@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://csmae7j3a5gs4"]
+
+[ext_resource type="Script" uid="uid://ddmvvunabxnw2" path="res://user_interface/info/version_label.gd" id="1_oroyg"]
+
+[node name="GameInfo" type="MarginContainer" unique_id=283505685]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="Tech" type="HBoxContainer" parent="." unique_id=976229312]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="Version" type="Label" parent="Tech" unique_id=1832769551]
+layout_mode = 2
+text = "Version: Development"
+script = ExtResource("1_oroyg")
+metadata/_custom_type_script = "uid://ddmvvunabxnw2"
+
+[node name="Quaternius" type="HBoxContainer" parent="." unique_id=713939939]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="Label" type="Label" parent="Quaternius" unique_id=2105343015]
+layout_mode = 2
+text = "Prototype assets by"
+
+[node name="LinkButton" type="LinkButton" parent="Quaternius" unique_id=891836639]
+layout_mode = 2
+text = "Quaternius"
+underline = 1
+uri = "https://quaternius.com/"

@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://bi3mr4sjccywj"]
+
+[ext_resource type="Script" uid="uid://dvlr2wvgpeyqn" path="res://user_interface/pause_menu/multiplayer_menu.gd" id="1_k1c65"]
+[ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="2_mwgi0"]
+[ext_resource type="Script" uid="uid://c5s3itsvtp0mg" path="res://user_interface/better_line_edit.gd" id="2_rgp2h"]
+[ext_resource type="Script" uid="uid://cpw5mv8f3f0o2" path="res://user_interface/clipboard_button.gd" id="3_iouuv"]
+
+[node name="MultiplayerMenu" type="VBoxContainer" unique_id=876205651 node_paths=PackedStringArray("_player_name", "_join_button", "_ip_address", "_host_button", "_host_ip_address_button")]
+offset_right = 256.0
+offset_bottom = 101.0
+script = ExtResource("1_k1c65")
+_player_name = NodePath("PlayerName")
+_join_button = NodePath("GridContainer/Join")
+_ip_address = NodePath("GridContainer/IpAddress")
+_host_button = NodePath("GridContainer/Host")
+_host_ip_address_button = NodePath("GridContainer/HostIpAddress")
+metadata/_custom_type_script = "uid://dvlr2wvgpeyqn"
+
+[node name="PlayerName" type="LineEdit" parent="." unique_id=1461261219]
+layout_mode = 2
+placeholder_text = "Haunt"
+alignment = 1
+editable = false
+script = ExtResource("2_rgp2h")
+metadata/_custom_type_script = "uid://c5s3itsvtp0mg"
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=915323210]
+layout_mode = 2
+columns = 2
+
+[node name="Join" type="Button" parent="GridContainer" unique_id=221003262]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "Join"
+script = ExtResource("2_mwgi0")
+toggled_text = "Disconnect"
+metadata/_custom_type_script = "uid://cpyey1rgiu5s0"
+
+[node name="IpAddress" type="LineEdit" parent="GridContainer" unique_id=1834265851]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+placeholder_text = "127.0.0.1"
+alignment = 1
+script = ExtResource("2_rgp2h")
+metadata/_custom_type_script = "uid://c5s3itsvtp0mg"
+
+[node name="Host" type="Button" parent="GridContainer" unique_id=2070671973]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "Host"
+script = ExtResource("2_mwgi0")
+toggled_text = "Stop Hosting"
+metadata/_custom_type_script = "uid://cpyey1rgiu5s0"
+
+[node name="HostIpAddress" type="Button" parent="GridContainer" unique_id=1319524617]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+disabled = true
+script = ExtResource("3_iouuv")
+message = "IP address copied to clipboard!"
+metadata/_custom_type_script = "uid://cpw5mv8f3f0o2"
+
+[connection signal="text_submitted_or_focus_lost" from="PlayerName" to="." method="_on_player_name_text_changed"]
+[connection signal="toggled" from="GridContainer/Join" to="." method="_on_join_toggled"]
+[connection signal="text_changed" from="GridContainer/IpAddress" to="." method="_on_ip_address_text_changed"]
+[connection signal="text_submitted_or_focus_lost" from="GridContainer/IpAddress" to="." method="_on_ip_address_text_submitted"]
+[connection signal="toggled" from="GridContainer/Host" to="." method="_on_host_toggled"]

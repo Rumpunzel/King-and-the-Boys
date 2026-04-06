@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bgqwt7hjsgn3o"]
+
+[ext_resource type="Script" uid="uid://dw2cr4ecr33u2" path="res://user_interface/hud/input_prompts/key_prompt.gd" id="1_iqjhr"]
+
+[node name="KeyPrompt" type="Button" unique_id=501724215]
+offset_right = 40.0
+offset_bottom = 40.0
+focus_mode = 0
+mouse_filter = 2
+toggle_mode = true
+text = "Key"
+script = ExtResource("1_iqjhr")
+
+[connection signal="resized" from="." to="." method="_on_resized"]

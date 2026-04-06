@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://becdxlww4k13g"]
+
+[ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/pause_menu/player_info.tscn" id="1_7eg3o"]
+[ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/pause_menu/lobby_menu.gd" id="1_7xmpv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ljopc"]
+
+[node name="LobbyMenu" type="PanelContainer" unique_id=7244955 node_paths=PackedStringArray("_player_infos_container")]
+offset_right = 139.0
+offset_bottom = 212.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ljopc")
+script = ExtResource("1_7xmpv")
+_player_infos_container = NodePath("MarginContainer/PlayerInfos")
+_player_info_scene = ExtResource("1_7eg3o")
+metadata/_custom_type_script = "uid://cd0g7grdwdvy1"
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=2002559267]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="PlayerInfos" type="VBoxContainer" parent="MarginContainer" unique_id=911858800]
+layout_mode = 2
+theme_override_constants/separation = 8

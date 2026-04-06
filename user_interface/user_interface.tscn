@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://rmev082m4bw0"]
+
+[ext_resource type="Script" uid="uid://cy4skffv6sbru" path="res://user_interface/user_interface.gd" id="1_dbod7"]
+[ext_resource type="Script" uid="uid://cm7ublv6tq6oc" path="res://user_interface/info/fps_label.gd" id="2_dbod7"]
+[ext_resource type="PackedScene" uid="uid://becdxlww4k13g" path="res://user_interface/pause_menu/lobby_menu.tscn" id="3_ur1vw"]
+
+[node name="UserInterface" type="CanvasLayer" unique_id=137708046]
+layer = 10
+script = ExtResource("1_dbod7")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1277819004]
+process_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+metadata/_edit_lock_ = true
+
+[node name="FPS" type="Label" parent="MarginContainer" unique_id=1064896010]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "999 FPS"
+script = ExtResource("2_dbod7")
+metadata/_custom_type_script = "uid://cm7ublv6tq6oc"
+
+[node name="LobbyMenu" parent="MarginContainer" unique_id=175943447 instance=ExtResource("3_ur1vw")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0

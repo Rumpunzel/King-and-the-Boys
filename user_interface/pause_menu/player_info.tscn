@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://75rctdin2cpp"]
+
+[ext_resource type="Script" uid="uid://cep0umg7ktxy8" path="res://user_interface/pause_menu/player_info.gd" id="1_cwx72"]
+[ext_resource type="Texture2D" uid="uid://dnm0ga1m5opd4" path="res://icon.svg" id="22_8uhr8"]
+
+[node name="PlayerInfo" type="VBoxContainer" unique_id=469915613 node_paths=PackedStringArray("_host_indicator", "_local_indicator", "_character_portrait", "_player_avatar", "_player_name")]
+custom_minimum_size = Vector2(96, 96)
+offset_top = 127.0
+offset_right = 96.0
+offset_bottom = 223.0
+mouse_filter = 0
+script = ExtResource("1_cwx72")
+_host_indicator = NodePath("PanelContainer/Host")
+_local_indicator = NodePath("PanelContainer/Local")
+_character_portrait = NodePath("PanelContainer/CharacterPortrait")
+_player_avatar = NodePath("PanelContainer2/MarginContainer/HBoxContainer/PlayerAvatar")
+_player_name = NodePath("PanelContainer2/MarginContainer/HBoxContainer/PlayerName")
+metadata/_custom_type_script = "uid://cep0umg7ktxy8"
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=818322991]
+layout_mode = 2
+
+[node name="Host" type="ReferenceRect" parent="PanelContainer" unique_id=1070656394]
+layout_mode = 2
+border_color = Color(1, 0.890196, 0.270588, 1)
+border_width = 5.0
+editor_only = false
+
+[node name="Local" type="ReferenceRect" parent="PanelContainer" unique_id=2087193636]
+layout_mode = 2
+border_color = Color(0.270588, 0.843137, 1, 1)
+border_width = 2.0
+editor_only = false
+
+[node name="CharacterPortrait" type="TextureRect" parent="PanelContainer" unique_id=967569852]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("22_8uhr8")
+expand_mode = 4
+stretch_mode = 6
+
+[node name="PanelContainer2" type="PanelContainer" parent="." unique_id=1065486609]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer2" unique_id=1613926375]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer2/MarginContainer" unique_id=962720780]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="PlayerAvatar" type="TextureRect" parent="PanelContainer2/MarginContainer/HBoxContainer" unique_id=58873907]
+layout_mode = 2
+texture = ExtResource("22_8uhr8")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="PlayerName" type="Label" parent="PanelContainer2/MarginContainer/HBoxContainer" unique_id=588551247]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 2
+text = "Stefe"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 5
