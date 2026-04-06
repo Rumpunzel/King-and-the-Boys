@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://bgdc0htqg6del"]
+
+[ext_resource type="Script" uid="uid://drtidm4rhg3c0" path="res://addons/menagerie/preview/preview_viewer.gd" id="1_xkxy0"]
+[ext_resource type="Material" uid="uid://be0c78ct6bsia" path="res://addons/menagerie/preview/sky_boxes/autumn_forest.tres" id="2_ti87d"]
+[ext_resource type="Shader" uid="uid://5fwpxyq38r3s" path="res://addons/menagerie/preview/infinite_grid.gdshader" id="6_xkxy0"]
+[ext_resource type="Texture2D" uid="uid://dnm0ga1m5opd4" path="res://icon.svg" id="7_ume2k"]
+
+[sub_resource type="Sky" id="Sky_fc02p"]
+sky_material = ExtResource("2_ti87d")
+
+[sub_resource type="Environment" id="Environment_bgifn"]
+background_mode = 2
+sky = SubResource("Sky_fc02p")
+sky_rotation = Vector3(0, 1.5708, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ume2k"]
+render_priority = 0
+shader = ExtResource("6_xkxy0")
+shader_parameter/gridColor = Color(0.988, 0.511, 0, 0.215)
+shader_parameter/checkerColor = Color(0, 0, 0, 0.85)
+shader_parameter/fadeStart = 2.0
+shader_parameter/fadeEnd = 10.0
+shader_parameter/unitSize = 1.0
+shader_parameter/subdivisions = 5
+shader_parameter/majorLineThickness = 1.0
+shader_parameter/minorLineThickness = 2.0
+shader_parameter/minorLineAlpha = 0.7
+shader_parameter/centerOffset = Vector3(0, 0, 0)
+
+[node name="PreviewViewer" type="Node3D" unique_id=555090253 node_paths=PackedStringArray("_camera")]
+script = ExtResource("1_xkxy0")
+_camera = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=820545118]
+physics_interpolation_mode = 1
+transform = Transform3D(0.707102, -0.235695, 0.666664, 0, 0.942779, 0.333332, -0.707102, -0.235695, 0.666664, 1, 0.5, 1)
+environment = SubResource("Environment_bgifn")
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=339741006]
+transform = Transform3D(32, 0, 0, 0, -1.39876e-06, 32, 0, -32, -1.39876e-06, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_ume2k")
+texture = ExtResource("7_ume2k")

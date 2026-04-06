@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://cmahsihmepd4v"]
+
+[ext_resource type="Script" uid="uid://brk2kywqvfl68" path="res://addons/menagerie/profiles_tab.gd" id="1_5qoco"]
+
+[node name="ProfileTab (7)" type="MarginContainer" unique_id=380130184 node_paths=PackedStringArray("_profiles_tree")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5qoco")
+title = "ProfileTab"
+profile_column_title = "Profile"
+_profiles_tree = NodePath("VBoxContainer/VSplitContainer/Tree")
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1225075989]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=810147025]
+layout_mode = 2
+
+[node name="ProfileFilter" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1626470829]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter"
+clear_button_enabled = true
+select_all_on_focus = true
+
+[node name="RescanButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=705590058]
+layout_mode = 2
+text = "Rescan files"
+
+[node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer" unique_id=986377404]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Tree" type="Tree" parent="VBoxContainer/VSplitContainer" unique_id=182148634]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+column_titles_visible = true
+allow_reselect = true
+hide_root = true
+select_mode = 1
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/ProfileFilter" to="." method="_on_profile_filter_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RescanButton" to="." method="_on_rescan_button_pressed"]
+[connection signal="item_activated" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_activated"]
+[connection signal="item_selected" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_selected"]

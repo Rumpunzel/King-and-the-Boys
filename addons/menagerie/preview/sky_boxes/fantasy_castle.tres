@@ -1,0 +1,6 @@
+[gd_resource type="PanoramaSkyMaterial" format=3 uid="uid://ors0da3audrk"]
+
+[ext_resource type="Texture2D" uid="uid://brg8vcktsryod" path="res://protoype_assets/sky_boxes/fantasy_castle.jpg" id="1_fbpci"]
+
+[resource]
+panorama = ExtResource("1_fbpci")

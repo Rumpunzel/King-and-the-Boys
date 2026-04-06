@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://dqec8begeet6h"]
+
+[ext_resource type="Script" uid="uid://dfep0060am1ue" path="res://addons/menagerie/preview/preview_configuration.gd" id="1_tb4p3"]
+
+[node name="PreviewConfiguration" type="PanelContainer" unique_id=1557944393 node_paths=PackedStringArray("_show_collision_button", "_show_hit_box_button", "_show_interaction_area_button", "_randomize_variation_button", "_variation_spin_box")]
+size_flags_horizontal = 8
+size_flags_vertical = 0
+script = ExtResource("1_tb4p3")
+_show_collision_button = NodePath("MarginContainer/VBoxContainer/ShowCollision")
+_show_hit_box_button = NodePath("MarginContainer/VBoxContainer/ShowHitBox")
+_show_interaction_area_button = NodePath("MarginContainer/VBoxContainer/ShowInteractionArea")
+_randomize_variation_button = NodePath("MarginContainer/VBoxContainer/RandomizeVariation")
+_variation_spin_box = NodePath("MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VariationSpinBox")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=345674453]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=2050485827]
+layout_mode = 2
+
+[node name="ShowCollision" type="CheckButton" parent="MarginContainer/VBoxContainer" unique_id=649490700]
+layout_mode = 2
+button_pressed = true
+text = "Show collision"
+
+[node name="ShowHitBox" type="CheckButton" parent="MarginContainer/VBoxContainer" unique_id=1877126913]
+layout_mode = 2
+button_pressed = true
+text = "Show hitbox"
+
+[node name="ShowInteractionArea" type="CheckButton" parent="MarginContainer/VBoxContainer" unique_id=840625952]
+layout_mode = 2
+button_pressed = true
+text = "Show interaction area"
+
+[node name="RandomizeVariation" type="CheckButton" parent="MarginContainer/VBoxContainer" unique_id=2016191482]
+layout_mode = 2
+button_pressed = true
+text = "Randomize variation"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=1702968294]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_right = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer" unique_id=1553231310]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1863773678]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Variation"
+
+[node name="VariationSpinBox" type="SpinBox" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1414544827]
+layout_mode = 2
+max_value = 19.0
+value = 8.0
+rounded = true
+allow_greater = true
+allow_lesser = true
+
+[connection signal="toggled" from="MarginContainer/VBoxContainer/ShowCollision" to="." method="_on_show_collision_toggled"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/ShowHitBox" to="." method="_on_show_hit_box_toggled"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/ShowInteractionArea" to="." method="_on_show_interaction_area_toggled"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/RandomizeVariation" to="." method="_on_randomize_variation_toggled"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/VariationSpinBox" to="." method="_on_variation_spin_box_value_changed"]

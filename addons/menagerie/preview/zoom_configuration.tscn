@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://dkfcs1dxvd8s5"]
+
+[ext_resource type="Script" uid="uid://dyewcbhrr1q3a" path="res://addons/menagerie/preview/zoom_configuration.gd" id="1_y4tad"]
+
+[sub_resource type="DPITexture" id="DPITexture_lpjha"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"8\" fill-opacity=\".4\"/><path fill=\"#e0e0e0\" d=\"M8 1a7 7 0 0 0 0 14A7 7 0 0 0 8 1zM4 7h8v2H4z\"/></svg>
+"
+saturation = 2.0
+
+[sub_resource type="GDScript" id="GDScript_h6und"]
+script/source = "@tool
+extends Button
+func _ready() -> void: icon = EditorInterface.get_editor_theme().get_icon(\"ZoomLess\", \"EditorIcons\")
+"
+
+[sub_resource type="DPITexture" id="DPITexture_2164r"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><g stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"8\" cy=\"8\" r=\"8\" fill-opacity=\".4\"/><path fill=\"#e0e0e0\" d=\"M8 1a7 7 0 0 0 0 14A7 7 0 0 0 8 1zM7 4h2v3h3v2H9v3H7V9H4V7h3z\"/></g></svg>
+"
+saturation = 2.0
+
+[sub_resource type="GDScript" id="GDScript_vgjr1"]
+script/source = "@tool
+extends Button
+func _ready() -> void: icon = EditorInterface.get_editor_theme().get_icon(\"ZoomMore\", \"EditorIcons\")
+"
+
+[node name="ZoomConfiguration" type="HBoxContainer" unique_id=711966 node_paths=PackedStringArray("_zoom_slider")]
+theme_override_constants/separation = 4
+script = ExtResource("1_y4tad")
+_zoom_slider = NodePath("ZoomSlider")
+
+[node name="ZoomOut" type="Button" parent="." unique_id=1693840938]
+layout_mode = 2
+icon = SubResource("DPITexture_lpjha")
+flat = true
+script = SubResource("GDScript_h6und")
+
+[node name="ZoomSlider" type="HSlider" parent="." unique_id=549382736]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.95
+tick_count = 8
+ticks_on_borders = true
+
+[node name="ZoomIn" type="Button" parent="." unique_id=755473131]
+layout_mode = 2
+icon = SubResource("DPITexture_2164r")
+flat = true
+script = SubResource("GDScript_vgjr1")
+
+[connection signal="pressed" from="ZoomOut" to="." method="_on_zoom_out_pressed"]
+[connection signal="value_changed" from="ZoomSlider" to="." method="_on_zoom_slider_value_changed"]
+[connection signal="pressed" from="ZoomIn" to="." method="_on_zoom_in_pressed"]

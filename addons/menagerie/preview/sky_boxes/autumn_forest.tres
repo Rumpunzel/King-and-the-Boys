@@ -1,0 +1,6 @@
+[gd_resource type="PanoramaSkyMaterial" format=3 uid="uid://be0c78ct6bsia"]
+
+[ext_resource type="Texture2D" uid="uid://dhgy28gk2xn5w" path="res://protoype_assets/sky_boxes/autumn_forest.jpg" id="1_kpxjn"]
+
+[resource]
+panorama = ExtResource("1_kpxjn")

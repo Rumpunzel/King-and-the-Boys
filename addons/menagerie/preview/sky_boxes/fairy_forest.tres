@@ -1,0 +1,6 @@
+[gd_resource type="PanoramaSkyMaterial" format=3 uid="uid://cqtbbu3sg3568"]
+
+[ext_resource type="Texture2D" uid="uid://c0q6pkfx3ln8f" path="res://protoype_assets/sky_boxes/fairy_forest_day.jpg" id="1_3a2ce"]
+
+[resource]
+panorama = ExtResource("1_3a2ce")

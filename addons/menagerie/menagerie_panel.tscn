@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://bxs2pxpsmsfud"]
+
+[ext_resource type="Script" uid="uid://n0o3cjtujtpt" path="res://addons/menagerie/menagerie_panel.gd" id="1_4mtjh"]
+[ext_resource type="Script" uid="uid://ns4detjfiotx" path="res://addons/menagerie/profile_tabs.gd" id="2_37sv2"]
+[ext_resource type="Texture2D" uid="uid://btd64iwc2p3sh" path="res://tools/icons/white/wanted-reward.svg" id="2_muwvy"]
+[ext_resource type="Texture2D" uid="uid://bes0anop2dh5u" path="res://tools/icons/white/stone-tower.svg" id="3_ewiq4"]
+[ext_resource type="PackedScene" uid="uid://cmahsihmepd4v" path="res://addons/menagerie/profiles_tab.tscn" id="3_vgjr1"]
+[ext_resource type="Texture2D" uid="uid://c4udocqr7qeyj" path="res://tools/icons/white/diploma.svg" id="4_kqt6r"]
+[ext_resource type="PackedScene" uid="uid://csmryju0fx0x1" path="res://addons/menagerie/preview/model_preview.tscn" id="4_ne48i"]
+
+[node name="Menagerie" type="PanelContainer" unique_id=1251221561]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_4mtjh")
+metadata/_edit_lock_ = true
+
+[node name="HSplitContainer" type="HSplitContainer" parent="." unique_id=312971698]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer" unique_id=2022349488]
+layout_mode = 2
+
+[node name="ProfileTabs" type="TabContainer" parent="HSplitContainer/VBoxContainer" unique_id=1293005785 node_paths=PackedStringArray("_all_tab")]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/icon_max_width = 32
+current_tab = 0
+clip_tabs = false
+deselect_enabled = true
+tab_0/icon = ExtResource("2_muwvy")
+tab_1/icon = ExtResource("3_ewiq4")
+tab_2/icon = ExtResource("4_kqt6r")
+script = ExtResource("2_37sv2")
+_all_tab = NodePath("../MarginContainer")
+
+[node name="Characters (3)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=1095668201 instance=ExtResource("3_vgjr1")]
+layout_mode = 2
+title = "Characters"
+profile_column_title = "Character"
+_data_path = "res://data/characters"
+
+[node name="Structures (2)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=1783808379 instance=ExtResource("3_vgjr1")]
+visible = false
+layout_mode = 2
+title = "Structures"
+profile_column_title = "Structure"
+_data_path = "res://data/structures"
+metadata/_tab_index = 1
+
+[node name="Things (2)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=491795939 instance=ExtResource("3_vgjr1")]
+visible = false
+layout_mode = 2
+title = "Things"
+profile_column_title = "Thing"
+_data_path = "res://data/things"
+metadata/_tab_index = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/VBoxContainer" unique_id=1635886602]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = -8
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="All (7)" parent="HSplitContainer/VBoxContainer/MarginContainer" unique_id=921277399 instance=ExtResource("3_vgjr1")]
+layout_mode = 2
+title = "All"
+
+[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer" unique_id=298817011]
+layout_mode = 2
+
+[node name="ModelPreview" parent="HSplitContainer/VSplitContainer" unique_id=1214802491 instance=ExtResource("4_ne48i")]
+layout_mode = 2
+
+[connection signal="tab_changed" from="HSplitContainer/VBoxContainer/ProfileTabs" to="HSplitContainer/VBoxContainer/ProfileTabs" method="_on_tab_changed"]
+[connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Characters (3)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
+[connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Structures (2)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
+[connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Things (2)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
