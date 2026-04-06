@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://beahmsvyce16w"]
+
+[ext_resource type="Script" uid="uid://dtegkhffyvsvk" path="res://engine/objects/things/thing_spawner.gd" id="1_w56p7"]
+[ext_resource type="Script" uid="uid://dpnh7ub3toyd6" path="res://client/serialization/node_serializer.gd" id="2_o4a45"]
+
+[node name="ThingSpawner" type="MultiplayerSpawner" unique_id=1954249393]
+spawn_path = NodePath(".")
+script = ExtResource("1_w56p7")
+metadata/_custom_type_script = "uid://dtegkhffyvsvk"
+
+[node name="NodeSerializer" type="Node" parent="." unique_id=473013898 node_paths=PackedStringArray("_spawner")]
+script = ExtResource("2_o4a45")
+_spawner = NodePath("..")
+metadata/_custom_type_script = "uid://dpnh7ub3toyd6"
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]

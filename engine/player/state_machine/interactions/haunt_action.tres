@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://cuoqy5wkfjika"]
+
+[ext_resource type="Script" uid="uid://d14jrxqbsuw5b" path="res://engine/player/state_machine/interactions/action.gd" id="1_inyva"]
+
+[resource]
+script = ExtResource("1_inyva")
+name = "Haunt"
+input_action = "haunt"
+charge_time = 1.0
+metadata/_custom_type_script = "uid://d14jrxqbsuw5b"

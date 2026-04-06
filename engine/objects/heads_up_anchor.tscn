@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cpmcbnpcemt61"]
+
+[ext_resource type="Script" uid="uid://b8gk75wu11vc4" path="res://engine/objects/heads_up_anchor.gd" id="1_achcd"]
+
+[node name="HeadsUpAnchor" type="Marker3D" unique_id=1780627664]
+gizmo_extents = 0.5
+script = ExtResource("1_achcd")
+metadata/_custom_type_script = "uid://b8gk75wu11vc4"

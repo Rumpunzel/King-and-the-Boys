@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bf0f7saxrfwrp"]
+
+[ext_resource type="Script" uid="uid://brt4an7lsoudo" path="res://engine/player/interaction_area.gd" id="1_n3bu5"]
+[ext_resource type="Material" uid="uid://bm6tdnx32ndb4" path="res://engine/player/materials/highlight_material.tres" id="2_v751x"]
+
+[node name="InteractionArea" type="Area3D" unique_id=512467296 node_paths=PackedStringArray("_collision_shape")]
+collision_layer = 0
+collision_mask = 64
+input_ray_pickable = false
+monitorable = false
+script = ExtResource("1_n3bu5")
+_collision_shape = NodePath("CollisionShape3D")
+_highlight_material = ExtResource("2_v751x")
+metadata/_custom_type_script = "uid://brt4an7lsoudo"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=286643237]
+debug_color = Color(0.85098, 0.372549, 0, 0.419608)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

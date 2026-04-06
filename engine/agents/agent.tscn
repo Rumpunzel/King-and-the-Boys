@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://bbjgxgkshjet6"]
+
+[ext_resource type="Script" uid="uid://cs7if1mfalxq5" path="res://engine/agents/agent.gd" id="1_u7v0r"]
+[ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_qws77"]
+[ext_resource type="Script" uid="uid://d1mglynl0s74y" path="res://engine/agents/state_machine/agent_state_machine.gd" id="3_00iam"]
+[ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_ns2p6"]
+[ext_resource type="Script" uid="uid://d12y800yphwle" path="res://engine/agents/state_machine/states/agent_state_default.gd" id="4_pe618"]
+[ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="5_pe618"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qws77"]
+properties/0/path = NodePath("StateMachine:_serialized_state")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
+[node name="Agent" type="Node" unique_id=663144089 node_paths=PackedStringArray("character", "_state_machine")]
+script = ExtResource("1_u7v0r")
+character = NodePath("Character")
+_state_machine = NodePath("StateMachine")
+metadata/_custom_type_script = "uid://cs7if1mfalxq5"
+
+[node name="AgentSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=988583422]
+replication_config = SubResource("SceneReplicationConfig_qws77")
+script = ExtResource("2_qws77")
+metadata/_custom_type_script = "uid://crm43jylxmjbd"
+
+[node name="SynchronizerSerializer" type="Node" parent="AgentSynchronizer" unique_id=1044754297 node_paths=PackedStringArray("_synchronizer")]
+script = ExtResource("3_ns2p6")
+_synchronizer = NodePath("..")
+metadata/_custom_type_script = "uid://047sfnl1r5sv"
+
+[node name="StateMachine" type="Node" parent="." unique_id=931970586 node_paths=PackedStringArray("agent", "character", "hit_box")]
+script = ExtResource("3_00iam")
+agent = NodePath("..")
+character = NodePath("../Character")
+hit_box = NodePath("../Character/CharacterHitBox")
+_initial_state = ExtResource("4_pe618")
+metadata/_custom_type_script = "uid://d1mglynl0s74y"
+
+[node name="Character" parent="." unique_id=1033858553 instance=ExtResource("5_pe618")]
+
+[editable path="Character"]

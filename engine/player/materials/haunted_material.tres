@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cmbf2wnye66jw"]
+
+[ext_resource type="Shader" uid="uid://0opn3cgsdrfd" path="res://engine/player/materials/chromatic_aberration.gdshader" id="1_u40oy"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_u40oy")
+shader_parameter/sphere_color = Color(0, 0, 0, 0)
+shader_parameter/wave_amplitude = 0.001
+shader_parameter/wave_frequency = 19.397
+shader_parameter/wave_speed = 3.618
+shader_parameter/chroma_amount = 1.0
+shader_parameter/stars_enabled = true
+shader_parameter/star_field_scale = 4.377
+shader_parameter/star_size = 0.008
+shader_parameter/star_intensity = 1.0
+shader_parameter/star_axis_speed = 0.051
+shader_parameter/star_move_mode = 1

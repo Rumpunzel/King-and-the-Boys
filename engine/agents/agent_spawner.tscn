@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://c46ivy3ilmclp"]
+
+[ext_resource type="Script" uid="uid://cv80krf8r7fls" path="res://engine/agents/agent_spawner.gd" id="1_pi2sy"]
+[ext_resource type="Script" uid="uid://dpnh7ub3toyd6" path="res://client/serialization/node_serializer.gd" id="2_s2m8b"]
+
+[node name="AgentSpawner" type="MultiplayerSpawner" unique_id=1877340054]
+spawn_path = NodePath(".")
+script = ExtResource("1_pi2sy")
+metadata/_custom_type_script = "uid://cv80krf8r7fls"
+
+[node name="NodeSerializer" type="Node" parent="." unique_id=164136361 node_paths=PackedStringArray("_spawner")]
+script = ExtResource("2_s2m8b")
+_spawner = NodePath("..")
+metadata/_custom_type_script = "uid://dpnh7ub3toyd6"
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]

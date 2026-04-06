@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://bmwhs3lwb74ue"]
+
+[ext_resource type="Script" uid="uid://dktxo1t8ahw30" path="res://engine/levels/level.gd" id="1_ywn5t"]
+[ext_resource type="Texture2D" uid="uid://de50qpfb0w0ll" path="res://protoype_assets/grids/prototype_512x512_blue2.png" id="8_s5f45"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_8egsi"]
+vertices = PackedVector3Array(-31.5, 0.5, -31.5, -31.5, 0.5, 31.5, 31.5, 0.5, 31.5, 31.5, 0.5, -31.5)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+sample_partition_type = 1
+geometry_parsed_geometry_type = 1
+geometry_source_geometry_mode = 1
+geometry_source_group_name = &"Navigation"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2lmav"]
+size = Vector3(64, 16, 64)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
+size = Vector2(64, 64)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5pvop"]
+albedo_texture = ExtResource("8_s5f45")
+uv1_scale = Vector3(16, 16, 16)
+
+[node name="TestLevel" type="Node3D" unique_id=2100419132 node_paths=PackedStringArray("_navigation_region")]
+process_mode = 1
+script = ExtResource("1_ywn5t")
+_navigation_region = NodePath("NavigationRegion3D")
+metadata/_custom_type_script = "uid://dktxo1t8ahw30"
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=949098374]
+transform = Transform3D(1, 0, 0, 0, 0.444104, 0.895975, 0, -0.895975, 0.444104, 0, 10.6623, 0)
+shadow_enabled = true
+directional_shadow_blend_splits = true
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=61657652]
+navigation_mesh = SubResource("NavigationMesh_8egsi")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D" unique_id=191208107 groups=["Navigation"]]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/StaticBody3D" unique_id=2090542693]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8, 0)
+shape = SubResource("BoxShape3D_2lmav")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/StaticBody3D" unique_id=1372172077]
+mesh = SubResource("PlaneMesh_bkb5w")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_5pvop")
+
+[node name="SpawnPoints" type="Node3D" parent="." unique_id=1610595994]

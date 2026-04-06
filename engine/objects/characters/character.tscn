@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://cvj6b1m2b65hd"]
+
+[ext_resource type="Script" uid="uid://cwu2dwpvcrl3s" path="res://engine/objects/characters/character.gd" id="1_f5t6j"]
+[ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_b3pdv"]
+[ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_42yey"]
+[ext_resource type="PackedScene" uid="uid://bmk3aay8c7045" path="res://engine/objects/characters/character_hit_box.tscn" id="4_5i04j"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3fwhk"]
+properties/0/path = NodePath(".:_is_on_floor")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:_normalized_velocity")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:transform")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:visible")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="Character" type="CharacterBody3D" unique_id=280801836 node_paths=PackedStringArray("_collision_shape", "_navigation_agent") groups=["Characters"]]
+collision_layer = 2
+collision_mask = 15
+input_ray_pickable = false
+script = ExtResource("1_f5t6j")
+_collision_shape = NodePath("CollisionShape3D")
+_navigation_agent = NodePath("NavigationAgent3D")
+metadata/_custom_type_script = "uid://cwu2dwpvcrl3s"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=697396135]
+
+[node name="CharacterSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1181153482]
+replication_config = SubResource("SceneReplicationConfig_3fwhk")
+script = ExtResource("2_b3pdv")
+metadata/_custom_type_script = "uid://crm43jylxmjbd"
+
+[node name="SynchronizerSerializer" type="Node" parent="CharacterSynchronizer" unique_id=510585076 node_paths=PackedStringArray("_synchronizer")]
+script = ExtResource("3_42yey")
+_synchronizer = NodePath("..")
+metadata/_custom_type_script = "uid://047sfnl1r5sv"
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=951416405]
+simplify_path = true
+avoidance_enabled = true
+height = 1.5
+debug_enabled = true
+
+[node name="CharacterHitBox" parent="." unique_id=1431592383 node_paths=PackedStringArray("character") instance=ExtResource("4_5i04j")]
+character = NodePath("..")
+
+[connection signal="profile_changed" from="." to="CharacterHitBox" method="_on_character_profile_changed"]
+[connection signal="navigation_finished" from="NavigationAgent3D" to="." method="_on_navigation_agent_navigation_finished"]
+[connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_velocity_computed"]
+[connection signal="haunted" from="CharacterHitBox" to="." method="_on_haunted"]
+[connection signal="unhaunted" from="CharacterHitBox" to="." method="_on_unhaunted"]

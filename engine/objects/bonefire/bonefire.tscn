@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://dqqbhe1nhpx6b"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_34thk"]
+radius = 8.0
+
+[sub_resource type="Gradient" id="Gradient_qblxw"]
+offsets = PackedFloat32Array(0, 0.146998, 0.296066, 1)
+colors = PackedColorArray(1, 0.828195, 0.796312, 1, 1, 0.15868, 0.070372, 1, 0.940693, 0.431311, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_nr7in"]
+gradient = SubResource("Gradient_qblxw")
+
+[sub_resource type="Curve" id="Curve_pk2ua"]
+_data = [Vector2(0, 0), 0.0, 6.48981, 0, 0, Vector2(0.996071, 0.0245241), 1.22277, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_q2c4q"]
+curve = SubResource("Curve_pk2ua")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q06fq"]
+lifetime_randomness = 1.0
+emission_shape = 6
+emission_ring_axis = Vector3(0, 90, 1)
+emission_ring_height = 0.2
+emission_ring_radius = 0.5
+emission_ring_inner_radius = 0.2
+emission_ring_cone_angle = 50.0
+direction = Vector3(0, 1, 0)
+spread = 0.1
+initial_velocity_max = 2.0
+angular_velocity_min = -1.60933e-05
+angular_velocity_max = -1.60933e-05
+orbit_velocity_min = -2.0
+orbit_velocity_max = 2.0
+radial_velocity_min = -1.00002
+radial_velocity_max = -2.23517e-05
+gravity = Vector3(0, 1, 0)
+tangential_accel_min = -2.23517e-06
+tangential_accel_max = 0.999998
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_q2c4q")
+color_ramp = SubResource("GradientTexture1D_nr7in")
+hue_variation_min = -2.23517e-08
+hue_variation_max = -2.23517e-08
+turbulence_noise_strength = 0.05
+turbulence_noise_scale = 5.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r7e5s"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 1, 0.5)
+
+[sub_resource type="SphereMesh" id="SphereMesh_o7pq3"]
+material = SubResource("StandardMaterial3D_r7e5s")
+radius = 0.075
+height = 0.2
+radial_segments = 32
+rings = 16
+
+[node name="Bonefire" type="Area3D" unique_id=1428893429]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1076687506]
+shape = SubResource("SphereShape3D_34thk")
+debug_color = Color(0.408492, 0.606617, 0.0271558, 0.42)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=936801165]
+process_mode = 3
+amount = 512
+lifetime = 3.0
+explosiveness = 0.1
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_q06fq")
+draw_pass_1 = SubResource("SphereMesh_o7pq3")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=829213716]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+light_color = Color(0.977625, 0.552865, 0, 1)
+light_energy = 10.0
+light_size = 1.0
+shadow_enabled = true
+distance_fade_enabled = true
+omni_range = 8.0

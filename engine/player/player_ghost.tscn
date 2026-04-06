@@ -1,0 +1,126 @@
+[gd_scene format=3 uid="uid://ckcrpkujohkql"]
+
+[ext_resource type="Script" uid="uid://blq77gvr6c2qt" path="res://engine/player/player_ghost.gd" id="1_rp0et"]
+[ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_d7fgu"]
+[ext_resource type="Script" uid="uid://dqdyomt3y3nx8" path="res://engine/player/input_reader.gd" id="3_d7fgu"]
+[ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_jlh3c"]
+[ext_resource type="Script" uid="uid://hcr7qut3ys1y" path="res://engine/player/state_machine/player_state_machine.gd" id="3_kwn24"]
+[ext_resource type="Script" uid="uid://o0v0yokcefkd" path="res://engine/player/state_machine/states/player_state_default.gd" id="4_irqko"]
+[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="6_jlh3c"]
+[ext_resource type="Script" uid="uid://cmsnxge6cujxg" path="res://user_interface/hud/hud.gd" id="7_cs6u8"]
+[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="7_r3pxx"]
+[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_mvbif"]
+[ext_resource type="PackedScene" uid="uid://bf0f7saxrfwrp" path="res://engine/player/interaction_area.tscn" id="9_46i1k"]
+[ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="10_irqko"]
+[ext_resource type="PackedScene" uid="uid://dlla8034gqdsb" path="res://engine/player/haunt_camera.tscn" id="10_jlh3c"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p0vpi"]
+properties/0/path = NodePath("InputReader:direction_input")
+properties/0/spawn = false
+properties/0/replication_mode = 1
+properties/1/path = NodePath("InputReader:interaction_input")
+properties/1/spawn = false
+properties/1/replication_mode = 2
+properties/2/path = NodePath("StateMachine:_serialized_state")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[sub_resource type="Resource" id="Resource_shdhw"]
+script = ExtResource("7_r3pxx")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pj10w"]
+radius = 0.25
+height = 1.5
+
+[node name="PlayerGhost" type="Node" unique_id=830050244 node_paths=PackedStringArray("character", "_state_machine", "_camera")]
+script = ExtResource("1_rp0et")
+character = NodePath("Ghost")
+_state_machine = NodePath("StateMachine")
+_camera = NodePath("TopDownCamera")
+metadata/_custom_type_script = "uid://blq77gvr6c2qt"
+
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1754898974]
+replication_config = SubResource("SceneReplicationConfig_p0vpi")
+script = ExtResource("2_d7fgu")
+metadata/_custom_type_script = "uid://crm43jylxmjbd"
+
+[node name="SynchronizerSerializer" type="Node" parent="PlayerSynchronizer" unique_id=1943484683 node_paths=PackedStringArray("_synchronizer")]
+script = ExtResource("3_jlh3c")
+_synchronizer = NodePath("..")
+type = 64
+metadata/_custom_type_script = "uid://047sfnl1r5sv"
+
+[node name="InputReader" type="Node" parent="." unique_id=1925465353 node_paths=PackedStringArray("_interaction_area", "_camera")]
+script = ExtResource("3_d7fgu")
+_interaction_area = NodePath("../Ghost/InteractionArea")
+_camera = NodePath("../TopDownCamera")
+metadata/_custom_type_script = "uid://dqdyomt3y3nx8"
+
+[node name="StateMachine" type="Node" parent="." unique_id=1534177582 node_paths=PackedStringArray("player_ghost", "input_reader", "character", "hit_box", "interaction_area", "default_phantom_camera")]
+script = ExtResource("3_kwn24")
+player_ghost = NodePath("..")
+input_reader = NodePath("../InputReader")
+character = NodePath("../Ghost")
+hit_box = NodePath("../Ghost/CharacterHitBox")
+interaction_area = NodePath("../Ghost/InteractionArea")
+default_phantom_camera = NodePath("../DefaultCamera")
+haunt_phantom_camera_scene = ExtResource("10_jlh3c")
+_initial_state = ExtResource("4_irqko")
+metadata/_custom_type_script = "uid://hcr7qut3ys1y"
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=789256689 groups=["HUD"]]
+script = ExtResource("7_cs6u8")
+metadata/_custom_type_script = "uid://cmsnxge6cujxg"
+
+[node name="DefaultCamera" type="Node3D" parent="." unique_id=2055921019 node_paths=PackedStringArray("follow_target", "look_at_target")]
+process_mode = 3
+transform = Transform3D(0.707107, -0.51449573, 0.48507115, 2.980233e-08, 0.6859943, 0.7276068, -0.70710695, -0.51449573, 0.48507115, 16, 24, 16)
+top_level = true
+script = ExtResource("6_jlh3c")
+follow_mode = 2
+follow_target = NodePath("../Ghost")
+look_at_mode = 2
+look_at_target = NodePath("../Ghost")
+tween_resource = SubResource("Resource_shdhw")
+tween_on_load = false
+follow_offset = Vector3(16, 24, 16)
+align_transform_with_view = Callable()
+align_position_with_view = Callable()
+align_rotation_with_view = Callable()
+metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+
+[node name="TopDownCamera" type="Camera3D" parent="." unique_id=113072833]
+physics_interpolation_mode = 1
+transform = Transform3D(0.7071068, -0.51449573, 0.48507124, 2.9802322e-08, 0.6859943, 0.7276069, -0.70710677, -0.51449573, 0.48507124, 16, 24, 16)
+top_level = true
+fov = 37.8493
+
+[node name="PhantomCameraHost" type="Node" parent="TopDownCamera" unique_id=260013323]
+process_mode = 3
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("8_mvbif")
+
+[node name="Ghost" parent="." unique_id=1983351460 instance=ExtResource("10_irqko")]
+collision_layer = 65536
+collision_mask = 1
+variation = 8
+
+[node name="CollisionShape3D" parent="Ghost" index="0" unique_id=697396135]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("CapsuleShape3D_pj10w")
+
+[node name="SynchronizerSerializer" parent="Ghost/CharacterSynchronizer" parent_id_path=PackedInt32Array(1983351460, 1181153482) index="0" unique_id=510585076]
+type = 64
+
+[node name="CharacterHitBox" parent="Ghost" index="3" unique_id=1431592383]
+collision_layer = 1048576
+
+[node name="InteractionArea" parent="Ghost" unique_id=1352242980 node_paths=PackedStringArray("character") instance=ExtResource("9_46i1k")]
+collision_mask = 32
+character = NodePath("..")
+
+[connection signal="available_interactions_changed" from="StateMachine" to="HUD" method="_on_available_interactions_changed"]
+[connection signal="current_interactable_changed" from="Ghost/InteractionArea" to="StateMachine" method="_on_current_interactable_changed"]
+
+[editable path="Ghost"]

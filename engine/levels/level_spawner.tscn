@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://drxjik1sm7twx"]
+
+[ext_resource type="Script" uid="uid://ct2kte5v780cm" path="res://engine/levels/level_spawner.gd" id="1_8svm0"]
+[ext_resource type="Script" uid="uid://dpnh7ub3toyd6" path="res://client/serialization/node_serializer.gd" id="2_s3ivu"]
+
+[node name="LevelSpawner" type="MultiplayerSpawner" unique_id=794943575]
+spawn_path = NodePath(".")
+script = ExtResource("1_8svm0")
+metadata/_custom_type_script = "uid://ct2kte5v780cm"
+
+[node name="NodeSerializer" type="Node" parent="." unique_id=1616550743 node_paths=PackedStringArray("_spawner")]
+script = ExtResource("2_s3ivu")
+_spawner = NodePath("..")
+metadata/_custom_type_script = "uid://dpnh7ub3toyd6"
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]

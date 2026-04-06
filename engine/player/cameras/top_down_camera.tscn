@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cnh75c8plrhf1"]
+
+[ext_resource type="Script" uid="uid://ckbhvwumadh3b" path="res://engine/player/cameras/top_down_camera.gd" id="1_67rod"]
+
+[node name="TopDownCamera" type="Camera3D" unique_id=207303800]
+transform = Transform3D(0.70710695, -0.5, 0.5, 0, 0.7071067, 0.7071069, -0.70710695, -0.5, 0.5, 16.970562, 24, 16.970562)
+current = true
+fov = 30.0
+script = ExtResource("1_67rod")
+metadata/_custom_type_script = "uid://ckbhvwumadh3b"
