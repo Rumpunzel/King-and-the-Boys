@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://c3ggesrya61ic"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ssxdi"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="LabelSettings" id="LabelSettings_15lxs"]
+font_size = 128
+
+[node name="HUDPlaceholder" type="Sprite3D" unique_id=1911969012]
+pixel_size = 0.001
+billboard = 1
+texture = SubResource("ViewportTexture_ssxdi")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=345658082]
+transparent_bg = true
+size = Vector2i(1000, 180)
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewport" unique_id=1231606366]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.5
+offset_top = -13.5
+offset_right = 64.5
+offset_bottom = 13.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(64.5, 13.5)
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewport/PanelContainer" unique_id=1799621160]
+layout_mode = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 2
+
+[node name="Label" type="Label" parent="SubViewport/PanelContainer/MarginContainer" unique_id=2144751842]
+layout_mode = 2
+text = "UI Placeholder"
+label_settings = SubResource("LabelSettings_15lxs")
