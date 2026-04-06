@@ -1,10 +1,9 @@
-# Godot 4+ specific ignores
-.godot/
-.nomedia
-
 # Godot-specific ignores
 .import/
+.godot/
+.nomedia
 export.cfg
+export_presets.cfg
 export_credentials.cfg
 
 # Imported translations (automatically generated from CSV files)
@@ -14,3 +13,29 @@ export_credentials.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# User data ignores
+config.cfg
+config_multiplayer.cfg
+*.save
+
+# Test build ignores
+bin/
+lib/
+build/
+*.exe
+*.pck
+
+# Git plugin
+addons/godot-git-plugin/
+
+# Visual Studio Code cache directory
+.vscode/
+
+# Blender
+*.blend1
+
+# Intellij
+.idea/
+
+*.dll
