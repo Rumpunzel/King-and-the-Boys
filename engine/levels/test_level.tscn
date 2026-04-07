@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://bmwhs3lwb74ue"]
 
 [ext_resource type="Script" uid="uid://dktxo1t8ahw30" path="res://engine/levels/level.gd" id="1_ywn5t"]
-[ext_resource type="Script" uid="uid://da7xwt7wct3ms" path="res://engine/objects/characters/character_spawn_point.gd" id="3_6rouw"]
-[ext_resource type="Resource" uid="uid://ro6wvnf88xbo" path="res://data/characters/people/dwarf.tres" id="4_xnro7"]
+[ext_resource type="Script" uid="uid://da4c4gcyqk2rb" path="res://engine/objects/characters/player_spawn_point.gd" id="5_0p5hx"]
 [ext_resource type="Texture2D" uid="uid://de50qpfb0w0ll" path="res://protoype_assets/grids/prototype_512x512_blue2.png" id="8_s5f45"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_8egsi"]
@@ -38,6 +37,7 @@ directional_shadow_blend_splits = true
 navigation_mesh = SubResource("NavigationMesh_8egsi")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D" unique_id=191208107 groups=["Navigation"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/StaticBody3D" unique_id=2090542693]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8, 0)
@@ -50,8 +50,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_5pvop")
 
 [node name="SpawnPoints" type="Node3D" parent="." unique_id=1610595994]
 
-[node name="CharacterSpawnPoint" type="Marker3D" parent="SpawnPoints" unique_id=1417526250]
-script = ExtResource("3_6rouw")
-character_profile = ExtResource("4_xnro7")
-role = "PlayerSpawnPoints"
-metadata/_custom_type_script = "uid://da7xwt7wct3ms"
+[node name="PlayerSpawnPoint" type="Marker3D" parent="SpawnPoints" unique_id=1704218217]
+script = ExtResource("5_0p5hx")
+metadata/_custom_type_script = "uid://da4c4gcyqk2rb"

@@ -32,15 +32,15 @@ func stop_synching_players() -> void:
 func spawn_player_ghost(player: Player) -> bool:
 	assert(multiplayer.is_server())
 	assert(player)
-	var all_player_spawn_points: Array[Node] = get_tree().get_nodes_in_group("PlayerSpawnPoints")
+	var all_player_spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	## Level not yet loaded, queue spawning for later
 	if all_player_spawn_points.is_empty():
 		get_tree().node_added.connect(_on_node_added)
 		return true
 	assert(all_player_spawn_points.size() == 1)
-	var character_spawn_point: CharacterSpawnPoint = all_player_spawn_points.front()
-	assert(character_spawn_point)
-	var character_data: Dictionary[StringName, Variant] = character_spawn_point.get_character_data()
+	var player_spawn_point: PlayerSpawnPoint = all_player_spawn_points.front()
+	assert(player_spawn_point)
+	var character_data: Dictionary[StringName, Variant] = player_spawn_point.get_character_data(player.character, 0)
 	var player_ghost_data: Dictionary[StringName, Variant] = {
 		PlayerGhost.PLAYER_ID: player.player_id,
 		PlayerGhost.CHARACTER_DATA: character_data,

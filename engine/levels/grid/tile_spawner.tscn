@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dlhx7y8eou8yr"]
+
+[ext_resource type="Script" uid="uid://dxqalmkn12sbi" path="res://engine/levels/grid/tile_spawner.gd" id="1_cjo1t"]
+[ext_resource type="Script" uid="uid://dpnh7ub3toyd6" path="res://client/serialization/node_serializer.gd" id="2_7irrf"]
+
+[node name="TileSpawner" type="MultiplayerSpawner" unique_id=1750877689]
+spawn_path = NodePath(".")
+script = ExtResource("1_cjo1t")
+metadata/_custom_type_script = "uid://dxqalmkn12sbi"
+
+[node name="NodeSerializer" type="Node" parent="." unique_id=1006352422 node_paths=PackedStringArray("_spawner")]
+script = ExtResource("2_7irrf")
+_spawner = NodePath("")
+metadata/_custom_type_script = "uid://dpnh7ub3toyd6"
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]

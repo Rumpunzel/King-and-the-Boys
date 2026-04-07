@@ -93,9 +93,12 @@ func get_portrait() -> Texture:
 func get_heads_up_anchor() -> Vector3:
 	return position + profile.heads_up_display_offset
 
+func get_grid_position() -> Vector3i:
+	return Level.get_grid_cell_of_node(self)
+
 func get_grid_cells() -> Array[Vector3i]:
 	var grid_cells: Array[Vector3i] = []
-	var origin_cell: Vector3i = Level.get_grid_cell_of_node(self)
+	var origin_cell: Vector3i = get_grid_position()
 	for y: int in range(1): # range(profile.grid_cell_extents.y):
 		for z: int in range(profile.grid_cell_extents.z):
 			for x: int in range(profile.grid_cell_extents.x):

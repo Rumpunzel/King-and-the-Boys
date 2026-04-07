@@ -18,8 +18,8 @@ func _ready() -> void:
 
 func spawn_all_from_spawn_spoints() -> Array[Structure]:
 	assert(multiplayer.is_server())
-	var all_thing_spawn_points: Array[Node] = get_tree().get_nodes_in_group("StructureSpawnPoints")
-	for structure_spawn_point: StructureSpawnPoint in all_thing_spawn_points:
+	var all_structure_spawn_points: Array[Node] = get_tree().get_nodes_in_group("StructureSpawnPoints")
+	for structure_spawn_point: StructureSpawnPoint in all_structure_spawn_points:
 		spawn(structure_spawn_point.get_structure_data())
 	return _structures
 

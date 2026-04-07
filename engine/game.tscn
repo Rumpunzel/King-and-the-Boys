@@ -8,17 +8,20 @@
 [ext_resource type="PackedScene" uid="uid://csyirat4yr8h2" path="res://engine/objects/structures/structure_spawner.tscn" id="7_i022p"]
 [ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://engine/levels/test_level.tscn" id="8_ee6o4"]
 [ext_resource type="PackedScene" uid="uid://c46ivy3ilmclp" path="res://engine/agents/agent_spawner.tscn" id="8_i022p"]
+[ext_resource type="PackedScene" uid="uid://dlhx7y8eou8yr" path="res://engine/levels/grid/tile_spawner.tscn" id="9_7g70b"]
 [ext_resource type="PackedScene" uid="uid://beahmsvyce16w" path="res://engine/objects/things/thing_spawner.tscn" id="9_eadau"]
 [ext_resource type="PackedScene" uid="uid://rmev082m4bw0" path="res://user_interface/user_interface.tscn" id="10_j8tme"]
+[ext_resource type="Resource" uid="uid://dwljjhol16iea" path="res://data/structures/starting_tile.tres" id="10_q1ly4"]
 [ext_resource type="PackedScene" uid="uid://becdxlww4k13g" path="res://user_interface/pause_menu/lobby_menu.tscn" id="11_piikb"]
 
-[node name="Game" type="Node" unique_id=1433846697 node_paths=PackedStringArray("_serializer", "_level_spawner", "_structure_spawner", "_thing_spawner", "_agent_spawner", "_player_ghost_spawner")]
+[node name="Game" type="Node" unique_id=1433846697 node_paths=PackedStringArray("_serializer", "_level_spawner", "_structure_spawner", "_thing_spawner", "_tile_spawner", "_agent_spawner", "_player_ghost_spawner")]
 script = ExtResource("1_l8g03")
 _default_level = ExtResource("8_ee6o4")
 _serializer = NodePath("Serializer")
 _level_spawner = NodePath("LevelSpawner")
 _structure_spawner = NodePath("StructureSpawner")
 _thing_spawner = NodePath("ThingSpawner")
+_tile_spawner = NodePath("TileSpawner")
 _agent_spawner = NodePath("AgentSpawner")
 _player_ghost_spawner = NodePath("PlayerGhostSpawner")
 metadata/_custom_type_script = "uid://bgi8dhegxjea2"
@@ -36,6 +39,10 @@ metadata/_custom_type_script = "uid://d12oj323k2wmw"
 [node name="StructureSpawner" parent="." unique_id=194044044 instance=ExtResource("7_i022p")]
 
 [node name="ThingSpawner" parent="." unique_id=1087349806 instance=ExtResource("9_eadau")]
+
+[node name="TileSpawner" parent="." unique_id=1750877689 instance=ExtResource("9_7g70b")]
+_grid_size = null
+_tile = ExtResource("10_q1ly4")
 
 [node name="AgentSpawner" parent="." unique_id=1374671867 instance=ExtResource("8_i022p")]
 

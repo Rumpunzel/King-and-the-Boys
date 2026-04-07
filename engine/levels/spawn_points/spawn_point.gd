@@ -1,5 +1,6 @@
 @tool
 @icon("uid://cscgs7miwut5n")
+@abstract
 class_name SpawnPoint
 extends Marker3D
 
@@ -19,9 +20,7 @@ func _ready() -> void:
 	if _editor_material: model.apply_material_override(_editor_material)
 	add_child(model)
 
-func get_profile() -> Profile:
-	assert(false, "SpawnPoint.get_model is 'virtual' and needs to be overriden!")
-	return null
+@abstract func get_profile() -> Profile
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

@@ -67,7 +67,7 @@ metadata/_custom_type_script = "uid://cmsnxge6cujxg"
 
 [node name="DefaultCamera" type="Node3D" parent="." unique_id=2055921019 node_paths=PackedStringArray("follow_target", "look_at_target")]
 process_mode = 3
-transform = Transform3D(0.707107, -0.51449573, 0.48507115, 2.980233e-08, 0.6859943, 0.7276068, -0.70710695, -0.51449573, 0.48507115, 16, 24, 16)
+transform = Transform3D(1.0000002, 0, 0, 0, 0.6246951, 0.78086865, 0, -0.78086877, 0.62469506, 0, 20, 16)
 top_level = true
 script = ExtResource("6_jlh3c")
 follow_mode = 2
@@ -76,7 +76,7 @@ look_at_mode = 2
 look_at_target = NodePath("../Ghost")
 tween_resource = SubResource("Resource_shdhw")
 tween_on_load = false
-follow_offset = Vector3(16, 24, 16)
+follow_offset = Vector3(0, 20, 16)
 align_transform_with_view = Callable()
 align_position_with_view = Callable()
 align_rotation_with_view = Callable()
@@ -84,7 +84,7 @@ metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="TopDownCamera" type="Camera3D" parent="." unique_id=113072833]
 physics_interpolation_mode = 1
-transform = Transform3D(0.7071068, -0.51449573, 0.48507124, 2.9802322e-08, 0.6859943, 0.7276069, -0.70710677, -0.51449573, 0.48507124, 16, 24, 16)
+transform = Transform3D(1, 0, 0, 0, 0.6246951, 0.78086877, 0, -0.78086877, 0.6246951, 0, 20, 16)
 top_level = true
 fov = 37.8493
 

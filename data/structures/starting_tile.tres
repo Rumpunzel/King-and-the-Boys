@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://dwljjhol16iea"]
+
+[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_eeem8"]
+[ext_resource type="PackedScene" uid="uid://bb5otswt2l1ja" path="res://data/structures/tile.tscn" id="2_eeem8"]
+[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="3_mlcx8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2bxb5"]
+size = Vector3(1.8, 0.05, 1.8)
+
+[sub_resource type="Resource" id="Resource_mlcx8"]
+script = ExtResource("1_eeem8")
+_shape = SubResource("BoxShape3D_2bxb5")
+metadata/_custom_type_script = "uid://cfq64v34pot8s"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h2von"]
+size = Vector3(2, 1, 2)
+
+[sub_resource type="Resource" id="Resource_j7yav"]
+script = ExtResource("1_eeem8")
+_shape = SubResource("BoxShape3D_h2von")
+metadata/_custom_type_script = "uid://cfq64v34pot8s"
+
+[resource]
+script = ExtResource("3_mlcx8")
+grid_cell_extents = Vector3i(2, 2, 1)
+name = "Starting Tile"
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("2_eeem8")])
+_collision_shape = SubResource("Resource_mlcx8")
+_hit_box_shape = SubResource("Resource_j7yav")
+heads_up_display_offset = Vector3(0, 5, 0)
+metadata/_custom_type_script = "uid://dol8cfhd12nbf"

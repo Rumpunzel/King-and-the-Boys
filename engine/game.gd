@@ -16,6 +16,7 @@ enum GameStatus {
 @export var _level_spawner: LevelSpawner
 @export var _structure_spawner: StructureSpawner
 @export var _thing_spawner: ThingSpawner
+@export var _tile_spawner: TileSpawner
 @export var _agent_spawner: AgentSpawner
 @export var _player_ghost_spawner: PlayerGhostSpawner
 
@@ -60,6 +61,13 @@ func start_new_game() -> void:
 	_agent_spawner.spawn_all_from_spawn_spoints()
 	_structure_spawner.spawn_all_from_spawn_spoints()
 	_thing_spawner.spawn_all_from_spawn_spoints()
+	_tile_spawner.spawn_at_all([
+		Vector2i(0, 0),
+		Vector2i(1, 0),
+		Vector2i(0, 1),
+		Vector2i(-1, 0),
+		Vector2i(0, -1),
+	])
 	if Engine.is_editor_hint(): return
 	_game_status = GameStatus.RUNNING
 
@@ -104,6 +112,7 @@ func stop_game() -> void:
 	_game_status = GameStatus.NONE
 	_player_ghost_spawner.stop_synching_players()
 	_agent_spawner.remove_all_agents()
+	_tile_spawner.remove_all_tiles()
 	_thing_spawner.remove_all_things()
 	_structure_spawner.remove_all_structures()
 	_level_spawner.unload_level()
@@ -133,6 +142,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not _level_spawner: warnings.append("Missing LevelSpawner reference.")
 	if not _structure_spawner: warnings.append("Missing StructureSpawner reference.")
 	if not _thing_spawner: warnings.append("Missing ThingSpawner reference.")
+	if not _tile_spawner: warnings.append("Missing TileSpawner reference.")
 	if not _agent_spawner: warnings.append("Missing AgentSpawner reference.")
 	if not _player_ghost_spawner: warnings.append("Missing PlayerGhostSpawner reference.")
 	return warnings

@@ -6,7 +6,7 @@ extends SpawnPoint
 @export var character_profile: CharacterProfile
 ## Maximum number of [Character]s allowed to be spawned by this [CharacterSpawnPoint]
 ## When set to [code]<=0[/code], there is no limit
-@export_enum("CharacterSpawnPoints", "PlayerSpawnPoints") var role: String = "CharacterSpawnPoints"
+@export_enum("CharacterSpawnPoints") var role: String = "CharacterSpawnPoints"
 
 @export_group("Configuration")
 
