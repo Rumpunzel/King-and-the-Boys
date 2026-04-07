@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cy4skffv6sbru" path="res://user_interface/user_interface.gd" id="1_dbod7"]
 [ext_resource type="Script" uid="uid://cm7ublv6tq6oc" path="res://user_interface/info/fps_label.gd" id="2_dbod7"]
-[ext_resource type="PackedScene" uid="uid://becdxlww4k13g" path="res://user_interface/pause_menu/lobby_menu.tscn" id="3_ur1vw"]
 
 [node name="UserInterface" type="CanvasLayer" unique_id=137708046]
 layer = 10
@@ -28,8 +27,3 @@ size_flags_vertical = 0
 text = "999 FPS"
 script = ExtResource("2_dbod7")
 metadata/_custom_type_script = "uid://cm7ublv6tq6oc"
-
-[node name="LobbyMenu" parent="MarginContainer" unique_id=175943447 instance=ExtResource("3_ur1vw")]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 0

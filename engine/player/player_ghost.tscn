@@ -10,7 +10,6 @@
 [ext_resource type="Script" uid="uid://cmsnxge6cujxg" path="res://user_interface/hud/hud.gd" id="7_cs6u8"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="7_r3pxx"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_mvbif"]
-[ext_resource type="PackedScene" uid="uid://bf0f7saxrfwrp" path="res://engine/player/interaction_area.tscn" id="9_46i1k"]
 [ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="10_irqko"]
 [ext_resource type="PackedScene" uid="uid://dlla8034gqdsb" path="res://engine/player/haunt_camera.tscn" id="10_jlh3c"]
 
@@ -27,10 +26,6 @@ properties/2/replication_mode = 2
 
 [sub_resource type="Resource" id="Resource_shdhw"]
 script = ExtResource("7_r3pxx")
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pj10w"]
-radius = 0.25
-height = 1.5
 
 [node name="PlayerGhost" type="Node" unique_id=830050244 node_paths=PackedStringArray("character", "_state_machine", "_camera")]
 script = ExtResource("1_rp0et")
@@ -50,19 +45,17 @@ _synchronizer = NodePath("..")
 type = 64
 metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
-[node name="InputReader" type="Node" parent="." unique_id=1925465353 node_paths=PackedStringArray("_interaction_area", "_camera")]
+[node name="InputReader" type="Node" parent="." unique_id=1925465353 node_paths=PackedStringArray("_camera")]
 script = ExtResource("3_d7fgu")
-_interaction_area = NodePath("../Ghost/InteractionArea")
 _camera = NodePath("../TopDownCamera")
 metadata/_custom_type_script = "uid://dqdyomt3y3nx8"
 
-[node name="StateMachine" type="Node" parent="." unique_id=1534177582 node_paths=PackedStringArray("player_ghost", "input_reader", "character", "hit_box", "interaction_area", "default_phantom_camera")]
+[node name="StateMachine" type="Node" parent="." unique_id=1534177582 node_paths=PackedStringArray("player_ghost", "input_reader", "character", "hit_box", "default_phantom_camera")]
 script = ExtResource("3_kwn24")
 player_ghost = NodePath("..")
 input_reader = NodePath("../InputReader")
 character = NodePath("../Ghost")
 hit_box = NodePath("../Ghost/CharacterHitBox")
-interaction_area = NodePath("../Ghost/InteractionArea")
 default_phantom_camera = NodePath("../DefaultCamera")
 haunt_phantom_camera_scene = ExtResource("10_jlh3c")
 _initial_state = ExtResource("4_irqko")
@@ -104,11 +97,6 @@ script = ExtResource("8_mvbif")
 [node name="Ghost" parent="." unique_id=1983351460 instance=ExtResource("10_irqko")]
 collision_layer = 65536
 collision_mask = 1
-variation = 8
-
-[node name="CollisionShape3D" parent="Ghost" index="0" unique_id=697396135]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
-shape = SubResource("CapsuleShape3D_pj10w")
 
 [node name="SynchronizerSerializer" parent="Ghost/CharacterSynchronizer" parent_id_path=PackedInt32Array(1983351460, 1181153482) index="0" unique_id=510585076]
 type = 64
@@ -116,11 +104,6 @@ type = 64
 [node name="CharacterHitBox" parent="Ghost" index="3" unique_id=1431592383]
 collision_layer = 1048576
 
-[node name="InteractionArea" parent="Ghost" unique_id=1352242980 node_paths=PackedStringArray("character") instance=ExtResource("9_46i1k")]
-collision_mask = 32
-character = NodePath("..")
-
 [connection signal="available_interactions_changed" from="StateMachine" to="HUD" method="_on_available_interactions_changed"]
-[connection signal="current_interactable_changed" from="Ghost/InteractionArea" to="StateMachine" method="_on_current_interactable_changed"]
 
 [editable path="Ghost"]

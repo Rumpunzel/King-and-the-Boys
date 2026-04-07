@@ -16,7 +16,6 @@ func update(_delta: float) -> void:
 
 func physics_update(delta: float) -> void:
 	var direction_input: Vector2 = get_direction_input()
-	get_character().move_into_direction.rpc(direction_input, delta)
 
 func handle_input(_event: InputEvent) -> void:
 	pass

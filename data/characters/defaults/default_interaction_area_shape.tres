@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AreaShape" format=3 uid="uid://3vtg05cuw32e"]
+
+[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_slbyd"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_h2bdh"]
+height = 4.0
+radius = 3.0
+
+[resource]
+script = ExtResource("1_slbyd")
+_shape = SubResource("CylinderShape3D_h2bdh")
+_offset = Vector3(0, 0, 1)
+metadata/_custom_type_script = "uid://cfq64v34pot8s"

@@ -26,7 +26,8 @@ func _physics_process(delta: float) -> void:
 	_state_machine.physics_update(delta)
 
 static func create(character_data: Dictionary[StringName, Variant]) -> Agent:
-	var new_agent: Agent = PackedScenes.AGENT_SCENE.instantiate()
+	var scene: PackedScene = load("uid://bbjgxgkshjet6")
+	var new_agent: Agent = scene.instantiate()
 	new_agent.character.apply_character_data(character_data)
 	return new_agent
 

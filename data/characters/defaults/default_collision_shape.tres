@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="AreaShape" format=3 uid="uid://d27l7tjgj4lrb"]
+
+[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_yaxum"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yaxum"]
+radius = 0.25
+
+[resource]
+script = ExtResource("1_yaxum")
+_shape = SubResource("CapsuleShape3D_yaxum")
+metadata/_custom_type_script = "uid://cfq64v34pot8s"

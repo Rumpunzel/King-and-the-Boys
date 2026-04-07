@@ -3,7 +3,6 @@
 class_name PauseMenu
 extends CanvasLayer
 
-signal new_game_requested
 signal save_requested
 signal load_requested
 
@@ -11,7 +10,6 @@ signal opened
 signal closed
 
 @export_group("Configuration")
-@export var _new_game_button: Button
 @export var _save_button: Button
 @export var _load_button: Button
 @export var _animation_player: AnimationPlayer
@@ -69,15 +67,11 @@ func close_menu() -> void:
 	closed.emit()
 
 func reset_menu() -> void:
-	_new_game_button.disabled = false
 	_save_button.disabled = false
 	_load_button.disabled = false
 
 func _on_continue_pressed() -> void:
 	close_menu()
-
-func _on_new_game_pressed() -> void:
-	new_game_requested.emit()
 
 func _on_save_pressed() -> void:
 	save_requested.emit()
@@ -92,7 +86,6 @@ func _on_quit_confirmation_dialog_confirmed() -> void:
 # [Multiplayer] callbacks
 func _on_joining_multiplayer() -> void:
 	close_menu()
-	_new_game_button.disabled = true
 	_save_button.disabled = true
 	_load_button.disabled = true
 
@@ -105,7 +98,6 @@ func _on_saving_finished() -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _new_game_button: warnings.append("Missing new game button reference.")
 	if not _save_button: warnings.append("Missing save button reference.")
 	if not _load_button: warnings.append("Missing load button reference.")
 	if not _animation_player: warnings.append("Missing AnimationPlayer reference.")

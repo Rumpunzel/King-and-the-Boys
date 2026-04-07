@@ -21,7 +21,8 @@ enum Groups {
 @export_group("Configuration")
 
 func create(variation: int, spawn_transform: Transform3D) -> Thing:
-	var new_thing: Thing = PackedScenes.THING_SCENE.instantiate()
+	var scene: PackedScene = load("uid://dnxaisin8ueu5")
+	var new_thing: Thing = scene.instantiate()
 	new_thing.variation = variation
 	new_thing.profile = self
 	new_thing.transform = spawn_transform

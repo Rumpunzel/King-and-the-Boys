@@ -105,12 +105,6 @@ func get_heads_up_anchor() -> Vector3:
 func get_grid_cell() -> Vector3i:
 	return Level.get_grid_cell_of_node(self)
 
-func _on_haunted(_haunting: Character) -> void:
-	model.apply_material_overlay(profile.haunted_material)
-
-func _on_unhaunted() -> void:
-	model.remove_material_overlay(profile.haunted_material)
-
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not _collision_shape: warnings.append("Missing CollisionShape3D reference.")

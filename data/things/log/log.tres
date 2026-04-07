@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ThingProfile" format=3 uid="uid://cbl5ggrubf4we"]
+
+[ext_resource type="PackedScene" uid="uid://ift3r61cj7g3" path="res://data/things/log/wood_log.tscn" id="1_08lp2"]
+[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="2_wd3bf"]
+[ext_resource type="Script" uid="uid://dkumiyoi57n5x" path="res://engine/objects/things/thing_profile.gd" id="4_tp7fo"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_08lp2"]
+radius = 0.25
+
+[sub_resource type="Resource" id="Resource_uw3v0"]
+script = ExtResource("2_wd3bf")
+_shape = SubResource("CylinderShape3D_08lp2")
+_rotation_degrees = Vector3(90, 90, 0)
+_automatic_ground_offset = false
+metadata/_custom_type_script = "uid://cfq64v34pot8s"
+
+[resource]
+script = ExtResource("4_tp7fo")
+mass = 100.0
+name = "Log"
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("1_08lp2")])
+_collision_shape = SubResource("Resource_uw3v0")
+_hit_box_shape = SubResource("Resource_uw3v0")
+heads_up_display_offset = Vector3(0, 1.5, 0)
+metadata/_custom_type_script = "uid://dkumiyoi57n5x"

@@ -4,43 +4,39 @@ class_name CharacterProfile
 extends Profile
 
 enum Groups {
-	PEOPLE,
-	GHOSTS,
+	HEROES,
+	MONSTERS,
 }
 
-@export var group: Groups = Groups.PEOPLE:
+@export var group: Groups = Groups.HEROES:
 	set(new_value):
 		group = new_value
 		changed.emit()
 
 @export_category("Attributes")
-@export var move_speed: float = 8.0:
+@export var strength: int = 3:
 	set(new_value):
-		move_speed = new_value
+		strength = new_value
 		changed.emit()
-@export var acceleration: float = 32.0:
+@export var agility: int = 3:
 	set(new_value):
-		acceleration = new_value
+		agility = new_value
 		changed.emit()
-@export var deceleration: float = 32.0:
+@export var intelligence: int = 3:
 	set(new_value):
-		deceleration = new_value
+		intelligence = new_value
 		changed.emit()
-@export var turn_rate: float = 12.0:
+@export var speed: int = 3:
 	set(new_value):
-		turn_rate = new_value
-		changed.emit()
-
-@export_custom(PROPERTY_HINT_RANGE, "0.01,10000.0,exp,suffix:Newtons") var push_force: float = 750.0:
-	set(new_value):
-		push_force = new_value
+		speed = new_value
 		changed.emit()
 
 @export_category("")
 @export_group("Configuration")
 
 func create(variation: int, spawn_transform: Transform3D) -> Character:
-	var new_character: Character = PackedScenes.CHARACTER_SCENE.instantiate()
+	var scene: PackedScene = load("uid://cvj6b1m2b65hd")
+	var new_character: Character = scene.instantiate()
 	new_character.variation = variation
 	new_character.profile = self
 	new_character.transform = spawn_transform
@@ -49,6 +45,9 @@ func create(variation: int, spawn_transform: Transform3D) -> Character:
 func get_group_name() -> StringName:
 	var group_name: StringName = Groups.keys()[group]
 	return group_name.capitalize()
+
+func _to_string() -> String:
+	return "<%s, STRENGTH: %d, AGILITY: %d, INTELLIGENCE: %d, SPEED: %d>" % [name, strength, agility, intelligence, speed]
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

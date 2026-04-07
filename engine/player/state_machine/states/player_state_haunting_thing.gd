@@ -23,8 +23,6 @@ func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 	assert(haunted_thing)
 	_haunted.haunt.rpc(character.get_path())
 	var input_force: Vector3 = character.get_heads_up_anchor() - haunted_thing.position
-	var force_multiplyer: float = character.profile.push_force * haunted_thing.mass / 10.0
-	haunted_thing.apply_torque(input_force.rotated(Vector3.LEFT, PI / 2.0) * force_multiplyer)
 	character.hide_character.rpc(true)
 	character.position = haunted_thing.position
 	get_interaction_area().add_hit_box_to_ignore(_haunted)
@@ -50,10 +48,7 @@ func physics_update(delta: float) -> void:
 	var haunted_thing: Thing = _haunted.thing
 	var input_force: Vector3 = character.get_heads_up_anchor() - haunted_thing.position
 	var horizontal_offset: Vector2 = Vector2(input_force.x, input_force.z)
-	var force_multiplyer: float = character.profile.push_force * haunted_thing.mass / 100.0
 	var adjusted_direction_input: Vector2 = direction_input - (horizontal_offset * haunted_thing.mass / 100.0)
-	character.move_into_direction.rpc(adjusted_direction_input if adjusted_direction_input.length_squared() > 0.1 else direction_input, delta)
-	haunted_thing.apply_input_force.rpc(input_force * force_multiplyer)
 
 func handle_input(_event: InputEvent) -> void:
 	pass
@@ -64,7 +59,6 @@ func exit() -> void:
 	var character: Character = get_character()
 	var haunted_thing: Thing = _haunted.thing
 	assert(haunted_thing)
-	character.velocity = haunted_thing.linear_velocity * haunted_thing.mass / character.profile.push_force
 	character.unhide_character.rpc()
 	_haunted.unhaunt.rpc()
 	get_interaction_area().remove_hit_box_to_ignore(_haunted)

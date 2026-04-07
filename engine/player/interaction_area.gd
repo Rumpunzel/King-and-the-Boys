@@ -49,7 +49,7 @@ func remove_hit_box_to_ignore(hit_box: HitBox) -> void:
 	if not current_interactable: current_interactable = nearest_hit_box_in_area()
 
 func configure_collision_shape(character_profile: CharacterProfile) -> void:
-	character_profile.configure_interaction_area_shape(_collision_shape)
+	#character_profile.configure_interaction_area_shape(_collision_shape)
 	current_interactable = nearest_hit_box_in_area()
 
 func _is_ignored(hit_box: HitBox) -> bool:

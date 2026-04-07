@@ -103,12 +103,6 @@ func get_grid_cells() -> Array[Vector3i]:
 				grid_cells.append(origin_cell + cell_position)
 	return grid_cells
 
-func _on_haunted(_haunting: Character) -> void:
-	model.apply_material_overlay(profile.haunted_material)
-
-func _on_unhaunted() -> void:
-	model.remove_material_overlay(profile.haunted_material)
-
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not _collision_shape: warnings.append("Missing CollisionShape3D reference.")

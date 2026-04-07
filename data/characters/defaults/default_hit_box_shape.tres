@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="AreaShape" format=3 uid="uid://718wpxdsx3bo"]
+
+[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_s7fgh"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_0x6pq"]
+
+[resource]
+script = ExtResource("1_s7fgh")
+_shape = SubResource("CylinderShape3D_0x6pq")
+metadata/_custom_type_script = "uid://cfq64v34pot8s"

@@ -1,6 +1,8 @@
 @tool
 class_name LobbyMenu
-extends PanelContainer
+extends CanvasLayer
+
+signal game_started
 
 @export_group("Configuration")
 @export var _player_infos_container: Control
@@ -10,39 +12,61 @@ var _player_infos: Dictionary[Player, PlayerInfo] = {}
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
-	Multiplayer.connected_to_multiplayer.connect(open_menu)
-	Multiplayer.disconnected_from_multiplayer.connect(close_menu)
-	Lobby.player_connected.connect(create_player_info)
+	Lobby.player_connected.connect(_add_player)
 
 func _ready() -> void:
-	if Engine.is_editor_hint():
-		create_player_info(Player.create(1, "Player"))
-		return
-	visible = Multiplayer.is_online()
+	_clear()
+	for index: int in range(Multiplayer.MAX_CONNECTIONS + 1): _create_player_info()
+	if Engine.is_editor_hint(): return
 	var connected_players: Array[Player] = Lobby.get_connected_players()
-	for connected_player: Player in connected_players:
-		create_player_info(connected_player)
+	for index: int in connected_players.size():
+		var connected_player: Player = connected_players[index]
+		_add_player(connected_player)
 
-func open_menu() -> void:
-	if is_visible_in_tree(): return
-	show()
-
-func close_menu() -> void:
-	if not is_visible_in_tree(): return
-	hide()
-
-func create_player_info(player: Player) -> void:
-	assert(player)
+func _create_player_info() -> void:
 	var new_player_info: PlayerInfo = _player_info_scene.instantiate()
-	new_player_info.player = player
-	player.tree_exiting.connect(remove_player_info.bind(player))
-	_player_infos[player] = new_player_info
+	new_player_info.player = null
 	_player_infos_container.add_child(new_player_info, true)
 
-func remove_player_info(player: Player) -> void:
-	var player_info_to_remove: PlayerInfo = _player_infos[player]
-	_player_infos.erase(player)
-	player_info_to_remove.queue_free()
+func _add_player(player: Player) -> void:
+	assert(player)
+	var empty_player_info: PlayerInfo = null
+	for player_info: PlayerInfo in _get_player_infos():
+		if player_info.player == null:
+			empty_player_info = player_info
+			break
+	assert(empty_player_info)
+	assert(empty_player_info.player == null)
+	var available_character: CharacterProfile = _get_available_character()
+	assert(available_character)
+	player.character = available_character
+	empty_player_info.player = player
+	player.tree_exiting.connect(_remove_player.bind(player))
+	_player_infos[player] = empty_player_info
+
+func _remove_player(player: Player) -> void:
+	var player_info_to_clear: PlayerInfo = _player_infos[player]
+	player_info_to_clear.player = null
+
+func _clear() -> void:
+	_player_infos.clear()
+	for player_info: PlayerInfo in _get_player_infos():
+		_player_infos_container.remove_child(player_info)
+		player_info.queue_free()
+
+func _get_player_infos() -> Array[PlayerInfo]:
+	var children: Array[Node] = _player_infos_container.get_children()
+	var player_infos: Array[PlayerInfo] = []
+	for child: Node in children: if child is PlayerInfo: player_infos.append(child)
+	return player_infos
+
+func _get_available_character() -> CharacterProfile:
+	return load("uid://ro6wvnf88xbo")
+
+func _on_start_pressed() -> void:
+	visible = false
+	game_started.emit()
+	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

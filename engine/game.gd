@@ -108,6 +108,9 @@ func stop_game() -> void:
 	_structure_spawner.remove_all_structures()
 	_level_spawner.unload_level()
 
+func _on_game_started() -> void:
+	start_new_game()
+
 func _on_singleplayer_started() -> void:
 	assert(is_node_ready())
 	Client.pause_game()

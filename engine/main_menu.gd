@@ -11,7 +11,7 @@ var _loading_screen: CanvasLayer
 
 func start_new_game() -> void:
 	assert(multiplayer.is_server())
-	
+	get_tree().change_scene_to_file("res://engine/game.tscn")
 	print_debug("Starting new game...")
 
 func load_game() -> Error:

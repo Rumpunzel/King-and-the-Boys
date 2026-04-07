@@ -68,7 +68,7 @@ func _spawn_player_ghost(player_ghost_data: Dictionary[StringName, Variant]) -> 
 	var player: Player = Lobby.get_player(player_id)
 	assert(player)
 	var character_data: Dictionary[StringName, Variant] = player_ghost_data[PlayerGhost.CHARACTER_DATA]
-	#character_data[Character.VARIATION] = player.ghost_sprite_frame
+	character_data[Character.VARIATION] = -1
 	var player_ghost: PlayerGhost = PlayerGhost.create(player, character_data)
 	assert(not _player_ghosts.has(player))
 	_player_ghosts[player_ghost.player] = player_ghost

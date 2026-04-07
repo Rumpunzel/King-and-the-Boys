@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="ThingProfile" format=3 uid="uid://buicitfb4e20w"]
+
+[ext_resource type="PackedScene" uid="uid://bmu3ibo7uud8j" path="res://data/things/fish/fish_1_a_2.tscn" id="1_hpr2k"]
+[ext_resource type="PackedScene" uid="uid://bbqq46f2p8k0v" path="res://data/things/fish/fish_1_b_2.tscn" id="2_dnlk6"]
+[ext_resource type="PackedScene" uid="uid://cdy48nd51271h" path="res://data/things/fish/fish_1_d_2.tscn" id="3_l6kfr"]
+[ext_resource type="PackedScene" uid="uid://cfqqo6n7v0fli" path="res://data/things/fish/fish_1_e_2.tscn" id="4_bo3md"]
+[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="5_u5ehe"]
+[ext_resource type="Script" uid="uid://dkumiyoi57n5x" path="res://engine/objects/things/thing_profile.gd" id="8_l001u"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hpr2k"]
+radius = 0.1
+height = 0.5
+
+[sub_resource type="Resource" id="Resource_dnlk6"]
+script = ExtResource("5_u5ehe")
+_shape = SubResource("CapsuleShape3D_hpr2k")
+_rotation_degrees = Vector3(90, 0, 0)
+_automatic_ground_offset = false
+metadata/_custom_type_script = "uid://cfq64v34pot8s"
+
+[resource]
+script = ExtResource("8_l001u")
+mass = 0.5
+name = "Fish"
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("1_hpr2k"), ExtResource("2_dnlk6"), ExtResource("3_l6kfr"), ExtResource("4_bo3md")])
+_collision_shape = SubResource("Resource_dnlk6")
+_hit_box_shape = SubResource("Resource_dnlk6")
+heads_up_display_offset = Vector3(0, 1, 0)
+metadata/_custom_type_script = "uid://dkumiyoi57n5x"

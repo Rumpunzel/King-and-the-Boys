@@ -3,24 +3,47 @@
 [ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/pause_menu/player_info.tscn" id="1_7eg3o"]
 [ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/pause_menu/lobby_menu.gd" id="1_7xmpv"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ljopc"]
-
-[node name="LobbyMenu" type="PanelContainer" unique_id=7244955 node_paths=PackedStringArray("_player_infos_container")]
-offset_right = 139.0
-offset_bottom = 212.0
-theme_override_styles/panel = SubResource("StyleBoxEmpty_ljopc")
+[node name="LobbyMenu" type="CanvasLayer" unique_id=1103850548 node_paths=PackedStringArray("_player_infos_container")]
+physics_interpolation_mode = 2
+layer = 1000
 script = ExtResource("1_7xmpv")
-_player_infos_container = NodePath("MarginContainer/PlayerInfos")
+_player_infos_container = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/PlayerInfos")
 _player_info_scene = ExtResource("1_7eg3o")
 metadata/_custom_type_script = "uid://cd0g7grdwdvy1"
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=2002559267]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1648262628]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 64
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1534937830]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=874526140]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/PanelContainer" unique_id=2002559267]
 layout_mode = 2
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 4
+theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="PlayerInfos" type="VBoxContainer" parent="MarginContainer" unique_id=911858800]
+[node name="PlayerInfos" type="HBoxContainer" parent="MarginContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=960834194]
 layout_mode = 2
 theme_override_constants/separation = 8
+
+[node name="Start" type="Button" parent="MarginContainer/VBoxContainer" unique_id=49430844]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Start"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]

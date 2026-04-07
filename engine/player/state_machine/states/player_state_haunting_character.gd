@@ -49,7 +49,6 @@ func physics_update(delta: float) -> void:
 	var character: Character = get_character()
 	var haunted_character: Character = _haunted.character
 	assert(haunted_character)
-	haunted_character.move_into_direction.rpc(direction_input, delta)
 	character.transform = haunted_character.transform
 
 func handle_input(_event: InputEvent) -> void:

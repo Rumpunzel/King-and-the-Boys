@@ -24,7 +24,7 @@ font_size = 72
 process_mode = 3
 layer = 100
 script = ExtResource("1_h4gok")
-_new_game_button = NodePath("PanelContainer/Menu/GridContainer/VBoxContainer/NewGame")
+_new_game_button = NodePath("")
 _save_button = NodePath("PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Save")
 _load_button = NodePath("PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Load")
 _animation_player = NodePath("AnimationPlayer")
@@ -73,10 +73,6 @@ theme_override_constants/separation = 24
 layout_mode = 2
 text = "Continue"
 
-[node name="NewGame" type="Button" parent="PanelContainer/Menu/GridContainer/VBoxContainer" unique_id=2036852837]
-layout_mode = 2
-text = "New Game"
-
 [node name="SavingLoading" type="VBoxContainer" parent="PanelContainer/Menu/GridContainer/VBoxContainer" unique_id=89214162]
 layout_mode = 2
 
@@ -103,7 +99,6 @@ libraries/ = SubResource("AnimationLibrary_tkajo")
 auto_translate_mode = 1
 
 [connection signal="pressed" from="PanelContainer/Menu/GridContainer/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="PanelContainer/Menu/GridContainer/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Load" to="." method="_on_load_pressed"]
 [connection signal="pressed" from="PanelContainer/Menu/GridContainer/VBoxContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
