@@ -16,9 +16,13 @@ func update(_delta: float) -> void:
 
 func physics_update(delta: float) -> void:
 	var direction_input: Vector2 = get_direction_input()
+	#get_character().move_into_direction.rpc(direction_input, delta)
 
-func handle_input(_event: InputEvent) -> void:
-	pass
+func handle_input(event: InputEvent) -> void:
+	if event.is_action_released("move_up"): get_character().move_on_grid.rpc(Vector2.UP)
+	elif event.is_action_released("move_right"): get_character().move_on_grid.rpc(Vector2.RIGHT)
+	elif event.is_action_released("move_down"): get_character().move_on_grid.rpc(Vector2.DOWN)
+	elif event.is_action_released("move_left"): get_character().move_on_grid.rpc(Vector2.LEFT)
 
 func exit() -> void:
 	super.exit()

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bvj0ntif5bqqq"]
+
+[ext_resource type="Script" uid="uid://853l0h1bjf04" path="res://engine/levels/ghost_spawner.gd" id="1_sn5e1"]
+
+[node name="PlayerGhostSpawner" type="MultiplayerSpawner" unique_id=225359458]
+spawn_path = NodePath(".")
+script = ExtResource("1_sn5e1")
+metadata/_custom_type_script = "uid://853l0h1bjf04"
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]

@@ -61,13 +61,6 @@ func start_new_game() -> void:
 	_agent_spawner.spawn_all_from_spawn_spoints()
 	_structure_spawner.spawn_all_from_spawn_spoints()
 	_thing_spawner.spawn_all_from_spawn_spoints()
-	_tile_spawner.spawn_at_all([
-		Vector2i(0, 0),
-		Vector2i(1, 0),
-		Vector2i(0, 1),
-		Vector2i(-1, 0),
-		Vector2i(0, -1),
-	])
 	if Engine.is_editor_hint(): return
 	_game_status = GameStatus.RUNNING
 

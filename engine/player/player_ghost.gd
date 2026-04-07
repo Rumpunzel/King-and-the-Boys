@@ -39,6 +39,11 @@ func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority(): return
 	_state_machine.physics_update(delta)
 
+func _input(event: InputEvent) -> void:
+	if Engine.is_editor_hint(): return
+	if not is_multiplayer_authority(): return
+	_state_machine.handle_input(event)
+
 static func create(for_player: Player, character_data: Dictionary[StringName, Variant]) -> PlayerGhost:
 	assert(for_player)
 	var scene: PackedScene = load("uid://ckcrpkujohkql")

@@ -31,6 +31,17 @@ enum Groups {
 		speed = new_value
 		changed.emit()
 
+@export var vision: Array[Vector2i] = [
+		Vector2i.UP,
+		Vector2i.UP + Vector2i.RIGHT,
+		Vector2i.RIGHT,
+		Vector2i.RIGHT + Vector2i.DOWN,
+		Vector2i.DOWN,
+		Vector2i.DOWN + Vector2i.LEFT,
+		Vector2i.LEFT,
+		Vector2i.LEFT + Vector2i.UP,
+	]
+
 @export_category("")
 @export_group("Configuration")
 

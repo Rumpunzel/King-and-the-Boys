@@ -4,15 +4,19 @@
 [ext_resource type="PackedScene" uid="uid://5sd2jgms4uso" path="res://user_interface/pause_menu/pause_menu.tscn" id="2_j8tme"]
 [ext_resource type="Script" uid="uid://d12oj323k2wmw" path="res://client/serialization/serializer.gd" id="3_i022p"]
 [ext_resource type="PackedScene" uid="uid://drxjik1sm7twx" path="res://engine/levels/level_spawner.tscn" id="6_i022p"]
-[ext_resource type="Script" uid="uid://853l0h1bjf04" path="res://engine/levels/ghost_spawner.gd" id="6_j8tme"]
 [ext_resource type="PackedScene" uid="uid://csyirat4yr8h2" path="res://engine/objects/structures/structure_spawner.tscn" id="7_i022p"]
 [ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://engine/levels/test_level.tscn" id="8_ee6o4"]
 [ext_resource type="PackedScene" uid="uid://c46ivy3ilmclp" path="res://engine/agents/agent_spawner.tscn" id="8_i022p"]
 [ext_resource type="PackedScene" uid="uid://dlhx7y8eou8yr" path="res://engine/levels/grid/tile_spawner.tscn" id="9_7g70b"]
 [ext_resource type="PackedScene" uid="uid://beahmsvyce16w" path="res://engine/objects/things/thing_spawner.tscn" id="9_eadau"]
 [ext_resource type="PackedScene" uid="uid://rmev082m4bw0" path="res://user_interface/user_interface.tscn" id="10_j8tme"]
-[ext_resource type="Resource" uid="uid://dwljjhol16iea" path="res://data/structures/starting_tile.tres" id="10_q1ly4"]
+[ext_resource type="Resource" uid="uid://dwljjhol16iea" path="res://data/structures/tiles/starting_tile.tres" id="10_q1ly4"]
 [ext_resource type="PackedScene" uid="uid://becdxlww4k13g" path="res://user_interface/pause_menu/lobby_menu.tscn" id="11_piikb"]
+[ext_resource type="Script" uid="uid://ckc7uvbxnandc" path="res://engine/objects/structures/tile_profile.gd" id="11_wv7h4"]
+[ext_resource type="Resource" uid="uid://bdfrpagwkpemd" path="res://data/structures/tiles/horizontal_hallway_tile.tres" id="12_fp4pp"]
+[ext_resource type="PackedScene" uid="uid://bvj0ntif5bqqq" path="res://engine/player/player_ghost_spawner.tscn" id="12_q1ly4"]
+[ext_resource type="Resource" uid="uid://dckkvjgeuxvfx" path="res://data/structures/tiles/vertical_hallway_tile.tres" id="13_j1did"]
+[ext_resource type="Resource" uid="uid://djc0kwgsfemkg" path="res://data/structures/tiles/down_right_corner_tile.tres" id="14_os7jx"]
 
 [node name="Game" type="Node" unique_id=1433846697 node_paths=PackedStringArray("_serializer", "_level_spawner", "_structure_spawner", "_thing_spawner", "_tile_spawner", "_agent_spawner", "_player_ghost_spawner")]
 script = ExtResource("1_l8g03")
@@ -41,15 +45,12 @@ metadata/_custom_type_script = "uid://d12oj323k2wmw"
 [node name="ThingSpawner" parent="." unique_id=1087349806 instance=ExtResource("9_eadau")]
 
 [node name="TileSpawner" parent="." unique_id=1750877689 instance=ExtResource("9_7g70b")]
-_grid_size = null
-_tile = ExtResource("10_q1ly4")
+_starting_tile = ExtResource("10_q1ly4")
+_available_tiles = Array[ExtResource("11_wv7h4")]([ExtResource("10_q1ly4"), ExtResource("12_fp4pp"), ExtResource("13_j1did"), ExtResource("14_os7jx")])
 
 [node name="AgentSpawner" parent="." unique_id=1374671867 instance=ExtResource("8_i022p")]
 
-[node name="PlayerGhostSpawner" type="MultiplayerSpawner" parent="." unique_id=1321013111]
-spawn_path = NodePath(".")
-script = ExtResource("6_j8tme")
-metadata/_custom_type_script = "uid://853l0h1bjf04"
+[node name="PlayerGhostSpawner" parent="." unique_id=225359458 instance=ExtResource("12_q1ly4")]
 
 [node name="LobbyMenu" parent="." unique_id=2017772968 instance=ExtResource("11_piikb")]
 
@@ -58,4 +59,5 @@ metadata/_custom_type_script = "uid://853l0h1bjf04"
 [connection signal="save_requested" from="PauseMenu" to="." method="save_game"]
 [connection signal="structure_created" from="StructureSpawner" to="LevelSpawner" method="_on_structure_created"]
 [connection signal="agent_created" from="AgentSpawner" to="LevelSpawner" method="_on_agent_created"]
+[connection signal="player_spawned" from="PlayerGhostSpawner" to="TileSpawner" method="_on_player_spawned"]
 [connection signal="game_started" from="LobbyMenu" to="." method="_on_game_started"]

@@ -1,4 +1,5 @@
 @icon("uid://cawf6uult17mx")
+@abstract
 class_name State
 extends RefCounted
 
@@ -53,12 +54,8 @@ func deserialize(serialized_state: Dictionary[StringName, Variant]) -> State:
 		_previous_state_script = load(previous_state_script_path)
 	return self
 
-func get_state_machine() -> StateMachine:
-	assert(false, "State._get_state_machine is 'virtual' and needs to be overriden!")
-	return null
-
-func set_state_machine(_state_machine: StateMachine) -> void:
-	assert(false, "State._set_state_machine is 'virtual' and needs to be overriden!")
+@abstract func get_state_machine() -> StateMachine
+@abstract func set_state_machine(_state_machine: StateMachine) -> void
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = [ ]

@@ -18,7 +18,6 @@ const NAME: StringName = "player_name"
 		if Engine.is_editor_hint(): return
 		set_multiplayer_authority(player_id)
 		player_info_changed.emit()
-		print("setting avatar")
 		player_avatar = await Client.get_player_avatar(player_id)
 
 @export var player_name: String:

@@ -3,6 +3,8 @@
 class_name Character
 extends CharacterBody3D
 
+signal moved
+
 signal entered_grid_cell(cell: Vector3i)
 signal exited_grid_cell(cell: Vector3i)
 signal destination_reached
@@ -93,6 +95,24 @@ static func validate_character_data(character_data: Dictionary[StringName, Varia
 	assert(character_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM]))
 	assert(character_data.size() == 3)
 
+## Used to move the [Character] without pathfinding
+@rpc("any_peer", "call_local")
+func move_into_direction(direction_input: Vector2, delta: float) -> void:
+	if not direction_input:
+		var deceleration: float = delta
+		velocity.x = move_toward(velocity.x, 0.0, deceleration)
+		velocity.z = move_toward(velocity.z, 0.0, deceleration)
+		return
+	var move_speed: float = 16.0
+	var acceleration: float = delta
+	velocity.x = move_toward(velocity.x, direction_input.x * move_speed, acceleration)
+	velocity.z = move_toward(velocity.z, direction_input.y * move_speed, acceleration)
+
+@rpc("any_peer", "call_local", "reliable")
+func move_on_grid(direction_input: Vector2) -> void:
+	global_position += Vector3(direction_input.x, 0.0, direction_input.y) * 2.0
+	moved.emit()
+
 @rpc("any_peer", "call_local", "reliable")
 func move_to_position(position_input: Vector3) -> void:
 	_navigation_agent.target_position = position_input
@@ -152,8 +172,8 @@ func _handle_pathfinding() -> void:
 	else:
 		_on_navigation_agent_velocity_computed(new_velocity)
 
-func _look_forward(delta: float) -> void:
-	look_target = position + velocity
+func _look_forward(delta: float, direction: Vector3 = velocity) -> void:
+	look_target = position + direction
 	look_target.y = position.y
 	if look_target.is_equal_approx(transform.origin): return
 	var transform_looking_into_direction: Transform3D = transform.looking_at(look_target, Vector3.UP, true)

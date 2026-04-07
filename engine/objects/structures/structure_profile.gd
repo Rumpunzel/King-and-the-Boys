@@ -6,6 +6,7 @@ extends Profile
 enum Groups {
 	BUILDING,
 	FLORA,
+	TILE,
 }
 
 @export var group: Groups = Groups.BUILDING

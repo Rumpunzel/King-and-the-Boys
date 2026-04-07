@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://yu3m6ywkwlvf" path="res://user_interface/pause_menu/pause_menu.gd" id="1_h4gok"]
 [ext_resource type="PackedScene" uid="uid://csmae7j3a5gs4" path="res://user_interface/pause_menu/game_info.tscn" id="2_wsp0d"]
 [ext_resource type="Script" uid="uid://lt4t275g8dsp" path="res://user_interface/info/title_label.gd" id="3_4wkd6"]
+[ext_resource type="Texture2D" uid="uid://2qnwvokder1c" path="res://protoype_assets/logo.png" id="3_tkajo"]
 [ext_resource type="PackedScene" uid="uid://bi3mr4sjccywj" path="res://user_interface/pause_menu/multiplayer_menu.tscn" id="4_xkrjr"]
 
 [sub_resource type="Gradient" id="Gradient_ofb81"]
@@ -20,11 +21,10 @@ font_size = 72
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_tkajo"]
 
-[node name="PauseMenu" type="CanvasLayer" unique_id=1674632881 node_paths=PackedStringArray("_new_game_button", "_save_button", "_load_button", "_animation_player")]
+[node name="PauseMenu" type="CanvasLayer" unique_id=1674632881 node_paths=PackedStringArray("_save_button", "_load_button", "_animation_player")]
 process_mode = 3
 layer = 100
 script = ExtResource("1_h4gok")
-_new_game_button = NodePath("")
 _save_button = NodePath("PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Save")
 _load_button = NodePath("PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Load")
 _animation_player = NodePath("AnimationPlayer")
@@ -54,7 +54,12 @@ theme_override_constants/margin_bottom = 64
 layout_mode = 2
 columns = 2
 
+[node name="Logo" type="TextureRect" parent="PanelContainer/Menu/GridContainer" unique_id=2114485832]
+layout_mode = 2
+texture = ExtResource("3_tkajo")
+
 [node name="Title" type="Label" parent="PanelContainer/Menu/GridContainer" unique_id=787119547]
+visible = false
 layout_mode = 2
 text = "King and the Boys"
 label_settings = SubResource("LabelSettings_ru3py")
