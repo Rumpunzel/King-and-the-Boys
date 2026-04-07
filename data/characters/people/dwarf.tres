@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://ro6wvnf88xbo"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_riycf"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_x2406"]
+[ext_resource type="PackedScene" uid="uid://b55tt1yijxn7r" path="res://data/characters/people/king.tscn" id="3_xoskv"]
+[ext_resource type="Texture2D" uid="uid://d3kpui0ngdvp8" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_3.png" id="4_xk1ji"]
+[ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_34kdi"]
+
+[resource]
+script = ExtResource("5_34kdi")
+strength = 4
+agility = 2
+speed = 2
+name = "Dwarf"
+portrait = ExtResource("4_xk1ji")
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("3_xoskv")])
+heads_up_display_offset = Vector3(0, 2.25, 0)
+metadata/_custom_type_script = "uid://ddefcwtx6jfym"

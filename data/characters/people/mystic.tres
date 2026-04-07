@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://dptm3ey44x73g"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_isdep"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_0knfu"]
+[ext_resource type="PackedScene" uid="uid://c1y1c3gomyjk6" path="res://data/characters/people/rogue.tscn" id="3_44wk6"]
+[ext_resource type="Texture2D" uid="uid://dev2j2wnv1ku1" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_5.png" id="4_isdep"]
+[ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_60tc1"]
+
+[resource]
+script = ExtResource("5_60tc1")
+strength = 2
+agility = 2
+intelligence = 5
+name = "Mystic"
+portrait = ExtResource("4_isdep")
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("3_44wk6")])
+heads_up_display_offset = Vector3(0, 2.25, 0)
+metadata/_custom_type_script = "uid://ddefcwtx6jfym"

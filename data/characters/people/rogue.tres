@@ -3,23 +3,16 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="3_0y2lj"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="3_7rwy5"]
 [ext_resource type="PackedScene" uid="uid://c1y1c3gomyjk6" path="res://data/characters/people/rogue.tscn" id="3_kcow0"]
-[ext_resource type="Resource" uid="uid://3vtg05cuw32e" path="res://data/characters/defaults/default_interaction_area_shape.tres" id="3_x6ffh"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="4_ithgo"]
-[ext_resource type="Texture2D" uid="uid://c0olk24khqlnj" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_4.png" id="5_x6ffh"]
+[ext_resource type="Texture2D" uid="uid://di5m3ea325uel" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_1.png" id="4_x6f0m"]
 
 [resource]
 script = ExtResource("3_7rwy5")
-group = 0
-strength = 3
-agility = 3
-intelligence = 3
-speed = 3
+strength = 2
+speed = 4
 name = "Rogue"
-portrait = ExtResource("5_x6ffh")
+portrait = ExtResource("4_x6f0m")
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_kcow0")])
-_collision_shape = ExtResource("3_0y2lj")
-_hit_box_shape = ExtResource("4_ithgo")
-_interaction_area_shape = ExtResource("3_x6ffh")
 heads_up_display_offset = Vector3(0, 2.25, 0)
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

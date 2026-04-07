@@ -4,9 +4,11 @@ class_name InputReader
 extends Node
 
 @export_group("Configuration")
+@export var _interaction_area: InteractionArea
 @export var _camera: Camera3D
 
 var direction_input: Vector2 = Vector2.ZERO
+var interaction_input: StringName = ""
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
@@ -35,8 +37,13 @@ func get_camera_adjusted_direction_input() -> Vector2:
 
 func _collect_input() -> void:
 	direction_input = read_movement_input()
+	interaction_input = ""
+	if Input.is_action_pressed("interact"): interaction_input = "interact"
+	elif Input.is_action_pressed("haunt"): interaction_input = "haunt"
+	elif Input.is_action_pressed("unhaunt"): interaction_input = "unhaunt"
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if not _interaction_area: warnings.append("Missing InteractionArea reference.")
 	if not _camera: warnings.append("Missing Camera3D reference.")
 	return warnings
