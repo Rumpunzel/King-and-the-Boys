@@ -55,10 +55,8 @@ func _update_player_vision(character: Character) -> void:
 	var character_grid_position: Vector2i = world_to_grid_position(character.global_position)
 	var blocked_vision: Array[Vector2i] = []
 	blocked_vision.assign(_get_vision_for_tile(character_grid_position, character.profile.vision))
-	print(blocked_vision)
 	var visible_adjacent_tiles: Array[Vector2i] = []
 	visible_adjacent_tiles.assign(blocked_vision.map(func(direction: Vector2i) -> Vector2i: return character_grid_position + direction))
-	print(visible_adjacent_tiles)
 	spawn_at_all(visible_adjacent_tiles)
 
 func _get_vision_for_tile(tile_position: Vector2i, vision: Array[Vector2i]) -> Array[Vector2i]:

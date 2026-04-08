@@ -19,7 +19,6 @@ static func create(
 
 func has_connection(direction: TileProfile.Direction) -> bool:
 	var adjusted_direction: TileProfile.Direction = posmod(direction + clockwise_turns * 2, 8)
-	print("direction: %s, clockwise_turns: %d, adjusted_direction: %s" % [TileProfile.Direction.find_key(direction), clockwise_turns, TileProfile.Direction.find_key(adjusted_direction)])
 	return tile_profile.connections.has(adjusted_direction)
 
 func _to_string() -> String:
