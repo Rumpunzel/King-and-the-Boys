@@ -1,4 +1,5 @@
 @tool
+@abstract
 class_name Spawner
 extends MultiplayerSpawner
 
@@ -26,9 +27,7 @@ func get_all_added_nodes() -> Dictionary[StringName, int]:
 	return added_nodes
 
 ## @returns an [Array] of all spawned node data
-func get_all_node_data() -> Array[Variant]:
-	assert(false, "Spawner.get_all_node_data is 'virtual' and needs to be overriden!")
-	return []
+@abstract func get_all_node_data() -> Array[Variant]
 
 func remove_all_spawned_nodes() -> Array[NodePath]:
 	var freed_added_node_paths: Array[NodePath] = _remove_all_added_nodes()
@@ -48,6 +47,4 @@ func _remove_all_added_nodes() -> Array[NodePath]:
 		node.queue_free()
 	return nodes_freed
 
-func _remove_all_data_nodes() -> Array[NodePath]:
-	assert(false, "Spawner._remove_all_data_nodes is 'virtual' and needs to be overriden!")
-	return []
+@abstract func _remove_all_data_nodes() -> Array[NodePath]

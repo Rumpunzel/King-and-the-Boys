@@ -16,7 +16,6 @@ enum GameStatus {
 @export var _level_spawner: LevelSpawner
 @export var _structure_spawner: StructureSpawner
 @export var _thing_spawner: ThingSpawner
-@export var _tile_spawner: TileSpawner
 @export var _agent_spawner: AgentSpawner
 @export var _player_ghost_spawner: PlayerGhostSpawner
 
@@ -105,7 +104,6 @@ func stop_game() -> void:
 	_game_status = GameStatus.NONE
 	_player_ghost_spawner.stop_synching_players()
 	_agent_spawner.remove_all_agents()
-	_tile_spawner.remove_all_tiles()
 	_thing_spawner.remove_all_things()
 	_structure_spawner.remove_all_structures()
 	_level_spawner.unload_level()
@@ -135,7 +133,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not _level_spawner: warnings.append("Missing LevelSpawner reference.")
 	if not _structure_spawner: warnings.append("Missing StructureSpawner reference.")
 	if not _thing_spawner: warnings.append("Missing ThingSpawner reference.")
-	if not _tile_spawner: warnings.append("Missing TileSpawner reference.")
 	if not _agent_spawner: warnings.append("Missing AgentSpawner reference.")
 	if not _player_ghost_spawner: warnings.append("Missing PlayerGhostSpawner reference.")
 	return warnings

@@ -1,14 +1,14 @@
-[gd_resource type="Resource" script_class="TileProfile" format=3 uid="uid://bdfrpagwkpemd"]
+[gd_resource type="Resource" script_class="TileProfile" format=3 uid="uid://dckkvjgeuxvfx"]
 
-[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_4svn7"]
-[ext_resource type="PackedScene" uid="uid://bb5otswt2l1ja" path="res://data/structures/tile.tscn" id="2_jlj70"]
-[ext_resource type="Script" uid="uid://ckc7uvbxnandc" path="res://engine/objects/structures/tile_profile.gd" id="3_rdekp"]
+[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_ykis1"]
+[ext_resource type="PackedScene" uid="uid://bb5otswt2l1ja" path="res://data/structures/tile.tscn" id="2_2acvw"]
+[ext_resource type="Script" uid="uid://ckc7uvbxnandc" path="res://engine/objects/structures/tile_profile.gd" id="3_vqw4a"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2bxb5"]
 size = Vector3(1.8, 0.05, 1.8)
 
 [sub_resource type="Resource" id="Resource_mlcx8"]
-script = ExtResource("1_4svn7")
+script = ExtResource("1_ykis1")
 _shape = SubResource("BoxShape3D_2bxb5")
 metadata/_custom_type_script = "uid://cfq64v34pot8s"
 
@@ -16,18 +16,17 @@ metadata/_custom_type_script = "uid://cfq64v34pot8s"
 size = Vector3(2, 1, 2)
 
 [sub_resource type="Resource" id="Resource_j7yav"]
-script = ExtResource("1_4svn7")
+script = ExtResource("1_ykis1")
 _shape = SubResource("BoxShape3D_h2von")
 metadata/_custom_type_script = "uid://cfq64v34pot8s"
 
 [resource]
-script = ExtResource("3_rdekp")
-connections = Array[Vector2i]([Vector2i(1, 0), Vector2i(-1, 0)])
+script = ExtResource("3_vqw4a")
+connections = Array[int]([2, 4, 6])
 group = 2
-grid_cell_extents = null
 name = "Starting Tile"
 color = Color(0.878431, 0.878431, 0.878431, 1)
-_model_variations = Array[PackedScene]([ExtResource("2_jlj70")])
+_model_variations = Array[PackedScene]([ExtResource("2_2acvw")])
 _collision_shape = SubResource("Resource_mlcx8")
 _hit_box_shape = SubResource("Resource_j7yav")
 heads_up_display_offset = Vector3(0, 5, 0)

@@ -4,6 +4,7 @@ class_name LevelSpawner
 extends Spawner
 
 @export_group("Configuration")
+@export var _structure_spawner: StructureSpawner
 
 var _level: Level
 
@@ -45,14 +46,22 @@ func _spawn_level(level_scene_path: String) -> Level:
 func _on_child_entered_tree(node: Node) -> void:
 	if not node is Level: return
 	_level = node
+	assert(_level)
+	_level.tile_placement_requested.connect(_structure_spawner.spawn_at)
 
 func _on_structure_created(structure: Structure) -> void:
+	assert(_level)
 	_level._on_structure_created(structure)
 
 func _on_agent_created(agent: Agent) -> void:
 	assert(_level)
 	agent.character.entered_grid_cell.connect(_level._on_character_entered_grid_cell)
 
+func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
+	assert(_level)
+	_level._on_player_ghost_created(player_ghost)
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if not _structure_spawner: warnings.append("Missing StructureSpawner reference.")
 	return warnings

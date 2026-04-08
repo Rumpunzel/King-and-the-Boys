@@ -23,7 +23,6 @@ metadata/_custom_type_script = "uid://cfq64v34pot8s"
 [resource]
 script = ExtResource("3_ogsu1")
 group = 2
-grid_cell_extents = null
 name = "Starting Tile"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_4mah2")])

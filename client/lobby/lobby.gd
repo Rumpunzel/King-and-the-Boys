@@ -4,6 +4,9 @@ extends Spawner
 
 signal player_connected(player: Player)
 
+## {PlayerId: int -> Plaer}
+var _players: Dictionary[int, Player] = {}
+
 func _enter_tree() -> void:
 	spawn_path = get_path()
 	if Engine.is_editor_hint(): return
@@ -17,16 +20,8 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	super._ready()
 
-func get_connected_players() -> Array[Player]:
-	var players: Array[Player] = []
-	for child: Node in get_children():
-		if child is Player: players.append(child)
-	return players
-
-func get_player(player_id: int) -> Player:
-	for player: Player in get_connected_players():
-		if player.player_id == player_id: return player
-	return null
+func get_connected_players() -> Array[Player]: return _players.values()
+func get_player(player_id: int) -> Player: return _players.get(player_id)
 
 func get_local_player() -> Player:
 	var local_player_id: int = Multiplayer.HOST_ID
@@ -38,9 +33,26 @@ func get_local_player() -> Player:
 	assert(local_player)
 	return local_player
 
+func get_all_node_data() -> Array[Variant]:
+	var player_data: Array[Variant] = []
+	for player: Player in _players.values():
+		player_data.append(player.get_player_info())
+	return player_data
+
+func _remove_all_data_nodes() -> Array[NodePath]:
+	var removed_player_paths: Array[NodePath] = []
+	var players: Array[Player] = _players.values()
+	while not players.is_empty():
+		var player: Player = players.pop_back()
+		removed_player_paths.append(player.get_path())
+		_remove_player(player)
+	_players.clear()
+	return removed_player_paths
+
 func _spawn_player(player_info: Dictionary[StringName, Variant]) -> Player:
 	Player.validate_player_info(player_info)
 	var player: Player = Player.from_player_info(player_info)
+	_players[player.player_id] = player
 	player.ready.connect(player_connected.emit.bind(player))
 	print_debug("Spawned player: %s" % player.get_player_info())
 	return player
@@ -49,11 +61,13 @@ func _create_local_player() -> void:
 	spawn(Player.get_local_player_info())
 
 func _remove_all_players() -> void:
-	for player: Player in get_children():
+	for player: Player in _players.values():
 		_remove_player(player)
 
 func _remove_player(player: Player) -> void:
 	assert(player)
+	assert(_players.has(player.player_id))
+	_players.erase(player.player_id)
 	remove_child(player)
 	player.queue_free()
 	print_debug("Removed player: %s!" % player.get_player_info())

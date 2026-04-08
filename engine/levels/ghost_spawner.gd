@@ -3,7 +3,7 @@
 class_name PlayerGhostSpawner
 extends Spawner
 
-signal player_spawned(player: PlayerGhost)
+signal player_ghost_created(player_ghost: PlayerGhost)
 
 @export_group("Configuration")
 
@@ -94,7 +94,7 @@ func _on_node_added(node: Node) -> void:
 
 func _on_child_entered_tree(node: Node) -> void:
 	if not node is PlayerGhost: return
-	player_spawned.emit(node)
+	player_ghost_created.emit(node)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

@@ -1,7 +1,13 @@
 [gd_scene format=3 uid="uid://bmwhs3lwb74ue"]
 
 [ext_resource type="Script" uid="uid://dktxo1t8ahw30" path="res://engine/levels/level.gd" id="1_ywn5t"]
+[ext_resource type="Resource" uid="uid://dwljjhol16iea" path="res://data/structures/tiles/crossroad.tres" id="2_c445m"]
+[ext_resource type="Script" uid="uid://ckc7uvbxnandc" path="res://engine/objects/structures/tile_profile.gd" id="3_oyy5j"]
+[ext_resource type="Resource" uid="uid://bdfrpagwkpemd" path="res://data/structures/tiles/hallway.tres" id="4_058wk"]
 [ext_resource type="Script" uid="uid://da4c4gcyqk2rb" path="res://engine/objects/characters/player_spawn_point.gd" id="5_0p5hx"]
+[ext_resource type="Resource" uid="uid://dckkvjgeuxvfx" path="res://data/structures/tiles/fork.tres" id="5_8egsi"]
+[ext_resource type="Resource" uid="uid://djc0kwgsfemkg" path="res://data/structures/tiles/corner.tres" id="6_cr1f1"]
+[ext_resource type="Resource" uid="uid://dksytd5n054hp" path="res://data/structures/tiles/deadend.tres" id="7_oyy5j"]
 [ext_resource type="Texture2D" uid="uid://de50qpfb0w0ll" path="res://protoype_assets/grids/prototype_512x512_blue2.png" id="8_s5f45"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_8egsi"]
@@ -25,6 +31,8 @@ uv1_scale = Vector3(16, 16, 16)
 [node name="TestLevel" type="Node3D" unique_id=2100419132 node_paths=PackedStringArray("_navigation_region")]
 process_mode = 1
 script = ExtResource("1_ywn5t")
+_starting_tile = ExtResource("2_c445m")
+_available_tiles = Array[ExtResource("3_oyy5j")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("7_oyy5j")])
 _navigation_region = NodePath("NavigationRegion3D")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
 

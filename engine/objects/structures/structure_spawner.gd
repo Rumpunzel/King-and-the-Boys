@@ -23,6 +23,18 @@ func spawn_all_from_spawn_spoints() -> Array[Structure]:
 		spawn(structure_spawn_point.get_structure_data())
 	return _structures
 
+func spawn_at(structure_profile: StructureProfile, structure_transform: Transform3D) -> Array[Structure]:
+	assert(multiplayer.is_server())
+	assert(structure_profile)
+	var tile_data: Dictionary[StringName, Variant] = {
+		Structure.VARIATION: -1,
+		Structure.PROFILE_PATH: structure_profile.resource_path,
+		Structure.SPAWN_TRANSFORM: structure_transform,
+	}
+	Structure.validate_structure_data(tile_data)
+	spawn(tile_data)
+	return _structures
+
 func remove_all_structures() -> void:
 	assert(multiplayer.is_server())
 	remove_all_spawned_nodes()
