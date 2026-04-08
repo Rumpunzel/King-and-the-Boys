@@ -37,7 +37,7 @@ _navigation_region = NodePath("NavigationRegion3D")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=949098374]
-transform = Transform3D(1, 0, 0, 0, 0.444104, 0.895975, 0, -0.895975, 0.444104, 0, 10.6623, 0)
+transform = Transform3D(0.8660254, -0.24999994, 0.4330126, 0, 0.8660252, 0.49999988, -0.5, -0.4330126, 0.7499998, 0, 10.6623, 0)
 shadow_enabled = true
 directional_shadow_blend_splits = true
 

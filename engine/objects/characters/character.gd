@@ -55,6 +55,7 @@ var model: Model:
 		if not model: return
 		add_child(model, true)
 
+var level: Level
 var look_target: Vector3 = Vector3.BACK
 
 var _is_on_floor: bool = true
@@ -110,7 +111,17 @@ func move_into_direction(direction_input: Vector2, delta: float) -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func move_on_grid(direction_input: Vector2) -> void:
-	global_position += Vector3(direction_input.x, 0.0, direction_input.y) * 2.0
+	assert(level)
+	var desired_position: Vector3 = global_position + Vector3(direction_input.x, 0.0, direction_input.y) * level.grid_size
+	var current_grid_position: Vector2i = level.world_to_grid_position(global_position)
+	var current_tile: PlacedTile = level.get_placed_tile(current_grid_position)
+	assert(current_tile)
+	var desired_grid_position: Vector2i = level.world_to_grid_position(desired_position)
+	var desired_direction: TileProfile.Direction = TileProfile.get_direction(desired_grid_position, current_grid_position)
+	if not current_tile.has_connection(desired_direction):
+		print("WALKING INTO WALL!")
+		return
+	global_position = desired_position
 	moved.emit()
 
 @rpc("any_peer", "call_local", "reliable")

@@ -5,7 +5,7 @@ extends Node3D
 
 signal tile_placement_requested(tile_profile: TileProfile, tile_transform: Transform3D)
 
-@export var _grid_size: float = 2.0
+@export var grid_size: float = 2.0
 
 @export_group("Configuration")
 @export var _starting_tile: TileProfile
@@ -33,10 +33,10 @@ static func get_grid_cell(world_position: Vector3) -> Vector3i:
 	return Vector3i(world_position)
 
 func world_to_grid_position(world_position: Vector3) -> Vector2i:
-	return Vector2i(floori(world_position.x / _grid_size), floori(world_position.z / _grid_size))
+	return Vector2i(floori(world_position.x / grid_size), floori(world_position.z / grid_size))
 
 func grid_to_world_position(grid_position: Vector2i) -> Vector3:
-	return Vector3(grid_position.x * _grid_size, 0.0, grid_position.y * _grid_size)
+	return Vector3(grid_position.x * grid_size, 0.0, grid_position.y * grid_size)
 
 func spawn_at(grid_position: Vector2i) -> void:
 	if _placed_tiles.has(grid_position):
@@ -50,6 +50,9 @@ func spawn_at(grid_position: Vector2i) -> void:
 
 func spawn_at_all(grid_positions: Array[Vector2i]) -> void:
 	for grid_position: Vector2i in grid_positions: spawn_at(grid_position)
+
+func get_placed_tile(grid_position: Vector2i) -> PlacedTile:
+	return _placed_tiles.get(grid_position)
 
 func _update_player_vision(character: Character) -> void:
 	var character_grid_position: Vector2i = world_to_grid_position(character.global_position)
@@ -135,6 +138,7 @@ func _on_structure_created(structure: Structure) -> void:
 
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	var character: Character = player_ghost.character
+	character.level = self
 	character.moved.connect(_on_player_moved.bind(character))
 	if not character.is_inside_tree(): await character.ready
 	_update_player_vision(character)
