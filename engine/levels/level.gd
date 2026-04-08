@@ -42,7 +42,7 @@ func spawn_at(grid_position: Vector2i) -> void:
 	if _placed_tiles.has(grid_position):
 		print_debug("Skipping spawning tile at %s, already a tile there!" % grid_position)
 		return
-	var available_tiles: Array[PlacedTile] = _get_available_tiles_for_tile(grid_position)
+	var available_tiles: Array[PlacedTile] = _get_available_tiles_for_position(grid_position)
 	assert(not available_tiles.is_empty())
 	var fitting_tile: PlacedTile = available_tiles.pick_random()
 	assert(fitting_tile)
@@ -60,6 +60,8 @@ func _update_player_vision(character: Character) -> void:
 	blocked_vision.assign(_get_vision_for_tile(character_grid_position, character.profile.vision))
 	var visible_adjacent_tiles: Array[Vector2i] = []
 	visible_adjacent_tiles.assign(blocked_vision.map(func(direction: Vector2i) -> Vector2i: return character_grid_position + direction))
+	for new_tile_position: Vector2i in visible_adjacent_tiles:
+		DebugDraw3D.draw_line(grid_to_world_position(character_grid_position), grid_to_world_position(new_tile_position), Color(1, 0, 1), INF)
 	spawn_at_all(visible_adjacent_tiles)
 
 func _get_vision_for_tile(tile_position: Vector2i, vision: Array[Vector2i]) -> Array[Vector2i]:
@@ -67,10 +69,10 @@ func _get_vision_for_tile(tile_position: Vector2i, vision: Array[Vector2i]) -> A
 	if not tile: return []
 	assert(tile)
 	var blocked_vision: Array[Vector2i] = []
-	blocked_vision.assign(vision.filter(func(direction: Vector2i) -> bool: return tile.has_connection(TileProfile.get_direction(tile_position + direction, tile_position))))
+	blocked_vision.assign(vision.filter(func(direction: Vector2i) -> bool: return tile.has_connection(TileProfile.get_direction(tile_position, tile_position + direction))))
 	return blocked_vision
 
-func _get_available_tiles_for_tile(new_tile_position: Vector2i) -> Array[PlacedTile]:
+func _get_available_tiles_for_position(new_tile_position: Vector2i) -> Array[PlacedTile]:
 	var surrounding_tiles: Dictionary[Vector2i, PlacedTile] = {}
 	for y: int in range(new_tile_position.y - 1, new_tile_position.y + 2):
 		for x: int in range(new_tile_position.x - 1, new_tile_position.x + 2):
@@ -83,8 +85,7 @@ func _get_available_tiles_for_tile(new_tile_position: Vector2i) -> Array[PlacedT
 		var direction: TileProfile.Direction = TileProfile.get_direction(new_tile_position, surrounding_tile_grid_position)
 		var reverse_direction: TileProfile.Direction = TileProfile.get_direction(surrounding_tile_grid_position, new_tile_position)
 		var surrounding_tile: PlacedTile = surrounding_tiles[surrounding_tile_grid_position]
-		var open_connection: bool = surrounding_tile.has_connection(direction)
-		available_tiles.assign(available_tiles.filter(func(tile: PlacedTile) -> bool: return open_connection == tile.has_connection(reverse_direction)))
+		available_tiles.assign(available_tiles.filter(func(tile: PlacedTile) -> bool: return tile.is_legal_neighbour(surrounding_tile, direction, reverse_direction)))
 	return available_tiles
 
 func _request_starting_placed_tile() -> void:

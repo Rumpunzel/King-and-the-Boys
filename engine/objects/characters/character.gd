@@ -117,7 +117,7 @@ func move_on_grid(direction_input: Vector2) -> void:
 	var current_tile: PlacedTile = level.get_placed_tile(current_grid_position)
 	assert(current_tile)
 	var desired_grid_position: Vector2i = level.world_to_grid_position(desired_position)
-	var desired_direction: TileProfile.Direction = TileProfile.get_direction(desired_grid_position, current_grid_position)
+	var desired_direction: TileProfile.Direction = TileProfile.get_direction(current_grid_position, desired_grid_position)
 	if not current_tile.has_connection(desired_direction):
 		print("WALKING INTO WALL!")
 		return

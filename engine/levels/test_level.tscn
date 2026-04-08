@@ -9,6 +9,10 @@
 [ext_resource type="Resource" uid="uid://djc0kwgsfemkg" path="res://data/structures/tiles/corner.tres" id="6_cr1f1"]
 [ext_resource type="Resource" uid="uid://dksytd5n054hp" path="res://data/structures/tiles/deadend.tres" id="7_oyy5j"]
 [ext_resource type="Texture2D" uid="uid://de50qpfb0w0ll" path="res://protoype_assets/grids/prototype_512x512_blue2.png" id="8_s5f45"]
+[ext_resource type="Resource" uid="uid://c3sqiedcypv0x" path="res://data/structures/tiles/room_center.tres" id="8_ua3w6"]
+[ext_resource type="Resource" uid="uid://lwhl84tub2jy" path="res://data/structures/tiles/room_edge.tres" id="9_iiqpp"]
+[ext_resource type="Resource" uid="uid://b6wth35w4tdk2" path="res://data/structures/tiles/room_corner.tres" id="10_jhxx2"]
+[ext_resource type="Resource" uid="uid://mmk57aplc5pu" path="res://data/structures/tiles/room_entry.tres" id="11_jwwwr"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_8egsi"]
 vertices = PackedVector3Array(-31.5, 0.5, -31.5, -31.5, 0.5, 31.5, 31.5, 0.5, 31.5, 31.5, 0.5, -31.5)
@@ -32,7 +36,7 @@ uv1_scale = Vector3(16, 16, 16)
 process_mode = 1
 script = ExtResource("1_ywn5t")
 _starting_tile = ExtResource("2_c445m")
-_available_tiles = Array[ExtResource("3_oyy5j")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("7_oyy5j")])
+_available_tiles = Array[ExtResource("3_oyy5j")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("7_oyy5j"), ExtResource("8_ua3w6"), ExtResource("9_iiqpp"), ExtResource("10_jhxx2"), ExtResource("11_jwwwr"), ExtResource("11_jwwwr")])
 _navigation_region = NodePath("NavigationRegion3D")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
 
