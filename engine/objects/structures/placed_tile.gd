@@ -46,6 +46,7 @@ static func create(
 	return new_placed_tile
 
 func reveal() -> void:
+	if status >= Status.REVEALED: return
 	status = Status.REVEALED
 
 func is_legal_neighbour(other_placed_tile: PlacedTile, first_grid_position: Vector2i, second_grid_position: Vector2i) -> bool:
@@ -59,8 +60,8 @@ func is_legal_neighbour(other_placed_tile: PlacedTile, first_grid_position: Vect
 		if not tile_profile.has_corner_connections() and not other_placed_tile.tile_profile.has_corner_connections(): return true
 		# Check if the two ajdacent corners are opposite to connect properly
 		var corner_direction_count: int = TileProfile.CornerDirection.size()
-		if not has_corner_connection(posmod(direction - 1, corner_direction_count)) == other_placed_tile.has_corner_connection(posmod(reverse_direction, corner_direction_count)): return false
-		if not has_corner_connection(posmod(direction, corner_direction_count)) == other_placed_tile.has_corner_connection(posmod(reverse_direction - 1, corner_direction_count)): return false
+		if has_corner_connection(posmod(direction - 1, corner_direction_count)) != other_placed_tile.has_corner_connection(posmod(reverse_direction, corner_direction_count)): return false
+		if has_corner_connection(posmod(direction, corner_direction_count)) != other_placed_tile.has_corner_connection(posmod(reverse_direction - 1, corner_direction_count)): return false
 		return true
 	# Check diagonal neighbours
 	elif TileProfile.is_corner_direction(first_grid_position, second_grid_position):

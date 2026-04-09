@@ -38,14 +38,11 @@ func world_to_grid_position(world_position: Vector3) -> Vector2i:
 func grid_to_world_position(grid_position: Vector2i) -> Vector3:
 	return Vector3(grid_position.x, 0.0, grid_position.y) * grid_size
 
-func spawn_at(grid_position: Vector2i, status: PlacedTile.Status) -> PlacedTile:
+func spawn_at(grid_position: Vector2i, status: PlacedTile.Status) -> void:
 	if _placed_tiles.has(grid_position):
 		var placed_tile: PlacedTile = _placed_tiles[grid_position]
 		assert(placed_tile)
-		if placed_tile.status != status:
-			placed_tile.status = status
-			return
-		print_debug("Skipping spawning tile at %s, already a tile there!" % grid_position)
+		if status >= placed_tile.status: placed_tile.status = status
 		return
 	var available_tiles: Array[PlacedTile] = _get_available_tiles_for_position(grid_position)
 	assert(not available_tiles.is_empty())
@@ -53,53 +50,31 @@ func spawn_at(grid_position: Vector2i, status: PlacedTile.Status) -> PlacedTile:
 	assert(fitting_tile)
 	fitting_tile.status = status
 	_spawn_at(fitting_tile, grid_position)
-	return fitting_tile
 
-func spawn_at_all(grid_positions: Array[Vector2i], status: PlacedTile.Status) -> Array[PlacedTile]:
-	var placed_tiles: Array[PlacedTile] = []
-	for grid_position: Vector2i in grid_positions:
-		var placed_tile: PlacedTile = spawn_at(grid_position, status)
-		placed_tiles.append(placed_tile)
-	return placed_tiles
+func spawn_at_all(grid_positions: Array[Vector2i], status: PlacedTile.Status) -> void:
+	for grid_position: Vector2i in grid_positions: spawn_at(grid_position, status)
 
 func get_placed_tile(grid_position: Vector2i) -> PlacedTile:
 	return _placed_tiles.get(grid_position)
 
 func _update_player_vision(character: Character) -> void:
 	var character_grid_position: Vector2i = world_to_grid_position(character.global_position)
-	
-	var placed_tiles: Array[PlacedTile] = []
-	
 	var tile: PlacedTile = _placed_tiles.get(character_grid_position)
 	assert(tile)
-	var vision: Array[Vector2i] = []
-	vision.assign(tile.get_connections().map(func(direction: TileProfile.Direction) -> Vector2i: return character_grid_position + TileProfile.direction_to_vector(direction)))
-	placed_tiles = spawn_at_all(vision, PlacedTile.Status.PLACED)
-	
-	#for index: int in range(character.profile.vision):
-		#var vision: Array[TileProfile.Direction] = []
-		#vision.assign(tile.get_connections())
-		#var visible_adjacent_tiles: Array[Vector2i] = []
-		#visible_adjacent_tiles.assign(vision.map(func(direction: TileProfile.Direction) -> Vector2i: return character_grid_position + direction))
-		#for new_tile_position: Vector2i in visible_adjacent_tiles:
-			#DebugDraw3D.draw_line(grid_to_world_position(character_grid_position), grid_to_world_position(new_tile_position), Color(1, 0, 1), INF)
-		#placed_tiles = spawn_at_all(visible_adjacent_tiles, PlacedTile.Status.REVEALED)
-	#
-	##adjustsed_connections
-	#spawn_at_all(visible_adjacent_tiles, PlacedTile.Status.PLACED)
+	var vision: Array[TileProfile.Direction] = tile.get_connections()
+	for direction: TileProfile.Direction in vision: _build_from_into(character_grid_position, direction)
+	for direction: TileProfile.Direction in vision: _build_from_into(character_grid_position, direction, character.profile.vision, PlacedTile.Status.REVEALED)
 
-#func _spawn_tiles_around(grid_position: Vector2i, radius: int) -> Array[PlacedTile]:
-	#var placed_tiles: Array[PlacedTile] = []
-	#for index: int in range(radius):
-		#var tile: PlacedTile = _placed_tiles.get(grid_position)
-		#var vision: Array[TileProfile.Direction] = []
-		#vision.assign(tile.get_connections())
-		#var visible_adjacent_tiles: Array[Vector2i] = []
-		#visible_adjacent_tiles.assign(vision.map(func(direction: TileProfile.Direction) -> Vector2i: return character_grid_position + direction))
-		#for new_tile_position: Vector2i in visible_adjacent_tiles:
-			#DebugDraw3D.draw_line(grid_to_world_position(grid_position), grid_to_world_position(new_tile_position), Color(1, 0, 1), INF)
-		#placed_tiles = spawn_at_all(visible_adjacent_tiles, PlacedTile.Status.REVEALED)
-	#return placed_tiles
+func _build_from_into(origin_grid_position: Vector2i, direction: TileProfile.Direction, max_iterations: int = -1, tile_status: PlacedTile.Status = PlacedTile.Status.PLACED) -> void:
+	if max_iterations == 0: return
+	var tile: PlacedTile = _placed_tiles.get(origin_grid_position)
+	assert(tile)
+	var relative_direction: Vector2i = TileProfile.direction_to_vector(direction)
+	var grid_position: Vector2i = origin_grid_position + relative_direction
+	spawn_at(grid_position, tile_status)
+	var placed_tile: PlacedTile = _placed_tiles[grid_position]
+	if not placed_tile.get_connections().has(direction): return
+	_build_from_into(grid_position, direction, max_iterations - 1, tile_status)
 
 func _get_available_tiles_for_position(new_tile_position: Vector2i) -> Array[PlacedTile]:
 	var surrounding_tiles: Dictionary[Vector2i, PlacedTile] = {}
@@ -132,6 +107,9 @@ func _spawn_at(tile: PlacedTile, grid_position: Vector2i) -> void:
 	for tile_grid_offset: Vector2i in tile.get_connection_vectors():
 		var edge_offset: Vector3 = grid_to_world_position(tile_grid_offset) * 0.5
 		DebugDraw3D.draw_line(grid_to_world_position(grid_position), grid_to_world_position(grid_position + tile_grid_offset) - edge_offset, Color.WHEAT, INF)
+	for tile_grid_offset: Vector2i in tile.get_corner_connection_vectors():
+		var edge_offset: Vector3 = grid_to_world_position(tile_grid_offset) * 0.5
+		DebugDraw3D.draw_line(grid_to_world_position(grid_position), grid_to_world_position(grid_position + tile_grid_offset) - edge_offset, Color.MAROON, INF)
 	tile_placement_requested.emit(tile.tile_profile, tile_transform)
 
 func _get_all_available_tile_placements() -> Array[PlacedTile]:
