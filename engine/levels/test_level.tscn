@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bmwhs3lwb74ue"]
 
 [ext_resource type="Script" uid="uid://dktxo1t8ahw30" path="res://engine/levels/level.gd" id="1_ywn5t"]
-[ext_resource type="Resource" uid="uid://dwljjhol16iea" path="res://data/structures/tiles/crossroad.tres" id="2_c445m"]
+[ext_resource type="Resource" uid="uid://dwljjhol16iea" path="res://data/structures/tiles/crossing.tres" id="2_c445m"]
 [ext_resource type="Script" uid="uid://ckc7uvbxnandc" path="res://engine/objects/structures/tile_profile.gd" id="3_oyy5j"]
 [ext_resource type="Resource" uid="uid://bdfrpagwkpemd" path="res://data/structures/tiles/hallway.tres" id="4_058wk"]
 [ext_resource type="Script" uid="uid://da4c4gcyqk2rb" path="res://engine/objects/characters/player_spawn_point.gd" id="5_0p5hx"]

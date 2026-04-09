@@ -40,6 +40,10 @@ gdscript/warnings/unsafe_call_argument=2
 gdscript/warnings/unsafe_void_return=2
 gdscript/warnings/deprecated_keyword=2
 
+[debug_draw_3d]
+
+settings/addon_root_folder="res://addons/debug_draw_3d"
+
 [display]
 
 window/size/viewport_width=1920
