@@ -22,7 +22,7 @@ metadata/_custom_type_script = "uid://cfq64v34pot8s"
 
 [resource]
 script = ExtResource("3_1kxui")
-connections = Array[int]([4])
+connections = Array[int]([0])
 group = 2
 name = "Starting Tile"
 color = Color(0.878431, 0.878431, 0.878431, 1)

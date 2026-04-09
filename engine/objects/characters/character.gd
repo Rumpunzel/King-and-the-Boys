@@ -121,6 +121,9 @@ func move_on_grid(direction_input: Vector2) -> void:
 	if not current_tile.has_connection(desired_direction):
 		print("WALKING INTO WALL!")
 		return
+	var desired_tile: PlacedTile = level.get_placed_tile(desired_grid_position)
+	assert(desired_tile, "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [desired_direction, current_tile, current_grid_position, desired_tile, desired_grid_position])
+	assert(desired_tile.has_connection(TileProfile.get_direction(desired_grid_position, current_grid_position)), "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [desired_direction, current_tile, current_grid_position, desired_tile, desired_grid_position])
 	global_position = desired_position
 	moved.emit()
 
