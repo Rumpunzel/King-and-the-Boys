@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_wbyyw"]
 [ext_resource type="PackedScene" uid="uid://bb5otswt2l1ja" path="res://data/structures/tile.tscn" id="2_hoo2v"]
 [ext_resource type="Script" uid="uid://ckc7uvbxnandc" path="res://engine/objects/structures/tile_profile.gd" id="3_dsmq2"]
+[ext_resource type="Script" uid="uid://cwdjimpf1f3pp" path="res://engine/objects/structures/room_type.gd" id="3_x6lyd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2bxb5"]
 size = Vector3(1.8, 0.05, 1.8)
@@ -22,7 +23,10 @@ metadata/_custom_type_script = "uid://cfq64v34pot8s"
 
 [resource]
 script = ExtResource("3_dsmq2")
-connections = Array[int]([0, 1])
+connections = Dictionary[int, ExtResource("3_x6lyd")]({
+0: null,
+1: null
+})
 group = 2
 name = "Starting Tile"
 color = Color(0.878431, 0.878431, 0.878431, 1)

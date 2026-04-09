@@ -51,66 +51,39 @@ func reveal() -> void:
 
 func is_legal_neighbour(other_placed_tile: PlacedTile, first_grid_position: Vector2i, second_grid_position: Vector2i) -> bool:
 	# Check horizontal/vertical neighbours
-	if TileProfile.is_direction(first_grid_position, second_grid_position):
-		var direction: TileProfile.Direction = TileProfile.get_direction(first_grid_position, second_grid_position)
-		var reverse_direction: TileProfile.Direction = TileProfile.get_direction(second_grid_position, first_grid_position)
-		# Must have opposite connections
-		if not has_connection(direction) == other_placed_tile.has_connection(reverse_direction): return false
-		# For tiles without corners, this is good enough
-		if not tile_profile.has_corner_connections() and not other_placed_tile.tile_profile.has_corner_connections(): return true
-		# Check if the two ajdacent corners are opposite to connect properly
-		var corner_direction_count: int = TileProfile.CornerDirection.size()
-		if has_corner_connection(posmod(direction - 1, corner_direction_count)) != other_placed_tile.has_corner_connection(posmod(reverse_direction, corner_direction_count)): return false
-		if has_corner_connection(posmod(direction, corner_direction_count)) != other_placed_tile.has_corner_connection(posmod(reverse_direction - 1, corner_direction_count)): return false
-		return true
-	# Check diagonal neighbours
-	elif TileProfile.is_corner_direction(first_grid_position, second_grid_position):
-		# Tiles without corner connections can always be neighbours diagonally
-		if not tile_profile.has_corner_connections() and not other_placed_tile.tile_profile.has_corner_connections(): return true
-		var corner_direction: TileProfile.CornerDirection = TileProfile.get_corner_direction(first_grid_position, second_grid_position)
-		var reverse_corner_direction: TileProfile.CornerDirection = TileProfile.get_corner_direction(second_grid_position, first_grid_position)
-		# Must have opposite corners to connect diagonally
-		return has_corner_connection(corner_direction) == other_placed_tile.has_corner_connection(reverse_corner_direction)
-	else:
-		assert(false, "Does not exist/not implemented!")
-		return false
+	var direction: TileProfile.Direction = TileProfile.get_direction(first_grid_position, second_grid_position)
+	var reverse_direction: TileProfile.Direction = TileProfile.get_direction(second_grid_position, first_grid_position)
+	if not has_connection(direction) and not other_placed_tile.has_connection(reverse_direction): return true
+	# Must have opposite connections
+	if has_connection(direction) != other_placed_tile.has_connection(reverse_direction): return false
+	return can_connect(direction, other_placed_tile.tile_profile.room_type) and other_placed_tile.can_connect(reverse_direction, tile_profile.room_type)
 
 func has_connection(direction: TileProfile.Direction) -> bool:
 	return get_connections().has(direction)
 
-func get_connections() -> Array[TileProfile.Direction]:
-	var adjusted_connections: Array[TileProfile.Direction] = []
-	adjusted_connections.assign(tile_profile.connections.map(func(connection: TileProfile.Direction) -> TileProfile.Direction: return _get_adjusted_direction(connection)))
+func can_connect(direction: TileProfile.Direction, room_type: RoomType) -> bool:
+	if not has_connection(direction): return false
+	var connections: Dictionary[TileProfile.Direction, RoomType] = get_connections()
+	var required_room_type: RoomType = connections[direction]
+	return not required_room_type or room_type == required_room_type
+
+func get_connections() -> Dictionary[TileProfile.Direction, RoomType]:
+	var adjusted_connections: Dictionary[TileProfile.Direction, RoomType] = {}
+	for connection: TileProfile.Direction in tile_profile.connections.keys():
+		adjusted_connections[_get_adjusted_direction(connection)] = tile_profile.connections[connection]
 	return adjusted_connections
 
 func get_connection_vectors() -> Array[Vector2i]:
 	var connection_vectors: Array[Vector2i]
-	connection_vectors.assign(get_connections().map(func(direction: TileProfile.Direction) -> Vector2i: return TileProfile.direction_to_vector(direction)))
-	return connection_vectors
-
-func has_corner_connection(corner_direction: TileProfile.CornerDirection) -> bool:
-	return get_corner_connections().has(corner_direction)
-
-func get_corner_connections() -> Array[TileProfile.CornerDirection]:
-	var adjusted_connections: Array[TileProfile.CornerDirection] = []
-	adjusted_connections.assign(tile_profile.corner_connections.map(func(connection: TileProfile.CornerDirection) -> TileProfile.CornerDirection: return _get_adjusted_corner_direction(connection)))
-	return adjusted_connections
-
-func get_corner_connection_vectors() -> Array[Vector2i]:
-	var connection_vectors: Array[Vector2i]
-	connection_vectors.assign(get_corner_connections().map(func(direction: TileProfile.CornerDirection) -> Vector2i: return TileProfile.corner_direction_to_vector(direction)))
+	connection_vectors.assign(get_connections().keys().map(func(direction: TileProfile.Direction) -> Vector2i: return TileProfile.direction_to_vector(direction)))
 	return connection_vectors
 
 func _get_adjusted_direction(direction: TileProfile.Direction) -> TileProfile.Direction:
 	var direction_count: int = TileProfile.Direction.size()
 	return posmod(direction + clockwise_turns * (direction_count / 4), direction_count)
 
-func _get_adjusted_corner_direction(corner_direction: TileProfile.CornerDirection) -> TileProfile.CornerDirection:
-	var corner_direction_count: int = TileProfile.CornerDirection.size()
-	return posmod(corner_direction + clockwise_turns * (corner_direction_count / 4), corner_direction_count)
-
 func _to_string() -> String:
-	return "[%s turned %d times: %s (%s)]" % [tile_profile.resource_path, clockwise_turns, get_connections(), get_corner_connections()]
+	return "[%s turned %d times: %s]" % [tile_profile, clockwise_turns, get_connections()]
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

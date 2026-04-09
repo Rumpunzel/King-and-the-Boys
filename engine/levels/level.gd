@@ -49,6 +49,7 @@ func spawn_at(grid_position: Vector2i, status: PlacedTile.Status) -> void:
 	var fitting_tile: PlacedTile = available_tiles.pick_random()
 	assert(fitting_tile)
 	fitting_tile.status = status
+	print(fitting_tile)
 	_spawn_at(fitting_tile, grid_position)
 
 func spawn_at_all(grid_positions: Array[Vector2i], status: PlacedTile.Status) -> void:
@@ -61,7 +62,7 @@ func _update_player_vision(character: Character) -> void:
 	var character_grid_position: Vector2i = world_to_grid_position(character.global_position)
 	var tile: PlacedTile = _placed_tiles.get(character_grid_position)
 	assert(tile)
-	var vision: Array[TileProfile.Direction] = tile.get_connections()
+	var vision: Array[TileProfile.Direction] = tile.get_connections().keys()
 	for direction: TileProfile.Direction in vision: _build_from_into(character_grid_position, direction)
 	for direction: TileProfile.Direction in vision: _build_from_into(character_grid_position, direction, character.profile.vision, PlacedTile.Status.REVEALED)
 
@@ -80,6 +81,7 @@ func _get_available_tiles_for_position(new_tile_position: Vector2i) -> Array[Pla
 	var surrounding_tiles: Dictionary[Vector2i, PlacedTile] = {}
 	for y: int in range(new_tile_position.y - 1, new_tile_position.y + 2):
 		for x: int in range(new_tile_position.x - 1, new_tile_position.x + 2):
+			if not (x == new_tile_position.x or y == new_tile_position.y): continue
 			var position_to_check: Vector2i = Vector2i(x, y)
 			if _placed_tiles.has(position_to_check):
 				var surrounding_tile: PlacedTile = _placed_tiles[position_to_check]
@@ -88,6 +90,7 @@ func _get_available_tiles_for_position(new_tile_position: Vector2i) -> Array[Pla
 	for surrounding_tile_grid_position: Vector2i in surrounding_tiles.keys():
 		var surrounding_tile: PlacedTile = surrounding_tiles[surrounding_tile_grid_position]
 		available_tiles.assign(available_tiles.filter(func(tile: PlacedTile) -> bool: return tile.is_legal_neighbour(surrounding_tile, new_tile_position, surrounding_tile_grid_position)))
+		assert(not available_tiles.is_empty(), "%s @ %s" % [surrounding_tile, surrounding_tile_grid_position])
 	return available_tiles
 
 func _request_starting_placed_tile() -> void:
@@ -105,11 +108,9 @@ func _spawn_at(tile: PlacedTile, grid_position: Vector2i) -> void:
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position).rotated_local(Vector3.DOWN, tile.clockwise_turns * PI * 0.5)
 	_placed_tiles[grid_position] = tile
 	for tile_grid_offset: Vector2i in tile.get_connection_vectors():
+		var color: Color = tile.tile_profile.room_type.color if tile.tile_profile.room_type else Color.WHEAT
 		var edge_offset: Vector3 = grid_to_world_position(tile_grid_offset) * 0.5
-		DebugDraw3D.draw_line(grid_to_world_position(grid_position), grid_to_world_position(grid_position + tile_grid_offset) - edge_offset, Color.WHEAT, INF)
-	for tile_grid_offset: Vector2i in tile.get_corner_connection_vectors():
-		var edge_offset: Vector3 = grid_to_world_position(tile_grid_offset) * 0.5
-		DebugDraw3D.draw_line(grid_to_world_position(grid_position), grid_to_world_position(grid_position + tile_grid_offset) - edge_offset, Color.MAROON, INF)
+		DebugDraw3D.draw_line(grid_to_world_position(grid_position), grid_to_world_position(grid_position + tile_grid_offset) - edge_offset, color, INF)
 	tile_placement_requested.emit(tile.tile_profile, tile_transform)
 
 func _get_all_available_tile_placements() -> Array[PlacedTile]:
