@@ -31,7 +31,7 @@ enum Groups {
 		speed = new_value
 		changed.emit()
 
-@export var vision: int = 1
+@export var vision: float = 1.5
 
 @export_category("")
 @export_group("Configuration")

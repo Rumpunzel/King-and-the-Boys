@@ -61,6 +61,10 @@ func is_legal_neighbour(other_placed_tile: PlacedTile, first_grid_position: Vect
 func has_connection(direction: TileProfile.Direction) -> bool:
 	return get_connections().has(direction)
 
+func get_connection(direction: TileProfile.Direction) -> RoomType:
+	assert(has_connection(direction))
+	return get_connections()[direction]
+
 func can_connect(direction: TileProfile.Direction, room_type: RoomType) -> bool:
 	if not has_connection(direction): return false
 	var connections: Dictionary[TileProfile.Direction, RoomType] = get_connections()
