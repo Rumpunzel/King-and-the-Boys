@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cg0fqb2lheq18"]
+
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_15ng2"]
+[ext_resource type="Material" uid="uid://ct20y625oo663" path="res://protoype_assets/textures/concrete_floor_painted_4k.blend/concrete_floor_painted.tres" id="2_8ey7k"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_xnro7"]
+lightmap_size_hint = Vector2i(14, 11)
+size = Vector3(3.625, 0.05, 3.75)
+
+[node name="Tile" type="Node3D" unique_id=1617054939]
+script = ExtResource("1_15ng2")
+metadata/_custom_type_script = "uid://bpkm2ws12sljg"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=124874037]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.125)
+mesh = SubResource("BoxMesh_xnro7")
+surface_material_override/0 = ExtResource("2_8ey7k")
