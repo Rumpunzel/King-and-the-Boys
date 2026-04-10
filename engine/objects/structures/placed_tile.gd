@@ -3,7 +3,9 @@ class_name PlacedTile
 extends Resource
 
 enum Status {
+	NONE = -1,
 	PLACED,
+	DISCOVERED,
 	REVEALED,
 }
 
@@ -11,23 +13,26 @@ enum Status {
 @export var clockwise_turns: int = 0:
 	set(new_rotation): clockwise_turns = posmod(new_rotation, 4)
 
-@export var status: Status = Status.PLACED:
+@export var status: Status = Status.NONE:
 	set(new_status):
+		if new_status == status: return
+		var old_status: Status = status
 		status = new_status
 		if not structure: return
-		assert(structure)
-		var model: Model = structure.model
-		assert(model)
-		match status:
-			Status.PLACED: model.apply_material_override(_hidden_material)
-			Status.REVEALED: model.remove_material_override(_hidden_material)
-			_: push_error("Status %s not implemented!" % status)
+		_update_model()
+		if status == Status.REVEALED and old_status >= Status.PLACED:
+			var model: Model = structure.model
+			var tween: Tween = model.create_tween()
+			tween.set_parallel()
+			tween.tween_property(model, "position:y", 1.0, 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			tween.tween_property(model, "rotation:x", PI, 0.6).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+			tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 
 var structure: Structure:
 	set(new_structure):
 		assert(not structure or new_structure)
 		structure = new_structure
-		status = status
+		_update_model()
 
 @export_group("Configuration")
 @export var _hidden_material: Material = preload("res://protoype_assets/quaternius/medieval_village/Buildings/GLB/Windows.material")
@@ -45,9 +50,10 @@ static func create(
 	if with_structure: new_placed_tile.structure = with_structure
 	return new_placed_tile
 
-func reveal() -> void:
-	if status >= Status.REVEALED: return
+func reveal() -> bool:
+	if status >= Status.REVEALED: return false
 	status = Status.REVEALED
+	return true
 
 func is_legal_neighbour(other_placed_tile: PlacedTile, first_grid_position: Vector2i, second_grid_position: Vector2i) -> bool:
 	# Check horizontal/vertical neighbours
@@ -81,6 +87,20 @@ func get_connection_vectors() -> Array[Vector2i]:
 	var connection_vectors: Array[Vector2i]
 	connection_vectors.assign(get_connections().keys().map(func(direction: TileProfile.Direction) -> Vector2i: return TileProfile.direction_to_vector(direction)))
 	return connection_vectors
+
+func _update_model() -> void:
+	assert(structure)
+	var model: Model = structure.model
+	assert(model)
+	match status:
+		Status.PLACED: model.visible = false
+		Status.DISCOVERED:
+			model.apply_material_override(_hidden_material)
+			model.visible = true
+		Status.REVEALED:
+			model.visible = true
+			model.remove_material_override(_hidden_material)
+		_: push_error("Status %s not implemented!" % status)
 
 func _get_adjusted_direction(direction: TileProfile.Direction) -> TileProfile.Direction:
 	var direction_count: int = TileProfile.Direction.size()

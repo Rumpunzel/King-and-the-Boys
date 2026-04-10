@@ -7,6 +7,9 @@ signal tile_placement_requested(tile_profile: TileProfile, tile_transform: Trans
 
 @export var grid_size: float = 2.0
 
+@export var _tiles_per_second: float = 8.0
+@export var _reveals_per_second: float = 32.0
+
 @export_group("Configuration")
 @export var _starting_tile: TileProfile
 @export var _available_tiles: Array[TileProfile]
@@ -19,12 +22,19 @@ var _placed_tiles: Dictionary[Vector2i, PlacedTile]
 var _grid: Dictionary[Vector3i, GridCell]
 var _debugs: Dictionary[Vector3i, Label3D]
 
+var _remaining_tile_placement_delay: float = 0.0
+var _remaining_tile_reveal_delay: float = 0.0
+
 func _ready() -> void:
 	_request_starting_placed_tile()
 	for z: int in range(-32, 32):
 		for x: int in range(-32, 32):
 			var cell_position: Vector3i = Vector3i(x, 0, z)
 			#if not _debugs.has(cell_position): _create_debug_label(cell_position)
+
+func _process(delta: float) -> void:
+	_remaining_tile_placement_delay = maxf(_remaining_tile_placement_delay - delta, 0.0)
+	_remaining_tile_reveal_delay = maxf(_remaining_tile_reveal_delay - delta, 0.0)
 
 static func get_grid_cell_of_node(node: Node3D) -> Vector3i:
 	return get_grid_cell(node.global_position)
@@ -84,8 +94,15 @@ func _update_vision_for_tile(tile_grid_position: Vector2i, from_tile: PlacedTile
 	if not tile: return false
 	var connection_room_type: RoomType = from_tile.get_connection(direction)
 	if check_connection_type and (not connection_room_type or not connection_room_type == tile.tile_profile.room_type): return false
-	tile.status = PlacedTile.Status.REVEALED
+	_reveal_tile(tile, tile_grid_position)
 	return true
+
+func _reveal_tile(tile: PlacedTile, tile_grid_position: Vector2i) -> void:
+	var tile_reveal_delay: float = 1.0 / _reveals_per_second
+	_remaining_tile_reveal_delay += tile_reveal_delay
+	if _remaining_tile_reveal_delay > tile_reveal_delay: await get_tree().create_timer(_remaining_tile_reveal_delay).timeout
+	var revealed: bool = tile.reveal()
+	if revealed: _debug_draw_connection(tile, tile_grid_position)
 
 func _build_dungeon_from(origin_grid_position: Vector2i, direction: TileProfile.Direction) -> void:
 	var tile: PlacedTile = _placed_tiles.get(origin_grid_position)
@@ -147,11 +164,18 @@ func _request_starting_placed_tile() -> void:
 	var starting_tile: PlacedTile = PlacedTile.create(_starting_tile, 0, PlacedTile.Status.REVEALED)
 	var starting_grid_position: Vector2i = world_to_grid_position(player_spawn_point.global_position)
 	_spawn_at(starting_tile, starting_grid_position)
+	_debug_draw_connection(starting_tile, starting_grid_position)
 
 func _spawn_at(tile: PlacedTile, grid_position: Vector2i) -> void:
 	var tile_position: Vector3 = grid_to_world_position(grid_position) - Vector3(0.0, 0.05, 0.0)
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position).rotated_local(Vector3.DOWN, tile.clockwise_turns * PI * 0.5)
 	_placed_tiles[grid_position] = tile
+	var tile_placement_delay: float = 1.0 / _tiles_per_second
+	_remaining_tile_placement_delay += tile_placement_delay
+	if _remaining_tile_placement_delay > tile_placement_delay: await get_tree().create_timer(_remaining_tile_placement_delay).timeout
+	tile_placement_requested.emit(tile.tile_profile, tile_transform)
+
+func _debug_draw_connection(tile: PlacedTile, grid_position: Vector2i) -> void:
 	for index: int in tile.get_connection_vectors().size():
 		var direction: TileProfile.Direction = tile.get_connections().keys()[index]
 		var tile_grid_offset: Vector2i = TileProfile.direction_to_vector(direction)
@@ -160,7 +184,6 @@ func _spawn_at(tile: PlacedTile, grid_position: Vector2i) -> void:
 		var color: Color = tile.tile_profile.room_type.color if tile.tile_profile.room_type else Color.WHEAT
 		var connection_color: Color = connection_room_type.color if connection_room_type else color
 		DebugDraw3D.draw_line(grid_to_world_position(grid_position), grid_to_world_position(grid_position + tile_grid_offset) - edge_offset, connection_color, INF)
-	tile_placement_requested.emit(tile.tile_profile, tile_transform)
 
 func _get_all_available_tile_placements() -> Array[PlacedTile]:
 	var available_tiles: Array[PlacedTile] = []
