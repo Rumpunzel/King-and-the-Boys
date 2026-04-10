@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/pause_menu/player_info.tscn" id="1_7eg3o"]
 [ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/pause_menu/lobby_menu.gd" id="1_7xmpv"]
+[ext_resource type="PackedScene" uid="uid://bi3mr4sjccywj" path="res://user_interface/pause_menu/multiplayer_menu.tscn" id="3_drr3r"]
 
 [node name="LobbyMenu" type="CanvasLayer" unique_id=1103850548 node_paths=PackedStringArray("_player_infos_container")]
 physics_interpolation_mode = 2
@@ -41,9 +42,18 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Start" type="Button" parent="MarginContainer/VBoxContainer" unique_id=49430844]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=390135791]
 layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MultiplayerMenu" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=876205651 instance=ExtResource("3_drr3r")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Start" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=49430844]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
 text = "Start"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Start" to="." method="_on_start_pressed"]

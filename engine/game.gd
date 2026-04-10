@@ -3,6 +3,8 @@
 class_name Game
 extends Node
 
+signal game_status_changed(new_game_status: GameStatus)
+
 enum GameStatus {
 	NONE,
 	RUNNING,
@@ -25,9 +27,9 @@ var _game_status: GameStatus:
 		_game_status = new_game_status
 		match _game_status:
 			GameStatus.NONE:
-				assert(not _loading_screen)
-				_loading_screen = _loading_screen_scene.instantiate()
-				add_child(_loading_screen)
+				if not _loading_screen:
+					_loading_screen = _loading_screen_scene.instantiate()
+					add_child(_loading_screen)
 			GameStatus.RUNNING:
 				assert(_loading_screen)
 				_loading_screen.queue_free()
@@ -37,6 +39,7 @@ var _game_status: GameStatus:
 				_loading_screen.queue_free()
 				_loading_screen = null
 			_: push_error("GameStatus %s not implemented!" % _game_status)
+		game_status_changed.emit(_game_status)
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
@@ -117,6 +120,7 @@ func _on_singleplayer_started() -> void:
 	continue_game()
 
 func _on_joining_multiplayer() -> void:
+	if _game_status == GameStatus.NONE: return
 	stop_game()
 
 func _on_game_joined(_host_player_info: Dictionary[StringName, Variant]) -> void:

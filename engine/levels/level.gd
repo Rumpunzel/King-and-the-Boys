@@ -29,6 +29,7 @@ var _remaining_tile_reveal_delay: float = 0.0
 var _remaining_tile_discover_delay: float = 0.0
 
 func _ready() -> void:
+	if not is_multiplayer_authority(): return
 	_request_starting_placed_tile()
 	for z: int in range(-32, 32):
 		for x: int in range(-32, 32):
@@ -131,6 +132,7 @@ func _update_player_vision_in_room(from_grid_position: Vector2i, vision_radius: 
 	if reveal_check.call(from_tile): reveal_function.call(from_grid_position)
 	var origin_tile_room_type: RoomType = _placed_tiles[origin_grid_position].tile_profile.room_type
 	assert(origin_tile_room_type)
+	assert(from_tile.tile_profile.room_type == origin_tile_room_type)
 	for direction: TileProfile.Direction in from_tile.get_connections():
 		var direction_vector: Vector2i = TileProfile.direction_to_vector(direction)
 		var tile_grid_position: Vector2i = from_grid_position + direction_vector
@@ -242,6 +244,7 @@ func _on_character_entered_grid_cell(cell_position: Vector3i) -> void:
 	_update_debug(cell_position, ground_cell)
 
 func _on_structure_created(structure: Structure) -> void:
+	if not is_multiplayer_authority(): return
 	if structure.profile is TileProfile:
 		var tile_grid_position: Vector2i = world_to_grid_position(structure.global_position)
 		var placed_tile: PlacedTile = _placed_tiles[tile_grid_position]
@@ -257,6 +260,7 @@ func _on_structure_created(structure: Structure) -> void:
 		_navigation_region.bake_navigation_mesh()
 
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
+	if not is_multiplayer_authority(): return
 	var character: Character = player_ghost.character
 	character.level = self
 	character.moved.connect(_on_player_moved.bind(character))

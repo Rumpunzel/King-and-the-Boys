@@ -6,9 +6,6 @@
 properties/0/path = NodePath(".:player_name")
 properties/0/spawn = false
 properties/0/replication_mode = 2
-properties/1/path = NodePath(".:ghost_sprite_frame")
-properties/1/spawn = false
-properties/1/replication_mode = 2
 
 [node name="Player" type="MultiplayerSynchronizer" unique_id=1218445456]
 root_path = NodePath(".")

@@ -13,7 +13,12 @@
 [ext_resource type="Resource" uid="uid://lwhl84tub2jy" path="res://data/structures/tiles/room_edge.tres" id="9_iiqpp"]
 [ext_resource type="Resource" uid="uid://c3sqiedcypv0x" path="res://data/structures/tiles/room_crossing.tres" id="9_ua3w6"]
 [ext_resource type="Resource" uid="uid://b6wth35w4tdk2" path="res://data/structures/tiles/room_corner.tres" id="10_jhxx2"]
+[ext_resource type="Resource" uid="uid://c863mo5jjag6h" path="res://data/structures/tiles/room_hallway.tres" id="11_iiqpp"]
+[ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="14_epvo2"]
+[ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="14_jhxx2"]
 [ext_resource type="Resource" uid="uid://lcjpjue1orcf" path="res://data/structures/tiles/room_deadend.tres" id="14_jwwwr"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jwwwr"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_8egsi"]
 vertices = PackedVector3Array(-31.5, 0.5, -31.5, -31.5, 0.5, 31.5, 31.5, 0.5, 31.5, 31.5, 0.5, -31.5)
@@ -37,9 +42,19 @@ uv1_scale = Vector3(16, 16, 16)
 process_mode = 1
 script = ExtResource("1_ywn5t")
 _starting_tile = ExtResource("8_ua3w6")
-_available_tiles = Array[ExtResource("3_oyy5j")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("7_oyy5j"), ExtResource("7_oyy5j"), ExtResource("9_ua3w6"), ExtResource("9_iiqpp"), ExtResource("10_jhxx2"), ExtResource("14_jwwwr"), ExtResource("8_ua3w6")])
+_available_tiles = Array[ExtResource("3_oyy5j")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("7_oyy5j"), ExtResource("7_oyy5j"), ExtResource("9_ua3w6"), ExtResource("9_iiqpp"), ExtResource("11_iiqpp"), ExtResource("10_jhxx2"), ExtResource("14_jwwwr"), ExtResource("8_ua3w6")])
 _navigation_region = NodePath("NavigationRegion3D")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
+
+[node name="LevelSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1927909387]
+replication_config = SubResource("SceneReplicationConfig_jwwwr")
+script = ExtResource("14_epvo2")
+metadata/_custom_type_script = "uid://crm43jylxmjbd"
+
+[node name="SynchronizerSerializer" type="Node" parent="LevelSynchronizer" unique_id=1163498343 node_paths=PackedStringArray("_synchronizer")]
+script = ExtResource("14_jhxx2")
+_synchronizer = NodePath("..")
+metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=949098374]
 transform = Transform3D(0.8660254, -0.24999994, 0.4330126, 0, 0.8660252, 0.49999988, -0.5, -0.4330126, 0.7499998, 0, 10.6623, 0)

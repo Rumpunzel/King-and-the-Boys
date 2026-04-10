@@ -64,9 +64,11 @@ func _get_available_character() -> CharacterProfile:
 	return load("uid://ro6wvnf88xbo")
 
 func _on_start_pressed() -> void:
-	visible = false
 	game_started.emit()
 	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
+
+func _on_game_status_changed(new_game_status: Game.GameStatus) -> void:
+	visible = new_game_status == Game.GameStatus.NONE
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

@@ -44,6 +44,7 @@ _structure_spawner = NodePath("../StructureSpawner")
 
 [node name="LobbyMenu" parent="." unique_id=2017772968 instance=ExtResource("11_piikb")]
 
+[connection signal="game_status_changed" from="." to="LobbyMenu" method="_on_game_status_changed"]
 [connection signal="saving_finished" from="Serializer" to="PauseMenu" method="_on_saving_finished"]
 [connection signal="load_requested" from="PauseMenu" to="." method="load_game"]
 [connection signal="save_requested" from="PauseMenu" to="." method="save_game"]
