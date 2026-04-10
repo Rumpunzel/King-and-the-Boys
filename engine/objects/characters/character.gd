@@ -56,6 +56,7 @@ var model: Model:
 		add_child(model, true)
 
 var level: Level
+var desired_position: Vector3 = Vector3.ZERO
 var look_target: Vector3 = Vector3.BACK
 
 var _is_on_floor: bool = true
@@ -112,19 +113,25 @@ func move_into_direction(direction_input: Vector2, delta: float) -> void:
 @rpc("any_peer", "call_local", "reliable")
 func move_on_grid(direction_input: Vector2) -> void:
 	assert(level)
-	var desired_position: Vector3 = global_position + Vector3(direction_input.x, 0.0, direction_input.y) * level.grid_size
 	var current_grid_position: Vector2i = level.world_to_grid_position(global_position)
-	var current_tile: PlacedTile = level.get_placed_tile(current_grid_position)
-	assert(current_tile)
+	var quantized_global_position: Vector3 = level.grid_to_world_position(current_grid_position)
+	desired_position = quantized_global_position + Vector3(direction_input.x, 0.0, direction_input.y) * level.grid_size
 	var desired_grid_position: Vector2i = level.world_to_grid_position(desired_position)
 	var desired_direction: TileProfile.Direction = TileProfile.get_direction(current_grid_position, desired_grid_position)
+	var current_tile: PlacedTile = level.get_placed_tile(current_grid_position)
+	assert(current_tile)
 	if not current_tile.has_connection(desired_direction):
 		print("WALKING INTO WALL!")
 		return
 	var desired_tile: PlacedTile = level.get_placed_tile(desired_grid_position)
 	assert(desired_tile, "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [desired_direction, current_tile, current_grid_position, desired_tile, desired_grid_position])
 	assert(desired_tile.has_connection(TileProfile.get_direction(desired_grid_position, current_grid_position)), "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [desired_direction, current_tile, current_grid_position, desired_tile, desired_grid_position])
-	global_position = desired_position
+	var tween: Tween = create_tween()
+	tween.set_parallel()
+	tween.tween_property(self, "global_position", desired_position, 0.5)
+	tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+	await tween.finished
 	moved.emit()
 
 @rpc("any_peer", "call_local", "reliable")
@@ -187,11 +194,11 @@ func _handle_pathfinding() -> void:
 		_on_navigation_agent_velocity_computed(new_velocity)
 
 func _look_forward(delta: float, direction: Vector3 = velocity) -> void:
-	look_target = position + direction
+	look_target = desired_position
 	look_target.y = position.y
 	if look_target.is_equal_approx(transform.origin): return
 	var transform_looking_into_direction: Transform3D = transform.looking_at(look_target, Vector3.UP, true)
-	transform = transform.interpolate_with(transform_looking_into_direction, 16.0 * delta)
+	transform = transform.interpolate_with(transform_looking_into_direction, 8.0 * delta)
 
 func _enable_physics() -> void:
 	set_physics_process(true)
