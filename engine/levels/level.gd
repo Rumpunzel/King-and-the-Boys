@@ -5,7 +5,7 @@ extends Node3D
 
 signal tile_placement_requested(tile_profile: TileProfile, tile_transform: Transform3D)
 
-@export var grid_size: float = 2.0
+@export var grid_size: float = 4.0
 
 @export var _reveals_per_second: float = 32.0
 @export var _discovers_per_second: float = 8.0

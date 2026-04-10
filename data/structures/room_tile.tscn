@@ -4,7 +4,7 @@
 
 [sub_resource type="BoxMesh" id="BoxMesh_xnro7"]
 lightmap_size_hint = Vector2i(14, 11)
-size = Vector3(2, 0.05, 2)
+size = Vector3(4, 0.05, 4)
 
 [node name="Tile" type="Node3D" unique_id=1617054939]
 script = ExtResource("1_a3jaf")

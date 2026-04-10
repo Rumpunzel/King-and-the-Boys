@@ -130,7 +130,7 @@ func move_on_grid(direction_input: Vector2) -> void:
 	tween.set_parallel()
 	tween.tween_property(self, "global_position", desired_position, 0.5)
 	tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+	tween.tween_property(model, "position:y", 0.0, 0.4).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 	await get_tree().create_timer(0.4).timeout
 	moved.emit(desired_grid_position)
 

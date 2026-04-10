@@ -1,25 +1,9 @@
 [gd_resource type="Resource" script_class="TileProfile" format=3 uid="uid://djc0kwgsfemkg"]
 
-[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_wbyyw"]
+[ext_resource type="Resource" uid="uid://b5jv6e8g1uhqs" path="res://data/structures/tiles/tile_shape.tres" id="1_r783g"]
 [ext_resource type="PackedScene" uid="uid://bb5otswt2l1ja" path="res://data/structures/tile.tscn" id="2_hoo2v"]
 [ext_resource type="Script" uid="uid://ckc7uvbxnandc" path="res://engine/objects/structures/tile_profile.gd" id="3_dsmq2"]
 [ext_resource type="Script" uid="uid://cwdjimpf1f3pp" path="res://engine/objects/structures/room_type.gd" id="3_x6lyd"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_2bxb5"]
-size = Vector3(1.8, 0.05, 1.8)
-
-[sub_resource type="Resource" id="Resource_mlcx8"]
-script = ExtResource("1_wbyyw")
-_shape = SubResource("BoxShape3D_2bxb5")
-metadata/_custom_type_script = "uid://cfq64v34pot8s"
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_h2von"]
-size = Vector3(2, 1, 2)
-
-[sub_resource type="Resource" id="Resource_j7yav"]
-script = ExtResource("1_wbyyw")
-_shape = SubResource("BoxShape3D_h2von")
-metadata/_custom_type_script = "uid://cfq64v34pot8s"
 
 [resource]
 script = ExtResource("3_dsmq2")
@@ -31,7 +15,7 @@ group = 2
 name = "Starting Tile"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_hoo2v")])
-_collision_shape = SubResource("Resource_mlcx8")
-_hit_box_shape = SubResource("Resource_j7yav")
+_collision_shape = ExtResource("1_r783g")
+_hit_box_shape = ExtResource("1_r783g")
 heads_up_display_offset = Vector3(0, 5, 0)
 metadata/_custom_type_script = "uid://dol8cfhd12nbf"

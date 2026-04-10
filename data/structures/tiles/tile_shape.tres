@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="AreaShape" format=3 uid="uid://b5jv6e8g1uhqs"]
+
+[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_fmtei"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2bxb5"]
+size = Vector3(3, 0.05, 3)
+
+[resource]
+script = ExtResource("1_fmtei")
+_shape = SubResource("BoxShape3D_2bxb5")
+metadata/_custom_type_script = "uid://cfq64v34pot8s"
