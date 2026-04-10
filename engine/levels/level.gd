@@ -93,49 +93,38 @@ func get_placed_tile(grid_position: Vector2i) -> PlacedTile:
 	return _placed_tiles.get(grid_position)
 
 func _update_player_vision(
-	origin_grid_position: Vector2i,
-	direction: TileProfile.Direction,
+	from_grid_position: Vector2i,
 	vision_radius: float,
+	origin_grid_position: Vector2i = from_grid_position,
 	reveal_check: Callable = func(tile: PlacedTile) -> bool: return tile.status < PlacedTile.Status.REVEALED,
 	reveal_function: Callable = func(tile_grid_position: Vector2i) -> void: _reveal_queue.append(tile_grid_position),
+	already_visited: Array[Vector2i] = [],
 ) -> void:
-	var tile: PlacedTile = _placed_tiles.get(origin_grid_position)
-	assert(tile)
-	if not tile.has_connection(direction): return
-	assert(tile.has_connection(direction))
-	var direction_vector: Vector2i = TileProfile.direction_to_vector(direction)
-	var clockwise_vector: Vector2i = Vector2(direction_vector).rotated(-PI * 0.5)
-	var counter_clockwise_vector: Vector2i = Vector2(direction_vector).rotated(PI * 0.5)
-	var max_vision: int = ceili(vision_radius)
-	for radius: int in range(max_vision + 1):
-		var tile_grid_position: Vector2i = origin_grid_position + direction_vector * radius
-		var revealed: bool = _update_vision_for_tile(tile_grid_position, tile, direction, origin_grid_position, vision_radius, reveal_check, reveal_function)
-		if not revealed: continue
-		var revaled_tile: PlacedTile = _placed_tiles[tile_grid_position]
-		for diagonal_radius: int in range(max_vision - radius + 1):
-			var clockwise_direction: TileProfile.Direction = TileProfile.get_direction(Vector2i.ZERO, clockwise_vector)
-			_update_vision_for_tile(tile_grid_position + clockwise_vector * diagonal_radius, revaled_tile, clockwise_direction, origin_grid_position, vision_radius, reveal_check, reveal_function, true)
-			var counter_clockwise_direction: TileProfile.Direction = TileProfile.get_direction(Vector2i.ZERO, counter_clockwise_vector)
-			_update_vision_for_tile(tile_grid_position + counter_clockwise_vector * diagonal_radius, revaled_tile, counter_clockwise_direction, origin_grid_position, vision_radius, reveal_check, reveal_function, true)
+	if origin_grid_position.distance_squared_to(from_grid_position) > pow(vision_radius, 2.0): return
+	var from_tile: PlacedTile = _placed_tiles.get(from_grid_position)
+	assert(from_tile)
+	if reveal_check.call(from_tile): reveal_function.call(from_grid_position)
+	var origin_tile_room_type: RoomType = _placed_tiles[origin_grid_position].tile_profile.room_type
+	for direction: TileProfile.Direction in from_tile.get_connections():
+		var direction_vector: Vector2i = TileProfile.direction_to_vector(direction)
+		var tile_grid_position: Vector2i = from_grid_position + direction_vector
+		var tile: PlacedTile = _placed_tiles.get(tile_grid_position)
+		if already_visited.is_empty(): _update_player_vision_in_direction(tile_grid_position, direction, vision_radius, origin_grid_position, reveal_check, reveal_function)
+		if origin_tile_room_type and origin_tile_room_type == tile.tile_profile.room_type and not already_visited.has(tile_grid_position):
+			already_visited.append(from_grid_position)
+			_update_player_vision(tile_grid_position, vision_radius, origin_grid_position, reveal_check, reveal_function, already_visited)
 
-func _update_vision_for_tile(
-	tile_grid_position: Vector2i,
-	from_tile: PlacedTile,
-	direction: TileProfile.Direction,
-	origin_grid_position: Vector2i,
-	vision_radius: float,
-	reveal_check: Callable,
-	reveal_function: Callable,
-	check_connection_type: bool = false,
-) -> bool:
-	if not from_tile.has_connection(direction): return false
-	if origin_grid_position.distance_squared_to(tile_grid_position) > pow(vision_radius, 2.0): return false
-	var tile: PlacedTile = _placed_tiles.get(tile_grid_position)
-	if not tile: return false
-	var connection_room_type: RoomType = from_tile.get_connection(direction)
-	if check_connection_type and (not connection_room_type or not connection_room_type == tile.tile_profile.room_type): return false
-	if reveal_check.call(tile): reveal_function.call(tile_grid_position)
-	return true
+func _update_player_vision_in_direction(from_grid_position: Vector2i, direction: TileProfile.Direction, vision_radius: float, origin_grid_position: Vector2i, reveal_check: Callable, reveal_function: Callable) -> void:
+	if origin_grid_position.distance_squared_to(from_grid_position) > pow(vision_radius, 2.0): return
+	var from_tile: PlacedTile = _placed_tiles.get(from_grid_position)
+	assert(from_tile)
+	if reveal_check.call(from_tile): reveal_function.call(from_grid_position)
+	if not from_tile.has_connection(direction): return
+	var direction_vector: Vector2i = TileProfile.direction_to_vector(direction)
+	for radius: int in range(1, ceili(vision_radius) + 1):
+		var tile_grid_position: Vector2i = from_grid_position + direction_vector * radius
+		if not _placed_tiles.has(tile_grid_position): return
+		_update_player_vision_in_direction(tile_grid_position, direction, vision_radius, origin_grid_position, reveal_check, reveal_function)
 
 func _build_dungeon_from(origin_grid_position: Vector2i, direction: TileProfile.Direction) -> void:
 	var tile: PlacedTile = _placed_tiles.get(origin_grid_position)
@@ -267,9 +256,8 @@ func _on_player_moved(character: Character) -> void:
 	assert(tile)
 	var connections: Array[TileProfile.Direction] = tile.get_connections().keys()
 	for direction: TileProfile.Direction in connections: _build_dungeon_from(character_grid_position, direction)
-	for direction: TileProfile.Direction in connections: _update_player_vision(character_grid_position, direction, character.profile.vision)
-	for direction: TileProfile.Direction in connections:
-		_update_player_vision(character_grid_position, direction, 1024.0, func(tile: PlacedTile) -> bool: return tile.status < PlacedTile.Status.DISCOVERED, func(tile_grid_position: Vector2i) -> void: _discover_queue.append(tile_grid_position))
+	_update_player_vision(character_grid_position, character.profile.vision)
+	#_update_player_vision(character_grid_position, 32.0, func(tile: PlacedTile) -> bool: return tile.status < PlacedTile.Status.DISCOVERED, func(tile_grid_position: Vector2i) -> void: _discover_queue.append(tile_grid_position))
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
