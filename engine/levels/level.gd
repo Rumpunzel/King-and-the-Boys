@@ -265,10 +265,9 @@ func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	character.level = self
 	character.moved.connect(_on_player_moved.bind(character))
 	if not character.is_inside_tree(): await character.ready
-	_on_player_moved(character)
+	_on_player_moved(world_to_grid_position(character.global_position), character)
 
-func _on_player_moved(character: Character) -> void:
-	var character_grid_position: Vector2i = world_to_grid_position(character.global_position)
+func _on_player_moved(character_grid_position: Vector2i, character: Character) -> void:
 	var tile: PlacedTile = _placed_tiles.get(character_grid_position)
 	assert(tile)
 	var connections: Array[TileProfile.Direction] = tile.get_connections().keys()

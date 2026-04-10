@@ -3,7 +3,7 @@
 class_name Character
 extends CharacterBody3D
 
-signal moved
+signal moved(into_grid_position: Vector2i)
 
 signal entered_grid_cell(cell: Vector3i)
 signal exited_grid_cell(cell: Vector3i)
@@ -131,8 +131,8 @@ func move_on_grid(direction_input: Vector2) -> void:
 	tween.tween_property(self, "global_position", desired_position, 0.5)
 	tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
-	await tween.finished
-	moved.emit()
+	await get_tree().create_timer(0.4).timeout
+	moved.emit(desired_grid_position)
 
 @rpc("any_peer", "call_local", "reliable")
 func move_to_position(position_input: Vector3) -> void:
