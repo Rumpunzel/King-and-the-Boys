@@ -20,13 +20,20 @@ enum Status {
 		status = new_status
 		if not structure: return
 		_update_model()
-		if status == Status.REVEALED and old_status >= Status.PLACED:
-			var model: Model = structure.model
-			var tween: Tween = model.create_tween()
-			tween.set_parallel()
-			tween.tween_property(model, "position:y", 1.0, 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-			tween.tween_property(model, "rotation:x", PI, 0.6).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-			tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+		if old_status < Status.PLACED: return
+		var model: Model = structure.model
+		match status:
+			Status.DISCOVERED:
+				var tween: Tween = model.create_tween()
+				tween.set_parallel()
+				tween.tween_property(model, "position:y", 1.0, 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+			Status.REVEALED:
+				var tween: Tween = model.create_tween()
+				tween.set_parallel()
+				tween.tween_property(model, "position:y", 1.0, 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+				tween.tween_property(model, "rotation:x", PI, 0.6).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 
 var structure: Structure:
 	set(new_structure):
@@ -49,6 +56,11 @@ static func create(
 	new_placed_tile.status = with_status
 	if with_structure: new_placed_tile.structure = with_structure
 	return new_placed_tile
+
+func discover() -> bool:
+	if status >= Status.DISCOVERED: return false
+	status = Status.DISCOVERED
+	return true
 
 func reveal() -> bool:
 	if status >= Status.REVEALED: return false

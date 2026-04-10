@@ -7,8 +7,8 @@ signal tile_placement_requested(tile_profile: TileProfile, tile_transform: Trans
 
 @export var grid_size: float = 2.0
 
-@export var _tiles_per_second: float = 8.0
 @export var _reveals_per_second: float = 32.0
+@export var _discovers_per_second: float = 8.0
 
 @export_group("Configuration")
 @export var _starting_tile: TileProfile
@@ -22,8 +22,11 @@ var _placed_tiles: Dictionary[Vector2i, PlacedTile]
 var _grid: Dictionary[Vector3i, GridCell]
 var _debugs: Dictionary[Vector3i, Label3D]
 
-var _remaining_tile_placement_delay: float = 0.0
+var _reveal_queue: Array[Vector2i] = []
+var _discover_queue: Array[Vector2i] = []
+
 var _remaining_tile_reveal_delay: float = 0.0
+var _remaining_tile_discover_delay: float = 0.0
 
 func _ready() -> void:
 	_request_starting_placed_tile()
@@ -33,8 +36,30 @@ func _ready() -> void:
 			#if not _debugs.has(cell_position): _create_debug_label(cell_position)
 
 func _process(delta: float) -> void:
-	_remaining_tile_placement_delay = maxf(_remaining_tile_placement_delay - delta, 0.0)
 	_remaining_tile_reveal_delay = maxf(_remaining_tile_reveal_delay - delta, 0.0)
+	if _remaining_tile_reveal_delay <= 0.0:
+		var tile_to_reveal: PlacedTile = null
+		var grid_position: Vector2i
+		while not _reveal_queue.is_empty() and not tile_to_reveal:
+			grid_position = _reveal_queue.pop_front()
+			tile_to_reveal = _placed_tiles[grid_position]
+			if tile_to_reveal.status >= PlacedTile.Status.REVEALED: tile_to_reveal = null
+		if tile_to_reveal:
+			tile_to_reveal.reveal()
+			_debug_draw_connection(tile_to_reveal, grid_position)
+			_remaining_tile_reveal_delay += 1.0 / _reveals_per_second
+	if not _reveal_queue.is_empty(): return
+	_remaining_tile_discover_delay = maxf(_remaining_tile_discover_delay - delta, 0.0)
+	if _remaining_tile_discover_delay <= 0.0:
+		var tile_to_discover: PlacedTile = null
+		while not _discover_queue.is_empty() and not tile_to_discover:
+			var grid_position: Vector2i = _discover_queue.pop_front()
+			tile_to_discover = _placed_tiles[grid_position]
+			if tile_to_discover.status >= PlacedTile.Status.DISCOVERED: tile_to_discover = null
+		if tile_to_discover:
+			tile_to_discover.discover()
+			_remaining_tile_discover_delay += 1.0 / _discovers_per_second
+
 
 static func get_grid_cell_of_node(node: Node3D) -> Vector3i:
 	return get_grid_cell(node.global_position)
@@ -67,7 +92,13 @@ func spawn_at_all(grid_positions: Array[Vector2i], status: PlacedTile.Status) ->
 func get_placed_tile(grid_position: Vector2i) -> PlacedTile:
 	return _placed_tiles.get(grid_position)
 
-func _update_player_vision(origin_grid_position: Vector2i, direction: TileProfile.Direction, vision_radius: float) -> void:
+func _update_player_vision(
+	origin_grid_position: Vector2i,
+	direction: TileProfile.Direction,
+	vision_radius: float,
+	reveal_check: Callable = func(tile: PlacedTile) -> bool: return tile.status < PlacedTile.Status.REVEALED,
+	reveal_function: Callable = func(tile_grid_position: Vector2i) -> void: _reveal_queue.append(tile_grid_position),
+) -> void:
 	var tile: PlacedTile = _placed_tiles.get(origin_grid_position)
 	assert(tile)
 	if not tile.has_connection(direction): return
@@ -78,31 +109,33 @@ func _update_player_vision(origin_grid_position: Vector2i, direction: TileProfil
 	var max_vision: int = ceili(vision_radius)
 	for radius: int in range(max_vision + 1):
 		var tile_grid_position: Vector2i = origin_grid_position + direction_vector * radius
-		var revealed: bool = _update_vision_for_tile(tile_grid_position, tile, direction, origin_grid_position, vision_radius)
+		var revealed: bool = _update_vision_for_tile(tile_grid_position, tile, direction, origin_grid_position, vision_radius, reveal_check, reveal_function)
 		if not revealed: continue
 		var revaled_tile: PlacedTile = _placed_tiles[tile_grid_position]
 		for diagonal_radius: int in range(max_vision - radius + 1):
 			var clockwise_direction: TileProfile.Direction = TileProfile.get_direction(Vector2i.ZERO, clockwise_vector)
-			_update_vision_for_tile(tile_grid_position + clockwise_vector * diagonal_radius, revaled_tile, clockwise_direction, origin_grid_position, vision_radius, true)
+			_update_vision_for_tile(tile_grid_position + clockwise_vector * diagonal_radius, revaled_tile, clockwise_direction, origin_grid_position, vision_radius, reveal_check, reveal_function, true)
 			var counter_clockwise_direction: TileProfile.Direction = TileProfile.get_direction(Vector2i.ZERO, counter_clockwise_vector)
-			_update_vision_for_tile(tile_grid_position + counter_clockwise_vector * diagonal_radius, revaled_tile, counter_clockwise_direction, origin_grid_position, vision_radius, true)
+			_update_vision_for_tile(tile_grid_position + counter_clockwise_vector * diagonal_radius, revaled_tile, counter_clockwise_direction, origin_grid_position, vision_radius, reveal_check, reveal_function, true)
 
-func _update_vision_for_tile(tile_grid_position: Vector2i, from_tile: PlacedTile, direction: TileProfile.Direction, origin_grid_position: Vector2i, vision_radius: float, check_connection_type: bool = false) -> bool:
+func _update_vision_for_tile(
+	tile_grid_position: Vector2i,
+	from_tile: PlacedTile,
+	direction: TileProfile.Direction,
+	origin_grid_position: Vector2i,
+	vision_radius: float,
+	reveal_check: Callable,
+	reveal_function: Callable,
+	check_connection_type: bool = false,
+) -> bool:
 	if not from_tile.has_connection(direction): return false
 	if origin_grid_position.distance_squared_to(tile_grid_position) > pow(vision_radius, 2.0): return false
 	var tile: PlacedTile = _placed_tiles.get(tile_grid_position)
 	if not tile: return false
 	var connection_room_type: RoomType = from_tile.get_connection(direction)
 	if check_connection_type and (not connection_room_type or not connection_room_type == tile.tile_profile.room_type): return false
-	_reveal_tile(tile, tile_grid_position)
+	if reveal_check.call(tile): reveal_function.call(tile_grid_position)
 	return true
-
-func _reveal_tile(tile: PlacedTile, tile_grid_position: Vector2i) -> void:
-	var tile_reveal_delay: float = 1.0 / _reveals_per_second
-	_remaining_tile_reveal_delay += tile_reveal_delay
-	if _remaining_tile_reveal_delay > tile_reveal_delay: await get_tree().create_timer(_remaining_tile_reveal_delay).timeout
-	var revealed: bool = tile.reveal()
-	if revealed: _debug_draw_connection(tile, tile_grid_position)
 
 func _build_dungeon_from(origin_grid_position: Vector2i, direction: TileProfile.Direction) -> void:
 	var tile: PlacedTile = _placed_tiles.get(origin_grid_position)
@@ -170,9 +203,6 @@ func _spawn_at(tile: PlacedTile, grid_position: Vector2i) -> void:
 	var tile_position: Vector3 = grid_to_world_position(grid_position) - Vector3(0.0, 0.05, 0.0)
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position).rotated_local(Vector3.DOWN, tile.clockwise_turns * PI * 0.5)
 	_placed_tiles[grid_position] = tile
-	var tile_placement_delay: float = 1.0 / _tiles_per_second
-	_remaining_tile_placement_delay += tile_placement_delay
-	if _remaining_tile_placement_delay > tile_placement_delay: await get_tree().create_timer(_remaining_tile_placement_delay).timeout
 	tile_placement_requested.emit(tile.tile_profile, tile_transform)
 
 func _debug_draw_connection(tile: PlacedTile, grid_position: Vector2i) -> void:
@@ -238,6 +268,8 @@ func _on_player_moved(character: Character) -> void:
 	var connections: Array[TileProfile.Direction] = tile.get_connections().keys()
 	for direction: TileProfile.Direction in connections: _build_dungeon_from(character_grid_position, direction)
 	for direction: TileProfile.Direction in connections: _update_player_vision(character_grid_position, direction, character.profile.vision)
+	for direction: TileProfile.Direction in connections:
+		_update_player_vision(character_grid_position, direction, 1024.0, func(tile: PlacedTile) -> bool: return tile.status < PlacedTile.Status.DISCOVERED, func(tile_grid_position: Vector2i) -> void: _discover_queue.append(tile_grid_position))
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
