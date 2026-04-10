@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bb5otswt2l1ja"]
 
 [ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_4fv44"]
+[ext_resource type="Material" uid="uid://bsy2m02dfuadb" path="res://protoype_assets/textures/monastery_stone_floor_4k.blend/monastery_stone_floor.tres" id="2_ot4ba"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_xnro7"]
 lightmap_size_hint = Vector2i(14, 11)
@@ -12,3 +13,4 @@ metadata/_custom_type_script = "uid://bpkm2ws12sljg"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=124874037]
 mesh = SubResource("BoxMesh_xnro7")
+surface_material_override/0 = ExtResource("2_ot4ba")

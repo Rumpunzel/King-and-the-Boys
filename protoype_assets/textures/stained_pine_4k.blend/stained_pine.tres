@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://3if213a4stg4"]
+
+[ext_resource type="Texture2D" uid="uid://db5t7jouko4ir" path="res://protoype_assets/textures/stained_pine_4k.blend/textures/stained_pine_diff_4k.jpg" id="1_6rqui"]
+
+[resource]
+resource_name = "stained_pine"
+cull_mode = 2
+albedo_texture = ExtResource("1_6rqui")
+metallic_texture_channel = 2
+roughness_texture_channel = 1
+normal_enabled = true
+normal_scale = 0.5

@@ -8,7 +8,6 @@
 [ext_resource type="Resource" uid="uid://dckkvjgeuxvfx" path="res://data/structures/tiles/fork.tres" id="5_8egsi"]
 [ext_resource type="Resource" uid="uid://djc0kwgsfemkg" path="res://data/structures/tiles/corner.tres" id="6_cr1f1"]
 [ext_resource type="Resource" uid="uid://dksytd5n054hp" path="res://data/structures/tiles/deadend.tres" id="7_oyy5j"]
-[ext_resource type="Texture2D" uid="uid://de50qpfb0w0ll" path="res://protoype_assets/grids/prototype_512x512_blue2.png" id="8_s5f45"]
 [ext_resource type="Resource" uid="uid://mmk57aplc5pu" path="res://data/structures/tiles/room_center.tres" id="8_ua3w6"]
 [ext_resource type="Resource" uid="uid://lwhl84tub2jy" path="res://data/structures/tiles/room_edge.tres" id="9_iiqpp"]
 [ext_resource type="Resource" uid="uid://c3sqiedcypv0x" path="res://data/structures/tiles/room_crossing.tres" id="9_ua3w6"]
@@ -17,6 +16,7 @@
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="14_epvo2"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="14_jhxx2"]
 [ext_resource type="Resource" uid="uid://lcjpjue1orcf" path="res://data/structures/tiles/room_deadend.tres" id="14_jwwwr"]
+[ext_resource type="Material" uid="uid://3if213a4stg4" path="res://protoype_assets/textures/stained_pine_4k.blend/stained_pine.tres" id="16_jwwwr"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jwwwr"]
 
@@ -34,9 +34,8 @@ size = Vector3(64, 16, 64)
 [sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
 size = Vector2(64, 64)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5pvop"]
-albedo_texture = ExtResource("8_s5f45")
-uv1_scale = Vector3(16, 16, 16)
+[sub_resource type="Environment" id="Environment_jwwwr"]
+background_energy_multiplier = 0.25
 
 [node name="TestLevel" type="Node3D" unique_id=2100419132 node_paths=PackedStringArray("_navigation_region")]
 process_mode = 1
@@ -56,11 +55,6 @@ script = ExtResource("14_jhxx2")
 _synchronizer = NodePath("..")
 metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=949098374]
-transform = Transform3D(0.8660254, -0.24999994, 0.4330126, 0, 0.8660252, 0.49999988, -0.5, -0.4330126, 0.7499998, 0, 10.6623, 0)
-shadow_enabled = true
-directional_shadow_blend_splits = true
-
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=61657652]
 navigation_mesh = SubResource("NavigationMesh_8egsi")
 
@@ -74,10 +68,13 @@ shape = SubResource("BoxShape3D_2lmav")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/StaticBody3D" unique_id=1372172077]
 mesh = SubResource("PlaneMesh_bkb5w")
 skeleton = NodePath("../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_5pvop")
+surface_material_override/0 = ExtResource("16_jwwwr")
 
 [node name="SpawnPoints" type="Node3D" parent="." unique_id=1610595994]
 
 [node name="PlayerSpawnPoint" type="Marker3D" parent="SpawnPoints" unique_id=1704218217]
 script = ExtResource("5_0p5hx")
 metadata/_custom_type_script = "uid://da4c4gcyqk2rb"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1391764827]
+environment = SubResource("Environment_jwwwr")

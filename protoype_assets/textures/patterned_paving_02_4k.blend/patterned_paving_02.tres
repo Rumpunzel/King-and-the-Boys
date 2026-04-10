@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c4xynwh6bk1n1"]
+
+[ext_resource type="Texture2D" uid="uid://dbvjh3g3qn2k2" path="res://protoype_assets/textures/patterned_paving_02_4k.blend/textures/patterned_paving_02_diff_4k.jpg" id="1_ag703"]
+
+[resource]
+resource_name = "patterned_paving_02"
+cull_mode = 2
+albedo_texture = ExtResource("1_ag703")
+metallic_texture_channel = 2
+roughness_texture_channel = 1
+normal_enabled = true
+uv1_scale = Vector3(2, 2, 2)

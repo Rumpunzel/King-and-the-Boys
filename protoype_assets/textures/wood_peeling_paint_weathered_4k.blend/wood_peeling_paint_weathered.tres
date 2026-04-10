@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://hituyc24dvpp"]
+
+[ext_resource type="Texture2D" uid="uid://c4pgsgglj8eau" path="res://protoype_assets/textures/wood_peeling_paint_weathered_4k.blend/textures/wood_peeling_paint_weathered_diff_4k.jpg" id="1_e7xep"]
+
+[resource]
+resource_name = "wood_peeling_paint_weathered"
+cull_mode = 2
+albedo_texture = ExtResource("1_e7xep")
+metallic_texture_channel = 2
+roughness_texture_channel = 1
+normal_enabled = true
+uv1_scale = Vector3(2, 2, 2)

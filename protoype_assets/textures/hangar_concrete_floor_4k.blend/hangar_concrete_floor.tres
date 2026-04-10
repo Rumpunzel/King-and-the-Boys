@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bq1r38eht65a4"]
+
+[ext_resource type="Texture2D" uid="uid://yl5njj48ym3h" path="res://protoype_assets/textures/hangar_concrete_floor_4k.blend/textures/hangar_concrete_floor_diff_4k.jpg" id="1_h6m71"]
+
+[resource]
+resource_name = "hangar_concrete_floor"
+cull_mode = 2
+albedo_texture = ExtResource("1_h6m71")
+metallic_texture_channel = 2
+roughness_texture_channel = 1
+normal_enabled = true

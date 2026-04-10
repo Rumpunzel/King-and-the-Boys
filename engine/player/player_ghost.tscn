@@ -77,15 +77,11 @@ look_at_target = NodePath("../Ghost")
 tween_resource = SubResource("Resource_shdhw")
 tween_on_load = false
 follow_offset = Vector3(0, 20, 16)
-align_transform_with_view = Callable()
-align_position_with_view = Callable()
-align_rotation_with_view = Callable()
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="TopDownCamera" type="Camera3D" parent="." unique_id=113072833]
 physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 0.6246951, 0.78086877, 0, -0.78086877, 0.6246951, 0, 20, 16)
-top_level = true
 fov = 37.8493
 
 [node name="PhantomCameraHost" type="Node" parent="TopDownCamera" unique_id=260013323]

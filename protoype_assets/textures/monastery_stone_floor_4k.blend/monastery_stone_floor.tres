@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bsy2m02dfuadb"]
+
+[ext_resource type="Texture2D" uid="uid://bmls4jbwjwk3r" path="res://protoype_assets/textures/monastery_stone_floor_4k.blend/textures/monastery_stone_floor_diff_4k.jpg" id="1_vg6gx"]
+[ext_resource type="Texture2D" uid="uid://cjuattkg22qd4" path="res://protoype_assets/textures/monastery_stone_floor_4k.blend/textures/monastery_stone_floor_rough_4k.exr" id="2_quy4u"]
+
+[resource]
+resource_name = "monastery_stone_floor"
+cull_mode = 2
+albedo_texture = ExtResource("1_vg6gx")
+metallic_texture = ExtResource("2_quy4u")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("2_quy4u")
+roughness_texture_channel = 1
+normal_enabled = true
+uv1_scale = Vector3(4, 4, 4)
