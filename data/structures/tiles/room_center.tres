@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="TileProfile" format=3 uid="uid://c3sqiedcypv0x"]
+[gd_resource type="Resource" script_class="TileProfile" format=3 uid="uid://mmk57aplc5pu"]
 
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_tc6os"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_qpg8a"]

@@ -49,7 +49,6 @@ func spawn_at(grid_position: Vector2i, status: PlacedTile.Status) -> void:
 	var fitting_tile: PlacedTile = available_tiles.pick_random()
 	assert(fitting_tile)
 	fitting_tile.status = status
-	print(fitting_tile)
 	_spawn_at(fitting_tile, grid_position)
 
 func spawn_at_all(grid_positions: Array[Vector2i], status: PlacedTile.Status) -> void:
@@ -63,10 +62,17 @@ func _update_player_vision(character: Character) -> void:
 	var tile: PlacedTile = _placed_tiles.get(character_grid_position)
 	assert(tile)
 	var vision: Array[TileProfile.Direction] = tile.get_connections().keys()
-	for direction: TileProfile.Direction in vision: _build_from_into(character_grid_position, direction)
-	for direction: TileProfile.Direction in vision: _build_from_into(character_grid_position, direction, character.profile.vision, PlacedTile.Status.REVEALED)
+	for direction: TileProfile.Direction in vision: _build_dungeon_from(character_grid_position, direction)
+	for direction: TileProfile.Direction in vision: _build_dungeon_from(character_grid_position, direction, character.profile.vision, PlacedTile.Status.REVEALED)
 
-func _build_from_into(origin_grid_position: Vector2i, direction: TileProfile.Direction, max_iterations: int = -1, tile_status: PlacedTile.Status = PlacedTile.Status.PLACED) -> void:
+func _build_dungeon_from(origin_grid_position: Vector2i, direction: TileProfile.Direction, max_iterations: int = -1, tile_status: PlacedTile.Status = PlacedTile.Status.PLACED) -> void:
+	if max_iterations == 0: return
+	var tile: PlacedTile = _placed_tiles.get(origin_grid_position)
+	assert(tile)
+	if tile.tile_profile.room_type: _build_room_from(origin_grid_position, max_iterations, tile_status)
+	_build_corridor_from(origin_grid_position, direction, max_iterations, tile_status)
+
+func _build_corridor_from(origin_grid_position: Vector2i, direction: TileProfile.Direction, max_iterations: int, tile_status: PlacedTile.Status) -> void:
 	if max_iterations == 0: return
 	var tile: PlacedTile = _placed_tiles.get(origin_grid_position)
 	assert(tile)
@@ -75,7 +81,30 @@ func _build_from_into(origin_grid_position: Vector2i, direction: TileProfile.Dir
 	spawn_at(grid_position, tile_status)
 	var placed_tile: PlacedTile = _placed_tiles[grid_position]
 	if not placed_tile.get_connections().has(direction): return
-	_build_from_into(grid_position, direction, max_iterations - 1, tile_status)
+	await get_tree().create_timer(0.1).timeout
+	_build_dungeon_from(grid_position, direction, max_iterations - 1, tile_status)
+
+func _build_room_from(origin_grid_position: Vector2i, max_iterations: int, tile_status: PlacedTile.Status, already_visited: Array[Vector2i] = []) -> void:
+	if max_iterations == 0: return
+	if already_visited.has(origin_grid_position): return
+	assert(not already_visited.has(origin_grid_position))
+	already_visited.append(origin_grid_position)
+	var tile: PlacedTile = _placed_tiles.get(origin_grid_position)
+	assert(tile)
+	var room_type: RoomType = tile.tile_profile.room_type
+	assert(room_type)
+	for connection: TileProfile.Direction in tile.get_connections().keys():
+		var relative_direction: Vector2i = TileProfile.direction_to_vector(connection)
+		var grid_position: Vector2i = origin_grid_position + relative_direction
+		if already_visited.has(grid_position): continue
+		assert(not already_visited.has(grid_position))
+		spawn_at(grid_position, tile_status)
+		var placed_tile: PlacedTile = _placed_tiles.get(grid_position)
+		if not placed_tile or not placed_tile.tile_profile.room_type == room_type:
+			already_visited.append(grid_position)
+			continue
+		await get_tree().create_timer(0.1).timeout
+		_build_room_from(grid_position, max_iterations - 1, tile_status, already_visited)
 
 func _get_available_tiles_for_position(new_tile_position: Vector2i) -> Array[PlacedTile]:
 	var surrounding_tiles: Dictionary[Vector2i, PlacedTile] = {}
@@ -90,7 +119,6 @@ func _get_available_tiles_for_position(new_tile_position: Vector2i) -> Array[Pla
 	for surrounding_tile_grid_position: Vector2i in surrounding_tiles.keys():
 		var surrounding_tile: PlacedTile = surrounding_tiles[surrounding_tile_grid_position]
 		available_tiles.assign(available_tiles.filter(func(tile: PlacedTile) -> bool: return tile.is_legal_neighbour(surrounding_tile, new_tile_position, surrounding_tile_grid_position)))
-		assert(not available_tiles.is_empty(), "%s @ %s" % [surrounding_tile, surrounding_tile_grid_position])
 	return available_tiles
 
 func _request_starting_placed_tile() -> void:
@@ -107,10 +135,14 @@ func _spawn_at(tile: PlacedTile, grid_position: Vector2i) -> void:
 	var tile_position: Vector3 = grid_to_world_position(grid_position) - Vector3(0.0, 0.05, 0.0)
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position).rotated_local(Vector3.DOWN, tile.clockwise_turns * PI * 0.5)
 	_placed_tiles[grid_position] = tile
-	for tile_grid_offset: Vector2i in tile.get_connection_vectors():
-		var color: Color = tile.tile_profile.room_type.color if tile.tile_profile.room_type else Color.WHEAT
+	for index: int in tile.get_connection_vectors().size():
+		var direction: TileProfile.Direction = tile.get_connections().keys()[index]
+		var tile_grid_offset: Vector2i = TileProfile.direction_to_vector(direction)
 		var edge_offset: Vector3 = grid_to_world_position(tile_grid_offset) * 0.5
-		DebugDraw3D.draw_line(grid_to_world_position(grid_position), grid_to_world_position(grid_position + tile_grid_offset) - edge_offset, color, INF)
+		var connection_room_type: RoomType = tile.get_connections()[direction]
+		var color: Color = tile.tile_profile.room_type.color if tile.tile_profile.room_type else Color.WHEAT
+		var connection_color: Color = connection_room_type.color if connection_room_type else color
+		DebugDraw3D.draw_line(grid_to_world_position(grid_position), grid_to_world_position(grid_position + tile_grid_offset) - edge_offset, connection_color, INF)
 	tile_placement_requested.emit(tile.tile_profile, tile_transform)
 
 func _get_all_available_tile_placements() -> Array[PlacedTile]:

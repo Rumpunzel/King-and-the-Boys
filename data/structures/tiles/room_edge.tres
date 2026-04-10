@@ -25,9 +25,9 @@ metadata/_custom_type_script = "uid://cfq64v34pot8s"
 [resource]
 script = ExtResource("3_gnic3")
 connections = Dictionary[int, ExtResource("3_p6h1h")]({
-0: ExtResource("4_eknxi"),
+0: null,
 1: ExtResource("4_eknxi"),
-2: ExtResource("4_eknxi")
+2: null
 })
 room_type = ExtResource("4_eknxi")
 group = 2
