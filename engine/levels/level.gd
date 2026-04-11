@@ -62,7 +62,6 @@ func _process(delta: float) -> void:
 			tile_to_discover.discover()
 			_remaining_tile_discover_delay += 1.0 / _discovers_per_second
 
-
 static func get_grid_cell_of_node(node: Node3D) -> Vector3i:
 	return get_grid_cell(node.global_position)
 

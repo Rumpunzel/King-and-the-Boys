@@ -68,7 +68,7 @@ func _on_start_pressed() -> void:
 	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
 
 func _on_game_status_changed(new_game_status: Game.GameStatus) -> void:
-	visible = new_game_status == Game.GameStatus.NONE
+	visible = new_game_status < Game.GameStatus.RUNNING
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
