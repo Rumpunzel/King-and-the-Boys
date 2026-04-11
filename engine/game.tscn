@@ -12,6 +12,11 @@
 [ext_resource type="PackedScene" uid="uid://becdxlww4k13g" path="res://user_interface/pause_menu/lobby_menu.tscn" id="11_piikb"]
 [ext_resource type="PackedScene" uid="uid://bvj0ntif5bqqq" path="res://engine/player/player_ghost_spawner.tscn" id="12_q1ly4"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_piikb"]
+properties/0/path = NodePath(".:_game_status")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
 [node name="Game" type="Node" unique_id=1433846697 node_paths=PackedStringArray("_serializer", "_level_spawner", "_structure_spawner", "_thing_spawner", "_agent_spawner", "_player_ghost_spawner")]
 script = ExtResource("1_l8g03")
 _default_level = ExtResource("8_ee6o4")
@@ -22,6 +27,9 @@ _thing_spawner = NodePath("ThingSpawner")
 _agent_spawner = NodePath("AgentSpawner")
 _player_ghost_spawner = NodePath("PlayerGhostSpawner")
 metadata/_custom_type_script = "uid://bgi8dhegxjea2"
+
+[node name="GameSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2051172079]
+replication_config = SubResource("SceneReplicationConfig_piikb")
 
 [node name="Serializer" type="Node" parent="." unique_id=1060350392]
 script = ExtResource("3_i022p")

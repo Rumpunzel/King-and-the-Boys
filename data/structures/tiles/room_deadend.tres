@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="TileProfile" format=3 uid="uid://lcjpjue1orcf"]
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://lcjpjue1orcf"]
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room_tile_shape.tres" id="1_l0kgb"]
 [ext_resource type="PackedScene" uid="uid://cg0fqb2lheq18" path="res://data/structures/room_deadend_tile.tscn" id="2_l0kgb"]
 [ext_resource type="Script" uid="uid://cwdjimpf1f3pp" path="res://engine/objects/structures/room_type.gd" id="3_3ic1t"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room.tres" id="4_g6ns3"]
-[ext_resource type="Script" uid="uid://ckc7uvbxnandc" path="res://engine/objects/structures/tile_profile.gd" id="5_b13st"]
+[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_b13st"]
 
 [resource]
 script = ExtResource("5_b13st")

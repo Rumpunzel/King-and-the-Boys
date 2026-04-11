@@ -5,7 +5,7 @@ extends VBoxContainer
 @export var player: Player:
 	set(new_player):
 		if player:
-			player.player_info_changed.connect(_update_player_info)
+			player.player_info_changed.disconnect(_update_player_info)
 		player = new_player
 		if not player:
 			_clear()

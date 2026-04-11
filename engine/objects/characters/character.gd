@@ -3,10 +3,8 @@
 class_name Character
 extends CharacterBody3D
 
-signal moved(into_grid_position: Vector2i)
-
-signal entered_grid_cell(cell: Vector3i)
-signal exited_grid_cell(cell: Vector3i)
+signal entered_grid_cell(cell: Vector2i)
+signal exited_grid_cell(cell: Vector2i)
 signal destination_reached
 
 signal profile_changed
@@ -59,26 +57,27 @@ var level: Level
 var desired_position: Vector3 = Vector3.ZERO
 var look_target: Vector3 = Vector3.BACK
 
+var _previous_grid_position: Vector2i = Vector2i.ZERO
 var _is_on_floor: bool = true
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	entered_grid_cell.emit(get_grid_cell())
+	entered_grid_cell.emit(get_grid_position())
 
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
-	var grid_cell_before: Vector3i = get_grid_cell()
-	_is_on_floor = is_on_floor()
-	if not _is_on_floor: _apply_gravity(delta)
-	_handle_pathfinding()
-	move_and_slide()
+	#_is_on_floor = is_on_floor()
+	#if not _is_on_floor: _apply_gravity(delta)
+	#_handle_pathfinding()
+	#move_and_slide()
 	_look_forward(delta)
-	var grid_cell_after: Vector3i = get_grid_cell()
-	if grid_cell_after != grid_cell_before:
-		exited_grid_cell.emit(grid_cell_before)
-		entered_grid_cell.emit(grid_cell_after)
+	var grid_position: Vector2i = get_grid_position()
+	if grid_position != _previous_grid_position:
+		_previous_grid_position = grid_position
+		exited_grid_cell.emit(grid_position)
+		entered_grid_cell.emit(grid_position)
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
@@ -111,28 +110,26 @@ func move_into_direction(direction_input: Vector2, delta: float) -> void:
 	velocity.z = move_toward(velocity.z, direction_input.y * move_speed, acceleration)
 
 @rpc("any_peer", "call_local", "reliable")
-func move_on_grid(direction_input: Vector2) -> void:
+func move_on_grid(direction_input: Level.Direction) -> void:
 	assert(level)
 	var current_grid_position: Vector2i = level.world_to_grid_position(global_position)
-	var quantized_global_position: Vector3 = level.grid_to_world_position(current_grid_position)
-	desired_position = quantized_global_position + Vector3(direction_input.x, 0.0, direction_input.y) * level.grid_size
-	var desired_grid_position: Vector2i = level.world_to_grid_position(desired_position)
-	var desired_direction: TileProfile.Direction = TileProfile.get_direction(current_grid_position, desired_grid_position)
-	var current_tile: PlacedTile = level.get_placed_tile(current_grid_position)
+	var current_tile: Structure = level.get_placed_tile(current_grid_position)
 	assert(current_tile)
-	if not current_tile.has_connection(desired_direction):
+	if not current_tile.has_connection(direction_input):
 		print("WALKING INTO WALL!")
 		return
-	var desired_tile: PlacedTile = level.get_placed_tile(desired_grid_position)
-	assert(desired_tile, "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [desired_direction, current_tile, current_grid_position, desired_tile, desired_grid_position])
-	assert(desired_tile.has_connection(TileProfile.get_direction(desired_grid_position, current_grid_position)), "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [desired_direction, current_tile, current_grid_position, desired_tile, desired_grid_position])
+	var quantized_global_position: Vector3 = level.grid_to_world_position(current_grid_position)
+	var direction_vector: Vector2i = Level.direction_to_vector(direction_input)
+	desired_position = quantized_global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * level.grid_size
+	var desired_grid_position: Vector2i = level.world_to_grid_position(desired_position)
+	var desired_tile: Structure = level.get_placed_tile(desired_grid_position)
+	assert(desired_tile, "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [direction_input, current_tile, current_grid_position, desired_tile, desired_grid_position])
+	assert(desired_tile.has_connection(Level.get_direction(desired_grid_position, current_grid_position)), "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [direction_input, current_tile, current_grid_position, desired_tile, desired_grid_position])
 	var tween: Tween = create_tween()
 	tween.set_parallel()
 	tween.tween_property(self, "global_position", desired_position, 0.5)
 	tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_property(model, "position:y", 0.0, 0.4).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
-	await get_tree().create_timer(0.4).timeout
-	moved.emit(desired_grid_position)
 
 @rpc("any_peer", "call_local", "reliable")
 func move_to_position(position_input: Vector3) -> void:
@@ -169,15 +166,15 @@ func to_character_data() -> Dictionary[StringName, Variant]:
 	return character_data
 
 func get_portrait() -> Texture:
-	if model.portrait_override:
-		return model.portrait_override
+	if model.portrait_override: return model.portrait_override
 	return profile.portrait
 
 func get_heads_up_anchor() -> Vector3:
 	return position + profile.heads_up_display_offset
 
-func get_grid_cell() -> Vector3i:
-	return Level.get_grid_cell_of_node(self)
+func get_grid_position() -> Vector2i:
+	assert(level)
+	return level.world_to_grid_position(global_position + Vector3(0.5, 0.0, 0.5) * level.grid_size)
 
 func _apply_gravity(delta: float) -> void:
 	velocity.y -= _gravity * delta

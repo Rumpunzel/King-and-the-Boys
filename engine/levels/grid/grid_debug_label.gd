@@ -2,10 +2,10 @@
 class_name GridDebugLabel
 extends Label3D
 
-var cell_position: Vector3i:
+var cell_position: Vector3:
 	set(new_cell_position):
 		cell_position = new_cell_position
-		position = Vector3(cell_position) + Vector3(0.5, 0.0, 0.5)
+		position = cell_position
 		update_text()
 
 var grid_cell: GridCell:
@@ -31,5 +31,5 @@ func update_text() -> void:
 			var structure_cell: StructureCell = grid_cell
 			travel_cost = structure_cell.structure.resource_path.get_file()
 			modulate = Color.WHITE
-	var grid_position: Vector2i = Vector2i(cell_position.x * 0.5, cell_position.z * 0.5)
+	var grid_position: Vector2i = Vector2i(cell_position.x, cell_position.z)
 	text = "%s\n%s" % [grid_position, travel_cost]

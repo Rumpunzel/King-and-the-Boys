@@ -2,15 +2,35 @@
 
 [ext_resource type="Script" uid="uid://g8gbwwqlcudv" path="res://engine/objects/structures/structure.gd" id="1_esc8u"]
 [ext_resource type="PackedScene" uid="uid://yutu4m8jrjxn" path="res://engine/objects/structures/structure_hit_box.tscn" id="2_c1vy7"]
+[ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_iq8r1"]
+[ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_qbgox"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5skvj"]
+properties/0/path = NodePath(".:clockwise_turns")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:status")
+properties/1/spawn = true
+properties/1/replication_mode = 2
 
 [node name="Structure" type="StaticBody3D" unique_id=1824059418 node_paths=PackedStringArray("_collision_shape") groups=["Navigation", "Structures"]]
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 0, 0, 0)
 collision_layer = 8
-input_ray_pickable = false
 script = ExtResource("1_esc8u")
 _collision_shape = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://g8gbwwqlcudv"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=221668453]
+
+[node name="Synchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2078102797]
+replication_config = SubResource("SceneReplicationConfig_5skvj")
+script = ExtResource("2_iq8r1")
+metadata/_custom_type_script = "uid://crm43jylxmjbd"
+
+[node name="SynchronizerSerializer" type="Node" parent="Synchronizer" unique_id=1350126360 node_paths=PackedStringArray("_synchronizer")]
+script = ExtResource("3_qbgox")
+_synchronizer = NodePath("..")
+metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
 [node name="StructureHitBox" parent="." unique_id=894402806 node_paths=PackedStringArray("structure") instance=ExtResource("2_c1vy7")]
 structure = NodePath("..")

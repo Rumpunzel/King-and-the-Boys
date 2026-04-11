@@ -9,7 +9,6 @@ enum GameStatus {
 	NONE,
 	READY,
 	RUNNING,
-	ON_SERVER,
 }
 
 @export_group("Configuration")
@@ -28,6 +27,7 @@ var _game_status: GameStatus:
 		_game_status = new_game_status
 		match _game_status:
 			GameStatus.NONE:
+				_on_server = false
 				if not _loading_screen:
 					_loading_screen = _loading_screen_scene.instantiate()
 					add_child(_loading_screen)
@@ -36,9 +36,10 @@ var _game_status: GameStatus:
 				_loading_screen.queue_free()
 				_loading_screen = null
 			GameStatus.RUNNING: pass
-			GameStatus.ON_SERVER: pass
 			_: push_error("GameStatus %s not implemented!" % _game_status)
 		game_status_changed.emit(_game_status)
+
+var _on_server: bool = false
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
@@ -54,11 +55,11 @@ func _ready() -> void:
 func start_new_game() -> void:
 	assert(multiplayer.is_server())
 	print_debug("Starting new game...")
+	if _on_server: push_error("Trying to start a new game while connected to server!")
 	match _game_status:
 		GameStatus.NONE: load_level()
 		GameStatus.READY: pass
 		GameStatus.RUNNING: stop_game()
-		GameStatus.ON_SERVER: push_error("Trying to start a new game while connected to server!")
 		_: push_error("GameStatus %s not implemented!" % _game_status)
 	assert(_game_status == GameStatus.READY)
 	_player_ghost_spawner.start_synching_players()
@@ -76,10 +77,10 @@ func load_level() -> void:
 func save_game() -> Error:
 	assert(multiplayer.is_server())
 	print_debug("Saving game...")
+	if _on_server: push_error("Trying to save a game while connected to server!")
 	match _game_status:
 		GameStatus.NONE, GameStatus.READY: push_error("Trying to save a game while no game is running!")
 		GameStatus.RUNNING: pass
-		GameStatus.ON_SERVER: push_error("Trying to save a game while connected to server!")
 		_: push_error("GameStatus %s not implemented!" % _game_status)
 	assert(_game_status == GameStatus.RUNNING)
 	var error: Error = _serializer.save_world_state()
@@ -89,10 +90,10 @@ func save_game() -> Error:
 func load_game() -> Error:
 	assert(multiplayer.is_server())
 	print_debug("Loading game...")
+	if _on_server: push_error("Trying to load a game while connected to server!")
 	match _game_status:
 		GameStatus.NONE, GameStatus.READY: pass
 		GameStatus.RUNNING: stop_game()
-		GameStatus.ON_SERVER: push_error("Trying to load a game while connected to server!")
 		_: push_error("GameStatus %s not implemented!" % _game_status)
 	assert(_game_status == GameStatus.NONE)
 	var error: Error = _serializer.load_world_state()
@@ -131,7 +132,7 @@ func _on_joining_multiplayer() -> void:
 	stop_game()
 
 func _on_game_joined(_host_player_info: Dictionary[StringName, Variant]) -> void:
-	_game_status = GameStatus.ON_SERVER
+	_on_server = true
 
 func _on_left_game() -> void:
 	stop_game()

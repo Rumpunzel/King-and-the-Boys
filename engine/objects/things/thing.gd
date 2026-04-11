@@ -102,8 +102,8 @@ func get_portrait() -> Texture:
 func get_heads_up_anchor() -> Vector3:
 	return position + profile.heads_up_display_offset
 
-func get_grid_cell() -> Vector3i:
-	return Level.get_grid_cell_of_node(self)
+#func get_grid_cell() -> Vector3i:
+	#return Level.get_grid_cell_of_node(self)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

@@ -19,10 +19,10 @@ func physics_update(delta: float) -> void:
 	#get_character().move_into_direction.rpc(direction_input, delta)
 
 func handle_input(event: InputEvent) -> void:
-	if event.is_action_released("move_up"): get_character().move_on_grid.rpc(Vector2.UP)
-	elif event.is_action_released("move_right"): get_character().move_on_grid.rpc(Vector2.RIGHT)
-	elif event.is_action_released("move_down"): get_character().move_on_grid.rpc(Vector2.DOWN)
-	elif event.is_action_released("move_left"): get_character().move_on_grid.rpc(Vector2.LEFT)
+	if event.is_action_released("move_up"): get_character().move_on_grid.rpc(Level.Direction.UP)
+	elif event.is_action_released("move_right"): get_character().move_on_grid.rpc(Level.Direction.RIGHT)
+	elif event.is_action_released("move_down"): get_character().move_on_grid.rpc(Level.Direction.DOWN)
+	elif event.is_action_released("move_left"): get_character().move_on_grid.rpc(Level.Direction.LEFT)
 
 func exit() -> void:
 	super.exit()

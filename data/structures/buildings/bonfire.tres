@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_275g7"]
 [ext_resource type="PackedScene" uid="uid://d2fn7gvcxvkan" path="res://data/structures/buildings/bonfire.tscn" id="3_275g7"]
+[ext_resource type="Script" uid="uid://cwdjimpf1f3pp" path="res://engine/objects/structures/room_type.gd" id="3_acfbe"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="4_4wi01"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_acfbe"]
