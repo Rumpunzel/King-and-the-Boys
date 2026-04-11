@@ -5,7 +5,7 @@ extends Node3D
 
 signal tile_placement_requested(tile_profile: TileProfile, tile_transform: Transform3D)
 
-@export var grid_size: float = 4.0
+@export var grid_size: float = 2.0
 
 @export var _reveals_per_second: float = 32.0
 @export var _discovers_per_second: float = 8.0
@@ -13,6 +13,7 @@ signal tile_placement_requested(tile_profile: TileProfile, tile_transform: Trans
 @export_group("Configuration")
 @export var _starting_tile: TileProfile
 @export var _available_tiles: Array[TileProfile]
+@export var _emergency_tiles: Array[TileProfile]
 
 var _placed_tiles: Dictionary[Vector2i, PlacedTile]
 
@@ -190,6 +191,12 @@ func _get_available_tiles_for_position(new_tile_position: Vector2i) -> Array[Pla
 	for surrounding_tile_grid_position: Vector2i in surrounding_tiles.keys():
 		var surrounding_tile: PlacedTile = surrounding_tiles[surrounding_tile_grid_position]
 		available_tiles.assign(available_tiles.filter(func(tile: PlacedTile) -> bool: return tile.is_legal_neighbour(surrounding_tile, new_tile_position, surrounding_tile_grid_position)))
+	if not available_tiles.is_empty(): return available_tiles
+	print_debug("No fitting tile found; looking for emergency tile.")
+	available_tiles = _get_all_available_emergency_tile_placements()
+	for surrounding_tile_grid_position: Vector2i in surrounding_tiles.keys():
+		var surrounding_tile: PlacedTile = surrounding_tiles[surrounding_tile_grid_position]
+		available_tiles.assign(available_tiles.filter(func(tile: PlacedTile) -> bool: return tile.is_legal_neighbour(surrounding_tile, new_tile_position, surrounding_tile_grid_position)))
 	return available_tiles
 
 func _request_starting_placed_tile() -> void:
@@ -224,6 +231,12 @@ func _get_all_available_tile_placements() -> Array[PlacedTile]:
 	for available_tile: TileProfile in _available_tiles:
 		for clockwise_rotation: int in range(4): available_tiles.append(PlacedTile.create(available_tile, clockwise_rotation))
 	return available_tiles
+
+func _get_all_available_emergency_tile_placements() -> Array[PlacedTile]:
+	var available_emergency_tiles: Array[PlacedTile] = []
+	for available_emergency_tile: TileProfile in _emergency_tiles:
+		for clockwise_rotation: int in range(4): available_emergency_tiles.append(PlacedTile.create(available_emergency_tile, clockwise_rotation))
+	return available_emergency_tiles
 
 func _create_debug_label(cell_position: Vector3i) -> GridDebugLabel:
 	var debug_label: GridDebugLabel = GridDebugLabel.new()

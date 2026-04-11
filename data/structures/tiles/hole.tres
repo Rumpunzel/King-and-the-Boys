@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TileProfile" format=3 uid="uid://bv4s7a3cdfg55"]
+
+[ext_resource type="Resource" uid="uid://b5jv6e8g1uhqs" path="res://data/structures/tiles/tile_shape.tres" id="1_b4a4e"]
+[ext_resource type="PackedScene" uid="uid://bb5otswt2l1ja" path="res://data/structures/tile.tscn" id="2_r65ho"]
+[ext_resource type="Script" uid="uid://cwdjimpf1f3pp" path="res://engine/objects/structures/room_type.gd" id="3_3ur7g"]
+[ext_resource type="Script" uid="uid://ckc7uvbxnandc" path="res://engine/objects/structures/tile_profile.gd" id="4_mev26"]
+
+[resource]
+script = ExtResource("4_mev26")
+connections = Dictionary[int, ExtResource("3_3ur7g")]({})
+group = 2
+name = "Starting Tile"
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("2_r65ho")])
+_collision_shape = ExtResource("1_b4a4e")
+_hit_box_shape = ExtResource("1_b4a4e")
+heads_up_display_offset = Vector3(0, 5, 0)
+metadata/_custom_type_script = "uid://dol8cfhd12nbf"

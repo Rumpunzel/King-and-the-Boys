@@ -13,6 +13,8 @@
 [ext_resource type="Resource" uid="uid://c3sqiedcypv0x" path="res://data/structures/tiles/room_crossing.tres" id="9_ua3w6"]
 [ext_resource type="Resource" uid="uid://b6wth35w4tdk2" path="res://data/structures/tiles/room_corner.tres" id="10_jhxx2"]
 [ext_resource type="Resource" uid="uid://c863mo5jjag6h" path="res://data/structures/tiles/room_hallway.tres" id="11_iiqpp"]
+[ext_resource type="Resource" uid="uid://bv4s7a3cdfg55" path="res://data/structures/tiles/hole.tres" id="12_m31io"]
+[ext_resource type="Resource" uid="uid://dmp8p7syitfd4" path="res://data/structures/tiles/room_corner_permissive.tres" id="13_epvo2"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="14_epvo2"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="14_jhxx2"]
 [ext_resource type="Resource" uid="uid://lcjpjue1orcf" path="res://data/structures/tiles/room_deadend.tres" id="14_jwwwr"]
@@ -40,9 +42,10 @@ background_energy_multiplier = 0.75
 [node name="TestLevel" type="Node3D" unique_id=2100419132 node_paths=PackedStringArray("_navigation_region")]
 process_mode = 1
 script = ExtResource("1_ywn5t")
-grid_size = 2.0
+grid_size = 2.25
 _starting_tile = ExtResource("8_ua3w6")
-_available_tiles = Array[ExtResource("3_oyy5j")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("7_oyy5j"), ExtResource("7_oyy5j"), ExtResource("9_ua3w6"), ExtResource("9_iiqpp"), ExtResource("11_iiqpp"), ExtResource("10_jhxx2"), ExtResource("14_jwwwr"), ExtResource("8_ua3w6")])
+_available_tiles = Array[ExtResource("3_oyy5j")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("7_oyy5j"), ExtResource("7_oyy5j"), ExtResource("9_ua3w6"), ExtResource("9_iiqpp"), ExtResource("10_jhxx2"), ExtResource("8_ua3w6")])
+_emergency_tiles = Array[ExtResource("3_oyy5j")]([ExtResource("12_m31io"), ExtResource("11_iiqpp"), ExtResource("13_epvo2"), ExtResource("14_jwwwr")])
 _navigation_region = NodePath("NavigationRegion3D")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
 
