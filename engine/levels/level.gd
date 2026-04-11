@@ -22,9 +22,6 @@ enum Direction {
 @export var _available_tiles: Array[StructureProfile]
 @export var _emergency_tiles: Array[StructureProfile]
 
-@export_group("Configuration")
-@export var _navigation_region: NavigationRegion3D
-
 var _placed_tiles: Dictionary[Vector2i, Structure]
 
 var _grid: Dictionary[Vector3i, GridCell]
@@ -288,7 +285,6 @@ func _update_debug(cell_position: Vector3i, grid_cell: GridCell) -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _navigation_region: warnings.append("Missing NavigationRegion3D reference.")
 	return warnings
 
 class TileBlueprint extends RefCounted:

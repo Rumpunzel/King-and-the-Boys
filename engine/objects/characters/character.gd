@@ -54,7 +54,6 @@ var model: Model:
 		add_child(model, true)
 
 var level: Level
-var desired_position: Vector3 = Vector3.ZERO
 var look_target: Vector3 = Vector3.BACK
 
 var _previous_grid_position: Vector2i = Vector2i.ZERO
@@ -72,7 +71,7 @@ func _physics_process(delta: float) -> void:
 	#if not _is_on_floor: _apply_gravity(delta)
 	#_handle_pathfinding()
 	#move_and_slide()
-	_look_forward(delta)
+	#_look_forward(delta)
 	var grid_position: Vector2i = get_grid_position()
 	if grid_position != _previous_grid_position:
 		_previous_grid_position = grid_position
@@ -112,21 +111,25 @@ func move_into_direction(direction_input: Vector2, delta: float) -> void:
 @rpc("any_peer", "call_local", "reliable")
 func move_on_grid(direction_input: Level.Direction) -> void:
 	assert(level)
-	var current_grid_position: Vector2i = level.world_to_grid_position(global_position)
+	var current_grid_position: Vector2i = get_grid_position()
 	var current_tile: Structure = level.get_placed_tile(current_grid_position)
 	assert(current_tile)
+	var tween: Tween = create_tween()
+	tween.set_parallel()
+	var relative_rotation: float = (2 - direction_input) * PI * 0.5 - rotation.y
+	while relative_rotation <= -PI: relative_rotation += TAU
+	while relative_rotation >= PI: relative_rotation -= TAU
+	tween.tween_property(self, "rotation:y", relative_rotation, 0.5).as_relative().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	if not current_tile.has_connection(direction_input):
 		print("WALKING INTO WALL!")
 		return
 	var quantized_global_position: Vector3 = level.grid_to_world_position(current_grid_position)
 	var direction_vector: Vector2i = Level.direction_to_vector(direction_input)
-	desired_position = quantized_global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * level.grid_size
+	var desired_position: Vector3 = quantized_global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * level.grid_size
 	var desired_grid_position: Vector2i = level.world_to_grid_position(desired_position)
 	var desired_tile: Structure = level.get_placed_tile(desired_grid_position)
 	assert(desired_tile, "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [direction_input, current_tile, current_grid_position, desired_tile, desired_grid_position])
 	assert(desired_tile.has_connection(Level.get_direction(desired_grid_position, current_grid_position)), "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [direction_input, current_tile, current_grid_position, desired_tile, desired_grid_position])
-	var tween: Tween = create_tween()
-	tween.set_parallel()
 	tween.tween_property(self, "global_position", desired_position, 0.5)
 	tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_property(model, "position:y", 0.0, 0.4).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
@@ -191,7 +194,7 @@ func _handle_pathfinding() -> void:
 		_on_navigation_agent_velocity_computed(new_velocity)
 
 func _look_forward(delta: float, direction: Vector3 = velocity) -> void:
-	look_target = desired_position
+	look_target = direction
 	look_target.y = position.y
 	if look_target.is_equal_approx(transform.origin): return
 	var transform_looking_into_direction: Transform3D = transform.looking_at(look_target, Vector3.UP, true)
