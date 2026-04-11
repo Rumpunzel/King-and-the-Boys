@@ -12,4 +12,3 @@ metallic_texture_channel = 2
 roughness_texture = ExtResource("2_quy4u")
 roughness_texture_channel = 1
 normal_enabled = true
-uv1_scale = Vector3(4, 4, 4)

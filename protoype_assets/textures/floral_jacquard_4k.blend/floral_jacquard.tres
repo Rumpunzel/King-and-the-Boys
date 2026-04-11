@@ -1,0 +1,19 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cgb4im743eoct"]
+
+[ext_resource type="Texture2D" uid="uid://byoy38oabrhno" path="res://protoype_assets/textures/floral_jacquard_4k.blend/textures/floral_jacquard_diff_4k.jpg" id="1_ur4ie"]
+[ext_resource type="Texture2D" uid="uid://d28dx21gunxr" path="res://protoype_assets/textures/floral_jacquard_4k.blend/textures/floral_jacquard_rough_4k.exr" id="2_jljd4"]
+
+[resource]
+resource_name = "floral_jacquard"
+cull_mode = 2
+albedo_texture = ExtResource("1_ur4ie")
+metallic = 1.0
+metallic_texture = ExtResource("2_jljd4")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("2_jljd4")
+roughness_texture_channel = 1
+normal_enabled = true
+uv1_scale = Vector3(1.5165063, 1, 1)
+metadata/extras = {
+"flip_fluid_material_library": {}
+}

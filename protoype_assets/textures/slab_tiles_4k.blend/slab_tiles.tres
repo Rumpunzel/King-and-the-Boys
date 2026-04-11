@@ -9,4 +9,3 @@ albedo_texture = ExtResource("1_en04h")
 metallic_texture_channel = 2
 roughness_texture_channel = 1
 normal_enabled = true
-uv1_scale = Vector3(2, 2, 2)

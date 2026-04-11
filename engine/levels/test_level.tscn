@@ -16,7 +16,7 @@
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="14_epvo2"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="14_jhxx2"]
 [ext_resource type="Resource" uid="uid://lcjpjue1orcf" path="res://data/structures/tiles/room_deadend.tres" id="14_jwwwr"]
-[ext_resource type="Material" uid="uid://3if213a4stg4" path="res://protoype_assets/textures/stained_pine_4k.blend/stained_pine.tres" id="16_jwwwr"]
+[ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jwwwr"]
 
@@ -35,11 +35,12 @@ size = Vector3(64, 16, 64)
 size = Vector2(64, 64)
 
 [sub_resource type="Environment" id="Environment_jwwwr"]
-background_energy_multiplier = 0.25
+background_energy_multiplier = 0.75
 
 [node name="TestLevel" type="Node3D" unique_id=2100419132 node_paths=PackedStringArray("_navigation_region")]
 process_mode = 1
 script = ExtResource("1_ywn5t")
+grid_size = 2.0
 _starting_tile = ExtResource("8_ua3w6")
 _available_tiles = Array[ExtResource("3_oyy5j")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("7_oyy5j"), ExtResource("7_oyy5j"), ExtResource("9_ua3w6"), ExtResource("9_iiqpp"), ExtResource("11_iiqpp"), ExtResource("10_jhxx2"), ExtResource("14_jwwwr"), ExtResource("8_ua3w6")])
 _navigation_region = NodePath("NavigationRegion3D")

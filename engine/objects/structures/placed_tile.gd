@@ -26,14 +26,14 @@ enum Status {
 			Status.DISCOVERED:
 				var tween: Tween = model.create_tween()
 				tween.set_parallel()
-				tween.tween_property(model, "position:y", 1.0, 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "position:y", 0.0, 0.4).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.4)
+				tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 			Status.REVEALED:
 				var tween: Tween = model.create_tween()
 				tween.set_parallel()
-				tween.tween_property(model, "position:y", 1.0, 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "rotation:x", PI, 0.8).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "position:y", 0.0, 0.4).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.4)
+				tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+				tween.tween_property(model, "rotation:x", PI, 0.7).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 
 var structure: Structure:
 	set(new_structure):
@@ -42,7 +42,7 @@ var structure: Structure:
 		_update_model()
 
 @export_group("Configuration")
-@export var _hidden_material: Material = preload("res://protoype_assets/quaternius/medieval_village/Buildings/GLB/Windows.material")
+@export var _hidden_material: Material = preload("uid://cgb4im743eoct")
 
 static func create(
 	with_tile_profile: TileProfile,
