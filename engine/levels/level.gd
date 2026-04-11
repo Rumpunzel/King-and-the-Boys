@@ -261,6 +261,7 @@ func _on_structure_created(structure: Structure) -> void:
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	var character: Character = player_ghost.character
 	character.level = self
+	if not multiplayer.is_server(): return
 	character.entered_grid_cell.connect(_on_player_moved.bind(character))
 	#if not character.is_inside_tree(): await character.ready
 	#_on_player_moved(world_to_grid_position(character.global_position), character)
