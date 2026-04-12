@@ -33,6 +33,8 @@ enum Groups {
 
 @export var vision: float = 1.5
 
+@export var animation_duration: float = 1.0
+
 @export_category("")
 @export_group("Configuration")
 

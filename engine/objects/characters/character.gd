@@ -130,9 +130,14 @@ func move_on_grid(direction_input: Level.Direction) -> void:
 	var desired_tile: Structure = level.get_placed_tile(desired_grid_position)
 	assert(desired_tile, "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [direction_input, current_tile, current_grid_position, desired_tile, desired_grid_position])
 	assert(desired_tile.has_connection(Level.get_direction(desired_grid_position, current_grid_position)), "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [direction_input, current_tile, current_grid_position, desired_tile, desired_grid_position])
-	tween.tween_property(self, "global_position", desired_position, 0.5)
-	tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_property(model, "position:y", 0.0, 0.4).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+	var animation_duration: float = profile.animation_duration
+	tween.tween_property(self, "global_position", desired_position, animation_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	tween.tween_property(model, "position:y", 1.25, animation_duration * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_property(model, "position:y", 0.0, animation_duration * 0.5).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(animation_duration * 0.8)
+	tween.tween_property(model, "position:x", pow(randf(), 2.0) * 1.0 - 0.5, animation_duration * 0.75).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(model, "position:x", 0.0, animation_duration * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_delay(animation_duration * 0.75)
+	tween.tween_property(model, "rotation:x", -0.3, animation_duration * 0.75).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(model, "rotation:x", 0.0, animation_duration * 0.75).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT).set_delay(animation_duration * 0.9)
 
 @rpc("any_peer", "call_local", "reliable")
 func move_to_position(position_input: Vector3) -> void:

@@ -60,6 +60,7 @@ const STATUS: StringName = "status"
 				model.visible = false
 				model.rotation.x = PI
 			Status.DISCOVERED:
+				await get_tree().create_timer(_reveal_delay).timeout
 				model.apply_material_override(_hidden_material)
 				model.visible = true
 			Status.REVEALED:
