@@ -13,6 +13,7 @@ enum Direction {
 }
 
 @export var grid_size: float = 2.0
+@export var grid_extents: Vector2i = Vector2i(13, 13)
 
 @export var _reveals_per_second: float = 16.0
 @export var _discovers_per_second: float = 2.0
@@ -220,10 +221,19 @@ func _request_starting_placed_tile() -> void:
 	var starting_tile_blueprint: TileBlueprint = TileBlueprint.new(_starting_tile, 0)
 	var starting_grid_position: Vector2i = world_to_grid_position(player_spawn_point.global_position)
 	_spawn_at(starting_tile_blueprint, starting_grid_position)
+	for y: int in range(-grid_extents.y, grid_extents.y + 1):
+		for x: int in range(-grid_extents.x, grid_extents.x + 1):
+			if absi(y) == grid_extents.y or absi(x) == grid_extents.x:
+				var wall_roation: int = 1 if absi(y) == grid_extents.y else 0
+				var wall_position: Vector2i = Vector2i(x, y)
+				_spawn_at(TileBlueprint.new(preload("uid://d3cc5nj7ogal8"), wall_roation), wall_position)
+				var wall: Structure = _placed_tiles.get(wall_position)
+				wall.reveal()
 	var starting_tile: Structure = _placed_tiles.get(starting_grid_position)
 	assert(starting_tile)
 	var connections: Array[Direction] = starting_tile.get_connections().keys()
 	for direction: Direction in connections: _build_dungeon_from(starting_grid_position, direction)
+	starting_tile.reveal()
 
 func _spawn_at(tile_blueprint: TileBlueprint, grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
 	var tile_position: Vector3 = grid_to_world_position(grid_position) - Vector3(0.0, 0.05, 0.0)

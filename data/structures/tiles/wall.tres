@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://d3cc5nj7ogal8"]
+
+[ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_yd6qc"]
+[ext_resource type="PackedScene" uid="uid://kecvh6aocwul" path="res://data/structures/wall.tscn" id="2_yd6qc"]
+[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_klcix"]
+[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="4_sqg78"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cpnen"]
+size = Vector3(2.5, 1, 2.5)
+
+[sub_resource type="Resource" id="Resource_klcix"]
+script = ExtResource("1_yd6qc")
+_shape = SubResource("BoxShape3D_cpnen")
+metadata/_custom_type_script = "uid://cfq64v34pot8s"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2bxb5"]
+size = Vector3(2, 0.1, 2)
+
+[sub_resource type="Resource" id="Resource_sqg78"]
+script = ExtResource("1_yd6qc")
+_shape = SubResource("BoxShape3D_2bxb5")
+metadata/_custom_type_script = "uid://cfq64v34pot8s"
+
+[resource]
+script = ExtResource("4_sqg78")
+connections = Dictionary[int, ExtResource("3_klcix")]({})
+group = 2
+name = "Wall"
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("2_yd6qc")])
+_collision_shape = SubResource("Resource_klcix")
+_hit_box_shape = SubResource("Resource_sqg78")
+heads_up_display_offset = Vector3(0, 5, 0)
+metadata/_custom_type_script = "uid://dol8cfhd12nbf"

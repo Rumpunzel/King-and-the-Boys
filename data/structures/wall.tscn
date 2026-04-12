@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://kecvh6aocwul"]
+
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_ntlmk"]
+[ext_resource type="Material" uid="uid://cvwu11s4ahpod" path="res://protoype_assets/textures/wood_06_1k/wood_06_1k.tres" id="2_27ulw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ntlmk"]
+material = ExtResource("2_27ulw")
+size = Vector3(2.5, 1, 2.5)
+
+[node name="Tile" type="Node3D" unique_id=1617054939]
+script = ExtResource("1_ntlmk")
+metadata/_custom_type_script = "uid://bpkm2ws12sljg"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1648661705]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_ntlmk")

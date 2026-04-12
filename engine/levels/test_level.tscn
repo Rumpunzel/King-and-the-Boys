@@ -43,6 +43,7 @@ size = Vector2(64, 64)
 process_mode = 1
 script = ExtResource("1_ywn5t")
 grid_size = 2.5
+grid_extents = null
 _starting_tile = ExtResource("8_ua3w6")
 _available_tiles = Array[ExtResource("3_m31io")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("7_oyy5j"), ExtResource("7_oyy5j"), ExtResource("9_ua3w6"), ExtResource("10_bqpxs"), ExtResource("10_jhxx2"), ExtResource("9_iiqpp")])
 _emergency_tiles = Array[ExtResource("3_m31io")]([ExtResource("12_m31io"), ExtResource("11_iiqpp"), ExtResource("13_epvo2"), ExtResource("14_jwwwr")])
