@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://lcjpjue1orcf"]
+
+[ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_uc1ih"]
+[ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_m7t2l"]
+[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_4o0sj"]
+[ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_connection_restriction.tres" id="4_rhjgu"]
+[ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_kf2cb"]
+[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_tr2gw"]
+
+[resource]
+script = ExtResource("6_tr2gw")
+connections = Dictionary[int, ExtResource("3_4o0sj")]({
+0: ExtResource("4_rhjgu")
+})
+room_type = ExtResource("5_kf2cb")
+group = 2
+name = "Room Deadend"
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("2_m7t2l")])
+_collision_shape = ExtResource("1_uc1ih")
+_hit_box_shape = ExtResource("1_uc1ih")
+heads_up_display_offset = Vector3(0, 5, 0)
+metadata/_custom_type_script = "uid://dol8cfhd12nbf"

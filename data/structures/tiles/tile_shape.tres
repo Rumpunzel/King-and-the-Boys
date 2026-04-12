@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_fmtei"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2bxb5"]
-size = Vector3(3, 0.05, 3)
+size = Vector3(2, 0.1, 2)
 
 [resource]
 script = ExtResource("1_fmtei")

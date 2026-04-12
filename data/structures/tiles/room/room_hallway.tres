@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://c863mo5jjag6h"]
+
+[ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_qxtb5"]
+[ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_h8n52"]
+[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_nkeiq"]
+[ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="4_7pw2l"]
+[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_ib5e0"]
+
+[resource]
+script = ExtResource("5_ib5e0")
+connections = Dictionary[int, ExtResource("3_nkeiq")]({
+0: null,
+2: null
+})
+room_type = ExtResource("4_7pw2l")
+group = 2
+name = "Room Hallway"
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("2_h8n52")])
+_collision_shape = ExtResource("1_qxtb5")
+_hit_box_shape = ExtResource("1_qxtb5")
+heads_up_display_offset = Vector3(0, 5, 0)
+metadata/_custom_type_script = "uid://dol8cfhd12nbf"

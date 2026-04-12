@@ -12,7 +12,7 @@ connections = Dictionary[int, ExtResource("3_ggsti")]({
 2: null
 })
 group = 2
-name = "Starting Tile"
+name = "Hallway"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_jlj70")])
 _collision_shape = ExtResource("1_ggsti")

@@ -11,7 +11,7 @@ connections = Dictionary[int, ExtResource("3_3derx")]({
 0: null
 })
 group = 2
-name = "Starting Tile"
+name = "Deadend"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_3derx")])
 _collision_shape = ExtResource("1_3derx")

@@ -12,7 +12,7 @@ connections = Dictionary[int, ExtResource("3_x6lyd")]({
 1: null
 })
 group = 2
-name = "Starting Tile"
+name = "Corner"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_hoo2v")])
 _collision_shape = ExtResource("1_r783g")

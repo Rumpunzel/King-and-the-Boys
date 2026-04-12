@@ -9,7 +9,7 @@
 script = ExtResource("4_mev26")
 connections = Dictionary[int, ExtResource("3_b4a4e")]({})
 group = 2
-name = "Starting Tile"
+name = "Hole"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_r65ho")])
 _collision_shape = ExtResource("1_b4a4e")

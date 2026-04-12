@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="TileConnectionRestriction" format=3 uid="uid://cwhv7wnfeyhkk"]
 
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="1_280lh"]
-[ext_resource type="Resource" uid="uid://c3sqiedcypv0x" path="res://data/structures/tiles/room_crossing.tres" id="2_6gu6e"]
-[ext_resource type="Resource" uid="uid://mmk57aplc5pu" path="res://data/structures/tiles/room_center.tres" id="2_280lh"]
+[ext_resource type="Resource" uid="uid://c3sqiedcypv0x" path="res://data/structures/tiles/room/room_crossing.tres" id="2_6gu6e"]
+[ext_resource type="Resource" uid="uid://mmk57aplc5pu" path="res://data/structures/tiles/room/room_center.tres" id="2_280lh"]
 [ext_resource type="Script" uid="uid://uiqnmklycpky" path="res://engine/objects/structures/connection_restrictions/tile_connection_restriction.gd" id="4_lmjoa"]
 
 [resource]

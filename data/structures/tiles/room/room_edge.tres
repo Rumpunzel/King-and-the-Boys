@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://lwhl84tub2jy"]
+
+[ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_dh8xs"]
+[ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_3hsrk"]
+[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_ly3ak"]
+[ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_connection_restriction.tres" id="4_3fc1k"]
+[ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_adq3p"]
+[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_18pct"]
+
+[resource]
+script = ExtResource("6_18pct")
+connections = Dictionary[int, ExtResource("3_ly3ak")]({
+0: ExtResource("4_3fc1k"),
+1: ExtResource("4_3fc1k"),
+2: ExtResource("4_3fc1k")
+})
+room_type = ExtResource("5_adq3p")
+group = 2
+name = "Room Edge"
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("2_3hsrk")])
+_collision_shape = ExtResource("1_dh8xs")
+_hit_box_shape = ExtResource("1_dh8xs")
+heads_up_display_offset = Vector3(0, 5, 0)
+metadata/_custom_type_script = "uid://dol8cfhd12nbf"

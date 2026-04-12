@@ -103,7 +103,7 @@ func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	if status == Status.NONE: status = Status.PLACED
 	@warning_ignore("unsafe_property_access")
-	$Label3D.text = "%s\n%s" % [profile.resource_path.get_file(), get_grid_position()]
+	$Label3D.text = "%s\n%s" % [profile.name, get_grid_position()]
 
 static func from_structure_data(structure_data: Dictionary[StringName, Variant]) -> Structure:
 	validate_structure_data(structure_data)
