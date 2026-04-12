@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="TileConnectionRestriction" format=3 uid="uid://rcf54itbtq40"]
+
+[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="1_xulsh"]
+[ext_resource type="Resource" uid="uid://c3sqiedcypv0x" path="res://data/structures/tiles/room_crossing.tres" id="2_6hylf"]
+[ext_resource type="Resource" uid="uid://lwhl84tub2jy" path="res://data/structures/tiles/room_edge.tres" id="3_r860s"]
+[ext_resource type="Script" uid="uid://uiqnmklycpky" path="res://engine/objects/structures/connection_restrictions/tile_connection_restriction.gd" id="4_g5jjp"]
+
+[resource]
+script = ExtResource("4_g5jjp")
+_tile_profiles = Array[ExtResource("1_xulsh")]([ExtResource("2_6hylf"), ExtResource("3_r860s")])
+metadata/_custom_type_script = "uid://uiqnmklycpky"

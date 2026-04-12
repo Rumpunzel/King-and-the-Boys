@@ -97,6 +97,8 @@ var level: Level
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	if status == Status.NONE: status = Status.PLACED
+	@warning_ignore("unsafe_property_access")
+	$Label3D.text = "%s\n%s" % [profile.resource_path.get_file(), get_grid_position()]
 
 static func from_structure_data(structure_data: Dictionary[StringName, Variant]) -> Structure:
 	validate_structure_data(structure_data)
@@ -149,18 +151,18 @@ func to_structure_data() -> Dictionary[StringName, Variant]:
 func has_connection(direction: Level.Direction) -> bool:
 	return get_connections().has(direction)
 
-func get_connection(direction: Level.Direction) -> RoomType:
+func get_connection(direction: Level.Direction) -> ConnectionRestriction:
 	assert(has_connection(direction))
 	return get_connections()[direction]
 
-func can_connect(direction: Level.Direction, room_type: RoomType) -> bool:
+func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool:
 	if not has_connection(direction): return false
-	var connections: Dictionary[Level.Direction, RoomType] = get_connections()
-	var required_room_type: RoomType = connections[direction]
-	return not required_room_type or room_type == required_room_type
+	var connections: Dictionary[Level.Direction, ConnectionRestriction] = get_connections()
+	var restriction: ConnectionRestriction = connections[direction]
+	return not restriction or restriction.can_connect(other_profile)
 
-func get_connections() -> Dictionary[Level.Direction, RoomType]:
-	var adjusted_connections: Dictionary[Level.Direction, RoomType] = {}
+func get_connections() -> Dictionary[Level.Direction, ConnectionRestriction]:
+	var adjusted_connections: Dictionary[Level.Direction, ConnectionRestriction] = {}
 	for connection: Level.Direction in profile.connections.keys():
 		adjusted_connections[_get_adjusted_direction(connection)] = profile.connections[connection]
 	return adjusted_connections
@@ -200,10 +202,8 @@ func _debug_draw_connections() -> void:
 		var direction: Level.Direction = get_connections().keys()[index]
 		var tile_grid_offset: Vector2i = Level.direction_to_vector(direction)
 		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.5
-		var connection_room_type: RoomType = get_connections()[direction]
 		var color: Color = profile.room_type.color if profile.room_type else Color.WHEAT
-		var connection_color: Color = connection_room_type.color if connection_room_type else color
-		DebugDraw3D.draw_line(global_position + Vector3.UP * 0.05, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, connection_color, INF)
+		DebugDraw3D.draw_line(global_position + Vector3.UP * 0.05, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, color, INF)
 
 func _to_string() -> String:
 	return "[%s turned %d times: %s]" % [profile, clockwise_turns, get_connections()]

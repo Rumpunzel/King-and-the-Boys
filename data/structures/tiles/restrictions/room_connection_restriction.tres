@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="RoomTypeConnectionRestriction" format=3 uid="uid://bjww6emicijx8"]
+
+[ext_resource type="Script" uid="uid://cwdjimpf1f3pp" path="res://engine/objects/structures/room_type.gd" id="1_5ucb1"]
+[ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room.tres" id="2_gbcqv"]
+[ext_resource type="Script" uid="uid://ded8opvljf2u" path="res://engine/objects/structures/connection_restrictions/room_type_connection_restriction.gd" id="2_vxy4d"]
+
+[resource]
+script = ExtResource("2_vxy4d")
+_room_types = Array[ExtResource("1_5ucb1")]([ExtResource("2_gbcqv")])
+metadata/_custom_type_script = "uid://ded8opvljf2u"

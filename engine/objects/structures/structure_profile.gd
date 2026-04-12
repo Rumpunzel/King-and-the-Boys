@@ -9,7 +9,7 @@ enum Groups {
 	TILE,
 }
 
-@export var connections: Dictionary[Level.Direction, RoomType] = {Level.Direction.UP: null, Level.Direction.RIGHT: null, Level.Direction.DOWN: null, Level.Direction.LEFT: null}
+@export var connections: Dictionary[Level.Direction, ConnectionRestriction] = {Level.Direction.UP: null, Level.Direction.RIGHT: null, Level.Direction.DOWN: null, Level.Direction.LEFT: null}
 @export var room_type: RoomType
 @export var group: Groups = Groups.BUILDING
 
@@ -29,7 +29,7 @@ func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, 
 	return new_structure
 
 func has_restrictions() -> bool:
-	return connections.values().any(func(restriction: RoomType) -> bool: return restriction != null)
+	return connections.values().any(func(restriction: ConnectionRestriction) -> bool: return restriction != null)
 
 func get_group_name() -> StringName:
 	var group_name: StringName = Groups.keys()[group]

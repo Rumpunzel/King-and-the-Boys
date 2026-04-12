@@ -34,3 +34,9 @@ metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
 [node name="StructureHitBox" parent="." unique_id=894402806 node_paths=PackedStringArray("structure") instance=ExtResource("2_c1vy7")]
 structure = NodePath("..")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=647613696]
+billboard = 1
+no_depth_test = true
+render_priority = 1
+text = "structure"

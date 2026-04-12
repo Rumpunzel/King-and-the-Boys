@@ -2,13 +2,13 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room_tile_shape.tres" id="1_dy08k"]
 [ext_resource type="PackedScene" uid="uid://5pi5sjed7xmn" path="res://data/structures/room_hallway_tile.tscn" id="2_dy08k"]
-[ext_resource type="Script" uid="uid://cwdjimpf1f3pp" path="res://engine/objects/structures/room_type.gd" id="3_db2m0"]
+[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_dy08k"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room.tres" id="4_judnu"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_qh3pg"]
 
 [resource]
 script = ExtResource("5_qh3pg")
-connections = Dictionary[int, ExtResource("3_db2m0")]({
+connections = Dictionary[int, ExtResource("3_dy08k")]({
 0: null,
 2: null
 })

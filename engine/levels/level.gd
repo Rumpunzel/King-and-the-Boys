@@ -24,9 +24,6 @@ enum Direction {
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
 
-var _grid: Dictionary[Vector3i, GridCell]
-var _debugs: Dictionary[Vector3i, Label3D]
-
 var _reveal_queue: Array[Structure] = []
 # Direction -> Array[Structure]
 var _discover_queue: Dictionary[Direction, Array] = {}
@@ -40,10 +37,6 @@ var _remaining_tile_discover_delay: float = 0.0
 func _ready() -> void:
 	if not is_multiplayer_authority(): return
 	_request_starting_placed_tile()
-	for z: int in range(-32, 32):
-		for x: int in range(-32, 32):
-			var cell_position: Vector3i = Vector3i(x, 0, z)
-			#if not _debugs.has(cell_position): _create_debug_label(cell_position)
 
 func _process(delta: float) -> void:
 	# Reveal
@@ -254,21 +247,10 @@ func _queue_discover(tile: Structure, direction: Direction) -> void:
 	if queued_discovers.has(tile): return
 	queued_discovers.append(tile)
 
-func _on_character_entered_grid_cell(cell_position: Vector3i) -> void:
-	var ground_cell: GroundCell = _grid.get_or_add(cell_position, GridCell.get_default())
-	ground_cell.times_entered += 1
-	_grid[cell_position] = ground_cell
-	_update_debug(cell_position, ground_cell)
-
 func _on_structure_created(structure: Structure) -> void:
 	structure.level = self
 	var tile_grid_position: Vector2i = world_to_grid_position(structure.global_position)
 	_placed_tiles[tile_grid_position] = structure
-	for cell_position: Vector2i in structure.get_grid_cells():
-		var vector3: Vector3i = Vector3i(cell_position.x, 0, cell_position.y)
-		var structure_cell: StructureCell = StructureCell.new(structure.profile, vector3)
-		_grid[vector3] = structure_cell
-		_update_debug(vector3, structure_cell)
 
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	var character: Character = player_ghost.character
@@ -283,18 +265,6 @@ func _on_player_moved(character_grid_position: Vector2i, character: Character) -
 	for direction: Direction in connections: _build_dungeon_from(character_grid_position, direction)
 	_update_player_vision(character_grid_position, character.profile.vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.REVEALED, _queue_reveal)
 	_update_player_vision(character_grid_position, 32.0, func(tile: Structure) -> bool: return tile.status < Structure.Status.DISCOVERED, _queue_discover)
-
-func _create_debug_label(cell_position: Vector3i) -> GridDebugLabel:
-	var debug_label: GridDebugLabel = GridDebugLabel.new()
-	debug_label.cell_position = cell_position
-	add_child(debug_label)
-	_debugs[cell_position] = debug_label
-	return debug_label
-
-func _update_debug(cell_position: Vector3i, grid_cell: GridCell) -> void:
-	var debug_label: GridDebugLabel = _debugs.get_or_add(cell_position, _create_debug_label(cell_position * grid_size))
-	debug_label.grid_cell = grid_cell
-	debug_label.update_text()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
@@ -315,23 +285,23 @@ class TileBlueprint extends RefCounted:
 		if not has_connection(direction) and not existing_tile.has_connection(reverse_direction): return true
 		# Must have opposite connections
 		if has_connection(direction) != existing_tile.has_connection(reverse_direction): return false
-		return can_connect(direction, existing_tile.profile.room_type) and existing_tile.can_connect(reverse_direction, profile.room_type)
+		return can_connect(direction, existing_tile.profile) and existing_tile.can_connect(reverse_direction, profile)
 	
 	func has_connection(direction: Level.Direction) -> bool:
 		return get_connections().has(direction)
 	
-	func get_connection(direction: Level.Direction) -> RoomType:
+	func get_connection(direction: Level.Direction) -> ConnectionRestriction:
 		assert(has_connection(direction))
 		return get_connections()[direction]
 
-	func can_connect(direction: Level.Direction, room_type: RoomType) -> bool:
+	func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool:
 		if not has_connection(direction): return false
-		var connections: Dictionary[Level.Direction, RoomType] = get_connections()
-		var required_room_type: RoomType = connections[direction]
-		return not required_room_type or room_type == required_room_type
+		var connections: Dictionary[Level.Direction, ConnectionRestriction] = get_connections()
+		var restriction: ConnectionRestriction = connections[direction]
+		return not restriction or restriction.can_connect(other_profile)
 
-	func get_connections() -> Dictionary[Level.Direction, RoomType]:
-		var adjusted_connections: Dictionary[Level.Direction, RoomType] = {}
+	func get_connections() -> Dictionary[Level.Direction, ConnectionRestriction]:
+		var adjusted_connections: Dictionary[Level.Direction, ConnectionRestriction] = {}
 		for connection: Level.Direction in profile.connections.keys():
 			adjusted_connections[_get_adjusted_direction(connection)] = profile.connections[connection]
 		return adjusted_connections

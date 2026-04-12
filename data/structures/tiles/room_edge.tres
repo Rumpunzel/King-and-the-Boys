@@ -3,15 +3,16 @@
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room_tile_shape.tres" id="1_gnic3"]
 [ext_resource type="PackedScene" uid="uid://1i7rftrrgr0b" path="res://data/structures/room_edge_tile.tscn" id="2_gnic3"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="3_gnic3"]
-[ext_resource type="Script" uid="uid://cwdjimpf1f3pp" path="res://engine/objects/structures/room_type.gd" id="3_p6h1h"]
+[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_p6h1h"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room.tres" id="4_eknxi"]
+[ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_connection_restriction.tres" id="4_p6h1h"]
 
 [resource]
 script = ExtResource("3_gnic3")
 connections = Dictionary[int, ExtResource("3_p6h1h")]({
-0: null,
-1: null,
-2: null
+0: ExtResource("4_p6h1h"),
+1: ExtResource("4_p6h1h"),
+2: ExtResource("4_p6h1h")
 })
 room_type = ExtResource("4_eknxi")
 group = 2
