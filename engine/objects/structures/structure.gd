@@ -75,13 +75,13 @@ const STATUS: StringName = "status"
 				var tween: Tween = create_tween()
 				tween.set_parallel()
 				tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "rotation:x", PI, 0.7).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+				tween.tween_property(model, "rotation:x", 0.0, 0.7).from(PI).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+				tween.tween_property(model, "position:y", 0.05, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 				_debug_draw_connections()
 
 @export_group("Configuration")
 @export var _collision_shape: CollisionShape3D
-@export var _hidden_material: Material = preload("uid://cgb4im743eoct")
+@export var _hidden_material: Material = preload("uid://cvwu11s4ahpod")
 
 var model: Model:
 	set(new_model):
@@ -203,7 +203,7 @@ func _debug_draw_connections() -> void:
 		var tile_grid_offset: Vector2i = Level.direction_to_vector(direction)
 		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.5
 		var color: Color = profile.room_type.color if profile.room_type else Color.WHEAT
-		DebugDraw3D.draw_line(global_position + Vector3.UP * 0.05, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, color, INF)
+		DebugDraw3D.draw_line(global_position + Vector3.UP * 0, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.15, color, INF)
 
 func _to_string() -> String:
 	return "[%s turned %d times: %s]" % [profile, clockwise_turns, get_connections()]

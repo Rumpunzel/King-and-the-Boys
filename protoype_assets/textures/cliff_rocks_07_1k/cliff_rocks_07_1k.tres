@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cov8evhhbasom"]
+
+[ext_resource type="Texture2D" uid="uid://b86pjo8uiiwdq" path="res://protoype_assets/textures/cliff_rocks_07_1k/cliff_rocks_07_basecolor_1k.png" id="1_1vkgl"]
+[ext_resource type="Texture2D" uid="uid://cnlwyajp5kdtw" path="res://protoype_assets/textures/cliff_rocks_07_1k/cliff_rocks_07_ambientocclusion_1k.png" id="2_rybdx"]
+[ext_resource type="Texture2D" uid="uid://fn1vvb1aaysb" path="res://protoype_assets/textures/cliff_rocks_07_1k/cliff_rocks_07_height_1k.png" id="3_5eiwm"]
+[ext_resource type="Texture2D" uid="uid://djhcccbqiyhdk" path="res://protoype_assets/textures/cliff_rocks_07_1k/cliff_rocks_07_metallic_1k.png" id="4_8ie3m"]
+[ext_resource type="Texture2D" uid="uid://buv6po6gccujf" path="res://protoype_assets/textures/cliff_rocks_07_1k/cliff_rocks_07_normal_gl_1k.png" id="5_cxopn"]
+[ext_resource type="Texture2D" uid="uid://c6pts43k3s24p" path="res://protoype_assets/textures/cliff_rocks_07_1k/cliff_rocks_07_roughness_1k.png" id="6_qcxlw"]
+
+[resource]
+albedo_texture = ExtResource("1_1vkgl")
+metallic = 1.0
+metallic_texture = ExtResource("4_8ie3m")
+roughness_texture = ExtResource("6_qcxlw")
+normal_enabled = true
+normal_texture = ExtResource("5_cxopn")
+bent_normal_enabled = true
+ao_enabled = true
+ao_texture = ExtResource("2_rybdx")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_5eiwm")

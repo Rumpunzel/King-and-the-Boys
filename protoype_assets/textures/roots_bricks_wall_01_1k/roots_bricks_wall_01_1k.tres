@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c2ftm0nklys7p"]
+
+[ext_resource type="Texture2D" uid="uid://r5hyomegxm1b" path="res://protoype_assets/textures/roots_bricks_wall_01_1k/roots_bricks_wall_01_basecolor_1k.png" id="1_tq6fi"]
+[ext_resource type="Texture2D" uid="uid://d5weqfxkxlxx" path="res://protoype_assets/textures/roots_bricks_wall_01_1k/roots_bricks_wall_01_ambientocclusion_1k.png" id="2_v2sr2"]
+[ext_resource type="Texture2D" uid="uid://ddxfl7hrgmc33" path="res://protoype_assets/textures/roots_bricks_wall_01_1k/roots_bricks_wall_01_height_1k.png" id="3_2otpb"]
+[ext_resource type="Texture2D" uid="uid://dtcatvlyjvv50" path="res://protoype_assets/textures/roots_bricks_wall_01_1k/roots_bricks_wall_01_metallic_1k.png" id="4_nyodb"]
+[ext_resource type="Texture2D" uid="uid://dv2omhet4xj4d" path="res://protoype_assets/textures/roots_bricks_wall_01_1k/roots_bricks_wall_01_normal_gl_1k.png" id="5_r8j5w"]
+[ext_resource type="Texture2D" uid="uid://deuydgmhfmyhr" path="res://protoype_assets/textures/roots_bricks_wall_01_1k/roots_bricks_wall_01_roughness_1k.png" id="6_nks0f"]
+
+[resource]
+albedo_texture = ExtResource("1_tq6fi")
+metallic = 1.0
+metallic_texture = ExtResource("4_nyodb")
+roughness_texture = ExtResource("6_nks0f")
+normal_enabled = true
+normal_texture = ExtResource("5_r8j5w")
+ao_enabled = true
+ao_texture = ExtResource("2_v2sr2")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_2otpb")
+uv1_scale = Vector3(2, 2, 2)

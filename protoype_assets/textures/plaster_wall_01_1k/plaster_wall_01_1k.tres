@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://re4dsmyyegh0"]
+
+[ext_resource type="Texture2D" uid="uid://b3u6dt4v0q6s1" path="res://protoype_assets/textures/plaster_wall_01_1k/plaster_wall_01_basecolor_1k.png" id="1_njssu"]
+[ext_resource type="Texture2D" uid="uid://b842y3uxs3c4b" path="res://protoype_assets/textures/plaster_wall_01_1k/plaster_wall_01_ambientocclusion_1k.png" id="2_ilrat"]
+[ext_resource type="Texture2D" uid="uid://dpqvhid25actd" path="res://protoype_assets/textures/plaster_wall_01_1k/plaster_wall_01_height_1k.png" id="3_heryc"]
+[ext_resource type="Texture2D" uid="uid://dxll6dpybqjxt" path="res://protoype_assets/textures/plaster_wall_01_1k/plaster_wall_01_metallic_1k.png" id="4_eofkx"]
+[ext_resource type="Texture2D" uid="uid://dw054eil571dr" path="res://protoype_assets/textures/plaster_wall_01_1k/plaster_wall_01_normal_gl_1k.png" id="5_8q7rk"]
+[ext_resource type="Texture2D" uid="uid://b5v1ie7itq5ed" path="res://protoype_assets/textures/plaster_wall_01_1k/plaster_wall_01_roughness_1k.png" id="6_c5a5r"]
+
+[resource]
+albedo_texture = ExtResource("1_njssu")
+metallic = 1.0
+metallic_texture = ExtResource("4_eofkx")
+roughness_texture = ExtResource("6_c5a5r")
+normal_enabled = true
+normal_texture = ExtResource("5_8q7rk")
+bent_normal_enabled = true
+ao_enabled = true
+ao_texture = ExtResource("2_ilrat")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_heryc")

@@ -20,15 +20,12 @@
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="14_jhxx2"]
 [ext_resource type="Resource" uid="uid://lcjpjue1orcf" path="res://data/structures/tiles/room_deadend.tres" id="14_jwwwr"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
-[ext_resource type="Texture2D" uid="uid://bcj58wy050mvn" path="res://protoype_assets/sky_boxes/skybox_6k.jpg" id="21_mkmcm"]
+[ext_resource type="Texture2D" uid="uid://bwn2kfo8trdse" path="res://protoype_assets/sky_boxes/material_0_baseColor.png" id="19_mkmcm"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jwwwr"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
-size = Vector2(64, 64)
-
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_3cql5"]
-panorama = ExtResource("21_mkmcm")
+panorama = ExtResource("19_mkmcm")
 
 [sub_resource type="Sky" id="Sky_olmtf"]
 sky_material = SubResource("PanoramaSkyMaterial_3cql5")
@@ -37,6 +34,10 @@ sky_material = SubResource("PanoramaSkyMaterial_3cql5")
 background_mode = 2
 background_energy_multiplier = 0.75
 sky = SubResource("Sky_olmtf")
+sky_rotation = Vector3(4.2044983, 4.7787113, 0)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
+size = Vector2(64, 64)
 
 [node name="TestLevel" type="Node3D" unique_id=2100419132]
 process_mode = 1
@@ -56,8 +57,11 @@ script = ExtResource("14_jhxx2")
 _synchronizer = NodePath("..")
 metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1391764827]
+environment = SubResource("Environment_jwwwr")
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1372172077]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 mesh = SubResource("PlaneMesh_bkb5w")
 skeleton = NodePath("..")
 surface_material_override/0 = ExtResource("16_jwwwr")
@@ -67,6 +71,3 @@ surface_material_override/0 = ExtResource("16_jwwwr")
 [node name="PlayerSpawnPoint" type="Marker3D" parent="SpawnPoints" unique_id=1704218217]
 script = ExtResource("5_0p5hx")
 metadata/_custom_type_script = "uid://da4c4gcyqk2rb"
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1391764827]
-environment = SubResource("Environment_jwwwr")

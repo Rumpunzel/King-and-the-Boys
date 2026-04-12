@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c7514hthc376u"]
+
+[ext_resource type="Texture2D" uid="uid://bbbippvixewhf" path="res://protoype_assets/textures/roof_tiles_08_1k/roof_tiles_08_basecolor_1k.png" id="1_fxt4f"]
+[ext_resource type="Texture2D" uid="uid://ca82he60v8gyr" path="res://protoype_assets/textures/roof_tiles_08_1k/roof_tiles_08_ambientocclusion_1k.png" id="2_ee55l"]
+[ext_resource type="Texture2D" uid="uid://clk4lo1vadipt" path="res://protoype_assets/textures/roof_tiles_08_1k/roof_tiles_08_height_1k.png" id="3_j1eks"]
+[ext_resource type="Texture2D" uid="uid://ch00m5gfpe1by" path="res://protoype_assets/textures/roof_tiles_08_1k/roof_tiles_08_metallic_1k.png" id="4_phydu"]
+[ext_resource type="Texture2D" uid="uid://dhhoy0y0l34bw" path="res://protoype_assets/textures/roof_tiles_08_1k/roof_tiles_08_normal_gl_1k.png" id="5_of648"]
+[ext_resource type="Texture2D" uid="uid://ddgdr8ty2lxgf" path="res://protoype_assets/textures/roof_tiles_08_1k/roof_tiles_08_roughness_1k.png" id="6_xwbbf"]
+
+[resource]
+albedo_texture = ExtResource("1_fxt4f")
+metallic = 1.0
+metallic_texture = ExtResource("4_phydu")
+roughness_texture = ExtResource("6_xwbbf")
+normal_enabled = true
+normal_texture = ExtResource("5_of648")
+ao_enabled = true
+ao_texture = ExtResource("2_ee55l")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_j1eks")
+uv1_scale = Vector3(2, 2, 2)

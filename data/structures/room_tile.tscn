@@ -1,11 +1,12 @@
 [gd_scene format=3 uid="uid://e5sxig2yepxa"]
 
 [ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_a3jaf"]
-[ext_resource type="Material" uid="uid://besg4cdmxbidu" path="res://protoype_assets/textures/stone_tiles_02_4k.blend/stone_tiles_02.tres" id="2_aessn"]
+[ext_resource type="Material" uid="uid://c831mxnod3wuk" path="res://protoype_assets/textures/wood_planks_with_sand_01_1k/wood_planks_with_sand_01_1k.tres" id="2_aessn"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_xnro7"]
 lightmap_size_hint = Vector2i(14, 11)
-size = Vector3(2, 0.05, 2)
+material = ExtResource("2_aessn")
+size = Vector3(2, 0.1, 2)
 
 [node name="Tile" type="Node3D" unique_id=1617054939]
 script = ExtResource("1_a3jaf")
@@ -13,4 +14,3 @@ metadata/_custom_type_script = "uid://bpkm2ws12sljg"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=124874037]
 mesh = SubResource("BoxMesh_xnro7")
-surface_material_override/0 = ExtResource("2_aessn")

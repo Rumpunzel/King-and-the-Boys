@@ -167,7 +167,6 @@ func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction) 
 	spawn_at(grid_position)
 	var placed_tile: Structure = _placed_tiles[grid_position]
 	if not placed_tile.get_connections().has(direction): return
-	await get_tree().process_frame
 	_build_dungeon_from(grid_position, direction)
 
 func _build_room_from(origin_grid_position: Vector2i, already_visited: Array[Vector2i] = []) -> void:
@@ -188,7 +187,6 @@ func _build_room_from(origin_grid_position: Vector2i, already_visited: Array[Vec
 			already_visited.append(grid_position)
 			continue
 		continue_building_here.append(grid_position)
-	await get_tree().process_frame
 	for grid_position: Vector2i in continue_building_here:
 		_build_room_from(grid_position, already_visited)
 
@@ -228,7 +226,7 @@ func _request_starting_placed_tile() -> void:
 	for direction: Direction in connections: _build_dungeon_from(starting_grid_position, direction)
 
 func _spawn_at(tile_blueprint: TileBlueprint, grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
-	var tile_position: Vector3 = grid_to_world_position(grid_position) - Vector3(0.0, 0.05, 0.0)
+	var tile_position: Vector3 = grid_to_world_position(grid_position) - Vector3(0.0, 0.1, 0.0)
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position)
 	tile_placement_requested.emit(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status)
 

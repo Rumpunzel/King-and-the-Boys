@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bx4kksdfow4u5"]
+
+[ext_resource type="Texture2D" uid="uid://bk725h3018b34" path="res://protoype_assets/textures/desert_ground_01_1k/desert_ground_01_baseColor_1k.png" id="1_1lqvj"]
+[ext_resource type="Texture2D" uid="uid://ce6qtl8g7hspn" path="res://protoype_assets/textures/desert_ground_01_1k/desert_ground_01_ambientOcclusion_1k.png" id="2_ikx8o"]
+[ext_resource type="Texture2D" uid="uid://mdoroylbsrsb" path="res://protoype_assets/textures/desert_ground_01_1k/desert_ground_01_height_1k.png" id="3_ia6d5"]
+[ext_resource type="Texture2D" uid="uid://dpeyd3ac3drik" path="res://protoype_assets/textures/desert_ground_01_1k/desert_ground_01_metallic_1k.png" id="4_7tqxf"]
+[ext_resource type="Texture2D" uid="uid://dbksiswxhbdkp" path="res://protoype_assets/textures/desert_ground_01_1k/desert_ground_01_normal_gl_1k.png" id="5_xj2x1"]
+[ext_resource type="Texture2D" uid="uid://byfmpiq55bg25" path="res://protoype_assets/textures/desert_ground_01_1k/desert_ground_01_roughness_1k.png" id="6_4gewi"]
+
+[resource]
+albedo_texture = ExtResource("1_1lqvj")
+metallic = 1.0
+metallic_texture = ExtResource("4_7tqxf")
+roughness_texture = ExtResource("6_4gewi")
+normal_enabled = true
+normal_texture = ExtResource("5_xj2x1")
+ao_enabled = true
+ao_texture = ExtResource("2_ikx8o")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_ia6d5")
+uv1_scale = Vector3(2, 2, 2)

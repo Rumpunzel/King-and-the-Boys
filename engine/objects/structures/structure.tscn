@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://g8gbwwqlcudv" path="res://engine/objects/structures/structure.gd" id="1_esc8u"]
 [ext_resource type="PackedScene" uid="uid://yutu4m8jrjxn" path="res://engine/objects/structures/structure_hit_box.tscn" id="2_c1vy7"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_iq8r1"]
+[ext_resource type="Material" uid="uid://c7514hthc376u" path="res://protoype_assets/textures/roof_tiles_08_1k/roof_tiles_08_1k.tres" id="2_qbgox"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_qbgox"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5skvj"]
@@ -18,6 +19,7 @@ transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 0, 0
 collision_layer = 8
 script = ExtResource("1_esc8u")
 _collision_shape = NodePath("CollisionShape3D")
+_hidden_material = ExtResource("2_qbgox")
 metadata/_custom_type_script = "uid://g8gbwwqlcudv"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=221668453]

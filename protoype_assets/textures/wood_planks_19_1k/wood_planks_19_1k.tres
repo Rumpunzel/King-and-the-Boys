@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b7r1ilxs6nnk2"]
+
+[ext_resource type="Texture2D" uid="uid://dbwex63no2as8" path="res://protoype_assets/textures/wood_planks_19_1k/basecolor_1kwood_planks_19_.png" id="1_8myty"]
+[ext_resource type="Texture2D" uid="uid://dbi5s7ivofj7s" path="res://protoype_assets/textures/wood_planks_19_1k/ambientocclusion_1kwood_planks_19_.png" id="2_bfcwv"]
+[ext_resource type="Texture2D" uid="uid://700xqtccqo01" path="res://protoype_assets/textures/wood_planks_19_1k/height_1kwood_planks_19_.png" id="3_vr4yr"]
+[ext_resource type="Texture2D" uid="uid://urrocnownn06" path="res://protoype_assets/textures/wood_planks_19_1k/metallic_1kwood_planks_19_.png" id="4_mkdo1"]
+[ext_resource type="Texture2D" uid="uid://btwy76fq57754" path="res://protoype_assets/textures/wood_planks_19_1k/normal_gl_1kwood_planks_19_.png" id="5_udwkw"]
+[ext_resource type="Texture2D" uid="uid://baniqhhcnyudq" path="res://protoype_assets/textures/wood_planks_19_1k/roughness_1kwood_planks_19_.png" id="6_nh2rj"]
+
+[resource]
+albedo_texture = ExtResource("1_8myty")
+metallic = 1.0
+metallic_texture = ExtResource("4_mkdo1")
+roughness_texture = ExtResource("6_nh2rj")
+normal_enabled = true
+normal_texture = ExtResource("5_udwkw")
+ao_enabled = true
+ao_texture = ExtResource("2_bfcwv")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_vr4yr")
+uv1_scale = Vector3(2, 2, 2)

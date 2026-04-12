@@ -1,0 +1,22 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dn2maqvn6vud"]
+
+[ext_resource type="Texture2D" uid="uid://dw4c5xb7ld3ls" path="res://protoype_assets/textures/ground_tiles_27_1k/ground_tiles_27_basecolor_1k.png" id="1_uqb61"]
+[ext_resource type="Texture2D" uid="uid://dx5i0j6oeisk" path="res://protoype_assets/textures/ground_tiles_27_1k/ground_tiles_27_ambientocclusion_1k.png" id="2_yppfh"]
+[ext_resource type="Texture2D" uid="uid://ioaw1tvida3u" path="res://protoype_assets/textures/ground_tiles_27_1k/ground_tiles_27_height_1k.png" id="3_hgy66"]
+[ext_resource type="Texture2D" uid="uid://5h6bpcvf6xib" path="res://protoype_assets/textures/ground_tiles_27_1k/ground_tiles_27_metallic_1k.png" id="4_favd8"]
+[ext_resource type="Texture2D" uid="uid://c8v8meu702s5i" path="res://protoype_assets/textures/ground_tiles_27_1k/ground_tiles_27_normal_gl_1k.png" id="5_fjjjc"]
+[ext_resource type="Texture2D" uid="uid://7a7gaugasoge" path="res://protoype_assets/textures/ground_tiles_27_1k/ground_tiles_27_roughness_1k.png" id="6_61w1i"]
+
+[resource]
+albedo_texture = ExtResource("1_uqb61")
+metallic = 1.0
+metallic_texture = ExtResource("4_favd8")
+roughness_texture = ExtResource("6_61w1i")
+normal_enabled = true
+normal_texture = ExtResource("5_fjjjc")
+bent_normal_enabled = true
+ao_enabled = true
+ao_texture = ExtResource("2_yppfh")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_hgy66")
+uv1_scale = Vector3(2, 2, 2)

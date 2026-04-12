@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c831mxnod3wuk"]
+
+[ext_resource type="Texture2D" uid="uid://cx7g1o85dqhvy" path="res://protoype_assets/textures/wood_planks_with_sand_01_1k/wood_planks_with_sand_01_color_1k.png" id="1_g03qo"]
+[ext_resource type="Texture2D" uid="uid://qoit3ht7y124" path="res://protoype_assets/textures/wood_planks_with_sand_01_1k/wood_planks_with_sand_01_ambient_occlusion_1k.png" id="2_mivb1"]
+[ext_resource type="Texture2D" uid="uid://bjvl6w1lxsrvt" path="res://protoype_assets/textures/wood_planks_with_sand_01_1k/wood_planks_with_sand_01_height_1k.png" id="3_sgxi6"]
+[ext_resource type="Texture2D" uid="uid://deig28uavwoli" path="res://protoype_assets/textures/wood_planks_with_sand_01_1k/wood_planks_with_sand_01_normal_gl_1k.png" id="4_sfobe"]
+[ext_resource type="Texture2D" uid="uid://c3xgh3kdbvc6w" path="res://protoype_assets/textures/wood_planks_with_sand_01_1k/wood_planks_with_sand_01_roughness_1k.png" id="5_rawdg"]
+
+[resource]
+albedo_texture = ExtResource("1_g03qo")
+roughness_texture = ExtResource("5_rawdg")
+normal_enabled = true
+normal_texture = ExtResource("4_sfobe")
+ao_enabled = true
+ao_texture = ExtResource("2_mivb1")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_sgxi6")
+uv1_scale = Vector3(2, 2, 2)
