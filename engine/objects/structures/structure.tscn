@@ -18,7 +18,6 @@ properties/1/replication_mode = 2
 transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 0, 0, 0)
 collision_layer = 8
 script = ExtResource("1_esc8u")
-_reveal_delay = null
 _collision_shape = NodePath("CollisionShape3D")
 _hidden_material = ExtResource("2_qbgox")
 metadata/_custom_type_script = "uid://g8gbwwqlcudv"

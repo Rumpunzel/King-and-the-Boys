@@ -164,7 +164,7 @@ func can_connect(direction: Level.Direction, other_profile: StructureProfile) ->
 	if not has_connection(direction): return false
 	var connections: Dictionary[Level.Direction, ConnectionRestriction] = get_connections()
 	var restriction: ConnectionRestriction = connections[direction]
-	return not restriction or restriction.can_connect(other_profile)
+	return not restriction or restriction.can_connect(profile, other_profile)
 
 func get_connections() -> Dictionary[Level.Direction, ConnectionRestriction]:
 	var adjusted_connections: Dictionary[Level.Direction, ConnectionRestriction] = {}
