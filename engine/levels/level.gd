@@ -226,7 +226,7 @@ func _request_starting_placed_tile() -> void:
 	for direction: Direction in connections: _build_dungeon_from(starting_grid_position, direction)
 
 func _spawn_at(tile_blueprint: TileBlueprint, grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
-	var tile_position: Vector3 = grid_to_world_position(grid_position) - Vector3(0.0, 0.1, 0.0)
+	var tile_position: Vector3 = grid_to_world_position(grid_position) - Vector3(0.0, 0.05, 0.0)
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position)
 	tile_placement_requested.emit(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status)
 

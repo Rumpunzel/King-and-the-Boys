@@ -56,7 +56,9 @@ const STATUS: StringName = "status"
 		var old_status: Status = status
 		status = new_status
 		match status:
-			Status.PLACED: model.visible = false
+			Status.PLACED:
+				model.visible = false
+				model.rotation.x = PI
 			Status.DISCOVERED:
 				model.apply_material_override(_hidden_material)
 				model.visible = true
@@ -76,8 +78,8 @@ const STATUS: StringName = "status"
 				var tween: Tween = create_tween()
 				tween.set_parallel()
 				tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "rotation:x", 0.0, 0.7).from(PI).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "position:y", 0.05, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+				tween.tween_property(model, "rotation:x", 0.0, 0.7).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 				_debug_draw_connections()
 
 @export var _reveal_delay: float = 0.2

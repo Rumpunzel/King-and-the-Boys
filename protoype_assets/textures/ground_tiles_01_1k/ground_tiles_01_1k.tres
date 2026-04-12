@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://fe81d5xtvmyw"]
+
+[ext_resource type="Texture2D" uid="uid://cpkjjan35hqds" path="res://protoype_assets/textures/ground_tiles_01_1k/ground_tiles_01_color_1k.png" id="1_tif5x"]
+[ext_resource type="Texture2D" uid="uid://fb1vuc8jryxj" path="res://protoype_assets/textures/ground_tiles_01_1k/ground_tiles_01_ambient_occlusion_1k.png" id="2_e0rgx"]
+[ext_resource type="Texture2D" uid="uid://b6makbmdahaws" path="res://protoype_assets/textures/ground_tiles_01_1k/ground_tiles_01_height_1k.png" id="3_d238d"]
+[ext_resource type="Texture2D" uid="uid://cyot04npcy1lk" path="res://protoype_assets/textures/ground_tiles_01_1k/ground_tiles_01_normal_gl_1k.png" id="4_wx07e"]
+[ext_resource type="Texture2D" uid="uid://cmj2yuvg8jjmr" path="res://protoype_assets/textures/ground_tiles_01_1k/ground_tiles_01_roughness_1k.png" id="5_k8u46"]
+
+[resource]
+albedo_texture = ExtResource("1_tif5x")
+roughness_texture = ExtResource("5_k8u46")
+normal_enabled = true
+normal_texture = ExtResource("4_wx07e")
+ao_enabled = true
+ao_texture = ExtResource("2_e0rgx")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_d238d")
