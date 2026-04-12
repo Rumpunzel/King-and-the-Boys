@@ -61,6 +61,7 @@ const STATUS: StringName = "status"
 				model.apply_material_override(_hidden_material)
 				model.visible = true
 			Status.REVEALED:
+				await get_tree().create_timer(_reveal_delay).timeout
 				model.visible = true
 				model.remove_material_override(_hidden_material)
 			_: push_error("Status %s not implemented!" % status)
@@ -79,9 +80,11 @@ const STATUS: StringName = "status"
 				tween.tween_property(model, "position:y", 0.05, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 				_debug_draw_connections()
 
+@export var _reveal_delay: float = 0.2
+
 @export_group("Configuration")
 @export var _collision_shape: CollisionShape3D
-@export var _hidden_material: Material = preload("uid://cvwu11s4ahpod")
+@export var _hidden_material: Material
 
 var model: Model:
 	set(new_model):

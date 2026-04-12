@@ -1,0 +1,20 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bi6wcd4s4v3pj"]
+
+[ext_resource type="Texture2D" uid="uid://dm63r4e28pbg2" path="res://protoype_assets/textures/metal_01_1k/metal_01_color_1k.png" id="1_i3wcu"]
+[ext_resource type="Texture2D" uid="uid://4nwb0q7qgkjh" path="res://protoype_assets/textures/metal_01_1k/metal_01_ambient_occlusion_1k.png" id="2_11hrc"]
+[ext_resource type="Texture2D" uid="uid://dpmxp7ugp0g6c" path="res://protoype_assets/textures/metal_01_1k/metal_01_height_1k.png" id="3_0bvrj"]
+[ext_resource type="Texture2D" uid="uid://curijecp753ed" path="res://protoype_assets/textures/metal_01_1k/metal_01_metallic_1k.png" id="4_stiji"]
+[ext_resource type="Texture2D" uid="uid://dm7gvwh8kmp3b" path="res://protoype_assets/textures/metal_01_1k/metal_01_normal_gl_1k.png" id="5_iu047"]
+[ext_resource type="Texture2D" uid="uid://baqkgjbregbgc" path="res://protoype_assets/textures/metal_01_1k/metal_01_roughness_1k.png" id="6_dkdk5"]
+
+[resource]
+albedo_texture = ExtResource("1_i3wcu")
+metallic = 1.0
+metallic_texture = ExtResource("4_stiji")
+roughness_texture = ExtResource("6_dkdk5")
+normal_enabled = true
+normal_texture = ExtResource("5_iu047")
+ao_enabled = true
+ao_texture = ExtResource("2_11hrc")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_0bvrj")

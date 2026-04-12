@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://2fi7awyv4jhn"]
+
+[ext_resource type="Shader" uid="uid://2cig846ux4bc" path="res://engine/levels/spawn_points/dissolve.gdshader" id="1_warpl"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_warpl")
+shader_parameter/baseColor = Color(0, 0, 0, 1)
+shader_parameter/dissolveSlider = 0.5000000712500001
+shader_parameter/dissolveNoiseScale = 2.0
+shader_parameter/edgeNoiseScale = -5.00000011176
+shader_parameter/edgesThickness = 0.0
+shader_parameter/edgeColor = Color(0, 0, 1, 1)
+shader_parameter/edgeEmissionSlider = 0.0
+shader_parameter/enable_dissolve_animation = true
+shader_parameter/animation_speed = 1.0
+shader_parameter/animation_intensity = 0.499999988824

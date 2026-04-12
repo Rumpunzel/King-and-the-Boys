@@ -12,7 +12,7 @@ enum Direction {
 	LEFT,
 }
 
-@export var grid_size: float = 2.25
+@export var grid_size: float = 2.0
 
 @export var _reveals_per_second: float = 16.0
 @export var _discovers_per_second: float = 2.0

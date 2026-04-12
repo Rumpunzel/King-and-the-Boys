@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bb5otswt2l1ja"]
 
 [ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_4fv44"]
-[ext_resource type="Material" uid="uid://t3cjhqondoph" path="res://protoype_assets/textures/wood_planks_17_1k/wood_planks_17_1k.tres" id="2_ot4ba"]
+[ext_resource type="Material" uid="uid://qm0n58cabsws" path="res://protoype_assets/textures/wood_planks_11_1k/wood_planks_11_1k.tres" id="2_ot4ba"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_xnro7"]
 lightmap_size_hint = Vector2i(22, 15)
