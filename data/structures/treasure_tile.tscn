@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b75usk17jvre8"]
+
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_wn74d"]
+[ext_resource type="PackedScene" uid="uid://bi1bg3m5u36m8" path="res://protoype_assets/big_tile.blend" id="2_jgjb4"]
+[ext_resource type="Material" uid="uid://cw4ow8x3f1dly" path="res://protoype_assets/textures/floor_tiles_08_1k/floor_tiles_08_1k.tres" id="3_wn74d"]
+
+[node name="Tile" type="Node3D" unique_id=1617054939]
+script = ExtResource("1_wn74d")
+metadata/_custom_type_script = "uid://bpkm2ws12sljg"
+
+[node name="BigTile" parent="." unique_id=78048013 instance=ExtResource("2_jgjb4")]
+
+[node name="Tile" parent="BigTile" index="0" unique_id=1263924155]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 0, 0)
+surface_material_override/0 = ExtResource("3_wn74d")
+
+[editable path="BigTile"]
