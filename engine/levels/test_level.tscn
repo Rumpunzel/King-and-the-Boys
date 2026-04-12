@@ -1,25 +1,12 @@
 [gd_scene format=3 uid="uid://bmwhs3lwb74ue"]
 
 [ext_resource type="Script" uid="uid://dktxo1t8ahw30" path="res://engine/levels/level.gd" id="1_ywn5t"]
-[ext_resource type="Resource" uid="uid://dwljjhol16iea" path="res://data/structures/tiles/crossing.tres" id="2_c445m"]
-[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="3_m31io"]
-[ext_resource type="Resource" uid="uid://bdfrpagwkpemd" path="res://data/structures/tiles/hallway.tres" id="4_058wk"]
+[ext_resource type="Resource" uid="uid://b50fre8sdxsyo" path="res://data/structures/tiles/default_tile_set.tres" id="3_c445m"]
 [ext_resource type="Script" uid="uid://da4c4gcyqk2rb" path="res://engine/objects/characters/player_spawn_point.gd" id="5_0p5hx"]
-[ext_resource type="Resource" uid="uid://dckkvjgeuxvfx" path="res://data/structures/tiles/fork.tres" id="5_8egsi"]
-[ext_resource type="Resource" uid="uid://djc0kwgsfemkg" path="res://data/structures/tiles/corner.tres" id="6_cr1f1"]
 [ext_resource type="Resource" uid="uid://mmk57aplc5pu" path="res://data/structures/tiles/room/room_center.tres" id="8_ua3w6"]
-[ext_resource type="Resource" uid="uid://lwhl84tub2jy" path="res://data/structures/tiles/room/room_edge.tres" id="9_iiqpp"]
-[ext_resource type="Resource" uid="uid://c3sqiedcypv0x" path="res://data/structures/tiles/room/room_crossing.tres" id="9_ua3w6"]
-[ext_resource type="Resource" uid="uid://ffideuo22lr7" path="res://data/structures/tiles/room/room_fork.tres" id="10_bqpxs"]
-[ext_resource type="Resource" uid="uid://b6wth35w4tdk2" path="res://data/structures/tiles/room/room_corner.tres" id="10_jhxx2"]
-[ext_resource type="Resource" uid="uid://c863mo5jjag6h" path="res://data/structures/tiles/room/room_hallway.tres" id="11_iiqpp"]
-[ext_resource type="Resource" uid="uid://bv4s7a3cdfg55" path="res://data/structures/tiles/hole.tres" id="12_m31io"]
-[ext_resource type="Resource" uid="uid://dmp8p7syitfd4" path="res://data/structures/tiles/room/room_corner_permissive.tres" id="13_epvo2"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="14_epvo2"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="14_jhxx2"]
-[ext_resource type="Resource" uid="uid://lcjpjue1orcf" path="res://data/structures/tiles/treasure/treasure_deadend.tres" id="14_jwwwr"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
-[ext_resource type="Resource" uid="uid://bgamr2kpoe8de" path="res://data/structures/tiles/room/room_deadend.tres" id="16_mkmcm"]
 [ext_resource type="Texture2D" uid="uid://bwn2kfo8trdse" path="res://protoype_assets/sky_boxes/material_0_baseColor.png" id="19_mkmcm"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jwwwr"]
@@ -44,8 +31,7 @@ process_mode = 1
 script = ExtResource("1_ywn5t")
 grid_size = 2.5
 _starting_tile = ExtResource("8_ua3w6")
-_available_tiles = Array[ExtResource("3_m31io")]([ExtResource("2_c445m"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("5_8egsi"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("4_058wk"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("6_cr1f1"), ExtResource("9_ua3w6"), ExtResource("10_bqpxs"), ExtResource("10_jhxx2"), ExtResource("9_iiqpp"), ExtResource("14_jwwwr"), ExtResource("14_jwwwr"), ExtResource("14_jwwwr")])
-_emergency_tiles = Array[ExtResource("3_m31io")]([ExtResource("12_m31io"), ExtResource("11_iiqpp"), ExtResource("13_epvo2"), ExtResource("16_mkmcm")])
+_tile_set = ExtResource("3_c445m")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
 
 [node name="LevelSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1927909387]

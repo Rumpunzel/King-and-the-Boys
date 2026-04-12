@@ -20,8 +20,7 @@ enum Direction {
 
 @export_group("Configuration")
 @export var _starting_tile: StructureProfile
-@export var _available_tiles: Array[StructureProfile]
-@export var _emergency_tiles: Array[StructureProfile]
+@export var _tile_set: DungeonTileSet
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
 
@@ -31,9 +30,6 @@ var _discover_queue: Dictionary[Direction, Array] = {}
 
 var _remaining_tile_reveal_delay: float = 0.0
 var _remaining_tile_discover_delay: float = 0.0
-
-@onready var _available_tile_blueprints: Array[TileBlueprint] = _generate_blueprints(_available_tiles)
-@onready var _emergency_tile_blueprints: Array[TileBlueprint] = _generate_blueprints(_emergency_tiles)
 
 func _ready() -> void:
 	if not is_multiplayer_authority(): return
@@ -97,11 +93,17 @@ func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Stat
 		assert(placed_tile)
 		if status >= placed_tile.status: placed_tile.status = status
 		return
-	var tile_blueprints: Array[TileBlueprint] = _get_available_tile_blueprints_for_position(grid_position)
-	assert(not tile_blueprints.is_empty())
-	var fitting_tile_blueprint: TileBlueprint = tile_blueprints.pick_random()
-	assert(fitting_tile_blueprint)
-	_spawn_at(fitting_tile_blueprint, grid_position, status)
+	var surrounding_tiles: Dictionary[Vector2i, Structure] = {}
+	for y: int in range(grid_position.y - 1, grid_position.y + 2):
+		for x: int in range(grid_position.x - 1, grid_position.x + 2):
+			if not (x == grid_position.x or y == grid_position.y): continue
+			var position_to_check: Vector2i = Vector2i(x, y)
+			if _placed_tiles.has(position_to_check):
+				var surrounding_tile: Structure = _placed_tiles[position_to_check]
+				surrounding_tiles[position_to_check] = surrounding_tile
+	var fitting_blueprint: DungeonTileSet.TileBlueprint = _tile_set.get_tile_blueprint_for(grid_position, surrounding_tiles)
+	assert(fitting_blueprint)
+	_spawn_at(fitting_blueprint, grid_position, status)
 
 func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> void:
 	for grid_position: Vector2i in grid_positions: spawn_at(grid_position, status)
@@ -191,34 +193,13 @@ func _build_room_from(origin_grid_position: Vector2i, already_visited: Array[Vec
 	for grid_position: Vector2i in continue_building_here:
 		_build_room_from(grid_position, already_visited)
 
-func _get_available_tile_blueprints_for_position(new_tile_position: Vector2i) -> Array[TileBlueprint]:
-	var surrounding_tiles: Dictionary[Vector2i, Structure] = {}
-	for y: int in range(new_tile_position.y - 1, new_tile_position.y + 2):
-		for x: int in range(new_tile_position.x - 1, new_tile_position.x + 2):
-			if not (x == new_tile_position.x or y == new_tile_position.y): continue
-			var position_to_check: Vector2i = Vector2i(x, y)
-			if _placed_tiles.has(position_to_check):
-				var surrounding_tile: Structure = _placed_tiles[position_to_check]
-				surrounding_tiles[position_to_check] = surrounding_tile
-	var tile_blueprints: Array[TileBlueprint] = _available_tile_blueprints.duplicate()
-	for surrounding_tile_grid_position: Vector2i in surrounding_tiles.keys():
-		var surrounding_tile: Structure = surrounding_tiles[surrounding_tile_grid_position]
-		tile_blueprints.assign(tile_blueprints.filter(func(tile: TileBlueprint) -> bool: return tile.is_legal_neighbour(surrounding_tile, new_tile_position)))
-	if not tile_blueprints.is_empty(): return tile_blueprints
-	print_debug("No fitting tile found; looking for emergency tile.")
-	tile_blueprints = _emergency_tile_blueprints.duplicate()
-	for surrounding_tile_grid_position: Vector2i in surrounding_tiles.keys():
-		var surrounding_tile: Structure = surrounding_tiles[surrounding_tile_grid_position]
-		tile_blueprints.assign(tile_blueprints.filter(func(tile: TileBlueprint) -> bool: return tile.is_legal_neighbour(surrounding_tile, new_tile_position)))
-	return tile_blueprints
-
 func _request_starting_placed_tile() -> void:
 	var all_player_spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	assert(all_player_spawn_points.size() == 1)
 	var player_spawn_point: PlayerSpawnPoint = all_player_spawn_points.front()
 	assert(player_spawn_point)
 	assert(_starting_tile)
-	var starting_tile_blueprint: TileBlueprint = TileBlueprint.new(_starting_tile, 0)
+	var starting_tile_blueprint: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(_starting_tile, 0)
 	var starting_grid_position: Vector2i = world_to_grid_position(player_spawn_point.global_position)
 	_spawn_at(starting_tile_blueprint, starting_grid_position)
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
@@ -226,7 +207,7 @@ func _request_starting_placed_tile() -> void:
 			if absi(y) == grid_extents.y or absi(x) == grid_extents.x:
 				var wall_roation: int = 1 if absi(y) == grid_extents.y else 0
 				var wall_position: Vector2i = Vector2i(x, y)
-				_spawn_at(TileBlueprint.new(preload("uid://d3cc5nj7ogal8"), wall_roation), wall_position)
+				_spawn_at(DungeonTileSet.TileBlueprint.new(preload("uid://d3cc5nj7ogal8"), wall_roation), wall_position)
 				var wall: Structure = _placed_tiles.get(wall_position)
 				wall.reveal()
 	var starting_tile: Structure = _placed_tiles.get(starting_grid_position)
@@ -235,16 +216,10 @@ func _request_starting_placed_tile() -> void:
 	for direction: Direction in connections: _build_dungeon_from(starting_grid_position, direction)
 	starting_tile.reveal()
 
-func _spawn_at(tile_blueprint: TileBlueprint, grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
+func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
 	var tile_position: Vector3 = grid_to_world_position(grid_position) - Vector3(0.0, 0.05, 0.0)
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position)
 	tile_placement_requested.emit(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status)
-
-func _generate_blueprints(for_profiles: Array[StructureProfile]) -> Array[TileBlueprint]:
-	var available_tile_blueprints: Array[TileBlueprint] = []
-	for profile: StructureProfile in for_profiles:
-		for clockwise_rotation: int in range(4): available_tile_blueprints.append(TileBlueprint.new(profile, clockwise_rotation))
-	return available_tile_blueprints
 
 func _queue_reveal(tile: Structure, _direction: Direction) -> void:
 	if _reveal_queue.has(tile): return
@@ -273,52 +248,9 @@ func _on_player_moved(character_grid_position: Vector2i, character: Character) -
 	for direction: Direction in connections: _build_dungeon_from(character_grid_position, direction)
 	_update_player_vision(character_grid_position, character.profile.vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.REVEALED, _queue_reveal)
 	_update_player_vision(character_grid_position, 32.0, func(tile: Structure) -> bool: return tile.status < Structure.Status.DISCOVERED, _queue_discover)
+	_remaining_tile_reveal_delay = character.profile.animation_duration * 0.1
+	_remaining_tile_discover_delay = character.profile.animation_duration * 0.1
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	return warnings
-
-class TileBlueprint extends RefCounted:
-	var profile: StructureProfile
-	var clockwise_turns: int
-	
-	func _init(for_profile: StructureProfile, with_clockwise_turns: int = 0) -> void:
-		profile = for_profile
-		clockwise_turns = with_clockwise_turns
-	
-	func is_legal_neighbour(existing_tile: Structure, grid_position: Vector2i) -> bool:
-		# Check horizontal/vertical neighbours
-		var direction: Level.Direction = Level.get_direction(grid_position, existing_tile.get_grid_position())
-		var reverse_direction: Level.Direction = Level.get_direction(existing_tile.get_grid_position(), grid_position)
-		if not has_connection(direction) and not existing_tile.has_connection(reverse_direction): return true
-		# Must have opposite connections
-		if has_connection(direction) != existing_tile.has_connection(reverse_direction): return false
-		return can_connect(direction, existing_tile.profile) and existing_tile.can_connect(reverse_direction, profile)
-	
-	func has_connection(direction: Level.Direction) -> bool:
-		return get_connections().has(direction)
-	
-	func get_connection(direction: Level.Direction) -> ConnectionRestriction:
-		assert(has_connection(direction))
-		return get_connections()[direction]
-
-	func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool:
-		if not has_connection(direction): return false
-		var connections: Dictionary[Level.Direction, ConnectionRestriction] = get_connections()
-		var restriction: ConnectionRestriction = connections[direction]
-		return not restriction or restriction.can_connect(profile, other_profile)
-
-	func get_connections() -> Dictionary[Level.Direction, ConnectionRestriction]:
-		var adjusted_connections: Dictionary[Level.Direction, ConnectionRestriction] = {}
-		for connection: Level.Direction in profile.connections.keys():
-			adjusted_connections[_get_adjusted_direction(connection)] = profile.connections[connection]
-		return adjusted_connections
-
-	func get_connection_vectors() -> Array[Vector2i]:
-		var connection_vectors: Array[Vector2i]
-		connection_vectors.assign(get_connections().keys().map(func(direction: Level.Direction) -> Vector2i: return Level.direction_to_vector(direction)))
-		return connection_vectors
-	
-	func _get_adjusted_direction(direction: Level.Direction) -> Level.Direction:
-		var direction_count: int = Level.Direction.size()
-		return posmod(direction + clockwise_turns * (direction_count / 4), direction_count)
