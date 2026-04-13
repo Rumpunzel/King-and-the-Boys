@@ -2,14 +2,17 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_c61bo"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_61inb"]
-[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_w60u1"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="4_tbc5o"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_bw8s7"]
 
 [resource]
 script = ExtResource("5_bw8s7")
-room_type = ExtResource("4_tbc5o")
+_connection_up = true
+_connection_right = true
+_connection_down = true
+_connection_left = true
 group = 2
+room_type = ExtResource("4_tbc5o")
 name = "Room Crossing"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_61inb")])

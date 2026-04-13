@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bmwhs3lwb74ue"]
 
 [ext_resource type="Script" uid="uid://dktxo1t8ahw30" path="res://engine/levels/level.gd" id="1_ywn5t"]
+[ext_resource type="Resource" uid="uid://sed2rxcgl038" path="res://data/structures/tiles/room/starting_tile.tres" id="2_c445m"]
 [ext_resource type="Resource" uid="uid://b50fre8sdxsyo" path="res://data/structures/tiles/default_tile_set.tres" id="3_c445m"]
 [ext_resource type="Script" uid="uid://da4c4gcyqk2rb" path="res://engine/objects/characters/player_spawn_point.gd" id="5_0p5hx"]
-[ext_resource type="Resource" uid="uid://mmk57aplc5pu" path="res://data/structures/tiles/room/room_center.tres" id="8_ua3w6"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="14_epvo2"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="14_jhxx2"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
@@ -30,7 +30,7 @@ size = Vector2(64, 64)
 process_mode = 1
 script = ExtResource("1_ywn5t")
 grid_size = 2.5
-_starting_tile = ExtResource("8_ua3w6")
+_starting_tile = ExtResource("2_c445m")
 _tile_set = ExtResource("3_c445m")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
 

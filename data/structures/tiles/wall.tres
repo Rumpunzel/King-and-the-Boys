@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_yd6qc"]
 [ext_resource type="PackedScene" uid="uid://kecvh6aocwul" path="res://data/structures/wall.tscn" id="2_yd6qc"]
-[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_klcix"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="4_sqg78"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cpnen"]
@@ -23,7 +22,6 @@ metadata/_custom_type_script = "uid://cfq64v34pot8s"
 
 [resource]
 script = ExtResource("4_sqg78")
-connections = Dictionary[int, ExtResource("3_klcix")]({})
 group = 2
 name = "Wall"
 color = Color(0.878431, 0.878431, 0.878431, 1)

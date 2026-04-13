@@ -2,19 +2,15 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_p7emq"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_kgp5h"]
-[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_6im1f"]
-[ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_connection_restriction.tres" id="4_mqbgy"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_4n6w1"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_ijj4h"]
 
 [resource]
 script = ExtResource("6_ijj4h")
-connections = Dictionary[int, ExtResource("3_6im1f")]({
-0: ExtResource("4_mqbgy"),
-1: ExtResource("4_mqbgy")
-})
-room_type = ExtResource("5_4n6w1")
+_connection_up = true
+_connection_right = true
 group = 2
+room_type = ExtResource("5_4n6w1")
 name = "Room Corner"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_kgp5h")])

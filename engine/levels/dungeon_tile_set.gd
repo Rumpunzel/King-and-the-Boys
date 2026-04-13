@@ -5,31 +5,48 @@ extends Resource
 @export var _dungeon_tiles: Dictionary[StructureProfile, float]
 @export var _emergency_tiles: Dictionary[StructureProfile, float]
 
-func get_tile_blueprint_for(tile_position: Vector2i, surrounding_tiles: Dictionary[Vector2i, Structure]) -> TileBlueprint:
-	var fitting_blueprint: TileBlueprint = _find_tile_blueprint(_dungeon_tiles, tile_position, surrounding_tiles)
+var _blueprints: Dictionary[TileBlueprint, float]:
+	get:
+		if _blueprints.is_empty(): _blueprints = _generate_blueprints(_dungeon_tiles)
+		assert(not _blueprints.is_empty())
+		return _blueprints
+var _emergency_blueprints: Dictionary[TileBlueprint, float]:
+	get:
+		if _emergency_blueprints.is_empty(): _emergency_blueprints = _generate_blueprints(_emergency_tiles)
+		assert(not _emergency_blueprints.is_empty())
+		return _emergency_blueprints
+
+func get_tile_blueprint_for(tile_position: Vector2i, surrounding_tiles: Array[Structure]) -> TileBlueprint:
+	var fitting_blueprint: TileBlueprint = _find_tile_blueprint(_blueprints, tile_position, surrounding_tiles)
 	if fitting_blueprint: return fitting_blueprint
 	print_debug("No fitting tile found; looking for emergency tile.")
-	fitting_blueprint = _find_tile_blueprint(_emergency_tiles, tile_position, surrounding_tiles)
+	fitting_blueprint = _find_tile_blueprint(_emergency_blueprints, tile_position, surrounding_tiles)
 	assert(fitting_blueprint)
 	return fitting_blueprint
 
-func _find_tile_blueprint(set_to_search: Dictionary[StructureProfile, float], tile_position: Vector2i, surrounding_tiles: Dictionary[Vector2i, Structure]) -> TileBlueprint:
-	var tile_blueprints: Dictionary[TileBlueprint, float] = {}
-	for surrounding_tile_grid_position: Vector2i in surrounding_tiles.keys():
-		var surrounding_tile: Structure = surrounding_tiles[surrounding_tile_grid_position]
-		for profile: StructureProfile in set_to_search.keys():
-			for clockwise_rotation: int in range(4):
-				var blueprint: TileBlueprint = TileBlueprint.new(profile, clockwise_rotation)
-				if blueprint.is_legal_neighbour(surrounding_tile, tile_position): tile_blueprints[blueprint] = set_to_search[profile]
-	if tile_blueprints.is_empty(): return null
-	var total_weight: float = tile_blueprints.values().reduce(func(sum: float, tile_weight: float) -> float: return sum + tile_weight)
+func _find_tile_blueprint(blueprints_to_search: Dictionary[TileBlueprint, float], tile_position: Vector2i, surrounding_tiles: Array[Structure]) -> TileBlueprint:
+	var fitting_blueprints: Dictionary[TileBlueprint, float] = blueprints_to_search.duplicate()
+	for surrounding_tile: Structure in surrounding_tiles:
+		for blueprint: TileBlueprint in blueprints_to_search.keys():
+			if not fitting_blueprints.has(blueprint): continue
+			if not blueprint.is_legal_neighbour_at(tile_position, surrounding_tile): fitting_blueprints.erase(blueprint)
+	if fitting_blueprints.is_empty(): return null
+	var total_weight: float = fitting_blueprints.values().reduce(func(sum: float, tile_weight: float) -> float: return sum + tile_weight)
 	var random_selection: float = randf() * total_weight
-	for blueprint: TileBlueprint in tile_blueprints.keys():
-		var weight: float = tile_blueprints[blueprint]
+	for blueprint: TileBlueprint in fitting_blueprints.keys():
+		var weight: float = fitting_blueprints[blueprint]
 		if random_selection < weight: return blueprint
 		random_selection -= weight
 	assert(false)
 	return null
+
+func _generate_blueprints(for_tile_profiles: Dictionary[StructureProfile, float]) -> Dictionary[TileBlueprint, float]:
+	var blueprints: Dictionary[TileBlueprint, float] = {}
+	for profile: StructureProfile in for_tile_profiles.keys():
+		for clockwise_rotation: int in range(4):
+			var blueprint: TileBlueprint = TileBlueprint.new(profile, clockwise_rotation)
+			blueprints[blueprint] = for_tile_profiles[profile]
+	return blueprints
 
 class TileBlueprint extends RefCounted:
 	var profile: StructureProfile
@@ -39,39 +56,19 @@ class TileBlueprint extends RefCounted:
 		profile = for_profile
 		clockwise_turns = with_clockwise_turns
 	
-	func is_legal_neighbour(existing_tile: Structure, grid_position: Vector2i) -> bool:
-		# Check horizontal/vertical neighbours
+	func is_legal_neighbour_at(grid_position: Vector2i, existing_tile: Structure) -> bool:
 		var direction: Level.Direction = Level.get_direction(grid_position, existing_tile.get_grid_position())
 		var reverse_direction: Level.Direction = Level.get_direction(existing_tile.get_grid_position(), grid_position)
-		if not has_connection(direction) and not existing_tile.has_connection(reverse_direction): return true
-		# Must have opposite connections
 		if has_connection(direction) != existing_tile.has_connection(reverse_direction): return false
 		return can_connect(direction, existing_tile.profile) and existing_tile.can_connect(reverse_direction, profile)
 	
-	func has_connection(direction: Level.Direction) -> bool:
-		return get_connections().has(direction)
+	func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool: return profile.can_connect(direction, clockwise_turns, other_profile)
+
+	func has_connection(direction: Level.Direction) -> bool: return profile.has_connection(direction, clockwise_turns)
+	func get_connections() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
+	func get_connection_vectors() -> Array[Vector2i]: return profile.get_connection_vectors(clockwise_turns)
+
+	func get_restriction(direction: Level.Direction) -> ConnectionRestriction: return profile.get_restriction(direction, clockwise_turns)
+	func get_restrictions() -> Dictionary[Level.Direction, ConnectionRestriction]: return profile.get_restrictions(clockwise_turns)
 	
-	func get_connection(direction: Level.Direction) -> ConnectionRestriction:
-		assert(has_connection(direction))
-		return get_connections()[direction]
-
-	func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool:
-		if not has_connection(direction): return false
-		var connections: Dictionary[Level.Direction, ConnectionRestriction] = get_connections()
-		var restriction: ConnectionRestriction = connections[direction]
-		return not restriction or restriction.can_connect(profile, other_profile)
-
-	func get_connections() -> Dictionary[Level.Direction, ConnectionRestriction]:
-		var adjusted_connections: Dictionary[Level.Direction, ConnectionRestriction] = {}
-		for connection: Level.Direction in profile.connections.keys():
-			adjusted_connections[_get_adjusted_direction(connection)] = profile.connections[connection]
-		return adjusted_connections
-
-	func get_connection_vectors() -> Array[Vector2i]:
-		var connection_vectors: Array[Vector2i]
-		connection_vectors.assign(get_connections().keys().map(func(direction: Level.Direction) -> Vector2i: return Level.direction_to_vector(direction)))
-		return connection_vectors
-	
-	func _get_adjusted_direction(direction: Level.Direction) -> Level.Direction:
-		var direction_count: int = Level.Direction.size()
-		return posmod(direction + clockwise_turns * (direction_count / 4), direction_count)
+	func _to_string() -> String: return "%s rotated %d times" % [profile.name, clockwise_turns]

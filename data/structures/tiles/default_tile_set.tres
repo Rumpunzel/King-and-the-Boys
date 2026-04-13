@@ -27,7 +27,7 @@ ExtResource("6_tqqpw"): 1.0,
 ExtResource("7_0taot"): 1.0,
 ExtResource("8_7476t"): 1.0,
 ExtResource("9_g3wxk"): 1.0,
-ExtResource("10_xnkrs"): 3.0
+ExtResource("10_xnkrs"): 1.0
 })
 _emergency_tiles = Dictionary[ExtResource("1_ykmjg"), float]({
 ExtResource("11_twuq3"): 1.0,

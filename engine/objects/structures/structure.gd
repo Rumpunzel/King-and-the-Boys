@@ -53,7 +53,6 @@ const STATUS: StringName = "status"
 @export var status: Status = Status.NONE:
 	set(new_status):
 		if new_status == status: return
-		var old_status: Status = status
 		status = new_status
 		match status:
 			Status.PLACED:
@@ -62,24 +61,20 @@ const STATUS: StringName = "status"
 			Status.DISCOVERED:
 				model.apply_material_override(_hidden_material)
 				model.visible = true
-			Status.REVEALED:
-				model.visible = true
-				model.remove_material_override(_hidden_material)
-			_: push_error("Status %s not implemented!" % status)
-		if old_status < Status.PLACED: return
-		match status:
-			Status.DISCOVERED:
 				var tween: Tween = create_tween()
 				tween.set_parallel()
 				tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 			Status.REVEALED:
+				model.visible = true
+				model.remove_material_override(_hidden_material)
 				var tween: Tween = create_tween()
 				tween.set_parallel()
 				tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 				tween.tween_property(model, "rotation:x", 0.0, 0.7).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
 				_debug_draw_connections()
+			_: push_error("Status %s not implemented!" % status)
 
 @export_group("Configuration")
 @export var _collision_shape: CollisionShape3D
@@ -98,6 +93,7 @@ var level: Level
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	name = "%s %s" % [get_grid_position(), profile.name]
 	if status == Status.NONE: status = Status.PLACED
 	@warning_ignore("unsafe_property_access")
 	$Label3D.text = "%s\n%s" % [profile.name, get_grid_position()]
@@ -150,33 +146,17 @@ func to_structure_data() -> Dictionary[StringName, Variant]:
 	validate_structure_data(structure_data)
 	return structure_data
 
-func has_connection(direction: Level.Direction) -> bool:
-	return get_connections().has(direction)
+func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool: return profile.can_connect(direction, clockwise_turns, other_profile)
 
-func get_connection(direction: Level.Direction) -> ConnectionRestriction:
-	assert(has_connection(direction))
-	return get_connections()[direction]
+func has_connection(direction: Level.Direction) -> bool: return profile.has_connection(direction, clockwise_turns)
+func get_connections() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
+func get_connection_vectors() -> Array[Vector2i]: return profile.get_connection_vectors(clockwise_turns)
 
-func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool:
-	if not has_connection(direction): return false
-	var connections: Dictionary[Level.Direction, ConnectionRestriction] = get_connections()
-	var restriction: ConnectionRestriction = connections[direction]
-	return not restriction or restriction.can_connect(profile, other_profile)
-
-func get_connections() -> Dictionary[Level.Direction, ConnectionRestriction]:
-	var adjusted_connections: Dictionary[Level.Direction, ConnectionRestriction] = {}
-	for connection: Level.Direction in profile.connections.keys():
-		adjusted_connections[_get_adjusted_direction(connection)] = profile.connections[connection]
-	return adjusted_connections
-
-func get_connection_vectors() -> Array[Vector2i]:
-	var connection_vectors: Array[Vector2i]
-	connection_vectors.assign(get_connections().keys().map(func(direction: Level.Direction) -> Vector2i: return Level.direction_to_vector(direction)))
-	return connection_vectors
+func get_restriction(direction: Level.Direction) -> ConnectionRestriction: return profile.get_restriction(direction, clockwise_turns)
+func get_restrictions() -> Dictionary[Level.Direction, ConnectionRestriction]: return profile.get_restrictions(clockwise_turns)
 
 func get_portrait() -> Texture:
-	if model.portrait_override:
-		return model.portrait_override
+	if model.portrait_override: return model.portrait_override
 	return profile.portrait
 
 func get_heads_up_anchor() -> Vector3:
@@ -194,21 +174,24 @@ func get_grid_cells() -> Array[Vector2i]:
 			grid_cells.append(origin_cell + cell_position)
 	return grid_cells
 
-func _get_adjusted_direction(direction: Level.Direction) -> Level.Direction:
-	var direction_count: int = Level.Direction.size()
-	return posmod(direction + clockwise_turns * (direction_count / 4), direction_count)
-
 func _debug_draw_connections() -> void:
 	assert(level)
-	for index: int in get_connection_vectors().size():
-		var direction: Level.Direction = get_connections().keys()[index]
-		var tile_grid_offset: Vector2i = Level.direction_to_vector(direction)
+	for connection: Level.Direction in get_connections():
+		var tile_grid_offset: Vector2i = Level.direction_to_vector(connection)
 		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.5
 		var color: Color = profile.room_type.color if profile.room_type else Color.WHEAT
-		DebugDraw3D.draw_line(global_position + Vector3.UP * 0, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.15, color, INF)
+		DebugDraw3D.draw_line(global_position + Vector3.UP * 0.0, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.15, color, INF)
+	var restrictions: Dictionary[Level.Direction, ConnectionRestriction] = get_restrictions()
+	for direction: Level.Direction in restrictions.keys():
+		var restriction: ConnectionRestriction = restrictions[direction]
+		if not restriction: continue
+		var tile_grid_offset: Vector2i = Level.direction_to_vector(direction)
+		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.3
+		var color: Color = Color.BROWN
+		DebugDraw3D.draw_sphere(global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.15, 0.1, color, INF)
 
 func _to_string() -> String:
-	return "[%s turned %d times: %s]" % [profile, clockwise_turns, get_connections()]
+	return "[%s turned %d times: %s]" % [name, clockwise_turns, get_connections()]
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

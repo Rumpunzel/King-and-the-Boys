@@ -2,19 +2,16 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_53knh"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_2kovo"]
-[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_5xdeg"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="4_kji3m"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_fonyd"]
 
 [resource]
 script = ExtResource("5_fonyd")
-connections = Dictionary[int, ExtResource("3_5xdeg")]({
-0: null,
-1: null,
-2: null
-})
-room_type = ExtResource("4_kji3m")
+_connection_up = true
+_connection_right = true
+_connection_down = true
 group = 2
+room_type = ExtResource("4_kji3m")
 name = "Room Fork"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_2kovo")])

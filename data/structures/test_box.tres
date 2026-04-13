@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_x2qi8"]
 [ext_resource type="PackedScene" uid="uid://c0lri5bo3g6si" path="res://data/structures/test_box.tscn" id="2_3renu"]
-[ext_resource type="Script" uid="uid://cs12ywlptodem" path="res://engine/objects/structures/connection_restrictions/connection_restriction.gd" id="3_x2qi8"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="4_mu8tw"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n4bc8"]
