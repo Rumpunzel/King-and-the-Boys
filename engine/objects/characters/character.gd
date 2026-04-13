@@ -134,10 +134,13 @@ func move_on_grid(direction_input: Level.Direction) -> void:
 	tween.tween_property(self, "global_position", desired_position, animation_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tween.tween_property(model, "position:y", 1.25, animation_duration * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.tween_property(model, "position:y", 0.0, animation_duration * 0.5).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(animation_duration * 0.8)
-	tween.tween_property(model, "position:x", pow(randf_range(-0.5, 0.5), 2.0), animation_duration * 0.75).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(model, "position:x", 0.0, animation_duration * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_delay(animation_duration * 0.75)
 	tween.tween_property(model, "rotation:x", -0.3, animation_duration * 0.75).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(model, "rotation:x", 0.0, animation_duration * 0.75).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT).set_delay(animation_duration * 0.9)
+	var random_tilt: float = pow(randf_range(-0.5, 0.5), 2.0)
+	tween.tween_property(model, "position:x", random_tilt, animation_duration * 0.75).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(model, "position:x", 0.0, animation_duration * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_delay(animation_duration * 0.75)
+	tween.tween_property(model, "rotation:z", random_tilt * 0.5, animation_duration * 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(model, "rotation:z", 0.0, animation_duration * 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_delay(animation_duration * 0.5)
 
 @rpc("any_peer", "call_local", "reliable")
 func move_to_position(position_input: Vector3) -> void:
