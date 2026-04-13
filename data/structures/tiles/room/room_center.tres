@@ -2,6 +2,7 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_v3bqd"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_e84qc"]
+[ext_resource type="Resource" uid="uid://rcf54itbtq40" path="res://data/structures/tiles/restrictions/room_entry_restriction.tres" id="3_btghr"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_uyw6g"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_wldt0"]
 
@@ -11,6 +12,10 @@ _connection_up = true
 _connection_right = true
 _connection_down = true
 _connection_left = true
+_restriction_up = ExtResource("3_btghr")
+_restriction_right = ExtResource("3_btghr")
+_restriction_down = ExtResource("3_btghr")
+_restriction_left = ExtResource("3_btghr")
 group = 2
 room_type = ExtResource("5_uyw6g")
 name = "Room Center"

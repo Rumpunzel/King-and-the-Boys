@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://drsigx63csewb"]
+
+[ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_qwkur"]
+[ext_resource type="PackedScene" uid="uid://b75usk17jvre8" path="res://data/structures/treasure_tile.tscn" id="2_jjcdj"]
+[ext_resource type="Resource" uid="uid://dh1ukx6uh4bin" path="res://data/structures/tiles/treasure/treasure.tres" id="4_llryj"]
+[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_ha6cj"]
+
+[resource]
+script = ExtResource("5_ha6cj")
+_connection_up = true
+group = 2
+room_type = ExtResource("4_llryj")
+name = "Treasure Deadend [Permissive]"
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("2_jjcdj")])
+_collision_shape = ExtResource("1_qwkur")
+_hit_box_shape = ExtResource("1_qwkur")
+heads_up_display_offset = Vector3(0, 5, 0)
+metadata/_custom_type_script = "uid://dol8cfhd12nbf"

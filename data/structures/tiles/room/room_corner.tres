@@ -2,6 +2,7 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_p7emq"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_kgp5h"]
+[ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="3_p7emq"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_4n6w1"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_ijj4h"]
 
@@ -9,6 +10,8 @@
 script = ExtResource("6_ijj4h")
 _connection_up = true
 _connection_right = true
+_restriction_down = ExtResource("3_p7emq")
+_restriction_left = ExtResource("3_p7emq")
 group = 2
 room_type = ExtResource("5_4n6w1")
 name = "Room Corner"

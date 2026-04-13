@@ -2,6 +2,8 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_dh8xs"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_3hsrk"]
+[ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_restriction.tres" id="3_86pol"]
+[ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="4_dh8xs"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_adq3p"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_18pct"]
 
@@ -10,6 +12,10 @@ script = ExtResource("6_18pct")
 _connection_up = true
 _connection_right = true
 _connection_down = true
+_restriction_up = ExtResource("3_86pol")
+_restriction_right = ExtResource("3_86pol")
+_restriction_down = ExtResource("3_86pol")
+_restriction_left = ExtResource("4_dh8xs")
 group = 2
 room_type = ExtResource("5_adq3p")
 name = "Room Edge"

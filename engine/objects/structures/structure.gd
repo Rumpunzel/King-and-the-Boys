@@ -186,8 +186,9 @@ func _debug_draw_connections() -> void:
 		var restriction: ConnectionRestriction = restrictions[direction]
 		if not restriction: continue
 		var tile_grid_offset: Vector2i = Level.direction_to_vector(direction)
-		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.3
-		var color: Color = Color.BROWN
+		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.6
+		var color: Color = Color.BROWN if restriction._invert else Color.WEB_GREEN
+		color.a = 0.5
 		DebugDraw3D.draw_sphere(global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.15, 0.1, color, INF)
 
 func _to_string() -> String:

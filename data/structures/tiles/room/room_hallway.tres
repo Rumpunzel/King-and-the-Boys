@@ -2,13 +2,19 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_qxtb5"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_h8n52"]
+[ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_restriction.tres" id="3_h8n52"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="4_7pw2l"]
+[ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="4_nkeiq"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_ib5e0"]
 
 [resource]
 script = ExtResource("5_ib5e0")
 _connection_up = true
 _connection_down = true
+_restriction_up = ExtResource("3_h8n52")
+_restriction_right = ExtResource("4_nkeiq")
+_restriction_down = ExtResource("3_h8n52")
+_restriction_left = ExtResource("4_nkeiq")
 group = 2
 room_type = ExtResource("4_7pw2l")
 name = "Room Hallway"

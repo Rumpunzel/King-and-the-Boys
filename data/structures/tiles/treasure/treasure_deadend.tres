@@ -2,12 +2,17 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_pad4c"]
 [ext_resource type="PackedScene" uid="uid://b75usk17jvre8" path="res://data/structures/treasure_tile.tscn" id="2_pad4c"]
+[ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="3_pad4c"]
 [ext_resource type="Resource" uid="uid://dh1ukx6uh4bin" path="res://data/structures/tiles/treasure/treasure.tres" id="4_uxw6u"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_tcp5u"]
 
 [resource]
 script = ExtResource("5_tcp5u")
 _connection_up = true
+_restriction_up = ExtResource("3_pad4c")
+_restriction_right = ExtResource("3_pad4c")
+_restriction_down = ExtResource("3_pad4c")
+_restriction_left = ExtResource("3_pad4c")
 group = 2
 room_type = ExtResource("4_uxw6u")
 name = "Treasure Deadend"

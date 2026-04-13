@@ -2,12 +2,18 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_uc1ih"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/room_tile.tscn" id="2_m7t2l"]
+[ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="3_uc1ih"]
+[ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_restriction.tres" id="4_m7t2l"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_kf2cb"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_tr2gw"]
 
 [resource]
 script = ExtResource("6_tr2gw")
 _connection_up = true
+_restriction_up = ExtResource("4_m7t2l")
+_restriction_right = ExtResource("3_uc1ih")
+_restriction_down = ExtResource("3_uc1ih")
+_restriction_left = ExtResource("3_uc1ih")
 group = 2
 room_type = ExtResource("5_kf2cb")
 name = "Room Deadend"
