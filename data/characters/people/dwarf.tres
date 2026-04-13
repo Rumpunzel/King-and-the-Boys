@@ -11,6 +11,7 @@ script = ExtResource("5_34kdi")
 strength = 4
 agility = 2
 speed = 2
+dark_vision = 16.0
 name = "Dwarf"
 portrait = ExtResource("4_xk1ji")
 color = Color(0.878431, 0.878431, 0.878431, 1)

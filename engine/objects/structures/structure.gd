@@ -188,6 +188,8 @@ func _debug_draw_connections() -> void:
 		var tile_grid_offset: Vector2i = Level.direction_to_vector(direction)
 		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.6
 		var color: Color = Color.BROWN if restriction._invert else Color.WEB_GREEN
+		var neighbour_structure: Structure = level.get_placed_tile(get_grid_position() + Level.direction_to_vector(direction))
+		if neighbour_structure and not can_connect(direction, neighbour_structure.profile): color = Color.ROYAL_BLUE
 		color.a = 0.5
 		DebugDraw3D.draw_sphere(global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.15, 0.1, color, INF)
 

@@ -11,7 +11,6 @@ albedo_texture = ExtResource("1_m7o11")
 roughness_texture = ExtResource("5_f8wkt")
 normal_enabled = true
 normal_texture = ExtResource("4_kd856")
-bent_normal_enabled = true
 ao_enabled = true
 ao_texture = ExtResource("2_g8xaw")
 heightmap_enabled = true

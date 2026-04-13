@@ -21,15 +21,20 @@ func get_tile_blueprint_for(tile_position: Vector2i, surrounding_tiles: Array[St
 	if fitting_blueprint: return fitting_blueprint
 	print_debug("No fitting tile found; looking for emergency tile.")
 	fitting_blueprint = _find_tile_blueprint(_emergency_blueprints, tile_position, surrounding_tiles)
+	if fitting_blueprint: return fitting_blueprint
+	print_debug("No fitting emergency tile found; trying again without restrictions.")
+	fitting_blueprint = _find_tile_blueprint(_blueprints, tile_position, surrounding_tiles, true)
+	if fitting_blueprint: return fitting_blueprint
+	fitting_blueprint = _find_tile_blueprint(_emergency_blueprints, tile_position, surrounding_tiles, true)
 	assert(fitting_blueprint)
 	return fitting_blueprint
 
-func _find_tile_blueprint(blueprints_to_search: Dictionary[TileBlueprint, float], tile_position: Vector2i, surrounding_tiles: Array[Structure]) -> TileBlueprint:
+func _find_tile_blueprint(blueprints_to_search: Dictionary[TileBlueprint, float], tile_position: Vector2i, surrounding_tiles: Array[Structure], ignore_restrictions: bool = false) -> TileBlueprint:
 	var fitting_blueprints: Dictionary[TileBlueprint, float] = blueprints_to_search.duplicate()
 	for surrounding_tile: Structure in surrounding_tiles:
 		for blueprint: TileBlueprint in blueprints_to_search.keys():
 			if not fitting_blueprints.has(blueprint): continue
-			if not blueprint.is_legal_neighbour_at(tile_position, surrounding_tile): fitting_blueprints.erase(blueprint)
+			if not blueprint.is_legal_neighbour_at(tile_position, surrounding_tile, ignore_restrictions): fitting_blueprints.erase(blueprint)
 	if fitting_blueprints.is_empty(): return null
 	var total_weight: float = fitting_blueprints.values().reduce(func(sum: float, tile_weight: float) -> float: return sum + tile_weight)
 	var random_selection: float = randf() * total_weight
@@ -56,10 +61,11 @@ class TileBlueprint extends RefCounted:
 		profile = for_profile
 		clockwise_turns = with_clockwise_turns
 	
-	func is_legal_neighbour_at(grid_position: Vector2i, existing_tile: Structure) -> bool:
+	func is_legal_neighbour_at(grid_position: Vector2i, existing_tile: Structure, ignore_restrictions: bool) -> bool:
 		var direction: Level.Direction = Level.get_direction(grid_position, existing_tile.get_grid_position())
 		var reverse_direction: Level.Direction = Level.get_direction(existing_tile.get_grid_position(), grid_position)
 		if has_connection(direction) != existing_tile.has_connection(reverse_direction): return false
+		if ignore_restrictions: return true
 		return can_connect(direction, existing_tile.profile) and existing_tile.can_connect(reverse_direction, profile)
 	
 	func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool: return profile.can_connect(direction, clockwise_turns, other_profile)

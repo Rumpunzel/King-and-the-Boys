@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://tyk5fbls5jqx"]
+
+[ext_resource type="Texture2D" uid="uid://bmeakuceeq7t" path="res://protoype_assets/textures/floor_tiles_22_1k/floor_tiles_22_basecolor_1k.png" id="1_0c4t7"]
+[ext_resource type="Texture2D" uid="uid://dstyglxkgwxfk" path="res://protoype_assets/textures/floor_tiles_22_1k/floor_tiles_22_ambientocclusion_1k.png" id="2_m6jfs"]
+[ext_resource type="Texture2D" uid="uid://6f4ha7c14qis" path="res://protoype_assets/textures/floor_tiles_22_1k/floor_tiles_22_height_1k.png" id="3_6mch4"]
+[ext_resource type="Texture2D" uid="uid://bnsw02ot3lgho" path="res://protoype_assets/textures/floor_tiles_22_1k/floor_tiles_22_metallic_1k.png" id="4_3wv8k"]
+[ext_resource type="Texture2D" uid="uid://c00cjxinh3f8b" path="res://protoype_assets/textures/floor_tiles_22_1k/floor_tiles_22_normal_gl_1k.png" id="5_22wf6"]
+[ext_resource type="Texture2D" uid="uid://bfnm2qs60ybd3" path="res://protoype_assets/textures/floor_tiles_22_1k/floor_tiles_22_roughness_1k.png" id="6_6jhaq"]
+
+[resource]
+albedo_texture = ExtResource("1_0c4t7")
+metallic = 1.0
+metallic_texture = ExtResource("4_3wv8k")
+roughness_texture = ExtResource("6_6jhaq")
+normal_enabled = true
+normal_texture = ExtResource("5_22wf6")
+ao_enabled = true
+ao_texture = ExtResource("2_m6jfs")
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_6mch4")
+uv1_scale = Vector3(2, 2, 2)

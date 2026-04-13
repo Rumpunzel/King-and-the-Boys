@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_o1ofw"]
 [ext_resource type="PackedScene" uid="uid://bi1bg3m5u36m8" path="res://protoype_assets/big_tile.blend" id="2_e3slw"]
-[ext_resource type="Material" uid="uid://b7apgvjh7quul" path="res://protoype_assets/textures/medieval-tiles-01_1k/medieval_tiles_01_1k.tres" id="3_o1ofw"]
+[ext_resource type="Material" uid="uid://5xgbsn7ctpni" path="res://protoype_assets/textures/floor_tiles_17_1k/floor_tiles_17_1k.tres" id="3_o1ofw"]
 
 [node name="Tile" type="Node3D" unique_id=1617054939]
 script = ExtResource("1_o1ofw")

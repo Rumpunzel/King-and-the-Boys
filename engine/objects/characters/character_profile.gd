@@ -32,6 +32,7 @@ enum Groups {
 		changed.emit()
 
 @export var vision: float = 1.5
+@export var dark_vision: float = 1.0
 
 @export var animation_duration: float = 0.75
 

@@ -249,7 +249,7 @@ func _on_player_moved(character_grid_position: Vector2i, character: Character) -
 	assert(entered_tile)
 	_build_dungeon_from(character_grid_position)
 	_update_player_vision(character_grid_position, character.profile.vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.REVEALED, _queue_reveal)
-	_update_player_vision(character_grid_position, 32.0, func(tile: Structure) -> bool: return tile.status < Structure.Status.DISCOVERED, _queue_discover)
+	_update_player_vision(character_grid_position, character.profile.vision + character.profile.dark_vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.DISCOVERED, _queue_discover)
 	_remaining_tile_reveal_delay = character.profile.animation_duration * 0.1
 	_remaining_tile_discover_delay = character.profile.animation_duration * 0.1
 
