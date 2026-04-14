@@ -38,10 +38,6 @@ var _discover_queue: Dictionary[Direction, Array] = {}
 var _remaining_tile_reveal_delay: float = 0.0
 var _remaining_tile_discover_delay: float = 0.0
 
-func _ready() -> void:
-	if not is_multiplayer_authority(): return
-	_request_starting_placed_tile()
-
 func _process(delta: float) -> void:
 	# Reveal
 	_remaining_tile_reveal_delay = maxf(_remaining_tile_reveal_delay - delta, 0.0)
@@ -87,6 +83,13 @@ static func get_direction(first_grid_position: Vector2i, second_grid_position: V
 		_: push_error("delta_grid_position %s is not implemented!" % delta_grid_position)
 	assert(false)
 	return Direction.UP
+
+func build_level() -> void:
+	assert(is_multiplayer_authority())
+	await get_tree().process_frame
+	var starting_grid_position: Vector2i = _place_starting_tile()
+	_build_outer_wall(true)
+	await _build_dungeon_from(starting_grid_position, true)
 
 func world_to_grid_position(world_position: Vector3) -> Vector2i:
 	return Vector2i(roundi(world_position.x / grid_size), roundi(world_position.z / grid_size))
@@ -155,49 +158,48 @@ func _update_player_vision_in_room(from_grid_position: Vector2i, direction: Dire
 			await get_tree().process_frame
 			_update_player_vision_in_room(tile_grid_position, direction, vision_radius, reveal_check, reveal_function, origin_grid_position, already_visited)
 
-func _build_dungeon_from(origin_grid_position: Vector2i) -> void:
+func _build_dungeon_from(origin_grid_position: Vector2i, run_async: bool = false) -> void:
 	var tile: Structure = _placed_tiles.get(origin_grid_position)
 	assert(tile)
-	if tile.profile.room_type: _build_room_from(origin_grid_position, tile.profile.room_type)
-	for direction: Direction in tile.get_connections(): _build_corridor_from(origin_grid_position, direction)
+	var already_visited: Array[Vector2i] = [origin_grid_position]
+	if tile.profile.room_type: _build_room_from(origin_grid_position, tile.profile.room_type, already_visited, run_async)
+	for direction: Direction in tile.get_connections(): await _build_corridor_from(origin_grid_position, direction, already_visited, run_async)
 
-func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction) -> void:
+func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction, already_visited: Array[Vector2i], run_async: bool) -> void:
+	already_visited.append(origin_grid_position)
 	var tile: Structure = _placed_tiles.get(origin_grid_position)
 	assert(tile)
 	var relative_direction: Vector2i = direction_to_vector(direction)
-	var grid_position: Vector2i = origin_grid_position + relative_direction
-	spawn_at(grid_position)
-	var placed_tile: Structure = _placed_tiles[grid_position]
-	if placed_tile.profile.room_type: _build_room_from(grid_position, placed_tile.profile.room_type)
-	for connection: Direction in placed_tile.get_connections():
-		if connection == direction: _build_corridor_from(grid_position, direction)
-		else:
+	var index: int = 0
+	while tile.has_connection(direction):
+		var grid_position: Vector2i = origin_grid_position + relative_direction * index
+		spawn_at(grid_position)
+		tile = _placed_tiles[grid_position]
+		if tile.profile.room_type: _build_room_from(grid_position, tile.profile.room_type, already_visited, run_async)
+		for connection: Direction in tile.get_connections():
+			if connection == direction: continue
 			var neighbour_direction: Vector2i = direction_to_vector(connection)
 			var neighbour_position: Vector2i = grid_position + neighbour_direction
 			spawn_at(neighbour_position)
+		index += 1
+		if run_async: await get_tree().process_frame
 
-func _build_room_from(origin_grid_position: Vector2i, room_type: RoomType, already_visited: Array[Vector2i] = []) -> void:
+func _build_room_from(origin_grid_position: Vector2i, room_type: RoomType, already_visited: Array[Vector2i], run_async: bool) -> void:
 	assert(room_type)
 	if already_visited.has(origin_grid_position): return
 	already_visited.append(origin_grid_position)
 	var tile: Structure = _placed_tiles.get(origin_grid_position)
 	assert(tile)
 	if not room_type == tile.profile.room_type: return
-	var continue_building_here: Array[Vector2i] = []
 	for connection: Direction in tile.get_connections():
 		var relative_direction: Vector2i = direction_to_vector(connection)
 		var grid_position: Vector2i = origin_grid_position + relative_direction
 		if already_visited.has(grid_position): continue
 		spawn_at(grid_position)
-		var placed_tile: Structure = _placed_tiles.get(grid_position)
-		if not placed_tile or not placed_tile.profile.room_type == room_type:
-			already_visited.append(grid_position)
-			continue
-		continue_building_here.append(grid_position)
-	for grid_position: Vector2i in continue_building_here:
-		_build_room_from(grid_position, room_type, already_visited)
+		if run_async: await get_tree().process_frame
+		_build_room_from(grid_position, room_type, already_visited, run_async)
 
-func _request_starting_placed_tile() -> void:
+func _place_starting_tile() -> Vector2i:
 	var all_player_spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	assert(all_player_spawn_points.size() == 1)
 	var player_spawn_point: PlayerSpawnPoint = all_player_spawn_points.front()
@@ -206,6 +208,12 @@ func _request_starting_placed_tile() -> void:
 	var starting_tile_blueprint: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(_starting_tile, 0)
 	var starting_grid_position: Vector2i = world_to_grid_position(player_spawn_point.global_position)
 	_spawn_at(starting_tile_blueprint, starting_grid_position)
+	var starting_tile: Structure = _placed_tiles.get(starting_grid_position)
+	assert(starting_tile)
+	starting_tile.reveal()
+	return starting_grid_position
+
+func _build_outer_wall(run_async: bool) -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
 		for x: int in range(-grid_extents.x, grid_extents.x + 1):
 			if absi(y) != grid_extents.y and absi(x) != grid_extents.x: continue
@@ -214,10 +222,7 @@ func _request_starting_placed_tile() -> void:
 			_spawn_at(DungeonTileSet.TileBlueprint.new(preload("uid://d3cc5nj7ogal8"), wall_roation), wall_position)
 			var wall: Structure = _placed_tiles.get(wall_position)
 			wall.reveal()
-	var starting_tile: Structure = _placed_tiles.get(starting_grid_position)
-	assert(starting_tile)
-	starting_tile.reveal()
-	_build_dungeon_from(starting_grid_position)
+			if run_async: await get_tree().process_frame
 
 func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
 	var tile_position: Vector3 = grid_to_world_position(grid_position)

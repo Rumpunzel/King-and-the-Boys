@@ -1,9 +1,54 @@
 [gd_scene format=3 uid="uid://dmweuj7kxaxov"]
 
+[ext_resource type="StyleBox" uid="uid://c1k2tqhaccfdj" path="res://user_interface/menu_panel.tres" id="2_nw7rc"]
 [ext_resource type="Texture2D" uid="uid://bsemt5jnpwww7" path="res://protoype_assets/the_boys_background.png" id="2_tkj33"]
+[ext_resource type="FontFile" uid="uid://b0ybin3nm83i1" path="res://assets/fonts/Bokor-Regular.ttf" id="3_xnb5f"]
+
+[sub_resource type="Animation" id="Animation_nw7rc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible_characters")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [-1]
+}
+
+[sub_resource type="Animation" id="Animation_xnb5f"]
+resource_name = "loading"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible_characters")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [7, 8, 9, -1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_s5x3u"]
+_data = {
+&"RESET": SubResource("Animation_nw7rc"),
+&"loading": SubResource("Animation_xnb5f")
+}
 
 [node name="LoadingScreen" type="CanvasLayer" unique_id=957342698]
 layer = 128
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=928942914]
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("2_tkj33")
+stretch_mode = 6
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=212963439]
 anchors_preset = 15
@@ -11,19 +56,33 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = ExtResource("2_nw7rc")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=124850147]
-custom_minimum_size = Vector2(512, 512)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="TextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer" unique_id=928942914]
-layout_mode = 2
-texture = ExtResource("2_tkj33")
-stretch_mode = 6
-
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1556800612]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer" unique_id=251587788]
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/PanelContainer" unique_id=499075166]
+layout_mode = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 48
+
+[node name="Label" type="Label" parent="PanelContainer/PanelContainer/MarginContainer" unique_id=1556800612]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("3_xnb5f")
+theme_override_font_sizes/font_size = 64
 text = "Loading..."
+visible_characters_behavior = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PanelContainer/PanelContainer/MarginContainer/Label" unique_id=1174186908]
+libraries/ = SubResource("AnimationLibrary_s5x3u")
+autoplay = &"loading"

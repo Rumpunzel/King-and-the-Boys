@@ -9,6 +9,7 @@ enum GameStatus {
 	NONE,
 	IN_LOBBY,
 	READY,
+	LOADING,
 	RUNNING,
 }
 
@@ -33,25 +34,26 @@ var _game_status: GameStatus:
 			GameStatus.NONE:
 				_on_server = false
 				_background_placeholder.modulate.a = 1.0
-				#if not _loading_screen:
-					#_loading_screen = _loading_screen_scene.instantiate()
-					#add_child(_loading_screen)
 			GameStatus.IN_LOBBY:
-				#assert(_loading_screen)
-				#_loading_screen.queue_free()
-				_loading_screen = null
 				ResourceLoader.load_threaded_request(_default_level_path)
 			GameStatus.READY:
 				pass
-			GameStatus.RUNNING:
+			GameStatus.LOADING:
+				if not _loading_screen:
+					_loading_screen = _loading_screen_scene.instantiate()
+					add_child(_loading_screen)
 				_background_placeholder.visible = false
 				if _background_scene:
 					_background_scene.queue_free()
 					_background_scene = null
 				_level_spawner.spawn(_default_level_path)
-				_agent_spawner.spawn_all_from_spawn_spoints()
-				_structure_spawner.spawn_all_from_spawn_spoints()
-				_thing_spawner.spawn_all_from_spawn_spoints()
+				#_agent_spawner.spawn_all_from_spawn_spoints()
+				#_structure_spawner.spawn_all_from_spawn_spoints()
+				#_thing_spawner.spawn_all_from_spawn_spoints()
+			GameStatus.RUNNING:
+				assert(_loading_screen)
+				_loading_screen.queue_free()
+				_loading_screen = null
 				_player_ghost_spawner.start_synching_players()
 			_: push_error("GameStatus %s not implemented!" % _game_status)
 		game_status_changed.emit(_game_status)
@@ -74,9 +76,8 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
-	match _game_status:
-		GameStatus.NONE: if not _background_scene_path.is_empty() and not _background_scene: _load_background_scene_when_ready()
-		GameStatus.IN_LOBBY: _check_if_level_is_ready()
+	if _game_status <= GameStatus.IN_LOBBY: if not _background_scene_path.is_empty() and not _background_scene: _load_background_scene_when_ready()
+	if _game_status == GameStatus.IN_LOBBY: _check_if_level_is_ready()
 
 func open_lobby() -> void:
 	assert(multiplayer.is_server())
@@ -90,7 +91,7 @@ func start_game() -> void:
 	assert(_game_status == GameStatus.READY)
 	print_debug("Starting new game...")
 	if _on_server: push_error("Trying to start a new game while connected to server!")
-	_game_status = GameStatus.RUNNING
+	_game_status = GameStatus.LOADING
 
 func save_game() -> Error:
 	assert(multiplayer.is_server())
@@ -145,14 +146,18 @@ func _check_if_level_is_ready() -> void:
 func _on_game_requested() -> void:
 	open_lobby()
 
+func _on_game_start_requested() -> void:
+	start_game()
+
+func _on_level_loaded() -> void:
+	assert(_game_status == GameStatus.LOADING)
+	_game_status = GameStatus.RUNNING
+
 func _on_save_requested() -> void:
 	pass # Replace with function body.
 
 func _on_load_requested() -> void:
 	pass # Replace with function body.
-
-func _on_game_start_requested() -> void:
-	start_game()
 
 func _on_singleplayer_started() -> void:
 	assert(is_node_ready())

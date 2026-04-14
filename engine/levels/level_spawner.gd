@@ -3,6 +3,8 @@
 class_name LevelSpawner
 extends Spawner
 
+signal level_loaded
+
 @export_group("Configuration")
 @export var _structure_spawner: StructureSpawner
 
@@ -52,6 +54,9 @@ func _on_child_entered_tree(node: Node) -> void:
 	_level = node
 	assert(_level)
 	_level.tile_placement_requested.connect(_structure_spawner.spawn_at)
+	await _level.ready
+	await _level.build_level()
+	level_loaded.emit()
 
 func _on_structure_created(structure: Structure) -> void:
 	assert(_level)

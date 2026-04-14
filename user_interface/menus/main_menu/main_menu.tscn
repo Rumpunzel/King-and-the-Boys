@@ -61,6 +61,7 @@ auto_translate_mode = 1
 oversampling_override = 1.0
 
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="ready" from="VBoxContainer/VBoxContainer/Start" to="VBoxContainer/VBoxContainer/Start" method="grab_focus"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/VBoxContainer/Load" to="." method="_on_load_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
 [connection signal="confirmed" from="QuitConfirmationDialog" to="." method="_on_quit_confirmation_dialog_confirmed"]

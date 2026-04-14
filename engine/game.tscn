@@ -115,6 +115,7 @@ layout_mode = 2
 [connection signal="game_status_changed" from="." to="MenusLayer/Menus/PanelContainer/Menu/LobbyMenu" method="_on_game_status_changed"]
 [connection signal="game_status_changed" from="." to="MenusLayer/Menus/PanelContainer/Menu/MainMenu" method="_on_game_status_changed"]
 [connection signal="saving_finished" from="Serializer" to="MenusLayer/Menus/PanelContainer/Menu/PauseMenu" method="_on_saving_finished"]
+[connection signal="level_loaded" from="LevelSpawner" to="." method="_on_level_loaded"]
 [connection signal="structure_created" from="StructureSpawner" to="LevelSpawner" method="_on_structure_created"]
 [connection signal="thing_created" from="ThingSpawner" to="LevelSpawner" method="_on_thing_created"]
 [connection signal="agent_created" from="AgentSpawner" to="LevelSpawner" method="_on_agent_created"]
