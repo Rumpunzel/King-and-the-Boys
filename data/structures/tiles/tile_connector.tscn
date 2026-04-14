@@ -5,12 +5,20 @@
 
 [sub_resource type="BoxMesh" id="BoxMesh_odv8y"]
 material = ExtResource("2_n28j2")
-size = Vector3(1.25, 0.05, 0.75)
+size = Vector3(0.15, 0.05, 0.75)
 
 [node name="TileConnector" type="Node3D" unique_id=1599204829]
 script = ExtResource("1_d2mjk")
 metadata/_custom_type_script = "uid://bpkm2ws12sljg"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=258319594]
+[node name="MeshInstance3D1" type="MeshInstance3D" parent="." unique_id=258319594]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.075, 0)
+mesh = SubResource("BoxMesh_odv8y")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1543815334]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.075, 0)
+mesh = SubResource("BoxMesh_odv8y")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=174360621]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.075, 0)
 mesh = SubResource("BoxMesh_odv8y")
