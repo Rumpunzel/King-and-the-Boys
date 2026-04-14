@@ -11,7 +11,6 @@ enum Groups {
 
 @export var group: Groups = Groups.BUILDING
 @export var room_type: RoomType
-@export var spawn_table: ThingProfile
 @export var grid_cell_extents: Vector3i = Vector3i.ONE
 
 @export var discover_animation: ModelAnimation = preload("uid://bf0msgn2okdfo")
@@ -27,6 +26,8 @@ enum Groups {
 @export var _restriction_right: ConnectionRestriction
 @export var _restriction_down: ConnectionRestriction
 @export var _restriction_left: ConnectionRestriction
+@export_group("")
+@export var _spawn_table: NestedSpawnTable
 
 @export_group("Configuration")
 
@@ -47,6 +48,10 @@ func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, 
 func can_connect(direction: Level.Direction, clockwise_turns: int, other_profile: StructureProfile) -> bool:
 	var restriction: ConnectionRestriction = get_restriction(direction, clockwise_turns)
 	return not restriction or restriction.can_connect(self, other_profile)
+
+func get_spawn() -> Profile:
+	if not _spawn_table: return
+	return _spawn_table.get_spawn()
 
 func get_connections(clockwise_turns: int) -> Array[Level.Direction]:
 	var connections: Array[Level.Direction]

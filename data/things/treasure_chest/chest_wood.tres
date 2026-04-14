@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ThingProfile" format=3 uid="uid://cxtbci1hv7xut"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_i41rm"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_ubpky"]
+[ext_resource type="PackedScene" uid="uid://b7pe7pb0r7pdc" path="res://data/things/treasure_chest/chest_wood_01.tscn" id="7_wckgb"]
+[ext_resource type="Script" uid="uid://dkumiyoi57n5x" path="res://engine/objects/things/thing_profile.gd" id="8_vdk6h"]
+[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="9_ioooo"]
+
+[resource]
+script = ExtResource("8_vdk6h")
+name = "Chest Wood"
+_model_variations = Array[PackedScene]([ExtResource("7_wckgb")])
+metadata/_custom_type_script = "uid://dkumiyoi57n5x"

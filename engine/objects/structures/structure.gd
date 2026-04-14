@@ -3,8 +3,7 @@
 class_name Structure
 extends StaticBody3D
 
-signal character_spawn_requested(character_to_spawn: CharacterProfile)
-signal thing_spawn_requested(thing_to_spawn: ThingProfile)
+signal spawn_requested(profile_to_spawn: Profile)
 signal status_changed(status: Status)
 signal profile_changed
 
@@ -68,7 +67,8 @@ const STATUS: StringName = "status"
 				model.visible = true
 				model.remove_material_override(_hidden_material)
 				model.play_model_animation(profile.reveal_animation)
-				if profile.spawn_table: thing_spawn_requested.emit(profile.spawn_table)
+				var spawn: Profile = profile.get_spawn()
+				if spawn: spawn_requested.emit(spawn)
 				if level: _debug_draw_connections()
 			_: push_error("Status %s not implemented!" % status)
 		status_changed.emit(status)

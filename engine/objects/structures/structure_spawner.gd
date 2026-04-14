@@ -72,15 +72,14 @@ func _on_child_entered_tree(node: Node) -> void:
 	var structure: Structure = node
 	assert(not _structures.has(structure))
 	_structures.append(structure)
-	structure.character_spawn_requested.connect(_on_character_spawn_requested.bind(structure))
-	structure.thing_spawn_requested.connect(_on_thing_spawn_requested.bind(structure))
+	structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
 	structure_created.emit(structure)
 
-func _on_character_spawn_requested(character_to_spawn: CharacterProfile, spawn_for: Structure) -> void:
-	pass
-
-func _on_thing_spawn_requested(thing_to_spawn: ThingProfile, spawn_for: Structure) -> void:
-	_thing_spawner.spawn_at(thing_to_spawn, spawn_for.transform)
+func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> void:
+	if profile_to_spawn is StructureProfile: spawn_at(profile_to_spawn as StructureProfile, spawn_for.transform, spawn_for.clockwise_turns, spawn_for.status)
+	elif profile_to_spawn is ThingProfile: _thing_spawner.spawn_at(profile_to_spawn as ThingProfile, spawn_for.transform)
+	#elif profile_to_spawn is CharacterProfile: _agent_spawner.spawn_at(profile_to_spawn as CharacterProfile, spawn_for.transform)
+	else: push_error("Cannot spawn profile: %profile_to_spawn - Not implemented!" % profile_to_spawn)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

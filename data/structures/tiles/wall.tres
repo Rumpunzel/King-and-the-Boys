@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_yd6qc"]
 [ext_resource type="PackedScene" uid="uid://kecvh6aocwul" path="res://data/structures/tiles/wall.tscn" id="2_yd6qc"]
+[ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="3_cpnen"]
+[ext_resource type="Resource" uid="uid://80ut5hvuftsw" path="res://data/model_animations/flip_animation.tres" id="4_klcix"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="4_sqg78"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cpnen"]

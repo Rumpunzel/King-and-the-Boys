@@ -3,17 +3,31 @@
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_p7emq"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/tiles/room/room_tile.tscn" id="2_kgp5h"]
 [ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="3_p7emq"]
+[ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="4_4n6w1"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_4n6w1"]
+[ext_resource type="Resource" uid="uid://cygdfai8g5wp" path="res://data/things/treasure_spawn_table.tres" id="5_ijj4h"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_ijj4h"]
+[ext_resource type="Script" uid="uid://ds4gq17440h4n" path="res://engine/objects/nested_spawn_table.gd" id="6_lqlta"]
+[ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="7_ivox4"]
+[ext_resource type="Resource" uid="uid://80ut5hvuftsw" path="res://data/model_animations/flip_animation.tres" id="8_p8yqq"]
+
+[sub_resource type="Resource" id="Resource_b30kc"]
+script = ExtResource("6_lqlta")
+_table_distribution = Dictionary[ExtResource("4_4n6w1"), float]({
+null: 45.0,
+ExtResource("5_ijj4h"): 1.0
+})
+metadata/_custom_type_script = "uid://ds4gq17440h4n"
 
 [resource]
 script = ExtResource("6_ijj4h")
+group = 2
+room_type = ExtResource("5_4n6w1")
 _connection_up = true
 _connection_right = true
 _restriction_down = ExtResource("3_p7emq")
 _restriction_left = ExtResource("3_p7emq")
-group = 2
-room_type = ExtResource("5_4n6w1")
+_spawn_table = SubResource("Resource_b30kc")
 name = "Room Corner"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_kgp5h")])

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ThingProfile" format=3 uid="uid://bvmcx1v3wht0k"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_w8o3g"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_w5yi6"]
+[ext_resource type="PackedScene" uid="uid://c4mp8gvi3vh6u" path="res://data/things/treasure_chest/chest_02.tscn" id="4_ynn76"]
+[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="5_og26i"]
+[ext_resource type="Script" uid="uid://dkumiyoi57n5x" path="res://engine/objects/things/thing_profile.gd" id="8_qlb8l"]
+
+[resource]
+script = ExtResource("8_qlb8l")
+name = "Chest Medium"
+_model_variations = Array[PackedScene]([ExtResource("4_ynn76")])
+metadata/_custom_type_script = "uid://dkumiyoi57n5x"

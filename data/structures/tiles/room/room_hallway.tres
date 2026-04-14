@@ -5,18 +5,32 @@
 [ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_restriction.tres" id="3_h8n52"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="4_7pw2l"]
 [ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="4_nkeiq"]
+[ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="5_8q4mm"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_ib5e0"]
+[ext_resource type="Resource" uid="uid://cygdfai8g5wp" path="res://data/things/treasure_spawn_table.tres" id="6_0ci8l"]
+[ext_resource type="Script" uid="uid://ds4gq17440h4n" path="res://engine/objects/nested_spawn_table.gd" id="7_nuo1y"]
+[ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="8_v0a8f"]
+[ext_resource type="Resource" uid="uid://80ut5hvuftsw" path="res://data/model_animations/flip_animation.tres" id="9_bxuuf"]
+
+[sub_resource type="Resource" id="Resource_bty05"]
+script = ExtResource("7_nuo1y")
+_table_distribution = Dictionary[ExtResource("5_8q4mm"), float]({
+null: 99.0,
+ExtResource("6_0ci8l"): 1.0
+})
+metadata/_custom_type_script = "uid://ds4gq17440h4n"
 
 [resource]
 script = ExtResource("5_ib5e0")
+group = 2
+room_type = ExtResource("4_7pw2l")
 _connection_up = true
 _connection_down = true
 _restriction_up = ExtResource("3_h8n52")
 _restriction_right = ExtResource("4_nkeiq")
 _restriction_down = ExtResource("3_h8n52")
 _restriction_left = ExtResource("4_nkeiq")
-group = 2
-room_type = ExtResource("4_7pw2l")
+_spawn_table = SubResource("Resource_bty05")
 name = "Room Hallway"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_h8n52")])

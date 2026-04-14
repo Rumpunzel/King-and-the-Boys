@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ProfileSpawnTable" format=3 uid="uid://cygdfai8g5wp"]
+
+[ext_resource type="Script" uid="uid://dknjlw5u5cf63" path="res://engine/objects/profile.gd" id="1_6ebbp"]
+[ext_resource type="Resource" uid="uid://cxtbci1hv7xut" path="res://data/things/treasure_chest/chest_wood.tres" id="2_ekfou"]
+[ext_resource type="Resource" uid="uid://bp884ie0mi172" path="res://data/things/treasure_chest/chest_small.tres" id="3_tjlv0"]
+[ext_resource type="Resource" uid="uid://bvmcx1v3wht0k" path="res://data/things/treasure_chest/chest_medium.tres" id="4_dmshy"]
+[ext_resource type="Resource" uid="uid://dh75kfi3gf20o" path="res://data/things/treasure_chest/chest_large.tres" id="5_488lx"]
+[ext_resource type="Resource" uid="uid://bc2kxgw7spqpc" path="res://data/things/treasure_chest/chest_weapons.tres" id="6_jeld4"]
+[ext_resource type="Script" uid="uid://cav6n30acofc" path="res://engine/objects/profle_spawn_table.gd" id="7_ivqn8"]
+
+[resource]
+script = ExtResource("7_ivqn8")
+_profile_distribution = Dictionary[ExtResource("1_6ebbp"), float]({
+ExtResource("2_ekfou"): 3.0,
+ExtResource("3_tjlv0"): 5.0,
+ExtResource("4_dmshy"): 2.0,
+ExtResource("5_488lx"): 0.5,
+ExtResource("6_jeld4"): 1.0
+})
+metadata/_custom_type_script = "uid://cav6n30acofc"

@@ -2,7 +2,9 @@
 
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="1_275g7"]
 [ext_resource type="PackedScene" uid="uid://d2fn7gvcxvkan" path="res://data/structures/buildings/bonfire.tscn" id="3_275g7"]
+[ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="3_ifg41"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="4_4wi01"]
+[ext_resource type="Resource" uid="uid://80ut5hvuftsw" path="res://data/model_animations/flip_animation.tres" id="4_cvqp1"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_acfbe"]
 height = 0.2

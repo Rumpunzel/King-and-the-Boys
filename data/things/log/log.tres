@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://ift3r61cj7g3" path="res://data/things/log/wood_log.tscn" id="1_08lp2"]
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="2_wd3bf"]
+[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="4_08lp2"]
 [ext_resource type="Script" uid="uid://dkumiyoi57n5x" path="res://engine/objects/things/thing_profile.gd" id="4_tp7fo"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_08lp2"]

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cdy48nd51271h" path="res://data/things/fish/fish_1_d_2.tscn" id="3_l6kfr"]
 [ext_resource type="PackedScene" uid="uid://cfqqo6n7v0fli" path="res://data/things/fish/fish_1_e_2.tscn" id="4_bo3md"]
 [ext_resource type="Script" uid="uid://cfq64v34pot8s" path="res://engine/objects/area_shape.gd" id="5_u5ehe"]
+[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_u5ehe"]
 [ext_resource type="Script" uid="uid://dkumiyoi57n5x" path="res://engine/objects/things/thing_profile.gd" id="8_l001u"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hpr2k"]
