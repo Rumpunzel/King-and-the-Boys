@@ -6,6 +6,8 @@ extends Spawner
 signal structure_created(structure: Structure)
 
 @export_group("Configuration")
+@export var _agent_spawner: AgentSpawner
+@export var _thing_spawner: ThingSpawner
 
 var _structures: Array[Structure]
 
@@ -23,13 +25,13 @@ func spawn_all_from_spawn_spoints() -> Array[Structure]:
 		spawn(structure_spawn_point.get_structure_data())
 	return _structures
 
-func spawn_at(structure_profile: StructureProfile, structure_transform: Transform3D, clockwise_turns: int, status: Structure.Status) -> Array[Structure]:
+func spawn_at(profile: StructureProfile, transform: Transform3D, clockwise_turns: int, status: Structure.Status) -> Array[Structure]:
 	assert(multiplayer.is_server())
-	assert(structure_profile)
+	assert(profile)
 	var tile_data: Dictionary[StringName, Variant] = {
 		Structure.VARIATION: -1,
-		Structure.PROFILE_PATH: structure_profile.resource_path,
-		Structure.SPAWN_TRANSFORM: structure_transform,
+		Structure.PROFILE_PATH: profile.resource_path,
+		Structure.SPAWN_TRANSFORM: transform,
 		Structure.CLOCKWISE_TURNS: clockwise_turns,
 		Structure.STATUS: status,
 	}
@@ -67,10 +69,21 @@ func _spawn_structure(structure_data: Dictionary[StringName, Variant]) -> Struct
 
 func _on_child_entered_tree(node: Node) -> void:
 	if not node is Structure: return
-	assert(not _structures.has(node))
-	_structures.append(node)
-	structure_created.emit(node)
+	var structure: Structure = node
+	assert(not _structures.has(structure))
+	_structures.append(structure)
+	structure.character_spawn_requested.connect(_on_character_spawn_requested.bind(structure))
+	structure.thing_spawn_requested.connect(_on_thing_spawn_requested.bind(structure))
+	structure_created.emit(structure)
+
+func _on_character_spawn_requested(character_to_spawn: CharacterProfile, spawn_for: Structure) -> void:
+	pass
+
+func _on_thing_spawn_requested(thing_to_spawn: ThingProfile, spawn_for: Structure) -> void:
+	_thing_spawner.spawn_at(thing_to_spawn, spawn_for.transform)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if not _agent_spawner: warnings.append("Missing AgentSpawner reference.")
+	if not _thing_spawner: warnings.append("Missing ThingSpawner reference.")
 	return warnings

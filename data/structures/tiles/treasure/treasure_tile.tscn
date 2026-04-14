@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://b75usk17jvre8"]
+
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_lccw2"]
+[ext_resource type="PackedScene" uid="uid://bi1bg3m5u36m8" path="res://protoype_assets/big_tile.blend" id="2_rp3b6"]
+[ext_resource type="Material" uid="uid://c1orqjoxjai6" path="res://protoype_assets/textures/ground_tiles_10_1k/ground_tiles_10_1k.tres" id="3_mwxmq"]
+
+[node name="Tile" type="Node3D" unique_id=1617054939]
+script = ExtResource("1_lccw2")
+metadata/_custom_type_script = "uid://bpkm2ws12sljg"
+
+[node name="BigTile" parent="." unique_id=78048013 instance=ExtResource("2_rp3b6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.085, 0)
+
+[node name="Tile" parent="BigTile" index="0" unique_id=1263924155]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
+surface_material_override/0 = ExtResource("3_mwxmq")
+
+[editable path="BigTile"]

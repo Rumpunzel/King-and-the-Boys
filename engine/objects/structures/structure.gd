@@ -3,6 +3,8 @@
 class_name Structure
 extends StaticBody3D
 
+signal character_spawn_requested(character_to_spawn: CharacterProfile)
+signal thing_spawn_requested(thing_to_spawn: ThingProfile)
 signal profile_changed
 
 enum Status {
@@ -57,7 +59,6 @@ const STATUS: StringName = "status"
 		match status:
 			Status.PLACED:
 				model.visible = false
-				model.rotation.x = PI
 			Status.DISCOVERED:
 				model.apply_material_override(_hidden_material)
 				model.visible = true
@@ -71,8 +72,9 @@ const STATUS: StringName = "status"
 				var tween: Tween = create_tween()
 				tween.set_parallel()
 				tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "rotation:x", 0.0, 0.7).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+				tween.tween_property(model, "rotation:x", 0.0, 0.7).from(PI).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+				if profile.spawn_table: thing_spawn_requested.emit(profile.spawn_table)
 				_debug_draw_connections()
 			_: push_error("Status %s not implemented!" % status)
 
@@ -180,7 +182,7 @@ func _debug_draw_connections() -> void:
 		var tile_grid_offset: Vector2i = Level.direction_to_vector(connection)
 		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.5
 		var color: Color = profile.room_type.color if profile.room_type else Color.WHEAT
-		DebugDraw3D.draw_line(global_position + Vector3.UP * 0.0, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.15, color, INF)
+		DebugDraw3D.draw_line(global_position - Vector3.UP * 0.1, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, color, INF)
 	var restrictions: Dictionary[Level.Direction, ConnectionRestriction] = get_restrictions()
 	for direction: Level.Direction in restrictions.keys():
 		var restriction: ConnectionRestriction = restrictions[direction]

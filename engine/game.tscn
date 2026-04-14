@@ -42,7 +42,9 @@ metadata/_custom_type_script = "uid://d12oj323k2wmw"
 [node name="LevelSpawner" parent="." unique_id=1417309454 node_paths=PackedStringArray("_structure_spawner") instance=ExtResource("6_i022p")]
 _structure_spawner = NodePath("../StructureSpawner")
 
-[node name="StructureSpawner" parent="." unique_id=194044044 instance=ExtResource("7_i022p")]
+[node name="StructureSpawner" parent="." unique_id=194044044 node_paths=PackedStringArray("_agent_spawner", "_thing_spawner") instance=ExtResource("7_i022p")]
+_agent_spawner = NodePath("../AgentSpawner")
+_thing_spawner = NodePath("../ThingSpawner")
 
 [node name="ThingSpawner" parent="." unique_id=1087349806 instance=ExtResource("9_eadau")]
 

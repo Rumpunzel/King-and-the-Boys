@@ -9,6 +9,11 @@ enum Groups {
 	TILE,
 }
 
+@export var group: Groups = Groups.BUILDING
+@export var room_type: RoomType
+@export var spawn_table: ThingProfile
+@export var grid_cell_extents: Vector3i = Vector3i.ONE
+
 @export_group("Connections", "_connection")
 @export var _connection_up: bool
 @export var _connection_right: bool
@@ -19,10 +24,6 @@ enum Groups {
 @export var _restriction_right: ConnectionRestriction
 @export var _restriction_down: ConnectionRestriction
 @export var _restriction_left: ConnectionRestriction
-@export_group("")
-@export var group: Groups = Groups.BUILDING
-@export var room_type: RoomType
-@export var grid_cell_extents: Vector3i = Vector3i.ONE
 
 @export_group("Configuration")
 

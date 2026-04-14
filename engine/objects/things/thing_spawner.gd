@@ -23,6 +23,18 @@ func spawn_all_from_spawn_spoints() -> Array[Thing]:
 		spawn(thing_spawn_point.get_thing_data())
 	return _things
 
+func spawn_at(profile: ThingProfile, transform: Transform3D) -> Array[Thing]:
+	assert(multiplayer.is_server())
+	assert(profile)
+	var thing_data: Dictionary[StringName, Variant] = {
+		Thing.VARIATION: -1,
+		Thing.PROFILE_PATH: profile.resource_path,
+		Thing.SPAWN_TRANSFORM: transform,
+	}
+	Thing.validate_thing_data(thing_data)
+	spawn(thing_data)
+	return _things
+
 func remove_all_things() -> void:
 	assert(multiplayer.is_server())
 	remove_all_spawned_nodes()

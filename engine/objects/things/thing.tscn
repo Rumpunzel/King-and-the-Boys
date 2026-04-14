@@ -14,6 +14,7 @@ properties/0/replication_mode = 1
 collision_layer = 4
 collision_mask = 15
 input_ray_pickable = false
+freeze = true
 script = ExtResource("1_7qwap")
 _collision_shape = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://d1rn5h1erxn03"
