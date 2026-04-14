@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bdvppyr1yt6ae"]
+
+[node name="TreasureLight" type="OmniLight3D" unique_id=593047522]
+transform = Transform3D(1, 0, 0, 0, 0.99999964, 0, 0, 0, 1.0000001, 0, 0, 0)
+light_color = Color(1, 0.691481, 0.139706, 1)
+light_energy = 2.5
+light_bake_mode = 0
+shadow_bias = 0.05
+omni_range = 2.5
+omni_attenuation = 5.0
