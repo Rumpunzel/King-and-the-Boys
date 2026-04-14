@@ -185,7 +185,7 @@ func get_heads_up_anchor() -> Vector3:
 
 func get_grid_position() -> Vector2i:
 	assert(level)
-	return level.world_to_grid_position(global_position + Vector3(0.5, 0.0, 0.5) * level.grid_size)
+	return level.world_to_grid_position(global_position)
 
 func _apply_gravity(delta: float) -> void:
 	velocity.y -= _gravity * delta

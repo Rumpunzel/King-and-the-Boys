@@ -84,7 +84,7 @@ static func get_direction(first_grid_position: Vector2i, second_grid_position: V
 	return Direction.UP
 
 func world_to_grid_position(world_position: Vector3) -> Vector2i:
-	return Vector2i(floori(world_position.x / grid_size), floori(world_position.z / grid_size))
+	return Vector2i(roundi(world_position.x / grid_size), roundi(world_position.z / grid_size))
 
 func grid_to_world_position(grid_position: Vector2i) -> Vector3:
 	return Vector3(grid_position.x, 0.0, grid_position.y) * grid_size
