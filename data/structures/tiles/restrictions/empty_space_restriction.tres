@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AlwaysTrueRestriction" format=3 uid="uid://c7mdl4repm035"]
+
+[ext_resource type="Script" uid="uid://bv4qm14eba8i4" path="res://engine/objects/structures/connection_restrictions/always_true_restriction.gd" id="1_emch1"]
+
+[resource]
+script = ExtResource("1_emch1")
+_invert = true
+metadata/_custom_type_script = "uid://bv4qm14eba8i4"
