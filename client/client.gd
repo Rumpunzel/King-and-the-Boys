@@ -2,6 +2,7 @@
 extends Node
 
 signal game_started
+signal game_stopped
 signal singleplayer_started
 
 signal game_paused
@@ -27,18 +28,15 @@ func _process(_delta: float) -> void:
 	else:
 		if _pause_requested and not get_tree().paused: _pause_game()
 
-func start_game() -> void:
-	game_started.emit()
+func start_game() -> void: game_started.emit()
+func stop_game() -> void: game_stopped.emit()
 
-func pause_game() -> void:
-	_pause_requested = true
-
+func pause_game() -> void: _pause_requested = true
 func unpause_game() -> void:
 	_unpause_game()
 	_pause_requested = false
 
-func quit_game() -> void:
-	get_tree().quit()
+func quit_game() -> void: get_tree().quit()
 
 func get_player_name(player_id: int) -> String:
 	var user_name: String = "Haunt"

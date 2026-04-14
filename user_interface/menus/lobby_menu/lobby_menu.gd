@@ -67,7 +67,7 @@ func _on_start_pressed() -> void:
 	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
 
 func _on_game_status_changed(new_game_status: Game.GameStatus) -> void:
-	if not visible and new_game_status == Game.GameStatus.IN_LOBBY: open_menu()
+	if new_game_status == Game.GameStatus.IN_LOBBY: open_menu()
 	_start_button.disabled = not new_game_status == Game.GameStatus.READY
 
 func _get_configuration_warnings() -> PackedStringArray:

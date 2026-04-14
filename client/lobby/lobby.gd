@@ -13,6 +13,7 @@ func _enter_tree() -> void:
 	spawn_function = _spawn_player
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	Client.game_started.connect(_on_game_started)
+	Client.game_stopped.connect(_on_game_stopped)
 	Multiplayer.joining_multiplayer.connect(_on_joining_multiplayer)
 	Multiplayer.player_joined.connect(_on_player_joined)
 	Multiplayer.disconnected_from_multiplayer.connect(_on_disconnected_from_multiplayer)
@@ -74,6 +75,9 @@ func _remove_player(player: Player) -> void:
 
 func _on_game_started() -> void:
 	_create_local_player()
+
+func _on_game_stopped() -> void:
+	_remove_all_players()
 
 func _on_disconnected_from_multiplayer() -> void:
 	_remove_all_players()

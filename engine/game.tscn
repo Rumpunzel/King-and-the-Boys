@@ -23,7 +23,7 @@ properties/0/replication_mode = 2
 
 [node name="Game" type="Node" unique_id=1433846697 node_paths=PackedStringArray("_background_placeholder", "_serializer", "_level_spawner", "_structure_spawner", "_thing_spawner", "_agent_spawner", "_player_ghost_spawner")]
 script = ExtResource("1_l8g03")
-_background_placeholder = NodePath("BackgroundLayer/BlackBackground")
+_background_placeholder = NodePath("MenusLayer/BlackBackground")
 _background_scene_path = "uid://dl1biiyjo6o63"
 _default_level_path = "uid://bmwhs3lwb74ue"
 _serializer = NodePath("Serializer")
@@ -40,17 +40,6 @@ replication_config = SubResource("SceneReplicationConfig_piikb")
 [node name="Serializer" type="Node" parent="." unique_id=1060350392]
 script = ExtResource("3_i022p")
 metadata/_custom_type_script = "uid://d12oj323k2wmw"
-
-[node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=998376685]
-
-[node name="BlackBackground" type="ColorRect" parent="BackgroundLayer" unique_id=731804104]
-modulate = Color(1, 1, 1, 0)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 1)
 
 [node name="LevelSpawner" parent="." unique_id=1417309454 node_paths=PackedStringArray("_structure_spawner") instance=ExtResource("6_i022p")]
 _structure_spawner = NodePath("../StructureSpawner")
@@ -70,13 +59,23 @@ _thing_spawner = NodePath("../ThingSpawner")
 [node name="MenusLayer" type="CanvasLayer" parent="." unique_id=1986892659]
 layer = 100
 
-[node name="Menus" type="MarginContainer" parent="MenusLayer" unique_id=1633700177]
+[node name="BlackBackground" type="ColorRect" parent="MenusLayer" unique_id=731804104]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Menus" type="MarginContainer" parent="MenusLayer" unique_id=1633700177 node_paths=PackedStringArray("_pause_menu")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("9_ven62")
+_pause_menu = NodePath("PanelContainer/MarginContainer/PauseMenu")
 metadata/_custom_type_script = "uid://bwld5ujvjc76x"
 
 [node name="Background" type="TextureRect" parent="MenusLayer/Menus" unique_id=1295372125]
@@ -92,7 +91,7 @@ theme_override_styles/panel = ExtResource("10_ven62")
 [node name="GameInfo" parent="MenusLayer/Menus/PanelContainer" unique_id=632052217 instance=ExtResource("11_22so6")]
 layout_mode = 2
 
-[node name="Menu" type="MarginContainer" parent="MenusLayer/Menus/PanelContainer" unique_id=1714519205]
+[node name="MarginContainer" type="MarginContainer" parent="MenusLayer/Menus/PanelContainer" unique_id=1714519205]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 160
@@ -100,27 +99,32 @@ theme_override_constants/margin_top = 160
 theme_override_constants/margin_right = 160
 theme_override_constants/margin_bottom = 160
 
-[node name="PauseMenu" parent="MenusLayer/Menus/PanelContainer/Menu" unique_id=820514905 instance=ExtResource("2_j8tme")]
+[node name="PauseMenu" parent="MenusLayer/Menus/PanelContainer/MarginContainer" unique_id=820514905 instance=ExtResource("2_j8tme")]
 visible = false
+layout_mode = 2
 
-[node name="LobbyMenu" parent="MenusLayer/Menus/PanelContainer/Menu" unique_id=2017772968 instance=ExtResource("11_piikb")]
+[node name="LobbyMenu" parent="MenusLayer/Menus/PanelContainer/MarginContainer" unique_id=2017772968 instance=ExtResource("11_piikb")]
 visible = false
 layout_mode = 2
 _start = -1
 
-[node name="MainMenu" parent="MenusLayer/Menus/PanelContainer/Menu" unique_id=1883016999 instance=ExtResource("10_7g70b")]
+[node name="MainMenu" parent="MenusLayer/Menus/PanelContainer/MarginContainer" unique_id=1883016999 instance=ExtResource("10_7g70b")]
 layout_mode = 2
 
 [connection signal="game_status_changed" from="." to="MenusLayer/Menus" method="_on_game_status_changed"]
-[connection signal="game_status_changed" from="." to="MenusLayer/Menus/PanelContainer/Menu/LobbyMenu" method="_on_game_status_changed"]
-[connection signal="game_status_changed" from="." to="MenusLayer/Menus/PanelContainer/Menu/MainMenu" method="_on_game_status_changed"]
-[connection signal="saving_finished" from="Serializer" to="MenusLayer/Menus/PanelContainer/Menu/PauseMenu" method="_on_saving_finished"]
+[connection signal="game_status_changed" from="." to="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" method="_on_game_status_changed"]
+[connection signal="game_status_changed" from="." to="MenusLayer/Menus/PanelContainer/MarginContainer/LobbyMenu" method="_on_game_status_changed"]
+[connection signal="game_status_changed" from="." to="MenusLayer/Menus/PanelContainer/MarginContainer/MainMenu" method="_on_game_status_changed"]
+[connection signal="saving_finished" from="Serializer" to="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" method="_on_saving_finished"]
 [connection signal="level_loaded" from="LevelSpawner" to="." method="_on_level_loaded"]
 [connection signal="structure_created" from="StructureSpawner" to="LevelSpawner" method="_on_structure_created"]
 [connection signal="thing_created" from="ThingSpawner" to="LevelSpawner" method="_on_thing_created"]
 [connection signal="agent_created" from="AgentSpawner" to="LevelSpawner" method="_on_agent_created"]
 [connection signal="player_ghost_created" from="PlayerGhostSpawner" to="LevelSpawner" method="_on_player_ghost_created"]
-[connection signal="load_requested" from="MenusLayer/Menus/PanelContainer/Menu/PauseMenu" to="." method="_on_load_requested"]
-[connection signal="save_requested" from="MenusLayer/Menus/PanelContainer/Menu/PauseMenu" to="." method="_on_save_requested"]
-[connection signal="game_start_requested" from="MenusLayer/Menus/PanelContainer/Menu/LobbyMenu" to="." method="_on_game_start_requested"]
-[connection signal="game_requested" from="MenusLayer/Menus/PanelContainer/Menu/MainMenu" to="." method="_on_game_requested"]
+[connection signal="closed" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="MenusLayer/Menus" method="_on_pause_menu_closed"]
+[connection signal="load_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="." method="_on_load_requested"]
+[connection signal="main_menu_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="." method="_on_main_menu_requested"]
+[connection signal="opened" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="MenusLayer/Menus" method="_on_pause_menu_opened"]
+[connection signal="save_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="." method="_on_save_requested"]
+[connection signal="game_start_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/LobbyMenu" to="." method="_on_game_start_requested"]
+[connection signal="game_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/MainMenu" to="." method="_on_game_requested"]

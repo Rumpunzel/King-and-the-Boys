@@ -29,7 +29,7 @@ func _on_quit_confirmation_dialog_confirmed() -> void:
 	Client.quit_game()
 
 func _on_game_status_changed(new_game_status: Game.GameStatus) -> void:
-	if not visible and new_game_status == Game.GameStatus.NONE: open_menu()
+	if new_game_status == Game.GameStatus.NONE: open_menu()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

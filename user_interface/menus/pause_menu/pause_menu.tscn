@@ -1,85 +1,80 @@
 [gd_scene format=3 uid="uid://5sd2jgms4uso"]
 
 [ext_resource type="Script" uid="uid://yu3m6ywkwlvf" path="res://user_interface/menus/pause_menu/pause_menu.gd" id="1_h4gok"]
-[ext_resource type="PackedScene" uid="uid://csmae7j3a5gs4" path="res://user_interface/menus/pause_menu/game_info.tscn" id="2_wsp0d"]
+[ext_resource type="PackedScene" uid="uid://dqd2rl70hprht" path="res://user_interface/logo.tscn" id="2_yb88d"]
 
-[sub_resource type="Gradient" id="Gradient_ofb81"]
-colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_nb4k0"]
-gradient = SubResource("Gradient_ofb81")
-width = 1024
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j0huj"]
-texture = SubResource("GradientTexture1D_nb4k0")
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_tkajo"]
-
-[node name="PauseMenu" type="CanvasLayer" unique_id=1674632881 node_paths=PackedStringArray("_save_button", "_load_button", "_animation_player")]
+[node name="PauseMenu" type="MarginContainer" unique_id=1418579236 node_paths=PackedStringArray("_save_button", "_load_button")]
 process_mode = 3
-layer = 100
-script = ExtResource("1_h4gok")
-_save_button = NodePath("PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Save")
-_load_button = NodePath("PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Load")
-_animation_player = NodePath("AnimationPlayer")
-metadata/_custom_type_script = "uid://yu3m6ywkwlvf"
-
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=599138560]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 160.0
+offset_top = 160.0
+offset_right = -160.0
+offset_bottom = -160.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_j0huj")
+script = ExtResource("1_h4gok")
+_save_button = NodePath("VBoxContainer/VBoxContainer/SavingLoading/Save")
+_load_button = NodePath("VBoxContainer/VBoxContainer/SavingLoading/Load")
+_start = -1
+metadata/_custom_type_script = "uid://yu3m6ywkwlvf"
 
-[node name="GameInfo" parent="PanelContainer" unique_id=632052217 instance=ExtResource("2_wsp0d")]
-layout_mode = 2
-
-[node name="Menu" type="MarginContainer" parent="PanelContainer" unique_id=1714519205]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1855921521]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
-theme_override_constants/margin_left = 64
-theme_override_constants/margin_top = 64
-theme_override_constants/margin_right = 64
-theme_override_constants/margin_bottom = 64
+theme_override_constants/separation = 76
 
-[node name="GridContainer" type="GridContainer" parent="PanelContainer/Menu" unique_id=1986075465]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=59547197]
 layout_mode = 2
-columns = 2
+theme_override_constants/margin_left = -64
+theme_override_constants/margin_right = -64
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/Menu/GridContainer" unique_id=1855921521]
+[node name="Logo" parent="VBoxContainer/MarginContainer" unique_id=113253532 instance=ExtResource("2_yb88d")]
 layout_mode = 2
-theme_override_constants/separation = 24
 
-[node name="Continue" type="Button" parent="PanelContainer/Menu/GridContainer/VBoxContainer" unique_id=485081184]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=423231879]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Continue" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=485081184]
+layout_mode = 2
+size_flags_vertical = 2
 text = "Continue"
 
-[node name="SavingLoading" type="VBoxContainer" parent="PanelContainer/Menu/GridContainer/VBoxContainer" unique_id=89214162]
+[node name="SavingLoading" type="VBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=89214162]
 layout_mode = 2
+size_flags_vertical = 3
 
-[node name="Save" type="Button" parent="PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading" unique_id=1312993213]
+[node name="Save" type="Button" parent="VBoxContainer/VBoxContainer/SavingLoading" unique_id=1312993213]
 layout_mode = 2
+size_flags_vertical = 6
 text = "Save
 "
 
-[node name="Load" type="Button" parent="PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading" unique_id=1032184306]
+[node name="Load" type="Button" parent="VBoxContainer/VBoxContainer/SavingLoading" unique_id=1032184306]
 layout_mode = 2
+size_flags_vertical = 6
 text = "Load"
 
-[node name="Quit" type="Button" parent="PanelContainer/Menu/GridContainer/VBoxContainer" unique_id=723955972]
+[node name="MainMenu" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=1884078988]
 layout_mode = 2
-text = "Quit"
+size_flags_vertical = 10
+text = "Main Menu"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1816366333]
-libraries/ = SubResource("AnimationLibrary_tkajo")
+[node name="Quit" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=723955972]
+layout_mode = 2
+size_flags_vertical = 10
+text = "Quit"
 
 [node name="QuitConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1777982716]
 auto_translate_mode = 1
 
-[connection signal="pressed" from="PanelContainer/Menu/GridContainer/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="PanelContainer/Menu/GridContainer/VBoxContainer/SavingLoading/Load" to="." method="_on_load_pressed"]
-[connection signal="pressed" from="PanelContainer/Menu/GridContainer/VBoxContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
+[connection signal="closed" from="." to="." method="_on_closed"]
+[connection signal="opened" from="." to="." method="_on_opened"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/SavingLoading/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/SavingLoading/Load" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
 [connection signal="confirmed" from="QuitConfirmationDialog" to="." method="_on_quit_confirmation_dialog_confirmed"]

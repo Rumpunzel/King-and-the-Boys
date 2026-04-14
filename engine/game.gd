@@ -32,9 +32,13 @@ var _game_status: GameStatus:
 		_game_status = new_game_status
 		match _game_status:
 			GameStatus.NONE:
+				Client.stop_game()
 				_on_server = false
 				_background_placeholder.modulate.a = 1.0
+				_background_placeholder.visible = true
+				if not _background_scene_path.is_empty(): ResourceLoader.load_threaded_request(_background_scene_path)
 			GameStatus.IN_LOBBY:
+				Client.start_game()
 				ResourceLoader.load_threaded_request(_default_level_path)
 			GameStatus.READY:
 				pass
@@ -69,8 +73,6 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	_background_placeholder.visible = true
-	if not _background_scene_path.is_empty(): ResourceLoader.load_threaded_request(_background_scene_path)
 	assert(not _default_level_path.is_empty())
 	_game_status = GameStatus.NONE
 
@@ -81,7 +83,6 @@ func _process(_delta: float) -> void:
 
 func open_lobby() -> void:
 	assert(multiplayer.is_server())
-	Client.start_game()
 	print_debug("Opening Lobby...")
 	if _on_server: push_error("Trying to open a lobby while connected to server!")
 	_game_status = GameStatus.IN_LOBBY
@@ -123,12 +124,12 @@ func continue_game() -> void:
 func stop_game() -> void:
 	assert(multiplayer.is_server())
 	print_debug("Stopping running game...")
-	_game_status = GameStatus.NONE
 	_player_ghost_spawner.stop_synching_players()
 	_agent_spawner.remove_all_agents()
 	_thing_spawner.remove_all_things()
 	_structure_spawner.remove_all_structures()
 	_level_spawner.unload_level()
+	_game_status = GameStatus.NONE
 
 func _load_background_scene_when_ready() -> void:
 	if not ResourceLoader.load_threaded_get_status(_background_scene_path) == ResourceLoader.THREAD_LOAD_LOADED: return
@@ -158,6 +159,9 @@ func _on_save_requested() -> void:
 
 func _on_load_requested() -> void:
 	pass # Replace with function body.
+
+func _on_main_menu_requested() -> void:
+	stop_game()
 
 func _on_singleplayer_started() -> void:
 	assert(is_node_ready())
