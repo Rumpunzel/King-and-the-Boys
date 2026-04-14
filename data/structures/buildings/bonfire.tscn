@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d2fn7gvcxvkan"]
 
 [ext_resource type="PackedScene" uid="uid://pdyooxeenr4a" path="res://protoype_assets/quaternius/medieval_village/Props/GLB/Bonfire.glb" id="1_ixjql"]
-[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="2_t22ul"]
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="2_t22ul"]
 
 [node name="Bonfire" unique_id=1095304464 instance=ExtResource("1_ixjql")]
 script = ExtResource("2_t22ul")

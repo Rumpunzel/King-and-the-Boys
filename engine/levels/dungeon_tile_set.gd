@@ -2,30 +2,21 @@
 class_name DungeonTileSet
 extends Resource
 
+@export var tile_connector: StructureProfile
+
 @export var _dungeon_tiles: Dictionary[StructureProfile, float]
-@export var _emergency_tiles: Dictionary[StructureProfile, float]
 
 var _blueprints: Dictionary[TileBlueprint, float]:
 	get:
 		if _blueprints.is_empty(): _blueprints = _generate_blueprints(_dungeon_tiles)
 		assert(not _blueprints.is_empty())
 		return _blueprints
-var _emergency_blueprints: Dictionary[TileBlueprint, float]:
-	get:
-		if _emergency_blueprints.is_empty(): _emergency_blueprints = _generate_blueprints(_emergency_tiles)
-		assert(not _emergency_blueprints.is_empty())
-		return _emergency_blueprints
 
 func get_tile_blueprint_for(tile_position: Vector2i, surrounding_tiles: Array[Structure]) -> TileBlueprint:
 	var fitting_blueprint: TileBlueprint = _find_tile_blueprint(_blueprints, tile_position, surrounding_tiles)
 	if fitting_blueprint: return fitting_blueprint
-	print_debug("No fitting tile found; looking for emergency tile.")
-	fitting_blueprint = _find_tile_blueprint(_emergency_blueprints, tile_position, surrounding_tiles)
-	if fitting_blueprint: return fitting_blueprint
 	print_debug("No fitting emergency tile found; trying again without restrictions.")
 	fitting_blueprint = _find_tile_blueprint(_blueprints, tile_position, surrounding_tiles, true)
-	if fitting_blueprint: return fitting_blueprint
-	fitting_blueprint = _find_tile_blueprint(_emergency_blueprints, tile_position, surrounding_tiles, true)
 	assert(fitting_blueprint)
 	return fitting_blueprint
 

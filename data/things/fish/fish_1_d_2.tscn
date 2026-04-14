@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cdy48nd51271h"]
 
 [ext_resource type="PackedScene" uid="uid://bdpbcgvsuewqi" path="res://protoype_assets/rpg_poly/Food Pack/gLTF/Fish_1_D.glb" id="1_2lxuw"]
-[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="2_80m3l"]
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="2_80m3l"]
 
 [node name="Fish_1_D2" unique_id=786138243 instance=ExtResource("1_2lxuw")]
 script = ExtResource("2_80m3l")

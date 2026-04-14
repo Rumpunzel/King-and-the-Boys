@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ModelEmergeAnimation" format=3 uid="uid://376tehqx1du"]
+
+[ext_resource type="Script" uid="uid://cn08tolbnk2qo" path="res://engine/objects/model/model_emerge_animation.gd" id="1_wc0ds"]
+
+[resource]
+script = ExtResource("1_wc0ds")
+_emerge_depth = 0.25
+metadata/_custom_type_script = "uid://cn08tolbnk2qo"

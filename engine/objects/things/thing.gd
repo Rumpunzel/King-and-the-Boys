@@ -51,12 +51,7 @@ var model: Model:
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	var tween: Tween = create_tween()
-	tween.set_parallel()
-	tween.tween_property(model, "position:y", 2.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
-	tween.tween_property(model, "rotation:x", -0.5, 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(model, "rotation:x", 0.0, 0.75).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT).set_delay(0.5)
+	model.play_model_animation(profile.spawn_animation)
 
 #func _process(_delta: float) -> void:
 	#if Engine.is_editor_hint(): return

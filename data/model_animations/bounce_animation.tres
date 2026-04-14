@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ModelBounceAnimation" format=3 uid="uid://bf0msgn2okdfo"]
+
+[ext_resource type="Script" uid="uid://b5h27t8ow0ape" path="res://engine/objects/model/model_bounce_animation.gd" id="1_l0uyw"]
+
+[resource]
+script = ExtResource("1_l0uyw")
+duration = 0.5
+metadata/_custom_type_script = "uid://b5h27t8ow0ape"

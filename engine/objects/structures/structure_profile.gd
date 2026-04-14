@@ -14,6 +14,9 @@ enum Groups {
 @export var spawn_table: ThingProfile
 @export var grid_cell_extents: Vector3i = Vector3i.ONE
 
+@export var discover_animation: ModelAnimation = preload("uid://bf0msgn2okdfo")
+@export var reveal_animation: ModelAnimation = preload("uid://80ut5hvuftsw")
+
 @export_group("Connections", "_connection")
 @export var _connection_up: bool
 @export var _connection_right: bool

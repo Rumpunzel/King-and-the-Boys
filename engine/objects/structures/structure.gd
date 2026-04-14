@@ -5,6 +5,7 @@ extends StaticBody3D
 
 signal character_spawn_requested(character_to_spawn: CharacterProfile)
 signal thing_spawn_requested(thing_to_spawn: ThingProfile)
+signal status_changed(status: Status)
 signal profile_changed
 
 enum Status {
@@ -62,21 +63,15 @@ const STATUS: StringName = "status"
 			Status.DISCOVERED:
 				model.apply_material_override(_hidden_material)
 				model.visible = true
-				var tween: Tween = create_tween()
-				tween.set_parallel()
-				tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+				model.play_model_animation(profile.discover_animation)
 			Status.REVEALED:
 				model.visible = true
 				model.remove_material_override(_hidden_material)
-				var tween: Tween = create_tween()
-				tween.set_parallel()
-				tween.tween_property(model, "position:y", 1.0, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "rotation:x", 0.0, 0.7).from(PI).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
-				tween.tween_property(model, "position:y", 0.0, 0.3).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(0.3)
+				model.play_model_animation(profile.reveal_animation)
 				if profile.spawn_table: thing_spawn_requested.emit(profile.spawn_table)
-				_debug_draw_connections()
+				if level: _debug_draw_connections()
 			_: push_error("Status %s not implemented!" % status)
+		status_changed.emit(status)
 
 @export_group("Configuration")
 @export var _collision_shape: CollisionShape3D
@@ -95,10 +90,15 @@ var level: Level
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	name = "%s %s" % [get_grid_position(), profile.name]
+	if level: name = "%s %s" % [get_grid_position(), profile.name]
+	else: name = "%s %s" % [global_position, profile.name]
 	if status == Status.NONE: status = Status.PLACED
-	@warning_ignore("unsafe_property_access")
-	$Label3D.text = "%s\n%s" % [profile.name, get_grid_position()]
+	if level:
+		@warning_ignore("unsafe_property_access")
+		$Label3D.text = "%s\n%s" % [profile.name, get_grid_position()]
+	else:
+		@warning_ignore("unsafe_property_access")
+		$Label3D.text = ""
 
 static func from_structure_data(structure_data: Dictionary[StringName, Variant]) -> Structure:
 	validate_structure_data(structure_data)

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://tco40oti2kkn"]
 
-[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_yhu21"]
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="1_yhu21"]
 [ext_resource type="PackedScene" uid="uid://xftmuhyaspbu" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Chest_03.tscn" id="2_pllb1"]
 [ext_resource type="PackedScene" uid="uid://bdvppyr1yt6ae" path="res://data/things/treasure_light.tscn" id="3_p1soj"]
 

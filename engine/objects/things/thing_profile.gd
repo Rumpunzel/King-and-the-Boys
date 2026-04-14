@@ -17,6 +17,8 @@ enum Groups {
 		mass = new_value
 		changed.emit()
 
+@export var spawn_animation: ModelAnimation = preload("uid://djq27fwrmrv2")
+
 @export_group("")
 @export_group("Configuration")
 

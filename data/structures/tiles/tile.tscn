@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bb5otswt2l1ja"]
 
-[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_4tbub"]
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="1_4tbub"]
 [ext_resource type="PackedScene" uid="uid://bydl81he848yc" path="res://protoype_assets/tile.blend" id="2_x4pci"]
 [ext_resource type="Material" uid="uid://qjre4or0druw" path="res://protoype_assets/textures/cobblestone_01_1k/cobblestone_01_1k.tres" id="3_l1ipo"]
 

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d1rn5h1erxn03" path="res://engine/objects/things/thing.gd" id="1_7qwap"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_plyi5"]
+[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="2_q26n4"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_16bwq"]
 [ext_resource type="PackedScene" uid="uid://coieakxsf086s" path="res://engine/objects/things/thing_hit_box.tscn" id="4_pi2rr"]
 
@@ -16,6 +17,7 @@ collision_mask = 15
 input_ray_pickable = false
 freeze = true
 script = ExtResource("1_7qwap")
+_spawn_animation = ExtResource("2_q26n4")
 _collision_shape = NodePath("CollisionShape3D")
 metadata/_custom_type_script = "uid://d1rn5h1erxn03"
 

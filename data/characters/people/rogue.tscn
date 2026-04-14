@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c1y1c3gomyjk6"]
 
 [ext_resource type="PackedScene" uid="uid://coxn7n5500mo2" path="res://protoype_assets/quaternius/women/Medieval.blend" id="1_hjupo"]
-[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="2_yh02w"]
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="2_yh02w"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://dq7kyxeehjpe0" path="res://data/characters/people/quaternius_animation_tree.tres" id="3_wx7d7"]
 
 [node name="Rogue" unique_id=1742228997 node_paths=PackedStringArray("_animation_tree") instance=ExtResource("1_hjupo")]

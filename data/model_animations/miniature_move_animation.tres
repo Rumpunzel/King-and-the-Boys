@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ModelMiniatureMoveAnimation" format=3 uid="uid://bwiaycc13h0eo"]
+
+[ext_resource type="Script" uid="uid://clsflb34q1if1" path="res://engine/objects/model/model_miniature_move_animation.gd" id="1_xkbg2"]
+
+[resource]
+script = ExtResource("1_xkbg2")
+duration = 0.75
+metadata/_custom_type_script = "uid://clsflb34q1if1"

@@ -106,7 +106,7 @@ collision_layer = 1048576
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Ghost" unique_id=772574322]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 2, 1)
-light_color = Color(1, 0.877682, 0.79189277, 1)
+light_color = Color(0.99999994, 0.7550197, 0.57437825, 1)
 light_energy = 4.0
 shadow_enabled = true
 omni_range = 10.0

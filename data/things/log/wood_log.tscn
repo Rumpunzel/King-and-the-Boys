@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ift3r61cj7g3"]
 
 [ext_resource type="PackedScene" uid="uid://cjx0yeh5usv8k" path="res://protoype_assets/quaternius/survival/GLB/WoodLog.glb" id="1_6ebxv"]
-[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="2_iojr0"]
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="2_iojr0"]
 
 [node name="WoodLog" unique_id=256183067 instance=ExtResource("1_6ebxv")]
 script = ExtResource("2_iojr0")

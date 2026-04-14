@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://dosl7b347dw0a"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_7x1yn"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_ljiep"]
+[ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="3_jnhgs"]
+[ext_resource type="PackedScene" uid="uid://cuvtvyu4l8m08" path="res://data/structures/tiles/tile_connector.tscn" id="3_ljiep"]
+[ext_resource type="Resource" uid="uid://d3gv4j0loqykk" path="res://data/model_animations/slide_in_z_animation.tres" id="4_jnhgs"]
+
+[resource]
+script = ExtResource("3_jnhgs")
+group = 2
+reveal_animation = ExtResource("4_jnhgs")
+name = "Tile Connector"
+_model_variations = Array[PackedScene]([ExtResource("3_ljiep")])
+metadata/_custom_type_script = "uid://dol8cfhd12nbf"

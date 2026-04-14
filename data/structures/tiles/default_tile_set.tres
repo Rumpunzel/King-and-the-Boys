@@ -15,9 +15,11 @@
 [ext_resource type="Resource" uid="uid://c863mo5jjag6h" path="res://data/structures/tiles/room/room_hallway.tres" id="12_tqqpw"]
 [ext_resource type="Resource" uid="uid://mmk57aplc5pu" path="res://data/structures/tiles/room/room_center.tres" id="12_twuq3"]
 [ext_resource type="Resource" uid="uid://bgamr2kpoe8de" path="res://data/structures/tiles/room/room_deadend.tres" id="14_7476t"]
+[ext_resource type="Resource" uid="uid://dosl7b347dw0a" path="res://data/structures/tiles/tile_connector.tres" id="16_tqqpw"]
 
 [resource]
 script = ExtResource("1_qqpxh")
+tile_connector = ExtResource("16_tqqpw")
 _dungeon_tiles = Dictionary[ExtResource("1_ykmjg"), float]({
 ExtResource("2_07l2v"): 1.0,
 ExtResource("3_0m0h4"): 5.0,
@@ -29,7 +31,8 @@ ExtResource("8_7476t"): 1.0,
 ExtResource("9_g3wxk"): 1.0,
 ExtResource("10_xnkrs"): 3.0,
 ExtResource("14_7476t"): 1.0,
-ExtResource("12_twuq3"): 0.1
+ExtResource("12_twuq3"): 0.1,
+ExtResource("12_tqqpw"): 1.0
 })
 _emergency_tiles = Dictionary[ExtResource("1_ykmjg"), float]({
 ExtResource("11_twuq3"): 1.0,

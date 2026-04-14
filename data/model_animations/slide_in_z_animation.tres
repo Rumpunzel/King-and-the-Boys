@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ModelSlideAnimation" format=3 uid="uid://d3gv4j0loqykk"]
+
+[ext_resource type="Script" uid="uid://ny4msm013q8i" path="res://engine/objects/model/model_slide_animation.gd" id="1_4ok8u"]
+
+[resource]
+script = ExtResource("1_4ok8u")
+_axis = "z"
+metadata/_custom_type_script = "uid://ny4msm013q8i"

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://e5sxig2yepxa"]
 
-[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="1_ean0v"]
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="1_ean0v"]
 [ext_resource type="PackedScene" uid="uid://bi1bg3m5u36m8" path="res://protoype_assets/big_tile.blend" id="2_2vml5"]
 [ext_resource type="Material" uid="uid://fxuw30gdj6t4" path="res://protoype_assets/textures/ground_tiles_26_1k/ground_tiles_26_1k.tres" id="3_kuotf"]
 

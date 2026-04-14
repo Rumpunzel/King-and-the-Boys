@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b55tt1yijxn7r"]
 
 [ext_resource type="PackedScene" uid="uid://ikaw0dqn1dvh" path="res://protoype_assets/quaternius/men/King.blend" id="1_loedp"]
-[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model.gd" id="2_k3r55"]
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="2_k3r55"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://dq7kyxeehjpe0" path="res://data/characters/people/quaternius_animation_tree.tres" id="3_8dnim"]
 
 [node name="King" unique_id=217858079 node_paths=PackedStringArray("_animation_tree") instance=ExtResource("1_loedp")]

@@ -25,6 +25,7 @@ const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2
 @export var _tile_set: DungeonTileSet
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
+var _tile_connectors: Dictionary[Vector3, Structure]
 
 var _reveal_queue: Array[Structure] = []
 # Direction -> Array[Structure]
@@ -237,6 +238,27 @@ func _on_structure_created(structure: Structure) -> void:
 	structure.level = self
 	var tile_grid_position: Vector2i = world_to_grid_position(structure.global_position)
 	_placed_tiles[tile_grid_position] = structure
+	for connection: Direction in structure.get_connections():
+		var direction_vector: Vector2i = direction_to_vector(connection)
+		var connection_position: Vector3 = structure.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
+		if _tile_connectors.has(connection_position): continue
+		var tile_connector: Structure = _tile_set.tile_connector.create(-1, Transform3D(Basis.IDENTITY, connection_position), connection, Structure.Status.PLACED)
+		_tile_connectors[connection_position] = tile_connector
+		add_child(tile_connector)
+	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
+
+func _on_tile_status_changed(status: Structure.Status, structure: Structure) -> void:
+	if not status == Structure.Status.REVEALED: return
+	await get_tree().create_timer(0.5).timeout
+	for connection: Direction in structure.get_connections():
+		var direction_vector: Vector2i = direction_to_vector(connection)
+		var neighbour_position: Vector2i = structure.get_grid_position() + direction_vector
+		if not _placed_tiles.has(neighbour_position): continue
+		var neighbour: Structure = _placed_tiles[neighbour_position]
+		if not neighbour.status == Structure.Status.REVEALED: continue
+		var connection_position: Vector3 = structure.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
+		var tile_connector: Structure = _tile_connectors[connection_position]
+		tile_connector.reveal()
 
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	var character: Character = player_ghost.character
@@ -250,8 +272,8 @@ func _on_player_moved(character_grid_position: Vector2i, character: Character) -
 	_build_dungeon_from(character_grid_position)
 	_update_player_vision(character_grid_position, character.profile.vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.REVEALED, _queue_reveal)
 	_update_player_vision(character_grid_position, character.profile.vision + character.profile.dark_vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.DISCOVERED, _queue_discover)
-	_remaining_tile_reveal_delay = character.profile.animation_duration * 0.1
-	_remaining_tile_discover_delay = character.profile.animation_duration * 0.1
+	_remaining_tile_reveal_delay = character.profile.move_animation.duration * 0.1
+	_remaining_tile_discover_delay = character.profile.move_animation.duration * 0.1
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
