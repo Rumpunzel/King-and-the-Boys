@@ -8,6 +8,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
@@ -33,8 +34,16 @@ size_flags_vertical = 8
 layout_mode = 2
 text = "Prototype assets by"
 
-[node name="LinkButton" type="LinkButton" parent="Quaternius" unique_id=891836639]
+[node name="SyntyStudios" type="LinkButton" parent="Quaternius" unique_id=177996020]
+layout_mode = 2
+text = "Synty Studios"
+uri = "https://www.syntystudios.com/"
+
+[node name="And" type="Label" parent="Quaternius" unique_id=2123952392]
+layout_mode = 2
+text = "&"
+
+[node name="Quaternius" type="LinkButton" parent="Quaternius" unique_id=891836639]
 layout_mode = 2
 text = "Quaternius"
-underline = 1
 uri = "https://quaternius.com/"

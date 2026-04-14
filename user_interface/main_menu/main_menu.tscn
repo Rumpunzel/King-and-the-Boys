@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://cd2h44n70ffkn"]
 
 [ext_resource type="Script" uid="uid://b5mml6dqjiilo" path="res://user_interface/main_menu/main_menu.gd" id="1_ma220"]
-[ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://engine/levels/test_level.tscn" id="2_cw0qe"]
+[ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://data/levels/test_level.tscn" id="2_cw0qe"]
 [ext_resource type="Texture2D" uid="uid://bsemt5jnpwww7" path="res://protoype_assets/the_boys_background.png" id="3_7opyd"]
 [ext_resource type="PackedScene" uid="uid://csmae7j3a5gs4" path="res://user_interface/pause_menu/game_info.tscn" id="4_1pt63"]
-[ext_resource type="PackedScene" uid="uid://dl1biiyjo6o63" path="res://assets/polygon_dungeon/Scenes/Demo.tscn" id="4_7opyd"]
-[ext_resource type="Texture2D" uid="uid://2qnwvokder1c" path="res://protoype_assets/logo.png" id="5_7opyd"]
+[ext_resource type="PackedScene" uid="uid://dqd2rl70hprht" path="res://user_interface/logo.tscn" id="5_ru3py"]
 
 [sub_resource type="Gradient" id="Gradient_ofb81"]
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
@@ -40,8 +39,6 @@ grow_vertical = 2
 texture = ExtResource("3_7opyd")
 stretch_mode = 6
 
-[node name="Main" parent="." unique_id=691834154 instance=ExtResource("4_7opyd")]
-
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=599138560]
 layout_mode = 1
 anchors_preset = 15
@@ -54,49 +51,50 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_j0huj")
 [node name="GameInfo" parent="PanelContainer" unique_id=632052217 instance=ExtResource("4_1pt63")]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1425675220]
-layout_mode = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 64
-theme_override_constants/margin_right = 64
-theme_override_constants/margin_bottom = 64
-
-[node name="Menu" type="MarginContainer" parent="PanelContainer/MarginContainer" unique_id=1714519205]
+[node name="Menu" type="MarginContainer" parent="PanelContainer" unique_id=1714519205]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
-theme_override_constants/margin_left = 64
-theme_override_constants/margin_top = 64
+theme_override_constants/margin_left = 96
+theme_override_constants/margin_top = 160
 theme_override_constants/margin_right = 64
-theme_override_constants/margin_bottom = 64
+theme_override_constants/margin_bottom = 224
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/Menu" unique_id=1855921521]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/Menu" unique_id=1855921521]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 76
 
-[node name="Logo" type="TextureRect" parent="PanelContainer/MarginContainer/Menu/VBoxContainer" unique_id=834864288]
+[node name="Logo" parent="PanelContainer/Menu/VBoxContainer" unique_id=264040751 instance=ExtResource("5_ru3py")]
 layout_mode = 2
-texture = ExtResource("5_7opyd")
-stretch_mode = 5
 
-[node name="NewGame" type="Button" parent="PanelContainer/MarginContainer/Menu/VBoxContainer" unique_id=2036852837]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/Menu/VBoxContainer" unique_id=490678285]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_right = 64
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/Menu/VBoxContainer/MarginContainer" unique_id=556726564]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NewGame" type="Button" parent="PanelContainer/Menu/VBoxContainer/MarginContainer/VBoxContainer" unique_id=2036852837]
 layout_mode = 2
 text = "New Game"
 
-[node name="Load" type="Button" parent="PanelContainer/MarginContainer/Menu/VBoxContainer" unique_id=1032184306]
+[node name="Load" type="Button" parent="PanelContainer/Menu/VBoxContainer/MarginContainer/VBoxContainer" unique_id=1032184306]
 visible = false
 layout_mode = 2
 text = "Load"
 
-[node name="Quit" type="Button" parent="PanelContainer/MarginContainer/Menu/VBoxContainer" unique_id=723955972]
+[node name="Quit" type="Button" parent="PanelContainer/Menu/VBoxContainer/MarginContainer" unique_id=723955972]
 layout_mode = 2
+size_flags_vertical = 8
 text = "Quit"
 
 [node name="QuitConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1777982716]
 auto_translate_mode = 1
 oversampling_override = 1.0
 
-[connection signal="pressed" from="PanelContainer/MarginContainer/Menu/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/Menu/VBoxContainer/Load" to="." method="_on_load_pressed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/Menu/VBoxContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
+[connection signal="pressed" from="PanelContainer/Menu/VBoxContainer/MarginContainer/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="PanelContainer/Menu/VBoxContainer/MarginContainer/VBoxContainer/Load" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="PanelContainer/Menu/VBoxContainer/MarginContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
 [connection signal="confirmed" from="QuitConfirmationDialog" to="." method="_on_quit_confirmation_dialog_confirmed"]
