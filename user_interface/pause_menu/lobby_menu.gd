@@ -1,18 +1,15 @@
 @tool
 class_name LobbyMenu
-extends CanvasLayer
+extends Menu
 
-signal game_started
+signal game_start_requested
 
 @export_group("Configuration")
+@export var _start_button: Button
 @export var _player_infos_container: Control
 @export var _player_info_scene: PackedScene
 
 var _player_infos: Dictionary[Player, PlayerInfo] = {}
-
-func _enter_tree() -> void:
-	if Engine.is_editor_hint(): return
-	Lobby.player_connected.connect(_add_player)
 
 func _ready() -> void:
 	_clear()
@@ -22,6 +19,7 @@ func _ready() -> void:
 	for index: int in connected_players.size():
 		var connected_player: Player = connected_players[index]
 		_add_player(connected_player)
+	Lobby.player_connected.connect(_add_player)
 
 func _create_player_info() -> void:
 	var new_player_info: PlayerInfo = _player_info_scene.instantiate()
@@ -64,11 +62,13 @@ func _get_available_character() -> CharacterProfile:
 	return load("uid://cqkx0op1msr7s")
 
 func _on_start_pressed() -> void:
-	game_started.emit()
+	close_menu()
+	game_start_requested.emit()
 	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
 
 func _on_game_status_changed(new_game_status: Game.GameStatus) -> void:
-	visible = new_game_status < Game.GameStatus.RUNNING
+	if not visible and new_game_status == Game.GameStatus.IN_LOBBY: open_menu()
+	_start_button.disabled = not new_game_status == Game.GameStatus.READY
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

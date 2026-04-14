@@ -18,6 +18,7 @@ extends Resource
 		changed.emit()
 
 @export_category("Model")
+# TODO: refactor into @export_file("*.tscn") var _model_variations: Array[String]
 @export var _model_variations: Array[PackedScene]:
 	set(new_value):
 		_model_variations = new_value

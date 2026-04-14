@@ -1,7 +1,9 @@
 @icon("uid://csn6gjpak3yxk")
 extends Node
 
+signal game_started
 signal singleplayer_started
+
 signal game_paused
 signal game_unpaused
 
@@ -18,14 +20,15 @@ func _ready() -> void:
 	assert(not _game_environment)
 	_game_environment = Steamworks.new() # TODO: discriminate between actual environments
 	add_child(_game_environment)
-	if not get_viewport().is_node_ready(): await get_viewport().ready
-	_start_singleplayer()
 
 func _process(_delta: float) -> void:
 	if Multiplayer.is_online():
 		if get_tree().paused: _unpause_game()
 	else:
 		if _pause_requested and not get_tree().paused: _pause_game()
+
+func start_game() -> void:
+	game_started.emit()
 
 func pause_game() -> void:
 	_pause_requested = true

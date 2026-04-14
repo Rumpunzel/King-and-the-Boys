@@ -12,10 +12,10 @@ func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
 	spawn_function = _spawn_player
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+	Client.game_started.connect(_on_game_started)
 	Multiplayer.joining_multiplayer.connect(_on_joining_multiplayer)
 	Multiplayer.player_joined.connect(_on_player_joined)
 	Multiplayer.disconnected_from_multiplayer.connect(_on_disconnected_from_multiplayer)
-	Client.singleplayer_started.connect(_on_singleplayer_started)
 
 func _ready() -> void:
 	super._ready()
@@ -72,6 +72,9 @@ func _remove_player(player: Player) -> void:
 	player.queue_free()
 	print_debug("Removed player: %s!" % player.get_player_info())
 
+func _on_game_started() -> void:
+	_create_local_player()
+
 func _on_disconnected_from_multiplayer() -> void:
 	_remove_all_players()
 
@@ -94,6 +97,3 @@ func _on_peer_disconnected(peer_id: int) -> void:
 
 func _on_server_disconnected() -> void:
 	_remove_all_players()
-
-func _on_singleplayer_started() -> void:
-	_create_local_player()

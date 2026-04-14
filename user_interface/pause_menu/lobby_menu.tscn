@@ -4,56 +4,50 @@
 [ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/pause_menu/lobby_menu.gd" id="1_7xmpv"]
 [ext_resource type="PackedScene" uid="uid://bi3mr4sjccywj" path="res://user_interface/pause_menu/multiplayer_menu.tscn" id="3_drr3r"]
 
-[node name="LobbyMenu" type="CanvasLayer" unique_id=1103850548 node_paths=PackedStringArray("_player_infos_container")]
-physics_interpolation_mode = 2
-layer = 1000
+[node name="LobbyMenu" type="MarginContainer" unique_id=1981197787 node_paths=PackedStringArray("_start_button", "_player_infos_container")]
+offset_left = 160.0
+offset_top = 160.0
+offset_right = 1760.0
+offset_bottom = 920.0
 script = ExtResource("1_7xmpv")
-_player_infos_container = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/PlayerInfos")
+_start_button = NodePath("VBoxContainer/HBoxContainer/Start")
+_player_infos_container = NodePath("VBoxContainer/PanelContainer/MarginContainer/PlayerInfos")
 _player_info_scene = ExtResource("1_7eg3o")
+_fade_in_duration = 1.0
 metadata/_custom_type_script = "uid://cd0g7grdwdvy1"
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1648262628]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 64
-theme_override_constants/margin_top = 64
-theme_override_constants/margin_right = 64
-theme_override_constants/margin_bottom = 64
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1534937830]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=963768587]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=874526140]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=214167932]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/PanelContainer" unique_id=2002559267]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PanelContainer" unique_id=1305133702]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="PlayerInfos" type="HBoxContainer" parent="MarginContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=960834194]
+[node name="PlayerInfos" type="HBoxContainer" parent="VBoxContainer/PanelContainer/MarginContainer" unique_id=776592999]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=390135791]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=779050681]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MultiplayerMenu" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=876205651 instance=ExtResource("3_drr3r")]
+[node name="MultiplayerMenu" parent="VBoxContainer/HBoxContainer" unique_id=876205651 instance=ExtResource("3_drr3r")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Start" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=49430844]
+[node name="Start" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=894018621]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
+disabled = true
 text = "Start"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Start" to="." method="_on_start_pressed"]

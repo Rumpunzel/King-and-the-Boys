@@ -410,6 +410,44 @@
 [ext_resource type="PackedScene" uid="uid://c1ovl7mthi5gx" path="res://assets/polygon_dungeon/Prefabs/Environments/Floors/SM_Env_CrackedRock_02.tscn" id="416_8vtff"]
 [ext_resource type="PackedScene" uid="uid://bre3qvxwl8hkf" path="res://assets/polygon_dungeon/Prefabs/Environments/Misc/SM_Env_Obelisk_01.tscn" id="417_ppgd4"]
 
+[sub_resource type="Animation" id="Animation_l6a2v"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.101998776, -2.8014047, -0.0032663718)]
+}
+
+[sub_resource type="Animation" id="Animation_3ug65"]
+resource_name = "camera_wobble"
+length = 64.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 16, 32, 48, 64),
+"transitions": PackedFloat32Array(2, 0.5, 2, 0.5, 2),
+"update": 0,
+"values": [Vector3(-0.101998776, -2.8014047, -0.0032663718), Vector3(-0.14524716, -2.8013291, -0.047011748), Vector3(-0.18849556, -2.8012536, -0.090757124), Vector3(-0.14524716, -2.8013291, -0.047011748), Vector3(-0.101998776, -2.8014047, -0.0032663718)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u8f8o"]
+_data = {
+&"RESET": SubResource("Animation_l6a2v"),
+&"camera_wobble": SubResource("Animation_3ug65")
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1bp2u"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mi2iy"]
@@ -420,12 +458,16 @@
 environment = ExtResource("1_a2ea2")
 
 [node name="Camera" type="Camera3D" parent="." unique_id=1608909114]
-transform = Transform3D(-0.942798, 0.030895, -0.33193, -0.00324939, 0.994797, 0.101822, 0.333349, 0.0970761, -0.937792, -6.92779, -0.362655, 24.41)
+transform = Transform3D(-0.9427981, 0.030894997, -0.33192995, -0.00324939, 0.994797, 0.10182195, 0.33334902, 0.09707611, -0.937792, -6.92779, -0.362655, 24.41)
 cull_mask = 16777215
 current = true
 fov = 60.0
 near = 0.3
 far = 10000.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Camera" unique_id=1662789413]
+libraries/ = SubResource("AnimationLibrary_u8f8o")
+autoplay = &"camera_wobble"
 
 [node name="Lighting" type="Node3D" parent="." unique_id=1607383000]
 
