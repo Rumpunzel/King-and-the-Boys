@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cd2h44n70ffkn"]
 
-[ext_resource type="Script" uid="uid://b5mml6dqjiilo" path="res://engine/main_menu.gd" id="1_ma220"]
+[ext_resource type="Script" uid="uid://b5mml6dqjiilo" path="res://user_interface/main_menu/main_menu.gd" id="1_ma220"]
 [ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://engine/levels/test_level.tscn" id="2_cw0qe"]
 [ext_resource type="Texture2D" uid="uid://bsemt5jnpwww7" path="res://protoype_assets/the_boys_background.png" id="3_7opyd"]
 [ext_resource type="PackedScene" uid="uid://csmae7j3a5gs4" path="res://user_interface/pause_menu/game_info.tscn" id="4_1pt63"]

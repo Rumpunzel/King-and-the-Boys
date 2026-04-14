@@ -41,7 +41,11 @@ func _remove_all_data_nodes() -> Array[NodePath]:
 
 func _spawn_level(level_scene_path: String) -> Level:
 	var level_scene: PackedScene = load(level_scene_path)
-	return level_scene.instantiate()
+	assert(level_scene)
+	var spawned_level: Level = level_scene.instantiate()
+	assert(spawned_level)
+	assert(spawned_level is Level)
+	return spawned_level
 
 func _on_child_entered_tree(node: Node) -> void:
 	if not node is Level: return
