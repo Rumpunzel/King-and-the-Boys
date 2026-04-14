@@ -41,4 +41,6 @@ structure = NodePath("..")
 billboard = 1
 no_depth_test = true
 render_priority = 1
+modulate = Color(1, 1, 1, 0.19607843)
+outline_modulate = Color(0, 0, 0, 0.19607843)
 text = "structure"

@@ -22,12 +22,13 @@ enum Groups {
 @export_group("")
 @export_group("Configuration")
 
-func create(variation: int, spawn_transform: Transform3D) -> Thing:
+func create(variation: int, spawn_transform: Transform3D, status: Thing.Status) -> Thing:
 	var scene: PackedScene = load("uid://dnxaisin8ueu5")
 	var new_thing: Thing = scene.instantiate()
 	new_thing.variation = variation
 	new_thing.profile = self
 	new_thing.transform = spawn_transform
+	new_thing.status = status
 	return new_thing
 
 func get_group_name() -> StringName:

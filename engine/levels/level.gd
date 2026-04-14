@@ -29,6 +29,8 @@ var _placed_tiles: Dictionary[Vector2i, Structure]
 var _tile_connections: Dictionary[Structure, Array]
 var _tile_connectors: Dictionary[Vector3, Structure]
 
+var _placed_things: Dictionary[Vector2i, Thing]
+
 var _reveal_queue: Array[Structure] = []
 # Direction -> Array[Structure]
 var _discover_queue: Dictionary[Direction, Array] = {}
@@ -269,12 +271,16 @@ func _on_structure_created(structure: Structure) -> void:
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
 
 func _on_tile_status_changed(status: Structure.Status, tile: Structure) -> void:
+	var grid_position: Vector2i = tile.get_grid_position()
+	if _placed_things.has(grid_position):
+		var thing_on_tile: Thing = _placed_things[grid_position]
+		thing_on_tile.status = Thing.structure_status_to_thing_status(tile.status)
 	if not status == Structure.Status.REVEALED: return
 	await get_tree().create_timer(0.5).timeout
 	for connection: Direction in tile.get_connections():
 		var direction_vector: Vector2i = direction_to_vector(connection)
 		for tile_connection: Structure in _tile_connections[tile]: tile_connection.reveal()
-		var neighbour_position: Vector2i = tile.get_grid_position() + direction_vector
+		var neighbour_position: Vector2i = grid_position + direction_vector
 		assert(_placed_tiles.has(neighbour_position))
 		var neighbour: Structure = _placed_tiles[neighbour_position]
 		if not neighbour.status == Structure.Status.REVEALED:
@@ -283,6 +289,10 @@ func _on_tile_status_changed(status: Structure.Status, tile: Structure) -> void:
 		var connector_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
 		var tile_connector: Structure = _tile_connectors[connector_position]
 		tile_connector.reveal()
+
+func _on_thing_created(thing: Thing) -> void:
+	var thing_grid_position: Vector2i = world_to_grid_position(thing.global_position)
+	_placed_things[thing_grid_position] = thing
 
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	var character: Character = player_ghost.character

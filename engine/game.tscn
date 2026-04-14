@@ -59,6 +59,7 @@ _thing_spawner = NodePath("../ThingSpawner")
 [connection signal="load_requested" from="PauseMenu" to="." method="load_game"]
 [connection signal="save_requested" from="PauseMenu" to="." method="save_game"]
 [connection signal="structure_created" from="StructureSpawner" to="LevelSpawner" method="_on_structure_created"]
+[connection signal="thing_created" from="ThingSpawner" to="LevelSpawner" method="_on_thing_created"]
 [connection signal="agent_created" from="AgentSpawner" to="LevelSpawner" method="_on_agent_created"]
 [connection signal="player_ghost_created" from="PlayerGhostSpawner" to="LevelSpawner" method="_on_player_ghost_created"]
 [connection signal="game_started" from="LobbyMenu" to="." method="_on_game_started"]

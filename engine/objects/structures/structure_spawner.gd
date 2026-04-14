@@ -76,8 +76,10 @@ func _on_child_entered_tree(node: Node) -> void:
 	structure_created.emit(structure)
 
 func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> void:
-	if profile_to_spawn is StructureProfile: spawn_at(profile_to_spawn as StructureProfile, spawn_for.transform, spawn_for.clockwise_turns, spawn_for.status)
-	elif profile_to_spawn is ThingProfile: _thing_spawner.spawn_at(profile_to_spawn as ThingProfile, spawn_for.transform)
+	if profile_to_spawn is StructureProfile:
+		spawn_at(profile_to_spawn as StructureProfile, spawn_for.transform, spawn_for.clockwise_turns, spawn_for.status)
+	elif profile_to_spawn is ThingProfile:
+		_thing_spawner.spawn_at(profile_to_spawn as ThingProfile, spawn_for.transform, Thing.structure_status_to_thing_status(spawn_for.status))
 	#elif profile_to_spawn is CharacterProfile: _agent_spawner.spawn_at(profile_to_spawn as CharacterProfile, spawn_for.transform)
 	else: push_error("Cannot spawn profile: %profile_to_spawn - Not implemented!" % profile_to_spawn)
 

@@ -67,8 +67,6 @@ const STATUS: StringName = "status"
 				model.visible = true
 				model.remove_material_override(_hidden_material)
 				model.play_model_animation(profile.reveal_animation)
-				var spawn: Profile = profile.get_spawn()
-				if spawn: spawn_requested.emit(spawn)
 				if level: _debug_draw_connections()
 			_: push_error("Status %s not implemented!" % status)
 		status_changed.emit(status)
@@ -93,6 +91,8 @@ func _ready() -> void:
 	if level: name = "%s %s" % [get_grid_position(), profile.name]
 	else: name = "%s %s" % [global_position, profile.name]
 	if status == Status.NONE: status = Status.PLACED
+	var spawn: Profile = profile.get_spawn()
+	if spawn: spawn_requested.emit(spawn)
 	if level:
 		@warning_ignore("unsafe_property_access")
 		$Label3D.text = "%s\n%s" % [profile.name, get_grid_position()]

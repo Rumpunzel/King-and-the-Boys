@@ -61,7 +61,7 @@ func _get_player_infos() -> Array[PlayerInfo]:
 	return player_infos
 
 func _get_available_character() -> CharacterProfile:
-	return load("uid://ro6wvnf88xbo")
+	return load("uid://cqkx0op1msr7s")
 
 func _on_start_pressed() -> void:
 	game_started.emit()

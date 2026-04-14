@@ -53,6 +53,10 @@ func _on_structure_created(structure: Structure) -> void:
 	assert(_level)
 	_level._on_structure_created(structure)
 
+func _on_thing_created(thing: Thing) -> void:
+	assert(_level)
+	_level._on_thing_created(thing)
+
 func _on_agent_created(agent: Agent) -> void:
 	assert(_level)
 	#agent.character.entered_grid_cell.connect(_level._on_character_entered_grid_cell)

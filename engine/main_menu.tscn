@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://engine/levels/test_level.tscn" id="2_cw0qe"]
 [ext_resource type="Texture2D" uid="uid://bsemt5jnpwww7" path="res://protoype_assets/the_boys_background.png" id="3_7opyd"]
 [ext_resource type="PackedScene" uid="uid://csmae7j3a5gs4" path="res://user_interface/pause_menu/game_info.tscn" id="4_1pt63"]
+[ext_resource type="PackedScene" uid="uid://dl1biiyjo6o63" path="res://assets/polygon_dungeon/Scenes/Demo.tscn" id="4_7opyd"]
 [ext_resource type="Texture2D" uid="uid://2qnwvokder1c" path="res://protoype_assets/logo.png" id="5_7opyd"]
 
 [sub_resource type="Gradient" id="Gradient_ofb81"]
@@ -29,6 +30,7 @@ _default_level = ExtResource("2_cw0qe")
 metadata/_custom_type_script = "uid://b5mml6dqjiilo"
 
 [node name="Background" type="TextureRect" parent="." unique_id=1295372125]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,6 +39,8 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_7opyd")
 stretch_mode = 6
+
+[node name="Main" parent="." unique_id=691834154 instance=ExtResource("4_7opyd")]
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=599138560]
 layout_mode = 1
