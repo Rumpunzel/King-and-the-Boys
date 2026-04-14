@@ -49,6 +49,14 @@ func remove_material_overlay(material: Material) -> void:
 	for mesh: MeshInstance3D in gather_all_geometry_instances_on(self):
 		if mesh.material_override == material: mesh.material_override = null
 
+func get_mesh_scales() -> Array[Vector3]:
+	var scales: Array[Vector3] = []
+	scales.assign(gather_all_geometry_instances_on(self).map(func(mesh: MeshInstance3D) -> Vector3: return mesh.scale))
+	return scales
+
+func get_max_mesh_scale() -> float:
+	return get_mesh_scales().reduce(func(max_mesh_scale: float, mesh_scale: Vector3) -> float: return max(max_mesh_scale, mesh_scale.x, mesh_scale.y, mesh_scale.z), 0.0)
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = [ ]
 	if not _animation_tree: warnings.append("Missing AnimationTree reference.")

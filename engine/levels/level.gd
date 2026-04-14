@@ -25,6 +25,8 @@ const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2
 @export var _tile_set: DungeonTileSet
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
+# {Structure -> Array[Structure]}
+var _tile_connections: Dictionary[Structure, Array]
 var _tile_connectors: Dictionary[Vector3, Structure]
 
 var _reveal_queue: Array[Structure] = []
@@ -154,7 +156,7 @@ func _update_player_vision_in_room(from_grid_position: Vector2i, direction: Dire
 func _build_dungeon_from(origin_grid_position: Vector2i) -> void:
 	var tile: Structure = _placed_tiles.get(origin_grid_position)
 	assert(tile)
-	if tile.profile.room_type: _build_room_from(origin_grid_position)
+	if tile.profile.room_type: _build_room_from(origin_grid_position, tile.profile.room_type)
 	for direction: Direction in tile.get_connections(): _build_corridor_from(origin_grid_position, direction)
 
 func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction) -> void:
@@ -164,17 +166,21 @@ func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction) 
 	var grid_position: Vector2i = origin_grid_position + relative_direction
 	spawn_at(grid_position)
 	var placed_tile: Structure = _placed_tiles[grid_position]
-	if not placed_tile.get_connections().has(direction): return
-	if placed_tile.profile.room_type: _build_room_from(grid_position)
-	_build_corridor_from(grid_position, direction)
+	if placed_tile.profile.room_type: _build_room_from(grid_position, placed_tile.profile.room_type)
+	for connection: Direction in placed_tile.get_connections():
+		if connection == direction: _build_corridor_from(grid_position, direction)
+		else:
+			var neighbour_direction: Vector2i = direction_to_vector(connection)
+			var neighbour_position: Vector2i = grid_position + neighbour_direction
+			spawn_at(neighbour_position)
 
-func _build_room_from(origin_grid_position: Vector2i, already_visited: Array[Vector2i] = []) -> void:
+func _build_room_from(origin_grid_position: Vector2i, room_type: RoomType, already_visited: Array[Vector2i] = []) -> void:
+	assert(room_type)
 	if already_visited.has(origin_grid_position): return
 	already_visited.append(origin_grid_position)
 	var tile: Structure = _placed_tiles.get(origin_grid_position)
 	assert(tile)
-	var room_type: RoomType = tile.profile.room_type
-	assert(room_type)
+	if not room_type == tile.profile.room_type: return
 	var continue_building_here: Array[Vector2i] = []
 	for connection: Direction in tile.get_connections():
 		var relative_direction: Vector2i = direction_to_vector(connection)
@@ -187,7 +193,7 @@ func _build_room_from(origin_grid_position: Vector2i, already_visited: Array[Vec
 			continue
 		continue_building_here.append(grid_position)
 	for grid_position: Vector2i in continue_building_here:
-		_build_room_from(grid_position, already_visited)
+		_build_room_from(grid_position, room_type, already_visited)
 
 func _request_starting_placed_tile() -> void:
 	var all_player_spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
@@ -234,30 +240,48 @@ func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
 		surrounding_tiles.append(surrounding_tile)
 	return surrounding_tiles
 
+func _create_connection(tile: Structure, connection: Direction) -> void:
+	assert(tile)
+	var direction_vector: Vector2i = direction_to_vector(connection)
+	var connection_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * tile.model.get_max_mesh_scale()
+	var tile_connection: Structure = _tile_set.tile_connection.create(-1, Transform3D(Basis.IDENTITY, connection_position), connection, Structure.Status.PLACED)
+	var tile_connections: Array[Structure] = _tile_connections.get(tile, [] as Array[Structure])
+	assert(not tile_connections.has(tile))
+	tile_connections.append(tile_connection)
+	_tile_connections[tile] = tile_connections
+	add_child(tile_connection)
+
+func _create_connector(tile_position: Vector3, connection: Direction) -> void:
+	var direction_vector: Vector2i = direction_to_vector(connection)
+	var connector_position: Vector3 = tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
+	if _tile_connectors.has(connector_position): return
+	var tile_connector: Structure = _tile_set.tile_connector.create(-1, Transform3D(Basis.IDENTITY, connector_position), connection, Structure.Status.PLACED)
+	_tile_connectors[connector_position] = tile_connector
+	add_child(tile_connector)
+
 func _on_structure_created(structure: Structure) -> void:
 	structure.level = self
 	var tile_grid_position: Vector2i = world_to_grid_position(structure.global_position)
 	_placed_tiles[tile_grid_position] = structure
 	for connection: Direction in structure.get_connections():
-		var direction_vector: Vector2i = direction_to_vector(connection)
-		var connection_position: Vector3 = structure.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
-		if _tile_connectors.has(connection_position): continue
-		var tile_connector: Structure = _tile_set.tile_connector.create(-1, Transform3D(Basis.IDENTITY, connection_position), connection, Structure.Status.PLACED)
-		_tile_connectors[connection_position] = tile_connector
-		add_child(tile_connector)
+		_create_connection(structure, connection)
+		_create_connector(structure.global_position, connection)
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
 
-func _on_tile_status_changed(status: Structure.Status, structure: Structure) -> void:
+func _on_tile_status_changed(status: Structure.Status, tile: Structure) -> void:
 	if not status == Structure.Status.REVEALED: return
 	await get_tree().create_timer(0.5).timeout
-	for connection: Direction in structure.get_connections():
+	for connection: Direction in tile.get_connections():
 		var direction_vector: Vector2i = direction_to_vector(connection)
-		var neighbour_position: Vector2i = structure.get_grid_position() + direction_vector
-		if not _placed_tiles.has(neighbour_position): continue
+		for tile_connection: Structure in _tile_connections[tile]: tile_connection.reveal()
+		var neighbour_position: Vector2i = tile.get_grid_position() + direction_vector
+		assert(_placed_tiles.has(neighbour_position))
 		var neighbour: Structure = _placed_tiles[neighbour_position]
-		if not neighbour.status == Structure.Status.REVEALED: continue
-		var connection_position: Vector3 = structure.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
-		var tile_connector: Structure = _tile_connectors[connection_position]
+		if not neighbour.status == Structure.Status.REVEALED:
+			neighbour.discover()
+			continue
+		var connector_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
+		var tile_connector: Structure = _tile_connectors[connector_position]
 		tile_connector.reveal()
 
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:

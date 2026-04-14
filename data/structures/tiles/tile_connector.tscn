@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cuvtvyu4l8m08"]
 
 [ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="1_d2mjk"]
-[ext_resource type="Material" path="res://protoype_assets/quaternius/medieval_village/Buildings/GLB/Windows.material" id="2_n28j2"]
+[ext_resource type="Material" uid="uid://ddx3gylsqvpet" path="res://protoype_assets/textures/metal_02_1k/metal_02_1k.tres" id="2_n28j2"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_odv8y"]
 material = ExtResource("2_n28j2")

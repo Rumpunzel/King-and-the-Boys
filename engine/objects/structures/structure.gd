@@ -178,11 +178,6 @@ func get_grid_cells() -> Array[Vector2i]:
 
 func _debug_draw_connections() -> void:
 	assert(level)
-	for connection: Level.Direction in get_connections():
-		var tile_grid_offset: Vector2i = Level.direction_to_vector(connection)
-		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.5
-		var color: Color = profile.room_type.color if profile.room_type else Color.WHEAT
-		DebugDraw3D.draw_line(global_position - Vector3.UP * 0.1, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, color, INF)
 	var restrictions: Dictionary[Level.Direction, ConnectionRestriction] = get_restrictions()
 	for direction: Level.Direction in restrictions.keys():
 		var restriction: ConnectionRestriction = restrictions[direction]
@@ -193,7 +188,13 @@ func _debug_draw_connections() -> void:
 		var neighbour_structure: Structure = level.get_placed_tile(get_grid_position() + Level.direction_to_vector(direction))
 		if neighbour_structure and not can_connect(direction, neighbour_structure.profile): color = Color.ROYAL_BLUE
 		color.a = 0.5
-		DebugDraw3D.draw_sphere(global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.15, 0.1, color, INF)
+		DebugDraw3D.draw_sphere(global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, 0.1, color, INF)
+	if true: return
+	for connection: Level.Direction in get_connections():
+		var tile_grid_offset: Vector2i = Level.direction_to_vector(connection)
+		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.5
+		var color: Color = profile.room_type.color if profile.room_type else Color.WHEAT
+		DebugDraw3D.draw_line(global_position - Vector3.UP * 0.1, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, color, INF)
 
 func _to_string() -> String:
 	return "[%s turned %d times: %s]" % [name, clockwise_turns, get_connections()]

@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dsxfa42eosj8k"]
+
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="1_8cpyy"]
+[ext_resource type="Material" uid="uid://bi6wcd4s4v3pj" path="res://protoype_assets/textures/metal_01_1k/metal_01_1k.tres" id="2_8cpyy"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_utwu3"]
+material = ExtResource("2_8cpyy")
+size = Vector3(1.3, 0.1, 1.3)
+
+[node name="TileConnector" type="Node3D" unique_id=1599204829]
+script = ExtResource("1_8cpyy")
+metadata/_custom_type_script = "uid://bpkm2ws12sljg"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1543815334]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.075, 0.875)
+mesh = SubResource("BoxMesh_utwu3")

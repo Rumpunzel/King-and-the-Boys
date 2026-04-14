@@ -2,6 +2,7 @@
 class_name DungeonTileSet
 extends Resource
 
+@export var tile_connection: StructureProfile
 @export var tile_connector: StructureProfile
 
 @export var _dungeon_tiles: Dictionary[StructureProfile, float]
