@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cd2h44n70ffkn"]
 
-[ext_resource type="Script" uid="uid://b5mml6dqjiilo" path="res://user_interface/main_menu/main_menu.gd" id="1_ma220"]
+[ext_resource type="Script" uid="uid://b5mml6dqjiilo" path="res://user_interface/menus/main_menu/main_menu.gd" id="1_ma220"]
 [ext_resource type="PackedScene" uid="uid://dqd2rl70hprht" path="res://user_interface/logo.tscn" id="5_ru3py"]
 
 [node name="MainMenu" type="MarginContainer" unique_id=1421026630]

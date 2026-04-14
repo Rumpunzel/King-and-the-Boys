@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://becdxlww4k13g"]
 
-[ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/pause_menu/player_info.tscn" id="1_7eg3o"]
-[ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/pause_menu/lobby_menu.gd" id="1_7xmpv"]
-[ext_resource type="PackedScene" uid="uid://bi3mr4sjccywj" path="res://user_interface/pause_menu/multiplayer_menu.tscn" id="3_drr3r"]
+[ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/menus/lobby_menu/player_info.tscn" id="1_7eg3o"]
+[ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/menus/lobby_menu/lobby_menu.gd" id="1_7xmpv"]
+[ext_resource type="PackedScene" uid="uid://bi3mr4sjccywj" path="res://user_interface/menus/multiplayer_menu/multiplayer_menu.tscn" id="3_drr3r"]
 
 [node name="LobbyMenu" type="MarginContainer" unique_id=1981197787 node_paths=PackedStringArray("_start_button", "_player_infos_container")]
 offset_left = 160.0

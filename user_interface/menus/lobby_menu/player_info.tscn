@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://75rctdin2cpp"]
 
-[ext_resource type="Script" uid="uid://cep0umg7ktxy8" path="res://user_interface/pause_menu/player_info.gd" id="1_cwx72"]
+[ext_resource type="Script" uid="uid://cep0umg7ktxy8" path="res://user_interface/menus/lobby_menu/player_info.gd" id="1_cwx72"]
 [ext_resource type="Texture2D" uid="uid://d3kpui0ngdvp8" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_3.png" id="2_1hjrd"]
 [ext_resource type="Texture2D" uid="uid://c73t2rg8wrdt3" path="res://tools/icons/white/console-controller.svg" id="4_yen6h"]
 [ext_resource type="Texture2D" uid="uid://bqtf63dlb8eg" path="res://icon.svg" id="22_8uhr8"]
