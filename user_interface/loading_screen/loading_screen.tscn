@@ -29,10 +29,10 @@ tracks/0/path = NodePath(".:visible_characters")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 0.9, 0.95, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.2, 0.25, 0.3, 0.55, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [7, 8, 9, -1, 9, 8, 7]
+"values": [-1, 9, 8, 7, 8, 9]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s5x3u"]
@@ -42,6 +42,10 @@ _data = {
 }
 
 [node name="LoadingScreen" type="CanvasLayer" unique_id=957342698]
+process_mode = 3
+process_thread_group = 2
+process_thread_group_order = 0
+process_thread_messages = 0
 layer = 128
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=928942914]

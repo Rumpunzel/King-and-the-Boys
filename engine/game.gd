@@ -10,6 +10,7 @@ enum GameStatus {
 	IN_LOBBY,
 	READY,
 	LOADING,
+	GENERATING,
 	RUNNING,
 }
 
@@ -39,7 +40,6 @@ var _game_status: GameStatus:
 				if not _background_scene_path.is_empty(): ResourceLoader.load_threaded_request(_background_scene_path)
 			GameStatus.IN_LOBBY:
 				Client.start_game()
-				ResourceLoader.load_threaded_request(_default_level_path)
 			GameStatus.READY:
 				pass
 			GameStatus.LOADING:
@@ -50,7 +50,9 @@ var _game_status: GameStatus:
 				if _background_scene:
 					_background_scene.queue_free()
 					_background_scene = null
-				_level_spawner.spawn(_default_level_path)
+				ResourceLoader.load_threaded_request(_default_level_path)
+			GameStatus.GENERATING:
+				_level_spawner.load_level(_default_level_path)
 				#_agent_spawner.spawn_all_from_spawn_spoints()
 				#_structure_spawner.spawn_all_from_spawn_spoints()
 				#_thing_spawner.spawn_all_from_spawn_spoints()
@@ -79,7 +81,9 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	if _game_status <= GameStatus.IN_LOBBY: if not _background_scene_path.is_empty() and not _background_scene: _load_background_scene_when_ready()
-	if _game_status == GameStatus.IN_LOBBY: _check_if_level_is_ready()
+	# TODO: actually implement ready checks for lobby
+	if _game_status == GameStatus.IN_LOBBY: _game_status = GameStatus.READY
+	if _game_status == GameStatus.LOADING: _check_if_level_is_ready()
 
 func open_lobby() -> void:
 	assert(multiplayer.is_server())
@@ -140,9 +144,9 @@ func _load_background_scene_when_ready() -> void:
 	tween.tween_property(_background_placeholder, "modulate:a", 0.0, 5.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
 func _check_if_level_is_ready() -> void:
-	assert(_game_status == GameStatus.IN_LOBBY)
+	assert(_game_status == GameStatus.LOADING)
 	if not ResourceLoader.load_threaded_get_status(_default_level_path) == ResourceLoader.THREAD_LOAD_LOADED: return
-	_game_status = GameStatus.READY
+	_game_status = GameStatus.GENERATING
 
 func _on_game_requested() -> void:
 	open_lobby()
@@ -151,7 +155,7 @@ func _on_game_start_requested() -> void:
 	start_game()
 
 func _on_level_loaded() -> void:
-	assert(_game_status == GameStatus.LOADING)
+	assert(_game_status == GameStatus.GENERATING)
 	_game_status = GameStatus.RUNNING
 
 func _on_save_requested() -> void:

@@ -50,5 +50,4 @@ theme_override_font_sizes/font_size = 24
 disabled = true
 text = "Start"
 
-[connection signal="opened" from="." to="VBoxContainer/HBoxContainer/Start" method="grab_focus"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Start" to="." method="_on_start_pressed"]

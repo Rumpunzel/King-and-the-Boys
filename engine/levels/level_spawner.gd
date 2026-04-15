@@ -21,6 +21,9 @@ func load_level(level_scene_path: String) -> void:
 	assert(multiplayer.is_server())
 	assert(not _level)
 	spawn(level_scene_path)
+	assert(_level)
+	_level.build_level()
+	level_loaded.emit()
 
 func unload_level() -> void:
 	assert(multiplayer.is_server())
@@ -54,9 +57,6 @@ func _on_child_entered_tree(node: Node) -> void:
 	_level = node
 	assert(_level)
 	_level.tile_placement_requested.connect(_structure_spawner.spawn_at)
-	await _level.ready
-	_level.build_level()
-	level_loaded.emit()
 
 func _on_structure_created(structure: Structure) -> void:
 	assert(_level)

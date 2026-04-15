@@ -69,6 +69,7 @@ func _on_start_pressed() -> void:
 func _on_game_status_changed(new_game_status: Game.GameStatus) -> void:
 	if new_game_status == Game.GameStatus.IN_LOBBY: open_menu()
 	_start_button.disabled = not new_game_status == Game.GameStatus.READY
+	if not _start_button.disabled: _start_button.grab_focus()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
