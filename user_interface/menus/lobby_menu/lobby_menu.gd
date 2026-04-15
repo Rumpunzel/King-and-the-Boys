@@ -59,7 +59,7 @@ func _get_player_infos() -> Array[PlayerInfo]:
 	return player_infos
 
 func _get_available_character() -> CharacterProfile:
-	return load("uid://cqkx0op1msr7s")
+	return load("uid://ro6wvnf88xbo")
 
 func _on_start_pressed() -> void:
 	close_menu()

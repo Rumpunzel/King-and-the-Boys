@@ -62,7 +62,10 @@ func _create_local_player() -> void:
 	spawn(Player.get_local_player_info())
 
 func _remove_all_players() -> void:
-	for player: Player in _players.values():
+	for player_id: int in _players.keys():
+		var player_weakref: WeakRef = weakref(_players.get(player_id))
+		var player: Player = player_weakref.get_ref()
+		if not player: continue
 		_remove_player(player)
 
 func _remove_player(player: Player) -> void:

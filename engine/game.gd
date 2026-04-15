@@ -52,15 +52,17 @@ var _game_status: GameStatus:
 					_background_scene = null
 				ResourceLoader.load_threaded_request(_default_level_path)
 			GameStatus.GENERATING:
-				_level_spawner.load_level(_default_level_path)
-				#_agent_spawner.spawn_all_from_spawn_spoints()
-				#_structure_spawner.spawn_all_from_spawn_spoints()
-				#_thing_spawner.spawn_all_from_spawn_spoints()
+				if multiplayer.is_server():
+					_level_spawner.load_level(_default_level_path)
+					#_agent_spawner.spawn_all_from_spawn_spoints()
+					#_structure_spawner.spawn_all_from_spawn_spoints()
+					#_thing_spawner.spawn_all_from_spawn_spoints()
 			GameStatus.RUNNING:
 				assert(_loading_screen)
 				_loading_screen.queue_free()
 				_loading_screen = null
-				_player_ghost_spawner.start_synching_players()
+				if multiplayer.is_server():
+					_player_ghost_spawner.start_synching_players()
 			_: push_error("GameStatus %s not implemented!" % _game_status)
 		game_status_changed.emit(_game_status)
 
@@ -174,7 +176,7 @@ func _on_singleplayer_started() -> void:
 
 func _on_joining_multiplayer() -> void:
 	if _game_status == GameStatus.NONE: return
-	stop_game()
+	#stop_game()
 
 func _on_game_joined(_host_player_info: Dictionary[StringName, Variant]) -> void:
 	_on_server = true

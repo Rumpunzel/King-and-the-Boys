@@ -38,9 +38,6 @@ var _discover_queue: Dictionary[Direction, Array] = {}
 var _remaining_tile_reveal_delay: float = 0.0
 var _remaining_tile_discover_delay: float = 0.0
 
-func _ready() -> void:
-	_build_outer_wall()
-
 func _process(delta: float) -> void:
 	# Reveal
 	_remaining_tile_reveal_delay = maxf(_remaining_tile_reveal_delay - delta, 0.0)
@@ -89,6 +86,7 @@ static func get_direction(first_grid_position: Vector2i, second_grid_position: V
 
 func build_level() -> void:
 	assert(is_multiplayer_authority())
+	_build_outer_wall()
 	var starting_grid_position: Vector2i = _place_starting_tile()
 	_build_dungeon_from(starting_grid_position)
 

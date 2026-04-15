@@ -2,6 +2,10 @@
 
 [ext_resource type="FontFile" uid="uid://b0ybin3nm83i1" path="res://assets/fonts/Bokor-Regular.ttf" id="1_aohvs"]
 [ext_resource type="FontFile" uid="uid://b5koyewmt0kld" path="res://assets/fonts/Fondamento-Regular.ttf" id="2_b36hg"]
+[ext_resource type="Texture2D" uid="uid://b38hjh3hddlj" path="res://protoype_assets/logo/crenel-crown.svg" id="3_t142n"]
+[ext_resource type="Texture2D" uid="uid://ba8awdxxa5xd5" path="res://protoype_assets/logo/round-shield.svg" id="4_rm802"]
+[ext_resource type="Texture2D" uid="uid://dycojjdxk6ss0" path="res://protoype_assets/logo/two-handed-sword.svg" id="5_0mlit"]
+[ext_resource type="Texture2D" uid="uid://c7ao64fdobphw" path="res://protoype_assets/logo/logo_mask.png" id="5_rm802"]
 
 [node name="Logo" type="MarginContainer" unique_id=113253532]
 offset_right = 462.0
@@ -11,55 +15,121 @@ theme_override_constants/margin_bottom = -64
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=264040751]
 layout_mode = 2
-theme_override_constants/separation = -84
+theme_override_constants/separation = -92
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=707096493]
+[node name="Top" type="MarginContainer" parent="VBoxContainer" unique_id=707096493]
 layout_mode = 2
 theme_override_constants/margin_left = 76
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=1264006495]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Top" unique_id=1264006495]
 layout_mode = 2
-theme_override_constants/separation = -152
+theme_override_constants/separation = -144
 
-[node name="King" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer" unique_id=76484702]
+[node name="King" type="Label" parent="VBoxContainer/Top/VBoxContainer" unique_id=76484702]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9411765, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = ExtResource("1_aohvs")
 theme_override_font_sizes/font_size = 256
 text = "King"
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer" unique_id=755993949]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Top/VBoxContainer" unique_id=755993949]
 layout_mode = 2
-theme_override_constants/margin_right = 108
+theme_override_constants/margin_left = 8
 
-[node name="And" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer" unique_id=1168446241]
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_colors/font_color = Color(0.76862746, 0.52156866, 0.05490196, 1)
-theme_override_fonts/font = ExtResource("2_b36hg")
-theme_override_font_sizes/font_size = 32
-text = "and"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=933417470]
-layout_mode = 2
-theme_override_constants/separation = -92
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/VBoxContainer" unique_id=955258271]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 20
-
-[node name="The" type="Label" parent="VBoxContainer/VBoxContainer/MarginContainer" unique_id=423113465]
+[node name="The" type="Label" parent="VBoxContainer/Top/VBoxContainer/MarginContainer" unique_id=1168446241]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_colors/font_color = Color(0.76862746, 0.52156866, 0.05490196, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_fonts/font = ExtResource("2_b36hg")
 theme_override_font_sizes/font_size = 32
 text = "the"
 
-[node name="Boys" type="Label" parent="VBoxContainer/VBoxContainer" unique_id=1846597792]
+[node name="Control" type="Control" parent="VBoxContainer/Top" unique_id=128148652]
+layout_mode = 2
+
+[node name="Crown" type="TextureRect" parent="VBoxContainer/Top/Control" unique_id=1727171620]
+layout_mode = 0
+offset_left = 149.0
+offset_top = 101.0
+offset_right = 291.0
+offset_bottom = 234.0
+texture = ExtResource("3_t142n")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bottom" type="MarginContainer" parent="VBoxContainer" unique_id=1086111035]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/Bottom" unique_id=1574248811]
+layout_mode = 2
+
+[node name="Shield" type="TextureRect" parent="VBoxContainer/Bottom/Control" unique_id=375724114]
+layout_mode = 0
+offset_left = 94.0
+offset_top = -24.0
+offset_right = 350.0
+offset_bottom = 250.0
+texture = ExtResource("4_rm802")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Mask" type="TextureRect" parent="VBoxContainer/Bottom/Control" unique_id=1542504112]
+clip_children = 1
+layout_mode = 0
+offset_top = -177.0
+offset_right = 462.0
+offset_bottom = 246.0
+texture = ExtResource("5_rm802")
+expand_mode = 1
+
+[node name="Sword" type="TextureRect" parent="VBoxContainer/Bottom/Control/Mask" unique_id=1612085955]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 69.0
+offset_right = 441.0
+offset_bottom = 424.0
+texture = ExtResource("5_0mlit")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Bottom" unique_id=933417470]
+layout_mode = 2
+theme_override_constants/separation = -84
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Bottom/VBoxContainer" unique_id=955258271]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+
+[node name="And" type="Label" parent="VBoxContainer/Bottom/VBoxContainer/MarginContainer" unique_id=423113465]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_colors/font_color = Color(0.76862746, 0.52156866, 0.05490196, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_fonts/font = ExtResource("2_b36hg")
+theme_override_font_sizes/font_size = 32
+text = "and"
+
+[node name="Boys" type="Label" parent="VBoxContainer/Bottom/VBoxContainer" unique_id=1846597792]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9411765, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = ExtResource("1_aohvs")
 theme_override_font_sizes/font_size = 192
 text = "Boys"
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1695843931]
+layout_mode = 2
+theme_override_constants/margin_top = 96
+theme_override_constants/margin_bottom = 64

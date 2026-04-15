@@ -72,7 +72,8 @@ func _on_child_entered_tree(node: Node) -> void:
 	var structure: Structure = node
 	assert(not _structures.has(structure))
 	_structures.append(structure)
-	structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
+	if multiplayer.is_server():
+		structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
 	structure_created.emit(structure)
 
 func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> void:

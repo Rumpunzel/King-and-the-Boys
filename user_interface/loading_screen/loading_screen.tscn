@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dmweuj7kxaxov"]
 
+[ext_resource type="Texture2D" uid="uid://dxsmqwnikt6sl" path="res://protoype_assets/the_boys_background_2.png" id="1_nw7rc"]
 [ext_resource type="StyleBox" uid="uid://c1k2tqhaccfdj" path="res://user_interface/menu_panel.tres" id="2_nw7rc"]
-[ext_resource type="Texture2D" uid="uid://bsemt5jnpwww7" path="res://protoype_assets/the_boys_background.png" id="2_tkj33"]
 [ext_resource type="FontFile" uid="uid://b0ybin3nm83i1" path="res://assets/fonts/Bokor-Regular.ttf" id="3_xnb5f"]
 
 [sub_resource type="Animation" id="Animation_nw7rc"]
@@ -48,38 +48,50 @@ process_thread_group_order = 0
 process_thread_messages = 0
 layer = 128
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=928942914]
-offset_right = 1920.0
-offset_bottom = 1080.0
-texture = ExtResource("2_tkj33")
-stretch_mode = 6
-
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=212963439]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1553319817]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = ExtResource("2_nw7rc")
+
+[node name="ColorRect" type="ColorRect" parent="PanelContainer" unique_id=546579259]
+show_behind_parent = true
+layout_mode = 2
+color = Color(0, 0, 0, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=124850147]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer" unique_id=251587788]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer" unique_id=212963439]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 3
+theme_override_styles/panel = ExtResource("2_nw7rc")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/PanelContainer" unique_id=499075166]
+[node name="Background" type="TextureRect" parent="PanelContainer/VBoxContainer/PanelContainer" unique_id=928942914]
+show_behind_parent = true
 layout_mode = 2
-theme_override_constants/margin_left = 64
-theme_override_constants/margin_top = 48
-theme_override_constants/margin_right = 64
-theme_override_constants/margin_bottom = 48
+texture = ExtResource("1_nw7rc")
+stretch_mode = 6
 
-[node name="Label" type="Label" parent="PanelContainer/PanelContainer/MarginContainer" unique_id=1556800612]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer" unique_id=1724986897]
+layout_mode = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 32
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/MarginContainer" unique_id=251587788]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/MarginContainer/PanelContainer" unique_id=499075166]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 24
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/PanelContainer/MarginContainer" unique_id=1556800612]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("3_xnb5f")
@@ -87,6 +99,6 @@ theme_override_font_sizes/font_size = 64
 text = "Loading..."
 visible_characters_behavior = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PanelContainer/PanelContainer/MarginContainer/Label" unique_id=1174186908]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PanelContainer/VBoxContainer/MarginContainer/PanelContainer/MarginContainer/Label" unique_id=1174186908]
 libraries/ = SubResource("AnimationLibrary_s5x3u")
 autoplay = &"loading"

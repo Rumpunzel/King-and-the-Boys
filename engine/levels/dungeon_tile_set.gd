@@ -72,7 +72,7 @@ func get_tile_blueprint_for(tile_position: Vector2i, surrounding_tiles: Array[St
 func _generate_blueprints_bitflag() -> void:
 	var blueprints_bitflag: Dictionary[int, Array] = {}
 	for profile: StructureProfile in _dungeon_tiles.keys():
-		for clockwise_rotation: int in range(4):
+		for clockwise_rotation: int in range(Level.Direction.size()):
 			var blueprint: TileBlueprint = TileBlueprint.new(profile, clockwise_rotation)
 			var connection_bitflag: int = blueprint.get_connection_bitflag()
 			var similar_blueprints: Array[TileBlueprint] = blueprints_bitflag.get_or_add(connection_bitflag, [] as Array[TileBlueprint])
