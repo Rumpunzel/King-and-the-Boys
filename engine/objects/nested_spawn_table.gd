@@ -5,10 +5,10 @@ extends SpawnTable
 
 var _flat_profile_distribution: Dictionary[Profile, float]:
 	get:
-		if _flat_profile_distribution.is_empty(): _flat_profile_distribution = _get_flattened_profile_distribution()
+		if _flat_profile_distribution.is_empty(): _generate_flattened_profile_distribution()
 		return _flat_profile_distribution
 
-func _get_flattened_profile_distribution() -> Dictionary[Profile, float]:
+func _generate_flattened_profile_distribution() -> void:
 	var flattened_profile_distribution: Dictionary[Profile, float] = {}
 	for spawn_table: SpawnTable in _table_distribution.keys():
 		var adjusted_spawn_table: Dictionary[Profile, float]
@@ -17,7 +17,7 @@ func _get_flattened_profile_distribution() -> Dictionary[Profile, float]:
 		for profile: Profile in adjusted_spawn_table:
 			if not flattened_profile_distribution.has(profile): flattened_profile_distribution[profile] = adjusted_spawn_table[profile]
 			else: flattened_profile_distribution[profile] = flattened_profile_distribution[profile] + adjusted_spawn_table[profile]
-	return flattened_profile_distribution
+	_flat_profile_distribution = flattened_profile_distribution
 
 func _get_profiles() -> Array[Profile]: return _flat_profile_distribution.keys()
 func _get_weights() -> Array[float]: return _flat_profile_distribution.values()

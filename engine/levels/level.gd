@@ -120,7 +120,7 @@ func _update_player_vision(
 	reveal_function: Callable,
 	origin_grid_position: Vector2i = from_grid_position,
 ) -> void:
-	if origin_grid_position.distance_squared_to(from_grid_position) > pow(vision_radius, 2.0): return
+	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
 	var from_tile: Structure = _placed_tiles.get(from_grid_position)
 	assert(from_tile)
 	if reveal_check.call(from_tile): reveal_function.call(from_tile, Direction.UP)
@@ -132,7 +132,7 @@ func _update_player_vision(
 		var tile: Structure = _placed_tiles.get(tile_grid_position)
 		for radius: int in range(1, ceili(vision_radius) + 1):
 			var next_tile_grid_position: Vector2i = from_grid_position + direction_vector * radius
-			if origin_grid_position.distance_squared_to(next_tile_grid_position) > pow(vision_radius, 2.0): continue
+			if origin_grid_position.distance_squared_to(next_tile_grid_position) > vision_radius ** 2.0: continue
 			if not _placed_tiles.has(next_tile_grid_position): continue
 			var next_tile: Structure = _placed_tiles.get(next_tile_grid_position)
 			assert(next_tile)
@@ -142,7 +142,7 @@ func _update_player_vision(
 		_update_player_vision_in_room(tile_grid_position, direction, vision_radius, reveal_check, reveal_function, origin_grid_position)
 
 func _update_player_vision_in_room(from_grid_position: Vector2i, direction: Direction, vision_radius: float, reveal_check: Callable, reveal_function: Callable, origin_grid_position: Vector2i, already_visited: Array[Vector2i] = []) -> void:
-	if origin_grid_position.distance_squared_to(from_grid_position) > pow(vision_radius, 2.0): return
+	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
 	var from_tile: Structure = _placed_tiles.get(from_grid_position)
 	assert(from_tile)
 	if reveal_check.call(from_tile): reveal_function.call(from_tile, direction)
@@ -252,10 +252,9 @@ func _create_connection(tile: Structure, connection: Direction) -> void:
 	var direction_vector: Vector2i = direction_to_vector(connection)
 	var connection_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * tile.model.get_max_mesh_scale()
 	var tile_connection: Structure = _tile_set.tile_connection.create(-1, Transform3D(Basis.IDENTITY, connection_position), connection, Structure.Status.PLACED)
-	var tile_connections: Array[Structure] = _tile_connections.get(tile, [] as Array[Structure])
+	var tile_connections: Array[Structure] = _tile_connections.get_or_add(tile, [] as Array[Structure])
 	assert(not tile_connections.has(tile))
 	tile_connections.append(tile_connection)
-	_tile_connections[tile] = tile_connections
 	add_child(tile_connection)
 
 func _create_connector(tile_position: Vector3, connection: Direction) -> void:
