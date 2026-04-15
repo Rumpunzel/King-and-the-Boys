@@ -29,7 +29,7 @@ func open_menu() -> void:
 	show()
 	if _tween: _tween.kill()
 	_tween = get_tree().create_tween()
-	_tween.tween_property(self, "modulate:a", 1.0, _fade_in_duration)
+	_tween.tween_property(self, "modulate:a", 1.0, _fade_in_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	opened.emit()
 
@@ -37,7 +37,7 @@ func close_menu() -> void:
 	if not visible: return
 	if _tween: _tween.kill()
 	_tween = get_tree().create_tween()
-	_tween.tween_property(self, "modulate:a", 0.0, _fade_out_duration)
+	_tween.tween_property(self, "modulate:a", 0.0, _fade_out_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_tween.tween_callback(hide)
 	_tween.tween_callback(get_tree().call_group.bind("HUD", "show"))

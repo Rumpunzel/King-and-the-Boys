@@ -68,14 +68,15 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Menus" type="MarginContainer" parent="MenusLayer" unique_id=1633700177 node_paths=PackedStringArray("_pause_menu")]
+[node name="Menus" type="MarginContainer" parent="MenusLayer" unique_id=1633700177]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("9_ven62")
-_pause_menu = NodePath("PanelContainer/MarginContainer/PauseMenu")
+_fade_in_duration = 1.5
+_start = 1
 metadata/_custom_type_script = "uid://bwld5ujvjc76x"
 
 [node name="Background" type="TextureRect" parent="MenusLayer/Menus" unique_id=1295372125]
@@ -124,7 +125,9 @@ layout_mode = 2
 [connection signal="closed" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="MenusLayer/Menus" method="_on_pause_menu_closed"]
 [connection signal="load_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="." method="_on_load_requested"]
 [connection signal="main_menu_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="." method="_on_main_menu_requested"]
-[connection signal="opened" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="MenusLayer/Menus" method="_on_pause_menu_opened"]
+[connection signal="opened" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="MenusLayer/Menus" method="_on_menu_opened"]
 [connection signal="save_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/PauseMenu" to="." method="_on_save_requested"]
 [connection signal="game_start_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/LobbyMenu" to="." method="_on_game_start_requested"]
+[connection signal="opened" from="MenusLayer/Menus/PanelContainer/MarginContainer/LobbyMenu" to="MenusLayer/Menus" method="_on_menu_opened"]
 [connection signal="game_requested" from="MenusLayer/Menus/PanelContainer/MarginContainer/MainMenu" to="." method="_on_game_requested"]
+[connection signal="opened" from="MenusLayer/Menus/PanelContainer/MarginContainer/MainMenu" to="MenusLayer/Menus" method="_on_menu_opened"]
