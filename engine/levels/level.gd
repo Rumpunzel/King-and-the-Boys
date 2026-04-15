@@ -113,8 +113,7 @@ func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Stat
 func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> void:
 	for grid_position: Vector2i in grid_positions: spawn_at(grid_position, status)
 
-func get_placed_tile(grid_position: Vector2i) -> Structure:
-	return _placed_tiles.get(grid_position)
+func get_placed_tile(grid_position: Vector2i) -> Structure: return _placed_tiles.get(grid_position)
 
 func _build_outer_wall() -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
@@ -123,7 +122,7 @@ func _build_outer_wall() -> void:
 			var wall_roation: int = 1 if absi(y) == grid_extents.y else 0
 			var wall_position: Vector2i = Vector2i(x, y)
 			_spawn_at(DungeonTileSet.TileBlueprint.new(preload("uid://d3cc5nj7ogal8"), wall_roation), wall_position)
-			var wall: Structure = _placed_tiles.get(wall_position)
+			var wall: Structure = _placed_tiles[wall_position]
 			wall.reveal()
 
 func _place_starting_tile() -> Vector2i:
@@ -135,20 +134,20 @@ func _place_starting_tile() -> Vector2i:
 	var starting_tile_blueprint: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(_starting_tile, 0)
 	var starting_grid_position: Vector2i = world_to_grid_position(player_spawn_point.global_position)
 	_spawn_at(starting_tile_blueprint, starting_grid_position)
-	var starting_tile: Structure = _placed_tiles.get(starting_grid_position)
+	var starting_tile: Structure = _placed_tiles[starting_grid_position]
 	assert(starting_tile)
 	starting_tile.reveal()
 	return starting_grid_position
 
 func _build_dungeon_from(origin_grid_position: Vector2i) -> void:
-	var tile: Structure = _placed_tiles.get(origin_grid_position)
+	var tile: Structure = _placed_tiles[origin_grid_position]
 	assert(tile)
 	var already_visited: Array[Vector2i] = [origin_grid_position]
 	if tile.profile.room_type: _build_room_from(origin_grid_position, tile.profile.room_type, already_visited)
 	for direction: Direction in tile.get_connections(): _build_corridor_from(origin_grid_position, direction, already_visited)
 
 func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction, already_visited: Array[Vector2i]) -> void:
-	var tile: Structure = _placed_tiles.get(origin_grid_position)
+	var tile: Structure = _placed_tiles[origin_grid_position]
 	assert(tile)
 	var relative_direction: Vector2i = direction_to_vector(direction)
 	var index: int = 0
@@ -167,7 +166,7 @@ func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction, 
 
 func _build_room_from(origin_grid_position: Vector2i, room_type: RoomType, already_visited: Array[Vector2i]) -> void:
 	assert(room_type)
-	var tile: Structure = _placed_tiles.get(origin_grid_position)
+	var tile: Structure = _placed_tiles[origin_grid_position]
 	assert(tile)
 	if not room_type == tile.profile.room_type: return
 	for connection: Direction in tile.get_connections():
@@ -193,41 +192,42 @@ func _update_player_vision(
 	origin_grid_position: Vector2i = from_grid_position,
 ) -> void:
 	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
-	var from_tile: Structure = _placed_tiles.get(from_grid_position)
+	var from_tile: Structure = _placed_tiles[from_grid_position]
 	assert(from_tile)
-	if reveal_check.call(from_tile): reveal_function.call(from_tile, Direction.UP)
-	var origin_tile_room_type: RoomType = _placed_tiles[origin_grid_position].profile.room_type
+	var origin_room: Structure = _placed_tiles[origin_grid_position]
+	assert(origin_room)
+	var origin_tile_room_type: RoomType = origin_room.profile.room_type
+	if origin_tile_room_type and origin_tile_room_type == from_tile.profile.room_type:
+		_update_player_vision_in_room(from_grid_position, vision_radius, reveal_check, reveal_function, origin_grid_position)
 	for direction: Direction in from_tile.get_connections():
-		if not from_tile.has_connection(direction): continue
 		var direction_vector: Vector2i = direction_to_vector(direction)
-		var tile_grid_position: Vector2i = from_grid_position + direction_vector
-		var tile: Structure = _placed_tiles.get(tile_grid_position)
 		for radius: int in range(1, ceili(vision_radius) + 1):
 			var next_tile_grid_position: Vector2i = from_grid_position + direction_vector * radius
-			if origin_grid_position.distance_squared_to(next_tile_grid_position) > vision_radius ** 2.0: continue
-			if not _placed_tiles.has(next_tile_grid_position): continue
-			var next_tile: Structure = _placed_tiles.get(next_tile_grid_position)
+			if origin_grid_position.distance_squared_to(next_tile_grid_position) > vision_radius ** 2.0: break
+			if not _placed_tiles.has(next_tile_grid_position): break
+			var next_tile: Structure = _placed_tiles[next_tile_grid_position]
 			assert(next_tile)
 			if reveal_check.call(next_tile): reveal_function.call(next_tile, direction)
-		if not origin_tile_room_type or origin_tile_room_type != tile.profile.room_type: continue
-		_update_player_vision_in_room(tile_grid_position, direction, vision_radius, reveal_check, reveal_function, origin_grid_position)
 
-func _update_player_vision_in_room(from_grid_position: Vector2i, direction: Direction, vision_radius: float, reveal_check: Callable, reveal_function: Callable, origin_grid_position: Vector2i, already_visited: Array[Vector2i] = []) -> void:
+func _update_player_vision_in_room(from_grid_position: Vector2i, vision_radius: float, reveal_check: Callable, reveal_function: Callable, origin_grid_position: Vector2i, already_visited: Array[Vector2i] = []) -> void:
+	assert(not already_visited.has(from_grid_position))
+	already_visited.append(from_grid_position)
 	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
-	var from_tile: Structure = _placed_tiles.get(from_grid_position)
+	var from_tile: Structure = _placed_tiles[from_grid_position]
 	assert(from_tile)
-	if reveal_check.call(from_tile): reveal_function.call(from_tile, direction)
-	var origin_tile_room_type: RoomType = _placed_tiles[origin_grid_position].profile.room_type
+	if reveal_check.call(from_tile): reveal_function.call(from_tile, Direction.UP)
+	var origin_room: Structure = _placed_tiles[origin_grid_position]
+	assert(origin_room)
+	var origin_tile_room_type: RoomType = origin_room.profile.room_type
 	assert(origin_tile_room_type)
 	assert(from_tile.profile.room_type == origin_tile_room_type)
 	for connection: Direction in from_tile.get_connections():
 		var direction_vector: Vector2i = direction_to_vector(connection)
-		var tile_grid_position: Vector2i = from_grid_position + direction_vector
-		var tile: Structure = _placed_tiles.get(tile_grid_position)
-		if origin_tile_room_type == tile.profile.room_type and not already_visited.has(tile_grid_position):
-			already_visited.append(from_grid_position)
-			await get_tree().process_frame
-			_update_player_vision_in_room(tile_grid_position, direction, vision_radius, reveal_check, reveal_function, origin_grid_position, already_visited)
+		var room_tile_grid_position: Vector2i = from_grid_position + direction_vector
+		var room_tile: Structure = _placed_tiles[room_tile_grid_position]
+		assert(room_tile)
+		if origin_tile_room_type == room_tile.profile.room_type and not already_visited.has(room_tile_grid_position):
+			_update_player_vision_in_room(room_tile_grid_position, vision_radius, reveal_check, reveal_function, origin_grid_position, already_visited)
 
 func _queue_reveal(tile: Structure, _direction: Direction) -> void:
 	if _reveal_queue.has(tile): return
@@ -305,11 +305,11 @@ func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	character.entered_grid_cell.connect(_on_player_moved.bind(character))
 
 func _on_player_moved(character_grid_position: Vector2i, character: Character) -> void:
-	var entered_tile: Structure = _placed_tiles.get(character_grid_position)
+	var entered_tile: Structure = _placed_tiles[character_grid_position]
 	assert(entered_tile)
 	_build_dungeon_from(character_grid_position)
 	_update_player_vision(character_grid_position, character.profile.vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.REVEALED, _queue_reveal)
-	_update_player_vision(character_grid_position, character.profile.vision + character.profile.dark_vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.DISCOVERED, _queue_discover)
+	_update_player_vision(character_grid_position, character.profile.dark_vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.DISCOVERED, _queue_discover)
 	_remaining_tile_reveal_delay = character.profile.move_animation.duration * 0.1
 	_remaining_tile_discover_delay = character.profile.move_animation.duration * 0.1
 

@@ -32,7 +32,7 @@ enum Groups {
 		changed.emit()
 
 @export var vision: float = 1.5
-@export var dark_vision: float = 1.0
+@export var dark_vision: float = 2.5
 
 @export var spawn_animation: ModelAnimation = preload("uid://djq27fwrmrv2")
 @export var move_animation: ModelAnimation = preload("uid://bwiaycc13h0eo")
