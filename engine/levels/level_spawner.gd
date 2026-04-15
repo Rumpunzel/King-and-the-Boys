@@ -55,7 +55,7 @@ func _on_child_entered_tree(node: Node) -> void:
 	assert(_level)
 	_level.tile_placement_requested.connect(_structure_spawner.spawn_at)
 	await _level.ready
-	await _level.build_level()
+	_level.build_level()
 	level_loaded.emit()
 
 func _on_structure_created(structure: Structure) -> void:

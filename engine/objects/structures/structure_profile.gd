@@ -61,8 +61,7 @@ func get_connections(clockwise_turns: int) -> Array[Level.Direction]:
 	if _connection_left: connections.append(_get_adjusted_direction(Level.Direction.LEFT, clockwise_turns))
 	return connections
 
-func has_connection(direction: Level.Direction, clockwise_turns: int) -> bool:
-	return get_connections(clockwise_turns).has(direction)
+func has_connection(direction: Level.Direction, clockwise_turns: int) -> bool: return get_connections(clockwise_turns).has(direction)
 
 func get_connection_vectors(clockwise_turns: int) -> Array[Vector2i]:
 	var connection_vectors: Array[Vector2i]
@@ -77,8 +76,7 @@ func get_restrictions(clockwise_turns: int) -> Dictionary[Level.Direction, Conne
 		_get_adjusted_direction(Level.Direction.LEFT, clockwise_turns): _restriction_left,
 	}
 
-func get_restriction(direction: Level.Direction, clockwise_turns: int) -> ConnectionRestriction:
-	return get_restrictions(clockwise_turns)[direction]
+func get_restriction(direction: Level.Direction, clockwise_turns: int) -> ConnectionRestriction: return get_restrictions(clockwise_turns)[direction]
 
 func get_group_name() -> StringName:
 	var group_name: StringName = Groups.keys()[group]

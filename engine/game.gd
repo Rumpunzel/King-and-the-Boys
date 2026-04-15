@@ -43,9 +43,9 @@ var _game_status: GameStatus:
 			GameStatus.READY:
 				pass
 			GameStatus.LOADING:
-				if not _loading_screen:
-					_loading_screen = _loading_screen_scene.instantiate()
-					add_child(_loading_screen)
+				assert(not _loading_screen)
+				_loading_screen = _loading_screen_scene.instantiate()
+				add_child(_loading_screen)
 				_background_placeholder.visible = false
 				if _background_scene:
 					_background_scene.queue_free()

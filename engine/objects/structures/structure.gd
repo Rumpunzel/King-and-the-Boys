@@ -149,12 +149,22 @@ func to_structure_data() -> Dictionary[StringName, Variant]:
 	return structure_data
 
 func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool: return profile.can_connect(direction, clockwise_turns, other_profile)
+func can_connect_to(grid_position: Vector2i, other_profile: StructureProfile) -> bool:
+	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
+	return profile.can_connect(direction, clockwise_turns, other_profile)
 
 func has_connection(direction: Level.Direction) -> bool: return profile.has_connection(direction, clockwise_turns)
+func has_connection_to(grid_position: Vector2i) -> bool:
+	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
+	return profile.has_connection(direction, clockwise_turns)
+
 func get_connections() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
 func get_connection_vectors() -> Array[Vector2i]: return profile.get_connection_vectors(clockwise_turns)
 
-func get_restriction(direction: Level.Direction) -> ConnectionRestriction: return profile.get_restriction(direction, clockwise_turns)
+func get_restriction_to(grid_position: Vector2i) -> ConnectionRestriction:
+	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
+	return profile.get_restriction(direction, clockwise_turns)
+
 func get_restrictions() -> Dictionary[Level.Direction, ConnectionRestriction]: return profile.get_restrictions(clockwise_turns)
 
 func get_portrait() -> Texture:
@@ -175,6 +185,8 @@ func get_grid_cells() -> Array[Vector2i]:
 			var cell_position: Vector2i = Vector2i.RIGHT * x + Vector2i.UP * y
 			grid_cells.append(origin_cell + cell_position)
 	return grid_cells
+
+func _get_direction_to_grid_position(grid_position: Vector2i) -> Level.Direction: return Level.get_direction(get_grid_position(), grid_position)
 
 func _debug_draw_connections() -> void:
 	assert(level)
