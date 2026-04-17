@@ -7,10 +7,16 @@ extends Menu
 @export_group("Configuration")
 @export var _start_button: Button
 @export var _player_infos_container: Container
+@export var _toaster: Toaster
 @export_file("*.tscn") var _game_scene_path: String
 @export var _player_info_scene: PackedScene
 
 var _player_infos: Dictionary[Player, PlayerInfo] = {}
+
+func _enter_tree() -> void:
+	super._enter_tree()
+	if Engine.is_editor_hint(): return
+	Multiplayer.disconnected_from_multiplayer.connect(_on_disconnected_from_multiplayer)
 
 func _ready() -> void:
 	_clear()
@@ -21,7 +27,7 @@ func _ready() -> void:
 		var connected_player: Player = connected_players[index]
 		_add_player(connected_player)
 	Lobby.player_connected.connect(_add_player)
-	Client.start_game()
+	if multiplayer.is_server(): Client.start_game()
 	_start_button.grab_focus()
 	SceneManager.preload_scene(_default_level_path)
 
@@ -75,6 +81,10 @@ func _on_start_pressed() -> void:
 static func _setup_game(game: Game, level_path: String) -> Error:
 	game.setup_game(level_path)
 	return Error.OK
+
+func _on_disconnected_from_multiplayer() -> void:
+	_toaster.toast_error("Connection failed!")
+	SceneManager.to_main()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

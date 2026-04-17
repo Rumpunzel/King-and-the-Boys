@@ -1,29 +1,31 @@
-[gd_scene format=3 uid="uid://becdxlww4k13g"]
+[gd_scene format=3 uid="uid://d3blbqb654ekr"]
 
-[ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/menus/lobby_menu/lobby_menu.gd" id="1_v1dro"]
-[ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/menus/lobby_menu/player_info.tscn" id="2_ajev1"]
-[ext_resource type="PackedScene" uid="uid://bi3mr4sjccywj" path="res://user_interface/menus/multiplayer_menu/multiplayer_menu.tscn" id="3_drr3r"]
-[ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="3_wjy6x"]
+[ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/menus/lobby_menu/lobby_menu.gd" id="1_pffa0"]
+[ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/menus/lobby_menu/player_info.tscn" id="2_sm5fm"]
+[ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="3_h7yms"]
+[ext_resource type="PackedScene" uid="uid://bvxmx3fwfllaa" path="res://user_interface/menus/multiplayer_menu/multiplayer_host_menu.tscn" id="4_3j5nk"]
+[ext_resource type="Script" uid="uid://b68u3p1bd6gb" path="res://user_interface/toaster.gd" id="5_sm5fm"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ajev1"]
 
-[node name="LobbyMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_start_button", "_player_infos_container")]
+[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_start_button", "_player_infos_container", "_toaster")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ajev1")
-script = ExtResource("1_v1dro")
+script = ExtResource("1_pffa0")
 _default_level_path = "uid://bmwhs3lwb74ue"
 _start_button = NodePath("MenusContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Start")
 _player_infos_container = NodePath("MenusContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/PlayerInfos")
+_toaster = NodePath("Toaster")
 _game_scene_path = "uid://bmehrqe5x8c41"
-_player_info_scene = ExtResource("2_ajev1")
+_player_info_scene = ExtResource("2_sm5fm")
 _fade_in_duration = 1.0
 metadata/_custom_type_script = "uid://cd0g7grdwdvy1"
 
-[node name="MenusContainer" parent="." unique_id=608752574 instance=ExtResource("3_wjy6x")]
+[node name="MenusContainer" parent="." unique_id=608752574 instance=ExtResource("3_h7yms")]
 layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="MenusContainer" unique_id=1406027683]
@@ -56,10 +58,11 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=779050681]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MultiplayerMenu" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=876205651 instance=ExtResource("3_drr3r")]
+[node name="MultiplayerMenu" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=876205651 instance=ExtResource("4_3j5nk")]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -68,5 +71,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
 text = "Start"
+
+[node name="Toaster" type="Node" parent="." unique_id=600532876]
+script = ExtResource("5_sm5fm")
+_gravity = 1
+metadata/_custom_type_script = "uid://b68u3p1bd6gb"
 
 [connection signal="pressed" from="MenusContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Start" to="." method="_on_start_pressed"]

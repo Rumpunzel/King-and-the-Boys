@@ -6,19 +6,31 @@ extends Menu
 @export_file("*.tscn") var _background_scene_path: String
 
 @export_group("Configuration")
-@export_file("*.tscn") var _lobby_scene_path: String
+@export_file("*.tscn") var _lobby_host_scene_path: String
+@export_file("*.tscn") var _lobby_connecting_scene_path: String
+
+func _enter_tree() -> void:
+	super._enter_tree()
+	if Engine.is_editor_hint(): return
+	Multiplayer.connected_to_multiplayer.connect(_on_connected_to_multiplayer)
 
 func _ready() -> void:
+	if Engine.is_editor_hint(): return
 	Client.stop_game()
-	SceneManager.preload_scene(_lobby_scene_path)
 	if not _background_scene_path.is_empty(): Panorama.set_background(_background_scene_path)
 
-func start_new_game() -> void:
+func open_lobby() -> void:
 	assert(multiplayer.is_server())
 	close_menu()
 	await fully_closed
-	SceneManager.transition_to_scene(_lobby_scene_path)
-	print_debug("Starting new game...")
+	SceneManager.transition_to_scene(_lobby_host_scene_path, false)
+	print_debug("Opening lobby...")
+
+func join_lobby() -> void:
+	close_menu()
+	await fully_closed
+	SceneManager.transition_to_scene(_lobby_connecting_scene_path, false)
+	print_debug("Joining lobby...")
 
 func load_game() -> Error:
 	assert(multiplayer.is_server())
@@ -27,7 +39,7 @@ func load_game() -> Error:
 	return Error.OK#error
 
 func _on_start_pressed() -> void:
-	start_new_game()
+	open_lobby()
 
 func _on_load_pressed() -> void:
 	load_game()
@@ -35,7 +47,11 @@ func _on_load_pressed() -> void:
 func _on_quit_confirmation_dialog_confirmed() -> void:
 	Client.quit_game()
 
+func _on_connected_to_multiplayer() -> void:
+	join_lobby()
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if _lobby_scene_path.is_empty(): warnings.append("Missing lobby scene path.")
+	if _lobby_host_scene_path.is_empty(): warnings.append("Missing lobby host scene path.")
+	if _lobby_connecting_scene_path.is_empty(): warnings.append("Missing lobby connecting scene path.")
 	return warnings

@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://b70e0eh8qf5cl"]
+
+[ext_resource type="Script" uid="uid://bv3gmsloy2ehv" path="res://user_interface/menus/multiplayer_menu/multiplayer_join_menu.gd" id="1_2074e"]
+[ext_resource type="Script" uid="uid://c5s3itsvtp0mg" path="res://user_interface/better_line_edit.gd" id="2_jetwe"]
+[ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="3_n416u"]
+
+[node name="MultiplayerJoinMenu" type="VBoxContainer" unique_id=1980855649 node_paths=PackedStringArray("_join_button", "_ip_address", "_player_name")]
+offset_right = 256.0
+offset_bottom = 101.0
+script = ExtResource("1_2074e")
+_join_button = NodePath("HBoxContainer/Join")
+_ip_address = NodePath("HBoxContainer/IpAddress")
+_player_name = NodePath("PlayerName")
+metadata/_custom_type_script = "uid://bv3gmsloy2ehv"
+
+[node name="PlayerName" type="LineEdit" parent="." unique_id=1461261219]
+layout_mode = 2
+placeholder_text = "Haunt"
+alignment = 1
+editable = false
+script = ExtResource("2_jetwe")
+metadata/_custom_type_script = "uid://c5s3itsvtp0mg"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1239487278]
+layout_mode = 2
+
+[node name="Join" type="Button" parent="HBoxContainer" unique_id=221003262]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "Join"
+script = ExtResource("3_n416u")
+toggled_text = "Disconnect"
+metadata/_custom_type_script = "uid://cpyey1rgiu5s0"
+
+[node name="IpAddress" type="LineEdit" parent="HBoxContainer" unique_id=1834265851]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+placeholder_text = "127.0.0.1"
+alignment = 1
+script = ExtResource("2_jetwe")
+metadata/_custom_type_script = "uid://c5s3itsvtp0mg"
+
+[connection signal="text_submitted_or_focus_lost" from="PlayerName" to="." method="_on_player_name_text_changed"]
+[connection signal="toggled" from="HBoxContainer/Join" to="." method="_on_join_toggled"]
+[connection signal="text_changed" from="HBoxContainer/IpAddress" to="." method="_on_ip_address_text_changed"]
+[connection signal="text_submitted_or_focus_lost" from="HBoxContainer/IpAddress" to="." method="_on_ip_address_text_submitted"]

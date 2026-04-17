@@ -30,7 +30,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var loading_status: ResourceLoader.ThreadLoadStatus = ResourceLoader.load_threaded_get_status(_scene_path_to_load, _progress_array)
 	assert(_progress_array.size() == 1)
-	_loading_screen.set_loading_progress(_progress_array[0])
+	if _loading_screen: _loading_screen.set_loading_progress(_progress_array[0])
 	if loading_status == ResourceLoader.THREAD_LOAD_LOADED: _transition_to_scene(_scene_path_to_load)
 
 func verify_scene_path(scene_path: String) -> void:
@@ -44,15 +44,16 @@ func preload_scene(scene_path: String) -> void:
 
 ## Loads the scene and transitions to it when it's ready
 @rpc("call_local", "reliable")
-func transition_to_scene(scene_path: String) -> void:
+func transition_to_scene(scene_path: String, show_loading_screen: bool = true) -> void:
 	preload_scene(scene_path)
 	if ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED:
 		set_process(false)
 		_transition_to_scene(scene_path)
 		return
-	assert(_loading_screen_scene)
-	_loading_screen = _loading_screen_scene.instantiate()
-	add_child(_loading_screen)
+	if show_loading_screen:
+		assert(_loading_screen_scene)
+		_loading_screen = _loading_screen_scene.instantiate()
+		add_child(_loading_screen)
 	set_process(true)
 
 @rpc("call_local", "reliable")

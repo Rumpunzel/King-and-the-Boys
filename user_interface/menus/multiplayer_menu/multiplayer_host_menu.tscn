@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://bvxmx3fwfllaa"]
+
+[ext_resource type="Script" uid="uid://bwmombd8bkx7p" path="res://user_interface/menus/multiplayer_menu/multiplayer_host_menu.gd" id="1_oumda"]
+[ext_resource type="Script" uid="uid://c5s3itsvtp0mg" path="res://user_interface/better_line_edit.gd" id="2_4wvyy"]
+[ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="3_x4rj3"]
+
+[node name="MultiplayerHostMenu" type="VBoxContainer" unique_id=445969921 node_paths=PackedStringArray("_host_button", "_player_name")]
+offset_right = 256.0
+offset_bottom = 101.0
+script = ExtResource("1_oumda")
+_host_button = NodePath("Host")
+_player_name = NodePath("PlayerName")
+metadata/_custom_type_script = "uid://bwmombd8bkx7p"
+
+[node name="PlayerName" type="LineEdit" parent="." unique_id=1461261219]
+layout_mode = 2
+placeholder_text = "Haunt"
+alignment = 1
+editable = false
+script = ExtResource("2_4wvyy")
+metadata/_custom_type_script = "uid://c5s3itsvtp0mg"
+
+[node name="Host" type="Button" parent="." unique_id=2070671973]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+text = "Host"
+script = ExtResource("3_x4rj3")
+toggled_text = "Stop Hosting"
+metadata/_custom_type_script = "uid://cpyey1rgiu5s0"
+
+[connection signal="text_submitted_or_focus_lost" from="PlayerName" to="." method="_on_player_name_text_changed"]
+[connection signal="toggled" from="Host" to="." method="_on_host_toggled"]
