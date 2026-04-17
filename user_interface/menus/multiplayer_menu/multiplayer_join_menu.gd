@@ -4,22 +4,17 @@ class_name MultiplayerJoinMenu
 extends MultiplayerMenu
 
 @export_group("Configuration")
-@export var _join_button: ToggleButton
+@export var _join_button: Button
 @export var _ip_address: BetterLineEdit
 
 func reset_menu() -> void:
-	_join_button.disabled = false
-	_join_button.set_pressed_no_signal(false)
-	_join_button.update_button()
-	_ip_address.editable = true
+	pass
 
-func _on_join_toggled(joining: bool) -> void:
-	_ip_address.editable = not joining
-	if joining:
-		var ip_address_to_join: StringName = _ip_address.text
-		if ip_address_to_join.is_empty(): ip_address_to_join = Multiplayer.DEFAULT_SERVER_IP
-		Multiplayer.join_game(ip_address_to_join)
-	else: Multiplayer.leave_game()
+func _on_join_pressed() -> void:
+	_ip_address.editable = false
+	var ip_address_to_join: StringName = _ip_address.text
+	if ip_address_to_join.is_empty(): ip_address_to_join = Multiplayer.DEFAULT_SERVER_IP
+	Multiplayer.join_game(ip_address_to_join)
 
 func _on_ip_address_text_changed(new_ip_address: StringName) -> void:
 	_join_button.disabled = not new_ip_address.is_empty() and not new_ip_address.is_valid_ip_address()

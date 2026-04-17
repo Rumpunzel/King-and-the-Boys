@@ -32,7 +32,9 @@ func _process(_delta: float) -> void:
 	if not _background_scene_path.is_empty() and not _background_scene: _load_background_scene_when_ready()
 
 func set_background(background_scene_path: String) -> void:
-	if _background_scene: clear_background(true)
+	if _background_scene:
+		if _background_scene.scene_file_path == ResourceUID.ensure_path(background_scene_path): return
+		clear_background(true)
 	assert(_background_placeholder)
 	if not _background_placeholder.visible: _background_placeholder.modulate.a = 1.0
 	_background_placeholder.visible = true

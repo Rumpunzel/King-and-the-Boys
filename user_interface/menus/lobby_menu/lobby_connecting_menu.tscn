@@ -60,25 +60,29 @@ metadata/_custom_type_script = "uid://vr1ncpxlq1vc"
 [node name="MenusContainer" parent="." unique_id=608752574 instance=ExtResource("3_o1khs")]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="MenusContainer" unique_id=1406027683]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer" unique_id=1279970161]
 layout_mode = 2
 size_flags_vertical = 4
+theme_override_constants/separation = 16
 
-[node name="ProgressBar" type="ProgressBar" parent="MenusContainer/PanelContainer" unique_id=1299214939]
+[node name="PanelContainer" type="PanelContainer" parent="MenusContainer/VBoxContainer" unique_id=1406027683]
+layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="MenusContainer/VBoxContainer/PanelContainer" unique_id=1299214939]
 layout_mode = 2
 size_flags_vertical = 1
 show_percentage = false
 indeterminate = true
 editor_preview_indeterminate = true
 
-[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/PanelContainer" unique_id=1395001906]
+[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer/PanelContainer" unique_id=1395001906]
 layout_mode = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 24
 
-[node name="Label" type="Label" parent="MenusContainer/PanelContainer/MarginContainer" unique_id=1350820670]
+[node name="Label" type="Label" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=1350820670]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("4_hvnq8")
@@ -86,11 +90,20 @@ theme_override_font_sizes/font_size = 64
 text = "Connecting..."
 visible_characters_behavior = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="MenusContainer/PanelContainer/MarginContainer/Label" unique_id=1853144078]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/Label" unique_id=1853144078]
 libraries/ = SubResource("AnimationLibrary_vo66w")
 autoplay = &"loading"
+
+[node name="Cancel" type="Button" parent="MenusContainer/VBoxContainer" unique_id=2019960935]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
+text = "Cancel"
+flat = true
 
 [node name="Toaster" type="Node" parent="." unique_id=600532876]
 script = ExtResource("5_p4xko")
 _gravity = 1
 metadata/_custom_type_script = "uid://b68u3p1bd6gb"
+
+[connection signal="pressed" from="MenusContainer/VBoxContainer/Cancel" to="." method="_on_cancel_pressed"]

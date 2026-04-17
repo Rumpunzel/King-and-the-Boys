@@ -18,7 +18,7 @@ script = ExtResource("1_ld4hu")
 _background_scene_path = "uid://dl1biiyjo6o63"
 _lobby_host_scene_path = "uid://becdxlww4k13g"
 _lobby_connecting_scene_path = "uid://6470jvy1w2m3"
-_start = 1
+_fade_in_duration = 0.5
 metadata/_custom_type_script = "uid://b5mml6dqjiilo"
 
 [node name="GameInfo" parent="." unique_id=283505685 instance=ExtResource("3_afqf0")]
@@ -47,6 +47,7 @@ size_flags_vertical = 3
 [node name="Start" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=601068532]
 layout_mode = 2
 size_flags_vertical = 2
+mouse_default_cursor_shape = 2
 text = "Start"
 
 [node name="MultiplayerJoinMenu" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=876205651 instance=ExtResource("6_afqf0")]
@@ -66,11 +67,13 @@ text = "Save
 [node name="Load" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer/VBoxContainer" unique_id=286748430]
 layout_mode = 2
 size_flags_vertical = 6
+mouse_default_cursor_shape = 2
 text = "Load"
 
 [node name="Quit" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=968828243]
 layout_mode = 2
 size_flags_vertical = 10
+mouse_default_cursor_shape = 2
 text = "Quit"
 
 [node name="QuitConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1020103059]

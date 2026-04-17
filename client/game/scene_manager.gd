@@ -62,10 +62,10 @@ func transition_to_scene_with_setup(scene_path: String, scene_setup: Callable, s
 	_setup_mode = setup_mode
 	transition_to_scene(scene_path)
 
-func to_main() -> void:
+func to_main(show_loading_screen: bool = true) -> void:
 	var main_scene_path: String = ProjectSettings.get_setting("application/run/main_scene")
 	assert(not get_tree().current_scene or get_tree().current_scene.scene_file_path != main_scene_path)
-	transition_to_scene(main_scene_path)
+	transition_to_scene(main_scene_path, show_loading_screen)
 
 func _transition_to_scene(scene_path: String) -> void:
 	var packed_scene: PackedScene = ResourceLoader.load_threaded_get(scene_path)

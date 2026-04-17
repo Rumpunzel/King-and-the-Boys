@@ -66,6 +66,7 @@ size_flags_horizontal = 3
 [node name="Start" type="Button" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=894018621]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 24
 text = "Start"
 

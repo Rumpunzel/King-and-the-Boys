@@ -3,18 +3,12 @@ extends Node
 
 signal game_started
 signal game_stopped
-signal singleplayer_started
 
 signal game_paused
 signal game_unpaused
 
 var _game_environment: GameEnvironment
 var _pause_requested: bool = false
-
-func _enter_tree() -> void:
-	Multiplayer.stopped_hosting_game.connect(_start_singleplayer)
-	Multiplayer.left_game.connect(_start_singleplayer)
-	Multiplayer.disconnected_from_multiplayer.connect(_start_singleplayer)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -48,11 +42,6 @@ func get_player_avatar(player_id: int) -> Texture2D:
 	@warning_ignore("redundant_await")
 	var environment_avatar: Texture2D = await _game_environment.get_player_avatar(player_id)
 	return environment_avatar
-
-func _start_singleplayer() -> void:
-	var offline_peer: OfflineMultiplayerPeer = OfflineMultiplayerPeer.new()
-	multiplayer.multiplayer_peer = offline_peer
-	singleplayer_started.emit()
 
 func _pause_game() -> void:
 	get_tree().paused = true

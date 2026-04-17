@@ -17,16 +17,19 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if not multiplayer.multiplayer_peer: return
-	if multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
+	if not multiplayer.is_server() and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
 		set_process(false)
 		SceneManager.transition_to_scene(_lobby_guest_scene_path, false)
+
+func _on_cancel_pressed() -> void:
+	Multiplayer.leave_game()
 
 func _on_game_joined(_host_player_info: Dictionary[StringName, Variant]) -> void:
 	SceneManager.transition_to_scene(_lobby_guest_scene_path, false)
 
 func _on_disconnected_from_multiplayer() -> void:
 	_toaster.toast_error("Connection failed!")
-	SceneManager.to_main()
+	SceneManager.to_main(false)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
