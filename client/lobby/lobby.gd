@@ -61,11 +61,14 @@ func _spawn_player(player_info: Dictionary[StringName, Variant]) -> Player:
 func _create_local_player() -> void:
 	spawn(Player.get_local_player_info())
 
-func _remove_all_players() -> void:
+func _remove_all_players(except_local_player: bool = false) -> void:
 	for player_id: int in _players.keys():
 		var player_weakref: WeakRef = weakref(_players.get(player_id))
 		var player: Player = player_weakref.get_ref()
-		if not player: continue
+		if not player:
+			_players.erase(player_id)
+			continue
+		if except_local_player and player.is_local_player(): continue
 		_remove_player(player)
 
 func _remove_player(player: Player) -> void:
@@ -83,7 +86,7 @@ func _on_game_stopped() -> void:
 	_remove_all_players()
 
 func _on_disconnected_from_multiplayer() -> void:
-	_remove_all_players()
+	_remove_all_players(true)
 
 func _on_joining_multiplayer() -> void:
 	_remove_all_players()

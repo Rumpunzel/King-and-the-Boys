@@ -13,6 +13,7 @@ _player_name = NodePath("PlayerName")
 metadata/_custom_type_script = "uid://bwmombd8bkx7p"
 
 [node name="PlayerName" type="LineEdit" parent="." unique_id=1461261219]
+visible = false
 layout_mode = 2
 placeholder_text = "Haunt"
 alignment = 1

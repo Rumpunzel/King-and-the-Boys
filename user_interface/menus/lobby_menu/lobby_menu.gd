@@ -5,8 +5,8 @@ extends Menu
 @export_file("*.tscn") var _default_level_path: String
 
 @export_group("Configuration")
-@export var _start_button: Button
 @export var _player_infos_container: Container
+@export var _ready_button: ToggleButton
 @export var _toaster: Toaster
 @export_file("*.tscn") var _game_scene_path: String
 @export var _player_info_scene: PackedScene
@@ -28,7 +28,6 @@ func _ready() -> void:
 		_add_player(connected_player)
 	Lobby.player_connected.connect(_add_player)
 	if multiplayer.is_server(): Client.start_game()
-	_start_button.grab_focus()
 	SceneManager.preload_scene(_default_level_path)
 
 func _create_player_info() -> void:
@@ -72,7 +71,6 @@ func _get_available_character() -> CharacterProfile:
 	return load("uid://ro6wvnf88xbo")
 
 func _on_start_pressed() -> void:
-	_start_button.disabled = true
 	close_menu()
 	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
 	await fully_closed
@@ -82,14 +80,21 @@ static func _setup_game(game: Game, level_path: String) -> Error:
 	game.setup_game(level_path)
 	return Error.OK
 
+func _on_ready_toggled(_toggled_on: bool) -> void:
+	pass # Replace with function body.
+
+func _on_leave_pressed() -> void:
+	Multiplayer.leave_game()
+	SceneManager.to_main(false)
+
 func _on_disconnected_from_multiplayer() -> void:
 	_toaster.toast_error("Connection failed!")
-	SceneManager.to_main()
+	SceneManager.to_main(false)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _start_button: warnings.append("Missing start button reference.")
 	if not _player_infos_container: warnings.append("Missing player infos container reference.")
+	if not _ready_button: warnings.append("Missing ready button reference.")
 	if _game_scene_path.is_empty(): warnings.append("Missing game scene path.")
 	if not _player_info_scene: warnings.append("Missing PlayerInfo reference.")
 	return warnings

@@ -3,12 +3,14 @@
 [ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/menus/lobby_menu/lobby_menu.gd" id="1_pffa0"]
 [ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/menus/lobby_menu/player_info.tscn" id="2_sm5fm"]
 [ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="3_h7yms"]
-[ext_resource type="PackedScene" uid="uid://bvxmx3fwfllaa" path="res://user_interface/menus/multiplayer_menu/multiplayer_host_menu.tscn" id="4_3j5nk"]
+[ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="5_h7yms"]
 [ext_resource type="Script" uid="uid://b68u3p1bd6gb" path="res://user_interface/toaster.gd" id="5_sm5fm"]
+[ext_resource type="Texture2D" uid="uid://bsjjapj01slb6" path="res://tools/icons/editor_icons/hero_icons/check.svg" id="6_bdwjy"]
+[ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="8_6d7le"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ajev1"]
 
-[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_start_button", "_player_infos_container", "_toaster")]
+[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_player_infos_container", "_ready_button", "_toaster")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,8 +19,8 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ajev1")
 script = ExtResource("1_pffa0")
 _default_level_path = "uid://bmwhs3lwb74ue"
-_start_button = NodePath("MenusContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Start")
-_player_infos_container = NodePath("MenusContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/PlayerInfos")
+_player_infos_container = NodePath("MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/PlayerInfos")
+_ready_button = NodePath("MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Ready")
 _toaster = NodePath("Toaster")
 _game_scene_path = "uid://bmehrqe5x8c41"
 _player_info_scene = ExtResource("2_sm5fm")
@@ -28,53 +30,68 @@ metadata/_custom_type_script = "uid://cd0g7grdwdvy1"
 [node name="MenusContainer" parent="." unique_id=608752574 instance=ExtResource("3_h7yms")]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="MenusContainer" unique_id=1406027683]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer" unique_id=1332701707]
 layout_mode = 2
+theme_override_constants/separation = 8
 
-[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/PanelContainer" unique_id=1182618921]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer/PanelContainer/MarginContainer" unique_id=963768587]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="PanelContainer" type="PanelContainer" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=214167932]
+[node name="PanelContainer" type="PanelContainer" parent="MenusContainer/VBoxContainer" unique_id=1406027683]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer" unique_id=1305133702]
+[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer/PanelContainer" unique_id=1182618921]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="PlayerInfos" type="HBoxContainer" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=776592999]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=963768587]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=214167932]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer" unique_id=1305133702]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="PlayerInfos" type="HBoxContainer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=776592999]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=779050681]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="MultiplayerMenu" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=876205651 instance=ExtResource("4_3j5nk")]
+[node name="Ready" type="Button" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=743932031]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="Start" type="Button" parent="MenusContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=894018621]
-layout_mode = 2
-size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 24
-text = "Start"
+toggle_mode = true
+button_pressed = true
+text = "Ready"
+icon = ExtResource("8_6d7le")
+icon_alignment = 2
+expand_icon = true
+script = ExtResource("5_h7yms")
+toggled_text = "Ready"
+toggled_icon = ExtResource("6_bdwjy")
+metadata/_custom_type_script = "uid://cpyey1rgiu5s0"
+
+[node name="Leave" type="Button" parent="MenusContainer/VBoxContainer" unique_id=165183647]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
+text = "Leave"
+icon = ExtResource("8_6d7le")
+flat = true
 
 [node name="Toaster" type="Node" parent="." unique_id=600532876]
 script = ExtResource("5_sm5fm")
 _gravity = 1
 metadata/_custom_type_script = "uid://b68u3p1bd6gb"
 
-[connection signal="pressed" from="MenusContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="toggled" from="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Ready" to="." method="_on_ready_toggled"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/Leave" to="." method="_on_leave_pressed"]
