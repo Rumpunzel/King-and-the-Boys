@@ -7,7 +7,8 @@ signal player_ghost_created(player_ghost: PlayerGhost)
 
 @export_group("Configuration")
 
-var _player_ghosts: Dictionary[Player, PlayerGhost] = {}
+# {player_id: int -> PlayerGhost}
+var _player_ghosts: Dictionary[int, PlayerGhost] = {}
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
@@ -22,6 +23,7 @@ func start_synching_players() -> void:
 	for connected_player: Player in connected_players:
 		var spawning_queued: bool = spawn_player_ghost(connected_player)
 		if spawning_queued: return
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	Lobby.player_connected.connect(spawn_player_ghost)
 
 func stop_synching_players() -> void:
@@ -61,7 +63,7 @@ func _remove_all_data_nodes() -> Array[NodePath]:
 	var removed_player_ghost_paths: Array[NodePath] = []
 	for player_ghost: PlayerGhost in _player_ghosts.values():
 		removed_player_ghost_paths.append(player_ghost.get_path())
-		_remove_player_ghost(player_ghost)
+		_remove_player_ghost(player_ghost.player.player_id)
 	return removed_player_ghost_paths
 
 func _spawn_player_ghost(player_ghost_data: Dictionary[StringName, Variant]) -> PlayerGhost:
@@ -72,18 +74,21 @@ func _spawn_player_ghost(player_ghost_data: Dictionary[StringName, Variant]) -> 
 	var character_data: Dictionary[StringName, Variant] = player_ghost_data[PlayerGhost.CHARACTER_DATA]
 	character_data[Character.VARIATION] = -1
 	var player_ghost: PlayerGhost = PlayerGhost.create(player, character_data)
-	assert(not _player_ghosts.has(player))
-	_player_ghosts[player_ghost.player] = player_ghost
-	player.tree_exiting.connect(_remove_player_ghost.bind(player_ghost))
+	assert(not _player_ghosts.has(player_id))
+	_player_ghosts[player_id] = player_ghost
+	#player.tree_exiting.connect(_remove_player_ghost.bind(player_id))
 	return player_ghost
 
 func _remove_all_player_ghosts() -> void:
 	remove_all_spawned_nodes()
 
-func _remove_player_ghost(player_ghost: PlayerGhost) -> void:
+func _remove_player_ghost(player_id: int) -> void:
+	var player_ghost_weakref: WeakRef = weakref(_player_ghosts.get(player_id))
+	var player_ghost: PlayerGhost = player_ghost_weakref.get_ref()
+	_player_ghosts.erase(player_id)
+	if not player_ghost: return
 	var player: Player = player_ghost.player
-	_player_ghosts.erase(player)
-	player.tree_exiting.disconnect(_remove_player_ghost.bind(player_ghost))
+	#player.tree_exiting.disconnect(_remove_player_ghost.bind(player_id))
 	remove_child(player_ghost)
 	player_ghost.queue_free()
 
@@ -95,6 +100,10 @@ func _on_node_added(node: Node) -> void:
 func _on_child_entered_tree(node: Node) -> void:
 	if not node is PlayerGhost: return
 	player_ghost_created.emit(node)
+
+func _on_peer_disconnected(player_id: int) -> void:
+	return
+	_remove_player_ghost(player_id)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

@@ -44,9 +44,6 @@ _data = {
 
 [node name="LoadingScreen" type="CanvasLayer" unique_id=1623508165 node_paths=PackedStringArray("_progress_bar")]
 process_mode = 3
-process_thread_group = 2
-process_thread_group_order = 0
-process_thread_messages = 0
 layer = 128
 script = ExtResource("1_xnb5f")
 _progress_bar = NodePath("PanelContainer/VBoxContainer/MarginContainer/ProgressBar")

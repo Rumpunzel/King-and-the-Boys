@@ -59,7 +59,7 @@ func _on_load_requested() -> void:
 	pass # Replace with function body.
 
 func _on_disconnected_from_multiplayer() -> void:
-	stop_game()
+	SceneManager.to_main()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

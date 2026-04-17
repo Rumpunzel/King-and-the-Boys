@@ -53,9 +53,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_vo66w")
 script = ExtResource("1_hvnq8")
+_toaster = NodePath("Toaster")
 _lobby_guest_scene_path = "uid://d3blbqb654ekr"
 _fade_in_duration = 1.0
-_toaster = NodePath("Toaster")
 metadata/_custom_type_script = "uid://vr1ncpxlq1vc"
 
 [node name="MenusContainer" parent="." unique_id=608752574 instance=ExtResource("3_o1khs")]
