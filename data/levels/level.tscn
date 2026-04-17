@@ -22,7 +22,7 @@ sky_rotation = Vector3(4.2044983, 4.7787113, 0)
 [sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
 size = Vector2(64, 64)
 
-[node name="TestLevel" type="Node3D" unique_id=2100419132]
+[node name="Level" type="Node3D" unique_id=2100419132]
 process_mode = 1
 script = ExtResource("1_ywn5t")
 grid_size = 2.5

@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c46ivy3ilmclp" path="res://engine/agents/agent_spawner.tscn" id="6_o3fhh"]
 [ext_resource type="PackedScene" uid="uid://bvj0ntif5bqqq" path="res://engine/player/player_ghost_spawner.tscn" id="7_fxd01"]
 [ext_resource type="PackedScene" uid="uid://rmev082m4bw0" path="res://user_interface/user_interface.tscn" id="8_aqpue"]
-[ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://data/levels/test_level.tscn" id="9_eadau"]
+[ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://data/levels/level.tscn" id="9_eadau"]
 [ext_resource type="PackedScene" uid="uid://5sd2jgms4uso" path="res://user_interface/menus/pause_menu/pause_menu.tscn" id="13_vkpvb"]
 
 [node name="Game" type="Node" unique_id=808135939 node_paths=PackedStringArray("_serializer", "_structure_spawner", "_thing_spawner", "_agent_spawner", "_player_ghost_spawner", "_level")]
