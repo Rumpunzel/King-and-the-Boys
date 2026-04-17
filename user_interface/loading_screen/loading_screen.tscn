@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dmweuj7kxaxov"]
 
 [ext_resource type="Texture2D" uid="uid://dxsmqwnikt6sl" path="res://protoype_assets/the_boys_background_2.png" id="1_nw7rc"]
+[ext_resource type="Script" uid="uid://bal0a5xvafn1h" path="res://user_interface/loading_screen/loading_screen.gd" id="1_xnb5f"]
 [ext_resource type="StyleBox" uid="uid://c1k2tqhaccfdj" path="res://user_interface/menu_panel.tres" id="2_nw7rc"]
 [ext_resource type="FontFile" uid="uid://b0ybin3nm83i1" path="res://assets/fonts/Bokor-Regular.ttf" id="3_xnb5f"]
 
@@ -41,12 +42,15 @@ _data = {
 &"loading": SubResource("Animation_xnb5f")
 }
 
-[node name="LoadingScreen" type="CanvasLayer" unique_id=957342698]
+[node name="LoadingScreen" type="CanvasLayer" unique_id=1623508165 node_paths=PackedStringArray("_progress_bar")]
 process_mode = 3
 process_thread_group = 2
 process_thread_group_order = 0
 process_thread_messages = 0
 layer = 128
+script = ExtResource("1_xnb5f")
+_progress_bar = NodePath("PanelContainer/VBoxContainer/MarginContainer/ProgressBar")
+metadata/_custom_type_script = "uid://bal0a5xvafn1h"
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1553319817]
 anchors_preset = 15
@@ -81,17 +85,20 @@ theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 32
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/MarginContainer" unique_id=251587788]
+[node name="ProgressBar" type="ProgressBar" parent="PanelContainer/VBoxContainer/MarginContainer" unique_id=335826110]
 layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+show_percentage = false
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/MarginContainer/PanelContainer" unique_id=499075166]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/MarginContainer" unique_id=499075166]
 layout_mode = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 24
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/PanelContainer/MarginContainer" unique_id=1556800612]
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/MarginContainer" unique_id=1556800612]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("3_xnb5f")
@@ -99,6 +106,6 @@ theme_override_font_sizes/font_size = 64
 text = "Loading..."
 visible_characters_behavior = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PanelContainer/VBoxContainer/MarginContainer/PanelContainer/MarginContainer/Label" unique_id=1174186908]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PanelContainer/VBoxContainer/MarginContainer/MarginContainer/Label" unique_id=1174186908]
 libraries/ = SubResource("AnimationLibrary_s5x3u")
 autoplay = &"loading"

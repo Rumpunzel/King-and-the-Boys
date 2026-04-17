@@ -21,14 +21,17 @@ var _scene_path_to_load: String:
 var _scene_setup: Callable
 var _setup_mode: SetupMode
 
-var _loading_screen: CanvasLayer
+var _loading_screen: LoadingScreen
+var _progress_array: Array[float]
 
 func _ready() -> void:
 	set_process(false)
 
 func _process(_delta: float) -> void:
-	if not ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED: return
-	_transition_to_scene(_scene_path_to_load)
+	var loading_status: ResourceLoader.ThreadLoadStatus = ResourceLoader.load_threaded_get_status(_scene_path_to_load, _progress_array)
+	assert(_progress_array.size() == 1)
+	_loading_screen.set_loading_progress(_progress_array[0])
+	if loading_status == ResourceLoader.THREAD_LOAD_LOADED: _transition_to_scene(_scene_path_to_load)
 
 func verify_scene_path(scene_path: String) -> void:
 	var path: String = ResourceUID.ensure_path(scene_path)
@@ -77,9 +80,7 @@ func _transition_to_scene(scene_path: String) -> void:
 		if _setup_mode == SetupMode.PRE_CHANGE: var error: Error = await _scene_setup.call(scene)
 		scene_tree.change_scene_to_node(scene)
 		await scene_tree.scene_changed
-		print("here")
 		if _setup_mode == SetupMode.POST_CHANGE: var error: Error = await _scene_setup.call(scene)
-		print("there")
 		_scene_setup = Callable()
 		if not _loading_screen: return
 		remove_child(_loading_screen)
