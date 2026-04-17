@@ -43,6 +43,7 @@ func preload_scene(scene_path: String) -> void:
 	_scene_path_to_load = scene_path
 
 ## Loads the scene and transitions to it when it's ready
+@rpc("call_local", "reliable")
 func transition_to_scene(scene_path: String) -> void:
 	preload_scene(scene_path)
 	if ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED:
@@ -54,6 +55,7 @@ func transition_to_scene(scene_path: String) -> void:
 	add_child(_loading_screen)
 	set_process(true)
 
+@rpc("call_local", "reliable")
 func transition_to_scene_with_setup(scene_path: String, scene_setup: Callable, setup_mode: SetupMode) -> void:
 	_scene_setup = scene_setup
 	_setup_mode = setup_mode

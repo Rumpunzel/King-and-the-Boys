@@ -13,6 +13,7 @@ extends Node
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
+	Multiplayer.disconnected_from_multiplayer.connect(_on_disconnected_from_multiplayer)
 	Multiplayer.left_game.connect(_on_left_game)
 
 func _ready() -> void:
@@ -57,6 +58,9 @@ func _on_save_requested() -> void:
 
 func _on_load_requested() -> void:
 	pass # Replace with function body.
+
+func _on_disconnected_from_multiplayer() -> void:
+	stop_game()
 
 func _on_left_game() -> void:
 	stop_game()

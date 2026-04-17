@@ -70,7 +70,7 @@ func _on_start_pressed() -> void:
 	close_menu()
 	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
 	await fully_closed
-	SceneManager.transition_to_scene_with_setup(_game_scene_path, _setup_game.bind(_default_level_path), SceneManager.SetupMode.POST_CHANGE)
+	SceneManager.transition_to_scene_with_setup.rpc(_game_scene_path, _setup_game.bind(_default_level_path), SceneManager.SetupMode.POST_CHANGE)
 
 static func _setup_game(game: Game, level_path: String) -> Error:
 	game.setup_game(level_path)
