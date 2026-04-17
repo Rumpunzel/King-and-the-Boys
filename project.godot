@@ -12,7 +12,7 @@ config_version=5
 
 config/name="King and the Boys"
 config/version="Development"
-run/main_scene="uid://bvt1s3i2xw5s6"
+run/main_scene="uid://cd2h44n70ffkn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://2qnwvokder1c"
 

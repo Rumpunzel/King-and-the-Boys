@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cn86xgbt14ex6"]
+
+[node name="MenusContainer" type="MarginContainer" unique_id=608752574]
+mouse_filter = 2
+theme_override_constants/margin_left = 160
+theme_override_constants/margin_top = 160
+theme_override_constants/margin_right = 160
+theme_override_constants/margin_bottom = 160

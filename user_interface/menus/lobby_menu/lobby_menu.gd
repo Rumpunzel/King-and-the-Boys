@@ -2,11 +2,12 @@
 class_name LobbyMenu
 extends Menu
 
-signal game_start_requested
+@export_file("*.tscn") var _default_level_path: String
 
 @export_group("Configuration")
 @export var _start_button: Button
-@export var _player_infos_container: Control
+@export var _player_infos_container: Container
+@export_file("*.tscn") var _game_scene_path: String
 @export var _player_info_scene: PackedScene
 
 var _player_infos: Dictionary[Player, PlayerInfo] = {}
@@ -20,6 +21,9 @@ func _ready() -> void:
 		var connected_player: Player = connected_players[index]
 		_add_player(connected_player)
 	Lobby.player_connected.connect(_add_player)
+	Client.start_game()
+	_start_button.grab_focus()
+	SceneManager.preload_scene(_default_level_path)
 
 func _create_player_info() -> void:
 	var new_player_info: PlayerInfo = _player_info_scene.instantiate()
@@ -62,17 +66,20 @@ func _get_available_character() -> CharacterProfile:
 	return load("uid://ro6wvnf88xbo")
 
 func _on_start_pressed() -> void:
+	_start_button.disabled = true
 	close_menu()
-	game_start_requested.emit()
 	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
+	await fully_closed
+	SceneManager.transition_to_scene_with_setup(_game_scene_path, _setup_game.bind(_default_level_path), SceneManager.SetupMode.POST_CHANGE)
 
-func _on_game_status_changed(new_game_status: Game.GameStatus) -> void:
-	if new_game_status == Game.GameStatus.IN_LOBBY: open_menu()
-	_start_button.disabled = not new_game_status == Game.GameStatus.READY
-	if not _start_button.disabled: _start_button.grab_focus()
+static func _setup_game(game: Game, level_path: String) -> Error:
+	game.setup_game(level_path)
+	return Error.OK
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _player_infos_container: warnings.append("Missing player infos container.")
+	if not _start_button: warnings.append("Missing start button reference.")
+	if not _player_infos_container: warnings.append("Missing player infos container reference.")
+	if _game_scene_path.is_empty(): warnings.append("Missing game scene path.")
 	if not _player_info_scene: warnings.append("Missing PlayerInfo reference.")
 	return warnings

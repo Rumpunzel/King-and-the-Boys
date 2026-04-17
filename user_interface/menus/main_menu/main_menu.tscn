@@ -1,57 +1,70 @@
 [gd_scene format=3 uid="uid://cd2h44n70ffkn"]
 
-[ext_resource type="Script" uid="uid://b5mml6dqjiilo" path="res://user_interface/menus/main_menu/main_menu.gd" id="1_ma220"]
+[ext_resource type="Script" uid="uid://b5mml6dqjiilo" path="res://user_interface/menus/main_menu/main_menu.gd" id="1_ld4hu"]
+[ext_resource type="StyleBox" uid="uid://c1k2tqhaccfdj" path="res://user_interface/menu_panel.tres" id="1_u1ycj"]
+[ext_resource type="PackedScene" uid="uid://csmae7j3a5gs4" path="res://user_interface/menus/pause_menu/game_info.tscn" id="3_afqf0"]
+[ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="4_anww7"]
 [ext_resource type="PackedScene" uid="uid://dqd2rl70hprht" path="res://user_interface/logo.tscn" id="5_ru3py"]
 
-[node name="MainMenu" type="MarginContainer" unique_id=1421026630]
-offset_left = 160.0
-offset_top = 160.0
-offset_right = 1760.0
-offset_bottom = 920.0
-script = ExtResource("1_ma220")
-_fade_in_duration = 2.5
+[node name="MainMenu" type="PanelContainer" unique_id=251304731]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("1_u1ycj")
+script = ExtResource("1_ld4hu")
+_background_scene_path = "uid://dl1biiyjo6o63"
+_lobby_scene_path = "uid://becdxlww4k13g"
+_start = 1
 metadata/_custom_type_script = "uid://b5mml6dqjiilo"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=482512514]
+[node name="GameInfo" parent="." unique_id=283505685 instance=ExtResource("3_afqf0")]
+layout_mode = 2
+
+[node name="MenusContainer" parent="." unique_id=608752574 instance=ExtResource("4_anww7")]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer" unique_id=482512514]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 76
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1703754432]
+[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer" unique_id=1703754432]
 layout_mode = 2
 theme_override_constants/margin_left = -64
 theme_override_constants/margin_right = -64
 
-[node name="Logo" parent="VBoxContainer/MarginContainer" unique_id=113253532 instance=ExtResource("5_ru3py")]
+[node name="Logo" parent="MenusContainer/VBoxContainer/MarginContainer" unique_id=113253532 instance=ExtResource("5_ru3py")]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=854128942]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer/VBoxContainer" unique_id=854128942]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Start" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=601068532]
+[node name="Start" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=601068532]
 layout_mode = 2
 size_flags_vertical = 2
 text = "Start
 "
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=1819911048]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=1819911048]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Save" type="Button" parent="VBoxContainer/VBoxContainer/VBoxContainer" unique_id=1599034018]
+[node name="Save" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer/VBoxContainer" unique_id=1599034018]
 layout_mode = 2
 size_flags_vertical = 6
 text = "Save
 "
 
-[node name="Load" type="Button" parent="VBoxContainer/VBoxContainer/VBoxContainer" unique_id=286748430]
+[node name="Load" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer/VBoxContainer" unique_id=286748430]
 layout_mode = 2
 size_flags_vertical = 6
 text = "Load"
 
-[node name="Quit" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=968828243]
+[node name="Quit" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=968828243]
 layout_mode = 2
 size_flags_vertical = 10
 text = "Quit"
@@ -60,8 +73,8 @@ text = "Quit"
 auto_translate_mode = 1
 oversampling_override = 1.0
 
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
-[connection signal="ready" from="VBoxContainer/VBoxContainer/Start" to="VBoxContainer/VBoxContainer/Start" method="grab_focus"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/VBoxContainer/Load" to="." method="_on_load_pressed"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="ready" from="MenusContainer/VBoxContainer/VBoxContainer/Start" to="MenusContainer/VBoxContainer/VBoxContainer/Start" method="grab_focus"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/VBoxContainer/VBoxContainer/Load" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/VBoxContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
 [connection signal="confirmed" from="QuitConfirmationDialog" to="." method="_on_quit_confirmation_dialog_confirmed"]

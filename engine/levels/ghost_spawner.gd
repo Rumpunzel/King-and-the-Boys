@@ -90,7 +90,7 @@ func _remove_player_ghost(player_ghost: PlayerGhost) -> void:
 func _on_node_added(node: Node) -> void:
 	if not node.is_in_group("PlayerSpawnPoints"): return
 	get_tree().node_added.disconnect(_on_node_added)
-	start_synching_players()
+	#start_synching_players()
 
 func _on_child_entered_tree(node: Node) -> void:
 	if not node is PlayerGhost: return

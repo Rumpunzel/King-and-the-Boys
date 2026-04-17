@@ -1,68 +1,75 @@
 [gd_scene format=3 uid="uid://5sd2jgms4uso"]
 
+[ext_resource type="StyleBox" uid="uid://c1k2tqhaccfdj" path="res://user_interface/menu_panel.tres" id="1_8didn"]
 [ext_resource type="Script" uid="uid://yu3m6ywkwlvf" path="res://user_interface/menus/pause_menu/pause_menu.gd" id="1_h4gok"]
 [ext_resource type="PackedScene" uid="uid://dqd2rl70hprht" path="res://user_interface/logo.tscn" id="2_yb88d"]
+[ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="3_1j53j"]
+[ext_resource type="PackedScene" uid="uid://csmae7j3a5gs4" path="res://user_interface/menus/pause_menu/game_info.tscn" id="3_2pd4v"]
 
-[node name="PauseMenu" type="MarginContainer" unique_id=1418579236 node_paths=PackedStringArray("_save_button", "_load_button")]
+[node name="PauseMenu" type="PanelContainer" unique_id=1241718021 node_paths=PackedStringArray("_save_button", "_load_button")]
 process_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 160.0
-offset_top = 160.0
-offset_right = -160.0
-offset_bottom = -160.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = ExtResource("1_8didn")
 script = ExtResource("1_h4gok")
-_save_button = NodePath("VBoxContainer/VBoxContainer/SavingLoading/Save")
-_load_button = NodePath("VBoxContainer/VBoxContainer/SavingLoading/Load")
+_save_button = NodePath("MenusContainer/VBoxContainer/VBoxContainer/SavingLoading/Save")
+_load_button = NodePath("MenusContainer/VBoxContainer/VBoxContainer/SavingLoading/Load")
 _start = -1
 metadata/_custom_type_script = "uid://yu3m6ywkwlvf"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1855921521]
+[node name="GameInfo" parent="." unique_id=283505685 instance=ExtResource("3_2pd4v")]
+layout_mode = 2
+
+[node name="MenusContainer" parent="." unique_id=608752574 instance=ExtResource("3_1j53j")]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer" unique_id=1855921521]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 76
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=59547197]
+[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer" unique_id=59547197]
 layout_mode = 2
 theme_override_constants/margin_left = -64
 theme_override_constants/margin_right = -64
 
-[node name="Logo" parent="VBoxContainer/MarginContainer" unique_id=113253532 instance=ExtResource("2_yb88d")]
+[node name="Logo" parent="MenusContainer/VBoxContainer/MarginContainer" unique_id=113253532 instance=ExtResource("2_yb88d")]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=423231879]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer/VBoxContainer" unique_id=423231879]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Continue" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=485081184]
+[node name="Continue" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=485081184]
 layout_mode = 2
 size_flags_vertical = 2
 text = "Continue"
 
-[node name="SavingLoading" type="VBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=89214162]
+[node name="SavingLoading" type="VBoxContainer" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=89214162]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Save" type="Button" parent="VBoxContainer/VBoxContainer/SavingLoading" unique_id=1312993213]
+[node name="Save" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer/SavingLoading" unique_id=1312993213]
 layout_mode = 2
 size_flags_vertical = 6
 text = "Save
 "
 
-[node name="Load" type="Button" parent="VBoxContainer/VBoxContainer/SavingLoading" unique_id=1032184306]
+[node name="Load" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer/SavingLoading" unique_id=1032184306]
 layout_mode = 2
 size_flags_vertical = 6
 text = "Load"
 
-[node name="MainMenu" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=1884078988]
+[node name="MainMenu" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=1884078988]
 layout_mode = 2
 size_flags_vertical = 10
 text = "Main Menu"
 
-[node name="Quit" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=723955972]
+[node name="Quit" type="Button" parent="MenusContainer/VBoxContainer/VBoxContainer" unique_id=723955972]
 layout_mode = 2
 size_flags_vertical = 10
 text = "Quit"
@@ -70,11 +77,9 @@ text = "Quit"
 [node name="QuitConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1777982716]
 auto_translate_mode = 1
 
-[connection signal="closed" from="." to="." method="_on_closed"]
-[connection signal="opened" from="." to="." method="_on_opened"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/SavingLoading/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/SavingLoading/Load" to="." method="_on_load_pressed"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/VBoxContainer/SavingLoading/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/VBoxContainer/SavingLoading/Load" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/VBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/VBoxContainer/Quit" to="QuitConfirmationDialog" method="popup_centered"]
 [connection signal="confirmed" from="QuitConfirmationDialog" to="." method="_on_quit_confirmation_dialog_confirmed"]

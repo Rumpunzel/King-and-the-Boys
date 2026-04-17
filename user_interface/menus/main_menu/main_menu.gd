@@ -3,14 +3,21 @@
 class_name MainMenu
 extends Menu
 
-signal game_requested
+@export_file("*.tscn") var _background_scene_path: String
 
 @export_group("Configuration")
+@export_file("*.tscn") var _lobby_scene_path: String
+
+func _ready() -> void:
+	Client.stop_game()
+	SceneManager.preload_scene(_lobby_scene_path)
+	if not _background_scene_path.is_empty(): Panorama.set_background(_background_scene_path)
 
 func start_new_game() -> void:
 	assert(multiplayer.is_server())
 	close_menu()
-	game_requested.emit()
+	await fully_closed
+	SceneManager.transition_to_scene(_lobby_scene_path)
 	print_debug("Starting new game...")
 
 func load_game() -> Error:
@@ -28,9 +35,7 @@ func _on_load_pressed() -> void:
 func _on_quit_confirmation_dialog_confirmed() -> void:
 	Client.quit_game()
 
-func _on_game_status_changed(new_game_status: Game.GameStatus) -> void:
-	if new_game_status == Game.GameStatus.NONE: open_menu()
-
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if _lobby_scene_path.is_empty(): warnings.append("Missing lobby scene path.")
 	return warnings

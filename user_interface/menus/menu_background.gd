@@ -1,5 +1,5 @@
 @tool
-class_name Menus
+class_name MenuBackground
 extends Menu
 
 @export_group("Configuration")

@@ -6,8 +6,6 @@ extends Menu
 signal save_requested
 signal load_requested
 
-signal main_menu_requested
-
 @export_group("Configuration")
 @export var _save_button: Button
 @export var _load_button: Button
@@ -50,8 +48,7 @@ func _on_load_pressed() -> void:
 
 func _on_main_menu_pressed() -> void:
 	save_requested.emit()
-	main_menu_requested.emit()
-	close_menu()
+	SceneManager.to_main()
 
 func _on_quit_confirmation_dialog_confirmed() -> void:
 	save_requested.emit()
@@ -75,9 +72,6 @@ func _on_disconnected_from_multiplayer() -> void:
 # [Serializer] callbacks
 func _on_saving_finished() -> void:
 	_load_button.disabled = not Serializer.has_save_file(Serializer.SAVE_FILE_PATH)
-
-func _on_game_status_changed(new_game_status: Game.GameStatus) -> void:
-	set_process_unhandled_input(new_game_status == Game.GameStatus.RUNNING)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
