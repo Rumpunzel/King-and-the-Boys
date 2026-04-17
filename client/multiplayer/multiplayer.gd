@@ -38,7 +38,7 @@ func host_game(ip_address: StringName = DEFAULT_SERVER_IP, port: int = PORT) -> 
 	game_hosted.emit(ip_address, port)
 	connected_to_multiplayer.emit()
 	print_debug("Started hosting multiplayer game @ %s:%d!" % [ip_address, port])
-	add_child(Node.new())
+	add_child(Node.new()) # For debugging to make it clear who is host
 	return Error.OK
 
 func join_game(ip_address: StringName, port: int = PORT) -> Error:

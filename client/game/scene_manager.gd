@@ -1,5 +1,10 @@
 extends Node
 
+enum Execution {
+	LOCAL,
+	REMOTE,
+}
+
 enum SetupMode {
 	PRE_CHANGE,
 	POST_CHANGE,
@@ -19,6 +24,7 @@ var _scene_path_to_load: String:
 		ResourceLoader.load_threaded_request(_scene_path_to_load)
 
 var _scene_setup: Callable
+var _exection: Execution
 var _setup_mode: SetupMode
 
 var _loading_screen: LoadingScreen
@@ -43,8 +49,8 @@ func preload_scene(scene_path: String) -> void:
 	_scene_path_to_load = scene_path
 
 ## Loads the scene and transitions to it when it's ready
-@rpc("call_local", "reliable")
 func transition_to_scene(scene_path: String, show_loading_screen: bool = true) -> void:
+	_exection = Execution.LOCAL
 	preload_scene(scene_path)
 	if ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED:
 		set_process(false)
@@ -56,16 +62,34 @@ func transition_to_scene(scene_path: String, show_loading_screen: bool = true) -
 		add_child(_loading_screen)
 	set_process(true)
 
-@rpc("call_local", "reliable")
 func transition_to_scene_with_setup(scene_path: String, scene_setup: Callable, setup_mode: SetupMode) -> void:
 	_scene_setup = scene_setup
+	_exection = Execution.LOCAL
 	_setup_mode = setup_mode
 	transition_to_scene(scene_path)
 
 func to_main(show_loading_screen: bool = true) -> void:
+	_exection = Execution.LOCAL
 	var main_scene_path: String = ProjectSettings.get_setting("application/run/main_scene")
 	assert(not get_tree().current_scene or get_tree().current_scene.scene_file_path != main_scene_path)
 	transition_to_scene(main_scene_path, show_loading_screen)
+
+@rpc("call_remote", "reliable")
+func transition_to_scene_remotely(scene_path: String) -> void:
+	_exection = Execution.REMOTE
+	preload_scene(scene_path)
+	var scene_loaded: bool = ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED
+	set_process(not scene_loaded)
+	if scene_loaded: _transition_to_scene(scene_path)
+	assert(_loading_screen_scene)
+	_loading_screen = _loading_screen_scene.instantiate()
+	add_child(_loading_screen)
+
+@rpc("call_remote", "reliable")
+func remove_loading_screen() -> void:
+	assert(_loading_screen)
+	remove_child(_loading_screen)
+	_loading_screen.queue_free()
 
 func _transition_to_scene(scene_path: String) -> void:
 	var packed_scene: PackedScene = ResourceLoader.load_threaded_get(scene_path)
@@ -74,17 +98,18 @@ func _transition_to_scene(scene_path: String) -> void:
 	var scene_tree: SceneTree = get_tree()
 	if _scene_setup.is_null():
 		scene_tree.change_scene_to_packed(packed_scene)
+		if _exection == Execution.REMOTE:
+			assert(_loading_screen)
+			return
 		if not _loading_screen: return
 		await scene_tree.scene_changed
-		remove_child(_loading_screen)
-		_loading_screen.queue_free()
-	else:
-		var scene: Node = packed_scene.instantiate()
-		if _setup_mode == SetupMode.PRE_CHANGE: var error: Error = await _scene_setup.call(scene)
-		scene_tree.change_scene_to_node(scene)
-		await scene_tree.scene_changed
-		if _setup_mode == SetupMode.POST_CHANGE: var error: Error = await _scene_setup.call(scene)
-		_scene_setup = Callable()
-		if not _loading_screen: return
-		remove_child(_loading_screen)
-		_loading_screen.queue_free()
+		remove_loading_screen()
+		return
+	assert(_exection == Execution.LOCAL)
+	var scene: Node = packed_scene.instantiate()
+	if _setup_mode == SetupMode.PRE_CHANGE: var error: Error = await _scene_setup.call(scene)
+	scene_tree.change_scene_to_node(scene)
+	await scene_tree.scene_changed
+	if _setup_mode == SetupMode.POST_CHANGE: var error: Error = await _scene_setup.call(scene)
+	_scene_setup = Callable()
+	if _loading_screen: remove_loading_screen()

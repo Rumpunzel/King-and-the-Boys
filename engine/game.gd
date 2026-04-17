@@ -43,7 +43,6 @@ func load_game() -> Error:
 	return error
 
 func stop_game() -> void:
-	assert(multiplayer.is_server())
 	print_debug("Stopping running game...")
 	_player_ghost_spawner.stop_synching_players()
 	_agent_spawner.remove_all_agents()
@@ -59,7 +58,7 @@ func _on_load_requested() -> void:
 	pass # Replace with function body.
 
 func _on_disconnected_from_multiplayer() -> void:
-	SceneManager.to_main()
+	stop_game()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

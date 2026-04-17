@@ -50,11 +50,12 @@ func _spawn_level(level_scene_path: String) -> Level:
 	var spawned_level: Level = level_scene.instantiate()
 	assert(spawned_level)
 	assert(spawned_level is Level)
+	assert(not _level)
+	_level = spawned_level
 	return spawned_level
 
 func _on_child_entered_tree(node: Node) -> void:
 	if not node is Level: return
-	_level = node
 	assert(_level)
 	_level.tile_placement_requested.connect(_structure_spawner.spawn_at)
 

@@ -90,7 +90,6 @@ flat = true
 
 [node name="Toaster" type="Node" parent="." unique_id=600532876]
 script = ExtResource("5_sm5fm")
-_gravity = 1
 metadata/_custom_type_script = "uid://b68u3p1bd6gb"
 
 [connection signal="toggled" from="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Ready" to="." method="_on_ready_toggled"]

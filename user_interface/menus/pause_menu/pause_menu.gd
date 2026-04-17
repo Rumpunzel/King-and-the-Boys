@@ -47,8 +47,10 @@ func _on_load_pressed() -> void:
 	load_requested.emit()
 
 func _on_main_menu_pressed() -> void:
-	save_requested.emit()
-	SceneManager.to_main()
+	if Multiplayer.is_online(): Multiplayer.leave_game()
+	else:
+		save_requested.emit()
+		SceneManager.to_main()
 
 func _on_quit_confirmation_dialog_confirmed() -> void:
 	save_requested.emit()

@@ -74,17 +74,19 @@ func _on_start_pressed() -> void:
 	close_menu()
 	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
 	await fully_closed
-	SceneManager.transition_to_scene_with_setup.rpc(_game_scene_path, _setup_game.bind(_default_level_path), SceneManager.SetupMode.POST_CHANGE)
+	SceneManager.transition_to_scene_with_setup(_game_scene_path, _setup_game.bind(_default_level_path), SceneManager.SetupMode.POST_CHANGE)
+	SceneManager.transition_to_scene_remotely.rpc(_game_scene_path)
 
 static func _setup_game(game: Game, level_path: String) -> Error:
 	game.setup_game(level_path)
+	SceneManager.remove_loading_screen.rpc()
 	return Error.OK
 
 func _on_ready_toggled(_toggled_on: bool) -> void:
 	pass # Replace with function body.
 
 func _on_leave_pressed() -> void:
-	Multiplayer.leave_game()
+	if Multiplayer.is_online(): Multiplayer.leave_game()
 	SceneManager.to_main(false)
 
 func _on_disconnected_from_multiplayer() -> void:
