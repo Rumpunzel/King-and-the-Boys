@@ -2,8 +2,6 @@
 class_name LobbyMenu
 extends Menu
 
-@export_file("*.tscn") var _default_level_path: String
-
 @export_group("Configuration")
 @export var _player_infos_container: Container
 @export var _ready_button: ToggleButton
@@ -28,7 +26,6 @@ func _ready() -> void:
 		_add_player(connected_player)
 	Lobby.player_connected.connect(_add_player)
 	if multiplayer.is_server(): Client.start_game()
-	SceneManager.preload_scene(_default_level_path)
 
 func _create_player_info() -> void:
 	var new_player_info: PlayerInfo = _player_info_scene.instantiate()
@@ -74,11 +71,11 @@ func _on_start_pressed() -> void:
 	close_menu()
 	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
 	await fully_closed
-	SceneManager.transition_to_scene_with_setup(_game_scene_path, _setup_game.bind(_default_level_path), SceneManager.SetupMode.POST_CHANGE)
+	SceneManager.transition_to_scene_with_setup(_game_scene_path, _setup_level, SceneManager.SetupMode.POST_CHANGE)
 	SceneManager.transition_to_scene_remotely.rpc(_game_scene_path)
 
-static func _setup_game(game: Game, level_path: String) -> Error:
-	game.setup_game(level_path)
+static func _setup_level(game: Game) -> Error:
+	game.setup_game()
 	SceneManager.remove_loading_screen.rpc()
 	return Error.OK
 

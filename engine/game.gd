@@ -5,11 +5,11 @@ extends Node
 
 @export_group("Configuration")
 @export var _serializer: Serializer
-@export var _level_spawner: LevelSpawner
 @export var _structure_spawner: StructureSpawner
 @export var _thing_spawner: ThingSpawner
 @export var _agent_spawner: AgentSpawner
 @export var _player_ghost_spawner: PlayerGhostSpawner
+@export var _level: Level
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
@@ -19,10 +19,9 @@ func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	Panorama.clear_background()
 
-func setup_game(level_path: String) -> void:
-	ResourceLoader.load_threaded_request(level_path)
+func setup_game() -> void:
 	if not multiplayer.is_server(): return
-	_level_spawner.load_level(level_path)
+	_level.build_level()
 	#_agent_spawner.spawn_all_from_spawn_spoints()
 	#_structure_spawner.spawn_all_from_spawn_spoints()
 	#_thing_spawner.spawn_all_from_spawn_spoints()
@@ -48,7 +47,6 @@ func stop_game() -> void:
 	_agent_spawner.remove_all_agents()
 	_thing_spawner.remove_all_things()
 	_structure_spawner.remove_all_structures()
-	_level_spawner.unload_level()
 	SceneManager.to_main()
 
 func _on_save_requested() -> void:
@@ -63,9 +61,9 @@ func _on_disconnected_from_multiplayer() -> void:
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not _serializer: warnings.append("Missing Serializer reference.")
-	if not _level_spawner: warnings.append("Missing LevelSpawner reference.")
 	if not _structure_spawner: warnings.append("Missing StructureSpawner reference.")
 	if not _thing_spawner: warnings.append("Missing ThingSpawner reference.")
 	if not _agent_spawner: warnings.append("Missing AgentSpawner reference.")
 	if not _player_ghost_spawner: warnings.append("Missing PlayerGhostSpawner reference.")
+	if not _level: warnings.append("Missing Level reference.")
 	return warnings

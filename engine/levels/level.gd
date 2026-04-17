@@ -3,8 +3,6 @@
 class_name Level
 extends Node3D
 
-signal tile_placement_requested(tile_profile: StructureProfile, tile_transform: Transform3D, clockwise_turns: int, tile_status: Structure.Status)
-
 enum Direction {
 	UP,
 	RIGHT,
@@ -17,12 +15,14 @@ const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2
 @export var grid_size: float = 2.0
 @export var grid_extents: Vector2i = Vector2i(13, 13)
 
+@export var _starting_tile: StructureProfile
+@export var _tile_set: DungeonTileSet
+
 @export var _reveals_per_second: float = 16.0
 @export var _discovers_per_second: float = 2.0
 
 @export_group("Configuration")
-@export var _starting_tile: StructureProfile
-@export var _tile_set: DungeonTileSet
+@export var _structure_spawner: StructureSpawner
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
 # {Structure -> Array[Structure]}
@@ -84,17 +84,18 @@ static func get_direction(first_grid_position: Vector2i, second_grid_position: V
 	assert(false)
 	return Direction.UP
 
-func build_level() -> void:
-	assert(is_multiplayer_authority())
-	_build_outer_wall()
-	var starting_grid_position: Vector2i = _place_starting_tile()
-	_build_dungeon_from(starting_grid_position)
-
 func world_to_grid_position(world_position: Vector3) -> Vector2i:
 	return Vector2i(roundi(world_position.x / grid_size), roundi(world_position.z / grid_size))
 
 func grid_to_world_position(grid_position: Vector2i) -> Vector3:
 	return Vector3(grid_position.x, 0.0, grid_position.y) * grid_size
+
+func build_level() -> void:
+	assert(multiplayer.is_server())
+	assert(is_multiplayer_authority())
+	_build_outer_wall()
+	var starting_grid_position: Vector2i = _place_starting_tile()
+	_build_dungeon_from(starting_grid_position)
 
 func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
 	assert(absi(grid_position.x) < grid_extents.x)
@@ -180,7 +181,7 @@ func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vect
 	assert(absi(grid_position.y) <= grid_extents.y)
 	var tile_position: Vector3 = grid_to_world_position(grid_position)
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position)
-	tile_placement_requested.emit(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status)
+	_structure_spawner.spawn_at(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status)
 
 func _update_player_vision(
 	from_grid_position: Vector2i,
@@ -296,6 +297,9 @@ func _on_thing_created(thing: Thing) -> void:
 	var thing_grid_position: Vector2i = world_to_grid_position(thing.global_position)
 	_placed_things[thing_grid_position] = thing
 
+func _on_agent_created(agent: Agent) -> void:
+	pass # Replace with function body.
+
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	var character: Character = player_ghost.character
 	character.level = self
@@ -313,4 +317,5 @@ func _on_player_moved(character_grid_position: Vector2i, character: Character) -
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if not _structure_spawner: warnings.append("Missing StructureSpawner reference.")
 	return warnings

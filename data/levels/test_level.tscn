@@ -4,12 +4,8 @@
 [ext_resource type="Resource" uid="uid://sed2rxcgl038" path="res://data/structures/tiles/room/starting_tile.tres" id="2_c445m"]
 [ext_resource type="Resource" uid="uid://b50fre8sdxsyo" path="res://data/structures/tiles/default_tile_set.tres" id="3_c445m"]
 [ext_resource type="Script" uid="uid://da4c4gcyqk2rb" path="res://engine/objects/characters/player_spawn_point.gd" id="5_0p5hx"]
-[ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="14_epvo2"]
-[ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="14_jhxx2"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 [ext_resource type="Texture2D" uid="uid://bwn2kfo8trdse" path="res://protoype_assets/sky_boxes/material_0_baseColor.png" id="19_mkmcm"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jwwwr"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_3cql5"]
 panorama = ExtResource("19_mkmcm")
@@ -33,16 +29,6 @@ grid_size = 2.5
 _starting_tile = ExtResource("2_c445m")
 _tile_set = ExtResource("3_c445m")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
-
-[node name="LevelSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1927909387]
-replication_config = SubResource("SceneReplicationConfig_jwwwr")
-script = ExtResource("14_epvo2")
-metadata/_custom_type_script = "uid://crm43jylxmjbd"
-
-[node name="SynchronizerSerializer" type="Node" parent="LevelSynchronizer" unique_id=1163498343 node_paths=PackedStringArray("_synchronizer")]
-script = ExtResource("14_jhxx2")
-_synchronizer = NodePath("..")
-metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1391764827]
 environment = SubResource("Environment_jwwwr")
