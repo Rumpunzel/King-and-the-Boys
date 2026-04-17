@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://daq0in6baqmr"
-path="res://.godot/imported/icon_notebook.svg-e6def024085b74c851a47401ced6745d.ctex"
+path="res://.godot/imported/icon_notebook.svg-a56072be940da6fe8918db550010ad9e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/icon_notebook.svg"
-dest_files=["res://.godot/imported/icon_notebook.svg-e6def024085b74c851a47401ced6745d.ctex"]
+source_file="res://tools/icons/editor_icons/icon_notebook.svg"
+dest_files=["res://.godot/imported/icon_notebook.svg-a56072be940da6fe8918db550010ad9e.ctex"]
 
 [params]
 

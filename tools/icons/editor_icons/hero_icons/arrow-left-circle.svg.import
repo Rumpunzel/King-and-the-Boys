@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://3qlfy5xvks3t"
-path="res://.godot/imported/arrow-left-circle.svg-b3832c1b987e6b9cc1a88f5c3e24806f.ctex"
+path="res://.godot/imported/arrow-left-circle.svg-eac1c7cecdea69ad9e21139acce37cd6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/arrow-left-circle.svg"
-dest_files=["res://.godot/imported/arrow-left-circle.svg-b3832c1b987e6b9cc1a88f5c3e24806f.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/arrow-left-circle.svg"
+dest_files=["res://.godot/imported/arrow-left-circle.svg-eac1c7cecdea69ad9e21139acce37cd6.ctex"]
 
 [params]
 

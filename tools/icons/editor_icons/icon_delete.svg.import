@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://14ufy5sh5hei"
-path="res://.godot/imported/icon_delete.svg-3ac845c0c113abee982d659324d51b27.ctex"
+path="res://.godot/imported/icon_delete.svg-0100962dbd084c688196e359c9519157.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/icon_delete.svg"
-dest_files=["res://.godot/imported/icon_delete.svg-3ac845c0c113abee982d659324d51b27.ctex"]
+source_file="res://tools/icons/editor_icons/icon_delete.svg"
+dest_files=["res://.godot/imported/icon_delete.svg-0100962dbd084c688196e359c9519157.ctex"]
 
 [params]
 

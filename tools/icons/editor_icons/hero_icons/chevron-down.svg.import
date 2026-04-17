@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vsrb4darihes"
-path="res://.godot/imported/chevron-down.svg-40d1d1beddec6747432c9533c271c4ae.ctex"
+path="res://.godot/imported/chevron-down.svg-e59d01762b54f92b8cd5dd170864c721.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/chevron-down.svg"
-dest_files=["res://.godot/imported/chevron-down.svg-40d1d1beddec6747432c9533c271c4ae.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/chevron-down.svg"
+dest_files=["res://.godot/imported/chevron-down.svg-e59d01762b54f92b8cd5dd170864c721.ctex"]
 
 [params]
 

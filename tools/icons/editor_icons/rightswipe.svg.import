@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dmhvrx416awa"
-path="res://.godot/imported/rightswipe.svg-f2687456f453405de377f6594e81960e.ctex"
+path="res://.godot/imported/rightswipe.svg-262da05e494c5a315ddc7f8370fa96cb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/rightswipe.svg"
-dest_files=["res://.godot/imported/rightswipe.svg-f2687456f453405de377f6594e81960e.ctex"]
+source_file="res://tools/icons/editor_icons/rightswipe.svg"
+dest_files=["res://.godot/imported/rightswipe.svg-262da05e494c5a315ddc7f8370fa96cb.ctex"]
 
 [params]
 

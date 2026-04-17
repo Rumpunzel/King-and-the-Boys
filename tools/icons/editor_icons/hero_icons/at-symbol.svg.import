@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://i7hikq6ymhv5"
-path="res://.godot/imported/at-symbol.svg-1b320c7bb20cb96371ebfce816d8cc22.ctex"
+path="res://.godot/imported/at-symbol.svg-a5e34ebf351005ab224e431cefce4b27.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/at-symbol.svg"
-dest_files=["res://.godot/imported/at-symbol.svg-1b320c7bb20cb96371ebfce816d8cc22.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/at-symbol.svg"
+dest_files=["res://.godot/imported/at-symbol.svg-a5e34ebf351005ab224e431cefce4b27.ctex"]
 
 [params]
 

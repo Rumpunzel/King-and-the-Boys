@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://m6hdx78wbx7r"
-path="res://.godot/imported/arrows-pointing-in.svg-e27f6394bcf7e4158337b8265e0ec6f3.ctex"
+path="res://.godot/imported/arrows-pointing-in.svg-3e9ff4e99876c2c99b168d6a28192a1e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/arrows-pointing-in.svg"
-dest_files=["res://.godot/imported/arrows-pointing-in.svg-e27f6394bcf7e4158337b8265e0ec6f3.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/arrows-pointing-in.svg"
+dest_files=["res://.godot/imported/arrows-pointing-in.svg-3e9ff4e99876c2c99b168d6a28192a1e.ctex"]
 
 [params]
 

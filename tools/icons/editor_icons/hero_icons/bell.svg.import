@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdwhehvwoitnu"
-path="res://.godot/imported/bell.svg-ad6954abc06e31a396ffd86db599cca0.ctex"
+path="res://.godot/imported/bell.svg-ec7c422cafb232ac0564d57adcefd5e7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/bell.svg"
-dest_files=["res://.godot/imported/bell.svg-ad6954abc06e31a396ffd86db599cca0.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/bell.svg"
+dest_files=["res://.godot/imported/bell.svg-ec7c422cafb232ac0564d57adcefd5e7.ctex"]
 
 [params]
 

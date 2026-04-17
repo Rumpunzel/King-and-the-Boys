@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cli5dtlsa3rja"
-path="res://.godot/imported/arrow-up-tray.svg-1919135a047bd4a74db43f08842786d8.ctex"
+path="res://.godot/imported/arrow-up-tray.svg-025b4423089897d8d0963073c8d1d9c8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/arrow-up-tray.svg"
-dest_files=["res://.godot/imported/arrow-up-tray.svg-1919135a047bd4a74db43f08842786d8.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/arrow-up-tray.svg"
+dest_files=["res://.godot/imported/arrow-up-tray.svg-025b4423089897d8d0963073c8d1d9c8.ctex"]
 
 [params]
 

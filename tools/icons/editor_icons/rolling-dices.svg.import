@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dpmwlpo7a7q1r"
-path="res://.godot/imported/rolling-dices.svg-137c8328f3a6bb29288825321de44beb.ctex"
+path="res://.godot/imported/rolling-dices.svg-185f3f67f59ab85e83dd06f4540bbb23.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/rolling-dices.svg"
-dest_files=["res://.godot/imported/rolling-dices.svg-137c8328f3a6bb29288825321de44beb.ctex"]
+source_file="res://tools/icons/editor_icons/rolling-dices.svg"
+dest_files=["res://.godot/imported/rolling-dices.svg-185f3f67f59ab85e83dd06f4540bbb23.ctex"]
 
 [params]
 

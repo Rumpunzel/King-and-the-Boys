@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bwlvvep3lqspp"
-path="res://.godot/imported/circle-stack.svg-4719a81bd6cd6b2808b2100e6564f509.ctex"
+path="res://.godot/imported/circle-stack.svg-cce80623521c448fbf5ba14a5ae3225e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/circle-stack.svg"
-dest_files=["res://.godot/imported/circle-stack.svg-4719a81bd6cd6b2808b2100e6564f509.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/circle-stack.svg"
+dest_files=["res://.godot/imported/circle-stack.svg-cce80623521c448fbf5ba14a5ae3225e.ctex"]
 
 [params]
 

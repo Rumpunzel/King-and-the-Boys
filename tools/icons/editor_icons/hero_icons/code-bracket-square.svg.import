@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://boolje55401av"
-path="res://.godot/imported/code-bracket-square.svg-61d512e93db15de68e27148ec30df0d5.ctex"
+path="res://.godot/imported/code-bracket-square.svg-ffc878325fdbb8bcae00d4ee1462f524.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/code-bracket-square.svg"
-dest_files=["res://.godot/imported/code-bracket-square.svg-61d512e93db15de68e27148ec30df0d5.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/code-bracket-square.svg"
+dest_files=["res://.godot/imported/code-bracket-square.svg-ffc878325fdbb8bcae00d4ee1462f524.ctex"]
 
 [params]
 

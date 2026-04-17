@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://w7wusqrq8tm2"
-path="res://.godot/imported/currency-rupee.svg-5b8d313cdb306b60c4e8f8264d573c7c.ctex"
+path="res://.godot/imported/currency-rupee.svg-2f5fb973b711d7207820fc6320ba7523.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/currency-rupee.svg"
-dest_files=["res://.godot/imported/currency-rupee.svg-5b8d313cdb306b60c4e8f8264d573c7c.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/currency-rupee.svg"
+dest_files=["res://.godot/imported/currency-rupee.svg-2f5fb973b711d7207820fc6320ba7523.ctex"]
 
 [params]
 

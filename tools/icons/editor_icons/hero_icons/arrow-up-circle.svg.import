@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cowhr21fgffr8"
-path="res://.godot/imported/arrow-up-circle.svg-1d50d5569460b82d77c16cf22af99629.ctex"
+path="res://.godot/imported/arrow-up-circle.svg-ef315a574e7e553bf6fafb611be8960d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/arrow-up-circle.svg"
-dest_files=["res://.godot/imported/arrow-up-circle.svg-1d50d5569460b82d77c16cf22af99629.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/arrow-up-circle.svg"
+dest_files=["res://.godot/imported/arrow-up-circle.svg-ef315a574e7e553bf6fafb611be8960d.ctex"]
 
 [params]
 

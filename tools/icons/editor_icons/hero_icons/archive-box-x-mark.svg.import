@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://818d17ogfes7"
-path="res://.godot/imported/archive-box-x-mark.svg-26781f71a6cffbb182cb0a165eb3939c.ctex"
+path="res://.godot/imported/archive-box-x-mark.svg-0f58c66ea0380ae16f422a88f2ff271d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/archive-box-x-mark.svg"
-dest_files=["res://.godot/imported/archive-box-x-mark.svg-26781f71a6cffbb182cb0a165eb3939c.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/archive-box-x-mark.svg"
+dest_files=["res://.godot/imported/archive-box-x-mark.svg-0f58c66ea0380ae16f422a88f2ff271d.ctex"]
 
 [params]
 

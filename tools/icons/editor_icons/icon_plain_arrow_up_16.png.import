@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://crxjjt1htvr1c"
-path="res://.godot/imported/icon_plain_arrow_up_16.png-51dbabbebab836cc51143ac126a58650.ctex"
+path="res://.godot/imported/icon_plain_arrow_up_16.png-37744e3928b1d0847060fcd42e3c4ec0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/icon_plain_arrow_up_16.png"
-dest_files=["res://.godot/imported/icon_plain_arrow_up_16.png-51dbabbebab836cc51143ac126a58650.ctex"]
+source_file="res://tools/icons/editor_icons/icon_plain_arrow_up_16.png"
+dest_files=["res://.godot/imported/icon_plain_arrow_up_16.png-37744e3928b1d0847060fcd42e3c4ec0.ctex"]
 
 [params]
 

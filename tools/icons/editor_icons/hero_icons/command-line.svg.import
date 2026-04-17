@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cpw0p6q7marba"
-path="res://.godot/imported/command-line.svg-6c420c6618a66eb8b4c630eaa8b1f5e3.ctex"
+path="res://.godot/imported/command-line.svg-4c886ff60ff2e6ad186f224e89209847.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/command-line.svg"
-dest_files=["res://.godot/imported/command-line.svg-6c420c6618a66eb8b4c630eaa8b1f5e3.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/command-line.svg"
+dest_files=["res://.godot/imported/command-line.svg-4c886ff60ff2e6ad186f224e89209847.ctex"]
 
 [params]
 

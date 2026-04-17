@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bgrjk1x73st8u"
-path="res://.godot/imported/arrow-right-on-rectangle.svg-14e666201d6a0171c69b9a4d2a308f20.ctex"
+path="res://.godot/imported/arrow-right-on-rectangle.svg-d1f1353ce298ca8771461841de513ba7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/arrow-right-on-rectangle.svg"
-dest_files=["res://.godot/imported/arrow-right-on-rectangle.svg-14e666201d6a0171c69b9a4d2a308f20.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/arrow-right-on-rectangle.svg"
+dest_files=["res://.godot/imported/arrow-right-on-rectangle.svg-d1f1353ce298ca8771461841de513ba7.ctex"]
 
 [params]
 

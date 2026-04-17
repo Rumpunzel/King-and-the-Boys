@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cetdhygsj1jcl"
-path="res://.godot/imported/cursor-arrow-ripple.svg-52dc30c5a129cb602807060d90cd0f11.ctex"
+path="res://.godot/imported/cursor-arrow-ripple.svg-efbf17e1e5fbcdc717c9079c9ae88c87.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/cursor-arrow-ripple.svg"
-dest_files=["res://.godot/imported/cursor-arrow-ripple.svg-52dc30c5a129cb602807060d90cd0f11.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/cursor-arrow-ripple.svg"
+dest_files=["res://.godot/imported/cursor-arrow-ripple.svg-efbf17e1e5fbcdc717c9079c9ae88c87.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://2hpmldys4kse"
-path="res://.godot/imported/chart-pie.svg-db419b92aa856ec38c00c786992accf6.ctex"
+path="res://.godot/imported/chart-pie.svg-f19a7c417ed258c97225bce18c180513.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/chart-pie.svg"
-dest_files=["res://.godot/imported/chart-pie.svg-db419b92aa856ec38c00c786992accf6.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/chart-pie.svg"
+dest_files=["res://.godot/imported/chart-pie.svg-f19a7c417ed258c97225bce18c180513.ctex"]
 
 [params]
 

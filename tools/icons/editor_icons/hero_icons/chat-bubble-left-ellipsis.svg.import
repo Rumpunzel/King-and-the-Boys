@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://5qa0k01xgyqp"
-path="res://.godot/imported/chat-bubble-left-ellipsis.svg-590b6924d384e4e543a72ee3a098979b.ctex"
+path="res://.godot/imported/chat-bubble-left-ellipsis.svg-8d3e69b882cab200dca73e76d7739d01.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/chat-bubble-left-ellipsis.svg"
-dest_files=["res://.godot/imported/chat-bubble-left-ellipsis.svg-590b6924d384e4e543a72ee3a098979b.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/chat-bubble-left-ellipsis.svg"
+dest_files=["res://.godot/imported/chat-bubble-left-ellipsis.svg-8d3e69b882cab200dca73e76d7739d01.ctex"]
 
 [params]
 

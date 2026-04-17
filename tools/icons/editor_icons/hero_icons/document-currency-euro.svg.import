@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dxnhf7e8m62j0"
-path="res://.godot/imported/document-currency-euro.svg-7349cc2bdf7bc630a4cbe4af396dd1a7.ctex"
+path="res://.godot/imported/document-currency-euro.svg-56782733880a86ddbb6025d7b5d41225.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/document-currency-euro.svg"
-dest_files=["res://.godot/imported/document-currency-euro.svg-7349cc2bdf7bc630a4cbe4af396dd1a7.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/document-currency-euro.svg"
+dest_files=["res://.godot/imported/document-currency-euro.svg-56782733880a86ddbb6025d7b5d41225.ctex"]
 
 [params]
 

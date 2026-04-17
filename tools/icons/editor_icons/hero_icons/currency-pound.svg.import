@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://pl32ccubrfey"
-path="res://.godot/imported/currency-pound.svg-02b3fc5218a7e2d8d54fd767970ac122.ctex"
+path="res://.godot/imported/currency-pound.svg-cec90eadad31bf2f9dd54e2e1baa9cf4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/currency-pound.svg"
-dest_files=["res://.godot/imported/currency-pound.svg-02b3fc5218a7e2d8d54fd767970ac122.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/currency-pound.svg"
+dest_files=["res://.godot/imported/currency-pound.svg-cec90eadad31bf2f9dd54e2e1baa9cf4.ctex"]
 
 [params]
 

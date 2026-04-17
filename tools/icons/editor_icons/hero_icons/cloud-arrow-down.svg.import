@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bi8hriy50rd7q"
-path="res://.godot/imported/cloud-arrow-down.svg-642cbed04583639eb8ffbdb8641d1bd6.ctex"
+path="res://.godot/imported/cloud-arrow-down.svg-7a84b431cdc8636cf9f7c5fa148bfc98.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/cloud-arrow-down.svg"
-dest_files=["res://.godot/imported/cloud-arrow-down.svg-642cbed04583639eb8ffbdb8641d1bd6.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/cloud-arrow-down.svg"
+dest_files=["res://.godot/imported/cloud-arrow-down.svg-7a84b431cdc8636cf9f7c5fa148bfc98.ctex"]
 
 [params]
 

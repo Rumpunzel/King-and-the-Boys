@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cwysxuu2qge8a"
-path="res://.godot/imported/building-storefront.svg-b13e8b435cb75d57f7d82655144d2be8.ctex"
+path="res://.godot/imported/building-storefront.svg-d0acff9c2acb544fd2c27313e7a21364.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/building-storefront.svg"
-dest_files=["res://.godot/imported/building-storefront.svg-b13e8b435cb75d57f7d82655144d2be8.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/building-storefront.svg"
+dest_files=["res://.godot/imported/building-storefront.svg-d0acff9c2acb544fd2c27313e7a21364.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cv5t82gcrg050"
-path="res://.godot/imported/arrow-small-up.svg-5220b20ef67a0ad734ee3a0c3abe156c.ctex"
+path="res://.godot/imported/arrow-small-up.svg-e32abc6eddd77547e4786a7ab86fc547.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/arrow-small-up.svg"
-dest_files=["res://.godot/imported/arrow-small-up.svg-5220b20ef67a0ad734ee3a0c3abe156c.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/arrow-small-up.svg"
+dest_files=["res://.godot/imported/arrow-small-up.svg-e32abc6eddd77547e4786a7ab86fc547.ctex"]
 
 [params]
 

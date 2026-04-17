@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://jqtw2jkiagu6"
-path="res://.godot/imported/bolt.svg-def0a38291d19800d284b0f81f44c9e7.ctex"
+path="res://.godot/imported/bolt.svg-c486f2a5ed77e4655a4f78d7964eaa99.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/bolt.svg"
-dest_files=["res://.godot/imported/bolt.svg-def0a38291d19800d284b0f81f44c9e7.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/bolt.svg"
+dest_files=["res://.godot/imported/bolt.svg-c486f2a5ed77e4655a4f78d7964eaa99.ctex"]
 
 [params]
 

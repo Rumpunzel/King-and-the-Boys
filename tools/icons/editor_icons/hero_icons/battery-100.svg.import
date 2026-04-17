@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bgv7eswdbjkg6"
-path="res://.godot/imported/battery-100.svg-b6911d3e97870a6930de4a166daca95b.ctex"
+path="res://.godot/imported/battery-100.svg-5e3d7209040c1eb634827ca37e87aa46.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/battery-100.svg"
-dest_files=["res://.godot/imported/battery-100.svg-b6911d3e97870a6930de4a166daca95b.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/battery-100.svg"
+dest_files=["res://.godot/imported/battery-100.svg-5e3d7209040c1eb634827ca37e87aa46.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://btvi26kxlerqx"
-path="res://.godot/imported/cake.svg-1473ab4e8a78b823321f28cb11338ca3.ctex"
+path="res://.godot/imported/cake.svg-746775a2a07459a6681360ec47e5b9ed.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/cake.svg"
-dest_files=["res://.godot/imported/cake.svg-1473ab4e8a78b823321f28cb11338ca3.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/cake.svg"
+dest_files=["res://.godot/imported/cake.svg-746775a2a07459a6681360ec47e5b9ed.ctex"]
 
 [params]
 

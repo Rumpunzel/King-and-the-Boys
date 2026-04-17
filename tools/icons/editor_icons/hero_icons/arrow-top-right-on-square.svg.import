@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cfnly84ucfhkl"
-path="res://.godot/imported/arrow-top-right-on-square.svg-c9f28085567a532e46d283aab2c842bd.ctex"
+path="res://.godot/imported/arrow-top-right-on-square.svg-80a4501527e761a239f7ccfa4b02f45d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/arrow-top-right-on-square.svg"
-dest_files=["res://.godot/imported/arrow-top-right-on-square.svg-c9f28085567a532e46d283aab2c842bd.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/arrow-top-right-on-square.svg"
+dest_files=["res://.godot/imported/arrow-top-right-on-square.svg-80a4501527e761a239f7ccfa4b02f45d.ctex"]
 
 [params]
 

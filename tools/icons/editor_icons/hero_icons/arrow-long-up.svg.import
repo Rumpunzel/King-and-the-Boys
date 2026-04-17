@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cri8svnmhaqh2"
-path="res://.godot/imported/arrow-long-up.svg-048ff4a705422c35d8fbbbb07264a9ef.ctex"
+path="res://.godot/imported/arrow-long-up.svg-bde30948b409dc62b000ce93588ea310.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/arrow-long-up.svg"
-dest_files=["res://.godot/imported/arrow-long-up.svg-048ff4a705422c35d8fbbbb07264a9ef.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/arrow-long-up.svg"
+dest_files=["res://.godot/imported/arrow-long-up.svg-bde30948b409dc62b000ce93588ea310.ctex"]
 
 [params]
 

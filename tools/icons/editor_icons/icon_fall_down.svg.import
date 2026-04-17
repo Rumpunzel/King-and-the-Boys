@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cp2op0cpeyc18"
-path="res://.godot/imported/icon_fall_down.svg-52ac21539d8428503f4047a2d5cbf963.ctex"
+path="res://.godot/imported/icon_fall_down.svg-ec744027a11ed978be35d9526f5013b6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/icon_fall_down.svg"
-dest_files=["res://.godot/imported/icon_fall_down.svg-52ac21539d8428503f4047a2d5cbf963.ctex"]
+source_file="res://tools/icons/editor_icons/icon_fall_down.svg"
+dest_files=["res://.godot/imported/icon_fall_down.svg-ec744027a11ed978be35d9526f5013b6.ctex"]
 
 [params]
 

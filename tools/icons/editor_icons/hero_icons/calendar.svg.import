@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dxcsr40tncxv1"
-path="res://.godot/imported/calendar.svg-97e0a2c26b4f92fc33ac6ce34f9d1169.ctex"
+path="res://.godot/imported/calendar.svg-a03c1a2895669ee5bc7a8d733a59e143.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/calendar.svg"
-dest_files=["res://.godot/imported/calendar.svg-97e0a2c26b4f92fc33ac6ce34f9d1169.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/calendar.svg"
+dest_files=["res://.godot/imported/calendar.svg-a03c1a2895669ee5bc7a8d733a59e143.ctex"]
 
 [params]
 

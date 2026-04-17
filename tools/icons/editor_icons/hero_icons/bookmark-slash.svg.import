@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dnp641q48vhlk"
-path="res://.godot/imported/bookmark-slash.svg-590fd0d57de483d2d1ae60219cd90715.ctex"
+path="res://.godot/imported/bookmark-slash.svg-2ecf1e4a70f65e7e2d5e3cc7689f78f4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/editor_icons/hero_icons/bookmark-slash.svg"
-dest_files=["res://.godot/imported/bookmark-slash.svg-590fd0d57de483d2d1ae60219cd90715.ctex"]
+source_file="res://tools/icons/editor_icons/hero_icons/bookmark-slash.svg"
+dest_files=["res://.godot/imported/bookmark-slash.svg-2ecf1e4a70f65e7e2d5e3cc7689f78f4.ctex"]
 
 [params]
 
