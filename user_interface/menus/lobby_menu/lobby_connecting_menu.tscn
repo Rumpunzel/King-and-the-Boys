@@ -1,49 +1,12 @@
 [gd_scene format=3 uid="uid://6470jvy1w2m3"]
 
 [ext_resource type="Script" uid="uid://vr1ncpxlq1vc" path="res://user_interface/menus/lobby_menu/lobby_connecting_menu.gd" id="1_hvnq8"]
+[ext_resource type="PackedScene" uid="uid://8r5k07203hwx" path="res://user_interface/loading_screen/loading_bar.tscn" id="3_hvnq8"]
 [ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="3_o1khs"]
-[ext_resource type="FontFile" uid="uid://b0ybin3nm83i1" path="res://assets/fonts/Bokor-Regular.ttf" id="4_hvnq8"]
 [ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="4_vo66w"]
 [ext_resource type="Script" uid="uid://b68u3p1bd6gb" path="res://user_interface/toaster.gd" id="5_p4xko"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vo66w"]
-
-[sub_resource type="Animation" id="Animation_nw7rc"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:visible_characters")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [-1]
-}
-
-[sub_resource type="Animation" id="Animation_hvnq8"]
-resource_name = "loading"
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:visible_characters")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.25, 0.3, 0.55, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [-1, 12, 11, 10, 11, 12]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_vo66w"]
-_data = {
-&"RESET": SubResource("Animation_nw7rc"),
-&"loading": SubResource("Animation_hvnq8")
-}
 
 [node name="LobbyConnectingMenu" type="PanelContainer" unique_id=489087421 node_paths=PackedStringArray("_toaster")]
 anchors_preset = 15
@@ -66,34 +29,9 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 16
 
-[node name="PanelContainer" type="PanelContainer" parent="MenusContainer/VBoxContainer" unique_id=1406027683]
+[node name="LoadingBar" parent="MenusContainer/VBoxContainer" unique_id=1604917638 instance=ExtResource("3_hvnq8")]
 layout_mode = 2
-
-[node name="ProgressBar" type="ProgressBar" parent="MenusContainer/VBoxContainer/PanelContainer" unique_id=1299214939]
-layout_mode = 2
-size_flags_vertical = 1
-show_percentage = false
-indeterminate = true
-editor_preview_indeterminate = true
-
-[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer/PanelContainer" unique_id=1395001906]
-layout_mode = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 24
-
-[node name="Label" type="Label" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=1350820670]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_fonts/font = ExtResource("4_hvnq8")
-theme_override_font_sizes/font_size = 64
-text = "Connecting..."
-visible_characters_behavior = 1
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/Label" unique_id=1853144078]
-libraries/ = SubResource("AnimationLibrary_vo66w")
-autoplay = &"loading"
+loading_text = "Connecting"
 
 [node name="Cancel" type="Button" parent="MenusContainer/VBoxContainer" unique_id=2019960935]
 layout_mode = 2

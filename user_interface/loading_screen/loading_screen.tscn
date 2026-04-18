@@ -3,50 +3,29 @@
 [ext_resource type="Texture2D" uid="uid://dxsmqwnikt6sl" path="res://protoype_assets/the_boys_background_2.png" id="1_nw7rc"]
 [ext_resource type="Script" uid="uid://bal0a5xvafn1h" path="res://user_interface/loading_screen/loading_screen.gd" id="1_xnb5f"]
 [ext_resource type="StyleBox" uid="uid://c1k2tqhaccfdj" path="res://user_interface/menu_panel.tres" id="2_nw7rc"]
-[ext_resource type="FontFile" uid="uid://b0ybin3nm83i1" path="res://assets/fonts/Bokor-Regular.ttf" id="3_xnb5f"]
+[ext_resource type="PackedScene" uid="uid://8r5k07203hwx" path="res://user_interface/loading_screen/loading_bar.tscn" id="3_xnb5f"]
 
-[sub_resource type="Animation" id="Animation_nw7rc"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:visible_characters")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [-1]
-}
+[sub_resource type="Gradient" id="Gradient_s5x3u"]
+offsets = PackedFloat32Array(0.2994924, 1)
+colors = PackedColorArray(0.101960786, 0.101960786, 0.101960786, 1, 0, 0, 0, 0)
 
-[sub_resource type="Animation" id="Animation_xnb5f"]
-resource_name = "loading"
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:visible_characters")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.25, 0.3, 0.55, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [-1, 9, 8, 7, 8, 9]
-}
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mf20u"]
+gradient = SubResource("Gradient_s5x3u")
+width = 1024
+height = 256
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_s5x3u"]
-_data = {
-&"RESET": SubResource("Animation_nw7rc"),
-&"loading": SubResource("Animation_xnb5f")
-}
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bih3i"]
+texture = SubResource("GradientTexture2D_mf20u")
 
-[node name="LoadingScreen" type="CanvasLayer" unique_id=1623508165 node_paths=PackedStringArray("_progress_bar")]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3o0l7"]
+
+[node name="LoadingScreen" type="CanvasLayer" unique_id=1623508165 node_paths=PackedStringArray("_loading_bar")]
 process_mode = 3
 layer = 128
 script = ExtResource("1_xnb5f")
-_progress_bar = NodePath("PanelContainer/VBoxContainer/MarginContainer/ProgressBar")
+_loading_bar = NodePath("PanelContainer/LoadingBar")
 metadata/_custom_type_script = "uid://bal0a5xvafn1h"
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1553319817]
@@ -61,48 +40,27 @@ show_behind_parent = true
 layout_mode = 2
 color = Color(0, 0, 0, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=124850147]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=960227358]
 layout_mode = 2
+theme_override_constants/margin_bottom = 150
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer" unique_id=212963439]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = ExtResource("2_nw7rc")
-
-[node name="Background" type="TextureRect" parent="PanelContainer/VBoxContainer/PanelContainer" unique_id=928942914]
-show_behind_parent = true
+[node name="Background" type="TextureRect" parent="PanelContainer/MarginContainer" unique_id=928942914]
 layout_mode = 2
 texture = ExtResource("1_nw7rc")
 stretch_mode = 6
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer" unique_id=1724986897]
+[node name="BottomFade" type="PanelContainer" parent="PanelContainer" unique_id=1621956366]
+custom_minimum_size = Vector2(0, 512)
 layout_mode = 2
-theme_override_constants/margin_left = 48
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 48
-theme_override_constants/margin_bottom = 32
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxTexture_bih3i")
 
-[node name="ProgressBar" type="ProgressBar" parent="PanelContainer/VBoxContainer/MarginContainer" unique_id=335826110]
+[node name="LoadingBar" parent="PanelContainer" unique_id=1604917638 instance=ExtResource("3_xnb5f")]
 layout_mode = 2
-size_flags_vertical = 1
-max_value = 1.0
-show_percentage = false
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxEmpty_3o0l7")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/MarginContainer" unique_id=499075166]
+[node name="Panel" type="Panel" parent="PanelContainer" unique_id=545431860]
+modulate = Color(1, 1, 1, 0.75000006)
 layout_mode = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 24
-
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/MarginContainer" unique_id=1556800612]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_fonts/font = ExtResource("3_xnb5f")
-theme_override_font_sizes/font_size = 64
-text = "Loading..."
-visible_characters_behavior = 1
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PanelContainer/VBoxContainer/MarginContainer/MarginContainer/Label" unique_id=1174186908]
-libraries/ = SubResource("AnimationLibrary_s5x3u")
-autoplay = &"loading"
+theme_override_styles/panel = ExtResource("2_nw7rc")
