@@ -1,5 +1,5 @@
 @tool
-@icon("uid://bgjmcb04v358t")
+@icon("uid://b0vg3flbqcfqk")
 class_name Game
 extends Node
 
