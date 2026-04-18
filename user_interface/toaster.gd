@@ -28,16 +28,16 @@ enum VerticalPosition {
 
 const text_colors: Dictionary[Type, Color] = {
 	Type.INFO: Color.WHITE,
-	Type.SUCCESS: Color.BLACK,
+	Type.SUCCESS: Color.WHITE,
 	Type.WARNING: Color.BLACK,
 	Type.ERROR: Color.WHITE,
 }
 
 const background_colors: Dictionary[Type, Color] = {
-	Type.INFO: Color("#3b6b8a"),
-	Type.SUCCESS: Color("#527a5e"),
+	Type.INFO: Color("#196ab1"),
+	Type.SUCCESS: Color("#158a43"),
 	Type.WARNING: Color("#c4850e"),
-	Type.ERROR: Color("#a34136"),
+	Type.ERROR: Color("#c02f1d"),
 }
 
 @export var _horizontal_position: HorizontalPosition = HorizontalPosition.CENTER

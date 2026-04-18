@@ -12,7 +12,7 @@ extends Menu
 func _enter_tree() -> void:
 	super._enter_tree()
 	if Engine.is_editor_hint(): return
-	Multiplayer.game_joined.connect(_on_game_joined)
+	Multiplayer.joining_multiplayer.connect(_on_joining_multiplayer)
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
@@ -26,11 +26,11 @@ func open_lobby() -> void:
 	SceneManager.transition_to_scene(_lobby_host_scene_path, false)
 	print_debug("Opening lobby...")
 
-func join_lobby() -> void:
+func connect_to_lobby() -> void:
 	close_menu()
 	await fully_closed
 	SceneManager.transition_to_scene(_lobby_connecting_scene_path, false)
-	print_debug("Joining lobby...")
+	print_debug("Connecting to lobby...")
 
 func load_game() -> Error:
 	assert(multiplayer.is_server())
@@ -47,8 +47,8 @@ func _on_load_pressed() -> void:
 func _on_quit_confirmation_dialog_confirmed() -> void:
 	Client.quit_game()
 
-func _on_game_joined(_host_player_info: Dictionary[StringName, Variant]) -> void:
-	join_lobby()
+func _on_joining_multiplayer() -> void:
+	connect_to_lobby()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
