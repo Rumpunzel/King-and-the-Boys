@@ -75,6 +75,7 @@ func _on_start_pressed() -> void:
 	SceneManager.transition_to_scene_remotely.rpc(_game_scene_path)
 
 static func _setup_level(game: Game) -> Error:
+	SceneManager.update_loading_screen.rpc("Generating")
 	game.setup_game()
 	SceneManager.remove_loading_screen.rpc()
 	return Error.OK

@@ -85,6 +85,11 @@ func transition_to_scene_remotely(scene_path: String) -> void:
 	_loading_screen = _loading_screen_scene.instantiate()
 	add_child(_loading_screen)
 
+@rpc("call_local", "reliable")
+func update_loading_screen(message: String) -> void:
+	assert(_loading_screen)
+	_loading_screen.set_loading_message(message)
+
 @rpc("call_remote", "reliable")
 func remove_loading_screen() -> void:
 	assert(_loading_screen)

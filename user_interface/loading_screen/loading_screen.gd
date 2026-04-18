@@ -5,6 +5,10 @@ extends CanvasLayer
 @export_group("Configuration")
 @export var _loading_bar: LoadingBar
 
+func set_loading_message(message: String) -> void:
+	assert(_loading_bar)
+	_loading_bar.loading_text = message
+
 func set_loading_progress(progress: float) -> void:
 	assert(_loading_bar)
 	_loading_bar.percentage = progress
