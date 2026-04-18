@@ -12,7 +12,7 @@ extends Menu
 func _enter_tree() -> void:
 	super._enter_tree()
 	if Engine.is_editor_hint(): return
-	Multiplayer.connected_to_multiplayer.connect(_on_connected_to_multiplayer)
+	Multiplayer.game_joined.connect(_on_game_joined)
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
@@ -47,7 +47,7 @@ func _on_load_pressed() -> void:
 func _on_quit_confirmation_dialog_confirmed() -> void:
 	Client.quit_game()
 
-func _on_connected_to_multiplayer() -> void:
+func _on_game_joined(_host_player_info: Dictionary[StringName, Variant]) -> void:
 	join_lobby()
 
 func _get_configuration_warnings() -> PackedStringArray:

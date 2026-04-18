@@ -3,7 +3,6 @@ class_name LobbyConnectingMenu
 extends Menu
 
 @export_group("Configuration")
-@export var _toaster: Toaster
 @export_file("*.tscn") var _lobby_guest_scene_path: String
 
 func _enter_tree() -> void:
@@ -28,11 +27,9 @@ func _on_game_joined(_host_player_info: Dictionary[StringName, Variant]) -> void
 	SceneManager.transition_to_scene(_lobby_guest_scene_path, false)
 
 func _on_disconnected_from_multiplayer() -> void:
-	_toaster.toast_error("Connection failed!")
 	SceneManager.to_main(false)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _toaster: warnings.append("Missing Toaster reference.")
 	if _lobby_guest_scene_path.is_empty(): warnings.append("Missing lobby guest scene path.")
 	return warnings

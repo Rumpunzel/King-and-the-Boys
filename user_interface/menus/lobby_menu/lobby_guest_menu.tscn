@@ -4,13 +4,12 @@
 [ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/menus/lobby_menu/player_info.tscn" id="2_sm5fm"]
 [ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="3_h7yms"]
 [ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="5_h7yms"]
-[ext_resource type="Script" uid="uid://b68u3p1bd6gb" path="res://user_interface/toaster.gd" id="5_sm5fm"]
 [ext_resource type="Texture2D" uid="uid://bsjjapj01slb6" path="res://tools/icons/editor_icons/hero_icons/check.svg" id="6_bdwjy"]
 [ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="8_6d7le"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ajev1"]
 
-[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_player_infos_container", "_ready_button", "_toaster")]
+[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_player_infos_container", "_ready_button")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,7 +19,6 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_ajev1")
 script = ExtResource("1_pffa0")
 _player_infos_container = NodePath("MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/PlayerInfos")
 _ready_button = NodePath("MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Ready")
-_toaster = NodePath("Toaster")
 _game_scene_path = "uid://ciy6s8n2reyy2"
 _player_info_scene = ExtResource("2_sm5fm")
 _fade_in_duration = 1.0
@@ -86,10 +84,6 @@ mouse_default_cursor_shape = 2
 text = "Leave"
 icon = ExtResource("8_6d7le")
 flat = true
-
-[node name="Toaster" type="Node" parent="." unique_id=600532876]
-script = ExtResource("5_sm5fm")
-metadata/_custom_type_script = "uid://b68u3p1bd6gb"
 
 [connection signal="toggled" from="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Ready" to="." method="_on_ready_toggled"]
 [connection signal="pressed" from="MenusContainer/VBoxContainer/Leave" to="." method="_on_leave_pressed"]

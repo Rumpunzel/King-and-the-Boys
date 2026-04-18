@@ -28,10 +28,10 @@ const text_colors: Dictionary[Type, Color] = {
 }
 
 const background_colors: Dictionary[Type, Color] = {
-	Type.INFO: Color("#414042"),
-	Type.SUCCESS: Color(0.45, 0.95, 0.5),
-	Type.WARNING: Color(1, 0.87, 0.4),
-	Type.ERROR: Color(1, 0.47, 0.42),
+	Type.INFO: Color("#3b6b8a"),
+	Type.SUCCESS: Color("#527a5e"),
+	Type.WARNING: Color("#c4850e"),
+	Type.ERROR: Color("#a34136"),
 }
 
 @export var _gravity: Gravity = Gravity.TOP

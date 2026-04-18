@@ -24,7 +24,7 @@ const HOST_ID: int = 1
 @onready var _network: Network = ENetNetwork.new()
 
 func _enter_tree() -> void:
-	multiplayer.peer_connected.connect(_on_player_connected)
+	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.connection_failed.connect(_on_connection_failed)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
@@ -35,8 +35,8 @@ func _ready() -> void:
 func host_game(ip_address: StringName = DEFAULT_SERVER_IP, port: int = PORT) -> Error:
 	assert(_network)
 	multiplayer.multiplayer_peer = _network.create_multiplayer_server(port, MAX_CONNECTIONS)
-	game_hosted.emit(ip_address, port)
 	connected_to_multiplayer.emit()
+	game_hosted.emit(ip_address, port)
 	print_debug("Started hosting multiplayer game @ %s:%d!" % [ip_address, port])
 	add_child(Node.new()) # For debugging to make it clear who is host
 	return Error.OK
@@ -47,7 +47,6 @@ func join_game(ip_address: StringName, port: int = PORT) -> Error:
 	joining_multiplayer.emit()
 	assert(_network)
 	multiplayer.multiplayer_peer = _network.create_multiplayer_client(ip_address, port)
-	connected_to_multiplayer.emit()
 	print_debug("Joined multiplayer game @ %s:%d!" % [ip_address, port])
 	return Error.OK
 
@@ -70,8 +69,8 @@ func _register_player(player_info: Dictionary[StringName, Variant]) -> void:
 	var peer_id: int = multiplayer.get_remote_sender_id() if is_online() else HOST_ID
 	player_info[Player.ID] = peer_id
 	if peer_id == HOST_ID:
+		#connected_to_multiplayer.emit()
 		game_joined.emit(player_info)
-		connected_to_multiplayer.emit()
 		print_debug("Joined Player %s's multiplayer game!" % player_info)
 	else:
 		player_joined.emit(player_info)
@@ -84,7 +83,7 @@ func _go_offline() -> void:
 
 ## When a peer connects, send them the host info.
 ## This allows transfer of all desired data for each player, not only the unique ID.
-func _on_player_connected(peer_id: int) -> void:
+func _on_peer_connected(peer_id: int) -> void:
 	var host_player_info: Dictionary[StringName, Variant] = Player.get_local_player_info()
 	_register_player.rpc_id(peer_id, host_player_info)
 

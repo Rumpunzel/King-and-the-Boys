@@ -3,6 +3,9 @@
 extends Spawner
 
 signal player_connected(player: Player)
+signal player_disconnected(player: Player)
+
+signal player_created(player: Player)
 
 ## {PlayerId: int -> Plaer}
 var _players: Dictionary[int, Player] = {}
@@ -20,6 +23,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	super._ready()
+	_setup_toaster()
 
 func get_connected_players() -> Array[Player]: return _players.values()
 func get_player(player_id: int) -> Player: return _players.get(player_id)
@@ -54,7 +58,7 @@ func _spawn_player(player_info: Dictionary[StringName, Variant]) -> Player:
 	Player.validate_player_info(player_info)
 	var player: Player = Player.from_player_info(player_info)
 	_players[player.player_id] = player
-	player.ready.connect(player_connected.emit.bind(player))
+	player.ready.connect(player_created.emit.bind(player))
 	print_debug("Spawned player: %s" % player.get_player_info())
 	return player
 
@@ -78,6 +82,19 @@ func _remove_player(player: Player) -> void:
 	remove_child(player)
 	player.queue_free()
 	print_debug("Removed player: %s!" % player.get_player_info())
+
+func _setup_toaster() -> void:
+	var _toaster: Toaster = Toaster.new()
+	multiplayer.connection_failed.connect(_toaster.toast_error.bind("Connection failed!"))
+	multiplayer.server_disconnected.connect(_toaster.toast_error.bind("Connection to server lost!"))
+	Multiplayer.connected_to_multiplayer.connect(_toaster.toast_info.bind("Connecting to multiplayer..."))
+	Multiplayer.disconnected_from_multiplayer.connect(_toaster.toast_warning.bind("Disconnected from multiplayer..."))
+	Multiplayer.game_hosted.connect(func(_ip_address: StringName, _port: int) -> void: _toaster.toast_success("Game hosted!"))
+	Multiplayer.joining_multiplayer.connect(_toaster.toast_info.bind("Joining multiplayer..."))
+	Multiplayer.game_joined.connect(func(host_player_info: Dictionary) -> void: _toaster.toast_success("Joined %s's game!" % host_player_info[Player.NAME]))
+	Multiplayer.player_joined.connect(func(player_info: Dictionary) -> void: _toaster.toast_success("%s joined!" % player_info[Player.NAME]))
+	player_disconnected.connect(func(player: Player) -> void: _toaster.toast_warning("%s left!" % player.player_name))
+	add_child(_toaster)
 
 func _on_game_started() -> void:
 	_create_local_player()
@@ -103,6 +120,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		printerr("Host disconnected!")
 		return
 	_remove_player(disconnected_player)
+	player_disconnected.emit(disconnected_player)
 	print_debug("Player with player_id %d disconnected!" % peer_id)
 
 func _on_server_disconnected() -> void:

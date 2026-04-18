@@ -5,7 +5,6 @@ extends Menu
 @export_group("Configuration")
 @export var _player_infos_container: Container
 @export var _ready_button: ToggleButton
-@export var _toaster: Toaster
 @export_file("*.tscn") var _game_scene_path: String
 @export var _player_info_scene: PackedScene
 
@@ -24,7 +23,7 @@ func _ready() -> void:
 	for index: int in connected_players.size():
 		var connected_player: Player = connected_players[index]
 		_add_player(connected_player)
-	Lobby.player_connected.connect(_add_player)
+	Lobby.player_created.connect(_add_player)
 	if multiplayer.is_server(): Client.start_game()
 
 func _create_player_info() -> void:
@@ -88,7 +87,6 @@ func _on_leave_pressed() -> void:
 	SceneManager.to_main(false)
 
 func _on_disconnected_from_multiplayer() -> void:
-	_toaster.toast_error("Connection failed!")
 	SceneManager.to_main(false)
 
 func _get_configuration_warnings() -> PackedStringArray:

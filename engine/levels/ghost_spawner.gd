@@ -24,13 +24,13 @@ func start_synching_players() -> void:
 		var spawning_queued: bool = spawn_player_ghost(connected_player)
 		if spawning_queued: return
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	Lobby.player_connected.connect(spawn_player_ghost)
+	Lobby.player_created.connect(spawn_player_ghost)
 
 func stop_synching_players() -> void:
 	assert(multiplayer.is_server())
 	_remove_all_player_ghosts()
-	if Lobby.player_connected.is_connected(spawn_player_ghost):
-		Lobby.player_connected.disconnect(spawn_player_ghost)
+	if Lobby.player_created.is_connected(spawn_player_ghost):
+		Lobby.player_created.disconnect(spawn_player_ghost)
 
 ## @returns [code]true[/code] if spawning is queued for later
 func spawn_player_ghost(player: Player) -> bool:

@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://8r5k07203hwx" path="res://user_interface/loading_screen/loading_bar.tscn" id="3_hvnq8"]
 [ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="3_o1khs"]
 [ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="4_vo66w"]
-[ext_resource type="Script" uid="uid://b68u3p1bd6gb" path="res://user_interface/toaster.gd" id="5_p4xko"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vo66w"]
 
@@ -16,7 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_vo66w")
 script = ExtResource("1_hvnq8")
-_toaster = NodePath("Toaster")
+_toaster = NodePath("")
 _lobby_guest_scene_path = "uid://d3blbqb654ekr"
 _fade_in_duration = 1.0
 metadata/_custom_type_script = "uid://vr1ncpxlq1vc"
@@ -40,10 +39,5 @@ mouse_default_cursor_shape = 2
 text = "Cancel"
 icon = ExtResource("4_vo66w")
 flat = true
-
-[node name="Toaster" type="Node" parent="." unique_id=600532876]
-script = ExtResource("5_p4xko")
-_gravity = 1
-metadata/_custom_type_script = "uid://b68u3p1bd6gb"
 
 [connection signal="pressed" from="MenusContainer/VBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
