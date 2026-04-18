@@ -7,14 +7,11 @@
 [ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://data/levels/level.tscn" id="9_eadau"]
 [ext_resource type="PackedScene" uid="uid://5sd2jgms4uso" path="res://user_interface/menus/pause_menu/pause_menu.tscn" id="13_vkpvb"]
 
-[node name="Game" type="Node" unique_id=808135939 node_paths=PackedStringArray("_serializer", "_structure_spawner", "_thing_spawner", "_agent_spawner", "_player_ghost_spawner", "_level")]
+[node name="Game" type="Node" unique_id=808135939 node_paths=PackedStringArray("_serializer", "_level", "_player_ghost_spawner")]
 script = ExtResource("1_ybrgk")
 _serializer = NodePath("Serializer")
-_structure_spawner = NodePath("")
-_thing_spawner = NodePath("")
-_agent_spawner = NodePath("")
-_player_ghost_spawner = NodePath("PlayerGhostSpawner")
 _level = NodePath("Level")
+_player_ghost_spawner = NodePath("PlayerGhostSpawner")
 metadata/_custom_type_script = "uid://b6cfn5qwbi4xf"
 
 [node name="Serializer" type="Node" parent="." unique_id=1060350392]
