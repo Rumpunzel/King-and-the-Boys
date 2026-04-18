@@ -22,9 +22,6 @@ func _ready() -> void:
 func setup_game() -> void:
 	if not multiplayer.is_server(): return
 	_level.build_level()
-	#_agent_spawner.spawn_all_from_spawn_spoints()
-	#_structure_spawner.spawn_all_from_spawn_spoints()
-	#_thing_spawner.spawn_all_from_spawn_spoints()
 	_player_ghost_spawner.start_synching_players()
 
 func save_game() -> Error:

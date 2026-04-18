@@ -36,9 +36,7 @@ _thing_spawner = NodePath("ThingSpawner")
 _agent_spawner = NodePath("AgentSpawner")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
 
-[node name="StructureSpawner" parent="." unique_id=613621693 node_paths=PackedStringArray("_agent_spawner", "_thing_spawner") instance=ExtResource("4_0tvan")]
-_agent_spawner = NodePath("")
-_thing_spawner = NodePath("")
+[node name="StructureSpawner" parent="." unique_id=613621693 instance=ExtResource("4_0tvan")]
 
 [node name="ThingSpawner" parent="." unique_id=1954249393 instance=ExtResource("5_ek2od")]
 

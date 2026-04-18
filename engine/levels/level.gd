@@ -98,6 +98,9 @@ func build_level() -> void:
 	_build_outer_wall()
 	var starting_grid_position: Vector2i = _place_starting_tile()
 	_build_dungeon_from(starting_grid_position)
+	#_structure_spawner.spawn_all_from_spawn_spoints()
+	#_thing_spawner.spawn_all_from_spawn_spoints()
+	#_agent_spawner.spawn_all_from_spawn_spoints()
 
 func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
 	assert(absi(grid_position.x) < grid_extents.x)
@@ -115,6 +118,7 @@ func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> 
 	for grid_position: Vector2i in grid_positions: spawn_at(grid_position, status)
 
 func get_placed_tile(grid_position: Vector2i) -> Structure: return _placed_tiles.get(grid_position)
+func get_placed_thing(grid_position: Vector2i) -> Thing: return _placed_things.get(grid_position)
 
 func _build_outer_wall() -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
