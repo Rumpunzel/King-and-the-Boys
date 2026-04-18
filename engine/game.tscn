@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" uid="uid://b6cfn5qwbi4xf" path="res://engine/game.gd" id="1_ybrgk"]
 [ext_resource type="Script" uid="uid://d12oj323k2wmw" path="res://client/serialization/serializer.gd" id="2_3bptx"]
-[ext_resource type="PackedScene" uid="uid://csyirat4yr8h2" path="res://engine/objects/structures/structure_spawner.tscn" id="4_v50c7"]
-[ext_resource type="PackedScene" uid="uid://beahmsvyce16w" path="res://engine/objects/things/thing_spawner.tscn" id="5_rrkq5"]
-[ext_resource type="PackedScene" uid="uid://c46ivy3ilmclp" path="res://engine/agents/agent_spawner.tscn" id="6_o3fhh"]
 [ext_resource type="PackedScene" uid="uid://bvj0ntif5bqqq" path="res://engine/player/player_ghost_spawner.tscn" id="7_fxd01"]
 [ext_resource type="PackedScene" uid="uid://rmev082m4bw0" path="res://user_interface/user_interface.tscn" id="8_aqpue"]
 [ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://data/levels/level.tscn" id="9_eadau"]
@@ -13,9 +10,9 @@
 [node name="Game" type="Node" unique_id=808135939 node_paths=PackedStringArray("_serializer", "_structure_spawner", "_thing_spawner", "_agent_spawner", "_player_ghost_spawner", "_level")]
 script = ExtResource("1_ybrgk")
 _serializer = NodePath("Serializer")
-_structure_spawner = NodePath("StructureSpawner")
-_thing_spawner = NodePath("ThingSpawner")
-_agent_spawner = NodePath("AgentSpawner")
+_structure_spawner = NodePath("")
+_thing_spawner = NodePath("")
+_agent_spawner = NodePath("")
 _player_ghost_spawner = NodePath("PlayerGhostSpawner")
 _level = NodePath("Level")
 metadata/_custom_type_script = "uid://b6cfn5qwbi4xf"
@@ -24,13 +21,7 @@ metadata/_custom_type_script = "uid://b6cfn5qwbi4xf"
 script = ExtResource("2_3bptx")
 metadata/_custom_type_script = "uid://d12oj323k2wmw"
 
-[node name="StructureSpawner" parent="." unique_id=194044044 node_paths=PackedStringArray("_agent_spawner", "_thing_spawner") instance=ExtResource("4_v50c7")]
-_agent_spawner = NodePath("../AgentSpawner")
-_thing_spawner = NodePath("../ThingSpawner")
-
-[node name="ThingSpawner" parent="." unique_id=1087349806 instance=ExtResource("5_rrkq5")]
-
-[node name="AgentSpawner" parent="." unique_id=1374671867 instance=ExtResource("6_o3fhh")]
+[node name="Level" parent="." unique_id=2100419132 instance=ExtResource("9_eadau")]
 
 [node name="PlayerGhostSpawner" parent="." unique_id=225359458 instance=ExtResource("7_fxd01")]
 
@@ -38,12 +29,6 @@ _thing_spawner = NodePath("../ThingSpawner")
 
 [node name="PauseMenu" parent="UserInterface" unique_id=1241718021 instance=ExtResource("13_vkpvb")]
 
-[node name="Level" parent="." unique_id=2100419132 node_paths=PackedStringArray("_structure_spawner") instance=ExtResource("9_eadau")]
-_structure_spawner = NodePath("../StructureSpawner")
-
-[connection signal="structure_created" from="StructureSpawner" to="Level" method="_on_structure_created"]
-[connection signal="thing_created" from="ThingSpawner" to="Level" method="_on_thing_created"]
-[connection signal="agent_created" from="AgentSpawner" to="Level" method="_on_agent_created"]
 [connection signal="player_ghost_created" from="PlayerGhostSpawner" to="Level" method="_on_player_ghost_created"]
 [connection signal="load_requested" from="UserInterface/PauseMenu" to="." method="_on_load_requested"]
 [connection signal="save_requested" from="UserInterface/PauseMenu" to="." method="_on_save_requested"]

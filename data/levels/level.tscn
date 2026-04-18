@@ -3,7 +3,10 @@
 [ext_resource type="Script" uid="uid://dktxo1t8ahw30" path="res://engine/levels/level.gd" id="1_ywn5t"]
 [ext_resource type="Resource" uid="uid://sed2rxcgl038" path="res://data/structures/tiles/room/starting_tile.tres" id="2_c445m"]
 [ext_resource type="Resource" uid="uid://b50fre8sdxsyo" path="res://data/structures/tiles/default_tile_set.tres" id="3_c445m"]
+[ext_resource type="PackedScene" uid="uid://csyirat4yr8h2" path="res://engine/objects/structures/structure_spawner.tscn" id="4_0tvan"]
 [ext_resource type="Script" uid="uid://da4c4gcyqk2rb" path="res://engine/objects/characters/player_spawn_point.gd" id="5_0p5hx"]
+[ext_resource type="PackedScene" uid="uid://beahmsvyce16w" path="res://engine/objects/things/thing_spawner.tscn" id="5_ek2od"]
+[ext_resource type="PackedScene" uid="uid://c46ivy3ilmclp" path="res://engine/agents/agent_spawner.tscn" id="6_8rrhp"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 [ext_resource type="Texture2D" uid="uid://bwn2kfo8trdse" path="res://protoype_assets/sky_boxes/material_0_baseColor.png" id="19_mkmcm"]
 
@@ -22,13 +25,24 @@ sky_rotation = Vector3(4.2044983, 4.7787113, 0)
 [sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
 size = Vector2(64, 64)
 
-[node name="Level" type="Node3D" unique_id=2100419132]
+[node name="Level" type="Node3D" unique_id=2100419132 node_paths=PackedStringArray("_structure_spawner", "_thing_spawner", "_agent_spawner")]
 process_mode = 1
 script = ExtResource("1_ywn5t")
 grid_size = 2.5
 _starting_tile = ExtResource("2_c445m")
 _tile_set = ExtResource("3_c445m")
+_structure_spawner = NodePath("StructureSpawner")
+_thing_spawner = NodePath("ThingSpawner")
+_agent_spawner = NodePath("AgentSpawner")
 metadata/_custom_type_script = "uid://dktxo1t8ahw30"
+
+[node name="StructureSpawner" parent="." unique_id=613621693 node_paths=PackedStringArray("_agent_spawner", "_thing_spawner") instance=ExtResource("4_0tvan")]
+_agent_spawner = NodePath("")
+_thing_spawner = NodePath("")
+
+[node name="ThingSpawner" parent="." unique_id=1954249393 instance=ExtResource("5_ek2od")]
+
+[node name="AgentSpawner" parent="." unique_id=1877340054 instance=ExtResource("6_8rrhp")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1391764827]
 environment = SubResource("Environment_jwwwr")
@@ -44,3 +58,7 @@ surface_material_override/0 = ExtResource("16_jwwwr")
 [node name="PlayerSpawnPoint" type="Marker3D" parent="SpawnPoints" unique_id=1704218217]
 script = ExtResource("5_0p5hx")
 metadata/_custom_type_script = "uid://da4c4gcyqk2rb"
+
+[connection signal="structure_created" from="StructureSpawner" to="." method="_on_structure_created"]
+[connection signal="thing_created" from="ThingSpawner" to="." method="_on_thing_created"]
+[connection signal="agent_created" from="AgentSpawner" to="." method="_on_agent_created"]

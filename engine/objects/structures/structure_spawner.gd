@@ -6,8 +6,6 @@ extends Spawner
 signal structure_created(structure: Structure)
 
 @export_group("Configuration")
-@export var _agent_spawner: AgentSpawner
-@export var _thing_spawner: ThingSpawner
 
 var _structures: Array[Structure]
 
@@ -72,20 +70,8 @@ func _on_child_entered_tree(node: Node) -> void:
 	var structure: Structure = node
 	assert(not _structures.has(structure))
 	_structures.append(structure)
-	if multiplayer.is_server():
-		structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
 	structure_created.emit(structure)
-
-func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> void:
-	if profile_to_spawn is StructureProfile:
-		spawn_at(profile_to_spawn as StructureProfile, spawn_for.transform, spawn_for.clockwise_turns, spawn_for.status)
-	elif profile_to_spawn is ThingProfile:
-		_thing_spawner.spawn_at(profile_to_spawn as ThingProfile, spawn_for.transform, Thing.structure_status_to_thing_status(spawn_for.status))
-	#elif profile_to_spawn is CharacterProfile: _agent_spawner.spawn_at(profile_to_spawn as CharacterProfile, spawn_for.transform)
-	else: push_error("Cannot spawn profile: %profile_to_spawn - Not implemented!" % profile_to_spawn)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _agent_spawner: warnings.append("Missing AgentSpawner reference.")
-	if not _thing_spawner: warnings.append("Missing ThingSpawner reference.")
 	return warnings
