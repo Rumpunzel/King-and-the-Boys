@@ -85,6 +85,7 @@ func _remove_player(player: Player) -> void:
 
 func _setup_toaster() -> void:
 	var _toaster: Toaster = Toaster.new()
+	_toaster._gravity = Toaster.Gravity.BOTTOM
 	multiplayer.connection_failed.connect(_toaster.toast_error.bind("Connection failed!"))
 	multiplayer.server_disconnected.connect(_toaster.toast_error.bind("Connection to server lost!"))
 	Multiplayer.connected_to_multiplayer.connect(_toaster.toast_info.bind("Connecting to multiplayer..."))

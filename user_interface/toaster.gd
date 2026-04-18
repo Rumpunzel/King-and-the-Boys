@@ -14,10 +14,16 @@ enum Gravity {
 	BOTTOM,
 }
 
-enum Direction {
+enum HorizontalPosition {
+	LEFT = -1,
 	CENTER,
-	LEFT,
 	RIGHT,
+}
+
+enum VerticalPosition {
+	TOP = -1,
+	CENTER,
+	BOTTOM,
 }
 
 const text_colors: Dictionary[Type, Color] = {
@@ -34,53 +40,60 @@ const background_colors: Dictionary[Type, Color] = {
 	Type.ERROR: Color("#a34136"),
 }
 
-@export var _gravity: Gravity = Gravity.TOP
-@export var _direction: Direction = Direction.CENTER
+@export var _horizontal_position: HorizontalPosition = HorizontalPosition.CENTER
+@export var _vertical_position: VerticalPosition = VerticalPosition.TOP
+@export var _gravity: Gravity = Gravity.BOTTOM
 @export var _text_size: int = 18
 @export var _custom_toast_font: bool = false
 
 static func show_toast(
 	message: String,
 	type: Type,
+	horizontal_position: HorizontalPosition,
+	vertical_position: VerticalPosition,
 	gravity: Gravity,
-	direction: Direction,
 	text_size: int, 
 	custom_toast_font: bool,
 ) -> void:
 	assert(not message.is_empty())
-	ToastParty.show({
-		"text": message,
-		"bgcolor": background_colors[type],
-		"color": text_colors[type],
-		"gravity": _parse_gravity(gravity),
-		"direction": _parse_direction(direction),
-		"text_size": text_size,
-		"use_font": custom_toast_font,
-	})
+	ToastParty.show(ToasterConfig.new(message, type, horizontal_position, vertical_position, gravity, text_size, custom_toast_font))
 
 func toast_info(message: String) -> void:
-	show_toast(message, Type.INFO, _gravity, _direction, _text_size, _custom_toast_font)
+	show_toast(message, Type.INFO, _horizontal_position, _vertical_position, _gravity, _text_size, _custom_toast_font)
 
 func toast_success(message: String) -> void:
-	show_toast(message, Type.SUCCESS, _gravity, _direction, _text_size, _custom_toast_font)
+	show_toast(message, Type.SUCCESS, _horizontal_position, _vertical_position, _gravity, _text_size, _custom_toast_font)
 
 func toast_warning(message: String) -> void:
-	show_toast(message, Type.WARNING, _gravity, _direction, _text_size, _custom_toast_font)
+	show_toast(message, Type.WARNING, _horizontal_position, _vertical_position, _gravity, _text_size, _custom_toast_font)
 
 func toast_error(message: String) -> void:
-	show_toast(message, Type.ERROR, _gravity, _direction, _text_size, _custom_toast_font)
+	show_toast(message, Type.ERROR, _horizontal_position, _vertical_position, _gravity, _text_size, _custom_toast_font)
 
-static func _parse_gravity(gravity: Gravity) -> String:
-	match(gravity):
-		Gravity.TOP: return "top"
-		Gravity.BOTTOM: return "bottom"
-	assert(false, "Match case for Gravity is not exhaustive!")
-	return ""
-
-static func _parse_direction(direction: Direction) -> String:
-	match(direction):
-		Direction.CENTER: return "center"
-		Direction.LEFT: return "left"
-		Direction.RIGHT: return "right"
-	assert(false, "Match case for Direction is not exhaustive!")
-	return ""
+class ToasterConfig extends RefCounted:
+	var text: String
+	var bgcolor: Color
+	var color: Color
+	var horizontal_position: HorizontalPosition
+	var vertical_position: VerticalPosition
+	var gravity: Gravity
+	var text_size: int
+	var use_font: bool
+	
+	func _init(
+		with_message: String,
+		type: Type,
+		with_horizontal_position: HorizontalPosition,
+		with_vertical_position: VerticalPosition,
+		with_gravity: Gravity,
+		with_text_size: int,
+		with_custom_font: bool
+	) -> void:
+		text = with_message
+		bgcolor = background_colors[type]
+		color = text_colors[type]
+		horizontal_position = with_horizontal_position
+		vertical_position = with_vertical_position
+		gravity = with_gravity
+		text_size = with_text_size
+		use_font = with_custom_font
