@@ -41,6 +41,7 @@ func set_background(background_scene_path: String) -> void:
 	_background_placeholder.visible = true
 	_background_scene_path = background_scene_path
 
+@rpc("call_local", "reliable")
 func clear_background(fade_out: bool = false) -> void:
 	if _tween: _tween.kill()
 	if fade_out:

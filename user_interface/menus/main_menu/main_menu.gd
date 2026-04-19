@@ -22,15 +22,16 @@ func _ready() -> void:
 func open_lobby() -> void:
 	assert(multiplayer.is_server())
 	close_menu()
+	print_debug("Opening lobby...")
 	await fully_closed
 	SceneManager.transition_to_scene(_lobby_host_scene_path, false)
-	print_debug("Opening lobby...")
 
 func connect_to_lobby() -> void:
 	close_menu()
-	await fully_closed
-	SceneManager.transition_to_scene(_lobby_connecting_scene_path, false)
 	print_debug("Connecting to lobby...")
+	await fully_closed
+	if not get_tree().current_scene == self: return
+	SceneManager.transition_to_scene(_lobby_connecting_scene_path, false)
 
 func load_game() -> Error:
 	assert(multiplayer.is_server())

@@ -14,6 +14,8 @@ const VALID_SCENE_FORMATS: Array[StringName] = ["tscn", "scn"]
 
 @export var _loading_screen_scene: PackedScene = preload("uid://dmweuj7kxaxov")
 
+var confirmed_transitions: int = -1
+
 var _scene_path_to_load: String:
 	set(new_scene_path_to_load):
 		if new_scene_path_to_load.is_empty():
@@ -32,6 +34,9 @@ var _setup_mode: SetupMode
 var _loading_screen: LoadingScreen
 var _progress_array: Array[float]
 
+func _enter_tree() -> void:
+	multiplayer.peer_connected.connect(_on_peer_connected)
+
 func _ready() -> void:
 	set_process(false)
 
@@ -40,11 +45,6 @@ func _process(_delta: float) -> void:
 	assert(_progress_array.size() == 1)
 	if _loading_screen: _loading_screen.set_loading_progress(_progress_array[0])
 	if loading_status == ResourceLoader.THREAD_LOAD_LOADED: _transition_to_scene(_scene_path_to_load)
-
-func verify_scene_path(scene_path: String) -> void:
-	var path: String = ResourceUID.ensure_path(scene_path)
-	assert(FileAccess.file_exists(path))
-	assert(VALID_SCENE_FORMATS.has(path.get_extension()))
 
 ## Only loads the scene into memory without transitioning
 func preload_scene(scene_path: String) -> void:
@@ -58,8 +58,8 @@ func transition_to_scene(scene_path: String, show_loading_screen: bool = true) -
 		set_process(false)
 		_transition_to_scene(scene_path)
 		return
-	if show_loading_screen: _show_loading_screen()
 	set_process(true)
+	if show_loading_screen: _show_loading_screen()
 
 func transition_to_scene_with_setup(scene_path: String, scene_setup: Callable, setup_mode: SetupMode) -> void:
 	_scene_setup = scene_setup
@@ -73,14 +73,31 @@ func to_main(show_loading_screen: bool = true) -> void:
 	assert(not get_tree().current_scene or get_tree().current_scene.scene_file_path != main_scene_path)
 	transition_to_scene(main_scene_path, show_loading_screen)
 
+func verify_scene_path(scene_path: String) -> void:
+	var path: String = ResourceUID.ensure_path(scene_path)
+	assert(FileAccess.file_exists(path))
+	assert(VALID_SCENE_FORMATS.has(path.get_extension()))
+
 @rpc("call_remote", "reliable")
 func transition_to_scene_remotely(scene_path: String) -> void:
+	assert(confirmed_transitions == -1)
+	confirmed_transitions = 0
 	_exection = Execution.REMOTE
 	preload_scene(scene_path)
 	var scene_loaded: bool = ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED
 	set_process(not scene_loaded)
 	if scene_loaded: _transition_to_scene(scene_path)
 	_show_loading_screen()
+
+@rpc("any_peer", "call_local", "reliable")
+func confirm_transition() -> void:
+	assert(confirmed_transitions >= 0)
+	confirmed_transitions += 1
+
+@rpc("call_local", "reliable")
+func reset_confirmed_transition() -> void:
+	assert(confirmed_transitions >= 0)
+	confirmed_transitions = -1
 
 @rpc("call_local", "reliable")
 func update_loading_screen(message: String) -> void:
@@ -93,19 +110,23 @@ func remove_loading_screen() -> void:
 	remove_child(_loading_screen)
 	_loading_screen.queue_free()
 
+@rpc("call_remote", "reliable")
+func _transition_new_peer_to_scene_remotely(scene_path: String) -> void:
+	# Local execution as this is only called from the server, but a local loading screen
+	_exection = Execution.LOCAL
+	preload_scene(scene_path)
+	var scene_loaded: bool = ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED
+	set_process(not scene_loaded)
+	if scene_loaded: _transition_to_scene(scene_path)
+	else: _show_loading_screen("Joining Game")
+
 func _transition_to_scene(scene_path: String) -> void:
 	var packed_scene: PackedScene = ResourceLoader.load_threaded_get(scene_path)
 	assert(packed_scene)
 	if scene_path == _scene_path_to_load: _scene_path_to_load = ""
 	var scene_tree: SceneTree = get_tree()
 	if _scene_setup.is_null():
-		scene_tree.change_scene_to_packed(packed_scene)
-		if _exection == Execution.REMOTE:
-			assert(_loading_screen)
-			return
-		if not _loading_screen: return
-		await scene_tree.scene_changed
-		remove_loading_screen()
+		_transition_to_packed_scene(packed_scene)
 		return
 	assert(_exection == Execution.LOCAL)
 	var scene: Node = packed_scene.instantiate()
@@ -116,8 +137,32 @@ func _transition_to_scene(scene_path: String) -> void:
 	_scene_setup = Callable()
 	if _loading_screen: remove_loading_screen()
 
+func _transition_to_packed_scene(packed_scene: PackedScene) -> void:
+	var scene_tree: SceneTree = get_tree()
+	scene_tree.change_scene_to_packed(packed_scene)
+	if _exection == Execution.REMOTE:
+		assert(_loading_screen)
+		await scene_tree.scene_changed
+		SceneManager.confirm_transition.rpc()
+		return
+	if _loading_screen:
+		await scene_tree.scene_changed
+		remove_loading_screen()
+
 func _show_loading_screen(message: String = "Loading") -> void:
 	assert(_loading_screen_scene)
 	_loading_screen = _loading_screen_scene.instantiate()
 	update_loading_screen(message)
 	add_child(_loading_screen)
+
+## When a peer connects, transition them to either the current scene or client version of the current scene.
+func _on_peer_connected(peer_id: int) -> void:
+	if not multiplayer.is_server(): return
+	var current_scene_path: String = get_tree().current_scene.scene_file_path
+	var scene_path: String = current_scene_path
+	var lobby_menu_scene_path: String = ResourceUID.ensure_path("uid://becdxlww4k13g")
+	match current_scene_path:
+		lobby_menu_scene_path:
+			var lobby_guest_menu_scene_path: String = ResourceUID.ensure_path("uid://d3blbqb654ekr")
+			scene_path = lobby_guest_menu_scene_path
+	_transition_new_peer_to_scene_remotely.rpc_id(peer_id, scene_path)

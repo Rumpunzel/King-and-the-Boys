@@ -70,7 +70,6 @@ func _register_player(player_info: Dictionary[StringName, Variant]) -> void:
 	var peer_id: int = multiplayer.get_remote_sender_id() if is_online() else HOST_ID
 	player_info[Player.ID] = peer_id
 	if peer_id == HOST_ID:
-		#connected_to_multiplayer.emit()
 		game_joined.emit(player_info)
 		print_debug("Joined Player %s's multiplayer game!" % player_info)
 	else:
@@ -84,13 +83,14 @@ func _go_offline() -> void:
 
 func _setup_toaster() -> void:
 	var _toaster: Toaster = Toaster.new()
-	_toaster._vertical_position = Toaster.VerticalPosition.BOTTOM
+	_toaster._vertical_position = Toaster.VerticalPosition.TOP
 	_toaster._gravity = Toaster.Gravity.BOTTOM
 	multiplayer.connection_failed.connect(_toaster.toast_error.bind("Connection failed!"))
 	multiplayer.server_disconnected.connect(_toaster.toast_error.bind("Connection to server lost!"))
 	connected_to_multiplayer.connect(_toaster.toast.bind("Connecting to multiplayer..."))
 	disconnected_from_multiplayer.connect(_toaster.toast.bind("Disconnected from multiplayer..."))
 	game_hosted.connect(func(_ip_address: StringName, _port: int) -> void: _toaster.toast_info("Game hosted!"))
+	game_joined.connect(func(host_player_info: Dictionary) -> void: _toaster.toast_success("Joined %s's game!" % host_player_info[Player.NAME]))
 	joining_multiplayer.connect(_toaster.toast.bind("Joining multiplayer..."))
 	add_child(_toaster)
 

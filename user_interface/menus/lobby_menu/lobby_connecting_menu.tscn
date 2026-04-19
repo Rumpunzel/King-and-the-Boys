@@ -5,18 +5,27 @@
 [ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="3_o1khs"]
 [ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="4_vo66w"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vo66w"]
+[sub_resource type="Gradient" id="Gradient_ufuva"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0)
 
-[node name="LobbyConnectingMenu" type="PanelContainer" unique_id=489087421 node_paths=PackedStringArray("_toaster")]
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_hvnq8"]
+gradient = SubResource("Gradient_ufuva")
+width = 1024
+height = 1024
+fill_to = Vector2(0, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vo66w"]
+texture = SubResource("GradientTexture2D_hvnq8")
+
+[node name="LobbyConnectingMenu" type="PanelContainer" unique_id=489087421]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_vo66w")
+theme_override_styles/panel = SubResource("StyleBoxTexture_vo66w")
 script = ExtResource("1_hvnq8")
-_toaster = NodePath("")
-_lobby_guest_scene_path = "uid://d3blbqb654ekr"
 _fade_in_duration = 1.0
 metadata/_custom_type_script = "uid://vr1ncpxlq1vc"
 

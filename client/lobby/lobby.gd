@@ -85,10 +85,9 @@ func _remove_player(player: Player) -> void:
 
 func _setup_toaster() -> void:
 	var _toaster: Toaster = Toaster.new()
-	_toaster._vertical_position = Toaster.VerticalPosition.TOP
+	_toaster._vertical_position = Toaster.VerticalPosition.BOTTOM
 	_toaster._gravity = Toaster.Gravity.BOTTOM
-	Multiplayer.game_joined.connect(func(host_player_info: Dictionary) -> void: _toaster.toast_success("Joined %s's game!" % host_player_info[Player.NAME]))
-	Multiplayer.player_joined.connect(func(player_info: Dictionary) -> void: _toaster.toast_success("%s joined!" % player_info[Player.NAME]))
+	player_connected.connect(func(player: Player) -> void: _toaster.toast_success("%s joined!" % player.player_name))
 	player_disconnected.connect(func(player: Player) -> void: _toaster.toast_info("%s left!" % player.player_name))
 	add_child(_toaster)
 
@@ -108,6 +107,9 @@ func _on_player_joined(player_info: Dictionary[StringName, Variant]) -> void:
 	if not is_multiplayer_authority(): return
 	Player.validate_player_info(player_info)
 	spawn(player_info)
+	var player_id: int = player_info[Player.ID]
+	var connected_player: Player = get_player(player_id)
+	player_connected.emit(connected_player)
 
 func _on_peer_disconnected(peer_id: int) -> void:
 	if not is_multiplayer_authority(): return

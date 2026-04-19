@@ -24,13 +24,12 @@ func start_synching_players() -> void:
 		var spawning_queued: bool = spawn_player_ghost(connected_player)
 		if spawning_queued: return
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	Lobby.player_created.connect(spawn_player_ghost)
+	Lobby.player_created.connect(_on_player_created)
 
 func stop_synching_players() -> void:
 	assert(multiplayer.is_server())
 	_remove_all_player_ghosts()
-	if Lobby.player_created.is_connected(spawn_player_ghost):
-		Lobby.player_created.disconnect(spawn_player_ghost)
+	if Lobby.player_created.is_connected(_on_player_created): Lobby.player_created.disconnect(_on_player_created)
 
 ## @returns [code]true[/code] if spawning is queued for later
 func spawn_player_ghost(player: Player) -> bool:
@@ -76,7 +75,6 @@ func _spawn_player_ghost(player_ghost_data: Dictionary[StringName, Variant]) -> 
 	var player_ghost: PlayerGhost = PlayerGhost.create(player, character_data)
 	assert(not _player_ghosts.has(player_id))
 	_player_ghosts[player_id] = player_ghost
-	#player.tree_exiting.connect(_remove_player_ghost.bind(player_id))
 	return player_ghost
 
 func _remove_all_player_ghosts() -> void:
@@ -87,8 +85,6 @@ func _remove_player_ghost(player_id: int) -> void:
 	var player_ghost: PlayerGhost = player_ghost_weakref.get_ref()
 	_player_ghosts.erase(player_id)
 	if not player_ghost: return
-	var player: Player = player_ghost.player
-	#player.tree_exiting.disconnect(_remove_player_ghost.bind(player_id))
 	remove_child(player_ghost)
 	player_ghost.queue_free()
 
@@ -101,9 +97,16 @@ func _on_child_entered_tree(node: Node) -> void:
 	if not node is PlayerGhost: return
 	player_ghost_created.emit(node)
 
-func _on_peer_disconnected(player_id: int) -> void:
+func _on_player_created(player: Player) -> void:
+	if not _player_ghosts.has(player.player_id):
+		spawn_player_ghost(player)
+		return
+	var existing_player_ghost: PlayerGhost = _player_ghosts[player.player_id]
+	player.character = existing_player_ghost.character.profile
+	existing_player_ghost.player = player
+
+func _on_peer_disconnected(_player_id: int) -> void:
 	return
-	_remove_player_ghost(player_id)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

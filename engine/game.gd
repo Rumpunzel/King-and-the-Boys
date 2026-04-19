@@ -14,7 +14,6 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	Panorama.clear_background()
 
 func setup_game() -> void:
 	if not multiplayer.is_server(): return

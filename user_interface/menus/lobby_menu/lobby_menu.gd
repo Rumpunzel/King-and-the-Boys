@@ -66,19 +66,6 @@ func _get_player_infos() -> Array[PlayerInfo]:
 func _get_available_character() -> CharacterProfile:
 	return load("uid://ro6wvnf88xbo")
 
-func _on_start_pressed() -> void:
-	close_menu()
-	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
-	await fully_closed
-	SceneManager.transition_to_scene_with_setup(_game_scene_path, _setup_level, SceneManager.SetupMode.POST_CHANGE)
-	SceneManager.transition_to_scene_remotely.rpc(_game_scene_path)
-
-static func _setup_level(game: Game) -> Error:
-	SceneManager.update_loading_screen.rpc("Generating")
-	game.setup_game()
-	SceneManager.remove_loading_screen.rpc()
-	return Error.OK
-
 func _on_ready_toggled(_toggled_on: bool) -> void:
 	pass # Replace with function body.
 
