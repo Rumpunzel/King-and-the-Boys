@@ -85,16 +85,11 @@ func _remove_player(player: Player) -> void:
 
 func _setup_toaster() -> void:
 	var _toaster: Toaster = Toaster.new()
+	_toaster._vertical_position = Toaster.VerticalPosition.TOP
 	_toaster._gravity = Toaster.Gravity.BOTTOM
-	multiplayer.connection_failed.connect(_toaster.toast_error.bind("Connection failed!"))
-	multiplayer.server_disconnected.connect(_toaster.toast_error.bind("Connection to server lost!"))
-	Multiplayer.connected_to_multiplayer.connect(_toaster.toast_info.bind("Connecting to multiplayer..."))
-	Multiplayer.disconnected_from_multiplayer.connect(_toaster.toast_warning.bind("Disconnected from multiplayer..."))
-	Multiplayer.game_hosted.connect(func(_ip_address: StringName, _port: int) -> void: _toaster.toast_success("Game hosted!"))
-	Multiplayer.joining_multiplayer.connect(_toaster.toast_info.bind("Joining multiplayer..."))
 	Multiplayer.game_joined.connect(func(host_player_info: Dictionary) -> void: _toaster.toast_success("Joined %s's game!" % host_player_info[Player.NAME]))
 	Multiplayer.player_joined.connect(func(player_info: Dictionary) -> void: _toaster.toast_success("%s joined!" % player_info[Player.NAME]))
-	player_disconnected.connect(func(player: Player) -> void: _toaster.toast_warning("%s left!" % player.player_name))
+	player_disconnected.connect(func(player: Player) -> void: _toaster.toast_info("%s left!" % player.player_name))
 	add_child(_toaster)
 
 func _on_game_started() -> void:

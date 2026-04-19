@@ -31,6 +31,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	_go_offline()
+	_setup_toaster()
 
 func host_game(ip_address: StringName = DEFAULT_SERVER_IP, port: int = PORT) -> Error:
 	assert(_network)
@@ -80,6 +81,18 @@ func _go_offline() -> void:
 	var offline_peer: OfflineMultiplayerPeer = OfflineMultiplayerPeer.new()
 	multiplayer.multiplayer_peer = offline_peer
 	disconnected_from_multiplayer.emit()
+
+func _setup_toaster() -> void:
+	var _toaster: Toaster = Toaster.new()
+	_toaster._vertical_position = Toaster.VerticalPosition.BOTTOM
+	_toaster._gravity = Toaster.Gravity.BOTTOM
+	multiplayer.connection_failed.connect(_toaster.toast_error.bind("Connection failed!"))
+	multiplayer.server_disconnected.connect(_toaster.toast_error.bind("Connection to server lost!"))
+	connected_to_multiplayer.connect(_toaster.toast.bind("Connecting to multiplayer..."))
+	disconnected_from_multiplayer.connect(_toaster.toast.bind("Disconnected from multiplayer..."))
+	game_hosted.connect(func(_ip_address: StringName, _port: int) -> void: _toaster.toast_info("Game hosted!"))
+	joining_multiplayer.connect(_toaster.toast.bind("Joining multiplayer..."))
+	add_child(_toaster)
 
 ## When a peer connects, send them the host info.
 ## This allows transfer of all desired data for each player, not only the unique ID.

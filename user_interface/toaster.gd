@@ -3,6 +3,7 @@ class_name Toaster
 extends Node
 
 enum Type {
+	DEFAULT,
 	INFO,
 	SUCCESS,
 	WARNING,
@@ -27,6 +28,7 @@ enum VerticalPosition {
 }
 
 const text_colors: Dictionary[Type, Color] = {
+	Type.DEFAULT: Color.WHITE,
 	Type.INFO: Color.WHITE,
 	Type.SUCCESS: Color.WHITE,
 	Type.WARNING: Color.BLACK,
@@ -34,6 +36,7 @@ const text_colors: Dictionary[Type, Color] = {
 }
 
 const background_colors: Dictionary[Type, Color] = {
+	Type.DEFAULT: Color("#414042"),
 	Type.INFO: Color("#196ab1"),
 	Type.SUCCESS: Color("#158a43"),
 	Type.WARNING: Color("#c4850e"),
@@ -57,6 +60,9 @@ static func show_toast(
 ) -> void:
 	assert(not message.is_empty())
 	ToastParty.show(ToasterConfig.new(message, type, horizontal_position, vertical_position, gravity, text_size, custom_toast_font))
+
+func toast(message: String) -> void:
+	show_toast(message, Type.DEFAULT, _horizontal_position, _vertical_position, _gravity, _text_size, _custom_toast_font)
 
 func toast_info(message: String) -> void:
 	show_toast(message, Type.INFO, _horizontal_position, _vertical_position, _gravity, _text_size, _custom_toast_font)
