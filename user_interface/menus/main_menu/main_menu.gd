@@ -29,8 +29,6 @@ func open_lobby() -> void:
 func connect_to_lobby() -> void:
 	close_menu()
 	print_debug("Connecting to lobby...")
-	await fully_closed
-	if not get_tree().current_scene == self: return
 	SceneManager.transition_to_scene(_lobby_connecting_scene_path, false)
 
 func load_game() -> Error:

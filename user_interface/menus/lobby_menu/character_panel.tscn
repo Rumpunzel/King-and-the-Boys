@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://21gtxymctrvu"]
+
+[ext_resource type="Script" uid="uid://557j4vm5p4fn" path="res://user_interface/menus/lobby_menu/character_panel.gd" id="1_66a2b"]
+[ext_resource type="FontFile" uid="uid://b0ybin3nm83i1" path="res://assets/fonts/Bokor-Regular.ttf" id="2_mq4a8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2qws8"]
+
+[node name="CharacterPanel" type="PanelContainer" unique_id=1684484384 node_paths=PackedStringArray("_character_portrait", "_character_name")]
+offset_right = 486.0
+offset_bottom = 690.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_2qws8")
+script = ExtResource("1_66a2b")
+_character_portrait = NodePath("VBoxContainer/PanelContainer/Portrait")
+_character_name = NodePath("VBoxContainer/Attributes/VBoxContainer/Name")
+metadata/_custom_type_script = "uid://557j4vm5p4fn"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1774634192]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=818322991]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Portrait" type="TextureRect" parent="VBoxContainer/PanelContainer" unique_id=967569852]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Attributes" type="PanelContainer" parent="VBoxContainer" unique_id=323959594]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Attributes" unique_id=989241585]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="VBoxContainer/Attributes/VBoxContainer" unique_id=2086859535]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_fonts/font = ExtResource("2_mq4a8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Attributes/VBoxContainer" unique_id=825646161]
+visible = false
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/Attributes/VBoxContainer" unique_id=517266370]
+visible = false
+layout_mode = 2
+columns = 2
+
+[node name="Strength" type="Label" parent="VBoxContainer/Attributes/VBoxContainer/GridContainer" unique_id=1825552686]
+layout_mode = 2
+text = "Strength"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Agility" type="Label" parent="VBoxContainer/Attributes/VBoxContainer/GridContainer" unique_id=323059508]
+layout_mode = 2
+text = "Strength"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Intelligence" type="Label" parent="VBoxContainer/Attributes/VBoxContainer/GridContainer" unique_id=1111171139]
+layout_mode = 2
+text = "Strength"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Speed" type="Label" parent="VBoxContainer/Attributes/VBoxContainer/GridContainer" unique_id=1846343353]
+layout_mode = 2
+text = "Strength"
+horizontal_alignment = 1
+vertical_alignment = 1

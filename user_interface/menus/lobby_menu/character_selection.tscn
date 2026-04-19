@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://do0is58dpnojf"]
+
+[ext_resource type="PackedScene" uid="uid://21gtxymctrvu" path="res://user_interface/menus/lobby_menu/character_panel.tscn" id="1_dygw3"]
+[ext_resource type="Script" uid="uid://vypmblaqdpyg" path="res://user_interface/menus/lobby_menu/character_selection.gd" id="1_rvxdx"]
+[ext_resource type="Texture2D" uid="uid://dwbsss4838lf1" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_2.png" id="2_1i5e3"]
+[ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="2_46alb"]
+[ext_resource type="Resource" uid="uid://ro6wvnf88xbo" path="res://data/characters/people/dwarf.tres" id="3_vlxoo"]
+[ext_resource type="Resource" uid="uid://4knh77xf2vfl" path="res://data/characters/people/elf.tres" id="4_6255u"]
+[ext_resource type="Resource" uid="uid://cqkx0op1msr7s" path="res://data/characters/people/knight.tres" id="5_odjvv"]
+[ext_resource type="Resource" uid="uid://dptm3ey44x73g" path="res://data/characters/people/mystic.tres" id="6_mpqyy"]
+[ext_resource type="Resource" uid="uid://d18sc738vkuku" path="res://data/characters/people/rogue.tres" id="7_o63du"]
+
+[node name="CharacterSelection" unique_id=2021463314 instance=ExtResource("1_dygw3")]
+script = ExtResource("1_rvxdx")
+_available_characters = Array[ExtResource("2_46alb")]([ExtResource("3_vlxoo"), ExtResource("4_6255u"), ExtResource("5_odjvv"), ExtResource("6_mpqyy"), ExtResource("7_o63du")])
+
+[node name="Portrait" parent="VBoxContainer/PanelContainer" parent_id_path=PackedInt32Array(818322991) index="0" unique_id=967569852]
+texture = ExtResource("2_1i5e3")
+
+[node name="Name" parent="VBoxContainer/Attributes/VBoxContainer" parent_id_path=PackedInt32Array(989241585) index="0" unique_id=2086859535]
+text = "Knight"

@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cf6txwkm0153"]
+
+[ext_resource type="Script" uid="uid://cydfmkyu11yx2" path="res://user_interface/menus/lobby_menu/lobby_player_panel.gd" id="1_o1a58"]
+[ext_resource type="PackedScene" uid="uid://21gtxymctrvu" path="res://user_interface/menus/lobby_menu/character_panel.tscn" id="2_qa6vs"]
+[ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/menus/lobby_menu/player_info.tscn" id="3_o1a58"]
+[ext_resource type="Texture2D" uid="uid://c73t2rg8wrdt3" path="res://tools/icons/white/console-controller.svg" id="4_o1a58"]
+[ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="5_k8i80"]
+[ext_resource type="Texture2D" uid="uid://bsjjapj01slb6" path="res://tools/icons/editor_icons/hero_icons/check.svg" id="6_6q27a"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2qws8"]
+
+[node name="GuestPlayerPanel" type="PanelContainer" unique_id=568272671 node_paths=PackedStringArray("_character_panel", "_player_info", "_ready_button")]
+offset_right = 486.0
+offset_bottom = 690.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_2qws8")
+script = ExtResource("1_o1a58")
+_character_panel = NodePath("VBoxContainer/CharacterPanel")
+_player_info = NodePath("VBoxContainer/PlayerInfo")
+_ready_button = NodePath("VBoxContainer/Ready")
+metadata/_custom_type_script = "uid://cydfmkyu11yx2"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1774634192]
+layout_mode = 2
+
+[node name="CharacterPanel" parent="VBoxContainer" unique_id=1684484384 instance=ExtResource("2_qa6vs")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayerInfo" parent="VBoxContainer" unique_id=1344657733 instance=ExtResource("3_o1a58")]
+layout_mode = 2
+
+[node name="Ready" type="Button" parent="VBoxContainer" unique_id=75263722]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 2
+theme_override_constants/h_separation = 8
+toggle_mode = true
+button_mask = 0
+icon = ExtResource("4_o1a58")
+flat = true
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("5_k8i80")
+toggled_icon = ExtResource("6_6q27a")
+metadata/_custom_type_script = "uid://cpyey1rgiu5s0"

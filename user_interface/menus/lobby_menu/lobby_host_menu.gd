@@ -9,7 +9,7 @@ func _enter_tree() -> void:
 
 func _on_start_pressed() -> void:
 	close_menu()
-	print_debug("Confirming Lobby for : %s" % [_player_infos.keys()])
+	print_debug("Confirming Lobby for : %s" % [_player_panels.keys()])
 	await fully_closed
 	Panorama.clear_background.rpc()
 	SceneManager.transition_to_scene_with_setup(_game_scene_path, _setup_level, SceneManager.SetupMode.POST_CHANGE)
@@ -30,7 +30,7 @@ static func _setup_level(game: Game) -> Error:
 	return Error.OK
 
 func _on_connected_to_multiplayer() -> void:
-	_ready_button.visible = true
+	pass
 
 func _on_disconnected_from_multiplayer() -> void:
-	_ready_button.visible = false
+	pass

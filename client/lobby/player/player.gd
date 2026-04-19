@@ -40,6 +40,10 @@ const NAME: StringName = "player_name"
 
 @export_group("Configuration")
 
+var _serialized_character: String:
+	get: return character.resource_path if character else ""
+	set(new_serialized_character): if not new_serialized_character.is_empty(): character = load(new_serialized_character)
+
 static func create(new_player_id: int, new_player_name: String) -> Player:
 	var scene: PackedScene = load("uid://bvdlyl1asckv4")
 	var new_player: Player = scene.instantiate()
@@ -68,6 +72,7 @@ static func validate_player_info(player_info: Dictionary[StringName, Variant]) -
 	assert(player_info.has_all([ID, NAME]))
 	assert(player_info.size() == 2)
 
+func is_host() -> bool: return player_id == Multiplayer.HOST_ID
 func is_local_player() -> bool:
 	if not Multiplayer.is_online(): return true
 	if not is_inside_tree(): return Multiplayer.multiplayer.get_unique_id() == player_id

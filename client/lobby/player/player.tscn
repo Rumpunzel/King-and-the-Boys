@@ -4,8 +4,11 @@
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p0vpi"]
 properties/0/path = NodePath(".:player_name")
-properties/0/spawn = false
+properties/0/spawn = true
 properties/0/replication_mode = 2
+properties/1/path = NodePath(".:_serialized_character")
+properties/1/spawn = true
+properties/1/replication_mode = 2
 
 [node name="Player" type="MultiplayerSynchronizer" unique_id=1218445456]
 root_path = NodePath(".")

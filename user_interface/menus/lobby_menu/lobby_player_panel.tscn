@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://c7kea8i8fdsvy"]
+
+[ext_resource type="Script" uid="uid://cydfmkyu11yx2" path="res://user_interface/menus/lobby_menu/lobby_player_panel.gd" id="1_u61ja"]
+[ext_resource type="PackedScene" uid="uid://do0is58dpnojf" path="res://user_interface/menus/lobby_menu/character_selection.tscn" id="2_6u3sx"]
+[ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/menus/lobby_menu/player_info.tscn" id="3_u61ja"]
+[ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="5_rnd7j"]
+[ext_resource type="Texture2D" uid="uid://bsjjapj01slb6" path="res://tools/icons/editor_icons/hero_icons/check.svg" id="6_lan2d"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2qws8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6u3sx"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.76862746, 0.52156866, 0.05490196, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
+
+[node name="PlayerPanel" type="PanelContainer" unique_id=635160952 node_paths=PackedStringArray("_character_panel", "_player_info", "_ready_button")]
+offset_right = 486.0
+offset_bottom = 690.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_2qws8")
+script = ExtResource("1_u61ja")
+_character_panel = NodePath("VBoxContainer/PanelContainer/VBoxContainer/CharacterSelection")
+_player_info = NodePath("VBoxContainer/PanelContainer/VBoxContainer/PlayerInfo")
+_ready_button = NodePath("VBoxContainer/Ready")
+metadata/_custom_type_script = "uid://cydfmkyu11yx2"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1774634192]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=1105105489]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_6u3sx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer" unique_id=1666809714]
+layout_mode = 2
+
+[node name="CharacterSelection" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=2021463314 instance=ExtResource("2_6u3sx")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayerInfo" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=1344657733 instance=ExtResource("3_u61ja")]
+layout_mode = 2
+
+[node name="Ready" type="Button" parent="VBoxContainer" unique_id=1199024611]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_constants/h_separation = 8
+toggle_mode = true
+button_mask = 0
+text = "READY"
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("5_rnd7j")
+toggled_icon = ExtResource("6_lan2d")
+metadata/_custom_type_script = "uid://cpyey1rgiu5s0"
+
+[connection signal="character_selected" from="VBoxContainer/PanelContainer/VBoxContainer/CharacterSelection" to="." method="_on_character_selected"]
