@@ -30,6 +30,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if not _background_scene_path.is_empty() and not _background_scene: _load_background_scene_when_ready()
 
+func is_showing_panorama() -> bool: return _background_scene != null
+
 func set_background(background_scene_path: String) -> void:
 	if _background_scene:
 		if _background_scene.scene_file_path == ResourceUID.ensure_path(background_scene_path): return

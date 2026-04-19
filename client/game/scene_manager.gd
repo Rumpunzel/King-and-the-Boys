@@ -58,10 +58,7 @@ func transition_to_scene(scene_path: String, show_loading_screen: bool = true) -
 		set_process(false)
 		_transition_to_scene(scene_path)
 		return
-	if show_loading_screen:
-		assert(_loading_screen_scene)
-		_loading_screen = _loading_screen_scene.instantiate()
-		add_child(_loading_screen)
+	if show_loading_screen: _show_loading_screen()
 	set_process(true)
 
 func transition_to_scene_with_setup(scene_path: String, scene_setup: Callable, setup_mode: SetupMode) -> void:
@@ -83,9 +80,7 @@ func transition_to_scene_remotely(scene_path: String) -> void:
 	var scene_loaded: bool = ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED
 	set_process(not scene_loaded)
 	if scene_loaded: _transition_to_scene(scene_path)
-	assert(_loading_screen_scene)
-	_loading_screen = _loading_screen_scene.instantiate()
-	add_child(_loading_screen)
+	_show_loading_screen()
 
 @rpc("call_local", "reliable")
 func update_loading_screen(message: String) -> void:
@@ -120,3 +115,9 @@ func _transition_to_scene(scene_path: String) -> void:
 	if _setup_mode == SetupMode.POST_CHANGE: var error: Error = await _scene_setup.call(scene)
 	_scene_setup = Callable()
 	if _loading_screen: remove_loading_screen()
+
+func _show_loading_screen(message: String = "Loading") -> void:
+	assert(_loading_screen_scene)
+	_loading_screen = _loading_screen_scene.instantiate()
+	update_loading_screen(message)
+	add_child(_loading_screen)

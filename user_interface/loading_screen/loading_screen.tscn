@@ -2,12 +2,16 @@
 
 [ext_resource type="Texture2D" uid="uid://dxsmqwnikt6sl" path="res://protoype_assets/the_boys_background_2.png" id="1_nw7rc"]
 [ext_resource type="Script" uid="uid://bal0a5xvafn1h" path="res://user_interface/loading_screen/loading_screen.gd" id="1_xnb5f"]
-[ext_resource type="StyleBox" uid="uid://c1k2tqhaccfdj" path="res://user_interface/menu_panel.tres" id="2_nw7rc"]
 [ext_resource type="PackedScene" uid="uid://8r5k07203hwx" path="res://user_interface/loading_screen/loading_bar.tscn" id="3_xnb5f"]
+[ext_resource type="Script" uid="uid://cike5jo8ky0sg" path="res://user_interface/menus/menu.gd" id="4_s5x3u"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xnb5f"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s5x3u"]
 
 [sub_resource type="Gradient" id="Gradient_s5x3u"]
-offsets = PackedFloat32Array(0.2994924, 1)
-colors = PackedColorArray(0.101960786, 0.101960786, 0.101960786, 1, 0, 0, 0, 0)
+offsets = PackedFloat32Array(0.2, 0.7, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0.1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_mf20u"]
 gradient = SubResource("Gradient_s5x3u")
@@ -21,11 +25,12 @@ texture = SubResource("GradientTexture2D_mf20u")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3o0l7"]
 
-[node name="LoadingScreen" type="CanvasLayer" unique_id=1623508165 node_paths=PackedStringArray("_loading_bar")]
+[node name="LoadingScreen" type="CanvasLayer" unique_id=1623508165 node_paths=PackedStringArray("_background", "_loading_bar")]
 process_mode = 3
-layer = 128
+layer = 100
 script = ExtResource("1_xnb5f")
-_loading_bar = NodePath("PanelContainer/LoadingBar")
+_background = NodePath("PanelContainer/MarginContainer/Background")
+_loading_bar = NodePath("PanelContainer/Menu/LoadingBar")
 metadata/_custom_type_script = "uid://bal0a5xvafn1h"
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1553319817]
@@ -34,33 +39,31 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="ColorRect" type="ColorRect" parent="PanelContainer" unique_id=546579259]
-show_behind_parent = true
-layout_mode = 2
-color = Color(0, 0, 0, 1)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_xnb5f")
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=960227358]
 layout_mode = 2
 theme_override_constants/margin_bottom = 150
 
 [node name="Background" type="TextureRect" parent="PanelContainer/MarginContainer" unique_id=928942914]
+visible = false
 layout_mode = 2
 texture = ExtResource("1_nw7rc")
 stretch_mode = 6
 
-[node name="BottomFade" type="PanelContainer" parent="PanelContainer" unique_id=1621956366]
+[node name="Menu" type="PanelContainer" parent="PanelContainer" unique_id=1884257125]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s5x3u")
+script = ExtResource("4_s5x3u")
+metadata/_custom_type_script = "uid://cike5jo8ky0sg"
+
+[node name="BottomFade" type="PanelContainer" parent="PanelContainer/Menu" unique_id=1621956366]
 custom_minimum_size = Vector2(0, 512)
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxTexture_bih3i")
 
-[node name="LoadingBar" parent="PanelContainer" unique_id=1604917638 instance=ExtResource("3_xnb5f")]
+[node name="LoadingBar" parent="PanelContainer/Menu" unique_id=1604917638 instance=ExtResource("3_xnb5f")]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxEmpty_3o0l7")
-
-[node name="Panel" type="Panel" parent="PanelContainer" unique_id=545431860]
-modulate = Color(1, 1, 1, 0.75000006)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("2_nw7rc")
