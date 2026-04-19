@@ -2,17 +2,18 @@
 
 [ext_resource type="Script" uid="uid://cep0umg7ktxy8" path="res://user_interface/menus/lobby_menu/player_info.gd" id="1_cwx72"]
 [ext_resource type="Texture2D" uid="uid://d3kpui0ngdvp8" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_3.png" id="2_1hjrd"]
+[ext_resource type="Texture2D" uid="uid://b38hjh3hddlj" path="res://protoype_assets/logo/crenel-crown.svg" id="2_2qws8"]
 [ext_resource type="Texture2D" uid="uid://c73t2rg8wrdt3" path="res://tools/icons/white/console-controller.svg" id="4_yen6h"]
 [ext_resource type="Texture2D" uid="uid://bqtf63dlb8eg" path="res://icon.svg" id="22_8uhr8"]
 
 [node name="PlayerInfo" type="VBoxContainer" unique_id=469915613 node_paths=PackedStringArray("_host_indicator", "_local_indicator", "_character_portrait", "_character_name", "_player_avatar", "_player_name", "_ready")]
 offset_top = 63.0
-offset_right = 235.0
-offset_bottom = 267.0
+offset_right = 380.0
+offset_bottom = 578.0
 size_flags_horizontal = 3
 mouse_filter = 0
 script = ExtResource("1_cwx72")
-_host_indicator = NodePath("Character/PanelContainer/Host")
+_host_indicator = NodePath("Character/PanelContainer/MarginContainer/HostIndicator")
 _local_indicator = NodePath("Character/PanelContainer/Local")
 _character_portrait = NodePath("Character/PanelContainer/Portrait")
 _character_name = NodePath("Character/Attributes/VBoxContainer/Name")
@@ -29,23 +30,33 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Host" type="ReferenceRect" parent="Character/PanelContainer" unique_id=1070656394]
+[node name="Portrait" type="TextureRect" parent="Character/PanelContainer" unique_id=967569852]
 layout_mode = 2
-border_color = Color(1, 0.890196, 0.270588, 1)
-border_width = 5.0
-editor_only = false
+texture = ExtResource("2_1hjrd")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MarginContainer" type="MarginContainer" parent="Character/PanelContainer" unique_id=92075660]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HostIndicator" type="TextureRect" parent="Character/PanelContainer/MarginContainer" unique_id=99254987]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("2_2qws8")
+expand_mode = 1
+stretch_mode = 4
 
 [node name="Local" type="ReferenceRect" parent="Character/PanelContainer" unique_id=2087193636]
 layout_mode = 2
 border_color = Color(0.270588, 0.843137, 1, 1)
 border_width = 2.0
 editor_only = false
-
-[node name="Portrait" type="TextureRect" parent="Character/PanelContainer" unique_id=967569852]
-layout_mode = 2
-texture = ExtResource("2_1hjrd")
-expand_mode = 1
-stretch_mode = 6
 
 [node name="Attributes" type="PanelContainer" parent="Character" unique_id=323959594]
 layout_mode = 2

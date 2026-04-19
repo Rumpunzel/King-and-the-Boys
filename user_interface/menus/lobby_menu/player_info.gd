@@ -25,6 +25,11 @@ extends VBoxContainer
 @export var _player_name: Label
 @export var _ready: CheckBox
 
+func _enter_tree() -> void:
+	if Engine.is_editor_hint(): return
+	Multiplayer.connected_to_multiplayer.connect(_on_connected_to_multiplayer)
+	Multiplayer.disconnected_from_multiplayer.connect(_on_disconnected_from_multiplayer)
+
 func _clear() -> void:
 	name = _placeholder_name
 	_host_indicator.visible = false
@@ -39,7 +44,7 @@ func _clear() -> void:
 
 func _update_player_info() -> void:
 	name = "%d" % player.player_id
-	_host_indicator.visible = player.player_id == Multiplayer.HOST_ID
+	_update_host_indicator()
 	_local_indicator.visible = player.is_local_player()
 	_character_portrait.texture = player.character.portrait
 	_character_name.text = player.character.name
@@ -48,6 +53,15 @@ func _update_player_info() -> void:
 	_player_name.text = player.player_name
 	_ready.button_pressed = true
 	_ready.disabled = false
+
+func _update_host_indicator() -> void:
+	_host_indicator.visible = Multiplayer.is_online() and player and player.player_id == Multiplayer.HOST_ID
+
+func _on_connected_to_multiplayer() -> void:
+	_update_host_indicator()
+
+func _on_disconnected_from_multiplayer() -> void:
+	_update_host_indicator()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
