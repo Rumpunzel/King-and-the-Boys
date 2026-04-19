@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://d3blbqb654ekr"]
 
+[ext_resource type="StyleBox" uid="uid://c4045dqsci0uq" path="res://user_interface/menu_panel_bottom.tres" id="1_3j5nk"]
 [ext_resource type="Script" uid="uid://cd0g7grdwdvy1" path="res://user_interface/menus/lobby_menu/lobby_menu.gd" id="1_pffa0"]
 [ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/menus/lobby_menu/player_info.tscn" id="2_sm5fm"]
 [ext_resource type="PackedScene" uid="uid://cn86xgbt14ex6" path="res://user_interface/menus/menus_container.tscn" id="3_h7yms"]
@@ -7,18 +8,16 @@
 [ext_resource type="Texture2D" uid="uid://bsjjapj01slb6" path="res://tools/icons/editor_icons/hero_icons/check.svg" id="6_bdwjy"]
 [ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="8_6d7le"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ajev1"]
-
 [node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_player_infos_container", "_ready_button")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_ajev1")
+theme_override_styles/panel = ExtResource("1_3j5nk")
 script = ExtResource("1_pffa0")
-_player_infos_container = NodePath("MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/PlayerInfos")
-_ready_button = NodePath("MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Ready")
+_player_infos_container = NodePath("MenusContainer/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/PlayerInfos")
+_ready_button = NodePath("MenusContainer/VBoxContainer/MarginContainer/VBoxContainer/Ready")
 _game_scene_path = "uid://ciy6s8n2reyy2"
 _player_info_scene = ExtResource("2_sm5fm")
 _fade_in_duration = 1.0
@@ -31,37 +30,34 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="PanelContainer" type="PanelContainer" parent="MenusContainer/VBoxContainer" unique_id=1406027683]
+[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer" unique_id=1182618921]
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer/PanelContainer" unique_id=1182618921]
-layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=963768587]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenusContainer/VBoxContainer/MarginContainer" unique_id=963768587]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="PanelContainer" type="PanelContainer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=214167932]
+[node name="PanelContainer" type="PanelContainer" parent="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=214167932]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer" unique_id=1305133702]
+[node name="MarginContainer" type="MarginContainer" parent="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer" unique_id=1305133702]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="PlayerInfos" type="HBoxContainer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=776592999]
+[node name="PlayerInfos" type="HBoxContainer" parent="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=776592999]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Ready" type="Button" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=743932031]
+[node name="Ready" type="Button" parent="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=743932031]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_default_cursor_shape = 2
@@ -85,5 +81,5 @@ text = "Leave"
 icon = ExtResource("8_6d7le")
 flat = true
 
-[connection signal="toggled" from="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Ready" to="." method="_on_ready_toggled"]
+[connection signal="toggled" from="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer/Ready" to="." method="_on_ready_toggled"]
 [connection signal="pressed" from="MenusContainer/VBoxContainer/Leave" to="." method="_on_leave_pressed"]

@@ -32,10 +32,11 @@ func _enter_tree() -> void:
 
 func _clear() -> void:
 	name = _placeholder_name
+	modulate.a = 0.5
 	_host_indicator.visible = false
 	_local_indicator.visible = false
 	_character_portrait.texture = _placeholder_avatar
-	_character_name.text = "?"
+	_character_name.text = ""
 	_player_avatar.texture = null
 	#_player_avatar.visible = player.player_avatar != null
 	_player_name.text = _placeholder_name
@@ -44,6 +45,7 @@ func _clear() -> void:
 
 func _update_player_info() -> void:
 	name = "%d" % player.player_id
+	modulate.a = 1.0
 	_update_host_indicator()
 	_local_indicator.visible = player.is_local_player()
 	_character_portrait.texture = player.character.portrait

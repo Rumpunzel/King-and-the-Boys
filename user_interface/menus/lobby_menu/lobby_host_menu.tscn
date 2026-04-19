@@ -2,30 +2,29 @@
 
 [ext_resource type="PackedScene" uid="uid://d3blbqb654ekr" path="res://user_interface/menus/lobby_menu/lobby_guest_menu.tscn" id="1_6ios2"]
 [ext_resource type="Script" uid="uid://cr0bok5d2ves7" path="res://user_interface/menus/lobby_menu/lobby_host_menu.gd" id="2_y2tes"]
-[ext_resource type="Texture2D" uid="uid://b38hjh3hddlj" path="res://protoype_assets/logo/crenel-crown.svg" id="3_y2tes"]
 [ext_resource type="PackedScene" uid="uid://bvxmx3fwfllaa" path="res://user_interface/menus/multiplayer_menu/multiplayer_host_menu.tscn" id="4_wjy6x"]
+[ext_resource type="Texture2D" uid="uid://b0vg3flbqcfqk" path="res://protoype_assets/logo/goblin_icon.png" id="4_y2tes"]
 
 [node name="LobbyHostMenu" unique_id=1066179210 instance=ExtResource("1_6ios2")]
 script = ExtResource("2_y2tes")
 
-[node name="Ready" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" parent_id_path=PackedInt32Array(963768587) index="1" unique_id=743932031]
+[node name="Ready" parent="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer" parent_id_path=PackedInt32Array(963768587) index="1" unique_id=743932031]
 visible = false
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" parent_id_path=PackedInt32Array(963768587) index="2" unique_id=1721420902]
+[node name="HBoxContainer" type="HBoxContainer" parent="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer" parent_id_path=PackedInt32Array(963768587) index="2" unique_id=1721420902]
 layout_mode = 2
 
-[node name="MultiplayerHostMenu" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=445969921 instance=ExtResource("4_wjy6x")]
+[node name="MultiplayerHostMenu" parent="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" index="0" unique_id=445969921 instance=ExtResource("4_wjy6x")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Start" type="Button" parent="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1964483943]
+[node name="Start" type="Button" parent="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1964483943]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_default_cursor_shape = 2
-theme_override_font_sizes/font_size = 24
 text = "Start"
-icon = ExtResource("3_y2tes")
+icon = ExtResource("4_y2tes")
 icon_alignment = 2
 expand_icon = true
 
-[connection signal="pressed" from="MenusContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="MenusContainer/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/Start" to="." method="_on_start_pressed"]
