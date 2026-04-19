@@ -3,7 +3,7 @@
 class_name MainMenu
 extends Menu
 
-@export_file("*.tscn") var _background_scene_path: String
+@export_file("*.tscn", "*.scn") var _background_scene_path: String
 
 @export_group("Configuration")
 @export_file("*.tscn") var _lobby_host_scene_path: String

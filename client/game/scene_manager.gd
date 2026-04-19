@@ -10,6 +10,8 @@ enum SetupMode {
 	POST_CHANGE,
 }
 
+const VALID_SCENE_FORMATS: Array[StringName] = ["tscn", "scn"]
+
 @export var _loading_screen_scene: PackedScene = preload("uid://dmweuj7kxaxov")
 
 var _scene_path_to_load: String:
@@ -42,7 +44,7 @@ func _process(_delta: float) -> void:
 func verify_scene_path(scene_path: String) -> void:
 	var path: String = ResourceUID.ensure_path(scene_path)
 	assert(FileAccess.file_exists(path))
-	assert(path.get_extension() == "tscn")
+	assert(VALID_SCENE_FORMATS.has(path.get_extension()))
 
 ## Only loads the scene into memory without transitioning
 func preload_scene(scene_path: String) -> void:
