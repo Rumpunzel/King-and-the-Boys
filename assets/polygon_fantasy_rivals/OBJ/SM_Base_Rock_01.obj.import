@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ban3qypq5m736"
+path="res://.godot/imported/SM_Base_Rock_01.obj-f56090ba7690b0bfbdb3a4bd2f66b2b1.mesh"
+
+[deps]
+
+files=["res://.godot/imported/SM_Base_Rock_01.obj-f56090ba7690b0bfbdb3a4bd2f66b2b1.mesh"]
+
+source_file="res://assets/polygon_fantasy_rivals/OBJ/SM_Base_Rock_01.obj"
+dest_files=["res://.godot/imported/SM_Base_Rock_01.obj-f56090ba7690b0bfbdb3a4bd2f66b2b1.mesh", "res://.godot/imported/SM_Base_Rock_01.obj-f56090ba7690b0bfbdb3a4bd2f66b2b1.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
