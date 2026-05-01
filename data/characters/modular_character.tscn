@@ -1,34 +1,35 @@
 [gd_scene format=3 uid="uid://c6oheyitbnlpu"]
 
 [ext_resource type="Script" uid="uid://bdais0l7n3ei1" path="res://assets/polygon_modular_fantasy_heroes/char_visual.gd" id="1_jigrv"]
-[ext_resource type="ArrayMesh" uid="uid://dije2xjkoot05" path="res://data/characters/people/meshes/body/hair/Chr_Hair_05.res" id="2_scytm"]
+[ext_resource type="ArrayMesh" uid="uid://cmtki1f6v4te7" path="res://data/characters/people/meshes/body/hair/Chr_Hair_18.res" id="2_6oe0c"]
 [ext_resource type="Script" uid="uid://bpc78snhxhw1t" path="res://engine/objects/characters/modular_body_part_simple.gd" id="3_scytm"]
-[ext_resource type="ArrayMesh" uid="uid://y2hw5sylvj7k" path="res://data/characters/people/meshes/gear/back_attachment/Chr_BackAttachment_11.res" id="4_6oe0c"]
+[ext_resource type="ArrayMesh" uid="uid://c530g68sn352k" path="res://data/characters/people/meshes/gear/back_attachment/Chr_BackAttachment_01.res" id="4_scytm"]
 [ext_resource type="ArrayMesh" uid="uid://gam81uyscytk" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/Chr_ShoulderAttachRight_03.res" id="5_w4wwp"]
-[ext_resource type="ArrayMesh" uid="uid://h3aietprmjid" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/Chr_ShoulderAttachLeft_11.res" id="6_6oe0c"]
-[ext_resource type="ArrayMesh" uid="uid://t05rwjea00au" path="res://data/characters/people/meshes/gear/elbow_attachment_right/Chr_ElbowAttachRight_06.res" id="7_scytm"]
-[ext_resource type="ArrayMesh" uid="uid://hs413m7cq5q6" path="res://data/characters/people/meshes/gear/elbow_attachment_left/Chr_ElbowAttachLeft_02.res" id="8_qnvxh"]
-[ext_resource type="ArrayMesh" uid="uid://bdrmaf3g5ugxr" path="res://data/characters/people/meshes/gear/hips_attachment/Chr_HipsAttachment_07.res" id="9_e1rvy"]
-[ext_resource type="ArrayMesh" uid="uid://drvky2wke0vpb" path="res://data/characters/people/meshes/gear/knee_attachment_right/Chr_KneeAttachRight_09.res" id="10_qlyqs"]
-[ext_resource type="ArrayMesh" uid="uid://dm8cyese57f0x" path="res://data/characters/people/meshes/gear/knee_attachment_left/Chr_KneeAttachLeft_10.res" id="11_xp80y"]
+[ext_resource type="ArrayMesh" uid="uid://br48uta0ujemf" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/Chr_ShoulderAttachLeft_13.res" id="6_qnvxh"]
+[ext_resource type="ArrayMesh" uid="uid://cj1bnpou4oqc7" path="res://data/characters/people/meshes/gear/elbow_attachment_right/Chr_ElbowAttachRight_04.res" id="7_e1rvy"]
+[ext_resource type="ArrayMesh" uid="uid://fo0lthyiacuk" path="res://data/characters/people/meshes/gear/elbow_attachment_left/Chr_ElbowAttachLeft_06.res" id="8_qlyqs"]
+[ext_resource type="ArrayMesh" uid="uid://ja4pjwr1e2eq" path="res://data/characters/people/meshes/gear/hips_attachment/Chr_HipsAttachment_09.res" id="9_xp80y"]
+[ext_resource type="ArrayMesh" uid="uid://bfwjd3e5lm0kb" path="res://data/characters/people/meshes/gear/knee_attachment_right/Chr_KneeAttachRight_02.res" id="10_vlwxu"]
+[ext_resource type="ArrayMesh" uid="uid://myvpbsuva8q6" path="res://data/characters/people/meshes/gear/knee_attachment_left/Chr_KneeAttachLeft_01.res" id="11_h4jcq"]
 [ext_resource type="ArrayMesh" uid="uid://b3c2s8x174hmi" path="res://data/characters/people/meshes/body/male/eyebrows/Chr_Eyebrow_Male_06.res" id="12_vlwxu"]
 [ext_resource type="Script" uid="uid://c6nl3p3rcjph7" path="res://engine/objects/characters/modular_body_part_gendered.gd" id="13_scytm"]
-[ext_resource type="ArrayMesh" uid="uid://etbsylw2rpek" path="res://data/characters/people/meshes/body/male/facial_hair/Chr_FacialHair_Male_10.res" id="14_h4jcq"]
-[ext_resource type="ArrayMesh" uid="uid://gbh6rtyulgy" path="res://data/characters/people/meshes/gear/male/torso/Chr_Torso_Male_25.res" id="15_lqru0"]
-[ext_resource type="ArrayMesh" uid="uid://bjbl8j8awpnd1" path="res://data/characters/people/meshes/gear/male/arm_upper_right/Chr_ArmUpperRight_Male_16.res" id="16_4u5s7"]
-[ext_resource type="ArrayMesh" uid="uid://bwdpbevj1c378" path="res://data/characters/people/meshes/gear/male/arm_upper_left/Chr_ArmUpperLeft_Male_02.res" id="17_3v2ll"]
-[ext_resource type="ArrayMesh" uid="uid://bc04tt7uralef" path="res://data/characters/people/meshes/gear/male/arm_lower_right/Chr_ArmLowerRight_Male_03.res" id="18_vyb0w"]
-[ext_resource type="ArrayMesh" uid="uid://b5kigp80xdjhc" path="res://data/characters/people/meshes/gear/male/arm_lower_left/Chr_ArmLowerLeft_Male_10.res" id="19_lfppy"]
-[ext_resource type="ArrayMesh" uid="uid://cx7owyhsrm5qu" path="res://data/characters/people/meshes/gear/male/hand_right/Chr_HandRight_Male_11.res" id="20_nnam1"]
+[ext_resource type="ArrayMesh" uid="uid://dpue2guwjtj2h" path="res://data/characters/people/meshes/body/male/facial_hair/Chr_FacialHair_Male_09.res" id="14_lqru0"]
+[ext_resource type="ArrayMesh" uid="uid://bq6r006fwipuh" path="res://data/characters/people/meshes/gear/male/torso/Chr_Torso_Male_28.res" id="15_4u5s7"]
+[ext_resource type="ArrayMesh" uid="uid://4ha3nuwvml7p" path="res://data/characters/people/meshes/gear/male/arm_upper_right/Chr_ArmUpperRight_Male_02.res" id="16_3v2ll"]
+[ext_resource type="ArrayMesh" uid="uid://dluib08lnejjs" path="res://data/characters/people/meshes/gear/male/arm_upper_left/Chr_ArmUpperLeft_Male_00.res" id="17_vyb0w"]
+[ext_resource type="ArrayMesh" uid="uid://c8uwnjol05rut" path="res://data/characters/people/meshes/gear/male/arm_lower_right/Chr_ArmLowerRight_Male_01.res" id="18_lfppy"]
+[ext_resource type="ArrayMesh" uid="uid://5swdb2xqrlut" path="res://data/characters/people/meshes/gear/male/arm_lower_left/Chr_ArmLowerLeft_Male_16.res" id="19_nnam1"]
+[ext_resource type="ArrayMesh" uid="uid://dltceiwbhbese" path="res://data/characters/people/meshes/gear/male/hand_right/Chr_HandRight_Male_05.res" id="20_3p0y5"]
 [ext_resource type="ArrayMesh" uid="uid://bf2wy6xmc4m6n" path="res://data/characters/people/meshes/gear/male/hand_left/Chr_HandLeft_Male_16.res" id="21_3p0y5"]
-[ext_resource type="ArrayMesh" uid="uid://c6v0xedj2cd53" path="res://data/characters/people/meshes/gear/male/hips/Chr_Hips_Male_06.res" id="22_sfkbw"]
-[ext_resource type="ArrayMesh" uid="uid://bs467wmtfdaj7" path="res://data/characters/people/meshes/gear/male/leg_left/Chr_LegLeft_Male_15.res" id="23_d32xa"]
-[ext_resource type="ArrayMesh" uid="uid://cr1beos6i51o2" path="res://data/characters/people/meshes/gear/male/leg_left/Chr_LegLeft_Male_16.res" id="24_yqx1j"]
-[ext_resource type="ArrayMesh" uid="uid://cytgndop282na" path="res://data/characters/people/meshes/gear/head_coverings_base_hair/Chr_HeadCoverings_Base_Hair_07.res" id="25_mluuy"]
-[ext_resource type="ArrayMesh" uid="uid://b5jpdwag24cjg" path="res://data/characters/people/meshes/gear/helmet_attachment/Chr_HelmetAttachment_09.res" id="26_u6iy8"]
+[ext_resource type="ArrayMesh" uid="uid://drjgy0a3adqom" path="res://data/characters/people/meshes/gear/male/hips/Chr_Hips_Male_25.res" id="22_sfkbw"]
+[ext_resource type="ArrayMesh" uid="uid://dm6ien7gutgqf" path="res://data/characters/people/meshes/gear/male/leg_left/Chr_LegLeft_Male_10.res" id="23_d32xa"]
+[ext_resource type="ArrayMesh" uid="uid://dsv33u4g44mss" path="res://data/characters/people/meshes/gear/male/leg_left/Chr_LegLeft_Male_06.res" id="24_yqx1j"]
+[ext_resource type="ArrayMesh" uid="uid://dupl114jnrxec" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/Chr_HeadCoverings_No_Hair_10.res" id="25_mluuy"]
+[ext_resource type="ArrayMesh" uid="uid://b2raufdegpf8g" path="res://data/characters/people/meshes/gear/head_coverings_base_hair/Chr_HeadCoverings_Base_Hair_04.res" id="26_dbkht"]
+[ext_resource type="ArrayMesh" uid="uid://cr3s3xdvxca41" path="res://data/characters/people/meshes/gear/helmet_attachment/Chr_HelmetAttachment_03.res" id="27_u6iy8"]
 [ext_resource type="ArrayMesh" uid="uid://k4domd7j6mi8" path="res://data/characters/people/meshes/body/ears/Chr_Ear_Ear_01.res" id="27_y2evg"]
-[ext_resource type="ArrayMesh" uid="uid://dfm2scgkug6i0" path="res://data/characters/people/meshes/body/male/head/Chr_Head_Male_10.res" id="28_dbkht"]
-[ext_resource type="ArrayMesh" uid="uid://bqffbjyslco73" path="res://data/characters/people/meshes/gear/male/head/Chr_Head_No_Elements_Male_09.res" id="29_u6iy8"]
+[ext_resource type="ArrayMesh" uid="uid://bud8j6ulv6qws" path="res://data/characters/people/meshes/body/male/head/Chr_Head_Male_06.res" id="29_sdy60"]
+[ext_resource type="ArrayMesh" uid="uid://b28w0rxaqjq3i" path="res://data/characters/people/meshes/gear/male/head/Chr_Head_No_Elements_Male_06.res" id="30_nbt1k"]
 
 [sub_resource type="Skin" id="Skin_qunii"]
 resource_name = "Skin8"
@@ -964,21 +965,22 @@ bones/62/rotation = Quaternion(-0.4611367, -0.5360532, -0.4611367, 0.5360531)
 bones/62/scale = Vector3(1, 1, 1)
 
 [node name="Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=696948374]
-mesh = ExtResource("2_scytm")
+visible = false
+mesh = ExtResource("2_6oe0c")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/body/hair"
-_index = 4
+_index = 17
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="BackAttachment" type="MeshInstance3D" parent="Skeleton3D" unique_id=845337587]
-mesh = ExtResource("4_6oe0c")
+mesh = ExtResource("4_scytm")
 skin = SubResource("Skin_rcfm2")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/back_attachment"
-_index = 10
+_index = 0
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="ShoulderAttachRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1585100556]
@@ -991,57 +993,57 @@ _index = 2
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="ShoulderAttachLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=987040304]
-mesh = ExtResource("6_6oe0c")
+mesh = ExtResource("6_qnvxh")
 skin = SubResource("Skin_gow2m")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/shoulder_attachment_left"
-_index = 10
+_index = 12
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="ElbowAttachRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1748924802]
-mesh = ExtResource("7_scytm")
+mesh = ExtResource("7_e1rvy")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/elbow_attachment_right"
-_index = 5
+_index = 3
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="ElbowAttachLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=140631445]
-mesh = ExtResource("8_qnvxh")
+mesh = ExtResource("8_qlyqs")
 skin = SubResource("Skin_gow2m")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/elbow_attachment_left"
-_index = 1
+_index = 5
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="HipsAttachment" type="MeshInstance3D" parent="Skeleton3D" unique_id=1576410596]
-mesh = ExtResource("9_e1rvy")
+mesh = ExtResource("9_xp80y")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/hips_attachment"
-_index = 6
+_index = 8
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="KneeAttachRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1452005193]
-mesh = ExtResource("10_qlyqs")
+mesh = ExtResource("10_vlwxu")
 skin = SubResource("Skin_q0xn1")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/knee_attachment_right"
-_index = 8
+_index = 1
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="KneeAttachLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=1480384045]
-mesh = ExtResource("11_xp80y")
+mesh = ExtResource("11_h4jcq")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/knee_attachment_left"
-_index = 9
+_index = 0
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="Eyebrow" type="MeshInstance3D" parent="Skeleton3D" unique_id=611616150]
@@ -1055,72 +1057,73 @@ _index = 5
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="FacialHair" type="MeshInstance3D" parent="Skeleton3D" unique_id=1350422135]
-mesh = ExtResource("14_h4jcq")
+visible = false
+mesh = ExtResource("14_lqru0")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _male_mesh_directory = "res://data/characters/people/meshes/body/male/facial_hair"
-_index = 9
+_index = 8
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="Torso" type="MeshInstance3D" parent="Skeleton3D" unique_id=1722040556]
-mesh = ExtResource("15_lqru0")
+mesh = ExtResource("15_4u5s7")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/torso"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/torso"
-_index = 25
+_index = 28
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="ArmUpperRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=265750345]
-mesh = ExtResource("16_4u5s7")
+mesh = ExtResource("16_3v2ll")
 skin = SubResource("Skin_ymc4t")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/arm_upper_right"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/arm_upper_right"
-_index = 16
+_index = 2
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="ArmUpperLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=512604962]
-mesh = ExtResource("17_3v2ll")
+mesh = ExtResource("17_vyb0w")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/arm_upper_left"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/arm_upper_left"
-_index = 2
+_index = 0
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="ArmLowerRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=565075519]
-mesh = ExtResource("18_vyb0w")
+mesh = ExtResource("18_lfppy")
 skin = SubResource("Skin_xgiro")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/arm_lower_right"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/arm_lower_right"
-_index = 3
+_index = 1
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="ArmLowerLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=1765112503]
-mesh = ExtResource("19_lfppy")
+mesh = ExtResource("19_nnam1")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/arm_lower_left"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/arm_lower_left"
-_index = 10
+_index = 16
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="HandRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1662916459]
-mesh = ExtResource("20_nnam1")
+mesh = ExtResource("20_3p0y5")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/hand_right"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/hand_right"
-_index = 11
+_index = 5
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="HandLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=805991406]
@@ -1140,7 +1143,7 @@ skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/hips"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/hips"
-_index = 6
+_index = 25
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="LegLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=238045667]
@@ -1150,7 +1153,7 @@ skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/leg_left"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/leg_left"
-_index = 15
+_index = 10
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="LegRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=957346657]
@@ -1160,25 +1163,27 @@ skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/leg_left"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/leg_left"
-_index = 16
+_index = 6
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="HeadCoverings_No_Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=1449400606 node_paths=PackedStringArray("_related_parts")]
-skin = SubResource("Skin_ymc4t")
-skeleton = NodePath("..")
-script = ExtResource("3_scytm")
-_mesh_directory = "res://data/characters/people/meshes/gear/head_coverings_no_hair"
-_index = 12
-_related_parts = [NodePath("../Hair"), NodePath("../HeadCoverings_Base_Hair"), NodePath("../HeadCoverings_No_FacialHair"), NodePath("../Head")]
-metadata/_custom_type_script = "uid://bpc78snhxhw1t"
-
-[node name="HeadCoverings_Base_Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=698731839 node_paths=PackedStringArray("_related_parts")]
 mesh = ExtResource("25_mluuy")
 skin = SubResource("Skin_ymc4t")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
+_mesh_directory = "res://data/characters/people/meshes/gear/head_coverings_no_hair"
+_index = 33
+_related_parts = [NodePath("../Hair"), NodePath("../HeadCoverings_Base_Hair"), NodePath("../HeadCoverings_No_FacialHair"), NodePath("../Head")]
+metadata/_custom_type_script = "uid://bpc78snhxhw1t"
+
+[node name="HeadCoverings_Base_Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=698731839 node_paths=PackedStringArray("_related_parts")]
+visible = false
+mesh = ExtResource("26_dbkht")
+skin = SubResource("Skin_ymc4t")
+skeleton = NodePath("..")
+script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/head_coverings_base_hair"
-_index = 6
+_index = 3
 _related_parts = [NodePath("../HeadCoverings_No_Hair"), NodePath("../HeadCoverings_No_FacialHair"), NodePath("../Head")]
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
@@ -1187,17 +1192,17 @@ skin = SubResource("Skin_yg58n")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/head_coverings_no_facial_hair"
-_index = 1
+_index = 4
 _related_parts = [NodePath("../FacialHair"), NodePath("../HeadCoverings_No_Hair"), NodePath("../HeadCoverings_Base_Hair"), NodePath("../Head")]
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="HelmetAttachment" type="MeshInstance3D" parent="Skeleton3D" unique_id=40423006]
-mesh = ExtResource("26_u6iy8")
+mesh = ExtResource("27_u6iy8")
 skin = SubResource("Skin_r1pnr")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/helmet_attachment"
-_index = 8
+_index = 2
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="Ear" type="MeshInstance3D" parent="Skeleton3D" unique_id=140204218]
@@ -1209,23 +1214,24 @@ _mesh_directory = "res://data/characters/people/meshes/body/ear_ear"
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="Head_No_Elements" type="MeshInstance3D" parent="Skeleton3D" unique_id=703333712]
-mesh = ExtResource("28_dbkht")
+mesh = ExtResource("29_sdy60")
 skin = SubResource("Skin_ymc4t")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/body/female/head"
 _male_mesh_directory = "res://data/characters/people/meshes/body/male/head"
-_index = 10
+_index = 6
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="Head" type="MeshInstance3D" parent="Skeleton3D" unique_id=476034710 node_paths=PackedStringArray("_related_parts")]
-mesh = ExtResource("29_u6iy8")
+visible = false
+mesh = ExtResource("30_nbt1k")
 skin = SubResource("Skin_r1pnr")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/head"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/head"
-_index = 8
+_index = 5
 _related_parts = [NodePath("../HeadCoverings_No_Hair"), NodePath("../HeadCoverings_Base_Hair"), NodePath("../HeadCoverings_No_FacialHair")]
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
