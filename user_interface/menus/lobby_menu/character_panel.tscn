@@ -25,7 +25,7 @@ size_flags_vertical = 3
 [node name="Portrait" type="TextureRect" parent="VBoxContainer/PanelContainer" unique_id=967569852]
 layout_mode = 2
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Attributes" type="PanelContainer" parent="VBoxContainer" unique_id=323959594]
 layout_mode = 2

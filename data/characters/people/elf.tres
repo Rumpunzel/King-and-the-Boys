@@ -3,8 +3,10 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_xkb2u"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_giiki"]
 [ext_resource type="PackedScene" uid="uid://c1y1c3gomyjk6" path="res://data/characters/people/rogue.tscn" id="3_lr5qy"]
-[ext_resource type="Texture2D" uid="uid://c0olk24khqlnj" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_4.png" id="4_1nbx6"]
+[ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_lr5qy"]
+[ext_resource type="Texture2D" uid="uid://ben162rfher0t" path="res://data/characters/people/portraits/elf-helmet.svg" id="5_1nbx6"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_4smo8"]
+[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_4smo8"]
 
 [resource]
 script = ExtResource("5_4smo8")
@@ -13,7 +15,7 @@ agility = 4
 intelligence = 4
 speed = 5
 name = "Elf"
-portrait = ExtResource("4_1nbx6")
+portrait = ExtResource("5_1nbx6")
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_lr5qy")])
 heads_up_display_offset = Vector3(0, 2.25, 0)

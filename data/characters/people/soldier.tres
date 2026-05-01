@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://bxlvdrtypiygb"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_ul877"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_xol3p"]
+[ext_resource type="PackedScene" uid="uid://b55tt1yijxn7r" path="res://data/characters/people/king.tscn" id="3_agffl"]
+[ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_mo1vi"]
+[ext_resource type="Texture2D" uid="uid://b0o64egjvwnqs" path="res://data/characters/people/portraits/closed-barbute.svg" id="5_ul877"]
+[ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="6_sgqnm"]
+[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_3myd1"]
+
+[resource]
+script = ExtResource("6_sgqnm")
+name = "Soldier"
+portrait = ExtResource("5_ul877")
+color = Color(0.878431, 0.878431, 0.878431, 1)
+_model_variations = Array[PackedScene]([ExtResource("3_agffl")])
+heads_up_display_offset = Vector3(0, 2.25, 0)
+metadata/_custom_type_script = "uid://ddefcwtx6jfym"
