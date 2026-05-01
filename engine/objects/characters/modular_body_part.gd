@@ -13,6 +13,9 @@ var _mesh_list: Array[String] = []:
 		if _mesh_list.is_empty(): _load_meshes()
 		return _mesh_list
 
+func _ready() -> void:
+	custom_aabb = AABB()
+
 func update_index(index: int) -> int:
 	_index = index
 	update_visibility(true)
@@ -21,11 +24,12 @@ func update_index(index: int) -> int:
 		_index = -1
 		return _index
 	if _mesh_list.is_empty():
-		push_error("No meshes.")
+		if not _get_mesh_directory() == "NONE": push_error("No meshes.")
 		_index = -1
 		return _index
 	_index %= _mesh_list.size()
-	var new_mesh: Mesh = load(_mesh_list[_index])
+	var new_mesh: ArrayMesh = load(_mesh_list[_index])
+	new_mesh.custom_aabb = AABB(Vector3.ZERO, Vector3.ONE)
 	mesh = new_mesh
 	return _index
 
@@ -46,12 +50,12 @@ func _get_mesh_filenames() -> Array[String]:
 	if mesh_directory_path.is_empty(): return filenames
 	var dir: DirAccess = DirAccess.open(mesh_directory_path)
 	if not dir:
-		push_error("Meshes subdirectory not found.")
+		push_error("Meshes subdirectory @ <%s> not found." % mesh_directory_path)
 		return filenames
 	dir.list_dir_begin()
 	var filename: String = dir.get_next()
 	while filename != "":
-		if not dir.current_is_dir(): filenames.append("%s/%s" % [dir.get_current_dir(), filename])
+		if not dir.current_is_dir() and filename.begins_with("modular_character_"): filenames.append("%s/%s" % [dir.get_current_dir(), filename])
 		filename = dir.get_next()
 	return filenames
 

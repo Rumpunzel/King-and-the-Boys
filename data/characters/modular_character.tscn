@@ -1,39 +1,40 @@
 [gd_scene format=3 uid="uid://c6oheyitbnlpu"]
 
 [ext_resource type="Script" uid="uid://bdais0l7n3ei1" path="res://assets/polygon_modular_fantasy_heroes/char_visual.gd" id="1_jigrv"]
-[ext_resource type="ArrayMesh" uid="uid://cmtki1f6v4te7" path="res://data/characters/people/meshes/body/hair/Chr_Hair_18.res" id="2_6oe0c"]
+[ext_resource type="ArrayMesh" uid="uid://dwjnj2m7om6q8" path="res://data/characters/people/meshes/body/hair/modular_character_Hair_05.res" id="2_scytm"]
 [ext_resource type="Script" uid="uid://bpc78snhxhw1t" path="res://engine/objects/characters/modular_body_part_simple.gd" id="3_scytm"]
-[ext_resource type="ArrayMesh" uid="uid://c530g68sn352k" path="res://data/characters/people/meshes/gear/back_attachment/Chr_BackAttachment_01.res" id="4_scytm"]
-[ext_resource type="ArrayMesh" uid="uid://gam81uyscytk" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/Chr_ShoulderAttachRight_03.res" id="5_w4wwp"]
-[ext_resource type="ArrayMesh" uid="uid://br48uta0ujemf" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/Chr_ShoulderAttachLeft_13.res" id="6_qnvxh"]
-[ext_resource type="ArrayMesh" uid="uid://cj1bnpou4oqc7" path="res://data/characters/people/meshes/gear/elbow_attachment_right/Chr_ElbowAttachRight_04.res" id="7_e1rvy"]
-[ext_resource type="ArrayMesh" uid="uid://fo0lthyiacuk" path="res://data/characters/people/meshes/gear/elbow_attachment_left/Chr_ElbowAttachLeft_06.res" id="8_qlyqs"]
-[ext_resource type="ArrayMesh" uid="uid://ja4pjwr1e2eq" path="res://data/characters/people/meshes/gear/hips_attachment/Chr_HipsAttachment_09.res" id="9_xp80y"]
-[ext_resource type="ArrayMesh" uid="uid://bfwjd3e5lm0kb" path="res://data/characters/people/meshes/gear/knee_attachment_right/Chr_KneeAttachRight_02.res" id="10_vlwxu"]
-[ext_resource type="ArrayMesh" uid="uid://myvpbsuva8q6" path="res://data/characters/people/meshes/gear/knee_attachment_left/Chr_KneeAttachLeft_01.res" id="11_h4jcq"]
-[ext_resource type="ArrayMesh" uid="uid://b3c2s8x174hmi" path="res://data/characters/people/meshes/body/male/eyebrows/Chr_Eyebrow_Male_06.res" id="12_vlwxu"]
+[ext_resource type="ArrayMesh" uid="uid://de3yvnp0yysxx" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_08.res" id="4_qnvxh"]
+[ext_resource type="ArrayMesh" uid="uid://bcu0b0crhopg1" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_04.res" id="5_e1rvy"]
+[ext_resource type="ArrayMesh" uid="uid://b432frbe0foi3" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_20.res" id="6_qlyqs"]
+[ext_resource type="ArrayMesh" uid="uid://dhuitpqo5oq03" path="res://data/characters/people/meshes/gear/elbow_attachment_right/modular_character_ElbowAttachRight_03.res" id="7_xp80y"]
+[ext_resource type="ArrayMesh" uid="uid://c3mcv10gxrf8s" path="res://data/characters/people/meshes/gear/elbow_attachment_left/modular_character_ElbowAttachLeft_05.res" id="8_vlwxu"]
+[ext_resource type="ArrayMesh" uid="uid://cr8ggnelir72l" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_08.res" id="9_h4jcq"]
+[ext_resource type="ArrayMesh" uid="uid://cd57s16iwx02i" path="res://data/characters/people/meshes/gear/knee_attachment_right/modular_character_KneeAttachRight_11.res" id="10_lqru0"]
+[ext_resource type="ArrayMesh" uid="uid://brpfvuj46x7nx" path="res://data/characters/people/meshes/gear/knee_attachment_left/modular_character_KneeAttachLeft_04.res" id="11_4u5s7"]
+[ext_resource type="ArrayMesh" uid="uid://cipch5hwcni8e" path="res://data/characters/people/meshes/body/male/eyebrows/modular_character_Eyebrow_Male_05.res" id="12_4u5s7"]
 [ext_resource type="Script" uid="uid://c6nl3p3rcjph7" path="res://engine/objects/characters/modular_body_part_gendered.gd" id="13_scytm"]
-[ext_resource type="ArrayMesh" uid="uid://dpue2guwjtj2h" path="res://data/characters/people/meshes/body/male/facial_hair/Chr_FacialHair_Male_09.res" id="14_lqru0"]
-[ext_resource type="ArrayMesh" uid="uid://bq6r006fwipuh" path="res://data/characters/people/meshes/gear/male/torso/Chr_Torso_Male_28.res" id="15_4u5s7"]
-[ext_resource type="ArrayMesh" uid="uid://4ha3nuwvml7p" path="res://data/characters/people/meshes/gear/male/arm_upper_right/Chr_ArmUpperRight_Male_02.res" id="16_3v2ll"]
-[ext_resource type="ArrayMesh" uid="uid://dluib08lnejjs" path="res://data/characters/people/meshes/gear/male/arm_upper_left/Chr_ArmUpperLeft_Male_00.res" id="17_vyb0w"]
-[ext_resource type="ArrayMesh" uid="uid://c8uwnjol05rut" path="res://data/characters/people/meshes/gear/male/arm_lower_right/Chr_ArmLowerRight_Male_01.res" id="18_lfppy"]
-[ext_resource type="ArrayMesh" uid="uid://5swdb2xqrlut" path="res://data/characters/people/meshes/gear/male/arm_lower_left/Chr_ArmLowerLeft_Male_16.res" id="19_nnam1"]
-[ext_resource type="ArrayMesh" uid="uid://dltceiwbhbese" path="res://data/characters/people/meshes/gear/male/hand_right/Chr_HandRight_Male_05.res" id="20_3p0y5"]
-[ext_resource type="ArrayMesh" uid="uid://bf2wy6xmc4m6n" path="res://data/characters/people/meshes/gear/male/hand_left/Chr_HandLeft_Male_16.res" id="21_3p0y5"]
-[ext_resource type="ArrayMesh" uid="uid://drjgy0a3adqom" path="res://data/characters/people/meshes/gear/male/hips/Chr_Hips_Male_25.res" id="22_sfkbw"]
-[ext_resource type="ArrayMesh" uid="uid://dm6ien7gutgqf" path="res://data/characters/people/meshes/gear/male/leg_left/Chr_LegLeft_Male_10.res" id="23_d32xa"]
-[ext_resource type="ArrayMesh" uid="uid://dsv33u4g44mss" path="res://data/characters/people/meshes/gear/male/leg_left/Chr_LegLeft_Male_06.res" id="24_yqx1j"]
-[ext_resource type="ArrayMesh" uid="uid://dupl114jnrxec" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/Chr_HeadCoverings_No_Hair_10.res" id="25_mluuy"]
-[ext_resource type="ArrayMesh" uid="uid://b2raufdegpf8g" path="res://data/characters/people/meshes/gear/head_coverings_base_hair/Chr_HeadCoverings_Base_Hair_04.res" id="26_dbkht"]
-[ext_resource type="ArrayMesh" uid="uid://cr3s3xdvxca41" path="res://data/characters/people/meshes/gear/helmet_attachment/Chr_HelmetAttachment_03.res" id="27_u6iy8"]
-[ext_resource type="ArrayMesh" uid="uid://k4domd7j6mi8" path="res://data/characters/people/meshes/body/ears/Chr_Ear_Ear_01.res" id="27_y2evg"]
-[ext_resource type="ArrayMesh" uid="uid://bud8j6ulv6qws" path="res://data/characters/people/meshes/body/male/head/Chr_Head_Male_06.res" id="29_sdy60"]
-[ext_resource type="ArrayMesh" uid="uid://b28w0rxaqjq3i" path="res://data/characters/people/meshes/gear/male/head/Chr_Head_No_Elements_Male_06.res" id="30_nbt1k"]
+[ext_resource type="ArrayMesh" uid="uid://dcgc0dl6vy8n1" path="res://data/characters/people/meshes/body/male/facial_hair/modular_character_FacialHair_Male_12.res" id="14_3v2ll"]
+[ext_resource type="ArrayMesh" uid="uid://dpoclgbk213ve" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_20.res" id="15_vyb0w"]
+[ext_resource type="ArrayMesh" uid="uid://dv15h4cq6scml" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_06.res" id="16_lfppy"]
+[ext_resource type="ArrayMesh" uid="uid://244d7dfu75mq" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_05.res" id="17_nnam1"]
+[ext_resource type="ArrayMesh" uid="uid://dichqar4ibsvv" path="res://data/characters/people/meshes/gear/male/arm_lower_right/modular_character_ArmLowerRight_Male_12.res" id="18_3p0y5"]
+[ext_resource type="ArrayMesh" uid="uid://d0o77l8gd8wq0" path="res://data/characters/people/meshes/gear/male/arm_lower_left/modular_character_ArmLowerLeft_Male_16.res" id="19_sfkbw"]
+[ext_resource type="ArrayMesh" uid="uid://chjf1c0h77dhe" path="res://data/characters/people/meshes/gear/male/hand_right/modular_character_HandRight_Male_02.res" id="20_d32xa"]
+[ext_resource type="ArrayMesh" uid="uid://c2c0ahchjxj5n" path="res://data/characters/people/meshes/gear/male/hand_left/modular_character_HandLeft_Male_04.res" id="21_yqx1j"]
+[ext_resource type="ArrayMesh" uid="uid://dbsptb7j6h8pb" path="res://data/characters/people/meshes/gear/male/hips/modular_character_Hips_Male_15.res" id="22_mluuy"]
+[ext_resource type="ArrayMesh" uid="uid://dos8wi7cntcvs" path="res://data/characters/people/meshes/gear/male/leg_left/modular_character_LegLeft_Male_04.res" id="23_dbkht"]
+[ext_resource type="ArrayMesh" uid="uid://bumojbo322bwk" path="res://data/characters/people/meshes/gear/male/leg_left/modular_character_LegLeft_Male_00.res" id="23_u6iy8"]
+[ext_resource type="ArrayMesh" uid="uid://c67g853tmg2ei" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_13.res" id="25_sdy60"]
+[ext_resource type="ArrayMesh" uid="uid://cm458nv6rw431" path="res://data/characters/people/meshes/gear/head_coverings_base_hair/modular_character_HeadCoverings_Base_Hair_03.res" id="26_nbt1k"]
+[ext_resource type="ArrayMesh" uid="uid://05ot0akquey2" path="res://data/characters/people/meshes/gear/head_coverings_no_facial_hair/modular_character_HeadCoverings_No_FacialHair_02.res" id="27_y3hmm"]
+[ext_resource type="ArrayMesh" uid="uid://i1koay15lhma" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_10.res" id="28_y2evg"]
+[ext_resource type="ArrayMesh" uid="uid://b7iv6fp5kmj7f" path="res://data/characters/people/meshes/body/ears/modular_character_Ear_Ear_02.res" id="29_qods5"]
+[ext_resource type="ArrayMesh" uid="uid://cip00kov2yt48" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_07.res" id="30_ffcfl"]
+[ext_resource type="ArrayMesh" uid="uid://bewstpbstev4d" path="res://data/characters/people/meshes/gear/male/head/modular_character_Head_Male_22.res" id="31_u4hh0"]
 
 [sub_resource type="Skin" id="Skin_qunii"]
 resource_name = "Skin8"
-bind_count = 7
+bind_count = 54
 bind/0/name = &"Spine_03"
 bind/0/bone = -1
 bind/0/pose = Transform3D(6.105544e-17, 0.997111, 0.0759622, -5.6581013e-17, 0.0759622, -0.997111, -1, 5.6581e-17, 6.105542e-17, -1.3311008, -0.13416325, -7.367981e-17)
@@ -55,10 +56,151 @@ bind/5/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.7845478, -0.00569244)
 bind/6/name = &"Shoulder_Attachment_R"
 bind/6/bone = -1
 bind/6/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.190989, -1.4510298, 0.0484224)
+bind/7/name = &""
+bind/7/bone = -1
+bind/7/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/8/name = &""
+bind/8/bone = -1
+bind/8/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/9/name = &""
+bind/9/bone = -1
+bind/9/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/10/name = &""
+bind/10/bone = -1
+bind/10/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/11/name = &""
+bind/11/bone = -1
+bind/11/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/12/name = &""
+bind/12/bone = -1
+bind/12/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/13/name = &""
+bind/13/bone = -1
+bind/13/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/14/name = &""
+bind/14/bone = -1
+bind/14/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/15/name = &""
+bind/15/bone = -1
+bind/15/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/16/name = &""
+bind/16/bone = -1
+bind/16/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/17/name = &""
+bind/17/bone = -1
+bind/17/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/18/name = &""
+bind/18/bone = -1
+bind/18/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/19/name = &""
+bind/19/bone = -1
+bind/19/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/20/name = &""
+bind/20/bone = -1
+bind/20/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/21/name = &""
+bind/21/bone = -1
+bind/21/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/22/name = &""
+bind/22/bone = -1
+bind/22/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/23/name = &""
+bind/23/bone = -1
+bind/23/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/24/name = &""
+bind/24/bone = -1
+bind/24/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/25/name = &""
+bind/25/bone = -1
+bind/25/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/26/name = &""
+bind/26/bone = -1
+bind/26/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/27/name = &""
+bind/27/bone = -1
+bind/27/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/28/name = &""
+bind/28/bone = -1
+bind/28/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/29/name = &""
+bind/29/bone = -1
+bind/29/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/30/name = &""
+bind/30/bone = -1
+bind/30/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/31/name = &""
+bind/31/bone = -1
+bind/31/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/32/name = &""
+bind/32/bone = -1
+bind/32/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/33/name = &""
+bind/33/bone = -1
+bind/33/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/34/name = &""
+bind/34/bone = -1
+bind/34/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/35/name = &""
+bind/35/bone = -1
+bind/35/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/36/name = &""
+bind/36/bone = -1
+bind/36/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/37/name = &""
+bind/37/bone = -1
+bind/37/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/38/name = &""
+bind/38/bone = -1
+bind/38/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/39/name = &""
+bind/39/bone = -1
+bind/39/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/40/name = &""
+bind/40/bone = -1
+bind/40/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/41/name = &""
+bind/41/bone = -1
+bind/41/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/42/name = &""
+bind/42/bone = -1
+bind/42/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/43/name = &""
+bind/43/bone = -1
+bind/43/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/44/name = &""
+bind/44/bone = -1
+bind/44/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/45/name = &""
+bind/45/bone = -1
+bind/45/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/46/name = &""
+bind/46/bone = -1
+bind/46/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/47/name = &""
+bind/47/bone = -1
+bind/47/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/48/name = &""
+bind/48/bone = -1
+bind/48/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/49/name = &""
+bind/49/bone = -1
+bind/49/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/50/name = &""
+bind/50/bone = -1
+bind/50/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/51/name = &""
+bind/51/bone = -1
+bind/51/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/52/name = &""
+bind/52/bone = -1
+bind/52/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/53/name = &""
+bind/53/bone = -1
+bind/53/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [sub_resource type="Skin" id="Skin_rcfm2"]
 resource_name = "Skin12"
-bind_count = 12
+bind_count = 42
 bind/0/name = &"Spine_03"
 bind/0/bone = -1
 bind/0/pose = Transform3D(6.105544e-17, 0.997111, 0.0759622, -5.6581013e-17, 0.0759622, -0.997111, -1, 5.6581e-17, 6.105542e-17, -1.3311008, -0.13416325, -7.367981e-17)
@@ -95,10 +237,100 @@ bind/10/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.190989, -1.4510298, 0.04
 bind/11/name = &"Back_Attachment"
 bind/11/bone = -1
 bind/11/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.4921659, 0.14936832)
+bind/12/name = &""
+bind/12/bone = -1
+bind/12/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/13/name = &""
+bind/13/bone = -1
+bind/13/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/14/name = &""
+bind/14/bone = -1
+bind/14/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/15/name = &""
+bind/15/bone = -1
+bind/15/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/16/name = &""
+bind/16/bone = -1
+bind/16/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/17/name = &""
+bind/17/bone = -1
+bind/17/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/18/name = &""
+bind/18/bone = -1
+bind/18/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/19/name = &""
+bind/19/bone = -1
+bind/19/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/20/name = &""
+bind/20/bone = -1
+bind/20/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/21/name = &""
+bind/21/bone = -1
+bind/21/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/22/name = &""
+bind/22/bone = -1
+bind/22/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/23/name = &""
+bind/23/bone = -1
+bind/23/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/24/name = &""
+bind/24/bone = -1
+bind/24/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/25/name = &""
+bind/25/bone = -1
+bind/25/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/26/name = &""
+bind/26/bone = -1
+bind/26/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/27/name = &""
+bind/27/bone = -1
+bind/27/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/28/name = &""
+bind/28/bone = -1
+bind/28/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/29/name = &""
+bind/29/bone = -1
+bind/29/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/30/name = &""
+bind/30/bone = -1
+bind/30/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/31/name = &""
+bind/31/bone = -1
+bind/31/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/32/name = &""
+bind/32/bone = -1
+bind/32/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/33/name = &""
+bind/33/bone = -1
+bind/33/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/34/name = &""
+bind/34/bone = -1
+bind/34/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/35/name = &""
+bind/35/bone = -1
+bind/35/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/36/name = &""
+bind/36/bone = -1
+bind/36/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/37/name = &""
+bind/37/bone = -1
+bind/37/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/38/name = &""
+bind/38/bone = -1
+bind/38/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/39/name = &""
+bind/39/bone = -1
+bind/39/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/40/name = &""
+bind/40/bone = -1
+bind/40/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/41/name = &""
+bind/41/bone = -1
+bind/41/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [sub_resource type="Skin" id="Skin_gow2m"]
 resource_name = "Skin7"
-bind_count = 4
+bind_count = 24
 bind/0/name = &"Head"
 bind/0/bone = -1
 bind/0/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5691123, 0.00483958)
@@ -111,10 +343,70 @@ bind/2/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6967815, -0.11788256)
 bind/3/name = &"Head_Attachment"
 bind/3/bone = -1
 bind/3/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.7845478, -0.00569244)
+bind/4/name = &""
+bind/4/bone = -1
+bind/4/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/5/name = &""
+bind/5/bone = -1
+bind/5/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/6/name = &""
+bind/6/bone = -1
+bind/6/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/7/name = &""
+bind/7/bone = -1
+bind/7/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/8/name = &""
+bind/8/bone = -1
+bind/8/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/9/name = &""
+bind/9/bone = -1
+bind/9/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/10/name = &""
+bind/10/bone = -1
+bind/10/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/11/name = &""
+bind/11/bone = -1
+bind/11/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/12/name = &""
+bind/12/bone = -1
+bind/12/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/13/name = &""
+bind/13/bone = -1
+bind/13/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/14/name = &""
+bind/14/bone = -1
+bind/14/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/15/name = &""
+bind/15/bone = -1
+bind/15/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/16/name = &""
+bind/16/bone = -1
+bind/16/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/17/name = &""
+bind/17/bone = -1
+bind/17/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/18/name = &""
+bind/18/bone = -1
+bind/18/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/19/name = &""
+bind/19/bone = -1
+bind/19/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/20/name = &""
+bind/20/bone = -1
+bind/20/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/21/name = &""
+bind/21/bone = -1
+bind/21/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/22/name = &""
+bind/22/bone = -1
+bind/22/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/23/name = &""
+bind/23/bone = -1
+bind/23/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [sub_resource type="Skin" id="Skin_q0xn1"]
 resource_name = "Skin6"
-bind_count = 5
+bind_count = 48
 bind/0/name = &"Head"
 bind/0/bone = -1
 bind/0/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5691123, 0.00483958)
@@ -130,10 +422,139 @@ bind/3/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.7845478, -0.00569244)
 bind/4/name = &"Shoulder_Attachment_R"
 bind/4/bone = -1
 bind/4/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.190989, -1.4510298, 0.0484224)
+bind/5/name = &""
+bind/5/bone = -1
+bind/5/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/6/name = &""
+bind/6/bone = -1
+bind/6/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/7/name = &""
+bind/7/bone = -1
+bind/7/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/8/name = &""
+bind/8/bone = -1
+bind/8/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/9/name = &""
+bind/9/bone = -1
+bind/9/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/10/name = &""
+bind/10/bone = -1
+bind/10/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/11/name = &""
+bind/11/bone = -1
+bind/11/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/12/name = &""
+bind/12/bone = -1
+bind/12/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/13/name = &""
+bind/13/bone = -1
+bind/13/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/14/name = &""
+bind/14/bone = -1
+bind/14/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/15/name = &""
+bind/15/bone = -1
+bind/15/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/16/name = &""
+bind/16/bone = -1
+bind/16/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/17/name = &""
+bind/17/bone = -1
+bind/17/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/18/name = &""
+bind/18/bone = -1
+bind/18/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/19/name = &""
+bind/19/bone = -1
+bind/19/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/20/name = &""
+bind/20/bone = -1
+bind/20/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/21/name = &""
+bind/21/bone = -1
+bind/21/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/22/name = &""
+bind/22/bone = -1
+bind/22/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/23/name = &""
+bind/23/bone = -1
+bind/23/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/24/name = &""
+bind/24/bone = -1
+bind/24/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/25/name = &""
+bind/25/bone = -1
+bind/25/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/26/name = &""
+bind/26/bone = -1
+bind/26/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/27/name = &""
+bind/27/bone = -1
+bind/27/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/28/name = &""
+bind/28/bone = -1
+bind/28/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/29/name = &""
+bind/29/bone = -1
+bind/29/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/30/name = &""
+bind/30/bone = -1
+bind/30/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/31/name = &""
+bind/31/bone = -1
+bind/31/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/32/name = &""
+bind/32/bone = -1
+bind/32/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/33/name = &""
+bind/33/bone = -1
+bind/33/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/34/name = &""
+bind/34/bone = -1
+bind/34/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/35/name = &""
+bind/35/bone = -1
+bind/35/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/36/name = &""
+bind/36/bone = -1
+bind/36/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/37/name = &""
+bind/37/bone = -1
+bind/37/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/38/name = &""
+bind/38/bone = -1
+bind/38/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/39/name = &""
+bind/39/bone = -1
+bind/39/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/40/name = &""
+bind/40/bone = -1
+bind/40/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/41/name = &""
+bind/41/bone = -1
+bind/41/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/42/name = &""
+bind/42/bone = -1
+bind/42/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/43/name = &""
+bind/43/bone = -1
+bind/43/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/44/name = &""
+bind/44/bone = -1
+bind/44/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/45/name = &""
+bind/45/bone = -1
+bind/45/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/46/name = &""
+bind/46/bone = -1
+bind/46/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/47/name = &""
+bind/47/bone = -1
+bind/47/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [sub_resource type="Skin" id="Skin_ymc4t"]
 resource_name = "Skin13"
-bind_count = 8
+bind_count = 50
 bind/0/name = &"Spine_03"
 bind/0/bone = -1
 bind/0/pose = Transform3D(6.105544e-17, 0.997111, 0.0759622, -5.6581013e-17, 0.0759622, -0.997111, -1, 5.6581e-17, 6.105542e-17, -1.3311008, -0.13416325, -7.367981e-17)
@@ -158,10 +579,136 @@ bind/6/pose = Transform3D(0.8828524, -0.012983402, -0.4694713, 0.011463394, 0.99
 bind/7/name = &"Shoulder_Attachment_R"
 bind/7/bone = -1
 bind/7/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.190989, -1.4510298, 0.0484224)
+bind/8/name = &""
+bind/8/bone = -1
+bind/8/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/9/name = &""
+bind/9/bone = -1
+bind/9/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/10/name = &""
+bind/10/bone = -1
+bind/10/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/11/name = &""
+bind/11/bone = -1
+bind/11/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/12/name = &""
+bind/12/bone = -1
+bind/12/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/13/name = &""
+bind/13/bone = -1
+bind/13/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/14/name = &""
+bind/14/bone = -1
+bind/14/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/15/name = &""
+bind/15/bone = -1
+bind/15/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/16/name = &""
+bind/16/bone = -1
+bind/16/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/17/name = &""
+bind/17/bone = -1
+bind/17/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/18/name = &""
+bind/18/bone = -1
+bind/18/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/19/name = &""
+bind/19/bone = -1
+bind/19/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/20/name = &""
+bind/20/bone = -1
+bind/20/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/21/name = &""
+bind/21/bone = -1
+bind/21/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/22/name = &""
+bind/22/bone = -1
+bind/22/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/23/name = &""
+bind/23/bone = -1
+bind/23/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/24/name = &""
+bind/24/bone = -1
+bind/24/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/25/name = &""
+bind/25/bone = -1
+bind/25/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/26/name = &""
+bind/26/bone = -1
+bind/26/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/27/name = &""
+bind/27/bone = -1
+bind/27/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/28/name = &""
+bind/28/bone = -1
+bind/28/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/29/name = &""
+bind/29/bone = -1
+bind/29/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/30/name = &""
+bind/30/bone = -1
+bind/30/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/31/name = &""
+bind/31/bone = -1
+bind/31/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/32/name = &""
+bind/32/bone = -1
+bind/32/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/33/name = &""
+bind/33/bone = -1
+bind/33/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/34/name = &""
+bind/34/bone = -1
+bind/34/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/35/name = &""
+bind/35/bone = -1
+bind/35/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/36/name = &""
+bind/36/bone = -1
+bind/36/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/37/name = &""
+bind/37/bone = -1
+bind/37/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/38/name = &""
+bind/38/bone = -1
+bind/38/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/39/name = &""
+bind/39/bone = -1
+bind/39/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/40/name = &""
+bind/40/bone = -1
+bind/40/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/41/name = &""
+bind/41/bone = -1
+bind/41/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/42/name = &""
+bind/42/bone = -1
+bind/42/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/43/name = &""
+bind/43/bone = -1
+bind/43/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/44/name = &""
+bind/44/bone = -1
+bind/44/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/45/name = &""
+bind/45/bone = -1
+bind/45/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/46/name = &""
+bind/46/bone = -1
+bind/46/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/47/name = &""
+bind/47/bone = -1
+bind/47/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/48/name = &""
+bind/48/bone = -1
+bind/48/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/49/name = &""
+bind/49/bone = -1
+bind/49/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [sub_resource type="Skin" id="Skin_xgiro"]
 resource_name = "Skin14"
-bind_count = 6
+bind_count = 28
 bind/0/name = &"Spine_03"
 bind/0/bone = -1
 bind/0/pose = Transform3D(6.105544e-17, 0.997111, 0.0759622, -5.6581013e-17, 0.0759622, -0.997111, -1, 5.6581e-17, 6.105542e-17, -1.3311008, -0.13416325, -7.367981e-17)
@@ -180,43 +727,75 @@ bind/4/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6967815, -0.11788256)
 bind/5/name = &"Head_Attachment"
 bind/5/bone = -1
 bind/5/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.7845478, -0.00569244)
+bind/6/name = &""
+bind/6/bone = -1
+bind/6/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/7/name = &""
+bind/7/bone = -1
+bind/7/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/8/name = &""
+bind/8/bone = -1
+bind/8/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/9/name = &""
+bind/9/bone = -1
+bind/9/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/10/name = &""
+bind/10/bone = -1
+bind/10/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/11/name = &""
+bind/11/bone = -1
+bind/11/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/12/name = &""
+bind/12/bone = -1
+bind/12/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/13/name = &""
+bind/13/bone = -1
+bind/13/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/14/name = &""
+bind/14/bone = -1
+bind/14/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/15/name = &""
+bind/15/bone = -1
+bind/15/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/16/name = &""
+bind/16/bone = -1
+bind/16/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/17/name = &""
+bind/17/bone = -1
+bind/17/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/18/name = &""
+bind/18/bone = -1
+bind/18/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/19/name = &""
+bind/19/bone = -1
+bind/19/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/20/name = &""
+bind/20/bone = -1
+bind/20/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/21/name = &""
+bind/21/bone = -1
+bind/21/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/22/name = &""
+bind/22/bone = -1
+bind/22/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/23/name = &""
+bind/23/bone = -1
+bind/23/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/24/name = &""
+bind/24/bone = -1
+bind/24/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/25/name = &""
+bind/25/bone = -1
+bind/25/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/26/name = &""
+bind/26/bone = -1
+bind/26/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/27/name = &""
+bind/27/bone = -1
+bind/27/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [sub_resource type="Skin" id="Skin_1n2bs"]
 resource_name = "Skin15"
-bind_count = 11
-bind/0/name = &"Spine_03"
-bind/0/bone = -1
-bind/0/pose = Transform3D(6.105544e-17, 0.997111, 0.0759622, -5.6581013e-17, 0.0759622, -0.997111, -1, 5.6581e-17, 6.105542e-17, -1.3311008, -0.13416325, -7.367981e-17)
-bind/1/name = &"Neck"
-bind/1/bone = -1
-bind/1/pose = Transform3D(6.045487e-17, 0.987303, 0.158851, -5.150555e-17, 0.158851, -0.987303, -1, 5.1505526e-17, 6.0454846e-17, -1.4267756, -0.2540326, -7.3171385e-17)
-bind/2/name = &"Head"
-bind/2/bone = -1
-bind/2/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5691123, 0.00483958)
-bind/3/name = &"Eyes"
-bind/3/bone = -1
-bind/3/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6635884, -0.11788256)
-bind/4/name = &"Eyebrows"
-bind/4/bone = -1
-bind/4/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6967815, -0.11788256)
-bind/5/name = &"Head_Attachment"
-bind/5/bone = -1
-bind/5/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.7845478, -0.00569244)
-bind/6/name = &"Clavicle_L"
-bind/6/bone = -1
-bind/6/pose = Transform3D(0.8828524, -0.012983402, -0.4694713, 0.011463394, 0.999916, -0.006095851, 0.469511, 1.5735133e-09, 0.882927, -0.041317545, -1.3927602, -0.046918124)
-bind/7/name = &"Shoulder_L"
-bind/7/bone = -1
-bind/7/pose = Transform3D(0.996542, -0.08250205, -0.00988054, 0.082498, 0.996591, -0.0008179528, 0.0099143395, -5.224172e-10, 0.999951, -0.07609689, -1.4014487, 0.04652652)
-bind/8/name = &"Clavicle_R"
-bind/8/bone = -1
-bind/8/pose = Transform3D(0.8828524, 0.012983402, 0.4694713, 0.011463394, -0.999916, 0.006095851, 0.469511, -1.5735134e-09, -0.882927, 0.041317463, 1.3927639, 0.046918083)
-bind/9/name = &"Shoulder_R"
-bind/9/bone = -1
-bind/9/pose = Transform3D(0.996542, 0.08250205, 0.00988054, 0.082498, -0.996591, 0.0008179528, 0.0099143395, 5.224173e-10, -0.999951, 0.076096885, 1.4014459, -0.04652649)
-bind/10/name = &"Shoulder_Attachment_R"
-bind/10/bone = -1
-bind/10/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.190989, -1.4510298, 0.0484224)
 
 [sub_resource type="Skin" id="Skin_yg58n"]
 resource_name = "Skin16"
@@ -966,148 +1545,149 @@ bones/62/scale = Vector3(1, 1, 1)
 
 [node name="Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=696948374]
 visible = false
-mesh = ExtResource("2_6oe0c")
+mesh = ExtResource("2_scytm")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/body/hair"
-_index = 17
+_index = 4
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="BackAttachment" type="MeshInstance3D" parent="Skeleton3D" unique_id=845337587]
-mesh = ExtResource("4_scytm")
+mesh = ExtResource("4_qnvxh")
 skin = SubResource("Skin_rcfm2")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/back_attachment"
-_index = 0
+_index = 7
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="ShoulderAttachRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1585100556]
-mesh = ExtResource("5_w4wwp")
+mesh = ExtResource("5_e1rvy")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/shoulder_attachment_right"
-_index = 2
+_index = 3
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="ShoulderAttachLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=987040304]
-mesh = ExtResource("6_qnvxh")
+mesh = ExtResource("6_qlyqs")
 skin = SubResource("Skin_gow2m")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/shoulder_attachment_left"
-_index = 12
+_index = 19
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="ElbowAttachRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1748924802]
-mesh = ExtResource("7_e1rvy")
+mesh = ExtResource("7_xp80y")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/elbow_attachment_right"
-_index = 3
+_index = 2
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="ElbowAttachLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=140631445]
-mesh = ExtResource("8_qlyqs")
+mesh = ExtResource("8_vlwxu")
 skin = SubResource("Skin_gow2m")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/elbow_attachment_left"
-_index = 5
+_index = 4
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="HipsAttachment" type="MeshInstance3D" parent="Skeleton3D" unique_id=1576410596]
-mesh = ExtResource("9_xp80y")
+mesh = ExtResource("9_h4jcq")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/hips_attachment"
-_index = 8
+_index = 7
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="KneeAttachRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1452005193]
-mesh = ExtResource("10_vlwxu")
+mesh = ExtResource("10_lqru0")
 skin = SubResource("Skin_q0xn1")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/knee_attachment_right"
-_index = 1
+_index = 10
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="KneeAttachLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=1480384045]
-mesh = ExtResource("11_h4jcq")
+mesh = ExtResource("11_4u5s7")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/knee_attachment_left"
-_index = 0
+_index = 3
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="Eyebrow" type="MeshInstance3D" parent="Skeleton3D" unique_id=611616150]
-mesh = ExtResource("12_vlwxu")
+mesh = ExtResource("12_4u5s7")
 skin = SubResource("Skin_ymc4t")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/body/female/eyebrows"
 _male_mesh_directory = "res://data/characters/people/meshes/body/male/eyebrows"
-_index = 5
+_index = 4
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="FacialHair" type="MeshInstance3D" parent="Skeleton3D" unique_id=1350422135]
 visible = false
-mesh = ExtResource("14_lqru0")
+mesh = ExtResource("14_3v2ll")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
+_female_mesh_directory = "NONE"
 _male_mesh_directory = "res://data/characters/people/meshes/body/male/facial_hair"
-_index = 8
+_index = 11
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="Torso" type="MeshInstance3D" parent="Skeleton3D" unique_id=1722040556]
-mesh = ExtResource("15_4u5s7")
+mesh = ExtResource("15_vyb0w")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/torso"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/torso"
-_index = 28
+_index = 20
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="ArmUpperRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=265750345]
-mesh = ExtResource("16_3v2ll")
+mesh = ExtResource("16_lfppy")
 skin = SubResource("Skin_ymc4t")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/arm_upper_right"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/arm_upper_right"
-_index = 2
+_index = 6
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="ArmUpperLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=512604962]
-mesh = ExtResource("17_vyb0w")
+mesh = ExtResource("17_nnam1")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/arm_upper_left"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/arm_upper_left"
-_index = 0
+_index = 5
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="ArmLowerRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=565075519]
-mesh = ExtResource("18_lfppy")
+mesh = ExtResource("18_3p0y5")
 skin = SubResource("Skin_xgiro")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/arm_lower_right"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/arm_lower_right"
-_index = 1
+_index = 12
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="ArmLowerLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=1765112503]
-mesh = ExtResource("19_nnam1")
+mesh = ExtResource("19_sfkbw")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
@@ -1117,104 +1697,106 @@ _index = 16
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="HandRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1662916459]
-mesh = ExtResource("20_3p0y5")
+mesh = ExtResource("20_d32xa")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/hand_right"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/hand_right"
-_index = 5
+_index = 2
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="HandLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=805991406]
-mesh = ExtResource("21_3p0y5")
+mesh = ExtResource("21_yqx1j")
 skin = SubResource("Skin_qunii")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/hand_left"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/hand_left"
-_index = 16
+_index = 4
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="Hips" type="MeshInstance3D" parent="Skeleton3D" unique_id=245906295]
-mesh = ExtResource("22_sfkbw")
+mesh = ExtResource("22_mluuy")
 skin = SubResource("Skin_ymc4t")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/hips"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/hips"
-_index = 25
+_index = 15
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="LegLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=238045667]
-mesh = ExtResource("23_d32xa")
+mesh = ExtResource("23_u6iy8")
 skin = SubResource("Skin_1n2bs")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/leg_left"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/leg_left"
-_index = 10
+_index = 0
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="LegRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=957346657]
-mesh = ExtResource("24_yqx1j")
+mesh = ExtResource("23_dbkht")
 skin = SubResource("Skin_1n2bs")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/leg_left"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/leg_left"
-_index = 6
+_index = 4
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="HeadCoverings_No_Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=1449400606 node_paths=PackedStringArray("_related_parts")]
-mesh = ExtResource("25_mluuy")
+mesh = ExtResource("25_sdy60")
 skin = SubResource("Skin_ymc4t")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/head_coverings_no_hair"
-_index = 33
+_index = 12
 _related_parts = [NodePath("../Hair"), NodePath("../HeadCoverings_Base_Hair"), NodePath("../HeadCoverings_No_FacialHair"), NodePath("../Head")]
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="HeadCoverings_Base_Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=698731839 node_paths=PackedStringArray("_related_parts")]
 visible = false
-mesh = ExtResource("26_dbkht")
+mesh = ExtResource("26_nbt1k")
 skin = SubResource("Skin_ymc4t")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/head_coverings_base_hair"
-_index = 3
+_index = 2
 _related_parts = [NodePath("../HeadCoverings_No_Hair"), NodePath("../HeadCoverings_No_FacialHair"), NodePath("../Head")]
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="HeadCoverings_No_FacialHair" type="MeshInstance3D" parent="Skeleton3D" unique_id=665624694 node_paths=PackedStringArray("_related_parts")]
+mesh = ExtResource("27_y3hmm")
 skin = SubResource("Skin_yg58n")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/head_coverings_no_facial_hair"
-_index = 4
+_index = 1
 _related_parts = [NodePath("../FacialHair"), NodePath("../HeadCoverings_No_Hair"), NodePath("../HeadCoverings_Base_Hair"), NodePath("../Head")]
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="HelmetAttachment" type="MeshInstance3D" parent="Skeleton3D" unique_id=40423006]
-mesh = ExtResource("27_u6iy8")
+mesh = ExtResource("28_y2evg")
 skin = SubResource("Skin_r1pnr")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/helmet_attachment"
-_index = 2
+_index = 9
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="Ear" type="MeshInstance3D" parent="Skeleton3D" unique_id=140204218]
-mesh = ExtResource("27_y2evg")
+mesh = ExtResource("29_qods5")
 skin = SubResource("Skin_1n2bs")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
-_mesh_directory = "res://data/characters/people/meshes/body/ear_ear"
+_mesh_directory = "res://data/characters/people/meshes/body/ears"
+_index = 1
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 
 [node name="Head_No_Elements" type="MeshInstance3D" parent="Skeleton3D" unique_id=703333712]
-mesh = ExtResource("29_sdy60")
+mesh = ExtResource("30_ffcfl")
 skin = SubResource("Skin_ymc4t")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
@@ -1225,13 +1807,13 @@ metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
 [node name="Head" type="MeshInstance3D" parent="Skeleton3D" unique_id=476034710 node_paths=PackedStringArray("_related_parts")]
 visible = false
-mesh = ExtResource("30_nbt1k")
+mesh = ExtResource("31_u4hh0")
 skin = SubResource("Skin_r1pnr")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/head"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/head"
-_index = 5
+_index = 22
 _related_parts = [NodePath("../HeadCoverings_No_Hair"), NodePath("../HeadCoverings_Base_Hair"), NodePath("../HeadCoverings_No_FacialHair")]
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 
