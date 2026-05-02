@@ -1,5 +1,6 @@
 @tool
-extends Node3D
+class_name ModularCharacter
+extends Model
 
 @export_tool_button("Randomize", "RandomNumberGenerator") var _randomize_action: Callable = _randomize
 @export_group("Body Parts")
