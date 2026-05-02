@@ -36,7 +36,6 @@ func update_index(index: int) -> int:
 		return _index
 	_index %= _mesh_list.size()
 	var new_mesh: ArrayMesh = load(_mesh_list[_index])
-	new_mesh.custom_aabb = AABB(Vector3.ZERO, Vector3.ONE)
 	mesh = new_mesh
 	update_visibility(true)
 	return _index

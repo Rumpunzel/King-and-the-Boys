@@ -7,8 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://cf6txwkm0153" path="res://user_interface/menus/lobby_menu/lobby_guest_player_panel.tscn" id="4_bfn47"]
 [ext_resource type="FontFile" uid="uid://b5koyewmt0kld" path="res://assets/fonts/Fondamento-Regular.ttf" id="6_3j5nk"]
 [ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="8_6d7le"]
+[ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="8_80fhf"]
 
-[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_title", "_left_player_panels_container", "_local_player_panel", "_right_player_panels_container")]
+[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_title", "_left_player_panels_container", "_local_player_panel", "_right_player_panels_container", "_local_player_character_preview")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,6 +21,7 @@ _title = NodePath("MenusContainer/PlayerPanels/PanelContainer/Title")
 _left_player_panels_container = NodePath("MenusContainer/PlayerPanels/Left/LeftPlayerPanels")
 _local_player_panel = NodePath("MenusContainer/PlayerPanels/LocalPlayerPanel")
 _right_player_panels_container = NodePath("MenusContainer/PlayerPanels/Right/RightPlayerPanels")
+_local_player_character_preview = NodePath("CharacterPreview/ModularCharacter")
 _game_scene_path = "uid://ciy6s8n2reyy2"
 _guest_player_panel_scene = ExtResource("4_bfn47")
 _fade_in_duration = 1.0
@@ -91,5 +93,10 @@ flat = true
 
 [node name="RightMargin" type="MarginContainer" parent="MenusContainer/PlayerPanels" unique_id=890694212]
 layout_mode = 2
+
+[node name="CharacterPreview" type="Node3D" parent="." unique_id=762207543]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -6.5, -2, 26)
+
+[node name="ModularCharacter" parent="CharacterPreview" unique_id=1754453103 instance=ExtResource("8_80fhf")]
 
 [connection signal="pressed" from="MenusContainer/PlayerPanels/Leave" to="." method="_on_leave_pressed"]

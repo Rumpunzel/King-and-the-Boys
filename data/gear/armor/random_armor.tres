@@ -4,20 +4,13 @@
 
 [resource]
 script = ExtResource("1_3jc1p")
-_randomize_arm_lower_left = true
-_randomize_arm_lower_right = true
-_randomize_arm_upper_left = true
-_randomize_arm_upper_right = true
-_randomize_hand_left = true
-_randomize_hand_right = true
+_randomize_lower_arms = true
+_randomize_upper_arms = true
+_randomize_hands = true
 _randomize_hips = true
-_randomize_leg_left = true
-_randomize_leg_right = true
+_randomize_legs = true
 _randomize_torso = true
-_randomize_elbow_attach_left = true
-_randomize_elbow_attach_right = true
-_randomize_knee_attach_left = true
-_randomize_knee_attach_right = true
-_randomize_shoulder_attach_left = true
-_randomize_shoulder_attach_right = true
+_randomize_elbow_attachs = true
+_randomize_knee_attachs = true
+_randomize_shoulder_attachs = true
 metadata/_custom_type_script = "uid://cblm5blx0poy3"

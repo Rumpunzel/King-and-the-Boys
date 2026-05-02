@@ -5,6 +5,8 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2qws8"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mq4a8"]
+
 [node name="CharacterPanel" type="PanelContainer" unique_id=1684484384 node_paths=PackedStringArray("_character_portrait", "_character_name")]
 offset_right = 486.0
 offset_bottom = 690.0
@@ -21,6 +23,7 @@ size_flags_horizontal = 3
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=818322991]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_mq4a8")
 
 [node name="Portrait" type="TextureRect" parent="VBoxContainer/PanelContainer" unique_id=967569852]
 layout_mode = 2

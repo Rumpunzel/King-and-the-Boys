@@ -1,6 +1,7 @@
 [gd_resource type="StyleBoxTexture" format=3 uid="uid://c4045dqsci0uq"]
 
 [sub_resource type="Gradient" id="Gradient_h7yms"]
+offsets = PackedFloat32Array(0, 0.5)
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_3j5nk"]

@@ -70,6 +70,14 @@ func randomize_gear() -> void:
 	shoulder_attach_left.random_mesh()
 	shoulder_attach_right.random_mesh()
 
+func reset() -> void:
+	ears.reset_mesh()
+	head.reset_mesh()
+	eyebrow.reset_mesh()
+	facial_hair.reset_mesh()
+	hair.reset_mesh()
+	reset_gear()
+
 func reset_gear() -> void:
 	arm_lower_left.reset_mesh()
 	arm_lower_right.reset_mesh()

@@ -7,6 +7,7 @@ extends Menu
 @export var _left_player_panels_container: Container
 @export var _local_player_panel: LobbyPlayerPanel
 @export var _right_player_panels_container: Container
+@export var _local_player_character_preview: ModularCharacter
 @export_file("*.tscn") var _game_scene_path: String
 @export var _guest_player_panel_scene: PackedScene
 
@@ -25,7 +26,9 @@ func _ready() -> void:
 	if multiplayer.is_server(): Client.start_game()
 	for player: Player in Lobby.get_connected_players():
 		if player.is_host(): _title.text = "%s's Lobby" % player.player_name
-		if player.is_local_player(): _local_player_panel.player = player
+		if player.is_local_player():
+			_local_player_panel.player = player
+			player.player_info_changed.connect(_on_local_player_info_changed)
 		else: _add_player(player)
 	Lobby.player_created.connect(_add_player)
 
@@ -72,6 +75,10 @@ func _on_leave_pressed() -> void:
 
 func _on_disconnected_from_multiplayer() -> void:
 	SceneManager.to_main(false)
+
+func _on_local_player_info_changed() -> void:
+	_local_player_character_preview.reset()
+	_local_player_panel.player.character.setup_model(_local_player_character_preview)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

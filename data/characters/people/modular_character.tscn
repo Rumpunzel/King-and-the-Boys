@@ -6,10 +6,8 @@
 [ext_resource type="ArrayMesh" uid="uid://de5qrvvp0vcrl" path="res://data/characters/people/meshes/gear/male/arm_lower_right/modular_character_ArmLowerRight_Male_00.res" id="4_0fivv"]
 [ext_resource type="ArrayMesh" uid="uid://blwj1hbiooowa" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_00.res" id="5_53vo3"]
 [ext_resource type="ArrayMesh" uid="uid://dkdgv85cqxlqg" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_00.res" id="6_0jsxm"]
-[ext_resource type="ArrayMesh" uid="uid://dj5ofk021uosw" path="res://data/characters/people/meshes/body/male/eyebrows/modular_character_Eyebrow_Male_09.res" id="8_3vpe8"]
-[ext_resource type="ArrayMesh" uid="uid://c0ihesyqcu2gp" path="res://data/characters/people/meshes/body/male/facial_hair/modular_character_FacialHair_Male_10.res" id="9_g17ar"]
-[ext_resource type="ArrayMesh" uid="uid://citkg8ubm640j" path="res://data/characters/people/meshes/body/hair/modular_character_Hair_21.res" id="10_bgddg"]
-[ext_resource type="ArrayMesh" uid="uid://c7kqgynyxp4kf" path="res://data/characters/people/meshes/gear/male/head/modular_character_Head_Male_02.res" id="13_3vpe8"]
+[ext_resource type="ArrayMesh" uid="uid://1kn35ccm6ysq" path="res://data/characters/people/meshes/body/male/eyebrows/modular_character_Eyebrow_Male_01.res" id="8_f74qj"]
+[ext_resource type="ArrayMesh" uid="uid://bor5hhrp0p7pl" path="res://data/characters/people/meshes/gear/male/head/modular_character_Head_Male_00.res" id="11_ar228"]
 [ext_resource type="Script" uid="uid://c6nl3p3rcjph7" path="res://engine/objects/characters/modular_body_part_gendered.gd" id="13_scytm"]
 [ext_resource type="ArrayMesh" uid="uid://dx01d5veg0wrs" path="res://data/characters/people/meshes/gear/male/hand_left/modular_character_HandLeft_Male_00.res" id="15_t1e5b"]
 [ext_resource type="ArrayMesh" uid="uid://dh0uj78brilnl" path="res://data/characters/people/meshes/gear/male/hand_right/modular_character_HandRight_Male_00.res" id="16_6xm60"]
@@ -697,39 +695,38 @@ metadata/extras = {
 }
 
 [node name="Eyebrow" type="MeshInstance3D" parent="Skeleton3D" unique_id=758150316]
-mesh = ExtResource("8_3vpe8")
+mesh = ExtResource("8_f74qj")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/body/female/eyebrows"
 _male_mesh_directory = "res://data/characters/people/meshes/body/male/eyebrows"
-_index = 8
+_index = 0
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 metadata/extras = {
 "currentUVSet": "map1"
 }
 
 [node name="FacialHair" type="MeshInstance3D" parent="Skeleton3D" unique_id=1980668562]
-mesh = ExtResource("9_g17ar")
+visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "NONE"
 _male_mesh_directory = "res://data/characters/people/meshes/body/male/facial_hair"
 _type = 1
-_index = 9
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 metadata/extras = {
 "currentUVSet": "map1"
 }
 
 [node name="Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=1028685510]
-mesh = ExtResource("10_bgddg")
+visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/body/hair"
-_index = 20
+_type = 1
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 metadata/extras = {
 "currentUVSet": "map1"
@@ -762,13 +759,13 @@ metadata/extras = {
 }
 
 [node name="Head" type="MeshInstance3D" parent="Skeleton3D" unique_id=1811346982]
-mesh = ExtResource("13_3vpe8")
+mesh = ExtResource("11_ar228")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
 _female_mesh_directory = "res://data/characters/people/meshes/gear/female/head"
 _male_mesh_directory = "res://data/characters/people/meshes/gear/male/head"
-_index = 2
+_index = 0
 metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 metadata/extras = {
 "currentUVSet": "map1"

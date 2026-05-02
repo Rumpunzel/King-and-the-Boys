@@ -9,14 +9,20 @@
 [ext_resource type="Resource" uid="uid://dptm3ey44x73g" path="res://data/characters/people/mystic.tres" id="6_mpqyy"]
 [ext_resource type="Resource" uid="uid://d18sc738vkuku" path="res://data/characters/people/rogue.tres" id="7_o63du"]
 [ext_resource type="Resource" uid="uid://bxlvdrtypiygb" path="res://data/characters/people/soldier.tres" id="9_odjvv"]
-[ext_resource type="Texture2D" uid="uid://di5m3ea325uel" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_1.png" id="10_mpqyy"]
+[ext_resource type="Texture2D" uid="uid://ben162rfher0t" path="res://data/characters/people/portraits/elf-helmet.svg" id="10_odjvv"]
 
 [node name="CharacterSelection" unique_id=2021463314 instance=ExtResource("1_dygw3")]
 script = ExtResource("1_rvxdx")
 _available_characters = Array[ExtResource("2_46alb")]([ExtResource("3_vlxoo"), ExtResource("4_6255u"), ExtResource("5_odjvv"), ExtResource("6_mpqyy"), ExtResource("7_o63du"), ExtResource("9_odjvv")])
 
-[node name="Portrait" parent="VBoxContainer/PanelContainer" parent_id_path=PackedInt32Array(818322991) index="0" unique_id=967569852]
-texture = ExtResource("10_mpqyy")
+[node name="VBoxContainer" parent="." index="0" unique_id=1774634192]
+alignment = 2
+
+[node name="PanelContainer" parent="VBoxContainer" index="0" unique_id=818322991]
+visible = false
+
+[node name="Portrait" parent="VBoxContainer/PanelContainer" index="0" unique_id=967569852]
+texture = ExtResource("10_odjvv")
 
 [node name="Name" parent="VBoxContainer/Attributes/VBoxContainer" parent_id_path=PackedInt32Array(989241585) index="0" unique_id=2086859535]
-text = "Rogue"
+text = "Elf"
