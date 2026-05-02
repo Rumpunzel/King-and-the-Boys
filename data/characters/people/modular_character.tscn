@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://c6nl3p3rcjph7" path="res://engine/objects/characters/modular_body_part_gendered.gd" id="13_scytm"]
 [ext_resource type="ArrayMesh" uid="uid://dx01d5veg0wrs" path="res://data/characters/people/meshes/gear/male/hand_left/modular_character_HandLeft_Male_00.res" id="15_t1e5b"]
 [ext_resource type="ArrayMesh" uid="uid://dh0uj78brilnl" path="res://data/characters/people/meshes/gear/male/hand_right/modular_character_HandRight_Male_00.res" id="16_6xm60"]
+[ext_resource type="AnimationLibrary" uid="uid://dcpwsj71hiqk3" path="res://assets/quaternius_animations/AnimationLibrary_Godot.glb" id="16_ar228"]
 [ext_resource type="ArrayMesh" uid="uid://bgqyivu0dlm07" path="res://data/characters/people/meshes/gear/male/hips/modular_character_Hips_Male_00.res" id="23_3fxuq"]
 [ext_resource type="ArrayMesh" uid="uid://bumojbo322bwk" path="res://data/characters/people/meshes/gear/male/leg_left/modular_character_LegLeft_Male_00.res" id="27_586hc"]
 [ext_resource type="ArrayMesh" uid="uid://dy45rbmiqwq4i" path="res://data/characters/people/meshes/gear/male/leg_right/modular_character_LegRight_Male_00.res" id="28_mogl8"]
@@ -184,37 +185,38 @@ bind/53/pose = Transform3D(3.3287567e-10, 0.99999994, 2.3742699e-07, 1, -4.26689
 
 [node name="ModularCharacter" type="Node3D" unique_id=1754453103 node_paths=PackedStringArray("arm_lower_left", "arm_lower_right", "arm_upper_left", "arm_upper_right", "ears", "hand_left", "hand_right", "head", "head_no_elements", "hips", "leg_left", "leg_right", "torso", "eyebrow", "facial_hair", "hair", "back_attachment", "elbow_attach_left", "elbow_attach_right", "head_coverings_base_hair", "head_coverings_no_facial_hair", "head_coverings_no_hair", "helmet_attachment", "hips_attachment", "knee_attach_left", "knee_attach_right", "shoulder_attach_left", "shoulder_attach_right")]
 script = ExtResource("1_jigrv")
-arm_lower_left = NodePath("Skeleton3D/ArmLowerLeft")
-arm_lower_right = NodePath("Skeleton3D/ArmLowerRight")
-arm_upper_left = NodePath("Skeleton3D/ArmUpperLeft")
-arm_upper_right = NodePath("Skeleton3D/ArmUpperRight")
-ears = NodePath("Skeleton3D/Ears")
-hand_left = NodePath("Skeleton3D/HandLeft")
-hand_right = NodePath("Skeleton3D/HandRight")
-head = NodePath("Skeleton3D/Head")
-head_no_elements = NodePath("Skeleton3D/Head_No_Elements")
-hips = NodePath("Skeleton3D/Hips")
-leg_left = NodePath("Skeleton3D/LegLeft")
-leg_right = NodePath("Skeleton3D/LegRight")
-torso = NodePath("Skeleton3D/Torso")
-eyebrow = NodePath("Skeleton3D/Eyebrow")
-facial_hair = NodePath("Skeleton3D/FacialHair")
-hair = NodePath("Skeleton3D/Hair")
-back_attachment = NodePath("Skeleton3D/BackAttachment")
-elbow_attach_left = NodePath("Skeleton3D/ElbowAttachLeft")
-elbow_attach_right = NodePath("Skeleton3D/ElbowAttachRight")
-head_coverings_base_hair = NodePath("Skeleton3D/HeadCoverings_Base_Hair")
-head_coverings_no_facial_hair = NodePath("Skeleton3D/HeadCoverings_No_FacialHair")
-head_coverings_no_hair = NodePath("Skeleton3D/HeadCoverings_No_Hair")
-helmet_attachment = NodePath("Skeleton3D/HelmetAttachment")
-hips_attachment = NodePath("Skeleton3D/HipsAttachment")
-knee_attach_left = NodePath("Skeleton3D/KneeAttachLeft")
-knee_attach_right = NodePath("Skeleton3D/KneeAttachRight")
-shoulder_attach_left = NodePath("Skeleton3D/ShoulderAttachLeft")
-shoulder_attach_right = NodePath("Skeleton3D/ShoulderAttachRight")
+arm_lower_left = NodePath("GeneralSkeleton/ArmLowerLeft")
+arm_lower_right = NodePath("GeneralSkeleton/ArmLowerRight")
+arm_upper_left = NodePath("GeneralSkeleton/ArmUpperLeft")
+arm_upper_right = NodePath("GeneralSkeleton/ArmUpperRight")
+ears = NodePath("GeneralSkeleton/Ears")
+hand_left = NodePath("GeneralSkeleton/HandLeft")
+hand_right = NodePath("GeneralSkeleton/HandRight")
+head = NodePath("GeneralSkeleton/Head")
+head_no_elements = NodePath("GeneralSkeleton/Head_No_Elements")
+hips = NodePath("GeneralSkeleton/Hips")
+leg_left = NodePath("GeneralSkeleton/LegLeft")
+leg_right = NodePath("GeneralSkeleton/LegRight")
+torso = NodePath("GeneralSkeleton/Torso")
+eyebrow = NodePath("GeneralSkeleton/Eyebrow")
+facial_hair = NodePath("GeneralSkeleton/FacialHair")
+hair = NodePath("GeneralSkeleton/Hair")
+back_attachment = NodePath("GeneralSkeleton/BackAttachment")
+elbow_attach_left = NodePath("GeneralSkeleton/ElbowAttachLeft")
+elbow_attach_right = NodePath("GeneralSkeleton/ElbowAttachRight")
+head_coverings_base_hair = NodePath("GeneralSkeleton/HeadCoverings_Base_Hair")
+head_coverings_no_facial_hair = NodePath("GeneralSkeleton/HeadCoverings_No_FacialHair")
+head_coverings_no_hair = NodePath("GeneralSkeleton/HeadCoverings_No_Hair")
+helmet_attachment = NodePath("GeneralSkeleton/HelmetAttachment")
+hips_attachment = NodePath("GeneralSkeleton/HipsAttachment")
+knee_attach_left = NodePath("GeneralSkeleton/KneeAttachLeft")
+knee_attach_right = NodePath("GeneralSkeleton/KneeAttachRight")
+shoulder_attach_left = NodePath("GeneralSkeleton/ShoulderAttachLeft")
+shoulder_attach_right = NodePath("GeneralSkeleton/ShoulderAttachRight")
 metadata/_custom_type_script = "uid://bdais0l7n3ei1"
 
-[node name="Skeleton3D" type="Skeleton3D" parent="." unique_id=1559521962]
+[node name="GeneralSkeleton" type="Skeleton3D" parent="." unique_id=1559521962]
+unique_name_in_owner = true
 motion_scale = 0.8762761
 bones/0/name = "Root"
 bones/0/parent = -1
@@ -227,8 +229,8 @@ bones/1/name = "Hips"
 bones/1/parent = 0
 bones/1/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8762761, 3.1338078e-07)
 bones/1/enabled = true
-bones/1/position = Vector3(0, 0.8762761, 3.1338078e-07)
-bones/1/rotation = Quaternion(0, 0, 0, 1)
+bones/1/position = Vector3(0.005082482, 0.8384915, -0.08268025)
+bones/1/rotation = Quaternion(-0.04628033, -0.11588846, -0.005405691, 0.9921687)
 bones/1/scale = Vector3(1, 1, 1)
 bones/2/name = "Spine"
 bones/2/parent = 1
@@ -242,28 +244,28 @@ bones/3/parent = 2
 bones/3/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0096645e-08, 0.18128684, 0.009020556)
 bones/3/enabled = true
 bones/3/position = Vector3(-1.0096645e-08, 0.18128684, 0.009020556)
-bones/3/rotation = Quaternion(0, 0, 0, 1)
+bones/3/rotation = Quaternion(0.046351045, 0.0001086035, 0.00013027458, 0.99892527)
 bones/3/scale = Vector3(1, 1, 1)
 bones/4/name = "UpperChest"
 bones/4/parent = 3
 bones/4/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.76422e-09, 0.17711666, -0.026153931)
 bones/4/enabled = true
 bones/4/position = Vector3(-6.76422e-09, 0.17711666, -0.026153931)
-bones/4/rotation = Quaternion(0, 0, 0, 1)
+bones/4/rotation = Quaternion(0.13865471, 0.00032485503, 0.00038959694, 0.9903407)
 bones/4/scale = Vector3(1, 1, 1)
 bones/5/name = "Neck"
 bones/5/parent = 4
 bones/5/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4750254e-09, 0.11156598, 0.008499915)
 bones/5/enabled = true
 bones/5/position = Vector3(-6.4750254e-09, 0.11156598, 0.008499915)
-bones/5/rotation = Quaternion(0, 0, 0, 1)
+bones/5/rotation = Quaternion(-0.09260249, -0.00021697998, -0.00026025015, 0.9957031)
 bones/5/scale = Vector3(1, 1, 1)
 bones/6/name = "Head"
 bones/6/parent = 5
 bones/6/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.872263e-09, 0.1201006, 0.019322883)
 bones/6/enabled = true
 bones/6/position = Vector3(-7.872263e-09, 0.1201006, 0.019322883)
-bones/6/rotation = Quaternion(0, 0, 0, 1)
+bones/6/rotation = Quaternion(0.07725409, 0.0957206, 0.007964551, 0.99237394)
 bones/6/scale = Vector3(1, 1, 1)
 bones/7/name = "Eyes"
 bones/7/parent = 6
@@ -291,84 +293,84 @@ bones/10/parent = 4
 bones/10/rest = Transform3D(0, 1, 0, 0, 0, 1, 1, 0, 0, 0.07447158, 0.054659996, 0.04620011)
 bones/10/enabled = true
 bones/10/position = Vector3(0.07447158, 0.054659996, 0.04620011)
-bones/10/rotation = Quaternion(0.5, 0.5, 0.5, -0.5)
+bones/10/rotation = Quaternion(0.487481, 0.5266153, 0.52638155, -0.4560274)
 bones/10/scale = Vector3(1, 1, 1)
 bones/11/name = "LeftUpperArm"
 bones/11/parent = 10
 bones/11/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.061960228, 0.11651753, -0.0017128419)
 bones/11/enabled = true
 bones/11/position = Vector3(-0.061960228, 0.11651753, -0.0017128419)
-bones/11/rotation = Quaternion(0, 1, 0, 0)
+bones/11/rotation = Quaternion(-0.06222135, 0.81768024, -0.5722164, 0.009801064)
 bones/11/scale = Vector3(1, 1, 1)
 bones/12/name = "LeftLowerArm"
 bones/12/parent = 11
 bones/12/rest = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0.004789225, 0.33816645, 0.02945156)
 bones/12/enabled = true
 bones/12/position = Vector3(0.004789225, 0.33816645, 0.02945156)
-bones/12/rotation = Quaternion(0, -0.70710677, 0, 0.70710677)
+bones/12/rotation = Quaternion(0.18998532, -0.651041, 0.18306458, 0.7117153)
 bones/12/scale = Vector3(1, 1, 1)
 bones/13/name = "LeftHand"
 bones/13/parent = 12
 bones/13/rest = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -2.7753413e-07, 0.2704763, 0.019037846)
 bones/13/enabled = true
 bones/13/position = Vector3(-2.7753413e-07, 0.2704763, 0.019037846)
-bones/13/rotation = Quaternion(0, 0.70710677, 0, 0.70710677)
+bones/13/rotation = Quaternion(0.09913024, 0.70686626, 0.0629003, 0.69753635)
 bones/13/scale = Vector3(1, 1, 1)
 bones/14/name = "LeftThumbProximal"
 bones/14/parent = 13
 bones/14/rest = Transform3D(0, -0.577, 0.816, 0, 0.816, 0.577, -1, 0, 0, -0.045055684, 0.035140444, 0.011707349)
 bones/14/enabled = true
 bones/14/position = Vector3(-0.045055684, 0.035140444, 0.011707349)
-bones/14/rotation = Quaternion(-0.21418673, 0.67388725, 0.21418673, 0.67388725)
+bones/14/rotation = Quaternion(0.1818069, 0.11012425, 0.06006334, 0.97530067)
 bones/14/scale = Vector3(1, 0.99939233, 0.99939233)
 bones/15/name = "LeftThumbDistal"
 bones/15/parent = 14
 bones/15/rest = Transform3D(0.99999994, 0, 0, 0, 0.9999999, 2.9802322e-08, 0, -2.9802322e-08, 0.9999999, -0.011627754, 0.06258579, 0.0032596982)
 bones/15/enabled = true
 bones/15/position = Vector3(-0.011627754, 0.06258579, 0.0032596982)
-bones/15/rotation = Quaternion(-1.4901163e-08, 0, 0, 1)
+bones/15/rotation = Quaternion(0.5994299, 0.27396563, 0.19463211, 0.7264606)
 bones/15/scale = Vector3(0.99999994, 0.9999999, 0.9999999)
 bones/16/name = "LeftIndexProximal"
 bones/16/parent = 13
 bones/16/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02672654, 0.10396542, -0.0039866627)
 bones/16/enabled = true
 bones/16/position = Vector3(-0.02672654, 0.10396542, -0.0039866627)
-bones/16/rotation = Quaternion(0, 0, 0, 1)
+bones/16/rotation = Quaternion(0.6295969, -4.0978193e-08, -4.61936e-06, 0.77692205)
 bones/16/scale = Vector3(1, 1, 1)
 bones/17/name = "LeftIndexIntermediate"
 bones/17/parent = 16
 bones/17/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0053750747, 0.040579624, 0.00034844296)
 bones/17/enabled = true
 bones/17/position = Vector3(-0.0053750747, 0.040579624, 0.00034844296)
-bones/17/rotation = Quaternion(0, 0, 0, 1)
+bones/17/rotation = Quaternion(0.62334186, 2.9802322e-08, -4.261732e-06, 0.78194946)
 bones/17/scale = Vector3(1, 1, 1)
 bones/18/name = "LeftIndexDistal"
 bones/18/parent = 17
 bones/18/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.004077044, 0.036890503, 0.0077370927)
 bones/18/enabled = true
 bones/18/position = Vector3(-0.004077044, 0.036890503, 0.0077370927)
-bones/18/rotation = Quaternion(0, 0, 0, 1)
+bones/18/rotation = Quaternion(0.62334144, -2.2351742e-07, -4.4703484e-06, 0.78194976)
 bones/18/scale = Vector3(1, 1, 1)
 bones/19/name = "LeftRingProximal"
 bones/19/parent = 13
 bones/19/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03283344, 0.09982581, 0.0011597625)
 bones/19/enabled = true
 bones/19/position = Vector3(0.03283344, 0.09982581, 0.0011597625)
-bones/19/rotation = Quaternion(0, 0, 0, 1)
+bones/19/rotation = Quaternion(0.6291978, -0.022414071, -4.202128e-06, 0.77692205)
 bones/19/scale = Vector3(1, 1, 1)
 bones/20/name = "LeftRingIntermediate"
 bones/20/parent = 19
 bones/20/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0037072215, 0.042052165, 0.004799055)
 bones/20/enabled = true
 bones/20/position = Vector3(0.0037072215, 0.042052165, 0.004799055)
-bones/20/rotation = Quaternion(0, 0, 0, 1)
+bones/20/rotation = Quaternion(0.6229472, -0.022176376, -4.321337e-06, 0.78194946)
 bones/20/scale = Vector3(1, 1, 1)
 bones/21/name = "LeftRingDistal"
 bones/21/parent = 20
 bones/21/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001685157, 0.034666643, 0.0054510175)
 bones/21/enabled = true
 bones/21/position = Vector3(0.001685157, 0.034666643, 0.0054510175)
-bones/21/rotation = Quaternion(0, 0, 0, 1)
+bones/21/rotation = Quaternion(0.6228982, -0.023505477, -4.5001498e-06, 0.7819497)
 bones/21/scale = Vector3(1, 1, 1)
 bones/22/name = "Elbow_Attachment_L"
 bones/22/parent = 12
@@ -389,84 +391,84 @@ bones/24/parent = 4
 bones/24/rest = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -0.07447155, 0.05466356, 0.046200115)
 bones/24/enabled = true
 bones/24/position = Vector3(-0.07447155, 0.05466356, 0.046200115)
-bones/24/rotation = Quaternion(0.5, -0.5, -0.5, -0.5)
+bones/24/rotation = Quaternion(0.53972095, -0.47448963, -0.47470158, -0.5081529)
 bones/24/scale = Vector3(1, 1, 1)
 bones/25/name = "RightUpperArm"
 bones/25/parent = 24
 bones/25/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.061960213, 0.116517395, -0.0017196909)
 bones/25/enabled = true
 bones/25/position = Vector3(0.061960213, 0.116517395, -0.0017196909)
-bones/25/rotation = Quaternion(0, 1, 0, 0)
+bones/25/rotation = Quaternion(0.089077465, 0.82466066, -0.5584877, -0.009565941)
 bones/25/scale = Vector3(1, 1, 1)
 bones/26/name = "RightLowerArm"
 bones/26/parent = 25
 bones/26/rest = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.0047892295, 0.33816725, 0.029449975)
 bones/26/enabled = true
 bones/26/position = Vector3(-0.0047892295, 0.33816725, 0.029449975)
-bones/26/rotation = Quaternion(0, 0.70710677, 0, 0.70710677)
+bones/26/rotation = Quaternion(0.29214105, 0.54285806, -0.20492761, 0.760239)
 bones/26/scale = Vector3(1, 1, 1)
 bones/27/name = "RightHand"
 bones/27/parent = 26
 bones/27/rest = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -2.6077032e-08, 0.27047586, 0.019037846)
 bones/27/enabled = true
 bones/27/position = Vector3(-2.6077032e-08, 0.27047586, 0.019037846)
-bones/27/rotation = Quaternion(0, -0.70710677, 0, 0.70710677)
+bones/27/rotation = Quaternion(0.12024976, -0.69903094, -0.056890074, 0.702609)
 bones/27/scale = Vector3(1, 1, 1)
 bones/28/name = "RightThumbProximal"
 bones/28/parent = 27
 bones/28/rest = Transform3D(0, 0.577, -0.816, 0, 0.816, 0.577, 1, 0, 0, 0.045055717, 0.035139874, 0.0117100645)
 bones/28/enabled = true
 bones/28/position = Vector3(0.045055717, 0.035139874, 0.0117100645)
-bones/28/rotation = Quaternion(-0.21418673, -0.67388725, -0.21418673, 0.67388725)
+bones/28/rotation = Quaternion(0.181807, -0.110124156, -0.060063325, 0.9753006)
 bones/28/scale = Vector3(1, 0.99939233, 0.99939233)
 bones/29/name = "RightThumbDistal"
 bones/29/parent = 28
 bones/29/rest = Transform3D(0.99999994, 0, 0, 0, 0.9999999, 2.9802322e-08, 0, -2.9802322e-08, 0.9999999, 0.0116198, 0.062586546, 0.003260106)
 bones/29/enabled = true
 bones/29/position = Vector3(0.0116198, 0.062586546, 0.003260106)
-bones/29/rotation = Quaternion(-1.4901163e-08, 0, 0, 1)
+bones/29/rotation = Quaternion(0.5994302, -0.2739653, -0.19463223, 0.7264605)
 bones/29/scale = Vector3(0.99999994, 0.9999999, 0.9999999)
 bones/30/name = "RightIndexProximal"
 bones/30/parent = 27
 bones/30/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.026726607, 0.103965834, -0.0039896434)
 bones/30/enabled = true
 bones/30/position = Vector3(0.026726607, 0.103965834, -0.0039896434)
-bones/30/rotation = Quaternion(0, 0, 0, 1)
+bones/30/rotation = Quaternion(0.6295971, 3.7252903e-08, 4.172325e-06, 0.7769218)
 bones/30/scale = Vector3(1, 1, 1)
 bones/31/name = "RightIndexIntermediate"
 bones/31/parent = 30
 bones/31/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.005375093, 0.040579274, 0.00034956716)
 bones/31/enabled = true
 bones/31/position = Vector3(0.005375093, 0.040579274, 0.00034956716)
-bones/31/rotation = Quaternion(0, 0, 0, 1)
+bones/31/rotation = Quaternion(0.62334144, 1.825392e-07, 4.470348e-06, 0.7819497)
 bones/31/scale = Vector3(1, 1, 1)
 bones/32/name = "RightIndexDistal"
 bones/32/parent = 31
 bones/32/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004077063, 0.0368902, 0.007740313)
 bones/32/enabled = true
 bones/32/position = Vector3(0.004077063, 0.0368902, 0.007740313)
-bones/32/rotation = Quaternion(0, 0, 0, 1)
+bones/32/rotation = Quaternion(0.62334156, 1.00582824e-07, 4.2319293e-06, 0.78194964)
 bones/32/scale = Vector3(1, 1, 1)
 bones/33/name = "RightRingProximal"
 bones/33/parent = 27
 bones/33/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.032833405, 0.09982565, 0.0011601956)
 bones/33/enabled = true
 bones/33/position = Vector3(-0.032833405, 0.09982565, 0.0011601956)
-bones/33/rotation = Quaternion(0, 0, 0, 1)
+bones/33/rotation = Quaternion(0.6291981, 0.022413792, 4.11272e-06, 0.7769218)
 bones/33/scale = Vector3(1, 1, 1)
 bones/34/name = "RightRingIntermediate"
 bones/34/parent = 33
 bones/34/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0037071428, 0.042052, 0.004799537)
 bones/34/enabled = true
 bones/34/position = Vector3(-0.0037071428, 0.042052, 0.004799537)
-bones/34/rotation = Quaternion(0, 0, 0, 1)
+bones/34/rotation = Quaternion(0.62294656, 0.022176204, 4.470349e-06, 0.7819501)
 bones/34/scale = Vector3(1, 1, 1)
 bones/35/name = "RightRingDistal"
 bones/35/parent = 34
 bones/35/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016852407, 0.034666747, 0.005450579)
 bones/35/enabled = true
 bones/35/position = Vector3(-0.0016852407, 0.034666747, 0.005450579)
-bones/35/rotation = Quaternion(0, 0, 0, 1)
+bones/35/rotation = Quaternion(0.6228987, 0.02350526, 4.1723247e-06, 0.7819493)
 bones/35/scale = Vector3(1, 1, 1)
 bones/36/name = "Elbow_Attachment_R"
 bones/36/parent = 26
@@ -522,28 +524,28 @@ bones/43/parent = 1
 bones/43/rest = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, -0.09896705, -0.04471787, -0.020469038)
 bones/43/enabled = true
 bones/43/position = Vector3(-0.09896705, -0.04471787, -0.020469038)
-bones/43/rotation = Quaternion(0, 0, 1, 0)
+bones/43/rotation = Quaternion(0.0008066073, -0.110076316, 0.9872104, 0.11531823)
 bones/43/scale = Vector3(1, 1, 1)
 bones/44/name = "RightLowerLeg"
 bones/44/parent = 43
 bones/44/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.012674472, 0.39910805, -1.7575731e-07)
 bones/44/enabled = true
 bones/44/position = Vector3(0.012674472, 0.39910805, -1.7575731e-07)
-bones/44/rotation = Quaternion(0, 1, 0, 0)
+bones/44/rotation = Quaternion(-0.028729852, 0.92896134, -0.08071508, -0.36012587)
 bones/44/scale = Vector3(1, 1, 1)
 bones/45/name = "RightFoot"
 bones/45/parent = 44
 bones/45/rest = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, -0.0028017536, 0.3767562, 0.016404852)
 bones/45/enabled = true
 bones/45/position = Vector3(-0.0028017536, 0.3767562, 0.016404852)
-bones/45/rotation = Quaternion(0, 0.70710677, -0.70710677, 0)
+bones/45/rotation = Quaternion(0.17156827, 0.6469511, -0.7429744, -0.0027946457)
 bones/45/scale = Vector3(1, 1, 1)
 bones/46/name = "RightToes"
 bones/46/parent = 45
 bones/46/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -1.2091432e-08, 0.096386276, -0.05867396)
 bones/46/enabled = true
 bones/46/position = Vector3(-1.2091432e-08, 0.096386276, -0.05867396)
-bones/46/rotation = Quaternion(0, 1, 0, 0)
+bones/46/rotation = Quaternion(-8.1927055e-08, 1, 2.9802322e-08, -8.602239e-09)
 bones/46/scale = Vector3(1, 1, 1)
 bones/47/name = "Knee_Attachment_R"
 bones/47/parent = 44
@@ -557,28 +559,28 @@ bones/48/parent = 1
 bones/48/rest = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, 0.09896713, -0.04471802, -0.02046905)
 bones/48/enabled = true
 bones/48/position = Vector3(0.09896713, -0.04471802, -0.02046905)
-bones/48/rotation = Quaternion(0, 0, 1, 0)
+bones/48/rotation = Quaternion(-0.00077796273, 0.12214074, 0.98626107, -0.11122178)
 bones/48/scale = Vector3(1, 1, 1)
 bones/49/name = "LeftLowerLeg"
 bones/49/parent = 48
 bones/49/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.012674844, 0.3991081, -2.3473838e-07)
 bones/49/enabled = true
 bones/49/position = Vector3(-0.012674844, 0.3991081, -2.3473838e-07)
-bones/49/rotation = Quaternion(0, 1, 0, 0)
+bones/49/rotation = Quaternion(0.016344335, 0.98224515, -0.14901444, 0.11279213)
 bones/49/scale = Vector3(1, 1, 1)
 bones/50/name = "LeftFoot"
 bones/50/parent = 49
 bones/50/rest = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, 0.0028009163, 0.37675592, 0.016404899)
 bones/50/enabled = true
 bones/50/position = Vector3(0.0028009163, 0.37675592, 0.016404899)
-bones/50/rotation = Quaternion(0, 0.70710677, -0.70710677, 0)
+bones/50/rotation = Quaternion(-0.09455208, 0.7292354, -0.67767, 0.006254539)
 bones/50/scale = Vector3(1, 1, 1)
 bones/51/name = "LeftToes"
 bones/51/parent = 50
 bones/51/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -1.5407517e-08, 0.0963863, -0.058673967)
 bones/51/enabled = true
 bones/51/position = Vector3(-1.5407517e-08, 0.0963863, -0.058673967)
-bones/51/rotation = Quaternion(0, 1, 0, 0)
+bones/51/rotation = Quaternion(4.2923723e-08, 1, 5.9604645e-08, 2.568838e-08)
 bones/51/scale = Vector3(1, 1, 1)
 bones/52/name = "Knee_Attachment_L"
 bones/52/parent = 49
@@ -595,7 +597,7 @@ bones/53/position = Vector3(-3.3368093e-11, -5.6723643e-08, 6.858527e-08)
 bones/53/rotation = Quaternion(0.70710677, 0.70710677, 1.9329205e-07, -1.8602925e-07)
 bones/53/scale = Vector3(0.9999998, 0.9999999, 0.9999998)
 
-[node name="ArmLowerLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=377869014]
+[node name="ArmLowerLeft" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=377869014]
 mesh = ExtResource("2_44kuo")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -608,7 +610,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="ArmLowerRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=2019921739]
+[node name="ArmLowerRight" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=2019921739]
 mesh = ExtResource("4_0fivv")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -621,7 +623,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="ArmUpperLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=959353419]
+[node name="ArmUpperLeft" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=959353419]
 mesh = ExtResource("5_53vo3")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -634,7 +636,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="ArmUpperRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=652164881]
+[node name="ArmUpperRight" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=652164881]
 mesh = ExtResource("6_0jsxm")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -647,7 +649,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="BackAttachment" type="MeshInstance3D" parent="Skeleton3D" unique_id=298809248]
+[node name="BackAttachment" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=298809248]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -659,7 +661,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="Ears" type="MeshInstance3D" parent="Skeleton3D" unique_id=1385441428]
+[node name="Ears" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1385441428]
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
@@ -670,7 +672,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="ElbowAttachLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=1695916904]
+[node name="ElbowAttachLeft" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1695916904]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -682,7 +684,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="ElbowAttachRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=900811220]
+[node name="ElbowAttachRight" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=900811220]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -694,7 +696,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="Eyebrow" type="MeshInstance3D" parent="Skeleton3D" unique_id=758150316]
+[node name="Eyebrow" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=758150316]
 mesh = ExtResource("8_f74qj")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -707,7 +709,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="FacialHair" type="MeshInstance3D" parent="Skeleton3D" unique_id=1980668562]
+[node name="FacialHair" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1980668562]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -720,7 +722,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=1028685510]
+[node name="Hair" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1028685510]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -732,7 +734,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="HandLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=1358483337]
+[node name="HandLeft" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1358483337]
 mesh = ExtResource("15_t1e5b")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -745,7 +747,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="HandRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1086387389]
+[node name="HandRight" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1086387389]
 mesh = ExtResource("16_6xm60")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -758,7 +760,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="Head" type="MeshInstance3D" parent="Skeleton3D" unique_id=1811346982]
+[node name="Head" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1811346982]
 mesh = ExtResource("11_ar228")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -771,7 +773,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="Head_No_Elements" type="MeshInstance3D" parent="Skeleton3D" unique_id=1329363145 node_paths=PackedStringArray("_related_parts")]
+[node name="Head_No_Elements" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1329363145 node_paths=PackedStringArray("_related_parts")]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -785,7 +787,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="HeadCoverings_Base_Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=496804740]
+[node name="HeadCoverings_Base_Hair" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=496804740]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -797,7 +799,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="HeadCoverings_No_FacialHair" type="MeshInstance3D" parent="Skeleton3D" unique_id=1372539624 node_paths=PackedStringArray("_related_parts")]
+[node name="HeadCoverings_No_FacialHair" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1372539624 node_paths=PackedStringArray("_related_parts")]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -810,7 +812,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="HeadCoverings_No_Hair" type="MeshInstance3D" parent="Skeleton3D" unique_id=456147301 node_paths=PackedStringArray("_related_parts")]
+[node name="HeadCoverings_No_Hair" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=456147301 node_paths=PackedStringArray("_related_parts")]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -823,7 +825,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="HelmetAttachment" type="MeshInstance3D" parent="Skeleton3D" unique_id=1081570936]
+[node name="HelmetAttachment" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1081570936]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -835,7 +837,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="Hips" type="MeshInstance3D" parent="Skeleton3D" unique_id=95539976]
+[node name="Hips" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=95539976]
 mesh = ExtResource("23_3fxuq")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -848,7 +850,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="HipsAttachment" type="MeshInstance3D" parent="Skeleton3D" unique_id=273598332]
+[node name="HipsAttachment" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=273598332]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -860,7 +862,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="KneeAttachLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=1896852775]
+[node name="KneeAttachLeft" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1896852775]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -872,7 +874,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="KneeAttachRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1204221973]
+[node name="KneeAttachRight" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1204221973]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -884,7 +886,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="LegLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=570772077]
+[node name="LegLeft" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=570772077]
 mesh = ExtResource("27_586hc")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -897,7 +899,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="LegRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=2144882733]
+[node name="LegRight" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=2144882733]
 mesh = ExtResource("28_mogl8")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -910,7 +912,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="ShoulderAttachLeft" type="MeshInstance3D" parent="Skeleton3D" unique_id=811469592]
+[node name="ShoulderAttachLeft" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=811469592]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -922,7 +924,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="ShoulderAttachRight" type="MeshInstance3D" parent="Skeleton3D" unique_id=1964536722]
+[node name="ShoulderAttachRight" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1964536722]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -934,7 +936,7 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="Torso" type="MeshInstance3D" parent="Skeleton3D" unique_id=208479325]
+[node name="Torso" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=208479325]
 mesh = ExtResource("31_jetd4")
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
@@ -946,3 +948,7 @@ metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 metadata/extras = {
 "currentUVSet": "map1"
 }
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1831098486]
+libraries/AnimationLibrary_Godot = ExtResource("16_ar228")
+autoplay = &"AnimationLibrary_Godot/Idle"
