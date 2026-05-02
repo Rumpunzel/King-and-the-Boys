@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ModelConfigurationRandom" format=3 uid="uid://cel1vd8ygcdwk"]
+
+[ext_resource type="Script" uid="uid://cblm5blx0poy3" path="res://engine/objects/model/model_configuration_random.gd" id="1_yq8tv"]
+
+[resource]
+script = ExtResource("1_yq8tv")
+_randomize_head_coverings_no_facial_hair = true
+metadata/_custom_type_script = "uid://cblm5blx0poy3"

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GearProfile" format=3 uid="uid://51bc5k8oi6o7"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_u0j1j"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_xb6gt"]
+[ext_resource type="Resource" uid="uid://c5ast6jdup36o" path="res://data/gear/armor/random_item.tres" id="3_u0j1j"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="4_osqpi"]
+
+[resource]
+script = ExtResource("4_osqpi")
+group = 1
+model_configuration = ExtResource("3_u0j1j")
+name = "Test Item"
+metadata/_custom_type_script = "uid://8ygykwu25m2i"

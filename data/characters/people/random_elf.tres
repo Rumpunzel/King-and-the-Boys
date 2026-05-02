@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ModelConfigurationRandom" format=3 uid="uid://updblht1hc8k"]
+
+[ext_resource type="Script" uid="uid://cblm5blx0poy3" path="res://engine/objects/model/model_configuration_random.gd" id="1_hy0ga"]
+
+[resource]
+script = ExtResource("1_hy0ga")
+_randomize_ears = true
+_randomize_head = true
+_randomize_eyebrow = true
+_randomize_hair = true
+metadata/_custom_type_script = "uid://cblm5blx0poy3"

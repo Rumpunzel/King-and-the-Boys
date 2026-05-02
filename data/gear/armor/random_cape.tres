@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ModelConfigurationRandom" format=3 uid="uid://cb37voammpuxu"]
+
+[ext_resource type="Script" uid="uid://cblm5blx0poy3" path="res://engine/objects/model/model_configuration_random.gd" id="1_q5uvd"]
+
+[resource]
+script = ExtResource("1_q5uvd")
+_randomize_back_attachment = true
+metadata/_custom_type_script = "uid://cblm5blx0poy3"

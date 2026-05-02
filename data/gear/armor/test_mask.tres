@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="GearProfile" format=3 uid="uid://cuct3emokrkd2"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_0hlr3"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_0dol3"]
+[ext_resource type="Resource" uid="uid://cel1vd8ygcdwk" path="res://data/gear/armor/random_mask.tres" id="3_0hlr3"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="4_y5t3g"]
+
+[resource]
+script = ExtResource("4_y5t3g")
+model_configuration = ExtResource("3_0hlr3")
+name = "Test Mask"
+metadata/_custom_type_script = "uid://8ygykwu25m2i"

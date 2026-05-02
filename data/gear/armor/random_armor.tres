@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ModelConfigurationRandom" format=3 uid="uid://cp7xbe40wc8wj"]
+
+[ext_resource type="Script" uid="uid://cblm5blx0poy3" path="res://engine/objects/model/model_configuration_random.gd" id="1_3jc1p"]
+
+[resource]
+script = ExtResource("1_3jc1p")
+_randomize_arm_lower_left = true
+_randomize_arm_lower_right = true
+_randomize_arm_upper_left = true
+_randomize_arm_upper_right = true
+_randomize_hand_left = true
+_randomize_hand_right = true
+_randomize_hips = true
+_randomize_leg_left = true
+_randomize_leg_right = true
+_randomize_torso = true
+_randomize_elbow_attach_left = true
+_randomize_elbow_attach_right = true
+_randomize_knee_attach_left = true
+_randomize_knee_attach_right = true
+_randomize_shoulder_attach_left = true
+_randomize_shoulder_attach_right = true
+metadata/_custom_type_script = "uid://cblm5blx0poy3"

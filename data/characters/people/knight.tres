@@ -4,13 +4,19 @@
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_arfpv"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_u6fvh"]
 [ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_u6fvh"]
+[ext_resource type="Resource" uid="uid://c1i0e1p4feqhe" path="res://data/characters/people/random_human.tres" id="5_0vpuq"]
 [ext_resource type="Texture2D" uid="uid://cc2x8ji73hxc4" path="res://data/characters/people/portraits/frog-mouth-helm.svg" id="5_63j5q"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_ltdy7"]
 [ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_ltdy7"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="9_meawf"]
+[ext_resource type="Resource" uid="uid://cfvter2p2ghwh" path="res://data/gear/armor/test_helmet.tres" id="10_hq768"]
+[ext_resource type="Resource" uid="uid://c4i8xryhtmls2" path="res://data/gear/armor/test_armor.tres" id="11_hq768"]
+[ext_resource type="Resource" uid="uid://csl15f3tnjnyb" path="res://data/gear/armor/test_cape.tres" id="12_5davk"]
 
 [resource]
 script = ExtResource("5_ltdy7")
 intelligence = 2
+starting_equipment = Array[ExtResource("9_meawf")]([ExtResource("10_hq768"), ExtResource("11_hq768"), ExtResource("12_5davk")])
 name = "Knight"
 portrait = ExtResource("5_63j5q")
 color = Color(0.878431, 0.878431, 0.878431, 1)

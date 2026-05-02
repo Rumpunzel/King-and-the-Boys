@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="GearProfile" format=3 uid="uid://c4i8xryhtmls2"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_wdtwu"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_s5mik"]
+[ext_resource type="Resource" uid="uid://cp7xbe40wc8wj" path="res://data/gear/armor/random_armor.tres" id="3_wdtwu"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="4_c6thw"]
+
+[resource]
+script = ExtResource("4_c6thw")
+model_configuration = ExtResource("3_wdtwu")
+name = "Test Armor"
+metadata/_custom_type_script = "uid://8ygykwu25m2i"

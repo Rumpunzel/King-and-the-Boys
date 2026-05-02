@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="GearProfile" format=3 uid="uid://csl15f3tnjnyb"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_7sis4"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_4ie8v"]
+[ext_resource type="Resource" uid="uid://cb37voammpuxu" path="res://data/gear/armor/random_cape.tres" id="3_7sis4"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="4_5nf5p"]
+
+[resource]
+script = ExtResource("4_5nf5p")
+model_configuration = ExtResource("3_7sis4")
+name = "Test Cape"
+metadata/_custom_type_script = "uid://8ygykwu25m2i"

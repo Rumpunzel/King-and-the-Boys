@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ModelConfigurationRandom" format=3 uid="uid://c5ast6jdup36o"]
+
+[ext_resource type="Script" uid="uid://cblm5blx0poy3" path="res://engine/objects/model/model_configuration_random.gd" id="1_1eic7"]
+
+[resource]
+script = ExtResource("1_1eic7")
+_randomize_hips_attachment = true
+metadata/_custom_type_script = "uid://cblm5blx0poy3"

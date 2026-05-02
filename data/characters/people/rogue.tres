@@ -5,13 +5,20 @@
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_gg1jf"]
 [ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_gg1jf"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="4_ithgo"]
+[ext_resource type="Resource" uid="uid://c1i0e1p4feqhe" path="res://data/characters/people/random_human.tres" id="5_c4qnl"]
 [ext_resource type="Texture2D" uid="uid://ft6txm2uxjqv" path="res://data/characters/people/portraits/hood.svg" id="5_r37cg"]
 [ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_dwbog"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="9_lyfvp"]
+[ext_resource type="Resource" uid="uid://b26415ebkl0eq" path="res://data/gear/armor/test_hat.tres" id="10_ked5x"]
+[ext_resource type="Resource" uid="uid://cuct3emokrkd2" path="res://data/gear/armor/test_mask.tres" id="11_co6b3"]
+[ext_resource type="Resource" uid="uid://c4i8xryhtmls2" path="res://data/gear/armor/test_armor.tres" id="12_478kw"]
+[ext_resource type="Resource" uid="uid://51bc5k8oi6o7" path="res://data/gear/armor/test_item.tres" id="13_6kf5w"]
 
 [resource]
 script = ExtResource("3_7rwy5")
 strength = 2
 speed = 4
+starting_equipment = Array[ExtResource("9_lyfvp")]([ExtResource("10_ked5x"), ExtResource("11_co6b3"), ExtResource("12_478kw"), ExtResource("13_6kf5w")])
 name = "Rogue"
 portrait = ExtResource("5_r37cg")
 color = Color(0.878431, 0.878431, 0.878431, 1)

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="GearProfile" format=3 uid="uid://cfvter2p2ghwh"]
+
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_wrjos"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_be15t"]
+[ext_resource type="Resource" uid="uid://67ub3wguxgwc" path="res://data/gear/armor/random_helmet.tres" id="3_be15t"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="3_ewclc"]
+
+[resource]
+script = ExtResource("3_ewclc")
+model_configuration = ExtResource("3_be15t")
+name = "Test Helmet"
+metadata/_custom_type_script = "uid://8ygykwu25m2i"

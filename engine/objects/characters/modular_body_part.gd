@@ -3,6 +3,12 @@
 class_name ModularBodyPart
 extends MeshInstance3D
 
+enum Type {
+	ESSENTIAL,
+	DECORATIVE,
+}
+
+@export var _type: Type = Type.ESSENTIAL
 @export var _index: int = -1:
 	set = update_index
 
@@ -18,19 +24,21 @@ func _ready() -> void:
 
 func update_index(index: int) -> int:
 	_index = index
-	update_visibility(true)
 	if _index < 0:
 		mesh = null
 		_index = -1
+		update_visibility(false)
 		return _index
 	if _mesh_list.is_empty():
 		if not _get_mesh_directory() == "NONE": push_error("No meshes.")
 		_index = -1
+		update_visibility(false)
 		return _index
 	_index %= _mesh_list.size()
 	var new_mesh: ArrayMesh = load(_mesh_list[_index])
 	new_mesh.custom_aabb = AABB(Vector3.ZERO, Vector3.ONE)
 	mesh = new_mesh
+	update_visibility(true)
 	return _index
 
 func update_visibility(new_visibility: bool, sources: Array[ModularBodyPart] = []) -> void:
@@ -40,7 +48,8 @@ func update_visibility(new_visibility: bool, sources: Array[ModularBodyPart] = [
 		if sources.has(related_body_part): continue
 		related_body_part.update_visibility(not new_visibility, sources)
 
-func random_mesh() -> void: _index = randi()
+func random_mesh() -> void: _index = randi() - (0 if _type == Type.ESSENTIAL else 1)
+func reset_mesh() -> void: _index = 0 if _type == Type.ESSENTIAL else -1
 
 func _load_meshes() -> void: _mesh_list = _get_mesh_filenames()
 

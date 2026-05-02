@@ -4,12 +4,17 @@
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_xol3p"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_ul877"]
 [ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_mo1vi"]
+[ext_resource type="Resource" uid="uid://c1i0e1p4feqhe" path="res://data/characters/people/random_human.tres" id="5_a0nqf"]
 [ext_resource type="Texture2D" uid="uid://b0o64egjvwnqs" path="res://data/characters/people/portraits/closed-barbute.svg" id="5_ul877"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="6_sgqnm"]
 [ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_3myd1"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="9_sgqnm"]
+[ext_resource type="Resource" uid="uid://cfvter2p2ghwh" path="res://data/gear/armor/test_helmet.tres" id="10_3myd1"]
+[ext_resource type="Resource" uid="uid://c4i8xryhtmls2" path="res://data/gear/armor/test_armor.tres" id="11_5fk2k"]
 
 [resource]
 script = ExtResource("6_sgqnm")
+starting_equipment = Array[ExtResource("9_sgqnm")]([ExtResource("10_3myd1"), ExtResource("11_5fk2k")])
 name = "Soldier"
 portrait = ExtResource("5_ul877")
 color = Color(0.878431, 0.878431, 0.878431, 1)

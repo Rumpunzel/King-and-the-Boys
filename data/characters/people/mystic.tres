@@ -6,13 +6,20 @@
 [ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_44wk6"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_60tc1"]
 [ext_resource type="Texture2D" uid="uid://bp0wdwf7ydvi3" path="res://data/characters/people/portraits/pointy-hat.svg" id="5_e7bq6"]
+[ext_resource type="Resource" uid="uid://c1i0e1p4feqhe" path="res://data/characters/people/random_human.tres" id="5_vblr4"]
 [ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_60tc1"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="9_tiljl"]
+[ext_resource type="Resource" uid="uid://b26415ebkl0eq" path="res://data/gear/armor/test_hat.tres" id="10_07uti"]
+[ext_resource type="Resource" uid="uid://csl15f3tnjnyb" path="res://data/gear/armor/test_cape.tres" id="11_io77m"]
+[ext_resource type="Resource" uid="uid://c4i8xryhtmls2" path="res://data/gear/armor/test_armor.tres" id="11_tiljl"]
+[ext_resource type="Resource" uid="uid://51bc5k8oi6o7" path="res://data/gear/armor/test_item.tres" id="12_0nq4q"]
 
 [resource]
 script = ExtResource("5_60tc1")
 strength = 2
 agility = 2
 intelligence = 5
+starting_equipment = Array[ExtResource("9_tiljl")]([ExtResource("10_07uti"), ExtResource("11_tiljl"), ExtResource("11_io77m"), ExtResource("12_0nq4q")])
 name = "Mystic"
 portrait = ExtResource("5_e7bq6")
 color = Color(0.878431, 0.878431, 0.878431, 1)

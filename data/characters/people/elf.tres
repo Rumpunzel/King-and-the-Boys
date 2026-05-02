@@ -6,7 +6,13 @@
 [ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_lr5qy"]
 [ext_resource type="Texture2D" uid="uid://ben162rfher0t" path="res://data/characters/people/portraits/elf-helmet.svg" id="5_1nbx6"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_4smo8"]
+[ext_resource type="Resource" uid="uid://updblht1hc8k" path="res://data/characters/people/random_elf.tres" id="5_26gx7"]
 [ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_4smo8"]
+[ext_resource type="Script" uid="uid://8ygykwu25m2i" path="res://engine/objects/gear/gear_profile.gd" id="9_pi3jx"]
+[ext_resource type="Resource" uid="uid://b26415ebkl0eq" path="res://data/gear/armor/test_hat.tres" id="10_ot36u"]
+[ext_resource type="Resource" uid="uid://c4i8xryhtmls2" path="res://data/gear/armor/test_armor.tres" id="11_eh6ha"]
+[ext_resource type="Resource" uid="uid://csl15f3tnjnyb" path="res://data/gear/armor/test_cape.tres" id="12_tp5eo"]
+[ext_resource type="Resource" uid="uid://51bc5k8oi6o7" path="res://data/gear/armor/test_item.tres" id="13_thqp2"]
 
 [resource]
 script = ExtResource("5_4smo8")
@@ -14,6 +20,8 @@ strength = 2
 agility = 4
 intelligence = 4
 speed = 5
+model_configuration = ExtResource("5_26gx7")
+starting_equipment = Array[ExtResource("9_pi3jx")]([ExtResource("10_ot36u"), ExtResource("11_eh6ha"), ExtResource("12_tp5eo"), ExtResource("13_thqp2")])
 name = "Elf"
 portrait = ExtResource("5_1nbx6")
 color = Color(0.878431, 0.878431, 0.878431, 1)

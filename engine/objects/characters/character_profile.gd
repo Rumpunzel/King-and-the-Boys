@@ -34,6 +34,11 @@ enum Groups {
 @export var vision: float = 1.5
 @export var dark_vision: float = 2.5
 
+@export_category("Model")
+@export var model_configuration: ModelConfiguration = preload("uid://c1i0e1p4feqhe")
+@export var starting_equipment: Array[GearProfile]
+
+@export_category("Animations")
 @export var spawn_animation: ModelAnimation = preload("uid://djq27fwrmrv2")
 @export var move_animation: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var fast_move_animation: ModelAnimation = preload("uid://bwiaycc13h0eo")
@@ -48,6 +53,12 @@ func create(variation: int, spawn_transform: Transform3D) -> Character:
 	new_character.profile = self
 	new_character.transform = spawn_transform
 	return new_character
+
+func create_model(variation: int) -> Model:
+	var model: ModularCharacter = super.create_model(variation)
+	model_configuration.configure(model)
+	for gear_profile: GearProfile in starting_equipment: gear_profile.model_configuration.configure(model)
+	return model
 
 func get_group_name() -> StringName:
 	var group_name: StringName = Groups.keys()[group]
