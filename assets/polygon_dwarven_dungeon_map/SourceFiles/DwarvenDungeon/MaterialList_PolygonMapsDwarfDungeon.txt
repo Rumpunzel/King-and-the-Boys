@@ -1,0 +1,225 @@
+-------------------
+Folder Name: Prefabs
+-------------------
+Prefab Name: SM_Env_Cave_Roof_01
+    Mesh Name: SM_Env_Cave_Roof_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Cave_Wall_01
+    Mesh Name: SM_Env_Cave_Wall_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Cave_Wall_02
+    Mesh Name: SM_Env_Cave_Wall_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Cave_Wall_Curved_01
+    Mesh Name: SM_Env_Cave_Wall_Curved_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Cave_Wall_Curved_02
+    Mesh Name: SM_Env_Cave_Wall_Curved_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Gold_Ore_Small_01
+    Mesh Name: SM_Env_Gold_Ore_Small_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Gold_Ore_Small_02
+    Mesh Name: SM_Env_Gold_Ore_Small_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Gold_Ore_Small_03
+    Mesh Name: SM_Env_Gold_Ore_Small_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Gold_Ore_Small_04
+    Mesh Name: SM_Env_Gold_Ore_Small_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mine_Track_Curved_01
+    Mesh Name: SM_Env_Mine_Track_Curved_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mine_Track_Curved_02
+    Mesh Name: SM_Env_Mine_Track_Curved_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mine_Track_Ending_Block_01
+    Mesh Name: SM_Env_Mine_Track_Ending_Block_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mine_Track_Straight_01
+    Mesh Name: SM_Env_Mine_Track_Straight_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mountain_01
+    Mesh Name: SM_Env_Mountain_01
+        Slot: Mountain_Snow_01 (Uses custom shader)
+
+Prefab Name: SM_Env_Mountain_02
+    Mesh Name: SM_Env_Mountain_02
+        Slot: Mountain_Snow_01 (Uses custom shader)
+
+Prefab Name: SM_Env_Mountain_03
+    Mesh Name: SM_Env_Mountain_03
+        Slot: Mountain_Snow_01 (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Large_01
+    Mesh Name: SM_Env_Mushroom_Large_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Large_02
+    Mesh Name: SM_Env_Mushroom_Large_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Large_03
+    Mesh Name: SM_Env_Mushroom_Large_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Large_04
+    Mesh Name: SM_Env_Mushroom_Large_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Large_05
+    Mesh Name: SM_Env_Mushroom_Large_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Large_06
+    Mesh Name: SM_Env_Mushroom_Large_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Medium_01
+    Mesh Name: SM_Env_Mushroom_Medium_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Medium_02
+    Mesh Name: SM_Env_Mushroom_Medium_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Medium_03
+    Mesh Name: SM_Env_Mushroom_Medium_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Patch_01
+    Mesh Name: SM_Env_Mushroom_Patch_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Patch_02
+    Mesh Name: SM_Env_Mushroom_Patch_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Small_01
+    Mesh Name: SM_Env_Mushroom_Small_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Small_02
+    Mesh Name: SM_Env_Mushroom_Small_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Env_Mushroom_Small_03
+    Mesh Name: SM_Env_Mushroom_Small_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Bucket_01
+    Mesh Name: SM_Prop_Bucket_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Prop_Bucket_01_Handle_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Bucket_Mushrooms_01
+    Mesh Name: SM_Prop_Bucket_Mushrooms_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Candle_01
+    Mesh Name: SM_Prop_Candle_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Cart_01
+    Mesh Name: SM_Prop_Cart_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Prop_Cart_01_Wheel_L_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Prop_Cart_01_Wheel_R_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Crate_01_Insert_01
+    Mesh Name: SM_Prop_Crate_01_Insert_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_DeadBody_Goblin_01
+    Mesh Name: SM_Prop_DeadBody_Goblin_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_DeadBody_Goblin_02
+    Mesh Name: SM_Prop_DeadBody_Goblin_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_DeadBody_Goblin_03
+    Mesh Name: SM_Prop_DeadBody_Goblin_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_DeadBody_Goblin_04
+    Mesh Name: SM_Prop_DeadBody_Goblin_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_DeadBody_Goblin_05
+    Mesh Name: SM_Prop_DeadBody_Goblin_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_DeadBody_Goblin_06
+    Mesh Name: SM_Prop_DeadBody_Goblin_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Oar_01
+    Mesh Name: SM_Prop_Oar_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Plate_01
+    Mesh Name: SM_Prop_Plate_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Skull_Goblin_01
+    Mesh Name: SM_Prop_Skull_Goblin_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_SunMirror_01
+    Mesh Name: SM_Prop_SunMirror_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Prop_SunMirror_Rotate_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Prop_SunMirror_Angle_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Troll_Body_01
+    Mesh Name: SM_Prop_Troll_Body_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Troll_Body_02
+    Mesh Name: SM_Prop_Troll_Body_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Troll_Body_03
+    Mesh Name: SM_Prop_Troll_Body_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Trophy_Head_01
+    Mesh Name: SM_Prop_Trophy_Head_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Trophy_Head_02
+    Mesh Name: SM_Prop_Trophy_Head_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Prop_Trophy_Head_03
+    Mesh Name: SM_Prop_Trophy_Head_03
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Prop_Trophy_Head_03_Tongue_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Veh_Boat_01
+    Mesh Name: SM_Veh_Boat_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Veh_Boat_01_Rudder_01
+        Slot: Generic_01_A (Uses custom shader)
+

@@ -1,0 +1,1689 @@
+-------------------
+Folder Name: Base
+-------------------
+Prefab Name: SM_Bld_Base_45_Floor_01
+    Mesh Name: SM_Bld_Base_45_Floor_01
+        Slot: Generic_Wood (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_45_Floor_Combined_01
+    Mesh Name: SM_Bld_Base_45_Floor_Combined_01
+        Slot: Generic_Concrete (Uses custom shader)
+        Slot: Generic_Wood (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_45_Wall_01
+    Mesh Name: SM_Bld_Base_45_Wall_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_45_Wall_Door_01
+    Mesh Name: SM_Bld_Base_45_Wall_Door_01
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_45_Wall_Half_01
+    Mesh Name: SM_Bld_Base_45_Wall_Half_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Ceiling_01
+    Mesh Name: SM_Bld_Base_Ceiling_01
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Ceiling_45_01
+    Mesh Name: SM_Bld_Base_Ceiling_45_01
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Ceiling_Half_01
+    Mesh Name: SM_Bld_Base_Ceiling_Half_01
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Ceiling_Quarter_01
+    Mesh Name: SM_Bld_Base_Ceiling_Quarter_01
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Door_01
+    Mesh Name: SM_Bld_Base_Door_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Door_Large_01
+    Mesh Name: SM_Bld_Base_Door_Large_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Floor_01
+    Mesh Name: SM_Bld_Base_Floor_01
+        Slot: Generic_Wood (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Floor_Combined_01
+    Mesh Name: SM_Bld_Base_Floor_Combined_01
+        Slot: Generic_Concrete (Uses custom shader)
+        Slot: Generic_Wood (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Floor_Half_01
+    Mesh Name: SM_Bld_Base_Floor_Half_01
+        Slot: Generic_Concrete (Uses custom shader)
+        Slot: Generic_Wood (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Floor_Hole_01
+    Mesh Name: SM_Bld_Base_Floor_Hole_01
+        Slot: Generic_Wood (Uses custom shader)
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Default-Material (No Albedo Texture)
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Floor_Quarter_Combined_01
+    Mesh Name: SM_Bld_Base_Floor_Quarter_Combined_01
+        Slot: Generic_Concrete (Uses custom shader)
+        Slot: Generic_Wood (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Floor_Round_01
+    Mesh Name: SM_Bld_Base_Floor_Round_01
+        Slot: Generic_Concrete (Uses custom shader)
+        Slot: Generic_Wood (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_01
+    Mesh Name: SM_Bld_Base_Pillar_01
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_02
+    Mesh Name: SM_Bld_Base_Pillar_02
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_03
+    Mesh Name: SM_Bld_Base_Pillar_03
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_04
+    Mesh Name: SM_Bld_Base_Pillar_04
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_05
+    Mesh Name: SM_Bld_Base_Pillar_05
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_Half_01
+    Mesh Name: SM_Bld_Base_Pillar_Half_01
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_Half_02
+    Mesh Name: SM_Bld_Base_Pillar_Half_02
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_Half_03
+    Mesh Name: SM_Bld_Base_Pillar_Half_03
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_Half_04
+    Mesh Name: SM_Bld_Base_Pillar_Half_04
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Pillar_Half_05
+    Mesh Name: SM_Bld_Base_Pillar_Half_05
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Cap_01
+    Mesh Name: SM_Bld_Base_Roof_Cap_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Cap_Angle_01
+    Mesh Name: SM_Bld_Base_Roof_Cap_Angle_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Cap_Angle_Half_01
+    Mesh Name: SM_Bld_Base_Roof_Cap_Angle_Half_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Cap_End_01
+    Mesh Name: SM_Bld_Base_Roof_Cap_End_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Cap_Half_01
+    Mesh Name: SM_Bld_Base_Roof_Cap_Half_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Corner_In_01
+    Mesh Name: SM_Bld_Base_Roof_Corner_In_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Corner_Out_01
+    Mesh Name: SM_Bld_Base_Roof_Corner_Out_01
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Half_01
+    Mesh Name: SM_Bld_Base_Roof_Half_01
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Half_02
+    Mesh Name: SM_Bld_Base_Roof_Half_02
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Quarter_01
+    Mesh Name: SM_Bld_Base_Roof_Quarter_01
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Straight_01
+    Mesh Name: SM_Bld_Base_Roof_Straight_01
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Trim_01
+    Mesh Name: SM_Bld_Base_Roof_Trim_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Trim_Corner_01
+    Mesh Name: SM_Bld_Base_Roof_Trim_Corner_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Roof_Trim_Half_01
+    Mesh Name: SM_Bld_Base_Roof_Trim_Half_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Stairs_01
+    Mesh Name: SM_Bld_Base_Stairs_01
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Stairs_02
+    Mesh Name: SM_Bld_Base_Stairs_02
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Stairwell_Wall_01
+    Mesh Name: SM_Bld_Base_Stairwell_Wall_01
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Stair_Half_01
+    Mesh Name: SM_Bld_Base_Stair_Half_01
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Stair_Quarter_01
+    Mesh Name: SM_Bld_Base_Stair_Quarter_01
+        Slot: Generic_Concrete (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_01
+    Mesh Name: SM_Bld_Base_Wall_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Angle_01
+    Mesh Name: SM_Bld_Base_Wall_Angle_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Angle_02
+    Mesh Name: SM_Bld_Base_Wall_Angle_02
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Corner_01
+    Mesh Name: SM_Bld_Base_Wall_Corner_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Door_01
+    Mesh Name: SM_Bld_Base_Wall_Door_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Door_Double_01
+    Mesh Name: SM_Bld_Base_Wall_Door_Double_01
+        Slot: Generic_Plaster (Uses custom shader)
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Door_Double_Large_01
+    Mesh Name: SM_Bld_Base_Wall_Door_Double_Large_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Door_Large_01
+    Mesh Name: SM_Bld_Base_Wall_Door_Large_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Half_01
+    Mesh Name: SM_Bld_Base_Wall_Half_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Half_02
+    Mesh Name: SM_Bld_Base_Wall_Half_02
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Half_Angle_01
+    Mesh Name: SM_Bld_Base_Wall_Half_Angle_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Half_Angle_02
+    Mesh Name: SM_Bld_Base_Wall_Half_Angle_02
+        Slot: Generic_Plaster (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Quarter_01
+    Mesh Name: SM_Bld_Base_Wall_Quarter_01
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Round_01
+    Mesh Name: SM_Bld_Base_Wall_Round_01
+        Slot: Generic_Plaster (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Round_Half_01
+    Mesh Name: SM_Bld_Base_Wall_Round_Half_01
+        Slot: Generic_Plaster (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Thin_01
+    Mesh Name: SM_Bld_Base_Wall_Thin_01
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Thin_Half_01
+    Mesh Name: SM_Bld_Base_Wall_Thin_Half_01
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Thin_Half_02
+    Mesh Name: SM_Bld_Base_Wall_Thin_Half_02
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Thin_Quarter_01
+    Mesh Name: SM_Bld_Base_Wall_Thin_Quarter_01
+        Slot: Generic_Plaster (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Trim_01
+    Mesh Name: SM_Bld_Base_Wall_Trim_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Window_01
+    Mesh Name: SM_Bld_Base_Wall_Window_01
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+    Mesh Name: SM_Bld_Base_Wall_Window_01_Glass
+        Slot: Generic_Glass (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Window_Double_01
+    Mesh Name: SM_Bld_Base_Wall_Window_Double_01
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+    Mesh Name: SM_Bld_Base_Wall_Window_Double_01_Glass
+        Slot: Generic_Glass (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Window_Half_01
+    Mesh Name: SM_Bld_Base_Wall_Window_Half_01
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+    Mesh Name: SM_Bld_Base_Wall_Window_Half_01_Glass
+        Slot: Generic_Glass (Uses custom shader)
+
+Prefab Name: SM_Bld_Base_Wall_Window_Half_02
+    Mesh Name: SM_Bld_Base_Wall_Window_Half_02
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Brick (Uses custom shader)
+        Slot: Generic_Plaster (Uses custom shader)
+    Mesh Name: SM_Bld_Base_Wall_Window_Half_02_Glass
+        Slot: Generic_Glass (Uses custom shader)
+
+-------------------
+Folder Name: Building
+-------------------
+Prefab Name: SM_Gen_Bld_Background_01
+    Mesh Name: SM_Gen_Bld_Background_01
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_02
+    Mesh Name: SM_Gen_Bld_Background_02
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_03
+    Mesh Name: SM_Gen_Bld_Background_03
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_04
+    Mesh Name: SM_Gen_Bld_Background_04
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_05
+    Mesh Name: SM_Gen_Bld_Background_05
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_06
+    Mesh Name: SM_Gen_Bld_Background_06
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_07
+    Mesh Name: SM_Gen_Bld_Background_07
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_08
+    Mesh Name: SM_Gen_Bld_Background_08
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_09
+    Mesh Name: SM_Gen_Bld_Background_09
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_10
+    Mesh Name: SM_Gen_Bld_Background_10
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Background_11
+    Mesh Name: SM_Gen_Bld_Background_11
+        Slot: Generic_01_A (Uses custom shader)
+        Slot: Generic_Glass_Opaque (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Beam_01
+    Mesh Name: SM_Gen_Bld_Beam_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Beam_02
+    Mesh Name: SM_Gen_Bld_Beam_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Beam_03
+    Mesh Name: SM_Gen_Bld_Beam_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Ladder_01
+    Mesh Name: SM_Gen_Bld_Ladder_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_Cap_01
+    Mesh Name: SM_Gen_Bld_Pipe_Cap_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_Cap_02
+    Mesh Name: SM_Gen_Bld_Pipe_Cap_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_Corner_01
+    Mesh Name: SM_Gen_Bld_Pipe_Corner_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_Corner_02
+    Mesh Name: SM_Gen_Bld_Pipe_Corner_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_Cross_01
+    Mesh Name: SM_Gen_Bld_Pipe_Cross_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_Straight_01
+    Mesh Name: SM_Gen_Bld_Pipe_Straight_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_Straight_02
+    Mesh Name: SM_Gen_Bld_Pipe_Straight_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_Straight_03
+    Mesh Name: SM_Gen_Bld_Pipe_Straight_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_T_01
+    Mesh Name: SM_Gen_Bld_Pipe_T_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Bld_Pipe_Valve_01
+    Mesh Name: SM_Gen_Bld_Pipe_Valve_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Bld_Pipe_Valve_01_Wheel_01
+        Slot: Generic_01_A (Uses custom shader)
+
+-------------------
+Folder Name: Environment
+-------------------
+Prefab Name: SM_Gen_Env_Background_Mountain_01
+    Mesh Name: SM_Gen_Env_Background_Mountain_01
+        Slot: Generic_Mountains (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Background_Mountain_02
+    Mesh Name: SM_Gen_Env_Background_Mountain_02
+        Slot: Generic_Mountains (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Background_Mountain_03
+    Mesh Name: SM_Gen_Env_Background_Mountain_03
+        Slot: Generic_Mountains (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_01
+    Mesh Name: SM_Gen_Env_Bush_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_02
+    Mesh Name: SM_Gen_Env_Bush_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_03
+    Mesh Name: SM_Gen_Env_Bush_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_04
+    Mesh Name: SM_Gen_Env_Bush_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Large_01
+    Mesh Name: SM_Gen_Env_Bush_Large_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Large_02
+    Mesh Name: SM_Gen_Env_Bush_Large_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Large_03
+    Mesh Name: SM_Gen_Env_Bush_Large_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Large_04
+    Mesh Name: SM_Gen_Env_Bush_Large_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Part_01
+    Mesh Name: SM_Gen_Env_Bush_Part_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Part_02
+    Mesh Name: SM_Gen_Env_Bush_Part_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Part_03
+    Mesh Name: SM_Gen_Env_Bush_Part_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Part_04
+    Mesh Name: SM_Gen_Env_Bush_Part_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Part_05
+    Mesh Name: SM_Gen_Env_Bush_Part_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Bush_Part_06
+    Mesh Name: SM_Gen_Env_Bush_Part_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cliff_01
+    Mesh Name: SM_Gen_Env_Cliff_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cliff_02
+    Mesh Name: SM_Gen_Env_Cliff_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cliff_03
+    Mesh Name: SM_Gen_Env_Cliff_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cliff_04
+    Mesh Name: SM_Gen_Env_Cliff_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cliff_Arch_01
+    Mesh Name: SM_Gen_Env_Cliff_Arch_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cliff_Arch_02
+    Mesh Name: SM_Gen_Env_Cliff_Arch_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cliff_Pillar_01
+    Mesh Name: SM_Gen_Env_Cliff_Pillar_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cloud_01
+    Mesh Name: SM_Gen_Env_Cloud_01
+        Slot: Generic_Cloud (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cloud_02
+    Mesh Name: SM_Gen_Env_Cloud_02
+        Slot: Generic_Cloud (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cloud_03
+    Mesh Name: SM_Gen_Env_Cloud_03
+        Slot: Generic_Cloud (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Cloud_Ring_01
+    Mesh Name: SM_Gen_Env_Cloud_Ring_01
+        Slot: Generic_Cloud (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Fern_01
+    Mesh Name: SM_Gen_Env_Fern_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Fern_02
+    Mesh Name: SM_Gen_Env_Fern_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Fern_03
+    Mesh Name: SM_Gen_Env_Fern_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Flowers_01
+    Mesh Name: SM_Gen_Env_Flowers_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Flowers_02
+    Mesh Name: SM_Gen_Env_Flowers_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Flowers_03
+    Mesh Name: SM_Gen_Env_Flowers_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Flowers_04
+    Mesh Name: SM_Gen_Env_Flowers_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Flowers_05
+    Mesh Name: SM_Gen_Env_Flowers_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Flowers_06
+    Mesh Name: SM_Gen_Env_Flowers_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Flowers_07
+    Mesh Name: SM_Gen_Env_Flowers_07
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Flowers_08
+    Mesh Name: SM_Gen_Env_Flowers_08
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_01
+    Mesh Name: SM_Gen_Env_Grass_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_02
+    Mesh Name: SM_Gen_Env_Grass_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_03
+    Mesh Name: SM_Gen_Env_Grass_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_04
+    Mesh Name: SM_Gen_Env_Grass_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_05
+    Mesh Name: SM_Gen_Env_Grass_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_06
+    Mesh Name: SM_Gen_Env_Grass_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_07
+    Mesh Name: SM_Gen_Env_Grass_07
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_Tall_01
+    Mesh Name: SM_Gen_Env_Grass_Tall_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_Tall_02
+    Mesh Name: SM_Gen_Env_Grass_Tall_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_Tall_03
+    Mesh Name: SM_Gen_Env_Grass_Tall_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Grass_Tall_04
+    Mesh Name: SM_Gen_Env_Grass_Tall_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Dirt_01
+    Mesh Name: SM_Gen_Env_Ground_Dirt_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Dirt_02
+    Mesh Name: SM_Gen_Env_Ground_Dirt_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Dirt_03
+    Mesh Name: SM_Gen_Env_Ground_Dirt_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Dirt_04
+    Mesh Name: SM_Gen_Env_Ground_Dirt_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Dirt_Large_01
+    Mesh Name: SM_Gen_Env_Ground_Dirt_Large_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Dirt_Large_02
+    Mesh Name: SM_Gen_Env_Ground_Dirt_Large_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Dirt_Large_03
+    Mesh Name: SM_Gen_Env_Ground_Dirt_Large_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Grass_01
+    Mesh Name: SM_Gen_Env_Ground_Grass_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Grass_02
+    Mesh Name: SM_Gen_Env_Ground_Grass_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Grass_03
+    Mesh Name: SM_Gen_Env_Ground_Grass_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Grass_04
+    Mesh Name: SM_Gen_Env_Ground_Grass_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Grass_Large_01
+    Mesh Name: SM_Gen_Env_Ground_Grass_Large_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Grass_Large_02
+    Mesh Name: SM_Gen_Env_Ground_Grass_Large_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Grass_Large_03
+    Mesh Name: SM_Gen_Env_Ground_Grass_Large_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_01
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_02
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_03
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_04
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_05
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_06
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_07
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_07
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_Large_01
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_Large_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_Large_02
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_Large_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Dirt_Large_03
+    Mesh Name: SM_Gen_Env_Ground_River_Dirt_Large_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_01
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_02
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_03
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_04
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_05
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_06
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_07
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_07
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_Large_01
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_Large_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_Large_02
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_Large_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_River_Grass_Large_03
+    Mesh Name: SM_Gen_Env_Ground_River_Grass_Large_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Slope_Dirt_01
+    Mesh Name: SM_Gen_Env_Ground_Slope_Dirt_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Slope_Dirt_02
+    Mesh Name: SM_Gen_Env_Ground_Slope_Dirt_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Slope_Grass_01
+    Mesh Name: SM_Gen_Env_Ground_Slope_Grass_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ground_Slope_Grass_02
+    Mesh Name: SM_Gen_Env_Ground_Slope_Grass_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Hill_01
+    Mesh Name: SM_Gen_Env_Hill_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Hill_02
+    Mesh Name: SM_Gen_Env_Hill_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Hill_03
+    Mesh Name: SM_Gen_Env_Hill_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Hill_04
+    Mesh Name: SM_Gen_Env_Hill_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Hill_05
+    Mesh Name: SM_Gen_Env_Hill_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_01
+    Mesh Name: SM_Gen_Env_Ivy_01
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_02
+    Mesh Name: SM_Gen_Env_Ivy_02
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_03
+    Mesh Name: SM_Gen_Env_Ivy_03
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_04
+    Mesh Name: SM_Gen_Env_Ivy_04
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_05
+    Mesh Name: SM_Gen_Env_Ivy_05
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_06
+    Mesh Name: SM_Gen_Env_Ivy_06
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_07
+    Mesh Name: SM_Gen_Env_Ivy_07
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_08
+    Mesh Name: SM_Gen_Env_Ivy_08
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_09
+    Mesh Name: SM_Gen_Env_Ivy_09
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_10
+    Mesh Name: SM_Gen_Env_Ivy_10
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_11
+    Mesh Name: SM_Gen_Env_Ivy_11
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_12
+    Mesh Name: SM_Gen_Env_Ivy_12
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_13
+    Mesh Name: SM_Gen_Env_Ivy_13
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_Draped_01
+    Mesh Name: SM_Gen_Env_Ivy_Draped_01
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_Draped_02
+    Mesh Name: SM_Gen_Env_Ivy_Draped_02
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Ivy_Draped_03
+    Mesh Name: SM_Gen_Env_Ivy_Draped_03
+        Slot: Generic_Ivy (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Leaves_01
+    Mesh Name: SM_Gen_Env_Leaves_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Leaves_02
+    Mesh Name: SM_Gen_Env_Leaves_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Leaves_03
+    Mesh Name: SM_Gen_Env_Leaves_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Leaves_Pile_01
+    Mesh Name: SM_Gen_Env_Leaves_Pile_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Leaves_Pile_02
+    Mesh Name: SM_Gen_Env_Leaves_Pile_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Lilypads_01
+    Mesh Name: SM_Gen_Env_Lilypads_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Lilypads_02
+    Mesh Name: SM_Gen_Env_Lilypads_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Lilypads_03
+    Mesh Name: SM_Gen_Env_Lilypads_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Log_01
+    Mesh Name: SM_Gen_Env_Log_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Log_02
+    Mesh Name: SM_Gen_Env_Log_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Mountain_01
+    Mesh Name: SM_Gen_Env_Mountain_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Mountain_02
+    Mesh Name: SM_Gen_Env_Mountain_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Mountain_03
+    Mesh Name: SM_Gen_Env_Mountain_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Mushroom_01
+    Mesh Name: SM_Gen_Env_Mushroom_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Mushroom_02
+    Mesh Name: SM_Gen_Env_Mushroom_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Mushroom_03
+    Mesh Name: SM_Gen_Env_Mushroom_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Road_Gravel_Corner_Large_01
+    Mesh Name: SM_Gen_Env_Road_Gravel_Corner_Large_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Road_Gravel_Corner_Large_02
+    Mesh Name: SM_Gen_Env_Road_Gravel_Corner_Large_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Road_Gravel_Corner_Small_01
+    Mesh Name: SM_Gen_Env_Road_Gravel_Corner_Small_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Road_Gravel_Corner_Small_02
+    Mesh Name: SM_Gen_Env_Road_Gravel_Corner_Small_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Road_Gravel_End_01
+    Mesh Name: SM_Gen_Env_Road_Gravel_End_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Road_Gravel_Straight_01
+    Mesh Name: SM_Gen_Env_Road_Gravel_Straight_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Road_Gravel_Straight_02
+    Mesh Name: SM_Gen_Env_Road_Gravel_Straight_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Road_Gravel_Straight_03
+    Mesh Name: SM_Gen_Env_Road_Gravel_Straight_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_01
+    Mesh Name: SM_Gen_Env_Rock_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_02
+    Mesh Name: SM_Gen_Env_Rock_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_03
+    Mesh Name: SM_Gen_Env_Rock_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_04
+    Mesh Name: SM_Gen_Env_Rock_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_05
+    Mesh Name: SM_Gen_Env_Rock_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_06
+    Mesh Name: SM_Gen_Env_Rock_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_07
+    Mesh Name: SM_Gen_Env_Rock_07
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_08
+    Mesh Name: SM_Gen_Env_Rock_08
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_09
+    Mesh Name: SM_Gen_Env_Rock_09
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_10
+    Mesh Name: SM_Gen_Env_Rock_10
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_Pebbles_01
+    Mesh Name: SM_Gen_Env_Rock_Pebbles_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_Pebbles_02
+    Mesh Name: SM_Gen_Env_Rock_Pebbles_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_Pebbles_03
+    Mesh Name: SM_Gen_Env_Rock_Pebbles_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_Pebbles_04
+    Mesh Name: SM_Gen_Env_Rock_Pebbles_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Rock_Pebbles_05
+    Mesh Name: SM_Gen_Env_Rock_Pebbles_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Root_01
+    Mesh Name: SM_Gen_Env_Root_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Root_02
+    Mesh Name: SM_Gen_Env_Root_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Shrub_01
+    Mesh Name: SM_Gen_Env_Shrub_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Shrub_02
+    Mesh Name: SM_Gen_Env_Shrub_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Shrub_03
+    Mesh Name: SM_Gen_Env_Shrub_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Skydome_01
+    Mesh Name: SM_Gen_Env_Skydome_01
+        Slot: Generic_SimpleSky (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Skyline_01
+    Mesh Name: SM_Gen_Env_Skyline_01
+        Slot: Generic_Skyline (Uses custom shader)
+    Mesh Name: SM_Gen_Env_Skyline_02
+        Slot: Generic_Skyline (Uses custom shader)
+    Mesh Name: SM_Gen_Env_Skyline_03
+        Slot: Generic_Skyline (Uses custom shader)
+    Mesh Name: SM_Gen_Env_Skyline_04
+        Slot: Generic_Skyline (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Stump_01
+    Mesh Name: SM_Gen_Env_Stump_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Stump_02
+    Mesh Name: SM_Gen_Env_Stump_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Stump_03
+    Mesh Name: SM_Gen_Env_Stump_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Tree_01
+    Mesh Name: SM_Gen_Env_Tree_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Tree_02
+    Mesh Name: SM_Gen_Env_Tree_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Tree_03
+    Mesh Name: SM_Gen_Env_Tree_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Tree_Dead_01
+    Mesh Name: SM_Gen_Env_Tree_Dead_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Tree_Dead_02
+    Mesh Name: SM_Gen_Env_Tree_Dead_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Tree_Dead_03
+    Mesh Name: SM_Gen_Env_Tree_Dead_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Tree_Pine_01
+    Mesh Name: SM_Gen_Env_Tree_Pine_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Tree_Pine_02
+    Mesh Name: SM_Gen_Env_Tree_Pine_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Tree_Pine_03
+    Mesh Name: SM_Gen_Env_Tree_Pine_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Twig_01
+    Mesh Name: SM_Gen_Env_Twig_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Twig_02
+    Mesh Name: SM_Gen_Env_Twig_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Twig_03
+    Mesh Name: SM_Gen_Env_Twig_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Twig_04
+    Mesh Name: SM_Gen_Env_Twig_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Env_Water_Plane_01
+    Mesh Name: SM_Gen_Env_Water_Plane_01
+        Slot: Generic_Water (Uses custom shader)
+
+-------------------
+Folder Name: FX
+-------------------
+Prefab Name: FX_Blood_Splatter_01
+    Mesh Name: FX_Blood_Splatter_01
+        Slot: Generic_Circle_Multiply_01 (Uses custom shader)
+
+Prefab Name: FX_Candle_Flame_01
+    Mesh Name: FX_Candle_Flame_01
+        Slot: Generic_Candle_Glow_01 (Uses custom shader)
+
+Prefab Name: FX_Dust_Spots_01
+    Mesh Name: FX_Dust_Spots_01
+        Slot: Generic_Circle_Additive_01 (Uses custom shader)
+
+Prefab Name: FX_Fire_01
+    Mesh Name: FX_Fire_01
+        Slot: Generic_Circle_Additive_01 (Uses custom shader)
+
+Prefab Name: FX_Flies_01
+    Mesh Name: FX_Flies_01
+        Slot: Generic_Circle_Multiply_01 (Uses custom shader)
+
+Prefab Name: FX_Fog_01
+    Mesh Name: FX_Fog_01
+        Slot: Generic_Circle_Soft_01 (Uses custom shader)
+
+Prefab Name: FX_Leaves_01
+    Mesh Name: FX_Leaves_01
+        Slot: Generic_Leaf (Uses custom shader)
+
+Prefab Name: FX_Rain_01
+    Mesh Name: FX_Rain_01
+        Slot: Generic_Circle_Additive_01 (Uses custom shader)
+    Mesh Name: FX_Rain_Splash_01
+        Slot: Generic_Circle_Additive_01 (Uses custom shader)
+
+Prefab Name: FX_Smoke_01
+    Mesh Name: FX_Smoke_01
+        Slot: Generic_Circle_Multiply_01 (Uses custom shader)
+
+Prefab Name: FX_SunBeam_01
+    Mesh Name: FX_SunBeam_01
+        Slot: Generic_Sun_Beam_01 (Uses custom shader)
+
+Prefab Name: FX_Wind_Streaks_01
+    Mesh Name: FX_Wind_Streaks_01
+        Slot: Generic_Blank (Uses custom shader)
+        Slot: Generic_Wind_Streak (Uses custom shader)
+
+Prefab Name: LightRay_Cube_01
+    Mesh Name: SM_Lightray_Cube_01
+        Slot: Generic_Lightray_01 (Uses custom shader)
+
+Prefab Name: LightRay_Round_01
+    Mesh Name: SM_Lightray_Round_01
+        Slot: Generic_Lightray_01 (Uses custom shader)
+
+-------------------
+Folder Name: Props
+-------------------
+Prefab Name: SM_Gen_Prop_Aircon_01
+    Mesh Name: SM_Gen_Prop_Aircon_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Aircon_02
+    Mesh Name: SM_Gen_Prop_Aircon_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Aircon_Roof_01
+    Mesh Name: SM_Gen_Prop_Aircon_Roof_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Aircon_Roof_02
+    Mesh Name: SM_Gen_Prop_Aircon_Roof_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Aircon_Roof_03
+    Mesh Name: SM_Gen_Prop_Aircon_Roof_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Barrel_Metal_01
+    Mesh Name: SM_Gen_Prop_Barrel_Metal_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Barrel_Metal_02
+    Mesh Name: SM_Gen_Prop_Barrel_Metal_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Barrel_Metal_03
+    Mesh Name: SM_Gen_Prop_Barrel_Metal_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Barrel_Wood_01
+    Mesh Name: SM_Gen_Prop_Barrel_Wood_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Barrel_Wood_02
+    Mesh Name: SM_Gen_Prop_Barrel_Wood_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Barrel_Wood_03
+    Mesh Name: SM_Gen_Prop_Barrel_Wood_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Bottle_01
+    Mesh Name: SM_Gen_Prop_Bottle_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Bottle_02
+    Mesh Name: SM_Gen_Prop_Bottle_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Bottle_03
+    Mesh Name: SM_Gen_Prop_Bottle_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Bottle_04
+    Mesh Name: SM_Gen_Prop_Bottle_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Bottle_05
+    Mesh Name: SM_Gen_Prop_Bottle_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Button_01
+    Mesh Name: SM_Gen_Prop_Button_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Button_01_Button_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Button_02
+    Mesh Name: SM_Gen_Prop_Button_02
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Button_02_Button_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Cardboard_Box_01
+    Mesh Name: SM_Gen_Prop_Cardboard_Box_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Cardboard_Box_02
+    Mesh Name: SM_Gen_Prop_Cardboard_Box_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Cardboard_Box_03
+    Mesh Name: SM_Gen_Prop_Cardboard_Box_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Cardboard_Box_04
+    Mesh Name: SM_Gen_Prop_Cardboard_Box_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Cardboard_Box_05
+    Mesh Name: SM_Gen_Prop_Cardboard_Box_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Cardboard_Box_Preset_01
+    Mesh Name: SM_Gen_Prop_Cardboard_Box_Preset_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Chain_01
+    Mesh Name: SM_Gen_Prop_Chain_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Chain_02
+    Mesh Name: SM_Gen_Prop_Chain_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Chain_03
+    Mesh Name: SM_Gen_Prop_Chain_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Chain_Anchor_01
+    Mesh Name: SM_Gen_Prop_Chain_Anchor_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Chair_01
+    Mesh Name: SM_Gen_Prop_Chair_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Chest_01
+    Mesh Name: SM_Gen_Prop_Chest_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Chest_01_Lid_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Chest_01_Latch_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Chest_02
+    Mesh Name: SM_Gen_Prop_Chest_02
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Chest_02_Lid_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Clock_01
+    Mesh Name: SM_Gen_Prop_Clock_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Clock_01_Hand_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Clock_01_Hand_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Coin_01
+    Mesh Name: SM_Gen_Prop_Coin_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Coin_Pile_01
+    Mesh Name: SM_Gen_Prop_Coin_Pile_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Coin_Pile_02
+    Mesh Name: SM_Gen_Prop_Coin_Pile_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Coin_Stack_01
+    Mesh Name: SM_Gen_Prop_Coin_Stack_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Coin_Stack_02
+    Mesh Name: SM_Gen_Prop_Coin_Stack_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Crate_01
+    Mesh Name: SM_Gen_Prop_Crate_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Crate_02
+    Mesh Name: SM_Gen_Prop_Crate_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Crate_03
+    Mesh Name: SM_Gen_Prop_Crate_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Crate_Preset_01
+    Mesh Name: SM_Gen_Prop_Crate_Preset_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Bread_01
+    Mesh Name: SM_Gen_Prop_Food_Bread_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Bread_02
+    Mesh Name: SM_Gen_Prop_Food_Bread_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Meat_01
+    Mesh Name: SM_Gen_Prop_Food_Meat_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Meat_02
+    Mesh Name: SM_Gen_Prop_Food_Meat_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Meat_03
+    Mesh Name: SM_Gen_Prop_Food_Meat_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Meat_04
+    Mesh Name: SM_Gen_Prop_Food_Meat_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Meat_05
+    Mesh Name: SM_Gen_Prop_Food_Meat_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Meat_06
+    Mesh Name: SM_Gen_Prop_Food_Meat_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Vegetable_01
+    Mesh Name: SM_Gen_Prop_Food_Vegetable_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Vegetable_02
+    Mesh Name: SM_Gen_Prop_Food_Vegetable_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Vegetable_03
+    Mesh Name: SM_Gen_Prop_Food_Vegetable_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Vegetable_04
+    Mesh Name: SM_Gen_Prop_Food_Vegetable_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Vegetable_05
+    Mesh Name: SM_Gen_Prop_Food_Vegetable_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Food_Vegetable_06
+    Mesh Name: SM_Gen_Prop_Food_Vegetable_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Hook_01
+    Mesh Name: SM_Gen_Prop_Hook_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Keypad_01
+    Mesh Name: SM_Gen_Prop_Keypad_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Key_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Key_02
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Key_03
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Key_04
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Key_05
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Key_06
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Key_07
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Key_08
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Key_09
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Keypad_01_Light_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Key_01
+    Mesh Name: SM_Gen_Prop_Key_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Lever_01
+    Mesh Name: SM_Gen_Prop_Lever_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Lever_01_Stick_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Lever_02
+    Mesh Name: SM_Gen_Prop_Lever_02
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Lever_02_Stick_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Light_Roof_01
+    Mesh Name: SM_Gen_Prop_Light_Roof_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Light_Roof_02
+    Mesh Name: SM_Gen_Prop_Light_Roof_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Light_Roof_03
+    Mesh Name: SM_Gen_Prop_Light_Roof_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Light_Wall_01
+    Mesh Name: SM_Gen_Prop_Light_Wall_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Medkit_01
+    Mesh Name: SM_Gen_Prop_Medkit_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Medkit_01_Lid_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Papers_01
+    Mesh Name: SM_Gen_Prop_Papers_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Papers_02
+    Mesh Name: SM_Gen_Prop_Papers_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Papers_03
+    Mesh Name: SM_Gen_Prop_Papers_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Papers_04
+    Mesh Name: SM_Gen_Prop_Papers_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Papers_05
+    Mesh Name: SM_Gen_Prop_Papers_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Papers_06
+    Mesh Name: SM_Gen_Prop_Papers_06
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Plank_01
+    Mesh Name: SM_Gen_Prop_Plank_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Plank_02
+    Mesh Name: SM_Gen_Prop_Plank_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Plinth_01
+    Mesh Name: SM_Gen_Prop_Plinth_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Plinth_02
+    Mesh Name: SM_Gen_Prop_Plinth_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Potion_01
+    Mesh Name: SM_Gen_Prop_Potion_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Pot_01
+    Mesh Name: SM_Gen_Prop_Pot_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Pot_02
+    Mesh Name: SM_Gen_Prop_Pot_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Pot_03
+    Mesh Name: SM_Gen_Prop_Pot_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Pot_04
+    Mesh Name: SM_Gen_Prop_Pot_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Pot_05
+    Mesh Name: SM_Gen_Prop_Pot_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Rope_01
+    Mesh Name: SM_Gen_Prop_Rope_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Rope_02
+    Mesh Name: SM_Gen_Prop_Rope_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Rope_03
+    Mesh Name: SM_Gen_Prop_Rope_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Rope_Knot_01
+    Mesh Name: SM_Gen_Prop_Rope_Knot_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Sack_01
+    Mesh Name: SM_Gen_Prop_Sack_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Sack_02
+    Mesh Name: SM_Gen_Prop_Sack_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Sack_03
+    Mesh Name: SM_Gen_Prop_Sack_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Sack_04
+    Mesh Name: SM_Gen_Prop_Sack_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Sack_05
+    Mesh Name: SM_Gen_Prop_Sack_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Sack_Stack_01
+    Mesh Name: SM_Gen_Prop_Sack_Stack_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Sack_Stack_02
+    Mesh Name: SM_Gen_Prop_Sack_Stack_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Screen_01
+    Mesh Name: SM_Gen_Prop_Screen_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Shelf_01
+    Mesh Name: SM_Gen_Prop_Shelf_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Shelf_02
+    Mesh Name: SM_Gen_Prop_Shelf_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Shelf_03
+    Mesh Name: SM_Gen_Prop_Shelf_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Skull_01
+    Mesh Name: SM_Gen_Prop_Skull_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Statue_01
+    Mesh Name: SM_Gen_Prop_Statue_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Statue_02
+    Mesh Name: SM_Gen_Prop_Statue_02
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Statue_03
+    Mesh Name: SM_Gen_Prop_Statue_03
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Statue_04
+    Mesh Name: SM_Gen_Prop_Statue_04
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Statue_05
+    Mesh Name: SM_Gen_Prop_Statue_05
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Switch_01
+    Mesh Name: SM_Gen_Prop_Switch_01
+        Slot: Generic_01_A (Uses custom shader)
+    Mesh Name: SM_Gen_Prop_Switch_Stick_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Prop_Table_01
+    Mesh Name: SM_Gen_Prop_Table_01
+        Slot: Generic_01_A (Uses custom shader)
+
+-------------------
+Folder Name: Weapons
+-------------------
+Prefab Name: SM_Gen_Wep_Axe_01
+    Mesh Name: SM_Gen_Wep_Axe_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Wep_Pickaxe_01
+    Mesh Name: SM_Gen_Wep_Pickaxe_01
+        Slot: Generic_01_A (Uses custom shader)
+
+Prefab Name: SM_Gen_Wep_Spade_01
+    Mesh Name: SM_Gen_Wep_Spade_01
+        Slot: Generic_01_A (Uses custom shader)
+
