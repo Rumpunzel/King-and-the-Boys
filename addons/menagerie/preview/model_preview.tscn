@@ -196,26 +196,34 @@ _config = NodePath("../../../../PreviewConfig")
 size = Vector2i(3840, 2160)
 
 [node name="PreviewViewer" parent="SubViewport" unique_id=1621488171 node_paths=PackedStringArray("_view_target") instance=ExtResource("3_8vjfp")]
-transform = Transform3D(0.971961, 0, 0.23514196, 0, 1, 0, -0.23514196, 0, 0.971961, 0, 0, 0)
+transform = Transform3D(0.9719608, 0, 0.23514189, 0, 1, 0, -0.23514189, 0, 0.9719608, 0, 0, 0)
 _view_target = NodePath("../PreviewScene/PreviewModel")
 
 [node name="PreviewScene" parent="SubViewport" unique_id=1428006099 instance=ExtResource("5_m0po0")]
 script = ExtResource("3_p56y7")
 
 [node name="PreviewModel" parent="SubViewport/PreviewScene" unique_id=1932609070 instance=ExtResource("4_73bcv")]
+profile = null
 
 [node name="CollisionShape3D" parent="SubViewport/PreviewScene/PreviewModel" index="0" unique_id=281746367]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_yaxum")
 
 [node name="CollisionMesh" parent="SubViewport/PreviewScene/PreviewModel" index="1" unique_id=1367290623]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_eeoyy")
 
 [node name="HitBoxMesh" parent="SubViewport/PreviewScene/PreviewModel" index="2" unique_id=1550176642]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_q7ytu")
 
 [node name="InteractionAreaMesh" parent="SubViewport/PreviewScene/PreviewModel" index="3" unique_id=1225774775]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 visible = false
 mesh = SubResource("ArrayMesh_nh2fq")
+
+[node name="HeadsUpAnchor" parent="SubViewport/PreviewScene/PreviewModel" index="4" unique_id=1908165322]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [connection signal="active_profile_changed" from="." to="MarginContainer/GridContainer/PreviewConfiguration" method="_on_active_profile_changed"]
 [connection signal="active_profile_changed" from="." to="SubViewport/PreviewScene/PreviewModel" method="_on_active_profile_changed"]
@@ -227,6 +235,7 @@ mesh = SubResource("ArrayMesh_nh2fq")
 [connection signal="visibility_changed" from="." to="SubViewport/PreviewScene" method="_on_model_preview_visibility_changed"]
 [connection signal="zoomed_in" from="." to="SubViewport/PreviewViewer" method="_on_model_preview_zoomed_in"]
 [connection signal="zoomed_out" from="." to="SubViewport/PreviewViewer" method="_on_model_preview_zoomed_out"]
+[connection signal="randomized" from="MarginContainer/GridContainer/PreviewConfiguration" to="SubViewport/PreviewScene/PreviewModel" method="_on_randomized"]
 [connection signal="show_collision_changed" from="MarginContainer/GridContainer/PreviewConfiguration" to="SubViewport/PreviewScene/PreviewModel/CollisionMesh" method="set_visible"]
 [connection signal="show_hit_box_changed" from="MarginContainer/GridContainer/PreviewConfiguration" to="SubViewport/PreviewScene/PreviewModel/HitBoxMesh" method="set_visible"]
 [connection signal="show_interaction_area_changed" from="MarginContainer/GridContainer/PreviewConfiguration" to="SubViewport/PreviewScene/PreviewModel/InteractionAreaMesh" method="set_visible"]
@@ -243,5 +252,7 @@ mesh = SubResource("ArrayMesh_nh2fq")
 [connection signal="zoomed_out" from="MarginContainer/GridContainer/GridContainer/ZoomConfiguration" to="SubViewport/PreviewViewer" method="_on_model_preview_zoomed_out"]
 [connection signal="tilt_value_changed" from="SubViewport/PreviewViewer" to="MarginContainer/GridContainer/GridContainer/TiltConfiguration" method="_on_tilt_value_changed"]
 [connection signal="zoom_value_changed" from="SubViewport/PreviewViewer" to="MarginContainer/GridContainer/GridContainer/ZoomConfiguration" method="_on_zoom_value_changed"]
+[connection signal="model_changed" from="SubViewport/PreviewScene/PreviewModel" to="MarginContainer/GridContainer/PreviewConfiguration" method="_on_model_changed"]
+[connection signal="model_removed" from="SubViewport/PreviewScene/PreviewModel" to="MarginContainer/GridContainer/PreviewConfiguration" method="_on_model_removed"]
 
 [editable path="SubViewport/PreviewScene/PreviewModel"]

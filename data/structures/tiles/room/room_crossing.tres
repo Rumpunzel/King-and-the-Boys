@@ -2,21 +2,22 @@
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_c61bo"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/tiles/room/room_tile.tscn" id="2_61inb"]
+[ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="3_61inb"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="4_tbc5o"]
+[ext_resource type="Resource" uid="uid://80ut5hvuftsw" path="res://data/model_animations/flip_animation.tres" id="4_w60u1"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="5_bw8s7"]
 
 [resource]
 script = ExtResource("5_bw8s7")
+group = 2
+room_type = ExtResource("4_tbc5o")
 _connection_up = true
 _connection_right = true
 _connection_down = true
 _connection_left = true
-group = 2
-room_type = ExtResource("4_tbc5o")
 name = "Room Crossing"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_61inb")])
 _collision_shape = ExtResource("1_c61bo")
 _hit_box_shape = ExtResource("1_c61bo")
-heads_up_display_offset = Vector3(0, 5, 0)
 metadata/_custom_type_script = "uid://dol8cfhd12nbf"

@@ -4,6 +4,8 @@ class_name PreviewModel
 extends RigidBody3D
 
 signal profile_changed
+signal model_changed(model: Model)
+signal model_removed
 
 ## Determines the varation of the [Model]
 ## If [code]<0[/code] a random [Model] will be used
@@ -37,9 +39,11 @@ var _model: Model:
 		if _model:
 			remove_child(_model)
 			_model.queue_free()
+			model_removed.emit()
 		_model = new_model
 		if not _model: return
 		add_child(_model, true)
+		model_changed.emit(_model)
 
 func play_animation(normalized_velocity: Vector3, is_on_floor: bool) -> void:
 	_model.play_animation(normalized_velocity, is_on_floor)
@@ -50,6 +54,7 @@ func get_portrait() -> Texture:
 	return profile.portrait
 
 func get_heads_up_anchor() -> Vector3:
+	if not profile: return Vector3.ZERO
 	return position + profile.heads_up_display_offset
 
 func _update() -> void:
@@ -64,7 +69,6 @@ func _update() -> void:
 	profile.configure_collision_shape(_collision_shape)
 	profile.configure_collision_mesh(_collision_mesh)
 	profile.configure_hit_box_mesh(_hit_box_mesh)
-	profile.configure_interaction_area_mesh(_interaction_area_mesh)
 	_heads_up_anchor.position = get_heads_up_anchor()
 	profile_changed.emit()
 
@@ -90,3 +94,12 @@ func _on_active_profile_changed(active_profile: Profile) -> void:
 
 func _on_variation_changed(new_variation: int) -> void:
 	variation = new_variation
+
+func _on_randomized() -> void:
+	assert(profile)
+	assert(profile is CharacterProfile)
+	assert(_model)
+	assert(_model is ModularCharacter)
+	var character_profile: CharacterProfile = profile
+	var modular_character: ModularCharacter = _model
+	character_profile.setup_model(modular_character)

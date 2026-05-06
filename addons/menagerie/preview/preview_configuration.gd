@@ -6,6 +6,7 @@ signal show_hit_box_changed(show_hit_box: bool)
 signal show_interaction_area_changed(show_interaction_area: bool)
 signal randomize_variation_changed(randomize_variation: bool)
 signal variation_changed(new_variation: int)
+signal randomized
 
 @export_group("Configuration")
 @export var _show_collision_button: CheckButton
@@ -13,6 +14,7 @@ signal variation_changed(new_variation: int)
 @export var _show_interaction_area_button: CheckButton
 @export var _randomize_variation_button: CheckButton
 @export var _variation_spin_box: SpinBox
+@export var _randomize_button: Button
 @export var _config: Config
 
 func _ready() -> void:
@@ -46,8 +48,17 @@ func _on_variation_spin_box_value_changed(new_value: int) -> void:
 	_variation_spin_box.set_value_no_signal((new_value + max_variation) % max_variation)
 	variation_changed.emit(_variation_spin_box.value)
 
+func _on_randomize_pressed() -> void:
+	randomized.emit()
+
 func _on_active_profile_changed(active_profile: Profile) -> void:
 	_variation_spin_box.max_value = active_profile.get_variation_count() - 1
 	_variation_spin_box.editable = _variation_spin_box.max_value > 0
 	if _randomize_variation_button.button_pressed: _variation_spin_box.value = active_profile.get_random_variation()
 	else: _variation_spin_box.value = 0
+
+func _on_model_changed(model: Model) -> void:
+	_randomize_button.disabled = not model is ModularCharacter
+
+func _on_model_removed() -> void:
+	_randomize_button.disabled = true

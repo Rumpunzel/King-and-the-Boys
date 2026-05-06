@@ -38,13 +38,13 @@ tab_2/icon = ExtResource("4_kqt6r")
 script = ExtResource("2_37sv2")
 _all_tab = NodePath("../MarginContainer")
 
-[node name="Characters (3)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=1095668201 instance=ExtResource("3_vgjr1")]
+[node name="Characters (6)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=1095668201 instance=ExtResource("3_vgjr1")]
 layout_mode = 2
 title = "Characters"
 profile_column_title = "Character"
 _data_path = "res://data/characters"
 
-[node name="Structures (2)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=1783808379 instance=ExtResource("3_vgjr1")]
+[node name="Structures (19)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=1783808379 instance=ExtResource("3_vgjr1")]
 visible = false
 layout_mode = 2
 title = "Structures"
@@ -52,7 +52,7 @@ profile_column_title = "Structure"
 _data_path = "res://data/structures"
 metadata/_tab_index = 1
 
-[node name="Things (2)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=491795939 instance=ExtResource("3_vgjr1")]
+[node name="Things (7)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=491795939 instance=ExtResource("3_vgjr1")]
 visible = false
 layout_mode = 2
 title = "Things"
@@ -69,7 +69,7 @@ theme_override_constants/margin_top = -8
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="All (7)" parent="HSplitContainer/VBoxContainer/MarginContainer" unique_id=921277399 instance=ExtResource("3_vgjr1")]
+[node name="All (32)" parent="HSplitContainer/VBoxContainer/MarginContainer" unique_id=921277399 instance=ExtResource("3_vgjr1")]
 layout_mode = 2
 title = "All"
 
@@ -80,6 +80,6 @@ layout_mode = 2
 layout_mode = 2
 
 [connection signal="tab_changed" from="HSplitContainer/VBoxContainer/ProfileTabs" to="HSplitContainer/VBoxContainer/ProfileTabs" method="_on_tab_changed"]
-[connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Characters (3)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
-[connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Structures (2)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
-[connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Things (2)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
+[connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Characters (6)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
+[connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Structures (19)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
+[connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Things (7)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]

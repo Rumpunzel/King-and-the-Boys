@@ -43,14 +43,14 @@ extends Resource
 @export_group("Configuration")
 
 func create_model(variation: int) -> Model:
-	assert(not _model_variations.is_empty())
+	if _model_variations.is_empty(): return null
 	assert(variation >= 0)
 	assert(variation < get_variation_count())
 	var model: PackedScene = _model_variations[variation]
 	return model.instantiate()
 
 func configure_collision_shape(collision_shape: CollisionShape3D) -> void:
-	assert(_collision_shape)
+	if not collision_shape: return
 	_collision_shape.configure_collision_shape(collision_shape)
 
 func configure_hit_box(hit_box: CollisionShape3D) -> void:
@@ -58,7 +58,7 @@ func configure_hit_box(hit_box: CollisionShape3D) -> void:
 	else: _hit_box_shape.configure_collision_shape(hit_box)
 
 func configure_collision_mesh(collision_mesh: MeshInstance3D) -> void:
-	assert(collision_mesh)
+	if not collision_mesh: return
 	_collision_shape.configure_mesh(collision_mesh)
 
 func configure_hit_box_mesh(hit_box_mesh: MeshInstance3D) -> void:

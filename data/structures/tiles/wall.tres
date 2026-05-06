@@ -30,5 +30,4 @@ color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_yd6qc")])
 _collision_shape = SubResource("Resource_klcix")
 _hit_box_shape = SubResource("Resource_sqg78")
-heads_up_display_offset = Vector3(0, 5, 0)
 metadata/_custom_type_script = "uid://dol8cfhd12nbf"
