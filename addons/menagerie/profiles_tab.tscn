@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://brk2kywqvfl68" path="res://addons/menagerie/profiles_tab.gd" id="1_5qoco"]
 
-[node name="ProfileTab (7)" type="MarginContainer" unique_id=380130184 node_paths=PackedStringArray("_profiles_tree")]
+[node name="ProfileTab (32)" type="MarginContainer" unique_id=380130184 node_paths=PackedStringArray("_profiles_tree")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

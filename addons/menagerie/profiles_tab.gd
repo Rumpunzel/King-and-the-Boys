@@ -49,7 +49,7 @@ func _create_profile_item(profile: Profile, parent_item: TreeItem) -> TreeItem:
 	group_item.set_text(0, "%s (%d)" % [profile.get_group_name(), group_item.get_child_count()])
 	
 	var icon: Texture2D = profile.portrait if profile.portrait else profile.get_default_icon()
-	if icon.get_size().aspect() != 1.0: push_warning("Using a non-square icon for %s" % profile.resource_path)
+	if icon and icon.get_size().aspect() != 1.0: push_warning("Using a non-square icon for %s" % profile.resource_path)
 	var profile_text: String = profile.name
 	var variation_count: int = profile.get_variation_count()
 	if variation_count > 1: profile_text += " [1- %d]" % variation_count

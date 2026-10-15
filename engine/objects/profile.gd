@@ -84,7 +84,7 @@ func get_default_icon() -> Texture2D:
 			break
 	var own_global_class_icon_path: String = own_global_class.icon
 	assert(own_global_class_icon_path is String)
-	assert(not own_global_class_icon_path.is_empty())
+	if own_global_class_icon_path.is_empty(): return null
 	return load(own_global_class_icon_path)
 
 func _get_configuration_warnings() -> PackedStringArray:
