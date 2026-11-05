@@ -18,7 +18,7 @@ properties/2/spawn = true
 properties/2/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_eqp01"]
-properties/0/path = NodePath(".:equipped_paths")
+properties/0/path = NodePath(".:equipped_ids")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 

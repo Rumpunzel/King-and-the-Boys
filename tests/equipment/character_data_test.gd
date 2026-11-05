@@ -36,13 +36,22 @@ func test_character_data_has_all_keys() -> void:
 	assert_int((data[Character.BODY] as Dictionary).size()).is_equal(ModelConfigurationRandom.BODY_PARTS.size())
 	assert_array(data[Character.EQUIPMENT] as PackedStringArray).is_empty()
 
+func test_body_is_sent_as_mesh_uids() -> void:
+	var body: Dictionary = _knight.create_character_data(0, Transform3D())[Character.BODY]
+	for part: ModularCharacter.Part in body:
+		var mesh_id: String = body[part]
+		if mesh_id.is_empty(): continue
+		assert_str(mesh_id).starts_with("uid://")
+
 func test_peers_show_the_body_the_server_rolled() -> void:
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D())
 	var host: Character = auto_free(Character.from_character_data(data))
 	var peer: Character = _peer_from(data)
 	var body: Dictionary = data[Character.BODY]
 	var rolled: PackedStringArray = []
-	for part: ModularCharacter.Part in ModelConfigurationRandom.BODY_PARTS: rolled.append(body[part] as String)
+	for part: ModularCharacter.Part in ModelConfigurationRandom.BODY_PARTS:
+		var mesh: Resource = ResourceId.find(body[part] as String)
+		rolled.append(mesh.resource_path if mesh else "")
 	assert_array(_body_mesh_paths(host)).is_equal(rolled)
 	assert_array(_body_mesh_paths(peer)).is_equal(rolled)
 
@@ -69,12 +78,12 @@ func test_starting_and_rolled_equipment_reach_peers() -> void:
 	_knight.face = mask
 	_knight.random_equipment = [table, null]
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D())
-	assert_array(data[Character.EQUIPMENT] as PackedStringArray).contains_exactly([mask.resource_path, helmet.resource_path])
+	assert_array(data[Character.EQUIPMENT] as PackedStringArray).contains_exactly([ResourceId.of(mask), ResourceId.of(helmet)])
 	var host: Character = auto_free(Character.from_character_data(data))
 	assert_object(host.equipment.get_equipped(EquipmentProfile.Slot.HEAD)).is_same(helmet)
 	assert_object(host.equipment.get_equipped(EquipmentProfile.Slot.FACE)).is_null()
 	var round_trip: Dictionary[StringName, Variant] = host.to_character_data()
-	assert_array(round_trip[Character.EQUIPMENT] as PackedStringArray).contains_exactly([helmet.resource_path])
+	assert_array(round_trip[Character.EQUIPMENT] as PackedStringArray).contains_exactly([ResourceId.of(helmet)])
 	var peer: Character = _peer_from(round_trip)
 	var peer_model: ModularCharacter = peer.model
 	assert_str(EquipmentFixtures.mesh_path(peer_model.helmet_attachment)).is_equal(EquipmentFixtures.HELMET_ATTACHMENT)

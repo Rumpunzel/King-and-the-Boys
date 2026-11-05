@@ -36,7 +36,7 @@ var _is_set_up: bool = false
 func _ready() -> void:
 	# Do not bake generated items into this scene while it is edited itself
 	if is_part_of_edited_scene(): return
-	_gear_tab.visibility_changed.connect(_on_gear_tab_visibility_changed)
+	if _gear_tab: _gear_tab.visibility_changed.connect(_on_gear_tab_visibility_changed)
 	_type_option.item_selected.connect(_on_type_selected)
 	_edit_type_button.pressed.connect(_on_edit_type_pressed)
 	_combinations_button.pressed.connect(_on_combinations_pressed)
@@ -362,7 +362,8 @@ func _on_vary_toggled(_toggled_on: bool) -> void:
 	_update_combinations_button()
 
 func _on_gear_tab_visibility_changed() -> void:
-	visible = _gear_tab.visible
+	# Without a Gear tab (e.g. in tests) the panel is always shown
+	visible = _gear_tab.visible if _gear_tab else true
 	if not visible: return
 	# Types may have been added or edited since the tab was last open
 	_load_types()

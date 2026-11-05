@@ -28,12 +28,12 @@ func configure(model: ModularCharacter) -> void:
 	if _randomize_facial_hair: model.facial_hair.random_mesh()
 	else: model.facial_hair.reset_mesh()
 
-## Randomizes [param model] and returns the result as mesh paths, so peers can apply the exact same look
-## @returns {Part: [enum ModularCharacter.Part] -> mesh path: [String]}, an empty path meaning no mesh
+## Randomizes [param model] and returns the result as mesh [ResourceId]s, so peers can apply the exact same look
+## @returns {Part: [enum ModularCharacter.Part] -> mesh ID: [String]}, an empty ID meaning no mesh
 func roll(model: ModularCharacter) -> Dictionary:
 	configure(model)
 	var body: Dictionary = {}
 	for part: ModularCharacter.Part in BODY_PARTS:
 		var body_part: ModularBodyPart = model.get_part(part)
-		body[part] = body_part.mesh.resource_path if body_part.mesh else ""
+		body[part] = ResourceId.of(body_part.mesh)
 	return body

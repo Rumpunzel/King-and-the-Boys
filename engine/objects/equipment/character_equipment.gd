@@ -4,10 +4,10 @@ extends Node
 
 signal equipment_changed
 
-## Replicated by the server through the EquipmentSynchronizer; setting it re-equips everything
-var equipped_paths: PackedStringArray:
-	get: return get_equipped_paths()
-	set(new_equipped_paths): set_equipped_paths(new_equipped_paths)
+## [ResourceId]s of everything equipped, replicated by the server through the EquipmentSynchronizer; setting it re-equips everything
+var equipped_ids: PackedStringArray:
+	get: return get_equipped_ids()
+	set(new_equipped_ids): set_equipped_ids(new_equipped_ids)
 
 ## {Slot: EquipmentProfile.Slot -> EquipmentProfile}
 var _equipped: Dictionary[EquipmentProfile.Slot, EquipmentProfile] = {}
@@ -18,12 +18,13 @@ func _enter_tree() -> void:
 	# A [PlayerGhost] hands its whole subtree to its player, but equipment stays server authoritative
 	set_multiplayer_authority(MultiplayerPeer.TARGET_PEER_SERVER)
 
-## Asks the server to equip; the result reaches every peer through [member equipped_paths]
+## Asks the server to equip; the result reaches every peer through [member equipped_ids]
 func request_equip(equipment_profile: EquipmentProfile) -> void:
-	assert(equipment_profile)
-	_request_equip.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, equipment_profile.resource_path)
+	var equipment_id: String = ResourceId.of(equipment_profile)
+	assert(not equipment_id.is_empty(), "Only saved EquipmentProfiles can be requested!")
+	_request_equip.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, equipment_id)
 
-## Asks the server to unequip; the result reaches every peer through [member equipped_paths]
+## Asks the server to unequip; the result reaches every peer through [member equipped_ids]
 func request_unequip(slot: EquipmentProfile.Slot) -> void:
 	_request_unequip.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, slot)
 
@@ -61,38 +62,44 @@ func unequip(slot: EquipmentProfile.Slot) -> void:
 	_remove(slot)
 	equipment_changed.emit()
 
-func get_equipped_paths() -> PackedStringArray:
-	var equipped_paths: PackedStringArray = []
-	for equipment_profile: EquipmentProfile in _equipped.values(): equipped_paths.append(equipment_profile.resource_path)
-	return equipped_paths
+func get_equipped_ids() -> PackedStringArray:
+	return PackedStringArray(ResourceId.of_each(_equipped.values()))
 
-## Replaces everything equipped with the [EquipmentProfile]s at [param equipped_paths], in order
-func set_equipped_paths(new_equipped_paths: PackedStringArray) -> void:
-	if new_equipped_paths == get_equipped_paths(): return
+## Replaces everything equipped with the [EquipmentProfile]s [param new_equipped_ids] name, in order
+## Plain paths from older saves still work, as [method ResourceId.find] loads them too
+func set_equipped_ids(new_equipped_ids: PackedStringArray) -> void:
+	if new_equipped_ids == get_equipped_ids(): return
 	unequip_all()
-	for equipped_path: String in new_equipped_paths:
-		var equipment_profile: EquipmentProfile = load(equipped_path)
-		assert(equipment_profile, "No EquipmentProfile at %s!" % equipped_path)
-		if not equip(equipment_profile): push_warning("%s is blocked by %s; skipped!" % [equipped_path, get_blocker(equipment_profile.slot).resource_path])
+	for equipment_id: String in new_equipped_ids:
+		var equipment_profile: EquipmentProfile = ResourceId.find(equipment_id) as EquipmentProfile
+		if not equipment_profile:
+			push_error("No EquipmentProfile for %s; skipped!" % equipment_id)
+			continue
+		if not equip(equipment_profile): push_warning("%s is blocked by %s; skipped!" % [equipment_id, ResourceId.of(get_blocker(equipment_profile.slot))])
 
 func unequip_all() -> void:
 	if _equipped.is_empty(): return
 	for slot: EquipmentProfile.Slot in _equipped.keys(): _remove(slot)
 	equipment_changed.emit()
 
+## @returns whether a peer may name [param equipment_id]: it must point into the item directory
+static func is_requestable(equipment_id: String) -> bool:
+	var file_path: String = ResourceId.get_file_path(equipment_id)
+	return not file_path.is_empty() and file_path.simplify_path().begins_with(EquipmentProfile.ITEM_DIRECTORY + "/")
+
 @rpc("any_peer", "call_local", "reliable")
-func _request_equip(equipment_path: String) -> void:
+func _request_equip(equipment_id: String) -> void:
 	if not multiplayer.is_server(): return
 	var sender_id: int = multiplayer.get_remote_sender_id()
-	# Never trust a peer's path: only load EquipmentProfiles from the item directory
-	if not equipment_path.simplify_path().begins_with(EquipmentProfile.ITEM_DIRECTORY + "/") or not ResourceLoader.exists(equipment_path):
-		push_warning("Peer %d requested unknown equipment %s; refused!" % [sender_id, equipment_path])
+	# Never trust a peer's ID: only load EquipmentProfiles from the item directory
+	if not is_requestable(equipment_id):
+		push_warning("Peer %d requested equipment outside %s: %s; refused!" % [sender_id, EquipmentProfile.ITEM_DIRECTORY, equipment_id])
 		return
-	var equipment_profile: EquipmentProfile = load(equipment_path) as EquipmentProfile
+	var equipment_profile: EquipmentProfile = ResourceId.find(equipment_id) as EquipmentProfile
 	if not equipment_profile:
-		push_warning("Peer %d requested %s, which is no EquipmentProfile; refused!" % [sender_id, equipment_path])
+		push_warning("Peer %d requested %s, which is no EquipmentProfile; refused!" % [sender_id, equipment_id])
 		return
-	if not equip(equipment_profile): print_debug("Peer %d requested %s, but its slot is blocked; refused!" % [sender_id, equipment_path])
+	if not equip(equipment_profile): print_debug("Peer %d requested %s, but its slot is blocked; refused!" % [sender_id, equipment_id])
 
 @rpc("any_peer", "call_local", "reliable")
 func _request_unequip(slot: int) -> void:

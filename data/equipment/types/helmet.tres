@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EquipmentType" format=3]
+[gd_resource type="Resource" script_class="EquipmentType" format=3 uid="uid://cjtvbppxw8vd2"]
 
 [ext_resource type="Script" path="res://engine/objects/equipment/equipment_type.gd" id="1_8oil5"]
 

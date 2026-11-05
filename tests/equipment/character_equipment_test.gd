@@ -71,11 +71,16 @@ func test_belt_and_leg_armor_are_worn_together() -> void:
 	assert_str(EquipmentFixtures.mesh_path(_model().hips_attachment)).is_equal(EquipmentFixtures.BELT)
 	assert_str(EquipmentFixtures.mesh_path(_model().hips)).is_equal(EquipmentFixtures.HIPS_MALE)
 
-func test_equipped_paths_round_trip() -> void:
+func test_equipped_ids_round_trip() -> void:
 	var saved_helmet: EquipmentProfile = EquipmentFixtures.save_item(_helmet, "helmet.tres")
-	_equipment.equipped_paths = PackedStringArray([saved_helmet.resource_path])
+	_equipment.equipped_ids = PackedStringArray([ResourceId.of(saved_helmet)])
 	assert_object(_equipment.get_equipped(EquipmentProfile.Slot.HEAD)).is_same(saved_helmet)
-	assert_array(_equipment.equipped_paths).contains_exactly([saved_helmet.resource_path])
+	assert_array(_equipment.equipped_ids).contains_exactly([ResourceId.of(saved_helmet)])
+
+func test_plain_paths_from_older_saves_still_equip() -> void:
+	var saved_helmet: EquipmentProfile = EquipmentFixtures.save_item(_helmet, "helmet.tres")
+	_equipment.equipped_ids = PackedStringArray([saved_helmet.resource_path])
+	assert_object(_equipment.get_equipped(EquipmentProfile.Slot.HEAD)).is_same(saved_helmet)
 
 func test_equipment_stays_server_authoritative_inside_a_client_subtree() -> void:
 	# A PlayerGhost hands its subtree to its player before the character enters the tree
@@ -89,7 +94,7 @@ func test_equipment_stays_server_authoritative_inside_a_client_subtree() -> void
 	assert_int(client_character.get_multiplayer_authority()).is_equal(5)
 	assert_int(client_equipment.get_multiplayer_authority()).is_equal(1)
 	assert_int(synchronizer.get_multiplayer_authority()).is_equal(1)
-	assert_bool(synchronizer.replication_config.has_property(NodePath(".:equipped_paths"))).is_true()
+	assert_bool(synchronizer.replication_config.has_property(NodePath(".:equipped_ids"))).is_true()
 
 func test_equip_requests_only_accept_items_from_the_item_directory() -> void:
 	var saved_helmet: EquipmentProfile = EquipmentFixtures.save_item(_helmet, "helmet.tres")
@@ -99,12 +104,14 @@ func test_equip_requests_only_accept_items_from_the_item_directory() -> void:
 	for refused_path: String in [
 			"user://evil.tres",
 			EquipmentFixtures.KNIGHT,
+			ResourceId.of(load(EquipmentFixtures.KNIGHT) as Resource),
+			"uid://doesnotexist",
 			EquipmentFixtures.SAVED_ITEMS + "/../../characters/people/knight.tres",
 			EquipmentProfile.ITEM_DIRECTORY + "/does_not_exist.tres",
 		]:
 		_equipment._request_equip(refused_path)
-		assert_array(_equipment.equipped_paths).override_failure_message("%s was accepted" % refused_path).is_empty()
+		assert_array(_equipment.equipped_ids).override_failure_message("%s was accepted" % refused_path).is_empty()
 	_equipment._request_unequip(99)
 	_equipment.request_equip(saved_helmet)
 	_equipment.request_unequip(EquipmentProfile.Slot.HEAD)
-	assert_array(_equipment.equipped_paths).is_empty()
+	assert_array(_equipment.equipped_ids).is_empty()

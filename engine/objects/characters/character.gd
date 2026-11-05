@@ -61,7 +61,7 @@ var model: Model:
 			equipment.apply_to(modular_model)
 
 ## Rolled once by the server, see [method ModelConfigurationRandom.roll]
-## {Part: [enum ModularCharacter.Part] -> mesh path: [String]}, an empty path meaning no mesh
+## {Part: [enum ModularCharacter.Part] -> mesh [ResourceId]: [String]}, an empty ID meaning no mesh
 var body: Dictionary = {}:
 	set(new_body):
 		body = new_body
@@ -106,8 +106,8 @@ static func from_character_data(character_data: Dictionary[StringName, Variant])
 	var new_spawn_transform: Transform3D = character_data[SPAWN_TRANSFORM]
 	var new_character: Character = new_character_profile.create(new_variation, new_spawn_transform)
 	new_character.body = character_data[BODY]
-	var new_equipment_paths: PackedStringArray = character_data[EQUIPMENT]
-	new_character.equipment.set_equipped_paths(new_equipment_paths)
+	var new_equipment_ids: PackedStringArray = character_data[EQUIPMENT]
+	new_character.equipment.set_equipped_ids(new_equipment_ids)
 	return new_character
 
 static func validate_character_data(character_data: Dictionary[StringName, Variant]) -> void:
@@ -178,8 +178,8 @@ func apply_character_data(character_data: Dictionary[StringName, Variant]) -> vo
 	profile = load(character_profile_path)
 	transform = character_data[SPAWN_TRANSFORM]
 	body = character_data[BODY]
-	var equipment_paths: PackedStringArray = character_data[EQUIPMENT]
-	equipment.set_equipped_paths(equipment_paths)
+	var equipment_ids: PackedStringArray = character_data[EQUIPMENT]
+	equipment.set_equipped_ids(equipment_ids)
 
 func to_character_data() -> Dictionary[StringName, Variant]:
 	assert(profile)
@@ -188,7 +188,7 @@ func to_character_data() -> Dictionary[StringName, Variant]:
 		PROFILE_PATH: profile.resource_path,
 		SPAWN_TRANSFORM: transform,
 		BODY: body,
-		EQUIPMENT: equipment.get_equipped_paths(),
+		EQUIPMENT: equipment.get_equipped_ids(),
 	}
 	validate_character_data(character_data)
 	return character_data
@@ -197,8 +197,8 @@ func _apply_body() -> void:
 	if not model is ModularCharacter: return
 	var modular_model: ModularCharacter = model
 	for part: int in body:
-		var mesh_path: String = body[part]
-		var mesh: ArrayMesh = null if mesh_path.is_empty() else load(mesh_path)
+		var mesh_id: String = body[part]
+		var mesh: ArrayMesh = ResourceId.find(mesh_id) as ArrayMesh
 		modular_model.get_part(part as ModularCharacter.Part).apply_mesh(mesh)
 
 func get_portrait() -> Texture:

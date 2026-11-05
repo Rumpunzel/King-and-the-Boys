@@ -109,16 +109,17 @@ func create_character_data(variation: int, spawn_transform: Transform3D) -> Dict
 	var model: ModularCharacter = create_model(rolled_variation)
 	var body: Dictionary = model_configuration.roll(model)
 	model.free()
-	var equipment_paths: PackedStringArray = []
+	var equipment_ids: PackedStringArray = []
 	for equipment_profile: EquipmentProfile in roll_equipment():
-		assert(equipment_profile.resource_path.is_absolute_path(), "EquipmentProfile %s must be saved as its own file to be synchronized!" % equipment_profile.name)
-		equipment_paths.append(equipment_profile.resource_path)
+		var equipment_id: String = ResourceId.of(equipment_profile)
+		assert(not equipment_id.is_empty(), "EquipmentProfile %s must be saved to be synchronized!" % equipment_profile.name)
+		equipment_ids.append(equipment_id)
 	var character_data: Dictionary[StringName, Variant] = {
 		Character.VARIATION: rolled_variation,
 		Character.PROFILE_PATH: resource_path,
 		Character.SPAWN_TRANSFORM: spawn_transform,
 		Character.BODY: body,
-		Character.EQUIPMENT: equipment_paths,
+		Character.EQUIPMENT: equipment_ids,
 	}
 	Character.validate_character_data(character_data)
 	return character_data
