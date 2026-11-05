@@ -111,11 +111,15 @@ static func get_slot_parts(for_slot: Slot) -> Array[ModularCharacter.Part]:
 	assert(false)
 	return []
 
+## @returns the [ModularCharacter.Part]s an item in [param for_slot] blocking [param for_blocked_slots] may set
+static func get_parts_for(for_slot: Slot, for_blocked_slots: Array[Slot]) -> Array[ModularCharacter.Part]:
+	var parts: Array[ModularCharacter.Part] = get_slot_parts(for_slot)
+	for blocked_slot: Slot in for_blocked_slots:
+		if blocked_slot != for_slot: parts.append_array(get_slot_parts(blocked_slot))
+	return parts
+
 ## @returns the [ModularCharacter.Part]s this item may set: those of its own [member slot] and its [member blocked_slots]
-func get_allowed_parts() -> Array[ModularCharacter.Part]:
-	var allowed_parts: Array[ModularCharacter.Part] = get_slot_parts(slot)
-	for blocked_slot: Slot in blocked_slots: allowed_parts.append_array(get_slot_parts(blocked_slot))
-	return allowed_parts
+func get_allowed_parts() -> Array[ModularCharacter.Part]: return get_parts_for(slot, blocked_slots)
 
 ## Previews, such as Menagerie, show the item on a plain [ModularCharacter]
 func create_model(_variation: int) -> Model:

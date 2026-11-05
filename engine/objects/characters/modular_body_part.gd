@@ -53,6 +53,16 @@ func apply_mesh(new_mesh: ArrayMesh) -> void:
 	mesh = new_mesh
 	update_visibility(new_mesh != null)
 
+## @returns the position of the shown mesh in this part's mesh directory, or [code]-1[/code] if hidden or not listed there
+func get_mesh_index() -> int:
+	if not visible or not mesh: return -1
+	return _mesh_list.find(mesh.resource_path)
+
+func get_mesh_count() -> int: return _mesh_list.size()
+
+## Decorative parts may show no mesh at all, essential parts always show one
+func allows_none() -> bool: return _type == Type.DECORATIVE
+
 func random_mesh() -> void: _index = randi() - (0 if _type == Type.ESSENTIAL else 1)
 func reset_mesh() -> void: _index = 0 if _type == Type.ESSENTIAL else -1
 

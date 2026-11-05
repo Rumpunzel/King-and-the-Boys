@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cmahsihmepd4v" path="res://addons/menagerie/profiles_tab.tscn" id="3_vgjr1"]
 [ext_resource type="Texture2D" uid="uid://c4udocqr7qeyj" path="res://tools/icons/white/diploma.svg" id="4_kqt6r"]
 [ext_resource type="PackedScene" uid="uid://csmryju0fx0x1" path="res://addons/menagerie/preview/model_preview.tscn" id="4_ne48i"]
+[ext_resource type="PackedScene" path="res://addons/menagerie/equipment_editor.tscn" id="5_eqped"]
 
 [node name="Menagerie" type="PanelContainer" unique_id=1251221561]
 anchors_preset = 15
@@ -51,7 +52,7 @@ visible = false
 layout_mode = 2
 title = "Gear"
 profile_column_title = "Gear"
-_data_path = "res://data/gear"
+_data_path = "res://data/equipment"
 metadata/_tab_index = 1
 
 [node name="Structures (19)" parent="HSplitContainer/VBoxContainer/ProfileTabs" unique_id=1783808379 instance=ExtResource("3_vgjr1")]
@@ -89,8 +90,15 @@ layout_mode = 2
 [node name="ModelPreview" parent="HSplitContainer/VSplitContainer" unique_id=1214802491 instance=ExtResource("4_ne48i")]
 layout_mode = 2
 
+[node name="EquipmentEditor" parent="HSplitContainer/VSplitContainer" unique_id=1214802492 instance=ExtResource("5_eqped")]
+layout_mode = 2
+
 [connection signal="tab_changed" from="HSplitContainer/VBoxContainer/ProfileTabs" to="HSplitContainer/VBoxContainer/ProfileTabs" method="_on_tab_changed"]
 [connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Characters (6)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
 [connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Gear (6)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
 [connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Structures (19)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
 [connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Things (7)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]
+[connection signal="active_profile_changed" from="HSplitContainer/VSplitContainer/ModelPreview" to="HSplitContainer/VSplitContainer/EquipmentEditor" method="_on_active_profile_changed"]
+[connection signal="model_changed" from="HSplitContainer/VSplitContainer/ModelPreview" to="HSplitContainer/VSplitContainer/EquipmentEditor" method="_on_model_changed"]
+[connection signal="model_removed" from="HSplitContainer/VSplitContainer/ModelPreview" to="HSplitContainer/VSplitContainer/EquipmentEditor" method="_on_model_removed"]
+[connection signal="equipment_saved" from="HSplitContainer/VSplitContainer/EquipmentEditor" to="HSplitContainer/VBoxContainer/ProfileTabs/Gear (6)" method="_on_rescan_button_pressed" unbinds=1]

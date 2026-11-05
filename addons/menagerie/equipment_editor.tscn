@@ -1,0 +1,83 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/menagerie/equipment_editor.gd" id="1_eqped"]
+
+[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_slot_option", "_blocked_slots_container", "_parts_container", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
+size_flags_vertical = 3
+script = ExtResource("1_eqped")
+_slot_option = NodePath("MarginContainer/VBoxContainer/SlotRow/SlotOption")
+_blocked_slots_container = NodePath("MarginContainer/VBoxContainer/BlockedSlots")
+_parts_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Parts")
+_name_edit = NodePath("MarginContainer/VBoxContainer/SaveRow/NameEdit")
+_save_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveButton")
+_save_as_new_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveAsNewButton")
+_status_label = NodePath("MarginContainer/VBoxContainer/StatusLabel")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Equipment"
+
+[node name="SlotRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SlotLabel" type="Label" parent="MarginContainer/VBoxContainer/SlotRow"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Slot"
+
+[node name="SlotOption" type="OptionButton" parent="MarginContainer/VBoxContainer/SlotRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "The slot this item goes into; it owns and resets the slot's parts"
+
+[node name="BlockedLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Slots emptied while this item is worn; their parts can be part of the item"
+mouse_filter = 1
+text = "Blocks"
+
+[node name="BlockedSlots" type="HFlowContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Parts" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NameEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/SaveRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Item name"
+
+[node name="SaveButton" type="Button" parent="MarginContainer/VBoxContainer/SaveRow"]
+layout_mode = 2
+text = "Save"
+
+[node name="SaveAsNewButton" type="Button" parent="MarginContainer/VBoxContainer/SaveRow"]
+layout_mode = 2
+tooltip_text = "Save to data/equipment/<slot>/<name>.tres; never overwrites"
+text = "Save As New"
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+autowrap_mode = 3
