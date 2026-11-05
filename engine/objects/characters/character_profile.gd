@@ -47,41 +47,42 @@ enum Groups {
 		random_equipment = new_value
 		changed.emit()
 
-## One item per slot; each field only accepts items of its slot and is named after it, see [method set_starting_equipment_for]
+## One item per slot, as [ResourceId]s (a catalog entry lives inside another file, which an export cannot point into)
+## Each field only accepts items of its slot and is named after it, see [method set_starting_equipment_for]
 @export_group("Starting Equipment")
-@export var head: EquipmentProfile:
+@export var head: String:
 	set(new_value):
 		head = _accept_equipment(head, new_value, EquipmentProfile.Slot.HEAD)
 		changed.emit()
-@export var face: EquipmentProfile:
+@export var face: String:
 	set(new_value):
 		face = _accept_equipment(face, new_value, EquipmentProfile.Slot.FACE)
 		changed.emit()
-@export var torso: EquipmentProfile:
+@export var torso: String:
 	set(new_value):
 		torso = _accept_equipment(torso, new_value, EquipmentProfile.Slot.TORSO)
 		changed.emit()
-@export var hands: EquipmentProfile:
+@export var hands: String:
 	set(new_value):
 		hands = _accept_equipment(hands, new_value, EquipmentProfile.Slot.HANDS)
 		changed.emit()
-@export var legs: EquipmentProfile:
+@export var legs: String:
 	set(new_value):
 		legs = _accept_equipment(legs, new_value, EquipmentProfile.Slot.LEGS)
 		changed.emit()
-@export var back: EquipmentProfile:
+@export var back: String:
 	set(new_value):
 		back = _accept_equipment(back, new_value, EquipmentProfile.Slot.BACK)
 		changed.emit()
-@export var waist: EquipmentProfile:
+@export var waist: String:
 	set(new_value):
 		waist = _accept_equipment(waist, new_value, EquipmentProfile.Slot.WAIST)
 		changed.emit()
-@export var main_hand: EquipmentProfile:
+@export var main_hand: String:
 	set(new_value):
 		main_hand = _accept_equipment(main_hand, new_value, EquipmentProfile.Slot.MAIN_HAND)
 		changed.emit()
-@export var off_hand: EquipmentProfile:
+@export var off_hand: String:
 	set(new_value):
 		off_hand = _accept_equipment(off_hand, new_value, EquipmentProfile.Slot.OFF_HAND)
 		changed.emit()
@@ -159,28 +160,39 @@ func get_starting_equipment() -> Array[EquipmentProfile]:
 	return starting_equipment
 
 func get_starting_equipment_for(slot: EquipmentProfile.Slot) -> EquipmentProfile:
+	return ResourceId.find(get_starting_equipment_id(slot)) as EquipmentProfile
+
+func get_starting_equipment_id(slot: EquipmentProfile.Slot) -> String:
 	return get(get_slot_property(slot))
 
+## [param equipment_profile] must be saved, as the slot stores its [ResourceId]
 func set_starting_equipment_for(slot: EquipmentProfile.Slot, equipment_profile: EquipmentProfile) -> void:
-	set(get_slot_property(slot), equipment_profile)
+	var equipment_id: String = ResourceId.of(equipment_profile)
+	assert(equipment_profile == null or not equipment_id.is_empty(), "Only saved EquipmentProfiles can be starting equipment!")
+	set(get_slot_property(slot), equipment_id)
 
 ## Each slot's field is named after it, e.g. [member head] for [constant EquipmentProfile.HEAD]
 static func get_slot_property(slot: EquipmentProfile.Slot) -> StringName:
 	var slot_name: String = EquipmentProfile.Slot.keys()[slot]
 	return StringName(slot_name.to_lower())
 
-## Keeps [param old_value] if [param new_value] belongs to another slot, so a field never holds a mismatching item
-func _accept_equipment(old_value: EquipmentProfile, new_value: EquipmentProfile, slot: EquipmentProfile.Slot) -> EquipmentProfile:
-	var slot_name: String = EquipmentProfile.Slot.keys()[slot]
-	if new_value and not new_value.type:
-		push_error("%s has no EquipmentType and cannot be starting equipment of %s." % [new_value.resource_path, name])
-		return old_value
-	if new_value and new_value.slot != slot:
-		var item_slot_name: String = EquipmentProfile.Slot.keys()[new_value.slot]
-		push_error("%s goes into slot %s, not %s." % [new_value.resource_path, item_slot_name.capitalize(), slot_name.capitalize()])
-		return old_value
-	_forward_changes([old_value], [new_value])
-	return new_value
+## Keeps [param old_id] if [param new_id] names no item, an untyped one or one of another slot, so a field never holds a mismatching item
+func _accept_equipment(old_id: String, new_id: String, slot: EquipmentProfile.Slot) -> String:
+	var new_profile: EquipmentProfile = ResourceId.find(new_id) as EquipmentProfile
+	if not new_id.is_empty():
+		var slot_name: String = EquipmentProfile.Slot.keys()[slot]
+		if not new_profile:
+			push_error("%s names no EquipmentProfile; %s keeps its %s." % [new_id, name, slot_name.capitalize()])
+			return old_id
+		if not new_profile.type:
+			push_error("%s has no EquipmentType and cannot be starting equipment of %s." % [new_id, name])
+			return old_id
+		if new_profile.slot != slot:
+			var item_slot_name: String = EquipmentProfile.Slot.keys()[new_profile.slot]
+			push_error("%s goes into slot %s, not %s." % [new_profile.name, item_slot_name.capitalize(), slot_name.capitalize()])
+			return old_id
+	_forward_changes([ResourceId.find(old_id)], [new_profile])
+	return new_id
 
 ## Re-emits [signal Resource.changed] of nested resources, so previews also update when an item is edited
 func _forward_changes(old_resources: Array, new_resources: Array) -> void:

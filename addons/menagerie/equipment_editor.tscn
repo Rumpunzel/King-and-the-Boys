@@ -2,14 +2,21 @@
 
 [ext_resource type="Script" path="res://addons/menagerie/equipment_editor.gd" id="1_eqped"]
 
-[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_type_option", "_edit_type_button", "_type_info_label", "_parts_container", "_combinations_button", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
+[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_type_option", "_edit_type_button", "_type_info_label", "_parts_container", "_review_status_label", "_review_counts_label", "_previous_button", "_next_button", "_allow_button", "_deny_button", "_undecide_button", "_allow_rest_button", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
 size_flags_vertical = 0
 script = ExtResource("1_eqped")
 _type_option = NodePath("MarginContainer/VBoxContainer/TypeRow/TypeOption")
 _edit_type_button = NodePath("MarginContainer/VBoxContainer/TypeRow/EditTypeButton")
 _type_info_label = NodePath("MarginContainer/VBoxContainer/TypeInfoLabel")
 _parts_container = NodePath("MarginContainer/VBoxContainer/Parts")
-_combinations_button = NodePath("MarginContainer/VBoxContainer/CombinationsButton")
+_review_status_label = NodePath("MarginContainer/VBoxContainer/ReviewStatusLabel")
+_review_counts_label = NodePath("MarginContainer/VBoxContainer/ReviewCountsLabel")
+_previous_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/PreviousButton")
+_next_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/NextButton")
+_allow_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/AllowButton")
+_deny_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/DenyButton")
+_undecide_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/UndecideButton")
+_allow_rest_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/AllowRestButton")
 _name_edit = NodePath("MarginContainer/VBoxContainer/SaveRow/NameEdit")
 _save_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveButton")
 _save_as_new_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveAsNewButton")
@@ -58,10 +65,50 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CombinationsButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "Save one item per combination of the checked parts' meshes, named after the type and each part's mesh number; existing items are skipped"
-text = "Create Combinations"
+
+[node name="ReviewStatusLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderSmall"
+
+[node name="ReviewRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PreviousButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+tooltip_text = "Show the previous combination nobody decided on yet"
+text = "◀ Previous unreviewed"
+
+[node name="AllowButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Add the shown combination to the type's catalog, then show the next unreviewed one"
+text = "Allow"
+
+[node name="DenyButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Record the shown combination as denied, then show the next unreviewed one"
+text = "Deny"
+
+[node name="UndecideButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+tooltip_text = "Forget the decision on the shown combination"
+text = "Undecide"
+
+[node name="NextButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+tooltip_text = "Show the next combination nobody decided on yet"
+text = "Next unreviewed ▶"
+
+[node name="AllowRestButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+tooltip_text = "Allow every combination of the varied parts that is still unreviewed"
+text = "Allow all unreviewed"
+
+[node name="ReviewCountsLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
 
 [node name="SaveRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2

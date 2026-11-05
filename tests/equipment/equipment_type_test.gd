@@ -47,13 +47,6 @@ func test_combination_key_survives_renaming_items_and_types() -> void:
 	hat_type.name = "Cap"
 	assert_str(hat_type.get_combination_key_of(hat)).is_equal(key)
 
-func test_exclude_adds_a_key_once() -> void:
-	var hat_type: EquipmentType = EquipmentFixtures.load_type("hat").duplicate()
-	hat_type.excluded_combinations = []
-	assert_bool(hat_type.exclude("01 02")).is_true()
-	assert_bool(hat_type.exclude("01 02")).is_false()
-	assert_array(hat_type.excluded_combinations).contains_exactly(["01 02"])
-
 func test_type_warns_about_foreign_and_doubly_grouped_parts() -> void:
 	var equipment_type: EquipmentType = EquipmentFixtures.make_type(EquipmentProfile.Slot.HEAD)
 	equipment_type.parts.append(ModularCharacter.Part.TORSO)

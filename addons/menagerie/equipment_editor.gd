@@ -1,14 +1,17 @@
 @tool
 extends PanelContainer
 
+## Authors equipment: steps through a type's parts on the Menagerie preview and reviews its combinations into the type's
+## [EquipmentCatalog] (allow / deny), or saves hand-made items as files of their own
+
 signal equipment_saved(equipment_profile: EquipmentProfile)
 
 const TYPE_DIRECTORY: String = "res://data/equipment/types"
 const NO_MODEL_HINT: String = "Select an item, or a modular character to start from."
-## Above this many combinations, ask before creating them
-const CONFIRM_COMBINATIONS: int = 200
-## Above this many combinations, refuse; uncheck "vary" on some parts instead
+## Above this many combinations, reviewing refuses; uncheck "vary" on some parts instead
 const MAX_COMBINATIONS: int = 5000
+## Above this many, allowing all unreviewed combinations asks first
+const CONFIRM_COMBINATIONS: int = 50
 
 @export_group("Configuration")
 ## This panel is only shown while this tab is open
@@ -17,7 +20,14 @@ const MAX_COMBINATIONS: int = 5000
 @export var _edit_type_button: Button
 @export var _type_info_label: Label
 @export var _parts_container: VBoxContainer
-@export var _combinations_button: Button
+@export var _review_status_label: Label
+@export var _review_counts_label: Label
+@export var _previous_button: Button
+@export var _next_button: Button
+@export var _allow_button: Button
+@export var _deny_button: Button
+@export var _undecide_button: Button
+@export var _allow_rest_button: Button
 @export var _name_edit: LineEdit
 @export var _save_button: Button
 @export var _save_as_new_button: Button
@@ -28,10 +38,21 @@ var _model: ModularCharacter
 var _equipment_profile: EquipmentProfile
 ## Indexed like the items of [member _type_option]
 var _types: Array[EquipmentType] = []
-## Parts whose meshes are varied by [method _create_combinations]
+## Parts whose meshes are varied when reviewing combinations
 var _vary_check_boxes: Dictionary[ModularCharacter.Part, CheckBox] = {}
 var _mesh_labels: Dictionary[ModularCharacter.Part, Label] = {}
 var _is_set_up: bool = false
+
+## The selected type's catalog; created on the first decision
+var _catalog: EquipmentCatalog
+## Every combination of the varied parts, built on demand: {counters: [Array] of [int], key: [String]}
+var _review_combinations: Array[Dictionary] = []
+var _review_dimensions: Array[Array] = []
+var _review_options: Array[Array] = []
+## Meshes shown when the review list was built; parts lacking a leader's number fall back to these
+var _review_fallback: Dictionary[ModularCharacter.Part, Mesh] = {}
+var _is_review_built: bool = false
+var _review_index: int = -1
 
 func _ready() -> void:
 	# Do not bake generated items into this scene while it is edited itself
@@ -39,11 +60,29 @@ func _ready() -> void:
 	if _gear_tab: _gear_tab.visibility_changed.connect(_on_gear_tab_visibility_changed)
 	_type_option.item_selected.connect(_on_type_selected)
 	_edit_type_button.pressed.connect(_on_edit_type_pressed)
-	_combinations_button.pressed.connect(_on_combinations_pressed)
+	_previous_button.pressed.connect(_show_next_unreviewed.bind(-1))
+	_next_button.pressed.connect(_show_next_unreviewed.bind(1))
+	_allow_button.pressed.connect(_on_allow_pressed)
+	_deny_button.pressed.connect(_on_deny_pressed)
+	_undecide_button.pressed.connect(_on_undecide_pressed)
+	_allow_rest_button.pressed.connect(_on_allow_rest_pressed)
 	_save_button.pressed.connect(_on_save_pressed)
 	_save_as_new_button.pressed.connect(_on_save_as_new_pressed)
+	_set_shortcut(_allow_button, KEY_A)
+	_set_shortcut(_deny_button, KEY_D)
+	_set_shortcut(_previous_button, KEY_LEFT)
+	_set_shortcut(_next_button, KEY_RIGHT)
 	_is_set_up = true
 	_on_gear_tab_visibility_changed()
+
+## Shortcuts only fire while the focus is inside this panel
+func _set_shortcut(button: Button, keycode: Key) -> void:
+	var key_event: InputEventKey = InputEventKey.new()
+	key_event.keycode = keycode
+	var shortcut: Shortcut = Shortcut.new()
+	shortcut.events = [key_event]
+	button.shortcut = shortcut
+	button.shortcut_context = self
 
 func _load_types() -> void:
 	var selected_type: EquipmentType = _get_type()
@@ -71,6 +110,8 @@ func _select_type(equipment_type: EquipmentType) -> void:
 
 func _update() -> void:
 	var equipment_type: EquipmentType = _get_type()
+	_catalog = EquipmentCatalog.find_for(equipment_type)
+	_invalidate_review()
 	_edit_type_button.disabled = not equipment_type
 	_type_info_label.text = _describe(equipment_type)
 	_save_button.disabled = not _model or not _equipment_profile or not equipment_type
@@ -87,7 +128,6 @@ func _describe(equipment_type: EquipmentType) -> String:
 		blocked_names.append(blocked_name.capitalize())
 	var description: String = "Slot: %s" % slot_name.capitalize()
 	if not blocked_names.is_empty(): description += "   Blocks: %s" % ", ".join(blocked_names)
-	if not equipment_type.excluded_combinations.is_empty(): description += "   Excluded: %d" % equipment_type.excluded_combinations.size()
 	return description
 
 func _rebuild_parts() -> void:
@@ -98,20 +138,20 @@ func _rebuild_parts() -> void:
 	_mesh_labels.clear()
 	if not _model:
 		_status_label.text = NO_MODEL_HINT
-		_update_combinations_button()
+		_update_review()
 		return
 	if _status_label.text == NO_MODEL_HINT: _status_label.text = ""
 	var equipment_type: EquipmentType = _get_type()
 	if equipment_type:
 		for part: ModularCharacter.Part in equipment_type.parts: _parts_container.add_child(_create_part_row(part))
-	_update_combinations_button()
+	_update_review()
 
 func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
 	var row: HBoxContainer = HBoxContainer.new()
 	var part_name: String = ModularCharacter.Part.keys()[part]
 	var vary_check_box: CheckBox = CheckBox.new()
 	vary_check_box.button_pressed = true
-	vary_check_box.tooltip_text = "Vary this part when creating combinations; unchecked parts keep the mesh shown"
+	vary_check_box.tooltip_text = "Vary this part when reviewing combinations; unchecked parts keep the mesh shown"
 	vary_check_box.toggled.connect(_on_vary_toggled)
 	_vary_check_boxes[part] = vary_check_box
 	var name_label: Label = Label.new()
@@ -145,7 +185,9 @@ func _step_part(part: ModularCharacter.Part, direction: int, _mesh_label: Label)
 	var mesh_number: String = _get_mesh_number(body_part)
 	for linked_part: ModularCharacter.Part in _get_type().get_link_of(part):
 		if linked_part != part: _show_mesh_number(linked_part, mesh_number)
+	_review_index = -1
 	_update_mesh_labels()
+	_update_review()
 	_status_label.text = ""
 
 ## Shows the mesh numbered [param mesh_number], or no mesh for [code]"none"[/code]
@@ -218,69 +260,6 @@ func _count_combinations() -> int:
 		if count > MAX_COMBINATIONS: return count
 	return count
 
-func _update_combinations_button() -> void:
-	var count: int = _count_combinations()
-	_combinations_button.disabled = count == 0
-	_combinations_button.text = "Create Combinations (%s)" % (str(count) if count <= MAX_COMBINATIONS else "%d+" % MAX_COMBINATIONS)
-
-func _on_combinations_pressed() -> void:
-	var count: int = _count_combinations()
-	if count > MAX_COMBINATIONS:
-		_report_error("More than %d combinations; uncheck \"vary\" on some parts." % MAX_COMBINATIONS)
-		return
-	if count <= CONFIRM_COMBINATIONS:
-		_create_combinations()
-		return
-	var dialog: ConfirmationDialog = ConfirmationDialog.new()
-	dialog.dialog_text = "Create up to %d %s items in %s?" % [count, _get_type().name, _get_item_path("").get_base_dir()]
-	dialog.confirmed.connect(_create_combinations)
-	dialog.visibility_changed.connect(func() -> void: if not dialog.visible: dialog.queue_free())
-	add_child(dialog)
-	dialog.popup_centered()
-
-## Saves one item per combination of the varied parts' meshes; existing items are skipped
-func _create_combinations() -> void:
-	var dimensions: Array[Array] = _get_dimensions()
-	var options: Array[Array] = []
-	for dimension: Array in dimensions: options.append(Array(_get_options(dimension)))
-	var shown_meshes: Dictionary[ModularCharacter.Part, Mesh] = {}
-	for part: ModularCharacter.Part in _get_type().parts:
-		var body_part: ModularBodyPart = _model.get_part(part)
-		shown_meshes[part] = body_part.mesh if body_part.visible else null
-	var counters: Array[int] = []
-	counters.resize(dimensions.size())
-	counters.fill(0)
-	var saved_count: int = 0
-	var skipped_count: int = 0
-	var excluded_count: int = 0
-	var existing_combinations: Dictionary[String, bool] = _get_existing_combinations()
-	while true:
-		if _apply_combination(dimensions, options, counters, shown_meshes):
-			var combination_key: String = _get_combination_key()
-			var item_name: String = _get_type().get_combination_name(combination_key)
-			var item_path: String = _get_item_path(item_name)
-			var captured: EquipmentProfile = EquipmentProfile.from_model(_model, _get_type())
-			if _get_type().excluded_combinations.has(combination_key): excluded_count += 1
-			elif existing_combinations.has(combination_key) or ResourceLoader.exists(item_path) or captured.appearance.parts.is_empty(): skipped_count += 1
-			else:
-				captured.name = item_name
-				if not _write(captured, item_path): break
-				existing_combinations[combination_key] = true
-				saved_count += 1
-		if not _advance(options, counters): break
-	for part: ModularCharacter.Part in shown_meshes: _model.get_part(part).apply_mesh(shown_meshes[part] as ArrayMesh)
-	_rebuild_parts()
-	if saved_count > 0: equipment_saved.emit(null)
-	_status_label.text = "Saved %d new items to %s, skipped %d existing or empty and %d excluded." % [saved_count, _get_item_path("").get_base_dir(), skipped_count, excluded_count]
-
-## @returns the combination keys existing items of the selected type show, whatever their file or display names
-## Renamed items and items made before the type changed are recognized this way
-func _get_existing_combinations() -> Dictionary[String, bool]:
-	var existing_combinations: Dictionary[String, bool] = {}
-	for equipment_profile: EquipmentProfile in EquipmentSlotProperty.find_items(EquipmentProfile.ITEM_DIRECTORY, _get_type().slot):
-		if equipment_profile.type == _get_type(): existing_combinations[_get_type().get_combination_key_of(equipment_profile)] = true
-	return existing_combinations
-
 ## Linked parts follow their dimension's leader; a part lacking the leader's number shows its [param fallback_meshes] entry
 ## @returns [code]false[/code] if a leader cannot show its option
 func _apply_combination(dimensions: Array[Array], options: Array[Array], counters: Array[int], fallback_meshes: Dictionary = {}) -> bool:
@@ -303,6 +282,156 @@ func _advance(options: Array[Array], counters: Array[int]) -> bool:
 		counters[dimension_index] = 0
 	return false
 
+func _invalidate_review() -> void:
+	_is_review_built = false
+	_review_combinations.clear()
+	_review_index = -1
+
+## Lists every combination of the varied parts with its key, skipping empty ones; restores the shown meshes afterwards
+## @returns [code]false[/code] if there are too many
+func _build_review() -> bool:
+	if _is_review_built: return true
+	if _count_combinations() > MAX_COMBINATIONS:
+		_report_error("More than %d combinations; uncheck \"vary\" on some parts." % MAX_COMBINATIONS)
+		return false
+	_review_dimensions = _get_dimensions()
+	_review_options.clear()
+	for dimension: Array in _review_dimensions: _review_options.append(Array(_get_options(dimension)))
+	_review_fallback = _get_shown_meshes()
+	var counters: Array[int] = []
+	counters.resize(_review_dimensions.size())
+	counters.fill(0)
+	_review_combinations.clear()
+	while true:
+		if _apply_combination(_review_dimensions, _review_options, counters, _review_fallback):
+			var combination_key: String = _get_combination_key()
+			if not _is_empty_key(combination_key): _review_combinations.append({counters = counters.duplicate(), key = combination_key})
+		if not _advance(_review_options, counters): break
+	_show_meshes(_review_fallback)
+	_is_review_built = true
+	return true
+
+static func _is_empty_key(combination_key: String) -> bool:
+	for number: String in combination_key.replace("-", " ").split(" "):
+		if number != "none": return false
+	return true
+
+func _get_shown_meshes() -> Dictionary[ModularCharacter.Part, Mesh]:
+	var shown_meshes: Dictionary[ModularCharacter.Part, Mesh] = {}
+	for part: ModularCharacter.Part in _get_type().parts:
+		var body_part: ModularBodyPart = _model.get_part(part)
+		shown_meshes[part] = body_part.mesh if body_part.visible else null
+	return shown_meshes
+
+func _show_meshes(meshes: Dictionary[ModularCharacter.Part, Mesh]) -> void:
+	for part: ModularCharacter.Part in meshes: _model.get_part(part).apply_mesh(meshes[part] as ArrayMesh)
+
+func _show_review_combination(index: int) -> void:
+	var combination: Dictionary = _review_combinations[index]
+	var counters: Array[int] = []
+	counters.assign(combination.counters)
+	_apply_combination(_review_dimensions, _review_options, counters, _review_fallback)
+	_review_index = index
+	_update_mesh_labels()
+	_update_review()
+
+## Shows the next combination nobody decided on yet, going forward or back from the current one
+func _show_next_unreviewed(direction: int) -> void:
+	if not _model or not _get_type() or not _build_review(): return
+	var count: int = _review_combinations.size()
+	if count == 0: return
+	var start: int = _review_index if _review_index >= 0 else (-1 if direction > 0 else 0)
+	for step: int in range(1, count + 1):
+		var index: int = posmod(start + step * direction, count)
+		if _get_status(_review_combinations[index].key as String) == EquipmentCatalog.Status.UNREVIEWED:
+			_show_review_combination(index)
+			return
+	_update_review()
+	_status_label.text = "Every combination of the varied parts is decided."
+
+func _get_status(combination_key: String) -> EquipmentCatalog.Status:
+	return _catalog.get_status(combination_key) if _catalog else EquipmentCatalog.Status.UNREVIEWED
+
+func _update_review() -> void:
+	var can_review: bool = _model != null and _get_type() != null and not _vary_check_boxes.is_empty()
+	for button: Button in [_previous_button, _next_button, _allow_button, _deny_button, _undecide_button, _allow_rest_button]: button.disabled = not can_review
+	if not can_review:
+		_review_status_label.text = ""
+		_review_counts_label.text = ""
+		return
+	var combination_key: String = _get_combination_key()
+	var status: EquipmentCatalog.Status = _get_status(combination_key)
+	var status_name: String = EquipmentCatalog.Status.keys()[status]
+	_review_status_label.text = "%s: %s" % [_get_type().get_combination_name(combination_key), status_name.capitalize()]
+	_undecide_button.disabled = status == EquipmentCatalog.Status.UNREVIEWED
+	var allowed_count: int = _catalog.entries.size() if _catalog else 0
+	var denied_count: int = _catalog.denied.size() if _catalog else 0
+	if not _is_review_built:
+		_review_counts_label.text = "Allowed %d · Denied %d" % [allowed_count, denied_count]
+		return
+	var unreviewed_count: int = 0
+	for combination: Dictionary in _review_combinations:
+		if _get_status(combination.key as String) == EquipmentCatalog.Status.UNREVIEWED: unreviewed_count += 1
+	_review_counts_label.text = "Allowed %d · Denied %d · Unreviewed %d of %d varied" % [allowed_count, denied_count, unreviewed_count, _review_combinations.size()]
+
+## Decides the shown combination and moves on to the next unreviewed one
+func _decide(allow: bool) -> void:
+	var combination_key: String = _get_combination_key()
+	if _is_empty_key(combination_key):
+		_report_error("An empty combination cannot be an item.")
+		return
+	if not _catalog: _catalog = EquipmentCatalog.find_or_create(_get_type())
+	if allow: _catalog.allow(EquipmentProfile.from_model(_model, _get_type()), combination_key)
+	else: _catalog.deny(combination_key)
+	if not _save_catalog(): return
+	_status_label.text = "%s %s." % [_get_type().get_combination_name(combination_key), "allowed" if allow else "denied"]
+	_show_next_unreviewed(1)
+
+func _save_catalog() -> bool:
+	var catalog_path: String = _catalog.resource_path if not _catalog.resource_path.is_empty() else _catalog.get_default_path()
+	if not _write(_catalog, catalog_path): return false
+	equipment_saved.emit(null)
+	return true
+
+func _on_allow_pressed() -> void:
+	_decide(true)
+
+func _on_deny_pressed() -> void:
+	_decide(false)
+
+func _on_undecide_pressed() -> void:
+	if not _catalog: return
+	_catalog.undecide(_get_combination_key())
+	_save_catalog()
+	_update_review()
+
+func _on_allow_rest_pressed() -> void:
+	if not _build_review(): return
+	var unreviewed: Array[Dictionary] = _review_combinations.filter(func(combination: Dictionary) -> bool: return _get_status(combination.key as String) == EquipmentCatalog.Status.UNREVIEWED)
+	if unreviewed.is_empty(): return
+	if unreviewed.size() <= CONFIRM_COMBINATIONS:
+		_allow_all(unreviewed)
+		return
+	var dialog: ConfirmationDialog = ConfirmationDialog.new()
+	dialog.dialog_text = "Allow all %d unreviewed %s combinations?" % [unreviewed.size(), _get_type().name]
+	dialog.confirmed.connect(_allow_all.bind(unreviewed))
+	dialog.visibility_changed.connect(func() -> void: if not dialog.visible: dialog.queue_free())
+	add_child(dialog)
+	dialog.popup_centered()
+
+func _allow_all(combinations: Array[Dictionary]) -> void:
+	if not _catalog: _catalog = EquipmentCatalog.find_or_create(_get_type())
+	var shown_meshes: Dictionary[ModularCharacter.Part, Mesh] = _get_shown_meshes()
+	for combination: Dictionary in combinations:
+		var counters: Array[int] = []
+		counters.assign(combination.counters)
+		_apply_combination(_review_dimensions, _review_options, counters, _review_fallback)
+		_catalog.allow(EquipmentProfile.from_model(_model, _get_type()), combination.key as String)
+	_show_meshes(shown_meshes)
+	if _save_catalog(): _status_label.text = "Allowed %d combinations." % combinations.size()
+	_update_mesh_labels()
+	_update_review()
+
 func _capture() -> EquipmentProfile:
 	var captured: EquipmentProfile = EquipmentProfile.from_model(_model, _get_type())
 	captured.name = _name_edit.text.strip_edges()
@@ -314,22 +443,23 @@ func _save(equipment_profile: EquipmentProfile, item_path: String) -> bool:
 	equipment_saved.emit(equipment_profile)
 	return true
 
-func _write(equipment_profile: EquipmentProfile, item_path: String) -> bool:
-	var directory_error: Error = DirAccess.make_dir_recursive_absolute(item_path.get_base_dir())
+func _write(resource: Resource, path: String) -> bool:
+	var directory_error: Error = DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	if directory_error != Error.OK:
-		_report_error("Could not create %s: %s" % [item_path.get_base_dir(), error_string(directory_error)])
+		_report_error("Could not create %s: %s" % [path.get_base_dir(), error_string(directory_error)])
 		return false
-	var save_error: Error = ResourceSaver.save(equipment_profile, item_path)
+	var save_error: Error = ResourceSaver.save(resource, path)
 	if save_error != Error.OK:
-		_report_error("Could not save %s: %s" % [item_path, error_string(save_error)])
+		_report_error("Could not save %s: %s" % [path, error_string(save_error)])
 		return false
-	EditorInterface.get_resource_filesystem().update_file(item_path)
+	EditorInterface.get_resource_filesystem().update_file(path)
 	return true
 
 func _report_error(message: String) -> void:
 	_status_label.text = message
 	push_error(message)
 
+## Overwrites the selected item; a catalog entry is saved with its catalog
 func _on_save_pressed() -> void:
 	assert(_equipment_profile)
 	if _name_edit.text.strip_edges().is_empty():
@@ -339,9 +469,16 @@ func _on_save_pressed() -> void:
 	_equipment_profile.name = captured.name
 	_equipment_profile.type = captured.type
 	_equipment_profile.appearance = captured.appearance
-	_save(_equipment_profile, _equipment_profile.resource_path)
+	var item_path: String = _equipment_profile.resource_path
+	if not item_path.contains(ResourceId.SEPARATOR):
+		_save(_equipment_profile, item_path)
+		return
+	var catalog: EquipmentCatalog = load(item_path.get_slice(ResourceId.SEPARATOR, 0)) as EquipmentCatalog
+	if not catalog or not _write(catalog, catalog.resource_path): return
+	_status_label.text = "Saved %s in %s." % [_equipment_profile.name, catalog.resource_path]
+	equipment_saved.emit(_equipment_profile)
 
-## Saves to [code]data/equipment/<type>/<name>.tres[/code]; never overwrites an existing item
+## Saves a hand-made item to [code]data/equipment/<type>/<name>.tres[/code]; never overwrites an existing item
 ## An empty name falls back to the combination name, e.g. "Helmet 02 05"
 func _on_save_as_new_pressed() -> void:
 	if _name_edit.text.strip_edges().is_empty(): _name_edit.text = _get_combination_name()
@@ -359,7 +496,8 @@ func _on_type_selected(_index: int) -> void:
 	_update()
 
 func _on_vary_toggled(_toggled_on: bool) -> void:
-	_update_combinations_button()
+	_invalidate_review()
+	_update_review()
 
 func _on_gear_tab_visibility_changed() -> void:
 	# Without a Gear tab (e.g. in tests) the panel is always shown

@@ -55,8 +55,10 @@ func _update_property() -> void:
 	_pick_button.tooltip_text = equipment_profile.resource_path if equipment_profile else "Pick an item for this slot"
 	_clear_button.disabled = not equipment_profile
 
+## The slot stores a [ResourceId]
 func _get_current() -> EquipmentProfile:
-	return get_edited_object().get(get_edited_property())
+	var equipment_id: String = get_edited_object().get(get_edited_property())
+	return ResourceId.find(equipment_id) as EquipmentProfile
 
 func _open_popup() -> void:
 	_items = _get_cached_items(_slot)
@@ -86,13 +88,20 @@ static func _sort(items: Array[EquipmentProfile]) -> Array[EquipmentProfile]:
 	items.sort_custom(func(a: EquipmentProfile, b: EquipmentProfile) -> bool: return a.name.naturalnocasecmp_to(b.name) < 0 if a.type.name == b.type.name else a.type.name < b.type.name)
 	return items
 
-## @returns every saved item with a type below [param directory_path]
+## @returns every saved item with a type below [param directory_path]: hand-made item files and the entries of catalogs
 static func _collect_items(directory_path: String) -> Array[EquipmentProfile]:
 	var items: Array[EquipmentProfile] = []
 	for file_name: String in DirAccess.get_files_at(directory_path):
 		if file_name.get_extension() != "tres": continue
-		var equipment_profile: EquipmentProfile = load(directory_path.path_join(file_name)) as EquipmentProfile
-		if equipment_profile and equipment_profile.type: items.append(equipment_profile)
+		var resource: Resource = load(directory_path.path_join(file_name))
+		# A catalog holds the allowed combinations of a type; hand-made items are files of their own
+		if resource is EquipmentCatalog:
+			var catalog: EquipmentCatalog = resource
+			for entry: EquipmentProfile in catalog.entries:
+				if entry and entry.type: items.append(entry)
+		elif resource is EquipmentProfile:
+			var equipment_profile: EquipmentProfile = resource
+			if equipment_profile.type: items.append(equipment_profile)
 	for directory_name: String in DirAccess.get_directories_at(directory_path):
 		items.append_array(_collect_items(directory_path.path_join(directory_name)))
 	return items
@@ -158,7 +167,7 @@ func _get_profile_of(tree_item: TreeItem) -> EquipmentProfile:
 
 func _apply(equipment_profile: EquipmentProfile) -> void:
 	if equipment_profile == _get_current(): return
-	emit_changed(get_edited_property(), equipment_profile)
+	emit_changed(get_edited_property(), ResourceId.of(equipment_profile))
 
 func _on_clear_pressed() -> void:
 	_apply(null)

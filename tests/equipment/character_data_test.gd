@@ -75,7 +75,7 @@ func test_starting_and_rolled_equipment_reach_peers() -> void:
 	var table: ProfileSpawnTable = ProfileSpawnTable.new()
 	var distribution: Dictionary[Profile, float] = {helmet: 1.0}
 	table._profile_distribution = distribution
-	_knight.face = mask
+	_knight.face = ResourceId.of(mask)
 	_knight.random_equipment = [table, null]
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D())
 	assert_array(data[Character.EQUIPMENT] as PackedStringArray).contains_exactly([ResourceId.of(mask), ResourceId.of(helmet)])

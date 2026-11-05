@@ -44,10 +44,14 @@ static func make_item(equipment_type: EquipmentType, part: ModularCharacter.Part
 	item.appearance.parts = [part_mesh]
 	return item
 
-## Saves [param item] as its own file, as synchronization sends item paths
+static var _saved_count: int = 0
+
+## Saves [param item] as its own file, as synchronization and starting slots refer to saved items
+## Each call gets a file of its own, so a reloaded item is never a stale cached copy
 static func save_item(item: EquipmentProfile, file_name: String) -> EquipmentProfile:
 	DirAccess.make_dir_recursive_absolute(SAVED_ITEMS)
-	var path: String = SAVED_ITEMS.path_join(file_name)
+	_saved_count += 1
+	var path: String = SAVED_ITEMS.path_join("%d_%s" % [_saved_count, file_name])
 	assert(ResourceSaver.save(item, path) == OK)
 	return load(path)
 

@@ -83,7 +83,7 @@ func _create_group_item_for_profile(profile: Profile, parent_item: TreeItem) -> 
 func _change_profile(selected_item: TreeItem) -> void:
 	if _group_items.values().has(selected_item): return
 	var profile_path: String = selected_item.get_metadata(Columns.RESOURCE_PATH)
-	var profile: Profile = load(profile_path)
+	var profile: Profile = ResourceId.find(profile_path) as Profile
 	if is_visible_in_tree(): EditorInterface.get_inspector().edit(profile)
 	profile_changed.emit(profile)
 
@@ -100,6 +100,11 @@ func _list_profiles_in_directory(directory_path: String) -> Array[Profile]:
 		var resource_path: String = directory_path.path_join(file_name)
 		var resource: Resource = load(resource_path)
 		if resource is Profile: profiles_in_directory.append(resource)
+		# A catalog's entries are items stored inside it
+		elif resource is EquipmentCatalog:
+			var catalog: EquipmentCatalog = resource
+			for entry: EquipmentProfile in catalog.entries:
+				if entry: profiles_in_directory.append(entry)
 	return profiles_in_directory
 
 func _profile_matches_filter_string(profile: Profile) -> bool:
@@ -158,20 +163,35 @@ func _get_selected_paths() -> PackedStringArray:
 	return selected_paths
 
 ## Asks before moving [param paths] to the OS trash, listing other data files that still use them
+## Catalog entries are not files: deleting one denies it in its catalog
 func _request_delete(paths: PackedStringArray) -> void:
 	if paths.is_empty(): return
 	var users: PackedStringArray = _find_users(paths, "res://data")
+	var entry_count: int = Array(paths).filter(func(path: String) -> bool: return path.contains(ResourceId.SEPARATOR)).size()
+	var file_count: int = paths.size() - entry_count
 	var shown_paths: PackedStringArray = paths.slice(0, 10)
-	var text: String = "Move %d file(s) to the trash?\n\n%s" % [paths.size(), "\n".join(shown_paths)]
-	if paths.size() > shown_paths.size(): text += "\n… and %d more" % (paths.size() - shown_paths.size())
-	if not users.is_empty(): text += "\n\nStill used by:\n%s" % "\n".join(users)
+	var actions: PackedStringArray = []
+	if file_count > 0: actions.append("move %d file(s) to the trash" % file_count)
+	if entry_count > 0: actions.append("deny %d catalog combination(s)" % entry_count)
+	var action_text: String = " and ".join(actions)
+	var text: String = "%s%s?
+
+%s" % [action_text.left(1).to_upper(), action_text.substr(1), "
+".join(shown_paths)]
+	if paths.size() > shown_paths.size(): text += "
+… and %d more" % (paths.size() - shown_paths.size())
+	if not users.is_empty(): text += "
+
+Still used by:
+%s" % "
+".join(users)
 	var dialog: ConfirmationDialog = ConfirmationDialog.new()
 	dialog.title = "Delete profiles"
 	dialog.dialog_text = text
-	dialog.ok_button_text = "Move to trash"
+	dialog.ok_button_text = "Delete"
 	dialog.confirmed.connect(_delete.bind(paths))
-	if Array(paths).any(func(path: String) -> bool: return load(path) is EquipmentProfile):
-		dialog.add_button("Move to trash and exclude", true, EXCLUDE_ACTION)
+	if file_count > 0 and Array(paths).any(func(path: String) -> bool: return load(path) is EquipmentProfile):
+		dialog.add_button("Delete and deny combinations", true, EXCLUDE_ACTION)
 		dialog.custom_action.connect(func(action: StringName) -> void:
 			if action != EXCLUDE_ACTION: return
 			dialog.hide()
@@ -180,34 +200,56 @@ func _request_delete(paths: PackedStringArray) -> void:
 	add_child(dialog)
 	dialog.popup_centered()
 
-## @returns the resources and scenes below [param directory_path] that depend on any of [param paths]
+## @returns the resources and scenes below [param directory_path] that depend on any of [param paths], by reference or by a stored [ResourceId]
 func _find_users(paths: PackedStringArray, directory_path: String) -> PackedStringArray:
+	var ids: PackedStringArray = []
+	for path: String in paths:
+		var id: String = ResourceId.of(ResourceId.find(path))
+		if not id.is_empty(): ids.append(id)
+	return _find_users_of(paths, ids, directory_path)
+
+func _find_users_of(paths: PackedStringArray, ids: PackedStringArray, directory_path: String) -> PackedStringArray:
 	var users: PackedStringArray = []
+	var files: PackedStringArray = []
+	for path: String in paths: files.append(path.get_slice(ResourceId.SEPARATOR, 0))
 	for file_name: String in DirAccess.get_files_at(directory_path):
 		if file_name.get_extension() not in ["tres", "tscn"]: continue
 		var file_path: String = directory_path.path_join(file_name)
-		if paths.has(file_path): continue
-		for dependency: String in ResourceLoader.get_dependencies(file_path):
-			if paths.has(dependency.get_slice("::", 2)) or paths.has(dependency):
-				users.append(file_path)
-				break
+		if files.has(file_path): continue
+		if _uses(file_path, paths, ids): users.append(file_path)
 	for directory_name: String in DirAccess.get_directories_at(directory_path):
-		users.append_array(_find_users(paths, directory_path.path_join(directory_name)))
+		users.append_array(_find_users_of(paths, ids, directory_path.path_join(directory_name)))
 	return users
 
-## With [param exclude], equipment combinations are also added to their type's [member EquipmentType.excluded_combinations], so they are not generated again
-func _delete(paths: PackedStringArray, exclude: bool = false) -> void:
-	var changed_types: Array[EquipmentType] = []
-	if exclude:
-		for path: String in paths:
-			var equipment_profile: EquipmentProfile = load(path) as EquipmentProfile
-			if not equipment_profile or not equipment_profile.type: continue
-			equipment_profile.type.exclude(equipment_profile.type.get_combination_key_of(equipment_profile))
-			if not changed_types.has(equipment_profile.type): changed_types.append(equipment_profile.type)
-	for equipment_type: EquipmentType in changed_types:
-		var error: Error = ResourceSaver.save(equipment_type, equipment_type.resource_path)
-		if error != Error.OK: push_error("Could not save exclusions to %s: %s" % [equipment_type.resource_path, error_string(error)])
+func _uses(file_path: String, paths: PackedStringArray, ids: PackedStringArray) -> bool:
+	for dependency: String in ResourceLoader.get_dependencies(file_path):
+		if paths.has(dependency.get_slice("::", 2)) or paths.has(dependency): return true
+	if ids.is_empty(): return false
+	var text: String = FileAccess.get_file_as_string(file_path)
+	for id: String in ids:
+		if text.contains('"%s"' % id): return true
+	return false
+
+## Catalog entries are denied in their catalog; files are moved to the OS trash
+## With [param deny_files], the combinations of trashed equipment files are denied in their type's catalog too, so they are not offered again
+func _delete(paths: PackedStringArray, deny_files: bool = false) -> void:
+	var changed_catalogs: Array[EquipmentCatalog] = []
+	var trashed: PackedStringArray = []
 	for path: String in paths:
+		var is_entry: bool = path.contains(ResourceId.SEPARATOR)
+		if not is_entry: trashed.append(path)
+		if not is_entry and not deny_files: continue
+		var equipment_profile: EquipmentProfile = ResourceId.find(path) as EquipmentProfile
+		if not equipment_profile or not equipment_profile.type: continue
+		var catalog: EquipmentCatalog = load(path.get_slice(ResourceId.SEPARATOR, 0)) as EquipmentCatalog if is_entry else EquipmentCatalog.find_or_create(equipment_profile.type)
+		catalog.deny(equipment_profile.type.get_combination_key_of(equipment_profile))
+		if not changed_catalogs.has(catalog): changed_catalogs.append(catalog)
+	for catalog: EquipmentCatalog in changed_catalogs:
+		var catalog_path: String = catalog.resource_path if not catalog.resource_path.is_empty() else catalog.get_default_path()
+		DirAccess.make_dir_recursive_absolute(catalog_path.get_base_dir())
+		var error: Error = ResourceSaver.save(catalog, catalog_path)
+		if error != Error.OK: push_error("Could not save %s: %s" % [catalog_path, error_string(error)])
+	for path: String in trashed:
 		var error: Error = OS.move_to_trash(ProjectSettings.globalize_path(path))
 		if error != Error.OK: push_error("Could not move %s to the trash: %s" % [path, error_string(error)])
 	EditorInterface.get_resource_filesystem().scan()

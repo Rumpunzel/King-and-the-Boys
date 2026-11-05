@@ -103,12 +103,38 @@ func test_shown_combination_matches_the_saved_item_key() -> void:
 	assert_str(shown_key).is_equal("05 10")
 	assert_str(helmet_type.get_combination_key_of(captured)).is_equal(shown_key)
 
-func test_type_info_shows_slot_blocking_and_exclusions() -> void:
-	var helmet_type: EquipmentType = _use_type("helmet")
+func test_type_info_shows_slot_and_blocking() -> void:
+	_use_type("helmet")
 	var info: Label = _editor.get("_type_info_label")
 	assert_str(info.text).contains("Slot: Head").contains("Blocks: Face")
-	var excluded: PackedStringArray = helmet_type.excluded_combinations
-	helmet_type.excluded_combinations = ["01 01"]
-	_editor.call("_update")
-	assert_str(info.text).contains("Excluded: 1")
-	helmet_type.excluded_combinations = excluded
+
+func test_review_lists_every_non_empty_combination() -> void:
+	_use_type("helmet")
+	assert_bool(_editor.call("_build_review")).is_true()
+	var combinations: Array[Dictionary] = _editor.get("_review_combinations")
+	assert_int(combinations.size()).is_equal(_count() - 1)
+	assert_bool(combinations.any(func(combination: Dictionary) -> bool: return combination.key == "none none")).is_false()
+
+func test_review_shows_the_status_of_the_shown_combination() -> void:
+	var helmet_type: EquipmentType = _use_type("helmet")
+	var catalog: EquipmentCatalog = EquipmentCatalog.new()
+	catalog.type = helmet_type
+	_editor.set("_catalog", catalog)
+	_model.head_no_elements.update_index(_model.head_no_elements.find_mesh_index("05"))
+	_model.helmet_attachment.update_index(_model.helmet_attachment.find_mesh_index("10"))
+	catalog.deny("05 10")
+	_editor.call("_update_review")
+	var status: Label = _editor.get("_review_status_label")
+	assert_str(status.text).is_equal("Helmet 05 10: Denied")
+
+func test_next_unreviewed_skips_decided_combinations() -> void:
+	var helmet_type: EquipmentType = _use_type("helmet")
+	var catalog: EquipmentCatalog = EquipmentCatalog.new()
+	catalog.type = helmet_type
+	_editor.set("_catalog", catalog)
+	assert_bool(_editor.call("_build_review")).is_true()
+	var combinations: Array[Dictionary] = _editor.get("_review_combinations")
+	catalog.deny(combinations[0].key as String)
+	catalog.allow(EquipmentFixtures.make_item(helmet_type, ModularCharacter.Part.HELMET_ATTACHMENT, EquipmentFixtures.HELMET_ATTACHMENT), combinations[1].key as String)
+	_editor.call("_show_next_unreviewed", 1)
+	assert_str(_editor.call("_get_combination_key")).is_equal(combinations[2].key as String)

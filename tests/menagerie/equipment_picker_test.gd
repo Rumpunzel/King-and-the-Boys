@@ -21,8 +21,12 @@ func test_pickers_only_list_items_of_their_slot() -> void:
 func test_items_are_grouped_by_type_name() -> void:
 	_save_items()
 	var head_items: Array[EquipmentProfile] = EquipmentSlotProperty.find_items(EquipmentFixtures.SAVED_ITEMS, EquipmentProfile.Slot.HEAD)
-	assert_str(head_items[0].type.name).is_equal("Helmet")
-	assert_str(head_items[1].type.name).is_equal("Hood")
+	var type_names: PackedStringArray = []
+	for item: EquipmentProfile in head_items: type_names.append(item.type.name)
+	var sorted_names: PackedStringArray = type_names.duplicate()
+	sorted_names.sort()
+	assert_array(type_names).contains(["Helmet", "Hood"])
+	assert_array(type_names).is_equal(sorted_names)
 
 func test_items_are_grouped_by_the_mesh_of_their_types_first_part() -> void:
 	var helmet: EquipmentProfile = EquipmentFixtures.make_item(EquipmentFixtures.load_type("helmet"), ModularCharacter.Part.HELMET_ATTACHMENT, EquipmentFixtures.HELMET_ATTACHMENT)

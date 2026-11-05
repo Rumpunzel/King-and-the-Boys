@@ -35,13 +35,6 @@ extends Resource
 	set(new_value):
 		blocked_slots = new_value
 		changed.emit()
-## Combination keys (see [method get_combination_key]) that are never generated again, e.g. ugly ones deleted with "exclude" in Menagerie
-## Keys hold mesh numbers only, so they survive renaming this type; remove a key to allow that combination again
-@export var excluded_combinations: PackedStringArray:
-	set(new_value):
-		excluded_combinations = new_value
-		changed.emit()
-
 ## One mesh number per linked group of parts, e.g. "05 03"; linked parts with different numbers are joined, e.g. "05-07"
 ## @param part_numbers {Part: [enum ModularCharacter.Part] -> mesh number: [String]}; missing parts count as "none"
 func get_combination_key(part_numbers: Dictionary) -> String:
@@ -68,14 +61,6 @@ func get_combination_key_of(equipment_profile: EquipmentProfile) -> String:
 ## The display name for a combination, e.g. "Gloves 05 03"
 func get_combination_name(combination_key: String) -> String:
 	return "%s %s" % [name, combination_key]
-
-## @returns [code]false[/code] if the combination was already excluded
-func exclude(combination_key: String) -> bool:
-	if excluded_combinations.has(combination_key): return false
-	excluded_combinations.append(combination_key)
-	excluded_combinations.sort()
-	changed.emit()
-	return true
 
 ## @returns the linked parts: each [member part_groups] entry, plus left/right pairs not already grouped
 func get_links() -> Array[Array]:
