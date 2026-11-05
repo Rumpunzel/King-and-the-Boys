@@ -3,7 +3,6 @@ extends PanelContainer
 
 signal equipment_saved(equipment_profile: EquipmentProfile)
 
-const ITEM_DIRECTORY: String = "res://data/equipment"
 const TYPE_DIRECTORY: String = "res://data/equipment/types"
 const NO_MODEL_HINT: String = "Select an item, or a modular character to start from."
 ## Above this many combinations, ask before creating them
@@ -176,14 +175,18 @@ static func _get_mesh_number(body_part: ModularBodyPart) -> String:
 	if not body_part.visible or not body_part.mesh: return "none"
 	return ModularBodyPart.get_mesh_number(body_part.mesh.resource_path)
 
-## Names the shown combination, see [method EquipmentType.get_combination_name]
-func _get_combination_name() -> String:
+## The key of the shown combination, see [method EquipmentType.get_combination_key]
+func _get_combination_key() -> String:
 	var part_numbers: Dictionary = {}
 	for part: ModularCharacter.Part in _get_type().parts: part_numbers[part] = _get_mesh_number(_model.get_part(part))
-	return _get_type().get_combination_name(part_numbers)
+	return _get_type().get_combination_key(part_numbers)
+
+## The display name of the shown combination, e.g. "Helmet 02 05"
+func _get_combination_name() -> String:
+	return _get_type().get_combination_name(_get_combination_key())
 
 func _get_item_path(item_name: String) -> String:
-	return "%s/%s/%s.tres" % [ITEM_DIRECTORY, _get_type().name.to_snake_case(), item_name.to_snake_case()]
+	return "%s/%s/%s.tres" % [EquipmentProfile.ITEM_DIRECTORY, _get_type().name.to_snake_case(), item_name.to_snake_case()]
 
 ## Splits the varied parts into dimensions; linked parts (see [method EquipmentType.get_links]) form one
 ## @returns an [Array] of dimensions, each an [Array] of [enum ModularCharacter.Part]s
@@ -253,15 +256,16 @@ func _create_combinations() -> void:
 	var existing_combinations: Dictionary[String, bool] = _get_existing_combinations()
 	while true:
 		if _apply_combination(dimensions, options, counters, shown_meshes):
-			var item_name: String = _get_combination_name()
+			var combination_key: String = _get_combination_key()
+			var item_name: String = _get_type().get_combination_name(combination_key)
 			var item_path: String = _get_item_path(item_name)
 			var captured: EquipmentProfile = EquipmentProfile.from_model(_model, _get_type())
-			if _get_type().excluded_combinations.has(item_name): excluded_count += 1
-			elif existing_combinations.has(item_name) or ResourceLoader.exists(item_path) or captured.appearance.parts.is_empty(): skipped_count += 1
+			if _get_type().excluded_combinations.has(combination_key): excluded_count += 1
+			elif existing_combinations.has(combination_key) or ResourceLoader.exists(item_path) or captured.appearance.parts.is_empty(): skipped_count += 1
 			else:
 				captured.name = item_name
 				if not _write(captured, item_path): break
-				existing_combinations[item_name] = true
+				existing_combinations[combination_key] = true
 				saved_count += 1
 		if not _advance(options, counters): break
 	for part: ModularCharacter.Part in shown_meshes: _model.get_part(part).apply_mesh(shown_meshes[part] as ArrayMesh)
@@ -269,12 +273,12 @@ func _create_combinations() -> void:
 	if saved_count > 0: equipment_saved.emit(null)
 	_status_label.text = "Saved %d new items to %s, skipped %d existing or empty and %d excluded." % [saved_count, _get_item_path("").get_base_dir(), skipped_count, excluded_count]
 
-## @returns the combinations existing items of the selected type show, whatever their file or display names
+## @returns the combination keys existing items of the selected type show, whatever their file or display names
 ## Renamed items and items made before the type changed are recognized this way
 func _get_existing_combinations() -> Dictionary[String, bool]:
 	var existing_combinations: Dictionary[String, bool] = {}
-	for equipment_profile: EquipmentProfile in EquipmentSlotProperty.find_items(ITEM_DIRECTORY, _get_type().slot):
-		if equipment_profile.type == _get_type(): existing_combinations[_get_type().get_combination_name_of(equipment_profile)] = true
+	for equipment_profile: EquipmentProfile in EquipmentSlotProperty.find_items(EquipmentProfile.ITEM_DIRECTORY, _get_type().slot):
+		if equipment_profile.type == _get_type(): existing_combinations[_get_type().get_combination_key_of(equipment_profile)] = true
 	return existing_combinations
 
 ## Linked parts follow their dimension's leader; a part lacking the leader's number shows its [param fallback_meshes] entry

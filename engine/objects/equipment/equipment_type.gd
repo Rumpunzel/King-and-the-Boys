@@ -35,41 +35,44 @@ extends Resource
 	set(new_value):
 		blocked_slots = new_value
 		changed.emit()
-## Combination names that are never generated again, e.g. ugly ones deleted with "exclude" in Menagerie
-## Remove a name to allow that combination again
+## Combination keys (see [method get_combination_key]) that are never generated again, e.g. ugly ones deleted with "exclude" in Menagerie
+## Keys hold mesh numbers only, so they survive renaming this type; remove a key to allow that combination again
 @export var excluded_combinations: PackedStringArray:
 	set(new_value):
 		excluded_combinations = new_value
 		changed.emit()
 
-## Names a combination after this type and one mesh number per linked group of parts, e.g. "Gloves 05 03"
-## Linked parts with different numbers are joined, e.g. "05-07"
+## One mesh number per linked group of parts, e.g. "05 03"; linked parts with different numbers are joined, e.g. "05-07"
 ## @param part_numbers {Part: [enum ModularCharacter.Part] -> mesh number: [String]}; missing parts count as "none"
-func get_combination_name(part_numbers: Dictionary) -> String:
+func get_combination_key(part_numbers: Dictionary) -> String:
 	var numbers: PackedStringArray = []
-	var named: Array[ModularCharacter.Part] = []
+	var keyed: Array[ModularCharacter.Part] = []
 	for part: ModularCharacter.Part in parts:
-		if named.has(part): continue
+		if keyed.has(part): continue
 		var link: Array[ModularCharacter.Part] = get_link_of(part)
-		named.append_array(link)
+		keyed.append_array(link)
 		var link_numbers: PackedStringArray = []
 		for linked_part: ModularCharacter.Part in link:
 			var mesh_number: String = part_numbers.get(linked_part, "none")
 			if not link_numbers.has(mesh_number): link_numbers.append(mesh_number)
 		numbers.append("-".join(link_numbers))
-	return "%s %s" % [name, " ".join(numbers)]
+	return " ".join(numbers)
 
-## The combination an existing item shows, independent of its file or display name
-func get_combination_name_of(equipment_profile: EquipmentProfile) -> String:
+## The key of the combination an existing item shows, independent of its file or display name
+func get_combination_key_of(equipment_profile: EquipmentProfile) -> String:
 	var part_numbers: Dictionary = {}
 	for part_mesh: EquipmentPartMesh in equipment_profile.appearance.parts:
 		if part_mesh and part_mesh.male_mesh: part_numbers[part_mesh.part] = ModularBodyPart.get_mesh_number(part_mesh.male_mesh.resource_path)
-	return get_combination_name(part_numbers)
+	return get_combination_key(part_numbers)
+
+## The display name for a combination, e.g. "Gloves 05 03"
+func get_combination_name(combination_key: String) -> String:
+	return "%s %s" % [name, combination_key]
 
 ## @returns [code]false[/code] if the combination was already excluded
-func exclude(combination_name: String) -> bool:
-	if excluded_combinations.has(combination_name): return false
-	excluded_combinations.append(combination_name)
+func exclude(combination_key: String) -> bool:
+	if excluded_combinations.has(combination_key): return false
+	excluded_combinations.append(combination_key)
 	excluded_combinations.sort()
 	changed.emit()
 	return true

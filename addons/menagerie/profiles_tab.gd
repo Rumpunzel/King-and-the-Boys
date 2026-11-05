@@ -202,7 +202,7 @@ func _delete(paths: PackedStringArray, exclude: bool = false) -> void:
 		for path: String in paths:
 			var equipment_profile: EquipmentProfile = load(path) as EquipmentProfile
 			if not equipment_profile or not equipment_profile.type: continue
-			equipment_profile.type.exclude(equipment_profile.type.get_combination_name_of(equipment_profile))
+			equipment_profile.type.exclude(equipment_profile.type.get_combination_key_of(equipment_profile))
 			if not changed_types.has(equipment_profile.type): changed_types.append(equipment_profile.type)
 	for equipment_type: EquipmentType in changed_types:
 		var error: Error = ResourceSaver.save(equipment_type, equipment_type.resource_path)
