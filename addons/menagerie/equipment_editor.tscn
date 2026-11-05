@@ -2,13 +2,14 @@
 
 [ext_resource type="Script" path="res://addons/menagerie/equipment_editor.gd" id="1_eqped"]
 
-[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_type_option", "_edit_type_button", "_type_info_label", "_parts_container", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
+[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_type_option", "_edit_type_button", "_type_info_label", "_parts_container", "_combinations_button", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
 size_flags_vertical = 3
 script = ExtResource("1_eqped")
 _type_option = NodePath("MarginContainer/VBoxContainer/TypeRow/TypeOption")
 _edit_type_button = NodePath("MarginContainer/VBoxContainer/TypeRow/EditTypeButton")
 _type_info_label = NodePath("MarginContainer/VBoxContainer/TypeInfoLabel")
 _parts_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Parts")
+_combinations_button = NodePath("MarginContainer/VBoxContainer/CombinationsButton")
 _name_edit = NodePath("MarginContainer/VBoxContainer/SaveRow/NameEdit")
 _save_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveButton")
 _save_as_new_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveAsNewButton")
@@ -61,6 +62,11 @@ horizontal_scroll_mode = 0
 [node name="Parts" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="CombinationsButton" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Save one item per combination of the checked parts' meshes, named after the type and each part's mesh number; existing items are skipped"
+text = "Create Combinations"
 
 [node name="SaveRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
