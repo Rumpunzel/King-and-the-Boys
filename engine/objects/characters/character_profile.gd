@@ -90,9 +90,15 @@ func create_model(variation: int) -> Model:
 	if Engine.is_editor_hint(): setup_model(model)
 	return model
 
-## Randomizes the look locally, for previews only
+## Randomizes the look and equipment locally, for previews only
 func setup_model(model: ModularCharacter) -> void:
+	model.reset_gear()
 	model_configuration.configure(model)
+	# A detached [CharacterEquipment] applies the same slot and blocking rules as in game
+	var preview_equipment: CharacterEquipment = CharacterEquipment.new()
+	preview_equipment.apply_to(model)
+	for equipment_profile: EquipmentProfile in roll_equipment(): preview_equipment.equip(equipment_profile)
+	preview_equipment.free()
 
 func get_group_name() -> StringName:
 	var group_name: StringName = Groups.keys()[group]

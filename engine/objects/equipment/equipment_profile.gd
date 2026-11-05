@@ -13,6 +13,9 @@ enum Slot {
 	OFF_HAND,
 }
 
+## Loaded on demand instead of preloaded, as the [ModularCharacter] scene itself depends on this script
+const _PREVIEW_MODEL_UID: String = "uid://c6oheyitbnlpu"
+
 @export var slot: Slot = Slot.HEAD:
 	set(new_value):
 		slot = new_value
@@ -113,6 +116,17 @@ func get_allowed_parts() -> Array[ModularCharacter.Part]:
 	var allowed_parts: Array[ModularCharacter.Part] = get_slot_parts(slot)
 	for blocked_slot: Slot in blocked_slots: allowed_parts.append_array(get_slot_parts(blocked_slot))
 	return allowed_parts
+
+## Previews, such as Menagerie, show the item on a plain [ModularCharacter]
+func create_model(_variation: int) -> Model:
+	var scene: PackedScene = load(_PREVIEW_MODEL_UID)
+	var model: ModularCharacter = scene.instantiate()
+	model.reset_gear()
+	if appearance: appearance.configure(model)
+	return model
+
+func get_variation_count() -> int: return 1
+func get_random_variation() -> int: return 0
 
 func get_group_name() -> StringName:
 	var group_name: StringName = Slot.keys()[slot]
