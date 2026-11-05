@@ -89,6 +89,7 @@ layout_mode = 2
 
 [node name="ModelPreview" parent="HSplitContainer/VSplitContainer" unique_id=1214802491 instance=ExtResource("4_ne48i")]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="EquipmentEditor" parent="HSplitContainer/VSplitContainer" unique_id=1214802492 node_paths=PackedStringArray("_gear_tab") instance=ExtResource("5_eqped")]
 layout_mode = 2
