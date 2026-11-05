@@ -170,7 +170,7 @@ func _request_delete(paths: PackedStringArray) -> void:
 	dialog.dialog_text = text
 	dialog.ok_button_text = "Move to trash"
 	dialog.confirmed.connect(_delete.bind(paths))
-	if paths.any(func(path: String) -> bool: return load(path) is EquipmentProfile):
+	if Array(paths).any(func(path: String) -> bool: return load(path) is EquipmentProfile):
 		dialog.add_button("Move to trash and exclude", true, EXCLUDE_ACTION)
 		dialog.custom_action.connect(func(action: StringName) -> void:
 			if action != EXCLUDE_ACTION: return
