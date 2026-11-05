@@ -35,10 +35,22 @@ enum Groups {
 @export var dark_vision: float = 2.5
 
 @export_category("Model")
-@export var model_configuration: ModelConfigurationRandom = preload("uid://c1i0e1p4feqhe")
-@export var starting_equipment: Array[EquipmentProfile]
+@export var model_configuration: ModelConfigurationRandom = preload("uid://c1i0e1p4feqhe"):
+	set(new_value):
+		_forward_changes([model_configuration], [new_value])
+		model_configuration = new_value
+		changed.emit()
+@export var starting_equipment: Array[EquipmentProfile]:
+	set(new_value):
+		_forward_changes(starting_equipment, new_value)
+		starting_equipment = new_value
+		changed.emit()
 ## Each table rolls one [EquipmentProfile] on top of [member starting_equipment], replacing the item in its slot
-@export var random_equipment: Array[SpawnTable]
+@export var random_equipment: Array[SpawnTable]:
+	set(new_value):
+		_forward_changes(random_equipment, new_value)
+		random_equipment = new_value
+		changed.emit()
 
 @export_category("Animations")
 @export var spawn_animation: ModelAnimation = preload("uid://djq27fwrmrv2")
@@ -99,6 +111,13 @@ func setup_model(model: ModularCharacter) -> void:
 	preview_equipment.apply_to(model)
 	for equipment_profile: EquipmentProfile in roll_equipment(): preview_equipment.equip(equipment_profile)
 	preview_equipment.free()
+
+## Re-emits [signal Resource.changed] of nested resources, so previews also update when an item is edited
+func _forward_changes(old_resources: Array, new_resources: Array) -> void:
+	for resource: Resource in old_resources:
+		if resource and resource.changed.is_connected(changed.emit): resource.changed.disconnect(changed.emit)
+	for resource: Resource in new_resources:
+		if resource and not resource.changed.is_connected(changed.emit): resource.changed.connect(changed.emit)
 
 func get_group_name() -> StringName:
 	var group_name: StringName = Groups.keys()[group]

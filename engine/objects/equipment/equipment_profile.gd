@@ -25,7 +25,9 @@ const _PREVIEW_MODEL_UID: String = "uid://c6oheyitbnlpu"
 		changed.emit()
 @export var appearance: EquipmentAppearance:
 	set(new_value):
+		if appearance and appearance.changed.is_connected(changed.emit): appearance.changed.disconnect(changed.emit)
 		appearance = new_value
+		if appearance and not appearance.changed.is_connected(changed.emit): appearance.changed.connect(changed.emit)
 		changed.emit()
 
 var slot: Slot:
