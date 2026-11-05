@@ -62,3 +62,15 @@ func test_catalog_warns_about_entries_of_other_types() -> void:
 	var cape: EquipmentProfile = EquipmentFixtures.make_item(EquipmentFixtures.load_type("cape"), ModularCharacter.Part.BACK_ATTACHMENT, EquipmentFixtures.CAPE)
 	catalog.entries = [cape]
 	assert_int(catalog._get_configuration_warnings().size()).is_equal(1)
+
+func test_committed_catalogs_resolve_every_entry() -> void:
+	var catalogs: Array[EquipmentCatalog] = EquipmentCatalog.find_all()
+	assert_array(catalogs).is_not_empty()
+	for catalog: EquipmentCatalog in catalogs:
+		assert_array(catalog._get_configuration_warnings()).override_failure_message("%s warns" % catalog.resource_path).is_empty()
+		assert_str(ResourceId.of(catalog)).override_failure_message("%s has no UID" % catalog.resource_path).starts_with("uid://")
+		assert_object(EquipmentCatalog.find_for(catalog.type)).is_same(catalog)
+		for entry: EquipmentProfile in catalog.entries:
+			var key: String = catalog.type.get_combination_key_of(entry)
+			assert_str(entry.resource_scene_unique_id).override_failure_message("%s is stored under the wrong ID" % entry.name).is_equal(EquipmentCatalog.get_entry_id(key))
+			assert_object(ResourceId.find(ResourceId.of(entry))).is_same(entry)

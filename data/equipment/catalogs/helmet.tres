@@ -1,0 +1,4005 @@
+[gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://d1x5fu03gm71p"]
+
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_profile.gd" id="1_6mbxj"]
+[ext_resource type="Resource" path="res://data/characters/defaults/default_collision_shape.tres" id="2_vsagt"]
+[ext_resource type="Resource" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_ojet4"]
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_xbdg6"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_01.res" id="5_u7c31"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_01.res" id="6_pg2fg"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_01.res" id="7_yxc7m"]
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_appearance.gd" id="8_dvoll"]
+[ext_resource type="Resource" path="res://data/equipment/types/helmet.tres" id="9_2yfy5"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_02.res" id="10_tbpqa"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_03.res" id="11_ss3v6"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_04.res" id="12_n4e78"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_05.res" id="13_3y15k"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_06.res" id="14_mn3sn"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_07.res" id="15_knrcv"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_08.res" id="16_pj4gx"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_09.res" id="17_mqtx3"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_10.res" id="18_kooq3"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_11.res" id="19_uk7sx"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_12.res" id="20_8n5e8"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_13.res" id="21_i5bj8"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_02.res" id="22_1850s"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_02.res" id="23_62wtg"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_03.res" id="24_nhj4v"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_03.res" id="25_r6vgq"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_04.res" id="26_d5d0a"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_04.res" id="27_1o7mc"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_05.res" id="28_xpohe"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_05.res" id="29_072jo"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_06.res" id="30_vnuym"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_06.res" id="31_p3g77"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_07.res" id="32_44h5j"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_07.res" id="33_bb6ks"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_08.res" id="34_crybk"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_08.res" id="35_77fmh"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_09.res" id="36_kehya"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_09.res" id="37_fq48k"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_10.res" id="38_034vd"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_10.res" id="39_r7wsa"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_11.res" id="40_y5wc5"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_11.res" id="41_3pafv"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_12.res" id="42_tispi"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_12.res" id="43_4lo7j"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/female/head/modular_character_Head_No_Elements_Female_13.res" id="44_ygbd0"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_13.res" id="45_o3g13"]
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_catalog.gd" id="46_i0qkm"]
+
+[sub_resource type="Resource" id="Resource_3q6f8"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_cx8tn"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_kk7qg"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_3q6f8"), SubResource("Resource_cx8tn")])
+
+[sub_resource type="Resource" id="01_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_kk7qg")
+name = "Helmet 01 01"
+
+[sub_resource type="Resource" id="Resource_k81oi"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_qeuim"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_ywwxo"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_k81oi"), SubResource("Resource_qeuim")])
+
+[sub_resource type="Resource" id="01_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ywwxo")
+name = "Helmet 01 02"
+
+[sub_resource type="Resource" id="Resource_q4ab2"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_jswly"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_ipq5x"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_q4ab2"), SubResource("Resource_jswly")])
+
+[sub_resource type="Resource" id="01_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ipq5x")
+name = "Helmet 01 03"
+
+[sub_resource type="Resource" id="Resource_q1fux"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_gesxv"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_atg71"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_q1fux"), SubResource("Resource_gesxv")])
+
+[sub_resource type="Resource" id="01_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_atg71")
+name = "Helmet 01 04"
+
+[sub_resource type="Resource" id="Resource_qmutq"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_xhpdk"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_48m1p"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_qmutq"), SubResource("Resource_xhpdk")])
+
+[sub_resource type="Resource" id="01_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_48m1p")
+name = "Helmet 01 05"
+
+[sub_resource type="Resource" id="Resource_gbiiw"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_no1xq"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_ylcrr"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_gbiiw"), SubResource("Resource_no1xq")])
+
+[sub_resource type="Resource" id="01_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ylcrr")
+name = "Helmet 01 06"
+
+[sub_resource type="Resource" id="Resource_8r3yb"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_k2pis"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_m4twi"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_8r3yb"), SubResource("Resource_k2pis")])
+
+[sub_resource type="Resource" id="01_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_m4twi")
+name = "Helmet 01 07"
+
+[sub_resource type="Resource" id="Resource_641nf"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_uchk5"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_piu5k"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_641nf"), SubResource("Resource_uchk5")])
+
+[sub_resource type="Resource" id="01_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_piu5k")
+name = "Helmet 01 08"
+
+[sub_resource type="Resource" id="Resource_ontgx"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_cxwc7"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_eqhd4"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_ontgx"), SubResource("Resource_cxwc7")])
+
+[sub_resource type="Resource" id="01_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_eqhd4")
+name = "Helmet 01 09"
+
+[sub_resource type="Resource" id="Resource_uxkau"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_4m3i1"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_45c6l"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_uxkau"), SubResource("Resource_4m3i1")])
+
+[sub_resource type="Resource" id="01_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_45c6l")
+name = "Helmet 01 10"
+
+[sub_resource type="Resource" id="Resource_rvsqy"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_cbfc5"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_0hda5"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_rvsqy"), SubResource("Resource_cbfc5")])
+
+[sub_resource type="Resource" id="01_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0hda5")
+name = "Helmet 01 11"
+
+[sub_resource type="Resource" id="Resource_gcxrv"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_ym0te"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_7ox7g"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_gcxrv"), SubResource("Resource_ym0te")])
+
+[sub_resource type="Resource" id="01_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_7ox7g")
+name = "Helmet 01 12"
+
+[sub_resource type="Resource" id="Resource_st74j"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_mgail"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_eyv0q"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_st74j"), SubResource("Resource_mgail")])
+
+[sub_resource type="Resource" id="01_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_eyv0q")
+name = "Helmet 01 13"
+
+[sub_resource type="Resource" id="Resource_cwyoy"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("6_pg2fg")
+female_mesh = ExtResource("5_u7c31")
+
+[sub_resource type="Resource" id="Resource_ff256"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_cwyoy")])
+
+[sub_resource type="Resource" id="01_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ff256")
+name = "Helmet 01 none"
+
+[sub_resource type="Resource" id="Resource_20uwo"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_xnrpk"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_4jbej"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_20uwo"), SubResource("Resource_xnrpk")])
+
+[sub_resource type="Resource" id="02_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_4jbej")
+name = "Helmet 02 01"
+
+[sub_resource type="Resource" id="Resource_ltge6"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_6k2wi"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_5xtih"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_ltge6"), SubResource("Resource_6k2wi")])
+
+[sub_resource type="Resource" id="02_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_5xtih")
+name = "Helmet 02 02"
+
+[sub_resource type="Resource" id="Resource_1ckm6"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_seovk"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_y2i4s"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_1ckm6"), SubResource("Resource_seovk")])
+
+[sub_resource type="Resource" id="02_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_y2i4s")
+name = "Helmet 02 03"
+
+[sub_resource type="Resource" id="Resource_doug0"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_bxvy6"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_vgsyd"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_doug0"), SubResource("Resource_bxvy6")])
+
+[sub_resource type="Resource" id="02_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_vgsyd")
+name = "Helmet 02 04"
+
+[sub_resource type="Resource" id="Resource_i7x7j"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_75peh"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_3ixkc"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_i7x7j"), SubResource("Resource_75peh")])
+
+[sub_resource type="Resource" id="02_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_3ixkc")
+name = "Helmet 02 05"
+
+[sub_resource type="Resource" id="Resource_5xex5"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_bkvoy"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_yeihk"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_5xex5"), SubResource("Resource_bkvoy")])
+
+[sub_resource type="Resource" id="02_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_yeihk")
+name = "Helmet 02 06"
+
+[sub_resource type="Resource" id="Resource_57ttg"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_koncl"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_ppfb1"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_57ttg"), SubResource("Resource_koncl")])
+
+[sub_resource type="Resource" id="02_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ppfb1")
+name = "Helmet 02 07"
+
+[sub_resource type="Resource" id="Resource_egc48"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_yx1lw"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_me3fr"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_egc48"), SubResource("Resource_yx1lw")])
+
+[sub_resource type="Resource" id="02_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_me3fr")
+name = "Helmet 02 08"
+
+[sub_resource type="Resource" id="Resource_kollw"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_fajdk"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_n6bv0"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_kollw"), SubResource("Resource_fajdk")])
+
+[sub_resource type="Resource" id="02_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_n6bv0")
+name = "Helmet 02 09"
+
+[sub_resource type="Resource" id="Resource_an24b"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_b2set"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_0rlqs"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_an24b"), SubResource("Resource_b2set")])
+
+[sub_resource type="Resource" id="02_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0rlqs")
+name = "Helmet 02 10"
+
+[sub_resource type="Resource" id="Resource_30g8r"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_jmk2q"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_jcwx6"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_30g8r"), SubResource("Resource_jmk2q")])
+
+[sub_resource type="Resource" id="02_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_jcwx6")
+name = "Helmet 02 11"
+
+[sub_resource type="Resource" id="Resource_t5c7f"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_kum85"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_umc1e"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_t5c7f"), SubResource("Resource_kum85")])
+
+[sub_resource type="Resource" id="02_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_umc1e")
+name = "Helmet 02 12"
+
+[sub_resource type="Resource" id="Resource_whit1"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_0m7cx"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_a53sq"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_whit1"), SubResource("Resource_0m7cx")])
+
+[sub_resource type="Resource" id="02_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_a53sq")
+name = "Helmet 02 13"
+
+[sub_resource type="Resource" id="Resource_dx6qu"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("23_62wtg")
+female_mesh = ExtResource("22_1850s")
+
+[sub_resource type="Resource" id="Resource_iqt2d"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_dx6qu")])
+
+[sub_resource type="Resource" id="02_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_iqt2d")
+name = "Helmet 02 none"
+
+[sub_resource type="Resource" id="Resource_c5v26"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_d4upy"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_c04vb"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_c5v26"), SubResource("Resource_d4upy")])
+
+[sub_resource type="Resource" id="03_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_c04vb")
+name = "Helmet 03 01"
+
+[sub_resource type="Resource" id="Resource_v175n"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_vfw6d"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_mb8w6"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_v175n"), SubResource("Resource_vfw6d")])
+
+[sub_resource type="Resource" id="03_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_mb8w6")
+name = "Helmet 03 02"
+
+[sub_resource type="Resource" id="Resource_a28kb"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_03h68"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_ascbp"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_a28kb"), SubResource("Resource_03h68")])
+
+[sub_resource type="Resource" id="03_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ascbp")
+name = "Helmet 03 03"
+
+[sub_resource type="Resource" id="Resource_en3ag"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_eygmy"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_b7u8n"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_en3ag"), SubResource("Resource_eygmy")])
+
+[sub_resource type="Resource" id="03_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_b7u8n")
+name = "Helmet 03 04"
+
+[sub_resource type="Resource" id="Resource_3lkuw"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_u006c"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_0mgle"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_3lkuw"), SubResource("Resource_u006c")])
+
+[sub_resource type="Resource" id="03_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0mgle")
+name = "Helmet 03 05"
+
+[sub_resource type="Resource" id="Resource_s3v7c"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_ab8ak"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_f5r2k"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_s3v7c"), SubResource("Resource_ab8ak")])
+
+[sub_resource type="Resource" id="03_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_f5r2k")
+name = "Helmet 03 06"
+
+[sub_resource type="Resource" id="Resource_gk822"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_vas0i"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_o0gox"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_gk822"), SubResource("Resource_vas0i")])
+
+[sub_resource type="Resource" id="03_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_o0gox")
+name = "Helmet 03 07"
+
+[sub_resource type="Resource" id="Resource_861y8"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_thyl8"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_q5i0g"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_861y8"), SubResource("Resource_thyl8")])
+
+[sub_resource type="Resource" id="03_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_q5i0g")
+name = "Helmet 03 08"
+
+[sub_resource type="Resource" id="Resource_mwen8"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_nmysi"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_x5sm0"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_mwen8"), SubResource("Resource_nmysi")])
+
+[sub_resource type="Resource" id="03_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_x5sm0")
+name = "Helmet 03 09"
+
+[sub_resource type="Resource" id="Resource_6hp6l"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_gx7vy"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_757fr"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_6hp6l"), SubResource("Resource_gx7vy")])
+
+[sub_resource type="Resource" id="03_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_757fr")
+name = "Helmet 03 10"
+
+[sub_resource type="Resource" id="Resource_eg8mi"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_m21qn"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_va2ki"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_eg8mi"), SubResource("Resource_m21qn")])
+
+[sub_resource type="Resource" id="03_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_va2ki")
+name = "Helmet 03 11"
+
+[sub_resource type="Resource" id="Resource_a8trv"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_dov0p"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_ordml"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_a8trv"), SubResource("Resource_dov0p")])
+
+[sub_resource type="Resource" id="03_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ordml")
+name = "Helmet 03 12"
+
+[sub_resource type="Resource" id="Resource_h0ru1"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_qqdcg"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_6pndu"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_h0ru1"), SubResource("Resource_qqdcg")])
+
+[sub_resource type="Resource" id="03_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_6pndu")
+name = "Helmet 03 13"
+
+[sub_resource type="Resource" id="Resource_gsxqj"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("25_r6vgq")
+female_mesh = ExtResource("24_nhj4v")
+
+[sub_resource type="Resource" id="Resource_h0x0j"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_gsxqj")])
+
+[sub_resource type="Resource" id="03_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_h0x0j")
+name = "Helmet 03 none"
+
+[sub_resource type="Resource" id="Resource_3wu33"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_0cov6"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_wjsin"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_3wu33"), SubResource("Resource_0cov6")])
+
+[sub_resource type="Resource" id="04_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_wjsin")
+name = "Helmet 04 01"
+
+[sub_resource type="Resource" id="Resource_0nv7x"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_eohh4"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_580pw"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_0nv7x"), SubResource("Resource_eohh4")])
+
+[sub_resource type="Resource" id="04_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_580pw")
+name = "Helmet 04 02"
+
+[sub_resource type="Resource" id="Resource_1ptc5"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_rx3f6"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_iclhl"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_1ptc5"), SubResource("Resource_rx3f6")])
+
+[sub_resource type="Resource" id="04_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_iclhl")
+name = "Helmet 04 03"
+
+[sub_resource type="Resource" id="Resource_s2u38"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_mlo88"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_qxnm2"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_s2u38"), SubResource("Resource_mlo88")])
+
+[sub_resource type="Resource" id="04_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_qxnm2")
+name = "Helmet 04 04"
+
+[sub_resource type="Resource" id="Resource_k0s6h"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_8fova"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_yfw3d"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_k0s6h"), SubResource("Resource_8fova")])
+
+[sub_resource type="Resource" id="04_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_yfw3d")
+name = "Helmet 04 05"
+
+[sub_resource type="Resource" id="Resource_wk12p"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_2axis"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_wcufu"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_wk12p"), SubResource("Resource_2axis")])
+
+[sub_resource type="Resource" id="04_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_wcufu")
+name = "Helmet 04 06"
+
+[sub_resource type="Resource" id="Resource_it8ls"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_vm4t5"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_mo6vo"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_it8ls"), SubResource("Resource_vm4t5")])
+
+[sub_resource type="Resource" id="04_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_mo6vo")
+name = "Helmet 04 07"
+
+[sub_resource type="Resource" id="Resource_moo0b"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_mwnwy"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_05mus"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_moo0b"), SubResource("Resource_mwnwy")])
+
+[sub_resource type="Resource" id="04_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_05mus")
+name = "Helmet 04 08"
+
+[sub_resource type="Resource" id="Resource_nf21x"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_6kdrb"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_5li3d"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_nf21x"), SubResource("Resource_6kdrb")])
+
+[sub_resource type="Resource" id="04_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_5li3d")
+name = "Helmet 04 09"
+
+[sub_resource type="Resource" id="Resource_4mn27"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_no82p"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_e1ici"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_4mn27"), SubResource("Resource_no82p")])
+
+[sub_resource type="Resource" id="04_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_e1ici")
+name = "Helmet 04 10"
+
+[sub_resource type="Resource" id="Resource_1kjif"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_ycyam"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_0x7cg"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_1kjif"), SubResource("Resource_ycyam")])
+
+[sub_resource type="Resource" id="04_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0x7cg")
+name = "Helmet 04 11"
+
+[sub_resource type="Resource" id="Resource_5bnhr"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_rq6so"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_c7e6u"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_5bnhr"), SubResource("Resource_rq6so")])
+
+[sub_resource type="Resource" id="04_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_c7e6u")
+name = "Helmet 04 12"
+
+[sub_resource type="Resource" id="Resource_yfh0t"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_6l2di"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_1lbcn"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_yfh0t"), SubResource("Resource_6l2di")])
+
+[sub_resource type="Resource" id="04_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_1lbcn")
+name = "Helmet 04 13"
+
+[sub_resource type="Resource" id="Resource_cwsmd"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("27_1o7mc")
+female_mesh = ExtResource("26_d5d0a")
+
+[sub_resource type="Resource" id="Resource_b1dq7"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_cwsmd")])
+
+[sub_resource type="Resource" id="04_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_b1dq7")
+name = "Helmet 04 none"
+
+[sub_resource type="Resource" id="Resource_4e3q6"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_jn6sg"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_ec2ln"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_4e3q6"), SubResource("Resource_jn6sg")])
+
+[sub_resource type="Resource" id="05_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ec2ln")
+name = "Helmet 05 01"
+
+[sub_resource type="Resource" id="Resource_puro4"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_tvblm"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_vfsmp"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_puro4"), SubResource("Resource_tvblm")])
+
+[sub_resource type="Resource" id="05_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_vfsmp")
+name = "Helmet 05 02"
+
+[sub_resource type="Resource" id="Resource_gnbin"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_rf6lm"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_5bcnp"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_gnbin"), SubResource("Resource_rf6lm")])
+
+[sub_resource type="Resource" id="05_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_5bcnp")
+name = "Helmet 05 03"
+
+[sub_resource type="Resource" id="Resource_olu54"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_j65fo"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_bgm5f"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_olu54"), SubResource("Resource_j65fo")])
+
+[sub_resource type="Resource" id="05_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_bgm5f")
+name = "Helmet 05 04"
+
+[sub_resource type="Resource" id="Resource_amcuq"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_ddg23"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_hp24s"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_amcuq"), SubResource("Resource_ddg23")])
+
+[sub_resource type="Resource" id="05_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_hp24s")
+name = "Helmet 05 05"
+
+[sub_resource type="Resource" id="Resource_kuhej"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_ksyj5"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_jwahc"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_kuhej"), SubResource("Resource_ksyj5")])
+
+[sub_resource type="Resource" id="05_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_jwahc")
+name = "Helmet 05 06"
+
+[sub_resource type="Resource" id="Resource_uc4wc"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_ervd0"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_fbyh3"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_uc4wc"), SubResource("Resource_ervd0")])
+
+[sub_resource type="Resource" id="05_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_fbyh3")
+name = "Helmet 05 07"
+
+[sub_resource type="Resource" id="Resource_eqywl"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_g28d8"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_v0idr"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_eqywl"), SubResource("Resource_g28d8")])
+
+[sub_resource type="Resource" id="05_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_v0idr")
+name = "Helmet 05 08"
+
+[sub_resource type="Resource" id="Resource_01nhn"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_gxmpr"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_a70rf"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_01nhn"), SubResource("Resource_gxmpr")])
+
+[sub_resource type="Resource" id="05_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_a70rf")
+name = "Helmet 05 09"
+
+[sub_resource type="Resource" id="Resource_xcq2d"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_twy33"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_7fstf"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_xcq2d"), SubResource("Resource_twy33")])
+
+[sub_resource type="Resource" id="05_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_7fstf")
+name = "Helmet 05 10"
+
+[sub_resource type="Resource" id="Resource_41ja3"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_d7e0v"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_4biq7"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_41ja3"), SubResource("Resource_d7e0v")])
+
+[sub_resource type="Resource" id="05_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_4biq7")
+name = "Helmet 05 11"
+
+[sub_resource type="Resource" id="Resource_4ur26"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_a0eg2"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_n4cbt"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_4ur26"), SubResource("Resource_a0eg2")])
+
+[sub_resource type="Resource" id="05_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_n4cbt")
+name = "Helmet 05 12"
+
+[sub_resource type="Resource" id="Resource_o2cex"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_1wh7f"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_32h63"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_o2cex"), SubResource("Resource_1wh7f")])
+
+[sub_resource type="Resource" id="05_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_32h63")
+name = "Helmet 05 13"
+
+[sub_resource type="Resource" id="Resource_wgmxg"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("29_072jo")
+female_mesh = ExtResource("28_xpohe")
+
+[sub_resource type="Resource" id="Resource_22e13"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_wgmxg")])
+
+[sub_resource type="Resource" id="05_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_22e13")
+name = "Helmet 05 none"
+
+[sub_resource type="Resource" id="Resource_haau8"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_kcsja"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_36wtd"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_haau8"), SubResource("Resource_kcsja")])
+
+[sub_resource type="Resource" id="06_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_36wtd")
+name = "Helmet 06 01"
+
+[sub_resource type="Resource" id="Resource_dct61"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_osdpx"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_pkq6v"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_dct61"), SubResource("Resource_osdpx")])
+
+[sub_resource type="Resource" id="06_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_pkq6v")
+name = "Helmet 06 02"
+
+[sub_resource type="Resource" id="Resource_8daip"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_kp0x1"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_n2vc5"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_8daip"), SubResource("Resource_kp0x1")])
+
+[sub_resource type="Resource" id="06_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_n2vc5")
+name = "Helmet 06 03"
+
+[sub_resource type="Resource" id="Resource_4pk8c"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_hkahd"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_hhbjl"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_4pk8c"), SubResource("Resource_hkahd")])
+
+[sub_resource type="Resource" id="06_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_hhbjl")
+name = "Helmet 06 04"
+
+[sub_resource type="Resource" id="Resource_toqq8"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_2dlto"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_0vdpd"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_toqq8"), SubResource("Resource_2dlto")])
+
+[sub_resource type="Resource" id="06_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0vdpd")
+name = "Helmet 06 05"
+
+[sub_resource type="Resource" id="Resource_8ij7n"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_clnyq"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_u8egy"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_8ij7n"), SubResource("Resource_clnyq")])
+
+[sub_resource type="Resource" id="06_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_u8egy")
+name = "Helmet 06 06"
+
+[sub_resource type="Resource" id="Resource_skt4u"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_rnx7d"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_1qv8b"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_skt4u"), SubResource("Resource_rnx7d")])
+
+[sub_resource type="Resource" id="06_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_1qv8b")
+name = "Helmet 06 07"
+
+[sub_resource type="Resource" id="Resource_jpbq1"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_igsab"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_wblmm"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_jpbq1"), SubResource("Resource_igsab")])
+
+[sub_resource type="Resource" id="06_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_wblmm")
+name = "Helmet 06 08"
+
+[sub_resource type="Resource" id="Resource_6ew4q"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_rk1q7"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_idhsc"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_6ew4q"), SubResource("Resource_rk1q7")])
+
+[sub_resource type="Resource" id="06_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_idhsc")
+name = "Helmet 06 09"
+
+[sub_resource type="Resource" id="Resource_36cf2"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_0wajl"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_abf4i"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_36cf2"), SubResource("Resource_0wajl")])
+
+[sub_resource type="Resource" id="06_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_abf4i")
+name = "Helmet 06 10"
+
+[sub_resource type="Resource" id="Resource_jxb2a"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_p617q"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_0hrcv"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_jxb2a"), SubResource("Resource_p617q")])
+
+[sub_resource type="Resource" id="06_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0hrcv")
+name = "Helmet 06 11"
+
+[sub_resource type="Resource" id="Resource_58yfb"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_652l0"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_0ga7f"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_58yfb"), SubResource("Resource_652l0")])
+
+[sub_resource type="Resource" id="06_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0ga7f")
+name = "Helmet 06 12"
+
+[sub_resource type="Resource" id="Resource_huavo"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_brbgl"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_hxopy"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_huavo"), SubResource("Resource_brbgl")])
+
+[sub_resource type="Resource" id="06_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_hxopy")
+name = "Helmet 06 13"
+
+[sub_resource type="Resource" id="Resource_wevs7"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("31_p3g77")
+female_mesh = ExtResource("30_vnuym")
+
+[sub_resource type="Resource" id="Resource_42bfv"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_wevs7")])
+
+[sub_resource type="Resource" id="06_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_42bfv")
+name = "Helmet 06 none"
+
+[sub_resource type="Resource" id="Resource_ht8hb"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_mp047"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_xv7dv"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_ht8hb"), SubResource("Resource_mp047")])
+
+[sub_resource type="Resource" id="07_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_xv7dv")
+name = "Helmet 07 01"
+
+[sub_resource type="Resource" id="Resource_podt8"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_7k1ph"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_qygso"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_podt8"), SubResource("Resource_7k1ph")])
+
+[sub_resource type="Resource" id="07_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_qygso")
+name = "Helmet 07 02"
+
+[sub_resource type="Resource" id="Resource_dm5jl"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_ex35g"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_s8vf6"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_dm5jl"), SubResource("Resource_ex35g")])
+
+[sub_resource type="Resource" id="07_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_s8vf6")
+name = "Helmet 07 03"
+
+[sub_resource type="Resource" id="Resource_duwod"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_nrb2l"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_h5pj8"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_duwod"), SubResource("Resource_nrb2l")])
+
+[sub_resource type="Resource" id="07_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_h5pj8")
+name = "Helmet 07 04"
+
+[sub_resource type="Resource" id="Resource_miupf"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_1rrpw"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_p31k5"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_miupf"), SubResource("Resource_1rrpw")])
+
+[sub_resource type="Resource" id="07_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_p31k5")
+name = "Helmet 07 05"
+
+[sub_resource type="Resource" id="Resource_jd7i0"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_854x6"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_ejp2m"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_jd7i0"), SubResource("Resource_854x6")])
+
+[sub_resource type="Resource" id="07_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ejp2m")
+name = "Helmet 07 06"
+
+[sub_resource type="Resource" id="Resource_dcm4v"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_5lrej"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_cgtsh"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_dcm4v"), SubResource("Resource_5lrej")])
+
+[sub_resource type="Resource" id="07_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_cgtsh")
+name = "Helmet 07 07"
+
+[sub_resource type="Resource" id="Resource_st3x3"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_8aqd3"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_byu8t"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_st3x3"), SubResource("Resource_8aqd3")])
+
+[sub_resource type="Resource" id="07_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_byu8t")
+name = "Helmet 07 08"
+
+[sub_resource type="Resource" id="Resource_ioamb"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_xmbh8"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_0rage"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_ioamb"), SubResource("Resource_xmbh8")])
+
+[sub_resource type="Resource" id="07_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0rage")
+name = "Helmet 07 09"
+
+[sub_resource type="Resource" id="Resource_e1whk"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_agllo"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_b0vla"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_e1whk"), SubResource("Resource_agllo")])
+
+[sub_resource type="Resource" id="07_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_b0vla")
+name = "Helmet 07 10"
+
+[sub_resource type="Resource" id="Resource_hrpix"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_hgk14"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_42onv"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_hrpix"), SubResource("Resource_hgk14")])
+
+[sub_resource type="Resource" id="07_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_42onv")
+name = "Helmet 07 11"
+
+[sub_resource type="Resource" id="Resource_6jeo6"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_4hp2r"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_a1q6c"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_6jeo6"), SubResource("Resource_4hp2r")])
+
+[sub_resource type="Resource" id="07_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_a1q6c")
+name = "Helmet 07 12"
+
+[sub_resource type="Resource" id="Resource_wx8vg"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_bg5iy"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_el7sg"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_wx8vg"), SubResource("Resource_bg5iy")])
+
+[sub_resource type="Resource" id="07_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_el7sg")
+name = "Helmet 07 13"
+
+[sub_resource type="Resource" id="Resource_qm0lo"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("33_bb6ks")
+female_mesh = ExtResource("32_44h5j")
+
+[sub_resource type="Resource" id="Resource_bpotd"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_qm0lo")])
+
+[sub_resource type="Resource" id="07_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_bpotd")
+name = "Helmet 07 none"
+
+[sub_resource type="Resource" id="Resource_c7aal"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_p2fx2"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_cp02w"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_c7aal"), SubResource("Resource_p2fx2")])
+
+[sub_resource type="Resource" id="08_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_cp02w")
+name = "Helmet 08 01"
+
+[sub_resource type="Resource" id="Resource_qi2j3"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_nxnf2"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_h751t"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_qi2j3"), SubResource("Resource_nxnf2")])
+
+[sub_resource type="Resource" id="08_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_h751t")
+name = "Helmet 08 02"
+
+[sub_resource type="Resource" id="Resource_sh7ex"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_28nsh"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_844wy"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_sh7ex"), SubResource("Resource_28nsh")])
+
+[sub_resource type="Resource" id="08_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_844wy")
+name = "Helmet 08 03"
+
+[sub_resource type="Resource" id="Resource_l7406"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_a37dp"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_kfpad"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_l7406"), SubResource("Resource_a37dp")])
+
+[sub_resource type="Resource" id="08_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_kfpad")
+name = "Helmet 08 04"
+
+[sub_resource type="Resource" id="Resource_iisr3"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_61dy7"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_q0gpq"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_iisr3"), SubResource("Resource_61dy7")])
+
+[sub_resource type="Resource" id="08_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_q0gpq")
+name = "Helmet 08 05"
+
+[sub_resource type="Resource" id="Resource_kfwou"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_ongei"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_x7xuh"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_kfwou"), SubResource("Resource_ongei")])
+
+[sub_resource type="Resource" id="08_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_x7xuh")
+name = "Helmet 08 06"
+
+[sub_resource type="Resource" id="Resource_21kwp"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_y0bqr"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_2vljs"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_21kwp"), SubResource("Resource_y0bqr")])
+
+[sub_resource type="Resource" id="08_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_2vljs")
+name = "Helmet 08 07"
+
+[sub_resource type="Resource" id="Resource_mjcnd"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_3fh6a"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_5k7mn"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_mjcnd"), SubResource("Resource_3fh6a")])
+
+[sub_resource type="Resource" id="08_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_5k7mn")
+name = "Helmet 08 08"
+
+[sub_resource type="Resource" id="Resource_6cl4u"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_hjxtl"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_tie0w"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_6cl4u"), SubResource("Resource_hjxtl")])
+
+[sub_resource type="Resource" id="08_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_tie0w")
+name = "Helmet 08 09"
+
+[sub_resource type="Resource" id="Resource_rm63g"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_vhpm7"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_gpqt2"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_rm63g"), SubResource("Resource_vhpm7")])
+
+[sub_resource type="Resource" id="08_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_gpqt2")
+name = "Helmet 08 10"
+
+[sub_resource type="Resource" id="Resource_lvifj"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_n0w1v"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_1u2rh"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_lvifj"), SubResource("Resource_n0w1v")])
+
+[sub_resource type="Resource" id="08_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_1u2rh")
+name = "Helmet 08 11"
+
+[sub_resource type="Resource" id="Resource_qgx0q"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_7w48a"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_nd23m"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_qgx0q"), SubResource("Resource_7w48a")])
+
+[sub_resource type="Resource" id="08_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_nd23m")
+name = "Helmet 08 12"
+
+[sub_resource type="Resource" id="Resource_n2jgv"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_4r1n0"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_chjkq"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_n2jgv"), SubResource("Resource_4r1n0")])
+
+[sub_resource type="Resource" id="08_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_chjkq")
+name = "Helmet 08 13"
+
+[sub_resource type="Resource" id="Resource_pq25o"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("35_77fmh")
+female_mesh = ExtResource("34_crybk")
+
+[sub_resource type="Resource" id="Resource_33uyk"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_pq25o")])
+
+[sub_resource type="Resource" id="08_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_33uyk")
+name = "Helmet 08 none"
+
+[sub_resource type="Resource" id="Resource_qaebj"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_213s6"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_f1byi"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_qaebj"), SubResource("Resource_213s6")])
+
+[sub_resource type="Resource" id="09_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_f1byi")
+name = "Helmet 09 01"
+
+[sub_resource type="Resource" id="Resource_0sruq"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_tctl2"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_efjmb"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_0sruq"), SubResource("Resource_tctl2")])
+
+[sub_resource type="Resource" id="09_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_efjmb")
+name = "Helmet 09 02"
+
+[sub_resource type="Resource" id="Resource_klt2r"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_mkawo"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_ocdvs"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_klt2r"), SubResource("Resource_mkawo")])
+
+[sub_resource type="Resource" id="09_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ocdvs")
+name = "Helmet 09 03"
+
+[sub_resource type="Resource" id="Resource_h3srn"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_34tut"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_s23j2"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_h3srn"), SubResource("Resource_34tut")])
+
+[sub_resource type="Resource" id="09_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_s23j2")
+name = "Helmet 09 04"
+
+[sub_resource type="Resource" id="Resource_4s36u"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_55bbf"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_ad63c"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_4s36u"), SubResource("Resource_55bbf")])
+
+[sub_resource type="Resource" id="09_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ad63c")
+name = "Helmet 09 05"
+
+[sub_resource type="Resource" id="Resource_wranv"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_5imyk"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_a8d5f"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_wranv"), SubResource("Resource_5imyk")])
+
+[sub_resource type="Resource" id="09_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_a8d5f")
+name = "Helmet 09 06"
+
+[sub_resource type="Resource" id="Resource_qc05e"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_tgmww"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_bvx8s"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_qc05e"), SubResource("Resource_tgmww")])
+
+[sub_resource type="Resource" id="09_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_bvx8s")
+name = "Helmet 09 07"
+
+[sub_resource type="Resource" id="Resource_ywf1q"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_ts0bx"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_lousl"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_ywf1q"), SubResource("Resource_ts0bx")])
+
+[sub_resource type="Resource" id="09_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_lousl")
+name = "Helmet 09 08"
+
+[sub_resource type="Resource" id="Resource_o0nxp"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_brtfq"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_nvhea"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_o0nxp"), SubResource("Resource_brtfq")])
+
+[sub_resource type="Resource" id="09_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_nvhea")
+name = "Helmet 09 09"
+
+[sub_resource type="Resource" id="Resource_oc2q1"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_wyeme"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_ir4xr"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_oc2q1"), SubResource("Resource_wyeme")])
+
+[sub_resource type="Resource" id="09_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ir4xr")
+name = "Helmet 09 10"
+
+[sub_resource type="Resource" id="Resource_vu206"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_73bhv"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_6842e"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_vu206"), SubResource("Resource_73bhv")])
+
+[sub_resource type="Resource" id="09_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_6842e")
+name = "Helmet 09 11"
+
+[sub_resource type="Resource" id="Resource_1irvy"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_ptts6"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_alj5k"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_1irvy"), SubResource("Resource_ptts6")])
+
+[sub_resource type="Resource" id="09_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_alj5k")
+name = "Helmet 09 12"
+
+[sub_resource type="Resource" id="Resource_ih0go"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_rv53o"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_q8ise"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_ih0go"), SubResource("Resource_rv53o")])
+
+[sub_resource type="Resource" id="09_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_q8ise")
+name = "Helmet 09 13"
+
+[sub_resource type="Resource" id="Resource_574l7"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("37_fq48k")
+female_mesh = ExtResource("36_kehya")
+
+[sub_resource type="Resource" id="Resource_r84ky"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_574l7")])
+
+[sub_resource type="Resource" id="09_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_r84ky")
+name = "Helmet 09 none"
+
+[sub_resource type="Resource" id="Resource_vmudg"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_n7x2x"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_7fckg"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_vmudg"), SubResource("Resource_n7x2x")])
+
+[sub_resource type="Resource" id="10_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_7fckg")
+name = "Helmet 10 01"
+
+[sub_resource type="Resource" id="Resource_xodqi"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_s80im"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_rg1sc"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_xodqi"), SubResource("Resource_s80im")])
+
+[sub_resource type="Resource" id="10_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_rg1sc")
+name = "Helmet 10 02"
+
+[sub_resource type="Resource" id="Resource_7838d"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_0m03i"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_ib3w2"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_7838d"), SubResource("Resource_0m03i")])
+
+[sub_resource type="Resource" id="10_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ib3w2")
+name = "Helmet 10 03"
+
+[sub_resource type="Resource" id="Resource_00wet"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_v4ins"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_qjq8t"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_00wet"), SubResource("Resource_v4ins")])
+
+[sub_resource type="Resource" id="10_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_qjq8t")
+name = "Helmet 10 04"
+
+[sub_resource type="Resource" id="Resource_t3ob1"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_kh8bg"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_1ap45"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_t3ob1"), SubResource("Resource_kh8bg")])
+
+[sub_resource type="Resource" id="10_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_1ap45")
+name = "Helmet 10 05"
+
+[sub_resource type="Resource" id="Resource_5ibpe"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_f111o"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_pwdsu"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_5ibpe"), SubResource("Resource_f111o")])
+
+[sub_resource type="Resource" id="10_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_pwdsu")
+name = "Helmet 10 06"
+
+[sub_resource type="Resource" id="Resource_p804k"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_775yq"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_ju0bb"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_p804k"), SubResource("Resource_775yq")])
+
+[sub_resource type="Resource" id="10_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ju0bb")
+name = "Helmet 10 07"
+
+[sub_resource type="Resource" id="Resource_eq0sf"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_hgbjb"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_ux8hl"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_eq0sf"), SubResource("Resource_hgbjb")])
+
+[sub_resource type="Resource" id="10_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ux8hl")
+name = "Helmet 10 08"
+
+[sub_resource type="Resource" id="Resource_ul8sk"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_j7mqh"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_6rb6v"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_ul8sk"), SubResource("Resource_j7mqh")])
+
+[sub_resource type="Resource" id="10_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_6rb6v")
+name = "Helmet 10 09"
+
+[sub_resource type="Resource" id="Resource_jwr8q"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_xfkb2"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_td31y"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_jwr8q"), SubResource("Resource_xfkb2")])
+
+[sub_resource type="Resource" id="10_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_td31y")
+name = "Helmet 10 10"
+
+[sub_resource type="Resource" id="Resource_cpsds"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_5b7c8"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_n833n"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_cpsds"), SubResource("Resource_5b7c8")])
+
+[sub_resource type="Resource" id="10_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_n833n")
+name = "Helmet 10 11"
+
+[sub_resource type="Resource" id="Resource_mx2a6"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_elfaw"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_4y8ld"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_mx2a6"), SubResource("Resource_elfaw")])
+
+[sub_resource type="Resource" id="10_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_4y8ld")
+name = "Helmet 10 12"
+
+[sub_resource type="Resource" id="Resource_1y8ol"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_r5iwl"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_a8uxr"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_1y8ol"), SubResource("Resource_r5iwl")])
+
+[sub_resource type="Resource" id="10_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_a8uxr")
+name = "Helmet 10 13"
+
+[sub_resource type="Resource" id="Resource_6ca6v"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("39_r7wsa")
+female_mesh = ExtResource("38_034vd")
+
+[sub_resource type="Resource" id="Resource_aknu1"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_6ca6v")])
+
+[sub_resource type="Resource" id="10_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_aknu1")
+name = "Helmet 10 none"
+
+[sub_resource type="Resource" id="Resource_6vkch"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_i4ke5"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_aqbon"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_6vkch"), SubResource("Resource_i4ke5")])
+
+[sub_resource type="Resource" id="11_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_aqbon")
+name = "Helmet 11 01"
+
+[sub_resource type="Resource" id="Resource_du45p"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_o1g87"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_jp2e6"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_du45p"), SubResource("Resource_o1g87")])
+
+[sub_resource type="Resource" id="11_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_jp2e6")
+name = "Helmet 11 02"
+
+[sub_resource type="Resource" id="Resource_mnc3g"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_wkrbc"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_lql14"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_mnc3g"), SubResource("Resource_wkrbc")])
+
+[sub_resource type="Resource" id="11_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_lql14")
+name = "Helmet 11 03"
+
+[sub_resource type="Resource" id="Resource_vbfe6"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_dwees"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_0n8a0"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_vbfe6"), SubResource("Resource_dwees")])
+
+[sub_resource type="Resource" id="11_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0n8a0")
+name = "Helmet 11 04"
+
+[sub_resource type="Resource" id="Resource_1ycn7"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_ux25p"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_dpniv"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_1ycn7"), SubResource("Resource_ux25p")])
+
+[sub_resource type="Resource" id="11_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_dpniv")
+name = "Helmet 11 05"
+
+[sub_resource type="Resource" id="Resource_sctmy"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_vu5ru"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_v7cjs"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_sctmy"), SubResource("Resource_vu5ru")])
+
+[sub_resource type="Resource" id="11_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_v7cjs")
+name = "Helmet 11 06"
+
+[sub_resource type="Resource" id="Resource_js53u"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_4818j"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_rqqfl"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_js53u"), SubResource("Resource_4818j")])
+
+[sub_resource type="Resource" id="11_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_rqqfl")
+name = "Helmet 11 07"
+
+[sub_resource type="Resource" id="Resource_qicp4"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_mvvl6"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_40tdg"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_qicp4"), SubResource("Resource_mvvl6")])
+
+[sub_resource type="Resource" id="11_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_40tdg")
+name = "Helmet 11 08"
+
+[sub_resource type="Resource" id="Resource_pwrdo"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_cufa6"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_djqto"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_pwrdo"), SubResource("Resource_cufa6")])
+
+[sub_resource type="Resource" id="11_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_djqto")
+name = "Helmet 11 09"
+
+[sub_resource type="Resource" id="Resource_gu5w6"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_ndhm5"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_fh5g2"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_gu5w6"), SubResource("Resource_ndhm5")])
+
+[sub_resource type="Resource" id="11_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_fh5g2")
+name = "Helmet 11 10"
+
+[sub_resource type="Resource" id="Resource_jnlrf"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_r2glg"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_7ww0j"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_jnlrf"), SubResource("Resource_r2glg")])
+
+[sub_resource type="Resource" id="11_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_7ww0j")
+name = "Helmet 11 11"
+
+[sub_resource type="Resource" id="Resource_1xdj4"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_wwbto"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_w8xxo"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_1xdj4"), SubResource("Resource_wwbto")])
+
+[sub_resource type="Resource" id="11_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_w8xxo")
+name = "Helmet 11 12"
+
+[sub_resource type="Resource" id="Resource_oibt7"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_cmlqk"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_a3ba7"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_oibt7"), SubResource("Resource_cmlqk")])
+
+[sub_resource type="Resource" id="11_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_a3ba7")
+name = "Helmet 11 13"
+
+[sub_resource type="Resource" id="Resource_v4wdg"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("41_3pafv")
+female_mesh = ExtResource("40_y5wc5")
+
+[sub_resource type="Resource" id="Resource_qkcqh"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_v4wdg")])
+
+[sub_resource type="Resource" id="11_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_qkcqh")
+name = "Helmet 11 none"
+
+[sub_resource type="Resource" id="Resource_wmh4u"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_gpklm"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_h6fo5"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_wmh4u"), SubResource("Resource_gpklm")])
+
+[sub_resource type="Resource" id="12_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_h6fo5")
+name = "Helmet 12 01"
+
+[sub_resource type="Resource" id="Resource_2mips"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_j1s1c"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_ef8t3"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_2mips"), SubResource("Resource_j1s1c")])
+
+[sub_resource type="Resource" id="12_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ef8t3")
+name = "Helmet 12 02"
+
+[sub_resource type="Resource" id="Resource_hl2cn"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_sx876"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_ate6w"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_hl2cn"), SubResource("Resource_sx876")])
+
+[sub_resource type="Resource" id="12_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ate6w")
+name = "Helmet 12 03"
+
+[sub_resource type="Resource" id="Resource_vckfx"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_6cp3g"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_t2a6b"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_vckfx"), SubResource("Resource_6cp3g")])
+
+[sub_resource type="Resource" id="12_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_t2a6b")
+name = "Helmet 12 04"
+
+[sub_resource type="Resource" id="Resource_gsrsy"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_lku6c"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_wa7sg"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_gsrsy"), SubResource("Resource_lku6c")])
+
+[sub_resource type="Resource" id="12_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_wa7sg")
+name = "Helmet 12 05"
+
+[sub_resource type="Resource" id="Resource_qhx4s"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_xkng1"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_1gube"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_qhx4s"), SubResource("Resource_xkng1")])
+
+[sub_resource type="Resource" id="12_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_1gube")
+name = "Helmet 12 06"
+
+[sub_resource type="Resource" id="Resource_om6ks"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_3nnx0"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_2c5n3"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_om6ks"), SubResource("Resource_3nnx0")])
+
+[sub_resource type="Resource" id="12_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_2c5n3")
+name = "Helmet 12 07"
+
+[sub_resource type="Resource" id="Resource_5ahxu"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_jqdys"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_67vi3"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_5ahxu"), SubResource("Resource_jqdys")])
+
+[sub_resource type="Resource" id="12_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_67vi3")
+name = "Helmet 12 08"
+
+[sub_resource type="Resource" id="Resource_fhc53"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_fgnvs"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_21uu3"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_fhc53"), SubResource("Resource_fgnvs")])
+
+[sub_resource type="Resource" id="12_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_21uu3")
+name = "Helmet 12 09"
+
+[sub_resource type="Resource" id="Resource_4jgjv"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_kqv4x"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_umspw"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_4jgjv"), SubResource("Resource_kqv4x")])
+
+[sub_resource type="Resource" id="12_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_umspw")
+name = "Helmet 12 10"
+
+[sub_resource type="Resource" id="Resource_p0c8r"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_je2vi"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_xf1y7"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_p0c8r"), SubResource("Resource_je2vi")])
+
+[sub_resource type="Resource" id="12_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_xf1y7")
+name = "Helmet 12 11"
+
+[sub_resource type="Resource" id="Resource_tpkro"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_vcjhh"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_v054v"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_tpkro"), SubResource("Resource_vcjhh")])
+
+[sub_resource type="Resource" id="12_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_v054v")
+name = "Helmet 12 12"
+
+[sub_resource type="Resource" id="Resource_8ityf"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_gbe04"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_1p26d"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_8ityf"), SubResource("Resource_gbe04")])
+
+[sub_resource type="Resource" id="12_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_1p26d")
+name = "Helmet 12 13"
+
+[sub_resource type="Resource" id="Resource_qt505"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("43_4lo7j")
+female_mesh = ExtResource("42_tispi")
+
+[sub_resource type="Resource" id="Resource_7oony"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_qt505")])
+
+[sub_resource type="Resource" id="12_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_7oony")
+name = "Helmet 12 none"
+
+[sub_resource type="Resource" id="Resource_eal5h"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_7a2v7"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_34tta"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_eal5h"), SubResource("Resource_7a2v7")])
+
+[sub_resource type="Resource" id="13_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_34tta")
+name = "Helmet 13 01"
+
+[sub_resource type="Resource" id="Resource_1ta6a"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_35fsq"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_udr04"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_1ta6a"), SubResource("Resource_35fsq")])
+
+[sub_resource type="Resource" id="13_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_udr04")
+name = "Helmet 13 02"
+
+[sub_resource type="Resource" id="Resource_0ift3"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_6o3mn"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_em24q"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_0ift3"), SubResource("Resource_6o3mn")])
+
+[sub_resource type="Resource" id="13_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_em24q")
+name = "Helmet 13 03"
+
+[sub_resource type="Resource" id="Resource_wj846"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_r5ayy"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_pg4vc"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_wj846"), SubResource("Resource_r5ayy")])
+
+[sub_resource type="Resource" id="13_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_pg4vc")
+name = "Helmet 13 04"
+
+[sub_resource type="Resource" id="Resource_c7546"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_yfe2y"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_06mwf"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_c7546"), SubResource("Resource_yfe2y")])
+
+[sub_resource type="Resource" id="13_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_06mwf")
+name = "Helmet 13 05"
+
+[sub_resource type="Resource" id="Resource_lpwa0"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_u3188"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_6iyov"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_lpwa0"), SubResource("Resource_u3188")])
+
+[sub_resource type="Resource" id="13_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_6iyov")
+name = "Helmet 13 06"
+
+[sub_resource type="Resource" id="Resource_stfqi"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_w7fxk"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_0j48u"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_stfqi"), SubResource("Resource_w7fxk")])
+
+[sub_resource type="Resource" id="13_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_0j48u")
+name = "Helmet 13 07"
+
+[sub_resource type="Resource" id="Resource_4iy01"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_lbwta"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_ix1gf"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_4iy01"), SubResource("Resource_lbwta")])
+
+[sub_resource type="Resource" id="13_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ix1gf")
+name = "Helmet 13 08"
+
+[sub_resource type="Resource" id="Resource_5h3lq"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_v7wqs"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_jvdnl"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_5h3lq"), SubResource("Resource_v7wqs")])
+
+[sub_resource type="Resource" id="13_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_jvdnl")
+name = "Helmet 13 09"
+
+[sub_resource type="Resource" id="Resource_hhv2s"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_gyc8m"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_l1ayt"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_hhv2s"), SubResource("Resource_gyc8m")])
+
+[sub_resource type="Resource" id="13_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_l1ayt")
+name = "Helmet 13 10"
+
+[sub_resource type="Resource" id="Resource_2xo6g"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_vaoto"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_josd8"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_2xo6g"), SubResource("Resource_vaoto")])
+
+[sub_resource type="Resource" id="13_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_josd8")
+name = "Helmet 13 11"
+
+[sub_resource type="Resource" id="Resource_7j33w"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_t7mb7"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_ka6iv"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_7j33w"), SubResource("Resource_t7mb7")])
+
+[sub_resource type="Resource" id="13_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ka6iv")
+name = "Helmet 13 12"
+
+[sub_resource type="Resource" id="Resource_rfk0x"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_phy6o"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_nfhuy"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_rfk0x"), SubResource("Resource_phy6o")])
+
+[sub_resource type="Resource" id="13_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_nfhuy")
+name = "Helmet 13 13"
+
+[sub_resource type="Resource" id="Resource_p4tke"]
+script = ExtResource("4_xbdg6")
+part = 8
+male_mesh = ExtResource("45_o3g13")
+female_mesh = ExtResource("44_ygbd0")
+
+[sub_resource type="Resource" id="Resource_q8w4c"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_p4tke")])
+
+[sub_resource type="Resource" id="13_none"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_q8w4c")
+name = "Helmet 13 none"
+
+[sub_resource type="Resource" id="Resource_56pmt"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("7_yxc7m")
+
+[sub_resource type="Resource" id="Resource_6mbao"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_56pmt")])
+
+[sub_resource type="Resource" id="none_01"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_6mbao")
+name = "Helmet none 01"
+
+[sub_resource type="Resource" id="Resource_sojbs"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("10_tbpqa")
+
+[sub_resource type="Resource" id="Resource_7url8"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_sojbs")])
+
+[sub_resource type="Resource" id="none_02"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_7url8")
+name = "Helmet none 02"
+
+[sub_resource type="Resource" id="Resource_nefd2"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("11_ss3v6")
+
+[sub_resource type="Resource" id="Resource_fwps2"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_nefd2")])
+
+[sub_resource type="Resource" id="none_03"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_fwps2")
+name = "Helmet none 03"
+
+[sub_resource type="Resource" id="Resource_uhkwv"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("12_n4e78")
+
+[sub_resource type="Resource" id="Resource_mfktc"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_uhkwv")])
+
+[sub_resource type="Resource" id="none_04"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_mfktc")
+name = "Helmet none 04"
+
+[sub_resource type="Resource" id="Resource_1mfqs"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("13_3y15k")
+
+[sub_resource type="Resource" id="Resource_5uj7p"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_1mfqs")])
+
+[sub_resource type="Resource" id="none_05"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_5uj7p")
+name = "Helmet none 05"
+
+[sub_resource type="Resource" id="Resource_o8q7o"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("14_mn3sn")
+
+[sub_resource type="Resource" id="Resource_cx3gv"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_o8q7o")])
+
+[sub_resource type="Resource" id="none_06"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_cx3gv")
+name = "Helmet none 06"
+
+[sub_resource type="Resource" id="Resource_sis65"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("15_knrcv")
+
+[sub_resource type="Resource" id="Resource_34nm4"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_sis65")])
+
+[sub_resource type="Resource" id="none_07"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_34nm4")
+name = "Helmet none 07"
+
+[sub_resource type="Resource" id="Resource_dyaiw"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("16_pj4gx")
+
+[sub_resource type="Resource" id="Resource_wyuj8"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_dyaiw")])
+
+[sub_resource type="Resource" id="none_08"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_wyuj8")
+name = "Helmet none 08"
+
+[sub_resource type="Resource" id="Resource_r3fmd"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("17_mqtx3")
+
+[sub_resource type="Resource" id="Resource_mgcrd"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_r3fmd")])
+
+[sub_resource type="Resource" id="none_09"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_mgcrd")
+name = "Helmet none 09"
+
+[sub_resource type="Resource" id="Resource_mvf3d"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("18_kooq3")
+
+[sub_resource type="Resource" id="Resource_kl4yc"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_mvf3d")])
+
+[sub_resource type="Resource" id="none_10"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_kl4yc")
+name = "Helmet none 10"
+
+[sub_resource type="Resource" id="Resource_wbfre"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("19_uk7sx")
+
+[sub_resource type="Resource" id="Resource_45pt5"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_wbfre")])
+
+[sub_resource type="Resource" id="none_11"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_45pt5")
+name = "Helmet none 11"
+
+[sub_resource type="Resource" id="Resource_h85w7"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("20_8n5e8")
+
+[sub_resource type="Resource" id="Resource_lkxru"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_h85w7")])
+
+[sub_resource type="Resource" id="none_12"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_lkxru")
+name = "Helmet none 12"
+
+[sub_resource type="Resource" id="Resource_sl1i0"]
+script = ExtResource("4_xbdg6")
+part = 22
+male_mesh = ExtResource("21_i5bj8")
+
+[sub_resource type="Resource" id="Resource_ml0lg"]
+script = ExtResource("8_dvoll")
+parts = Array[ExtResource("4_xbdg6")]([SubResource("Resource_sl1i0")])
+
+[sub_resource type="Resource" id="none_13"]
+script = ExtResource("1_6mbxj")
+type = ExtResource("9_2yfy5")
+appearance = SubResource("Resource_ml0lg")
+name = "Helmet none 13"
+
+[resource]
+script = ExtResource("46_i0qkm")
+type = ExtResource("9_2yfy5")
+entries = Array[ExtResource("1_6mbxj")]([SubResource("01_01"), SubResource("01_02"), SubResource("01_03"), SubResource("01_04"), SubResource("01_05"), SubResource("01_06"), SubResource("01_07"), SubResource("01_08"), SubResource("01_09"), SubResource("01_10"), SubResource("01_11"), SubResource("01_12"), SubResource("01_13"), SubResource("01_none"), SubResource("02_01"), SubResource("02_02"), SubResource("02_03"), SubResource("02_04"), SubResource("02_05"), SubResource("02_06"), SubResource("02_07"), SubResource("02_08"), SubResource("02_09"), SubResource("02_10"), SubResource("02_11"), SubResource("02_12"), SubResource("02_13"), SubResource("02_none"), SubResource("03_01"), SubResource("03_02"), SubResource("03_03"), SubResource("03_04"), SubResource("03_05"), SubResource("03_06"), SubResource("03_07"), SubResource("03_08"), SubResource("03_09"), SubResource("03_10"), SubResource("03_11"), SubResource("03_12"), SubResource("03_13"), SubResource("03_none"), SubResource("04_01"), SubResource("04_02"), SubResource("04_03"), SubResource("04_04"), SubResource("04_05"), SubResource("04_06"), SubResource("04_07"), SubResource("04_08"), SubResource("04_09"), SubResource("04_10"), SubResource("04_11"), SubResource("04_12"), SubResource("04_13"), SubResource("04_none"), SubResource("05_01"), SubResource("05_02"), SubResource("05_03"), SubResource("05_04"), SubResource("05_05"), SubResource("05_06"), SubResource("05_07"), SubResource("05_08"), SubResource("05_09"), SubResource("05_10"), SubResource("05_11"), SubResource("05_12"), SubResource("05_13"), SubResource("05_none"), SubResource("06_01"), SubResource("06_02"), SubResource("06_03"), SubResource("06_04"), SubResource("06_05"), SubResource("06_06"), SubResource("06_07"), SubResource("06_08"), SubResource("06_09"), SubResource("06_10"), SubResource("06_11"), SubResource("06_12"), SubResource("06_13"), SubResource("06_none"), SubResource("07_01"), SubResource("07_02"), SubResource("07_03"), SubResource("07_04"), SubResource("07_05"), SubResource("07_06"), SubResource("07_07"), SubResource("07_08"), SubResource("07_09"), SubResource("07_10"), SubResource("07_11"), SubResource("07_12"), SubResource("07_13"), SubResource("07_none"), SubResource("08_01"), SubResource("08_02"), SubResource("08_03"), SubResource("08_04"), SubResource("08_05"), SubResource("08_06"), SubResource("08_07"), SubResource("08_08"), SubResource("08_09"), SubResource("08_10"), SubResource("08_11"), SubResource("08_12"), SubResource("08_13"), SubResource("08_none"), SubResource("09_01"), SubResource("09_02"), SubResource("09_03"), SubResource("09_04"), SubResource("09_05"), SubResource("09_06"), SubResource("09_07"), SubResource("09_08"), SubResource("09_09"), SubResource("09_10"), SubResource("09_11"), SubResource("09_12"), SubResource("09_13"), SubResource("09_none"), SubResource("10_01"), SubResource("10_02"), SubResource("10_03"), SubResource("10_04"), SubResource("10_05"), SubResource("10_06"), SubResource("10_07"), SubResource("10_08"), SubResource("10_09"), SubResource("10_10"), SubResource("10_11"), SubResource("10_12"), SubResource("10_13"), SubResource("10_none"), SubResource("11_01"), SubResource("11_02"), SubResource("11_03"), SubResource("11_04"), SubResource("11_05"), SubResource("11_06"), SubResource("11_07"), SubResource("11_08"), SubResource("11_09"), SubResource("11_10"), SubResource("11_11"), SubResource("11_12"), SubResource("11_13"), SubResource("11_none"), SubResource("12_01"), SubResource("12_02"), SubResource("12_03"), SubResource("12_04"), SubResource("12_05"), SubResource("12_06"), SubResource("12_07"), SubResource("12_08"), SubResource("12_09"), SubResource("12_10"), SubResource("12_11"), SubResource("12_12"), SubResource("12_13"), SubResource("12_none"), SubResource("13_01"), SubResource("13_02"), SubResource("13_03"), SubResource("13_04"), SubResource("13_05"), SubResource("13_06"), SubResource("13_07"), SubResource("13_08"), SubResource("13_09"), SubResource("13_10"), SubResource("13_11"), SubResource("13_12"), SubResource("13_13"), SubResource("13_none"), SubResource("none_01"), SubResource("none_02"), SubResource("none_03"), SubResource("none_04"), SubResource("none_05"), SubResource("none_06"), SubResource("none_07"), SubResource("none_08"), SubResource("none_09"), SubResource("none_10"), SubResource("none_11"), SubResource("none_12"), SubResource("none_13")])
