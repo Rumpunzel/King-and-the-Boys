@@ -10,6 +10,18 @@ extends Model
 ## Editor-only: applied in order by [method preview_equipment], without slot or blocking rules
 @export var _preview_equipment: Array[EquipmentProfile]
 
+const ITEM_DIRECTORY: String = "res://data/equipment"
+
+@export_group("Item Authoring")
+@export_tool_button("Save As Item", "Save") var save_as_item_action: Callable = save_as_item
+## Editor-only: [method save_as_item] captures the meshes currently shown in this slot
+@export var _item_slot: EquipmentProfile.Slot = EquipmentProfile.Slot.HEAD
+## Editor-only: parts of these slots are captured too, and the item will empty them when equipped
+@export var _item_blocked_slots: Array[EquipmentProfile.Slot]
+## Editor-only: the item is saved to [code]res://data/equipment/<slot>/<name>.tres[/code]
+@export var _item_name: String
+@export_group("")
+
 enum Part {
 	ARM_LOWER_LEFT,
 	ARM_LOWER_RIGHT,
@@ -112,6 +124,32 @@ func preview_equipment() -> void:
 	for equipment_profile: EquipmentProfile in _preview_equipment:
 		if not equipment_profile or not equipment_profile.appearance: continue
 		equipment_profile.appearance.configure(self)
+
+## Saves the meshes shown in [member _item_slot] as a new [EquipmentProfile]; never overwrites an existing item
+## @returns the saved path, or an empty [String] on failure
+func save_as_item() -> String:
+	if _item_name.strip_edges().is_empty():
+		push_error("Set an item name before saving.")
+		return ""
+	var slot_name: String = EquipmentProfile.Slot.keys()[_item_slot]
+	var slot_directory: String = "%s/%s" % [ITEM_DIRECTORY, slot_name.to_lower()]
+	var item_path: String = "%s/%s.tres" % [slot_directory, _item_name.strip_edges().to_snake_case()]
+	if ResourceLoader.exists(item_path):
+		push_error("%s already exists; pick another name or delete it first." % item_path)
+		return ""
+	var equipment_profile: EquipmentProfile = EquipmentProfile.from_model(self, _item_slot, _item_blocked_slots)
+	equipment_profile.name = _item_name.strip_edges()
+	if equipment_profile.appearance.parts.is_empty(): push_warning("No visible meshes in slot %s; saving an empty item." % EquipmentProfile.Slot.keys()[_item_slot])
+	var directory_error: Error = DirAccess.make_dir_recursive_absolute(slot_directory)
+	if directory_error != Error.OK:
+		push_error("Could not create %s: %s" % [slot_directory, error_string(directory_error)])
+		return ""
+	var save_error: Error = ResourceSaver.save(equipment_profile, item_path)
+	if save_error != Error.OK:
+		push_error("Could not save %s: %s" % [item_path, error_string(save_error)])
+		return ""
+	print("Saved %s with %d parts." % [item_path, equipment_profile.appearance.parts.size()])
+	return item_path
 
 func randomize_base() -> void:
 	ears.random_mesh()

@@ -27,6 +27,43 @@ enum Slot {
 		blocked_slots = new_value
 		changed.emit()
 
+## Captures what [param model] currently shows in [param for_slot] and [param for_blocked_slots] as a new item
+## Gendered meshes get their other-gender counterpart if one exists with the same number
+static func from_model(model: ModularCharacter, for_slot: Slot, for_blocked_slots: Array[Slot] = []) -> EquipmentProfile:
+	var equipment_profile: EquipmentProfile = EquipmentProfile.new()
+	equipment_profile.slot = for_slot
+	equipment_profile.blocked_slots = for_blocked_slots
+	equipment_profile.appearance = EquipmentAppearance.new()
+	var parts: Array[EquipmentPartMesh] = []
+	for part: ModularCharacter.Part in equipment_profile.get_allowed_parts():
+		var body_part: ModularBodyPart = model.get_part(part)
+		if not body_part.visible or not body_part.mesh: continue
+		var mesh: ArrayMesh = body_part.mesh
+		var part_mesh: EquipmentPartMesh = EquipmentPartMesh.new()
+		part_mesh.part = part
+		part_mesh.male_mesh = mesh
+		if body_part is ModularBodyPartGendered:
+			var gendered_body_part: ModularBodyPartGendered = body_part
+			var other_gender_mesh: ArrayMesh = _find_other_gender_mesh(mesh, gendered_body_part.gender)
+			if not other_gender_mesh: push_warning("No other-gender mesh found for %s; it is used for both." % mesh.resource_path)
+			elif gendered_body_part.gender == ModularBodyPartGendered.Gender.FEMALE:
+				part_mesh.male_mesh = other_gender_mesh
+				part_mesh.female_mesh = mesh
+			else: part_mesh.female_mesh = other_gender_mesh
+		parts.append(part_mesh)
+	equipment_profile.appearance.parts = parts
+	return equipment_profile
+
+static func _find_other_gender_mesh(mesh: ArrayMesh, gender: ModularBodyPartGendered.Gender) -> ArrayMesh:
+	var mesh_path: String = mesh.resource_path
+	var other_mesh_path: String
+	match gender:
+		ModularBodyPartGendered.Gender.MALE: other_mesh_path = mesh_path.replace("/male/", "/female/").replace("_Male_", "_Female_")
+		ModularBodyPartGendered.Gender.FEMALE: other_mesh_path = mesh_path.replace("/female/", "/male/").replace("_Female_", "_Male_")
+		_: push_error("Gender %s not implemented!" % gender)
+	if other_mesh_path == mesh_path or not ResourceLoader.exists(other_mesh_path): return null
+	return load(other_mesh_path)
+
 ## @returns the [ModularCharacter.Part]s a [enum Slot] owns and resets on equip
 static func get_slot_parts(for_slot: Slot) -> Array[ModularCharacter.Part]:
 	match for_slot:
