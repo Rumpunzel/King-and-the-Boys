@@ -3,6 +3,8 @@ extends Control
 
 signal profile_changed(new_profile: Profile)
 
+const EXCLUDE_ACTION: StringName = &"exclude"
+
 enum Columns {
 	PROFILE,
 	RESOURCE_PATH,
@@ -168,6 +170,12 @@ func _request_delete(paths: PackedStringArray) -> void:
 	dialog.dialog_text = text
 	dialog.ok_button_text = "Move to trash"
 	dialog.confirmed.connect(_delete.bind(paths))
+	if paths.any(func(path: String) -> bool: return load(path) is EquipmentProfile):
+		dialog.add_button("Move to trash and exclude", true, EXCLUDE_ACTION)
+		dialog.custom_action.connect(func(action: StringName) -> void:
+			if action != EXCLUDE_ACTION: return
+			dialog.hide()
+			_delete(paths, true))
 	dialog.visibility_changed.connect(func() -> void: if not dialog.visible: dialog.queue_free())
 	add_child(dialog)
 	dialog.popup_centered()
@@ -187,7 +195,18 @@ func _find_users(paths: PackedStringArray, directory_path: String) -> PackedStri
 		users.append_array(_find_users(paths, directory_path.path_join(directory_name)))
 	return users
 
-func _delete(paths: PackedStringArray) -> void:
+## With [param exclude], equipment combinations are also added to their type's [member EquipmentType.excluded_combinations], so they are not generated again
+func _delete(paths: PackedStringArray, exclude: bool = false) -> void:
+	var changed_types: Array[EquipmentType] = []
+	if exclude:
+		for path: String in paths:
+			var equipment_profile: EquipmentProfile = load(path) as EquipmentProfile
+			if not equipment_profile or not equipment_profile.type: continue
+			equipment_profile.type.exclude(equipment_profile.type.get_combination_name_of(equipment_profile))
+			if not changed_types.has(equipment_profile.type): changed_types.append(equipment_profile.type)
+	for equipment_type: EquipmentType in changed_types:
+		var error: Error = ResourceSaver.save(equipment_type, equipment_type.resource_path)
+		if error != Error.OK: push_error("Could not save exclusions to %s: %s" % [equipment_type.resource_path, error_string(error)])
 	for path: String in paths:
 		var error: Error = OS.move_to_trash(ProjectSettings.globalize_path(path))
 		if error != Error.OK: push_error("Could not move %s to the trash: %s" % [path, error_string(error)])
