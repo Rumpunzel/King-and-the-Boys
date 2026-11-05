@@ -5,6 +5,10 @@ extends Model
 @export_tool_button("Randomize Base", "RandomNumberGenerator") var randomize_base_action: Callable = randomize_base
 @export_tool_button("Randomize Gear", "AudioStreamRandomizer") var randomize_gear_action: Callable = randomize_gear
 @export_tool_button("Reset Gear", "Clear") var reset_gear_action: Callable = reset_gear
+@export_tool_button("Preview Equipment", "Skeleton3D") var preview_equipment_action: Callable = preview_equipment
+
+## Editor-only: applied in order by [method preview_equipment], without slot or blocking rules
+@export var _preview_equipment: Array[EquipmentProfile]
 
 enum Part {
 	ARM_LOWER_LEFT,
@@ -102,6 +106,12 @@ func get_part(part: Part) -> ModularBodyPart:
 		_: push_error("Part %s not implemented!" % part)
 	assert(false)
 	return null
+
+func preview_equipment() -> void:
+	reset_gear()
+	for equipment_profile: EquipmentProfile in _preview_equipment:
+		if not equipment_profile or not equipment_profile.appearance: continue
+		equipment_profile.appearance.configure(self)
 
 func randomize_base() -> void:
 	ears.random_mesh()
