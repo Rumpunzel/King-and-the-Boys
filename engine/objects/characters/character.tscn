@@ -17,6 +17,11 @@ properties/2/path = NodePath(".:visible")
 properties/2/spawn = true
 properties/2/replication_mode = 2
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_eqp01"]
+properties/0/path = NodePath(".:equipped_paths")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
 [node name="Character" type="CharacterBody3D" unique_id=280801836 node_paths=PackedStringArray("_collision_shape", "_navigation_agent", "equipment") groups=["Characters"]]
 collision_layer = 2
 collision_mask = 15
@@ -32,6 +37,11 @@ metadata/_custom_type_script = "uid://cwu2dwpvcrl3s"
 [node name="CharacterEquipment" type="Node" parent="." unique_id=1739204561]
 script = ExtResource("5_eqp01")
 metadata/_custom_type_script = "uid://ca8rg7sjibiiv"
+
+[node name="EquipmentSynchronizer" type="MultiplayerSynchronizer" parent="CharacterEquipment" unique_id=1739204562]
+replication_config = SubResource("SceneReplicationConfig_eqp01")
+script = ExtResource("2_b3pdv")
+metadata/_custom_type_script = "uid://crm43jylxmjbd"
 
 [node name="CharacterSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1181153482]
 replication_config = SubResource("SceneReplicationConfig_3fwhk")
