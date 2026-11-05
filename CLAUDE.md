@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-"King and the Boys" — a Godot **4.6** (Forward Plus, Jolt Physics) 3D multiplayer game written in **GDScript**. Players are ghosts that "haunt" characters and things in a procedurally generated, grid-based dungeon. No build system, linter, or test suite exists; everything runs through the Godot editor.
+"King and the Boys" — a Godot **4.6** (Forward Plus, Jolt Physics) 3D multiplayer game written in **GDScript**. Players are ghosts that "haunt" characters and things in a procedurally generated, grid-based dungeon. No build system or linter; tests use gdUnit4 (`addons/gdUnit4`, suites in `tests/`).
 
 ## Commands
 
@@ -12,7 +12,9 @@ Godot 4.6 is installed via Godots at `F:\Users\Kesepian\Godots\versions\Godot_v4
 
 - Open editor: `<godot> --path . -e`
 - Run game (main scene): `<godot> --path .`
-- Parse/compile check of all scripts: `<godot> --path . --headless --editor --quit`, then grep the output for `Parse Error` / `Compile Error`. It currently segfaults on quit (exit 139); the logged errors are still usable.
+- Parse/compile check of all scripts: `<godot> --path . --headless --editor --quit`, then grep the output for `Parse Error` / `Compile Error`. It currently segfaults on quit (exit 139); the logged errors are still usable. If the user's editor is open at the same time, the run can report bogus "Preload file … does not exist" errors from the shared uid cache; run it again.
+- Run all tests: `GODOT_BIN=<godot> bash addons/gdUnit4/runtest.sh --headless --ignoreHeadlessMode -a res://tests` (exit 0 = pass, 100 = failures, 101 = warnings such as orphan nodes). A single suite: `-a res://tests/equipment/character_equipment_test.gd`. Reports land in `reports/` (gitignored). CI runs the same suites via `.github/workflows/tests.yml` (needs Git LFS for meshes).
+- Tests must only use committed data: build items with `EquipmentFixtures` (`tests/equipment/equipment_fixtures.gd`), restore any cached profile you modify, and keep nodes in the tree (`add_child`) so gdUnit does not count them as orphans. `EditorProperty`/`EditorInterface` code cannot be instantiated headless; test its static helpers instead.
 
 Strict typing is enforced as **errors** in `project.godot` (`untyped_declaration`, `inferred_declaration`, `unsafe_property_access`, `unsafe_method_access`, `unsafe_call_argument`, etc.). Every variable, parameter and return must be explicitly typed (`var x: int = 0`, not `var x := 0`); casts and typed `for` loop variables are used everywhere to satisfy this.
 
@@ -48,9 +50,18 @@ Nodes are restored first, then properties. Save path is currently `res://test.sa
 - `Game` (`engine/game.gd`) is the game scene root: on the server `setup_game()` builds the level and starts spawning player ghosts; `save_game`/`load_game` go through `Serializer`; disconnecting returns to main.
 - `Level` (`engine/levels/level.gd`) — grid-based procedural dungeon (`grid_size`, `grid_extents`). Builds outer wall, starting tile, then corridors/rooms by picking tiles from a `DungeonTileSet` resource (bitflag-matched blueprints + weighted tiles, with `ConnectionRestriction` resources and `RoomType`s). Tiles have a `Structure.Status` and are progressively revealed/discovered around player-controlled characters (fog-of-war style).
 - Object kinds: `Structure`, `Thing`, `Character` — each a scene + spawner + `HitBox` subclass + `SpawnPoint` subclass + `Profile` subclass. `Profile` (abstract `Resource`) holds name, portrait, model variations, collision/hit-box `AreaShape`s; concrete content lives in `data/`. `SpawnTable` / `ProfileSpawnTable` / `NestedSpawnTable` provide weighted random profile selection.
-- Models: `Model` + `ModelConfiguration` (modular characters with gear via `GearProfile`) and `ModelAnimation` resources (bounce, flip, emerge, slide...) in `data/model_animations/`.
+- Models: `Model`, `ModularCharacter` (28 `ModularBodyPart`s addressed via `ModularCharacter.Part` / `get_part()`), and `ModelAnimation` resources (bounce, flip, emerge, slide...) in `data/model_animations/`. A body part picks meshes from a folder by index (editor stepping) or takes an exact mesh via `apply_mesh()`; meshes are matched across parts by their file number (`..._05.res`).
 - State machines: generic `StateMachine` (Node) + `State` (`RefCounted`, abstract). `AgentStateMachine` drives NPC `Agent`s (default/haunted); `PlayerStateMachine` drives `PlayerGhost` (default / haunting character / haunting thing). States transition by emitting `finished(next_state)`; initial state is a `GDScript` export.
 - Haunting: a `PlayerGhost` interacts (`interact`/`haunt`/`unhaunt` input actions) with a target's `HitBox`, which emits `haunted`/`unhaunted`; the target's state machine then hands control to the player.
+
+### Equipment (`engine/objects/equipment/`)
+- `EquipmentProfile` (an item, a `Profile`) = `type` + `appearance` (`EquipmentAppearance` → `EquipmentPartMesh`es: part, male mesh, optional female mesh). Items are saved one per file under `data/equipment/<type>/` (`EquipmentProfile.ITEM_DIRECTORY`), because sync and saves send item paths.
+- `EquipmentType` (`data/equipment/types/*.tres`) decides the `slot`, the `parts` its items set, `blocked_slots` (e.g. helmets block FACE), optional `part_groups` (parts sharing a mesh number; the first part leads; left/right pairs are linked automatically) and `excluded_combinations` (keys of mesh numbers, e.g. `"05 03"`, never generated again). `EquipmentProfile.Slot` is stored by number in saved types: only append new slots.
+- Slots own fixed parts (`EquipmentProfile.get_slot_parts()`). `CharacterEquipment` (child of `Character`) holds one item per slot; equipping resets every part of the slot and its blocked slots, then applies the item, and is refused while another item blocks the slot. `Character` re-applies body and equipment on every model rebuild.
+- `CharacterProfile` has one starting equipment field per slot (`head` … `waist`, named after the slot; `get_starting_equipment_for(slot)`) plus `random_equipment` (one `SpawnTable` per rolled item). `create_character_data()` runs on the server only: it resolves the variation, rolls the base body (`ModelConfigurationRandom.roll()` → `BODY`, mesh paths) and equipment (`EQUIPMENT`, item paths). Character data has 5 keys.
+- Sync: `CharacterEquipment.equipped_paths` is replicated by its own `EquipmentSynchronizer`, pinned to server authority even inside a `PlayerGhost` (client) subtree. Peers call `request_equip()` / `request_unequip()`; the server only loads items from the item directory. There is no ownership/inventory check yet. Saves need nothing extra: spawner data already holds the paths.
+- Authoring happens in Menagerie (`addons/menagerie/`): the Gear tab's Equipment panel steps through a type's parts, saves items and creates all combinations; the profiles list deletes to the OS trash (optionally excluding combinations); an inspector plugin replaces `CharacterProfile` slot fields with a slot-filtered, grouped picker.
+- Design notes and progress: "Equipment Resources Plan" doc (claude.ai, see memory).
 
 ### Physics layers (`project.godot`)
 1 World, 2 Characters, 3 Things, 4 Structures, 5 WorldAreas, 6 HitBoxes, 7 HurtBoxes, 17 Ghosts, 21 GhostHitBoxes.
