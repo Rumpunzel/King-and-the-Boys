@@ -90,8 +90,9 @@ layout_mode = 2
 [node name="ModelPreview" parent="HSplitContainer/VSplitContainer" unique_id=1214802491 instance=ExtResource("4_ne48i")]
 layout_mode = 2
 
-[node name="EquipmentEditor" parent="HSplitContainer/VSplitContainer" unique_id=1214802492 instance=ExtResource("5_eqped")]
+[node name="EquipmentEditor" parent="HSplitContainer/VSplitContainer" unique_id=1214802492 node_paths=PackedStringArray("_gear_tab") instance=ExtResource("5_eqped")]
 layout_mode = 2
+_gear_tab = NodePath("../../VBoxContainer/ProfileTabs/Gear (6)")
 
 [connection signal="tab_changed" from="HSplitContainer/VBoxContainer/ProfileTabs" to="HSplitContainer/VBoxContainer/ProfileTabs" method="_on_tab_changed"]
 [connection signal="profile_changed" from="HSplitContainer/VBoxContainer/ProfileTabs/Characters (6)" to="HSplitContainer/VSplitContainer/ModelPreview" method="_on_profile_changed"]

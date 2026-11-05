@@ -6,6 +6,8 @@ signal equipment_saved(equipment_profile: EquipmentProfile)
 const ITEM_DIRECTORY: String = "res://data/equipment"
 
 @export_group("Configuration")
+## This panel is only shown while this tab is open
+@export var _gear_tab: Control
 @export var _slot_option: OptionButton
 @export var _blocked_slots_container: HFlowContainer
 @export var _parts_container: VBoxContainer
@@ -22,6 +24,8 @@ var _blocked_check_boxes: Dictionary[EquipmentProfile.Slot, CheckBox] = {}
 func _ready() -> void:
 	# Do not bake generated items into this scene while it is edited itself
 	if is_part_of_edited_scene(): return
+	_gear_tab.visibility_changed.connect(_on_gear_tab_visibility_changed)
+	_on_gear_tab_visibility_changed()
 	for slot: EquipmentProfile.Slot in EquipmentProfile.Slot.values():
 		var slot_name: String = EquipmentProfile.Slot.keys()[slot]
 		_slot_option.add_item(slot_name.capitalize(), slot)
@@ -182,3 +186,6 @@ func _on_model_removed() -> void:
 	if _is_set_up(): _update()
 
 func _is_set_up() -> bool: return not _blocked_check_boxes.is_empty()
+
+func _on_gear_tab_visibility_changed() -> void:
+	visible = _gear_tab.visible
