@@ -6,7 +6,9 @@ extends EditorProperty
 ## Items are grouped by type, then by their base mesh, e.g. "Torso 05", so variations of one base sit together
 ## Selecting an item equips it right away, so the Menagerie preview can be clicked through; activating it also closes
 
-const ITEM_DIRECTORY: String = "res://data/equipment"
+## All items of every slot, loaded once and dropped whenever the project's files change
+static var _cached_items: Array[EquipmentProfile] = []
+static var _is_cache_valid: bool = false
 
 var _slot: EquipmentProfile.Slot
 var _pick_button: Button = Button.new()
@@ -57,27 +59,42 @@ func _get_current() -> EquipmentProfile:
 	return get_edited_object().get(get_edited_property())
 
 func _open_popup() -> void:
-	_items = find_items(ITEM_DIRECTORY, _slot)
+	_items = _get_cached_items(_slot)
 	_filter_edit.text = ""
 	_refresh_tree()
 	var button_rect: Rect2 = _pick_button.get_global_rect()
 	_popup.popup(Rect2i(Vector2i(_pick_button.get_screen_position() + Vector2(0, button_rect.size.y)), Vector2i.ZERO))
 	_filter_edit.grab_focus()
 
+## Loading every item takes seconds, so the picker reuses one scan until the FileSystem changes
+static func _get_cached_items(slot: EquipmentProfile.Slot) -> Array[EquipmentProfile]:
+	if not _is_cache_valid:
+		var file_system: EditorFileSystem = EditorInterface.get_resource_filesystem()
+		if not file_system.filesystem_changed.is_connected(_invalidate_cache): file_system.filesystem_changed.connect(_invalidate_cache)
+		_cached_items = _sort(_collect_items(EquipmentProfile.ITEM_DIRECTORY))
+		_is_cache_valid = true
+	return _cached_items.filter(func(equipment_profile: EquipmentProfile) -> bool: return equipment_profile.slot == slot)
+
+static func _invalidate_cache() -> void:
+	_is_cache_valid = false
+
 ## @returns every saved item below [param directory_path] that goes into [param slot], sorted by type and name
 static func find_items(directory_path: String, slot: EquipmentProfile.Slot) -> Array[EquipmentProfile]:
-	var items: Array[EquipmentProfile] = _collect_items(directory_path, slot)
+	return _sort(_collect_items(directory_path).filter(func(equipment_profile: EquipmentProfile) -> bool: return equipment_profile.slot == slot))
+
+static func _sort(items: Array[EquipmentProfile]) -> Array[EquipmentProfile]:
 	items.sort_custom(func(a: EquipmentProfile, b: EquipmentProfile) -> bool: return a.name.naturalnocasecmp_to(b.name) < 0 if a.type.name == b.type.name else a.type.name < b.type.name)
 	return items
 
-static func _collect_items(directory_path: String, slot: EquipmentProfile.Slot) -> Array[EquipmentProfile]:
+## @returns every saved item with a type below [param directory_path]
+static func _collect_items(directory_path: String) -> Array[EquipmentProfile]:
 	var items: Array[EquipmentProfile] = []
 	for file_name: String in DirAccess.get_files_at(directory_path):
 		if file_name.get_extension() != "tres": continue
 		var equipment_profile: EquipmentProfile = load(directory_path.path_join(file_name)) as EquipmentProfile
-		if equipment_profile and equipment_profile.type and equipment_profile.slot == slot: items.append(equipment_profile)
+		if equipment_profile and equipment_profile.type: items.append(equipment_profile)
 	for directory_name: String in DirAccess.get_directories_at(directory_path):
-		items.append_array(_collect_items(directory_path.path_join(directory_name), slot))
+		items.append_array(_collect_items(directory_path.path_join(directory_name)))
 	return items
 
 ## @returns the item's mesh for its type's first part, e.g. "Torso 05"; items of one base are variations of each other
