@@ -39,3 +39,6 @@ addons/godot-git-plugin/
 .idea/
 
 *.dll
+
+# gdUnit4 test reports
+reports/
