@@ -31,6 +31,7 @@ var _equipment_profile: EquipmentProfile
 var _types: Array[EquipmentType] = []
 ## Parts whose meshes are varied by [method _create_combinations]
 var _vary_check_boxes: Dictionary[ModularCharacter.Part, CheckBox] = {}
+var _mesh_labels: Dictionary[ModularCharacter.Part, Label] = {}
 var _is_set_up: bool = false
 
 func _ready() -> void:
@@ -94,6 +95,7 @@ func _rebuild_parts() -> void:
 		_parts_container.remove_child(child)
 		child.queue_free()
 	_vary_check_boxes.clear()
+	_mesh_labels.clear()
 	if not _model:
 		_status_label.text = NO_MODEL_HINT
 		_update_combinations_button()
@@ -118,6 +120,7 @@ func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
 	var previous_button: Button = Button.new()
 	previous_button.text = "<"
 	var mesh_label: Label = Label.new()
+	_mesh_labels[part] = mesh_label
 	mesh_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	mesh_label.clip_text = true
 	var next_button: Button = Button.new()
@@ -129,7 +132,8 @@ func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
 	return row
 
 ## Steps through the part's mesh directory; decorative parts include "none"
-func _step_part(part: ModularCharacter.Part, direction: int, mesh_label: Label) -> void:
+## Linked parts follow to the same mesh number where they have it
+func _step_part(part: ModularCharacter.Part, direction: int, _mesh_label: Label) -> void:
 	var body_part: ModularBodyPart = _model.get_part(part)
 	var mesh_count: int = body_part.get_mesh_count()
 	if mesh_count == 0: return
@@ -138,8 +142,23 @@ func _step_part(part: ModularCharacter.Part, direction: int, mesh_label: Label) 
 	if new_index < lowest_index: new_index = mesh_count - 1
 	elif new_index >= mesh_count: new_index = lowest_index
 	body_part.update_index(new_index)
-	_update_mesh_label(part, mesh_label)
+	var mesh_number: String = _get_mesh_number(body_part)
+	for linked_part: ModularCharacter.Part in _get_type().get_link_of(part):
+		if linked_part != part: _show_mesh_number(linked_part, mesh_number)
+	_update_mesh_labels()
 	_status_label.text = ""
+
+## Shows the mesh numbered [param mesh_number], or no mesh for [code]"none"[/code]
+## @returns [code]false[/code] if the part has no such mesh
+func _show_mesh_number(part: ModularCharacter.Part, mesh_number: String) -> bool:
+	var body_part: ModularBodyPart = _model.get_part(part)
+	var mesh_index: int = -1 if mesh_number == "none" else body_part.find_mesh_index(mesh_number)
+	if mesh_index < 0 and (mesh_number != "none" or not body_part.allows_none()): return false
+	body_part.update_index(mesh_index)
+	return true
+
+func _update_mesh_labels() -> void:
+	for part: ModularCharacter.Part in _mesh_labels: _update_mesh_label(part, _mesh_labels[part])
 
 func _update_mesh_label(part: ModularCharacter.Part, mesh_label: Label) -> void:
 	var body_part: ModularBodyPart = _model.get_part(part)
@@ -154,46 +173,55 @@ func _update_mesh_label(part: ModularCharacter.Part, mesh_label: Label) -> void:
 ## @returns the trailing number of the shown mesh's file, such as [code]"05"[/code], or [code]"none"[/code]
 static func _get_mesh_number(body_part: ModularBodyPart) -> String:
 	if not body_part.visible or not body_part.mesh: return "none"
-	var regex: RegEx = RegEx.create_from_string("(\\d+)$")
-	var mesh_name: String = body_part.mesh.resource_path.get_file().get_basename()
-	var found: RegExMatch = regex.search(mesh_name)
-	return found.get_string(1) if found else mesh_name
+	return ModularBodyPart.get_mesh_number(body_part.mesh.resource_path)
 
-## Names an item after its type and the mesh number of each of the type's parts, e.g. "Helmet 02 05"
+## Names an item after its type and one mesh number per linked group of parts, e.g. "Gloves 05 03"
+## Linked parts showing different numbers are joined, e.g. "05-07"
 func _get_combination_name() -> String:
 	var numbers: PackedStringArray = []
-	for part: ModularCharacter.Part in _get_type().parts: numbers.append(_get_mesh_number(_model.get_part(part)))
+	var named: Array[ModularCharacter.Part] = []
+	for part: ModularCharacter.Part in _get_type().parts:
+		if named.has(part): continue
+		var link: Array[ModularCharacter.Part] = _get_type().get_link_of(part)
+		named.append_array(link)
+		var link_numbers: PackedStringArray = []
+		for linked_part: ModularCharacter.Part in link:
+			var mesh_number: String = _get_mesh_number(_model.get_part(linked_part))
+			if not link_numbers.has(mesh_number): link_numbers.append(mesh_number)
+		numbers.append("-".join(link_numbers))
 	return "%s %s" % [_get_type().name, " ".join(numbers)]
 
 func _get_item_path(item_name: String) -> String:
 	return "%s/%s/%s.tres" % [ITEM_DIRECTORY, _get_type().name.to_snake_case(), item_name.to_snake_case()]
 
-## Groups the varied parts; a left part and its right counterpart change together
-## @returns an [Array] of dimensions, each an [Array] of one or two [enum ModularCharacter.Part]s
+## Splits the varied parts into dimensions; linked parts (see [method EquipmentType.get_links]) form one
+## @returns an [Array] of dimensions, each an [Array] of [enum ModularCharacter.Part]s
 func _get_dimensions() -> Array[Array]:
 	var dimensions: Array[Array] = []
-	var varied: Array[ModularCharacter.Part] = []
+	var assigned: Array[ModularCharacter.Part] = []
 	for part: ModularCharacter.Part in _vary_check_boxes:
-		if _vary_check_boxes[part].button_pressed: varied.append(part)
-	for part: ModularCharacter.Part in varied:
-		var part_name: String = ModularCharacter.Part.keys()[part]
-		if part_name.ends_with("_RIGHT") and varied.has(ModularCharacter.Part.get(part_name.trim_suffix("_RIGHT") + "_LEFT")): continue
-		var dimension: Array[ModularCharacter.Part] = [part]
-		if part_name.ends_with("_LEFT"):
-			var right_name: String = part_name.trim_suffix("_LEFT") + "_RIGHT"
-			if ModularCharacter.Part.has(right_name):
-				var right_part: ModularCharacter.Part = ModularCharacter.Part[right_name]
-				if varied.has(right_part): dimension.append(right_part)
+		if assigned.has(part) or not _vary_check_boxes[part].button_pressed: continue
+		var dimension: Array[ModularCharacter.Part] = []
+		for linked_part: ModularCharacter.Part in _get_type().get_link_of(part):
+			if _vary_check_boxes.has(linked_part) and _vary_check_boxes[linked_part].button_pressed: dimension.append(linked_part)
+		assigned.append_array(dimension)
 		dimensions.append(dimension)
 	return dimensions
 
-## @returns the mesh indices a dimension cycles through; [code]-1[/code] stands for "none"
-func _get_options(dimension: Array) -> Array[int]:
+## @returns the mesh numbers every part of a dimension has, plus [code]"none"[/code] if all of them allow it
+func _get_options(dimension: Array) -> PackedStringArray:
 	var first_part: ModularCharacter.Part = dimension[0]
-	var body_part: ModularBodyPart = _model.get_part(first_part)
-	var options: Array[int] = []
-	if body_part.allows_none(): options.append(-1)
-	for mesh_index: int in body_part.get_mesh_count(): options.append(mesh_index)
+	var options: PackedStringArray = _model.get_part(first_part).get_mesh_numbers()
+	var all_allow_none: bool = true
+	for part: ModularCharacter.Part in dimension:
+		var body_part: ModularBodyPart = _model.get_part(part)
+		var part_numbers: PackedStringArray = body_part.get_mesh_numbers()
+		var shared: PackedStringArray = []
+		for mesh_number: String in options:
+			if part_numbers.has(mesh_number): shared.append(mesh_number)
+		options = shared
+		all_allow_none = all_allow_none and body_part.allows_none()
+	if all_allow_none: options.insert(0, "none")
 	return options
 
 func _count_combinations() -> int:
@@ -228,7 +256,7 @@ func _on_combinations_pressed() -> void:
 func _create_combinations() -> void:
 	var dimensions: Array[Array] = _get_dimensions()
 	var options: Array[Array] = []
-	for dimension: Array in dimensions: options.append(_get_options(dimension))
+	for dimension: Array in dimensions: options.append(Array(_get_options(dimension)))
 	var shown_meshes: Dictionary[ModularCharacter.Part, Mesh] = {}
 	for part: ModularCharacter.Part in _get_type().parts:
 		var body_part: ModularBodyPart = _model.get_part(part)
@@ -254,14 +282,12 @@ func _create_combinations() -> void:
 	if saved_count > 0: equipment_saved.emit(null)
 	_status_label.text = "Saved %d new items to %s, skipped %d existing or empty." % [saved_count, _get_item_path("").get_base_dir(), skipped_count]
 
-## @returns [code]false[/code] if a right part has no mesh with the left part's index
+## @returns [code]false[/code] if a part lacks the combination's mesh number
 func _apply_combination(dimensions: Array[Array], options: Array[Array], counters: Array[int]) -> bool:
 	for dimension_index: int in dimensions.size():
-		var mesh_index: int = options[dimension_index][counters[dimension_index]]
+		var mesh_number: String = options[dimension_index][counters[dimension_index]]
 		for part: ModularCharacter.Part in dimensions[dimension_index]:
-			var body_part: ModularBodyPart = _model.get_part(part)
-			if mesh_index >= body_part.get_mesh_count(): return false
-			body_part.update_index(mesh_index)
+			if not _show_mesh_number(part, mesh_number): return false
 	return true
 
 ## Counts like an odometer over all dimensions

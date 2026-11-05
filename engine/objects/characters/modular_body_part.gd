@@ -60,6 +60,22 @@ func get_mesh_index() -> int:
 
 func get_mesh_count() -> int: return _mesh_list.size()
 
+## @returns the trailing number of a mesh file, e.g. [code]"05"[/code] for [code]..._Male_05.res[/code]
+static func get_mesh_number(mesh_path: String) -> String:
+	var mesh_name: String = mesh_path.get_file().get_basename()
+	var found: RegExMatch = RegEx.create_from_string("(\\d+)$").search(mesh_name)
+	return found.get_string(1) if found else mesh_name
+
+## @returns the numbers of all meshes in this part's directory, in directory order
+func get_mesh_numbers() -> PackedStringArray:
+	var mesh_numbers: PackedStringArray = []
+	for mesh_path: String in _mesh_list: mesh_numbers.append(get_mesh_number(mesh_path))
+	return mesh_numbers
+
+## @returns the position of the mesh numbered [param mesh_number] in this part's directory, or [code]-1[/code]
+func find_mesh_index(mesh_number: String) -> int:
+	return get_mesh_numbers().find(mesh_number)
+
 ## Decorative parts may show no mesh at all, essential parts always show one
 func allows_none() -> bool: return _type == Type.DECORATIVE
 
