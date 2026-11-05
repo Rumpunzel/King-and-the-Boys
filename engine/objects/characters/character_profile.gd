@@ -47,7 +47,7 @@ enum Groups {
 		random_equipment = new_value
 		changed.emit()
 
-## One item per slot; each field only accepts items of its slot, see [method set_starting_equipment_for]
+## One item per slot; each field only accepts items of its slot and is named after it, see [method set_starting_equipment_for]
 @export_group("Starting Equipment")
 @export var head: EquipmentProfile:
 	set(new_value):
@@ -72,6 +72,10 @@ enum Groups {
 @export var back: EquipmentProfile:
 	set(new_value):
 		back = _accept_equipment(back, new_value, EquipmentProfile.Slot.BACK)
+		changed.emit()
+@export var waist: EquipmentProfile:
+	set(new_value):
+		waist = _accept_equipment(waist, new_value, EquipmentProfile.Slot.WAIST)
 		changed.emit()
 @export var main_hand: EquipmentProfile:
 	set(new_value):

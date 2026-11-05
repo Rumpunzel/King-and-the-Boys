@@ -11,6 +11,8 @@ enum Slot {
 	BACK,
 	MAIN_HAND,
 	OFF_HAND,
+	# Appended last, as slots are stored by number in saved types
+	WAIST,
 }
 
 ## Loaded on demand instead of preloaded, as the [ModularCharacter] scene itself depends on this script
@@ -106,6 +108,8 @@ static func get_slot_parts(for_slot: Slot) -> Array[ModularCharacter.Part]:
 			ModularCharacter.Part.LEG_RIGHT,
 			ModularCharacter.Part.KNEE_ATTACH_LEFT,
 			ModularCharacter.Part.KNEE_ATTACH_RIGHT,
+		]
+		Slot.WAIST: return [
 			ModularCharacter.Part.HIPS_ATTACHMENT,
 		]
 		Slot.BACK: return [

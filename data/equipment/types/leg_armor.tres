@@ -11,5 +11,5 @@ parts = Array[int]([9, 10, 11])
 script = ExtResource("1_lcvyn")
 name = "Leg Armor"
 slot = 4
-parts = Array[int]([9, 10, 11, 24, 25, 23])
+parts = Array[int]([9, 10, 11, 24, 25])
 part_groups = Array[ExtResource("1_2puwj")]([SubResource("Resource_dexy2")])
