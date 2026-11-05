@@ -158,13 +158,13 @@ func get_starting_equipment() -> Array[EquipmentProfile]:
 	return starting_equipment
 
 func get_starting_equipment_for(slot: EquipmentProfile.Slot) -> EquipmentProfile:
-	return get(_get_slot_property(slot))
+	return get(get_slot_property(slot))
 
 func set_starting_equipment_for(slot: EquipmentProfile.Slot, equipment_profile: EquipmentProfile) -> void:
-	set(_get_slot_property(slot), equipment_profile)
+	set(get_slot_property(slot), equipment_profile)
 
 ## Each slot's field is named after it, e.g. [member head] for [constant EquipmentProfile.HEAD]
-static func _get_slot_property(slot: EquipmentProfile.Slot) -> StringName:
+static func get_slot_property(slot: EquipmentProfile.Slot) -> StringName:
 	var slot_name: String = EquipmentProfile.Slot.keys()[slot]
 	return StringName(slot_name.to_lower())
 

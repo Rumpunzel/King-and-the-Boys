@@ -4,6 +4,7 @@ extends EditorPlugin
 const MENAGERIE_PANEL_SCENE: PackedScene = preload("uid://bxs2pxpsmsfud")
 
 var _menagerie_panel: MenageriePanel
+var _equipment_inspector_plugin: EditorInspectorPlugin = preload("res://addons/menagerie/inspector/equipment_inspector_plugin.gd").new()
 
 func _enter_tree() -> void:
 	_menagerie_panel = MENAGERIE_PANEL_SCENE.instantiate()
@@ -11,9 +12,11 @@ func _enter_tree() -> void:
 	EditorInterface.get_editor_main_screen().add_child(_menagerie_panel)
 	# Hide the main panel. Very much required.
 	_make_visible(false)
+	add_inspector_plugin(_equipment_inspector_plugin)
 
 func _exit_tree() -> void:
 	if _menagerie_panel: _menagerie_panel.queue_free()
+	remove_inspector_plugin(_equipment_inspector_plugin)
 
 func _has_main_screen() -> bool:
 	return true
