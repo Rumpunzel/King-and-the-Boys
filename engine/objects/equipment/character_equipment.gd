@@ -103,14 +103,14 @@ func _request_unequip(slot: int) -> void:
 	unequip(slot as EquipmentProfile.Slot)
 
 func _apply(equipment_profile: EquipmentProfile) -> void:
-	_reset_parts(equipment_profile.get_allowed_parts())
+	_reset_parts(equipment_profile.get_reset_parts())
 	if equipment_profile.appearance: equipment_profile.appearance.configure(_model)
 
 func _remove(slot: EquipmentProfile.Slot) -> void:
 	var equipment_profile: EquipmentProfile = _equipped.get(slot)
 	if not equipment_profile: return
 	_equipped.erase(slot)
-	if _model: _reset_parts(equipment_profile.get_allowed_parts())
+	if _model: _reset_parts(equipment_profile.get_reset_parts())
 
 func _reset_parts(parts: Array[ModularCharacter.Part]) -> void:
 	for part: ModularCharacter.Part in parts: _model.get_part(part).reset_mesh()

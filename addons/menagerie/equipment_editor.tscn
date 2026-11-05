@@ -2,11 +2,12 @@
 
 [ext_resource type="Script" path="res://addons/menagerie/equipment_editor.gd" id="1_eqped"]
 
-[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_slot_option", "_blocked_slots_container", "_parts_container", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
+[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_type_option", "_edit_type_button", "_type_info_label", "_parts_container", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
 size_flags_vertical = 3
 script = ExtResource("1_eqped")
-_slot_option = NodePath("MarginContainer/VBoxContainer/SlotRow/SlotOption")
-_blocked_slots_container = NodePath("MarginContainer/VBoxContainer/BlockedSlots")
+_type_option = NodePath("MarginContainer/VBoxContainer/TypeRow/TypeOption")
+_edit_type_button = NodePath("MarginContainer/VBoxContainer/TypeRow/EditTypeButton")
+_type_info_label = NodePath("MarginContainer/VBoxContainer/TypeInfoLabel")
 _parts_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Parts")
 _name_edit = NodePath("MarginContainer/VBoxContainer/SaveRow/NameEdit")
 _save_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveButton")
@@ -27,27 +28,27 @@ layout_mode = 2
 layout_mode = 2
 text = "Equipment"
 
-[node name="SlotRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="TypeRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="SlotLabel" type="Label" parent="MarginContainer/VBoxContainer/SlotRow"]
+[node name="TypeLabel" type="Label" parent="MarginContainer/VBoxContainer/TypeRow"]
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
-text = "Slot"
+text = "Type"
 
-[node name="SlotOption" type="OptionButton" parent="MarginContainer/VBoxContainer/SlotRow"]
+[node name="TypeOption" type="OptionButton" parent="MarginContainer/VBoxContainer/TypeRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-tooltip_text = "The slot this item goes into; it owns and resets the slot's parts"
+tooltip_text = "The kind of item; it decides the slot, the parts listed below and what the item blocks"
 
-[node name="BlockedLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="EditTypeButton" type="Button" parent="MarginContainer/VBoxContainer/TypeRow"]
 layout_mode = 2
-tooltip_text = "Slots emptied while this item is worn; their parts can be part of the item"
-mouse_filter = 1
-text = "Blocks"
+tooltip_text = "Open this EquipmentType in the inspector"
+text = "Edit Type"
 
-[node name="BlockedSlots" type="HFlowContainer" parent="MarginContainer/VBoxContainer"]
+[node name="TypeInfoLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_type_variation = &"HeaderSmall"
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -75,7 +76,7 @@ text = "Save"
 
 [node name="SaveAsNewButton" type="Button" parent="MarginContainer/VBoxContainer/SaveRow"]
 layout_mode = 2
-tooltip_text = "Save to data/equipment/<slot>/<name>.tres; never overwrites"
+tooltip_text = "Save to data/equipment/<type>/<name>.tres; never overwrites"
 text = "Save As New"
 
 [node name="StatusLabel" type="Label" parent="MarginContainer/VBoxContainer"]

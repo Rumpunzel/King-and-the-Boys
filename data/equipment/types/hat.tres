@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="EquipmentType" format=3]
+
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_type.gd" id="1_4yh50"]
+
+[resource]
+script = ExtResource("1_4yh50")
+name = "Hat"
+parts = Array[int]([19, 22])

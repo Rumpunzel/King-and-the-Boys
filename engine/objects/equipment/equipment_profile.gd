@@ -16,29 +16,33 @@ enum Slot {
 ## Loaded on demand instead of preloaded, as the [ModularCharacter] scene itself depends on this script
 const _PREVIEW_MODEL_UID: String = "uid://c6oheyitbnlpu"
 
-@export var slot: Slot = Slot.HEAD:
+## Decides the slot, the parts this item may set and the slots it blocks
+@export var type: EquipmentType:
 	set(new_value):
-		slot = new_value
+		if type and type.changed.is_connected(changed.emit): type.changed.disconnect(changed.emit)
+		type = new_value
+		if type and not type.changed.is_connected(changed.emit): type.changed.connect(changed.emit)
 		changed.emit()
 @export var appearance: EquipmentAppearance:
 	set(new_value):
 		appearance = new_value
 		changed.emit()
-## Slots that are emptied while this item is equipped, such as a full helmet blocking [constant FACE]
-@export var blocked_slots: Array[Slot]:
-	set(new_value):
-		blocked_slots = new_value
-		changed.emit()
 
-## Captures what [param model] currently shows in [param for_slot] and [param for_blocked_slots] as a new item
+var slot: Slot:
+	get:
+		assert(type, "EquipmentProfile %s has no EquipmentType!" % resource_path)
+		return type.slot if type else Slot.HEAD
+var blocked_slots: Array[Slot]:
+	get: return type.blocked_slots if type else [] as Array[Slot]
+
+## Captures what [param model] currently shows in the parts of [param for_type] as a new item
 ## Gendered meshes get their other-gender counterpart if one exists with the same number
-static func from_model(model: ModularCharacter, for_slot: Slot, for_blocked_slots: Array[Slot] = []) -> EquipmentProfile:
+static func from_model(model: ModularCharacter, for_type: EquipmentType) -> EquipmentProfile:
 	var equipment_profile: EquipmentProfile = EquipmentProfile.new()
-	equipment_profile.slot = for_slot
-	equipment_profile.blocked_slots = for_blocked_slots
+	equipment_profile.type = for_type
 	equipment_profile.appearance = EquipmentAppearance.new()
 	var parts: Array[EquipmentPartMesh] = []
-	for part: ModularCharacter.Part in equipment_profile.get_allowed_parts():
+	for part: ModularCharacter.Part in for_type.parts:
 		var body_part: ModularBodyPart = model.get_part(part)
 		if not body_part.visible or not body_part.mesh: continue
 		var mesh: ArrayMesh = body_part.mesh
@@ -111,15 +115,15 @@ static func get_slot_parts(for_slot: Slot) -> Array[ModularCharacter.Part]:
 	assert(false)
 	return []
 
-## @returns the [ModularCharacter.Part]s an item in [param for_slot] blocking [param for_blocked_slots] may set
+## @returns the [ModularCharacter.Part]s of [param for_slot] and [param for_blocked_slots]
 static func get_parts_for(for_slot: Slot, for_blocked_slots: Array[Slot]) -> Array[ModularCharacter.Part]:
 	var parts: Array[ModularCharacter.Part] = get_slot_parts(for_slot)
 	for blocked_slot: Slot in for_blocked_slots:
 		if blocked_slot != for_slot: parts.append_array(get_slot_parts(blocked_slot))
 	return parts
 
-## @returns the [ModularCharacter.Part]s this item may set: those of its own [member slot] and its [member blocked_slots]
-func get_allowed_parts() -> Array[ModularCharacter.Part]: return get_parts_for(slot, blocked_slots)
+## @returns every part equipping or unequipping this item resets: all parts of its slot and of the slots it blocks
+func get_reset_parts() -> Array[ModularCharacter.Part]: return get_parts_for(slot, blocked_slots)
 
 ## Previews, such as Menagerie, show the item on a plain [ModularCharacter]
 func create_model(_variation: int) -> Model:
@@ -133,22 +137,19 @@ func get_variation_count() -> int: return 1
 func get_random_variation() -> int: return 0
 
 func get_group_name() -> StringName:
-	var group_name: StringName = Slot.keys()[slot]
-	return group_name.capitalize()
+	return StringName(type.name) if type else &"Untyped"
 
 func _get_configuration_warnings() -> PackedStringArray:
 	# Equipment has no model variations of its own, so the [Profile] warnings do not apply
 	var warnings: PackedStringArray = []
-	if not appearance:
-		warnings.append("Missing EquipmentAppearance.")
-		return warnings
-	if blocked_slots.has(slot): warnings.append("Slot %s blocks itself." % Slot.keys()[slot])
-	var allowed_parts: Array[ModularCharacter.Part] = get_allowed_parts()
+	if not type: warnings.append("Missing EquipmentType.")
+	if not appearance: warnings.append("Missing EquipmentAppearance.")
+	if not type or not appearance: return warnings
 	for part_mesh: EquipmentPartMesh in appearance.parts:
 		if not part_mesh:
 			warnings.append("Empty EquipmentPartMesh entry.")
 			continue
 		var part_name: String = ModularCharacter.Part.keys()[part_mesh.part]
-		if not allowed_parts.has(part_mesh.part): warnings.append("Part %s is neither owned by slot %s nor by a blocked slot." % [part_name, Slot.keys()[slot]])
+		if not type.parts.has(part_mesh.part): warnings.append("Part %s is not used by type %s." % [part_name, type.name])
 		if not part_mesh.male_mesh: warnings.append("Part %s has no male mesh." % part_name)
 	return warnings

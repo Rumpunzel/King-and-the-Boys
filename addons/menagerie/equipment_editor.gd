@@ -4,12 +4,14 @@ extends PanelContainer
 signal equipment_saved(equipment_profile: EquipmentProfile)
 
 const ITEM_DIRECTORY: String = "res://data/equipment"
+const TYPE_DIRECTORY: String = "res://data/equipment/types"
 
 @export_group("Configuration")
 ## This panel is only shown while this tab is open
 @export var _gear_tab: Control
-@export var _slot_option: OptionButton
-@export var _blocked_slots_container: HFlowContainer
+@export var _type_option: OptionButton
+@export var _edit_type_button: Button
+@export var _type_info_label: Label
 @export var _parts_container: VBoxContainer
 @export var _name_edit: LineEdit
 @export var _save_button: Button
@@ -19,58 +21,75 @@ const ITEM_DIRECTORY: String = "res://data/equipment"
 var _model: ModularCharacter
 ## The item being edited, or [code]null[/code] when another profile is previewed
 var _equipment_profile: EquipmentProfile
-var _blocked_check_boxes: Dictionary[EquipmentProfile.Slot, CheckBox] = {}
+## Indexed like the items of [member _type_option]
+var _types: Array[EquipmentType] = []
+var _is_set_up: bool = false
 
 func _ready() -> void:
 	# Do not bake generated items into this scene while it is edited itself
 	if is_part_of_edited_scene(): return
 	_gear_tab.visibility_changed.connect(_on_gear_tab_visibility_changed)
-	_on_gear_tab_visibility_changed()
-	for slot: EquipmentProfile.Slot in EquipmentProfile.Slot.values():
-		var slot_name: String = EquipmentProfile.Slot.keys()[slot]
-		_slot_option.add_item(slot_name.capitalize(), slot)
-		var check_box: CheckBox = CheckBox.new()
-		check_box.text = slot_name.capitalize()
-		check_box.toggled.connect(_on_blocked_slot_toggled)
-		_blocked_slots_container.add_child(check_box)
-		_blocked_check_boxes[slot] = check_box
-	_slot_option.item_selected.connect(_on_slot_selected)
+	_type_option.item_selected.connect(_on_type_selected)
+	_edit_type_button.pressed.connect(_on_edit_type_pressed)
 	_save_button.pressed.connect(_on_save_pressed)
 	_save_as_new_button.pressed.connect(_on_save_as_new_pressed)
-	if _equipment_profile: _show_item(_equipment_profile)
-	_update()
+	_is_set_up = true
+	_on_gear_tab_visibility_changed()
 
-func _get_slot() -> EquipmentProfile.Slot:
-	return _slot_option.get_selected_id() as EquipmentProfile.Slot
+func _load_types() -> void:
+	var selected_type: EquipmentType = _get_type()
+	_types.clear()
+	_type_option.clear()
+	if DirAccess.dir_exists_absolute(TYPE_DIRECTORY):
+		for file_name: String in DirAccess.get_files_at(TYPE_DIRECTORY):
+			if file_name.get_extension() != "tres": continue
+			var equipment_type: EquipmentType = load(TYPE_DIRECTORY.path_join(file_name)) as EquipmentType
+			if not equipment_type: continue
+			_types.append(equipment_type)
+			if equipment_type.icon: _type_option.add_icon_item(equipment_type.icon, equipment_type.name)
+			else: _type_option.add_item(equipment_type.name)
+	_select_type(selected_type)
 
-func _get_blocked_slots() -> Array[EquipmentProfile.Slot]:
-	var blocked_slots: Array[EquipmentProfile.Slot] = []
-	for slot: EquipmentProfile.Slot in _blocked_check_boxes:
-		if _blocked_check_boxes[slot].button_pressed and slot != _get_slot(): blocked_slots.append(slot)
-	return blocked_slots
+func _get_type() -> EquipmentType:
+	var selected_index: int = _type_option.selected
+	if selected_index < 0 or selected_index >= _types.size(): return null
+	return _types[selected_index]
 
-func _show_item(equipment_profile: EquipmentProfile) -> void:
-	_name_edit.text = equipment_profile.name
-	_slot_option.select(_slot_option.get_item_index(equipment_profile.slot))
-	for slot: EquipmentProfile.Slot in _blocked_check_boxes:
-		_blocked_check_boxes[slot].set_pressed_no_signal(equipment_profile.blocked_slots.has(slot))
+func _select_type(equipment_type: EquipmentType) -> void:
+	var type_index: int = _types.find(equipment_type)
+	if type_index < 0 and not _types.is_empty(): type_index = 0
+	_type_option.select(type_index)
 
 func _update() -> void:
-	for slot: EquipmentProfile.Slot in _blocked_check_boxes:
-		_blocked_check_boxes[slot].disabled = slot == _get_slot()
-	_save_button.disabled = not _model or not _equipment_profile
-	_save_as_new_button.disabled = not _model
+	var equipment_type: EquipmentType = _get_type()
+	_edit_type_button.disabled = not equipment_type
+	_type_info_label.text = _describe(equipment_type)
+	_save_button.disabled = not _model or not _equipment_profile or not equipment_type
+	_save_as_new_button.disabled = not _model or not equipment_type
 	_save_button.tooltip_text = "Overwrite %s" % _equipment_profile.resource_path if _equipment_profile else "Select an item in the Gear tab to overwrite it"
 	_rebuild_parts()
+
+func _describe(equipment_type: EquipmentType) -> String:
+	if not equipment_type: return "Create an EquipmentType in %s first." % TYPE_DIRECTORY
+	var slot_name: String = EquipmentProfile.Slot.keys()[equipment_type.slot]
+	var blocked_names: PackedStringArray = []
+	for blocked_slot: EquipmentProfile.Slot in equipment_type.blocked_slots:
+		var blocked_name: String = EquipmentProfile.Slot.keys()[blocked_slot]
+		blocked_names.append(blocked_name.capitalize())
+	var description: String = "Slot: %s" % slot_name.capitalize()
+	if not blocked_names.is_empty(): description += "   Blocks: %s" % ", ".join(blocked_names)
+	return description
 
 func _rebuild_parts() -> void:
 	for child: Node in _parts_container.get_children():
 		_parts_container.remove_child(child)
 		child.queue_free()
 	if not _model:
-		_status_label.text = "Select a modular character or an item to author equipment."
+		_status_label.text = "Select an item, or a modular character to start from."
 		return
-	for part: ModularCharacter.Part in EquipmentProfile.get_parts_for(_get_slot(), _get_blocked_slots()):
+	var equipment_type: EquipmentType = _get_type()
+	if not equipment_type: return
+	for part: ModularCharacter.Part in equipment_type.parts:
 		_parts_container.add_child(_create_part_row(part))
 
 func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
@@ -116,7 +135,7 @@ func _update_mesh_label(part: ModularCharacter.Part, mesh_label: Label) -> void:
 	mesh_label.tooltip_text = body_part.mesh.resource_path
 
 func _capture() -> EquipmentProfile:
-	var captured: EquipmentProfile = EquipmentProfile.from_model(_model, _get_slot(), _get_blocked_slots())
+	var captured: EquipmentProfile = EquipmentProfile.from_model(_model, _get_type())
 	captured.name = _name_edit.text.strip_edges()
 	return captured
 
@@ -145,47 +164,52 @@ func _on_save_pressed() -> void:
 		return
 	var captured: EquipmentProfile = _capture()
 	_equipment_profile.name = captured.name
-	_equipment_profile.slot = captured.slot
-	_equipment_profile.blocked_slots = captured.blocked_slots
+	_equipment_profile.type = captured.type
 	_equipment_profile.appearance = captured.appearance
 	_save(_equipment_profile, _equipment_profile.resource_path)
 
-## Never overwrites an existing item
+## Saves to [code]data/equipment/<type>/<name>.tres[/code]; never overwrites an existing item
 func _on_save_as_new_pressed() -> void:
 	var item_name: String = _name_edit.text.strip_edges()
 	if item_name.is_empty():
 		_report_error("Set an item name before saving.")
 		return
-	var slot_name: String = EquipmentProfile.Slot.keys()[_get_slot()]
-	var item_path: String = "%s/%s/%s.tres" % [ITEM_DIRECTORY, slot_name.to_lower(), item_name.to_snake_case()]
+	var item_path: String = "%s/%s/%s.tres" % [ITEM_DIRECTORY, _get_type().name.to_snake_case(), item_name.to_snake_case()]
 	if ResourceLoader.exists(item_path):
 		_report_error("%s already exists; pick another name." % item_path)
 		return
 	var captured: EquipmentProfile = _capture()
 	if _save(captured, item_path): EditorInterface.get_inspector().edit(load(item_path))
 
-func _on_slot_selected(_index: int) -> void:
+func _on_edit_type_pressed() -> void:
+	EditorInterface.get_inspector().edit(_get_type())
+
+func _on_type_selected(_index: int) -> void:
 	_update()
 
-func _on_blocked_slot_toggled(_toggled_on: bool) -> void:
-	_rebuild_parts()
+func _on_gear_tab_visibility_changed() -> void:
+	visible = _gear_tab.visible
+	if not visible: return
+	# Types may have been added or edited since the tab was last open
+	_load_types()
+	if _equipment_profile: _show_item(_equipment_profile)
+	_update()
 
-# The preview may report before this panel is ready; [method _ready] then catches up
+func _show_item(equipment_profile: EquipmentProfile) -> void:
+	_name_edit.text = equipment_profile.name
+	if equipment_profile.type: _select_type(equipment_profile.type)
+
+# The preview may report before this panel is ready; showing the Gear tab then catches up
 func _on_active_profile_changed(active_profile: Profile) -> void:
 	_equipment_profile = active_profile as EquipmentProfile
-	if not _is_set_up(): return
+	if not _is_set_up or not visible: return
 	if _equipment_profile: _show_item(_equipment_profile)
 	_update()
 
 func _on_model_changed(model: Model) -> void:
 	_model = model as ModularCharacter
-	if _is_set_up(): _update()
+	if _is_set_up and visible: _update()
 
 func _on_model_removed() -> void:
 	_model = null
-	if _is_set_up(): _update()
-
-func _is_set_up() -> bool: return not _blocked_check_boxes.is_empty()
-
-func _on_gear_tab_visibility_changed() -> void:
-	visible = _gear_tab.visible
+	if _is_set_up and visible: _update()

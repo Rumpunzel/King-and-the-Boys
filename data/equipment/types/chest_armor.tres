@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EquipmentType" format=3]
+
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_type.gd" id="1_bldbf"]
+
+[resource]
+script = ExtResource("1_bldbf")
+name = "Chest Armor"
+slot = 2
+parts = Array[int]([12, 2, 3, 26, 27])
