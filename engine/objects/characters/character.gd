@@ -43,6 +43,7 @@ const SPAWN_TRANSFORM: StringName = "spawn_transform"
 @export_group("Configuration")
 @export var _collision_shape: CollisionShape3D
 @export var _navigation_agent: NavigationAgent3D
+@export var equipment: CharacterEquipment
 
 var model: Model:
 	set(new_model):
@@ -52,6 +53,9 @@ var model: Model:
 		model = new_model
 		if not model: return
 		add_child(model, true)
+		if equipment and model is ModularCharacter:
+			var modular_model: ModularCharacter = model
+			equipment.apply_to(modular_model)
 
 var level: Level
 var look_target: Vector3 = Vector3.BACK
@@ -220,4 +224,5 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not _collision_shape: warnings.append("Missing CollisionShape3D reference.")
 	if not _navigation_agent: warnings.append("Missing NavigationAgent3D reference.")
+	if not equipment: warnings.append("Missing CharacterEquipment reference.")
 	return warnings
