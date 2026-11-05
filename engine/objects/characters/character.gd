@@ -12,6 +12,7 @@ signal profile_changed
 const VARIATION: StringName = "variation"
 const PROFILE_PATH: StringName = "profile_path"
 const SPAWN_TRANSFORM: StringName = "spawn_transform"
+const BODY: StringName = "body"
 const EQUIPMENT: StringName = "equipment"
 
 ## Determines the varation of the [Model]
@@ -54,9 +55,17 @@ var model: Model:
 		model = new_model
 		if not model: return
 		add_child(model, true)
+		_apply_body()
 		if equipment and model is ModularCharacter:
 			var modular_model: ModularCharacter = model
 			equipment.apply_to(modular_model)
+
+## Rolled once by the server, see [method ModelConfigurationRandom.roll]
+## {Part: [enum ModularCharacter.Part] -> mesh path: [String]}, an empty path meaning no mesh
+var body: Dictionary = {}:
+	set(new_body):
+		body = new_body
+		_apply_body()
 
 var level: Level
 var look_target: Vector3 = Vector3.BACK
@@ -96,13 +105,15 @@ static func from_character_data(character_data: Dictionary[StringName, Variant])
 	assert(new_character_profile)
 	var new_spawn_transform: Transform3D = character_data[SPAWN_TRANSFORM]
 	var new_character: Character = new_character_profile.create(new_variation, new_spawn_transform)
+	new_character.body = character_data[BODY]
 	var new_equipment_paths: PackedStringArray = character_data[EQUIPMENT]
 	new_character.equipment.set_equipped_paths(new_equipment_paths)
 	return new_character
 
 static func validate_character_data(character_data: Dictionary[StringName, Variant]) -> void:
-	assert(character_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM, EQUIPMENT]))
-	assert(character_data.size() == 4)
+	assert(character_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM, BODY, EQUIPMENT]))
+	assert(character_data.size() == 5)
+	assert(character_data[BODY] is Dictionary)
 	assert(character_data[EQUIPMENT] is PackedStringArray)
 
 ## Used to move the [Character] without pathfinding
@@ -166,6 +177,7 @@ func apply_character_data(character_data: Dictionary[StringName, Variant]) -> vo
 	var character_profile_path: String = character_data[PROFILE_PATH]
 	profile = load(character_profile_path)
 	transform = character_data[SPAWN_TRANSFORM]
+	body = character_data[BODY]
 	var equipment_paths: PackedStringArray = character_data[EQUIPMENT]
 	equipment.set_equipped_paths(equipment_paths)
 
@@ -175,10 +187,19 @@ func to_character_data() -> Dictionary[StringName, Variant]:
 		VARIATION: variation,
 		PROFILE_PATH: profile.resource_path,
 		SPAWN_TRANSFORM: transform,
+		BODY: body,
 		EQUIPMENT: equipment.get_equipped_paths(),
 	}
 	validate_character_data(character_data)
 	return character_data
+
+func _apply_body() -> void:
+	if not model is ModularCharacter: return
+	var modular_model: ModularCharacter = model
+	for part: int in body:
+		var mesh_path: String = body[part]
+		var mesh: ArrayMesh = null if mesh_path.is_empty() else load(mesh_path)
+		modular_model.get_part(part as ModularCharacter.Part).apply_mesh(mesh)
 
 func get_portrait() -> Texture:
 	if model.portrait_override: return model.portrait_override
