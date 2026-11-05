@@ -5,6 +5,7 @@ signal equipment_saved(equipment_profile: EquipmentProfile)
 
 const ITEM_DIRECTORY: String = "res://data/equipment"
 const TYPE_DIRECTORY: String = "res://data/equipment/types"
+const NO_MODEL_HINT: String = "Select an item, or a modular character to start from."
 
 @export_group("Configuration")
 ## This panel is only shown while this tab is open
@@ -85,8 +86,9 @@ func _rebuild_parts() -> void:
 		_parts_container.remove_child(child)
 		child.queue_free()
 	if not _model:
-		_status_label.text = "Select an item, or a modular character to start from."
+		_status_label.text = NO_MODEL_HINT
 		return
+	if _status_label.text == NO_MODEL_HINT: _status_label.text = ""
 	var equipment_type: EquipmentType = _get_type()
 	if not equipment_type: return
 	for part: ModularCharacter.Part in equipment_type.parts:
@@ -105,9 +107,13 @@ func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
 	mesh_label.clip_text = true
 	var next_button: Button = Button.new()
 	next_button.text = ">"
+	var batch_button: Button = Button.new()
+	batch_button.text = "One per mesh"
+	batch_button.tooltip_text = "Save one new item for every mesh of this part, keeping the other parts as shown"
 	previous_button.pressed.connect(_step_part.bind(part, -1, mesh_label))
 	next_button.pressed.connect(_step_part.bind(part, 1, mesh_label))
-	for control: Control in [name_label, previous_button, mesh_label, next_button]: row.add_child(control)
+	batch_button.pressed.connect(_on_one_per_mesh_pressed.bind(part, mesh_label))
+	for control: Control in [name_label, previous_button, mesh_label, next_button, batch_button]: row.add_child(control)
 	_update_mesh_label(part, mesh_label)
 	return row
 
@@ -130,9 +136,36 @@ func _update_mesh_label(part: ModularCharacter.Part, mesh_label: Label) -> void:
 	if not body_part.visible or not body_part.mesh:
 		mesh_label.text = "none"
 		return
-	var mesh_name: String = body_part.mesh.resource_path.get_file().get_basename().trim_prefix("modular_character_")
-	mesh_label.text = "%s  (%d/%d)" % [mesh_name, mesh_index + 1, body_part.get_mesh_count()]
+	mesh_label.text = "%s  (%d/%d)" % [_get_mesh_name(body_part.mesh), mesh_index + 1, body_part.get_mesh_count()]
 	mesh_label.tooltip_text = body_part.mesh.resource_path
+
+static func _get_mesh_name(mesh: Mesh) -> String:
+	return mesh.resource_path.get_file().get_basename().trim_prefix("modular_character_")
+
+func _get_item_path(item_name: String) -> String:
+	return "%s/%s/%s.tres" % [ITEM_DIRECTORY, _get_type().name.to_snake_case(), item_name.to_snake_case()]
+
+## Saves one item per mesh in [param part]'s directory, named after the mesh; existing items are skipped
+func _on_one_per_mesh_pressed(part: ModularCharacter.Part, mesh_label: Label) -> void:
+	var body_part: ModularBodyPart = _model.get_part(part)
+	var original_index: int = body_part.get_mesh_index()
+	var saved_count: int = 0
+	var skipped_count: int = 0
+	for mesh_index: int in body_part.get_mesh_count():
+		body_part.update_index(mesh_index)
+		var item_name: String = _get_mesh_name(body_part.mesh)
+		var item_path: String = _get_item_path(item_name)
+		if ResourceLoader.exists(item_path):
+			skipped_count += 1
+			continue
+		var captured: EquipmentProfile = EquipmentProfile.from_model(_model, _get_type())
+		captured.name = item_name
+		if not _write(captured, item_path): break
+		saved_count += 1
+	body_part.update_index(original_index)
+	_update_mesh_label(part, mesh_label)
+	if saved_count > 0: equipment_saved.emit(null)
+	_status_label.text = "Saved %d new items to %s, skipped %d existing." % [saved_count, _get_item_path("").get_base_dir(), skipped_count]
 
 func _capture() -> EquipmentProfile:
 	var captured: EquipmentProfile = EquipmentProfile.from_model(_model, _get_type())
@@ -140,6 +173,12 @@ func _capture() -> EquipmentProfile:
 	return captured
 
 func _save(equipment_profile: EquipmentProfile, item_path: String) -> bool:
+	if not _write(equipment_profile, item_path): return false
+	_status_label.text = "Saved %s with %d parts." % [item_path, equipment_profile.appearance.parts.size()]
+	equipment_saved.emit(equipment_profile)
+	return true
+
+func _write(equipment_profile: EquipmentProfile, item_path: String) -> bool:
 	var directory_error: Error = DirAccess.make_dir_recursive_absolute(item_path.get_base_dir())
 	if directory_error != Error.OK:
 		_report_error("Could not create %s: %s" % [item_path.get_base_dir(), error_string(directory_error)])
@@ -149,8 +188,6 @@ func _save(equipment_profile: EquipmentProfile, item_path: String) -> bool:
 		_report_error("Could not save %s: %s" % [item_path, error_string(save_error)])
 		return false
 	EditorInterface.get_resource_filesystem().update_file(item_path)
-	_status_label.text = "Saved %s with %d parts." % [item_path, equipment_profile.appearance.parts.size()]
-	equipment_saved.emit(equipment_profile)
 	return true
 
 func _report_error(message: String) -> void:
@@ -174,7 +211,7 @@ func _on_save_as_new_pressed() -> void:
 	if item_name.is_empty():
 		_report_error("Set an item name before saving.")
 		return
-	var item_path: String = "%s/%s/%s.tres" % [ITEM_DIRECTORY, _get_type().name.to_snake_case(), item_name.to_snake_case()]
+	var item_path: String = _get_item_path(item_name)
 	if ResourceLoader.exists(item_path):
 		_report_error("%s already exists; pick another name." % item_path)
 		return
