@@ -12,6 +12,7 @@ signal profile_changed
 const VARIATION: StringName = "variation"
 const PROFILE_PATH: StringName = "profile_path"
 const SPAWN_TRANSFORM: StringName = "spawn_transform"
+const EQUIPMENT: StringName = "equipment"
 
 ## Determines the varation of the [Model]
 ## If [code]<0[/code] a random [Model] will be used
@@ -94,11 +95,15 @@ static func from_character_data(character_data: Dictionary[StringName, Variant])
 	var new_character_profile: CharacterProfile = load(new_character_profile_path)
 	assert(new_character_profile)
 	var new_spawn_transform: Transform3D = character_data[SPAWN_TRANSFORM]
-	return new_character_profile.create(new_variation, new_spawn_transform)
+	var new_character: Character = new_character_profile.create(new_variation, new_spawn_transform)
+	var new_equipment_paths: PackedStringArray = character_data[EQUIPMENT]
+	new_character.equipment.set_equipped_paths(new_equipment_paths)
+	return new_character
 
 static func validate_character_data(character_data: Dictionary[StringName, Variant]) -> void:
-	assert(character_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM]))
-	assert(character_data.size() == 3)
+	assert(character_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM, EQUIPMENT]))
+	assert(character_data.size() == 4)
+	assert(character_data[EQUIPMENT] is PackedStringArray)
 
 ## Used to move the [Character] without pathfinding
 @rpc("any_peer", "call_local")
@@ -161,6 +166,8 @@ func apply_character_data(character_data: Dictionary[StringName, Variant]) -> vo
 	var character_profile_path: String = character_data[PROFILE_PATH]
 	profile = load(character_profile_path)
 	transform = character_data[SPAWN_TRANSFORM]
+	var equipment_paths: PackedStringArray = character_data[EQUIPMENT]
+	equipment.set_equipped_paths(equipment_paths)
 
 func to_character_data() -> Dictionary[StringName, Variant]:
 	assert(profile)
@@ -168,6 +175,7 @@ func to_character_data() -> Dictionary[StringName, Variant]:
 		VARIATION: variation,
 		PROFILE_PATH: profile.resource_path,
 		SPAWN_TRANSFORM: transform,
+		EQUIPMENT: equipment.get_equipped_paths(),
 	}
 	validate_character_data(character_data)
 	return character_data

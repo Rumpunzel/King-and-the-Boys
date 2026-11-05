@@ -14,13 +14,7 @@ func _enter_tree() -> void:
 	add_to_group(role)
 
 func get_character_data() -> Dictionary[StringName, Variant]:
-	var character_data: Dictionary[StringName, Variant] = {
-		Character.VARIATION: variation,
-		Character.PROFILE_PATH: character_profile.resource_path,
-		Character.SPAWN_TRANSFORM: transform,
-	}
-	Character.validate_character_data(character_data)
-	return character_data
+	return character_profile.create_character_data(variation, transform)
 
 func get_profile() -> CharacterProfile:
 	return character_profile

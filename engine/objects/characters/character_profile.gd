@@ -36,7 +36,9 @@ enum Groups {
 
 @export_category("Model")
 @export var model_configuration: ModelConfiguration = preload("uid://c1i0e1p4feqhe")
-@export var starting_equipment: Array[GearProfile]
+@export var starting_equipment: Array[EquipmentProfile]
+## Each table rolls one [EquipmentProfile] on top of [member starting_equipment], replacing the item in its slot
+@export var random_equipment: Array[SpawnTable]
 
 @export_category("Animations")
 @export var spawn_animation: ModelAnimation = preload("uid://djq27fwrmrv2")
@@ -54,6 +56,29 @@ func create(variation: int, spawn_transform: Transform3D) -> Character:
 	new_character.transform = spawn_transform
 	return new_character
 
+## Rolls [member random_equipment], so only call this where character data is authored, i.e. on the server
+func create_character_data(variation: int, spawn_transform: Transform3D) -> Dictionary[StringName, Variant]:
+	var equipment_paths: PackedStringArray = []
+	for equipment_profile: EquipmentProfile in roll_equipment():
+		assert(equipment_profile.resource_path.is_absolute_path(), "EquipmentProfile %s must be saved as its own file to be synchronized!" % equipment_profile.name)
+		equipment_paths.append(equipment_profile.resource_path)
+	var character_data: Dictionary[StringName, Variant] = {
+		Character.VARIATION: variation,
+		Character.PROFILE_PATH: resource_path,
+		Character.SPAWN_TRANSFORM: spawn_transform,
+		Character.EQUIPMENT: equipment_paths,
+	}
+	Character.validate_character_data(character_data)
+	return character_data
+
+func roll_equipment() -> Array[EquipmentProfile]:
+	var rolled_equipment: Array[EquipmentProfile] = starting_equipment.duplicate()
+	for spawn_table: SpawnTable in random_equipment:
+		var rolled_profile: Profile = spawn_table.get_spawn()
+		if rolled_profile is EquipmentProfile: rolled_equipment.append(rolled_profile)
+		else: push_error("SpawnTable in random_equipment of %s rolled %s, which is no EquipmentProfile!" % [name, rolled_profile])
+	return rolled_equipment
+
 func create_model(variation: int) -> Model:
 	var model: ModularCharacter = super.create_model(variation)
 	setup_model(model)
@@ -61,7 +86,6 @@ func create_model(variation: int) -> Model:
 
 func setup_model(model: ModularCharacter) -> void:
 	model_configuration.configure(model)
-	for gear_profile: GearProfile in starting_equipment: gear_profile.model_configuration.configure(model)
 
 func get_group_name() -> StringName:
 	var group_name: StringName = Groups.keys()[group]

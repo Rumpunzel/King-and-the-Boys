@@ -42,6 +42,19 @@ func unequip(slot: EquipmentProfile.Slot) -> void:
 	_remove(slot)
 	equipment_changed.emit()
 
+func get_equipped_paths() -> PackedStringArray:
+	var equipped_paths: PackedStringArray = []
+	for equipment_profile: EquipmentProfile in _equipped.values(): equipped_paths.append(equipment_profile.resource_path)
+	return equipped_paths
+
+## Replaces everything equipped with the [EquipmentProfile]s at [param equipped_paths], in order
+func set_equipped_paths(equipped_paths: PackedStringArray) -> void:
+	unequip_all()
+	for equipped_path: String in equipped_paths:
+		var equipment_profile: EquipmentProfile = load(equipped_path)
+		assert(equipment_profile, "No EquipmentProfile at %s!" % equipped_path)
+		if not equip(equipment_profile): push_warning("%s is blocked by %s; skipped!" % [equipped_path, get_blocker(equipment_profile.slot).resource_path])
+
 func unequip_all() -> void:
 	if _equipped.is_empty(): return
 	for slot: EquipmentProfile.Slot in _equipped.keys(): _remove(slot)
