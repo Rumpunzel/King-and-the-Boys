@@ -208,20 +208,12 @@ func _get_dimensions() -> Array[Array]:
 		dimensions.append(dimension)
 	return dimensions
 
-## @returns the mesh numbers every part of a dimension has, plus [code]"none"[/code] if all of them allow it
+## The first part of a dimension leads: its mesh numbers, plus [code]"none"[/code] if it allows that
 func _get_options(dimension: Array) -> PackedStringArray:
-	var first_part: ModularCharacter.Part = dimension[0]
-	var options: PackedStringArray = _model.get_part(first_part).get_mesh_numbers()
-	var all_allow_none: bool = true
-	for part: ModularCharacter.Part in dimension:
-		var body_part: ModularBodyPart = _model.get_part(part)
-		var part_numbers: PackedStringArray = body_part.get_mesh_numbers()
-		var shared: PackedStringArray = []
-		for mesh_number: String in options:
-			if part_numbers.has(mesh_number): shared.append(mesh_number)
-		options = shared
-		all_allow_none = all_allow_none and body_part.allows_none()
-	if all_allow_none: options.insert(0, "none")
+	var leader: ModularCharacter.Part = dimension[0]
+	var body_part: ModularBodyPart = _model.get_part(leader)
+	var options: PackedStringArray = body_part.get_mesh_numbers()
+	if body_part.allows_none(): options.insert(0, "none")
 	return options
 
 func _count_combinations() -> int:
@@ -267,7 +259,7 @@ func _create_combinations() -> void:
 	var saved_count: int = 0
 	var skipped_count: int = 0
 	while true:
-		if _apply_combination(dimensions, options, counters):
+		if _apply_combination(dimensions, options, counters, shown_meshes):
 			var item_name: String = _get_combination_name()
 			var item_path: String = _get_item_path(item_name)
 			var captured: EquipmentProfile = EquipmentProfile.from_model(_model, _get_type())
@@ -282,12 +274,17 @@ func _create_combinations() -> void:
 	if saved_count > 0: equipment_saved.emit(null)
 	_status_label.text = "Saved %d new items to %s, skipped %d existing or empty." % [saved_count, _get_item_path("").get_base_dir(), skipped_count]
 
-## @returns [code]false[/code] if a part lacks the combination's mesh number
-func _apply_combination(dimensions: Array[Array], options: Array[Array], counters: Array[int]) -> bool:
+## Linked parts follow their dimension's leader; a part lacking the leader's number shows its [param fallback_meshes] entry
+## @returns [code]false[/code] if a leader cannot show its option
+func _apply_combination(dimensions: Array[Array], options: Array[Array], counters: Array[int], fallback_meshes: Dictionary = {}) -> bool:
 	for dimension_index: int in dimensions.size():
 		var mesh_number: String = options[dimension_index][counters[dimension_index]]
-		for part: ModularCharacter.Part in dimensions[dimension_index]:
-			if not _show_mesh_number(part, mesh_number): return false
+		var dimension: Array = dimensions[dimension_index]
+		for part_index: int in dimension.size():
+			var part: ModularCharacter.Part = dimension[part_index]
+			if _show_mesh_number(part, mesh_number): continue
+			if part_index == 0: return false
+			if fallback_meshes.has(part): _model.get_part(part).apply_mesh(fallback_meshes[part] as ArrayMesh)
 	return true
 
 ## Counts like an odometer over all dimensions
