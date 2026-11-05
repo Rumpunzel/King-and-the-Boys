@@ -15,6 +15,9 @@ enum Slot {
 	WAIST,
 }
 
+## Where items live; peers may only request items from here
+const ITEM_DIRECTORY: String = "res://data/equipment"
+
 ## Loaded on demand instead of preloaded, as the [ModularCharacter] scene itself depends on this script
 const _PREVIEW_MODEL_UID: String = "uid://c6oheyitbnlpu"
 

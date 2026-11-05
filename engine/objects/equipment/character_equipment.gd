@@ -84,8 +84,8 @@ func unequip_all() -> void:
 func _request_equip(equipment_path: String) -> void:
 	if not multiplayer.is_server(): return
 	var sender_id: int = multiplayer.get_remote_sender_id()
-	# Never trust a peer's path: only load project resources that are EquipmentProfiles
-	if not equipment_path.begins_with("res://") or not ResourceLoader.exists(equipment_path):
+	# Never trust a peer's path: only load EquipmentProfiles from the item directory
+	if not equipment_path.simplify_path().begins_with(EquipmentProfile.ITEM_DIRECTORY + "/") or not ResourceLoader.exists(equipment_path):
 		push_warning("Peer %d requested unknown equipment %s; refused!" % [sender_id, equipment_path])
 		return
 	var equipment_profile: EquipmentProfile = load(equipment_path) as EquipmentProfile
