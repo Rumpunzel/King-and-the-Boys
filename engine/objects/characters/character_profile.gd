@@ -89,8 +89,10 @@ func create_character_data(variation: int, spawn_transform: Transform3D) -> Dict
 	return character_data
 
 func roll_equipment() -> Array[EquipmentProfile]:
-	var rolled_equipment: Array[EquipmentProfile] = starting_equipment.duplicate()
+	# Empty entries are left over from editing the arrays in the inspector
+	var rolled_equipment: Array[EquipmentProfile] = starting_equipment.filter(func(equipment_profile: EquipmentProfile) -> bool: return equipment_profile != null)
 	for spawn_table: SpawnTable in random_equipment:
+		if not spawn_table: continue
 		var rolled_profile: Profile = spawn_table.get_spawn()
 		if rolled_profile is EquipmentProfile: rolled_equipment.append(rolled_profile)
 		else: push_error("SpawnTable in random_equipment of %s rolled %s, which is no EquipmentProfile!" % [name, rolled_profile])
