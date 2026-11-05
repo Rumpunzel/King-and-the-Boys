@@ -47,6 +47,12 @@ func update_visibility(new_visibility: bool, sources: Array[ModularBodyPart] = [
 		if sources.has(related_body_part): continue
 		related_body_part.update_visibility(not new_visibility, sources)
 
+## Sets an exact mesh, bypassing the index into the mesh directory
+## A [code]null[/code] mesh hides this part and shows its related parts
+func apply_mesh(new_mesh: ArrayMesh) -> void:
+	mesh = new_mesh
+	update_visibility(new_mesh != null)
+
 func random_mesh() -> void: _index = randi() - (0 if _type == Type.ESSENTIAL else 1)
 func reset_mesh() -> void: _index = 0 if _type == Type.ESSENTIAL else -1
 
