@@ -18,10 +18,10 @@ func _helmet(catalog: EquipmentCatalog) -> EquipmentLook:
 func test_adding_stores_a_look_under_its_key_with_its_flag() -> void:
 	var catalog: EquipmentCatalog = _catalog()
 	var helmet: EquipmentLook = _helmet(catalog)
-	catalog.add(helmet, "none 02", false)
-	assert_object(catalog.get_look("none 02")).is_same(helmet)
-	assert_str(helmet.resource_scene_unique_id).is_equal("none_02")
-	assert_str(helmet.name).is_equal("Helmet none 02")
+	catalog.add(helmet, "00 02", false)
+	assert_object(catalog.get_look("00 02")).is_same(helmet)
+	assert_str(helmet.resource_scene_unique_id).is_equal("00_02")
+	assert_str(helmet.name).is_equal("Helmet 00 02")
 	assert_bool(helmet.allowed).is_false()
 	assert_array(catalog.get_allowed_looks()).is_empty()
 	helmet.allowed = true
@@ -39,7 +39,7 @@ func test_hand_made_looks_are_allowed_by_default() -> void:
 	assert_bool(EquipmentLook.new().allowed).is_true()
 
 func test_look_ids_only_use_characters_godot_keeps() -> void:
-	assert_str(EquipmentCatalog.get_look_id("21-00 none")).is_equal("21x00_none")
+	assert_str(EquipmentCatalog.get_look_id("21-00 00")).is_equal("21x00_00")
 	assert_str(EquipmentCatalog.get_look_id("05 10")).is_equal("05_10")
 
 func test_missing_combinations_are_added_unchecked() -> void:
@@ -48,24 +48,24 @@ func test_missing_combinations_are_added_unchecked() -> void:
 	add_child(model)
 	var combinations: EquipmentCombinations = EquipmentCombinations.new(catalog.type, model)
 	combinations.varied_parts = [ModularCharacter.Part.HELMET_ATTACHMENT]
-	catalog.add(_helmet(catalog), "none 02", true)
+	catalog.add(_helmet(catalog), "00 02", true)
 	var added: int = catalog.add_missing(combinations)
 	assert_int(added).is_equal(combinations.list().size() - 1)
-	assert_bool(catalog.get_look("none 02").allowed).is_true()
-	assert_bool(catalog.get_look("none 03").allowed).is_false()
+	assert_bool(catalog.get_look("00 02").allowed).is_true()
+	assert_bool(catalog.get_look("00 03").allowed).is_false()
 	assert_int(catalog.add_missing(combinations)).is_equal(0)
 
 func test_saved_looks_are_found_again_by_resource_id() -> void:
 	var catalog: EquipmentCatalog = _catalog()
-	catalog.add(_helmet(catalog), "21-00 none", false)
+	catalog.add(_helmet(catalog), "21-00 00", false)
 	DirAccess.make_dir_recursive_absolute(EquipmentFixtures.SAVED_ITEMS)
 	assert_int(ResourceSaver.save(catalog, SAVED_CATALOG)).is_equal(OK)
 	var loaded: EquipmentCatalog = ResourceLoader.load(SAVED_CATALOG, "", ResourceLoader.CACHE_MODE_REPLACE)
-	var look: EquipmentLook = loaded.get_look("21-00 none")
+	var look: EquipmentLook = loaded.get_look("21-00 00")
 	assert_object(look).is_not_null()
 	assert_bool(look.allowed).is_false()
 	var look_id: String = ResourceId.of(look)
-	assert_str(look_id).ends_with("::21x00_none")
+	assert_str(look_id).ends_with("::21x00_00")
 	assert_object(ResourceId.find(look_id)).is_same(look)
 	assert_bool(CharacterEquipment.is_requestable(look_id)).is_true()
 

@@ -46,7 +46,7 @@ func get_combination_key(part_numbers: Dictionary) -> String:
 		keyed.append_array(link)
 		var link_numbers: PackedStringArray = []
 		for linked_part: ModularCharacter.Part in link:
-			var mesh_number: String = part_numbers.get(linked_part, "none")
+			var mesh_number: String = part_numbers.get(linked_part, ModularBodyPart.EMPTY_MESH_NUMBER)
 			if not link_numbers.has(mesh_number): link_numbers.append(mesh_number)
 		numbers.append("-".join(link_numbers))
 	return " ".join(numbers)

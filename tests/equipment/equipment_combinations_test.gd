@@ -20,8 +20,8 @@ func test_helmet_combinations_include_none_but_skip_empty_ones() -> void:
 	assert_int(combinations.count()).is_equal(expected)
 	var keys: Dictionary[String, bool] = _keys(combinations)
 	assert_int(keys.size()).is_equal(expected - 1)
-	assert_bool(keys.has("01 none")).is_true()
-	assert_bool(keys.has("none none")).is_false()
+	assert_bool(keys.has("01 00")).is_true()
+	assert_bool(keys.has("00 00")).is_false()
 
 func test_unvaried_parts_keep_their_mesh() -> void:
 	var combinations: EquipmentCombinations = EquipmentCombinations.new(EquipmentFixtures.load_type("helmet"), _model)
@@ -39,7 +39,9 @@ func test_gloves_vary_by_lower_arm_and_elbow_pair() -> void:
 	var expected: int = _model.arm_lower_left.get_mesh_count() * _with_none(_model.elbow_attach_left)
 	assert_int(combinations.count()).is_equal(expected)
 	var keys: Dictionary[String, bool] = _keys(combinations)
-	assert_int(keys.size()).is_equal(expected)
+	# Bare lower arms without elbow pads show no gloves at all
+	assert_int(keys.size()).is_equal(expected - 1)
+	assert_bool(keys.has("00 00")).is_false()
 	assert_bool(keys.has("05 03")).is_true()
 
 func test_group_leaders_reach_numbers_their_partners_lack() -> void:
@@ -47,7 +49,8 @@ func test_group_leaders_reach_numbers_their_partners_lack() -> void:
 	var expected: int = _model.torso.get_mesh_count() * _with_none(_model.shoulder_attach_left)
 	assert_int(combinations.count()).is_equal(expected)
 	var keys: Dictionary[String, bool] = _keys(combinations)
-	assert_int(keys.size()).is_equal(expected)
+	# The bare torso without shoulder pads shows no armour at all
+	assert_int(keys.size()).is_equal(expected - 1)
 	var last_torso: String = _model.torso.get_mesh_numbers()[-1]
 	assert_bool(keys.keys().any(func(combination_key: String) -> bool: return combination_key.begins_with(last_torso))).is_true()
 
@@ -66,6 +69,6 @@ func test_show_key_puts_a_stored_combination_back_on_the_model() -> void:
 	assert_bool(chest.show_key("05")).is_false()
 
 func test_empty_keys_are_recognized() -> void:
-	assert_bool(EquipmentCombinations.is_empty_key("none none")).is_true()
-	assert_bool(EquipmentCombinations.is_empty_key("none-none none")).is_true()
-	assert_bool(EquipmentCombinations.is_empty_key("none 02")).is_false()
+	assert_bool(EquipmentCombinations.is_empty_key("00 00")).is_true()
+	assert_bool(EquipmentCombinations.is_empty_key("00-00 00")).is_true()
+	assert_bool(EquipmentCombinations.is_empty_key("00 02")).is_false()

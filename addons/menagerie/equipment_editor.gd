@@ -152,7 +152,7 @@ func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
 	_update_mesh_label(part, mesh_label)
 	return row
 
-## Steps through the part's mesh directory; decorative parts include "none"
+## Steps through the part's mesh directory; decorative parts include showing no mesh
 ## Linked parts follow to the same mesh number where they have it
 func _step_part(part: ModularCharacter.Part, direction: int) -> void:
 	var body_part: ModularBodyPart = _model.get_part(part)

@@ -35,14 +35,14 @@ func test_combination_key_has_one_number_per_link() -> void:
 		ModularCharacter.Part.ELBOW_ATTACH_LEFT: "03", ModularCharacter.Part.ELBOW_ATTACH_RIGHT: "03",
 	}
 	assert_str(gloves.get_combination_key(part_numbers)).is_equal("05-07 03")
-	assert_str(gloves.get_combination_key({})).is_equal("none none")
+	assert_str(gloves.get_combination_key({})).is_equal("00 00")
 	assert_str(gloves.get_combination_name("05 03")).is_equal("Gloves 05 03")
 
 func test_combination_key_survives_renaming_items_and_types() -> void:
 	var hat_type: EquipmentType = EquipmentFixtures.load_type("hat").duplicate()
 	var hat: EquipmentLook = EquipmentFixtures.make_item(hat_type, ModularCharacter.Part.HEAD_COVERINGS_BASE_HAIR, EquipmentFixtures.HAT)
 	var key: String = hat_type.get_combination_key_of(hat)
-	assert_str(key).is_equal("01 none")
+	assert_str(key).is_equal("01 00")
 	hat.name = "Renamed"
 	hat_type.name = "Cap"
 	assert_str(hat_type.get_combination_key_of(hat)).is_equal(key)

@@ -453,11 +453,11 @@ female_mesh = ExtResource("11_dg4j6")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_whciv"), SubResource("Resource_d8tkh"), SubResource("Resource_8ev22"), SubResource("Resource_uyv3l")])
 
-[sub_resource type="Resource" id="00_none"]
+[sub_resource type="Resource" id="00_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_fk251")
-name = "Gloves 00 none"
+name = "Gloves 00 00"
 
 [sub_resource type="Resource" id="Resource_oe3tr"]
 script = ExtResource("4_msw5b")
@@ -744,11 +744,11 @@ female_mesh = ExtResource("33_vynt2")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_qp3tc"), SubResource("Resource_yd17n"), SubResource("Resource_dq001"), SubResource("Resource_wt6ud")])
 
-[sub_resource type="Resource" id="01_none"]
+[sub_resource type="Resource" id="01_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_q22vk")
-name = "Gloves 01 none"
+name = "Gloves 01 00"
 
 [sub_resource type="Resource" id="Resource_kw0fi"]
 script = ExtResource("4_msw5b")
@@ -1035,11 +1035,11 @@ female_mesh = ExtResource("41_5gqgt")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_hkfeo"), SubResource("Resource_j5apy"), SubResource("Resource_5ii1q"), SubResource("Resource_fej0o")])
 
-[sub_resource type="Resource" id="02_none"]
+[sub_resource type="Resource" id="02_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_cbbf0")
-name = "Gloves 02 none"
+name = "Gloves 02 00"
 
 [sub_resource type="Resource" id="Resource_gxjjs"]
 script = ExtResource("4_msw5b")
@@ -1326,11 +1326,11 @@ female_mesh = ExtResource("49_lu63c")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_heg5p"), SubResource("Resource_04wpn"), SubResource("Resource_iovih"), SubResource("Resource_klmiq")])
 
-[sub_resource type="Resource" id="03_none"]
+[sub_resource type="Resource" id="03_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_bimmy")
-name = "Gloves 03 none"
+name = "Gloves 03 00"
 
 [sub_resource type="Resource" id="Resource_vq8fa"]
 script = ExtResource("4_msw5b")
@@ -1617,11 +1617,11 @@ female_mesh = ExtResource("57_07a7f")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_xyya0"), SubResource("Resource_ka88y"), SubResource("Resource_go3c7"), SubResource("Resource_ljfbk")])
 
-[sub_resource type="Resource" id="04_none"]
+[sub_resource type="Resource" id="04_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_sl4bp")
-name = "Gloves 04 none"
+name = "Gloves 04 00"
 
 [sub_resource type="Resource" id="Resource_xoy5j"]
 script = ExtResource("4_msw5b")
@@ -1908,11 +1908,11 @@ female_mesh = ExtResource("65_gg5o7")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_n7e28"), SubResource("Resource_gqhq3"), SubResource("Resource_v85n2"), SubResource("Resource_7sgxt")])
 
-[sub_resource type="Resource" id="05_none"]
+[sub_resource type="Resource" id="05_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_rg5im")
-name = "Gloves 05 none"
+name = "Gloves 05 00"
 
 [sub_resource type="Resource" id="Resource_ocdfg"]
 script = ExtResource("4_msw5b")
@@ -2199,11 +2199,11 @@ female_mesh = ExtResource("73_37wmp")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_ohuq7"), SubResource("Resource_xi0yt"), SubResource("Resource_oerqe"), SubResource("Resource_cfprw")])
 
-[sub_resource type="Resource" id="06_none"]
+[sub_resource type="Resource" id="06_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_88p1d")
-name = "Gloves 06 none"
+name = "Gloves 06 00"
 
 [sub_resource type="Resource" id="Resource_xk36p"]
 script = ExtResource("4_msw5b")
@@ -2490,11 +2490,11 @@ female_mesh = ExtResource("81_rbk1n")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_qllbv"), SubResource("Resource_42u66"), SubResource("Resource_gfouk"), SubResource("Resource_3n02g")])
 
-[sub_resource type="Resource" id="07_none"]
+[sub_resource type="Resource" id="07_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_qw5rf")
-name = "Gloves 07 none"
+name = "Gloves 07 00"
 
 [sub_resource type="Resource" id="Resource_7lj15"]
 script = ExtResource("4_msw5b")
@@ -2781,11 +2781,11 @@ female_mesh = ExtResource("89_70f0d")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_cs577"), SubResource("Resource_wdsaw"), SubResource("Resource_rqp4p"), SubResource("Resource_mkjdx")])
 
-[sub_resource type="Resource" id="08_none"]
+[sub_resource type="Resource" id="08_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_s1roy")
-name = "Gloves 08 none"
+name = "Gloves 08 00"
 
 [sub_resource type="Resource" id="Resource_7mqh6"]
 script = ExtResource("4_msw5b")
@@ -3072,11 +3072,11 @@ female_mesh = ExtResource("97_dt2ts")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_np6vx"), SubResource("Resource_0m2do"), SubResource("Resource_psuyd"), SubResource("Resource_krong")])
 
-[sub_resource type="Resource" id="09_none"]
+[sub_resource type="Resource" id="09_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_1xnw8")
-name = "Gloves 09 none"
+name = "Gloves 09 00"
 
 [sub_resource type="Resource" id="Resource_2r0cg"]
 script = ExtResource("4_msw5b")
@@ -3363,11 +3363,11 @@ female_mesh = ExtResource("105_clkkw")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_77ilt"), SubResource("Resource_lnxfm"), SubResource("Resource_35pdr"), SubResource("Resource_tejlw")])
 
-[sub_resource type="Resource" id="10_none"]
+[sub_resource type="Resource" id="10_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_j0sxn")
-name = "Gloves 10 none"
+name = "Gloves 10 00"
 
 [sub_resource type="Resource" id="Resource_8xn7o"]
 script = ExtResource("4_msw5b")
@@ -3654,11 +3654,11 @@ female_mesh = ExtResource("113_olu0g")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_itbn1"), SubResource("Resource_n7j5p"), SubResource("Resource_d400f"), SubResource("Resource_iqx0y")])
 
-[sub_resource type="Resource" id="11_none"]
+[sub_resource type="Resource" id="11_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_hwpg6")
-name = "Gloves 11 none"
+name = "Gloves 11 00"
 
 [sub_resource type="Resource" id="Resource_3wrek"]
 script = ExtResource("4_msw5b")
@@ -3945,11 +3945,11 @@ female_mesh = ExtResource("121_qnbfh")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_18rj8"), SubResource("Resource_707ga"), SubResource("Resource_n8v6f"), SubResource("Resource_qbmb5")])
 
-[sub_resource type="Resource" id="12_none"]
+[sub_resource type="Resource" id="12_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_ynwtc")
-name = "Gloves 12 none"
+name = "Gloves 12 00"
 
 [sub_resource type="Resource" id="Resource_3j1ua"]
 script = ExtResource("4_msw5b")
@@ -4236,11 +4236,11 @@ female_mesh = ExtResource("129_xcr8f")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_mwpay"), SubResource("Resource_c26h0"), SubResource("Resource_846x0"), SubResource("Resource_rvmi5")])
 
-[sub_resource type="Resource" id="13_none"]
+[sub_resource type="Resource" id="13_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_xcbjk")
-name = "Gloves 13 none"
+name = "Gloves 13 00"
 
 [sub_resource type="Resource" id="Resource_eanyv"]
 script = ExtResource("4_msw5b")
@@ -4527,11 +4527,11 @@ female_mesh = ExtResource("137_qcu5w")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_3n6cf"), SubResource("Resource_7f3th"), SubResource("Resource_skd4r"), SubResource("Resource_7syh5")])
 
-[sub_resource type="Resource" id="14_none"]
+[sub_resource type="Resource" id="14_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_xjtaf")
-name = "Gloves 14 none"
+name = "Gloves 14 00"
 
 [sub_resource type="Resource" id="Resource_ss8co"]
 script = ExtResource("4_msw5b")
@@ -4818,11 +4818,11 @@ female_mesh = ExtResource("145_ot2ug")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_0ca2l"), SubResource("Resource_pgfj3"), SubResource("Resource_omg3p"), SubResource("Resource_ywqj6")])
 
-[sub_resource type="Resource" id="15_none"]
+[sub_resource type="Resource" id="15_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_bq8a5")
-name = "Gloves 15 none"
+name = "Gloves 15 00"
 
 [sub_resource type="Resource" id="Resource_hy8fq"]
 script = ExtResource("4_msw5b")
@@ -5109,11 +5109,11 @@ female_mesh = ExtResource("153_5ka0s")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_1ntch"), SubResource("Resource_uln3k"), SubResource("Resource_jlavl"), SubResource("Resource_vecai")])
 
-[sub_resource type="Resource" id="16_none"]
+[sub_resource type="Resource" id="16_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_l35io")
-name = "Gloves 16 none"
+name = "Gloves 16 00"
 
 [sub_resource type="Resource" id="Resource_xb7ay"]
 script = ExtResource("4_msw5b")
@@ -5400,11 +5400,11 @@ female_mesh = ExtResource("161_o4kl7")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_dfeop"), SubResource("Resource_rjb7v"), SubResource("Resource_7h8nt"), SubResource("Resource_uu3e7")])
 
-[sub_resource type="Resource" id="17_none"]
+[sub_resource type="Resource" id="17_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_3fi7t")
-name = "Gloves 17 none"
+name = "Gloves 17 00"
 
 [sub_resource type="Resource" id="Resource_4fr0p"]
 script = ExtResource("4_msw5b")
@@ -5691,13 +5691,13 @@ female_mesh = ExtResource("11_dg4j6")
 script = ExtResource("15_p4a2q")
 parts = Array[ExtResource("4_msw5b")]([SubResource("Resource_08uil"), SubResource("Resource_n8q0u"), SubResource("Resource_01s5l"), SubResource("Resource_4l706")])
 
-[sub_resource type="Resource" id="18x00_none"]
+[sub_resource type="Resource" id="18x00_00"]
 script = ExtResource("1_mauv3")
 type = ExtResource("16_npxb3")
 appearance = SubResource("Resource_jhfm8")
-name = "Gloves 18-00 none"
+name = "Gloves 18-00 00"
 
 [resource]
 script = ExtResource("167_e45y8")
 type = ExtResource("16_npxb3")
-looks = Array[ExtResource("1_mauv3")]([SubResource("00_01"), SubResource("00_02"), SubResource("00_03"), SubResource("00_04"), SubResource("00_05"), SubResource("00_06"), SubResource("00_none"), SubResource("01_01"), SubResource("01_02"), SubResource("01_03"), SubResource("01_04"), SubResource("01_05"), SubResource("01_06"), SubResource("01_none"), SubResource("02_01"), SubResource("02_02"), SubResource("02_03"), SubResource("02_04"), SubResource("02_05"), SubResource("02_06"), SubResource("02_none"), SubResource("03_01"), SubResource("03_02"), SubResource("03_03"), SubResource("03_04"), SubResource("03_05"), SubResource("03_06"), SubResource("03_none"), SubResource("04_01"), SubResource("04_02"), SubResource("04_03"), SubResource("04_04"), SubResource("04_05"), SubResource("04_06"), SubResource("04_none"), SubResource("05_01"), SubResource("05_02"), SubResource("05_03"), SubResource("05_04"), SubResource("05_05"), SubResource("05_06"), SubResource("05_none"), SubResource("06_01"), SubResource("06_02"), SubResource("06_03"), SubResource("06_04"), SubResource("06_05"), SubResource("06_06"), SubResource("06_none"), SubResource("07_01"), SubResource("07_02"), SubResource("07_03"), SubResource("07_04"), SubResource("07_05"), SubResource("07_06"), SubResource("07_none"), SubResource("08_01"), SubResource("08_02"), SubResource("08_03"), SubResource("08_04"), SubResource("08_05"), SubResource("08_06"), SubResource("08_none"), SubResource("09_01"), SubResource("09_02"), SubResource("09_03"), SubResource("09_04"), SubResource("09_05"), SubResource("09_06"), SubResource("09_none"), SubResource("10_01"), SubResource("10_02"), SubResource("10_03"), SubResource("10_04"), SubResource("10_05"), SubResource("10_06"), SubResource("10_none"), SubResource("11_01"), SubResource("11_02"), SubResource("11_03"), SubResource("11_04"), SubResource("11_05"), SubResource("11_06"), SubResource("11_none"), SubResource("12_01"), SubResource("12_02"), SubResource("12_03"), SubResource("12_04"), SubResource("12_05"), SubResource("12_06"), SubResource("12_none"), SubResource("13_01"), SubResource("13_02"), SubResource("13_03"), SubResource("13_04"), SubResource("13_05"), SubResource("13_06"), SubResource("13_none"), SubResource("14_01"), SubResource("14_02"), SubResource("14_03"), SubResource("14_04"), SubResource("14_05"), SubResource("14_06"), SubResource("14_none"), SubResource("15_01"), SubResource("15_02"), SubResource("15_03"), SubResource("15_04"), SubResource("15_05"), SubResource("15_06"), SubResource("15_none"), SubResource("16_01"), SubResource("16_02"), SubResource("16_03"), SubResource("16_04"), SubResource("16_05"), SubResource("16_06"), SubResource("16_none"), SubResource("17_01"), SubResource("17_02"), SubResource("17_03"), SubResource("17_04"), SubResource("17_05"), SubResource("17_06"), SubResource("17_none"), SubResource("18x00_01"), SubResource("18x00_02"), SubResource("18x00_03"), SubResource("18x00_04"), SubResource("18x00_05"), SubResource("18x00_06"), SubResource("18x00_none")])
+looks = Array[ExtResource("1_mauv3")]([SubResource("00_01"), SubResource("00_02"), SubResource("00_03"), SubResource("00_04"), SubResource("00_05"), SubResource("00_06"), SubResource("00_00"), SubResource("01_01"), SubResource("01_02"), SubResource("01_03"), SubResource("01_04"), SubResource("01_05"), SubResource("01_06"), SubResource("01_00"), SubResource("02_01"), SubResource("02_02"), SubResource("02_03"), SubResource("02_04"), SubResource("02_05"), SubResource("02_06"), SubResource("02_00"), SubResource("03_01"), SubResource("03_02"), SubResource("03_03"), SubResource("03_04"), SubResource("03_05"), SubResource("03_06"), SubResource("03_00"), SubResource("04_01"), SubResource("04_02"), SubResource("04_03"), SubResource("04_04"), SubResource("04_05"), SubResource("04_06"), SubResource("04_00"), SubResource("05_01"), SubResource("05_02"), SubResource("05_03"), SubResource("05_04"), SubResource("05_05"), SubResource("05_06"), SubResource("05_00"), SubResource("06_01"), SubResource("06_02"), SubResource("06_03"), SubResource("06_04"), SubResource("06_05"), SubResource("06_06"), SubResource("06_00"), SubResource("07_01"), SubResource("07_02"), SubResource("07_03"), SubResource("07_04"), SubResource("07_05"), SubResource("07_06"), SubResource("07_00"), SubResource("08_01"), SubResource("08_02"), SubResource("08_03"), SubResource("08_04"), SubResource("08_05"), SubResource("08_06"), SubResource("08_00"), SubResource("09_01"), SubResource("09_02"), SubResource("09_03"), SubResource("09_04"), SubResource("09_05"), SubResource("09_06"), SubResource("09_00"), SubResource("10_01"), SubResource("10_02"), SubResource("10_03"), SubResource("10_04"), SubResource("10_05"), SubResource("10_06"), SubResource("10_00"), SubResource("11_01"), SubResource("11_02"), SubResource("11_03"), SubResource("11_04"), SubResource("11_05"), SubResource("11_06"), SubResource("11_00"), SubResource("12_01"), SubResource("12_02"), SubResource("12_03"), SubResource("12_04"), SubResource("12_05"), SubResource("12_06"), SubResource("12_00"), SubResource("13_01"), SubResource("13_02"), SubResource("13_03"), SubResource("13_04"), SubResource("13_05"), SubResource("13_06"), SubResource("13_00"), SubResource("14_01"), SubResource("14_02"), SubResource("14_03"), SubResource("14_04"), SubResource("14_05"), SubResource("14_06"), SubResource("14_00"), SubResource("15_01"), SubResource("15_02"), SubResource("15_03"), SubResource("15_04"), SubResource("15_05"), SubResource("15_06"), SubResource("15_00"), SubResource("16_01"), SubResource("16_02"), SubResource("16_03"), SubResource("16_04"), SubResource("16_05"), SubResource("16_06"), SubResource("16_00"), SubResource("17_01"), SubResource("17_02"), SubResource("17_03"), SubResource("17_04"), SubResource("17_05"), SubResource("17_06"), SubResource("17_00"), SubResource("18x00_01"), SubResource("18x00_02"), SubResource("18x00_03"), SubResource("18x00_04"), SubResource("18x00_05"), SubResource("18x00_06"), SubResource("18x00_00")])

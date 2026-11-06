@@ -60,6 +60,9 @@ func get_mesh_index() -> int:
 
 func get_mesh_count() -> int: return _mesh_list.size()
 
+## The number keys use for a part showing no mesh; the asset pack's own [code]00[/code] meshes are bare skin, so it reads the same
+const EMPTY_MESH_NUMBER: String = "00"
+
 ## @returns the trailing number of a mesh file, e.g. [code]"05"[/code] for [code]..._Male_05.res[/code]
 static func get_mesh_number(mesh_path: String) -> String:
 	var mesh_name: String = mesh_path.get_file().get_basename()

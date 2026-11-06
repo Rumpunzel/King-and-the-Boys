@@ -19,15 +19,15 @@ func _init(for_type: EquipmentType, on_model: ModularCharacter) -> void:
 	model = on_model
 	varied_parts = for_type.parts.duplicate()
 
-## @returns the trailing number of the mesh [param body_part] shows, such as [code]"05"[/code], or [code]"none"[/code]
+## @returns the trailing number of the mesh [param body_part] shows, such as [code]"05"[/code], or [constant ModularBodyPart.EMPTY_MESH_NUMBER] if it shows none
 static func get_mesh_number(body_part: ModularBodyPart) -> String:
-	if not body_part.visible or not body_part.mesh: return "none"
+	if not body_part.visible or not body_part.mesh: return ModularBodyPart.EMPTY_MESH_NUMBER
 	return ModularBodyPart.get_mesh_number(body_part.mesh.resource_path)
 
-## @returns whether a key names no mesh at all, e.g. "none none"
+## @returns whether a key names only bare or no meshes, e.g. "00 00"
 static func is_empty_key(combination_key: String) -> bool:
 	for number: String in combination_key.replace("-", " ").split(" "):
-		if number != "none": return false
+		if number != ModularBodyPart.EMPTY_MESH_NUMBER: return false
 	return true
 
 ## The key of what [member model] shows now
@@ -36,12 +36,12 @@ func get_shown_key() -> String:
 	for part: ModularCharacter.Part in type.parts: part_numbers[part] = get_mesh_number(model.get_part(part))
 	return type.get_combination_key(part_numbers)
 
-## Shows the mesh numbered [param mesh_number], or no mesh for [code]"none"[/code]
+## Shows the mesh numbered [param mesh_number]; [constant ModularBodyPart.EMPTY_MESH_NUMBER] hides a part without such a mesh
 ## @returns [code]false[/code] if the part has no such mesh
 func show_mesh_number(part: ModularCharacter.Part, mesh_number: String) -> bool:
 	var body_part: ModularBodyPart = model.get_part(part)
-	var mesh_index: int = -1 if mesh_number == "none" else body_part.find_mesh_index(mesh_number)
-	if mesh_index < 0 and (mesh_number != "none" or not body_part.allows_none()): return false
+	var mesh_index: int = body_part.find_mesh_index(mesh_number)
+	if mesh_index < 0 and (mesh_number != ModularBodyPart.EMPTY_MESH_NUMBER or not body_part.allows_none()): return false
 	body_part.update_index(mesh_index)
 	return true
 
@@ -86,12 +86,12 @@ func get_dimensions() -> Array[Array]:
 		dimensions.append(dimension)
 	return dimensions
 
-## The leader's mesh numbers, plus [code]"none"[/code] if it allows that
+## The leader's mesh numbers, plus [constant ModularBodyPart.EMPTY_MESH_NUMBER] for no mesh if it allows that
 func get_options(dimension: Array) -> PackedStringArray:
 	var leader: ModularCharacter.Part = dimension[0]
 	var body_part: ModularBodyPart = model.get_part(leader)
 	var options: PackedStringArray = body_part.get_mesh_numbers()
-	if body_part.allows_none(): options.insert(0, "none")
+	if body_part.allows_none() and not options.has(ModularBodyPart.EMPTY_MESH_NUMBER): options.insert(0, ModularBodyPart.EMPTY_MESH_NUMBER)
 	return options
 
 ## Counts up to [constant MAX_COMBINATIONS] + 1
