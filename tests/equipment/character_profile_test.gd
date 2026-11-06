@@ -98,3 +98,11 @@ func test_items_preview_themselves_on_a_plain_character() -> void:
 	var model: ModularCharacter = auto_free(helmet.create_model(0))
 	assert_str(EquipmentFixtures.mesh_path(model.helmet_attachment)).is_equal(EquipmentFixtures.HELMET_ATTACHMENT)
 	assert_object(model.back_attachment.mesh).is_null()
+
+func test_unchecked_starting_looks_are_kept_but_warned_about() -> void:
+	var unchecked: EquipmentLook = EquipmentFixtures.make_item(EquipmentFixtures.load_type("cape"), ModularCharacter.Part.BACK_ATTACHMENT, EquipmentFixtures.CAPE)
+	unchecked.allowed = false
+	var saved: EquipmentLook = EquipmentFixtures.save_item(unchecked, "unchecked_cape.tres")
+	_knight.back = ResourceId.of(saved)
+	assert_str(_knight.back).is_equal(ResourceId.of(saved))
+	assert_bool(_has_warning("unchecked")).is_true()

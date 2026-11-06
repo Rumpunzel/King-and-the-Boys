@@ -75,4 +75,4 @@ name = "Mask 04"
 [resource]
 script = ExtResource("11_mdt74")
 type = ExtResource("7_e2gbk")
-entries = Array[ExtResource("1_5oj2n")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04")])
+looks = Array[ExtResource("1_5oj2n")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04")])

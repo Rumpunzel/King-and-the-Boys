@@ -15,62 +15,74 @@ func _helmet(catalog: EquipmentCatalog) -> EquipmentLook:
 	helmet.name = ""
 	return helmet
 
-func test_combinations_start_unreviewed() -> void:
-	assert_int(_catalog().get_status("05 10")).is_equal(EquipmentCatalog.Status.UNREVIEWED)
-
-func test_allowing_stores_the_item_under_its_key() -> void:
+func test_adding_stores_a_look_under_its_key_with_its_flag() -> void:
 	var catalog: EquipmentCatalog = _catalog()
 	var helmet: EquipmentLook = _helmet(catalog)
-	catalog.allow(helmet, "none 02")
-	assert_int(catalog.get_status("none 02")).is_equal(EquipmentCatalog.Status.ALLOWED)
-	assert_object(catalog.get_entry("none 02")).is_same(helmet)
+	catalog.add(helmet, "none 02", false)
+	assert_object(catalog.get_look("none 02")).is_same(helmet)
 	assert_str(helmet.resource_scene_unique_id).is_equal("none_02")
 	assert_str(helmet.name).is_equal("Helmet none 02")
+	assert_bool(helmet.allowed).is_false()
+	assert_array(catalog.get_allowed_looks()).is_empty()
+	helmet.allowed = true
+	assert_array(catalog.get_allowed_looks()).contains_exactly([helmet])
 
-func test_deny_and_undecide_document_and_reset_decisions() -> void:
+func test_adding_a_key_again_replaces_the_look() -> void:
 	var catalog: EquipmentCatalog = _catalog()
-	catalog.allow(_helmet(catalog), "05 10")
-	catalog.deny("05 10")
-	assert_int(catalog.get_status("05 10")).is_equal(EquipmentCatalog.Status.DENIED)
-	assert_object(catalog.get_entry("05 10")).is_null()
-	catalog.deny("05 10")
-	assert_array(catalog.denied).contains_exactly(["05 10"])
-	catalog.allow(_helmet(catalog), "05 10")
-	assert_array(catalog.denied).is_empty()
-	catalog.undecide("05 10")
-	assert_int(catalog.get_status("05 10")).is_equal(EquipmentCatalog.Status.UNREVIEWED)
+	catalog.add(_helmet(catalog), "05 10", true)
+	var replacement: EquipmentLook = _helmet(catalog)
+	catalog.add(replacement, "05 10", false)
+	assert_int(catalog.looks.size()).is_equal(1)
+	assert_object(catalog.get_look("05 10")).is_same(replacement)
 
-func test_entry_ids_only_use_characters_godot_keeps() -> void:
-	assert_str(EquipmentCatalog.get_entry_id("21-00 none")).is_equal("21x00_none")
-	assert_str(EquipmentCatalog.get_entry_id("05 10")).is_equal("05_10")
+func test_hand_made_looks_are_allowed_by_default() -> void:
+	assert_bool(EquipmentLook.new().allowed).is_true()
 
-func test_saved_entries_are_found_again_by_resource_id() -> void:
+func test_look_ids_only_use_characters_godot_keeps() -> void:
+	assert_str(EquipmentCatalog.get_look_id("21-00 none")).is_equal("21x00_none")
+	assert_str(EquipmentCatalog.get_look_id("05 10")).is_equal("05_10")
+
+func test_missing_combinations_are_added_unchecked() -> void:
 	var catalog: EquipmentCatalog = _catalog()
-	catalog.allow(_helmet(catalog), "21-00 none")
+	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
+	add_child(model)
+	var combinations: EquipmentCombinations = EquipmentCombinations.new(catalog.type, model)
+	combinations.varied_parts = [ModularCharacter.Part.HELMET_ATTACHMENT]
+	catalog.add(_helmet(catalog), "none 02", true)
+	var added: int = catalog.add_missing(combinations)
+	assert_int(added).is_equal(combinations.list().size() - 1)
+	assert_bool(catalog.get_look("none 02").allowed).is_true()
+	assert_bool(catalog.get_look("none 03").allowed).is_false()
+	assert_int(catalog.add_missing(combinations)).is_equal(0)
+
+func test_saved_looks_are_found_again_by_resource_id() -> void:
+	var catalog: EquipmentCatalog = _catalog()
+	catalog.add(_helmet(catalog), "21-00 none", false)
 	DirAccess.make_dir_recursive_absolute(EquipmentFixtures.SAVED_ITEMS)
 	assert_int(ResourceSaver.save(catalog, SAVED_CATALOG)).is_equal(OK)
 	var loaded: EquipmentCatalog = ResourceLoader.load(SAVED_CATALOG, "", ResourceLoader.CACHE_MODE_REPLACE)
-	var entry: EquipmentLook = loaded.get_entry("21-00 none")
-	assert_object(entry).is_not_null()
-	var entry_id: String = ResourceId.of(entry)
-	assert_str(entry_id).ends_with("::21x00_none")
-	assert_object(ResourceId.find(entry_id)).is_same(entry)
-	assert_bool(CharacterEquipment.is_requestable(entry_id)).is_true()
+	var look: EquipmentLook = loaded.get_look("21-00 none")
+	assert_object(look).is_not_null()
+	assert_bool(look.allowed).is_false()
+	var look_id: String = ResourceId.of(look)
+	assert_str(look_id).ends_with("::21x00_none")
+	assert_object(ResourceId.find(look_id)).is_same(look)
+	assert_bool(CharacterEquipment.is_requestable(look_id)).is_true()
 
-func test_catalog_warns_about_entries_of_other_types() -> void:
+func test_catalog_warns_about_looks_of_other_types() -> void:
 	var catalog: EquipmentCatalog = _catalog()
 	var cape: EquipmentLook = EquipmentFixtures.make_item(EquipmentFixtures.load_type("cape"), ModularCharacter.Part.BACK_ATTACHMENT, EquipmentFixtures.CAPE)
-	catalog.entries = [cape]
+	catalog.looks = [cape]
 	assert_int(catalog._get_configuration_warnings().size()).is_equal(1)
 
-func test_committed_catalogs_resolve_every_entry() -> void:
+func test_committed_catalogs_resolve_every_look() -> void:
 	var catalogs: Array[EquipmentCatalog] = EquipmentCatalog.find_all()
 	assert_array(catalogs).is_not_empty()
 	for catalog: EquipmentCatalog in catalogs:
 		assert_array(catalog._get_configuration_warnings()).override_failure_message("%s warns" % catalog.resource_path).is_empty()
 		assert_str(ResourceId.of(catalog)).override_failure_message("%s has no UID" % catalog.resource_path).starts_with("uid://")
 		assert_object(EquipmentCatalog.find_for(catalog.type)).is_same(catalog)
-		for entry: EquipmentLook in catalog.entries:
-			var key: String = catalog.type.get_combination_key_of(entry)
-			assert_str(entry.resource_scene_unique_id).override_failure_message("%s is stored under the wrong ID" % entry.name).is_equal(EquipmentCatalog.get_entry_id(key))
-			assert_object(ResourceId.find(ResourceId.of(entry))).is_same(entry)
+		for look: EquipmentLook in catalog.looks:
+			var key: String = catalog.type.get_combination_key_of(look)
+			assert_str(look.resource_scene_unique_id).override_failure_message("%s is stored under the wrong ID" % look.name).is_equal(EquipmentCatalog.get_look_id(key))
+			assert_object(ResourceId.find(ResourceId.of(look))).is_same(look)

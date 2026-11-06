@@ -212,6 +212,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if _model_variations.is_empty(): warnings.append("Missing model variations scene.")
 	for equipment_look: EquipmentLook in get_starting_equipment():
+		# Kept rather than refused, so unchecking a look in a catalog never silently empties a slot
+		if not equipment_look.allowed: warnings.append("%s is unchecked in its catalog." % equipment_look.name)
 		for blocked_slot: EquipmentLook.Slot in equipment_look.blocked_slots:
 			var blocked_profile: EquipmentLook = get_starting_equipment_for(blocked_slot)
 			if blocked_profile: warnings.append("%s blocks %s, so %s is never worn." % [equipment_look.name, EquipmentLook.Slot.keys()[blocked_slot], blocked_profile.name])

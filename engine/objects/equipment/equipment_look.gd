@@ -34,6 +34,11 @@ const _PREVIEW_MODEL_UID: String = "uid://c6oheyitbnlpu"
 		appearance = new_value
 		if appearance and not appearance.changed.is_connected(changed.emit): appearance.changed.connect(changed.emit)
 		changed.emit()
+## Whether this look is meant to be used; unchecked looks of a catalog stay recorded but are not offered or worn
+@export var allowed: bool = true:
+	set(new_value):
+		allowed = new_value
+		changed.emit()
 
 var slot: Slot:
 	get:
@@ -144,6 +149,17 @@ func create_model(_variation: int) -> Model:
 
 func get_variation_count() -> int: return 1
 func get_random_variation() -> int: return 0
+
+## The look's mesh for its type's first part, e.g. "Torso 05"; looks of one base are variations of each other
+func get_base_name() -> String:
+	if not type or type.parts.is_empty(): return get_group_name()
+	var lead_part: ModularCharacter.Part = type.parts[0]
+	var part_name: String = ModularCharacter.Part.keys()[lead_part]
+	if appearance:
+		for part_mesh: EquipmentPartMesh in appearance.parts:
+			if part_mesh and part_mesh.part == lead_part and part_mesh.male_mesh:
+				return "%s %s" % [part_name.capitalize(), ModularBodyPart.get_mesh_number(part_mesh.male_mesh.resource_path)]
+	return "No %s" % part_name.capitalize()
 
 func get_group_name() -> StringName:
 	return StringName(type.name) if type else &"Untyped"

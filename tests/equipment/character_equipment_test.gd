@@ -115,3 +115,9 @@ func test_equip_requests_only_accept_items_from_the_item_directory() -> void:
 	_equipment.request_equip(saved_helmet)
 	_equipment.request_unequip(EquipmentLook.Slot.HEAD)
 	assert_array(_equipment.equipped_ids).is_empty()
+
+func test_requests_for_unchecked_looks_are_refused() -> void:
+	_helmet.allowed = false
+	var saved_helmet: EquipmentLook = EquipmentFixtures.save_item(_helmet, "unchecked_helmet.tres")
+	_equipment.request_equip(saved_helmet)
+	assert_array(_equipment.equipped_ids).is_empty()

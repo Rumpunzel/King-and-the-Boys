@@ -1,194 +1,196 @@
 [gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://c0untm7mvwa2s"]
 
-[ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_67sew"]
-[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_hkfud"]
-[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_mlw21"]
-[ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_y8t4m"]
-[ext_resource type="ArrayMesh" uid="uid://cyhd4i0hp0irr" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_00.res" id="7_ju4ak"]
-[ext_resource type="ArrayMesh" uid="uid://blwj1hbiooowa" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_00.res" id="8_m0o1c"]
-[ext_resource type="ArrayMesh" uid="uid://b702rmang6nvd" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_00.res" id="9_tgbif"]
-[ext_resource type="ArrayMesh" uid="uid://dkdgv85cqxlqg" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_00.res" id="10_5b3pl"]
-[ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="11_s4d3g"]
-[ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="12_n2mon"]
-[ext_resource type="ArrayMesh" uid="uid://mvluv8nefqkp" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_01.res" id="13_xgx5b"]
-[ext_resource type="ArrayMesh" uid="uid://deylmhekr686p" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_01.res" id="14_tkoi2"]
-[ext_resource type="ArrayMesh" uid="uid://cecx1ax7iolbp" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_01.res" id="15_77bwk"]
-[ext_resource type="ArrayMesh" uid="uid://dsxra75u4drl2" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_01.res" id="16_edtfy"]
-[ext_resource type="ArrayMesh" uid="uid://vsisoihvg6m0" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_01.res" id="17_qk7i0"]
-[ext_resource type="ArrayMesh" uid="uid://cvla8rhq44drd" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_01.res" id="18_3ytx3"]
-[ext_resource type="ArrayMesh" uid="uid://dtxrpu1pc0jh3" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_01.res" id="19_b8aj6"]
-[ext_resource type="ArrayMesh" uid="uid://1ixx2gk17m17" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_01.res" id="20_ahgox"]
-[ext_resource type="ArrayMesh" uid="uid://bb02f05q1alxd" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_02.res" id="21_ifb4d"]
-[ext_resource type="ArrayMesh" uid="uid://dadhvn18ed65r" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_02.res" id="22_iqn2i"]
-[ext_resource type="ArrayMesh" uid="uid://c68auee4vc6ea" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_03.res" id="23_6j3xj"]
-[ext_resource type="ArrayMesh" uid="uid://cofn3d3nuahrw" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_03.res" id="24_etnkk"]
-[ext_resource type="ArrayMesh" uid="uid://3am4f7yg84b4" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_04.res" id="25_8it4r"]
-[ext_resource type="ArrayMesh" uid="uid://bcu0b0crhopg1" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_04.res" id="26_4bk32"]
-[ext_resource type="ArrayMesh" uid="uid://dg0mpguukhswx" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_05.res" id="27_jj3rc"]
-[ext_resource type="ArrayMesh" uid="uid://bqd2tyv1bhisn" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_05.res" id="28_hgs4x"]
-[ext_resource type="ArrayMesh" uid="uid://chlqacts65wa" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_06.res" id="29_r4cgp"]
-[ext_resource type="ArrayMesh" uid="uid://bswvd0v7wcwd0" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_06.res" id="30_08dkl"]
-[ext_resource type="ArrayMesh" uid="uid://b6uth0jqd75ex" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_07.res" id="31_hur7x"]
-[ext_resource type="ArrayMesh" uid="uid://cowyjkg64p6xg" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_07.res" id="32_k4cvl"]
-[ext_resource type="ArrayMesh" uid="uid://dd2s1pxr0a3xr" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_08.res" id="33_1gj6h"]
-[ext_resource type="ArrayMesh" uid="uid://caf5owhux44tv" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_08.res" id="34_ienq8"]
-[ext_resource type="ArrayMesh" uid="uid://bibrv7mxyt1v5" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_09.res" id="35_b3465"]
-[ext_resource type="ArrayMesh" uid="uid://db38ftykta2pi" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_09.res" id="36_8bn74"]
-[ext_resource type="ArrayMesh" uid="uid://68dphqmdlmdi" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_10.res" id="37_2edef"]
-[ext_resource type="ArrayMesh" uid="uid://bqvrcynlvk25x" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_10.res" id="38_m5j50"]
-[ext_resource type="ArrayMesh" uid="uid://b1it7cwfk3w7k" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_11.res" id="39_r7wpt"]
-[ext_resource type="ArrayMesh" uid="uid://d1gc8xixfgfr2" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_11.res" id="40_klokg"]
-[ext_resource type="ArrayMesh" uid="uid://bldvviu0x6sw2" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_12.res" id="41_syom1"]
-[ext_resource type="ArrayMesh" uid="uid://bumfl5xrc0uba" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_12.res" id="42_pga8g"]
-[ext_resource type="ArrayMesh" uid="uid://dsb3atxcky380" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_13.res" id="43_co4l7"]
-[ext_resource type="ArrayMesh" uid="uid://b5jt2w675g10v" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_13.res" id="44_4nofi"]
-[ext_resource type="ArrayMesh" uid="uid://jcn1kt08krmf" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_14.res" id="45_g0rnw"]
-[ext_resource type="ArrayMesh" uid="uid://cealbu25kblm2" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_14.res" id="46_krjhd"]
-[ext_resource type="ArrayMesh" uid="uid://b5fp5wergkrfx" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_15.res" id="47_gh1fh"]
-[ext_resource type="ArrayMesh" uid="uid://2q4soa37720v" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_15.res" id="48_85lfd"]
-[ext_resource type="ArrayMesh" uid="uid://mbeuo2uj4gey" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_16.res" id="49_jv2c0"]
-[ext_resource type="ArrayMesh" uid="uid://5xmq5t5amkua" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_16.res" id="50_g0ocv"]
-[ext_resource type="ArrayMesh" uid="uid://b2e0yrnjyiqlc" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_17.res" id="51_uh8uh"]
-[ext_resource type="ArrayMesh" uid="uid://xx6i75mkknrw" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_17.res" id="52_38b02"]
-[ext_resource type="ArrayMesh" uid="uid://dxlq53o7cdali" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_18.res" id="53_aw7kk"]
-[ext_resource type="ArrayMesh" uid="uid://cconuhoawhdcd" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_18.res" id="54_lockl"]
-[ext_resource type="ArrayMesh" uid="uid://dx3sxvm7ghmkr" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_19.res" id="55_xdcdx"]
-[ext_resource type="ArrayMesh" uid="uid://ge6bhch0cbot" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_19.res" id="56_ooil6"]
-[ext_resource type="ArrayMesh" uid="uid://b432frbe0foi3" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_20.res" id="57_ev1w3"]
-[ext_resource type="ArrayMesh" uid="uid://cevee7teqwhmb" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_20.res" id="58_bl7ty"]
-[ext_resource type="ArrayMesh" uid="uid://c2nlaip2ghkgj" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_21.res" id="59_vc1xm"]
-[ext_resource type="ArrayMesh" uid="uid://7dlw2l4f7s17" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_21.res" id="60_ujm30"]
-[ext_resource type="ArrayMesh" uid="uid://dtfx4l2hq08lp" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_02.res" id="61_gi75b"]
-[ext_resource type="ArrayMesh" uid="uid://d1capmro64iii" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_02.res" id="62_ixmhj"]
-[ext_resource type="ArrayMesh" uid="uid://dyg1ycd5hlkth" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_02.res" id="63_wlpsy"]
-[ext_resource type="ArrayMesh" uid="uid://c0j4iya3wjski" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_02.res" id="64_d1r4c"]
-[ext_resource type="ArrayMesh" uid="uid://bw7apfswnakkp" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_02.res" id="65_c5sdo"]
-[ext_resource type="ArrayMesh" uid="uid://bga53l81u2bj8" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_02.res" id="66_sponr"]
-[ext_resource type="ArrayMesh" uid="uid://dernyn7redux5" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_03.res" id="67_e40w3"]
-[ext_resource type="ArrayMesh" uid="uid://uougjyn1dql3" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_03.res" id="68_86ww2"]
-[ext_resource type="ArrayMesh" uid="uid://yveqgoh7remg" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_03.res" id="69_u834m"]
-[ext_resource type="ArrayMesh" uid="uid://ca57kkm7452tu" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_03.res" id="70_4kcgm"]
-[ext_resource type="ArrayMesh" uid="uid://bs852ogb8cymj" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_03.res" id="71_hqa2c"]
-[ext_resource type="ArrayMesh" uid="uid://c2xbvktciru6h" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_03.res" id="72_tm3u1"]
-[ext_resource type="ArrayMesh" uid="uid://sx6ps2nkxxfn" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_04.res" id="73_dklma"]
-[ext_resource type="ArrayMesh" uid="uid://b72c8nnc6gtj7" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_04.res" id="74_xpxua"]
-[ext_resource type="ArrayMesh" uid="uid://cg53dhcuaet25" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_04.res" id="75_r53we"]
-[ext_resource type="ArrayMesh" uid="uid://cng6fugkvf7w7" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_04.res" id="76_dwoua"]
-[ext_resource type="ArrayMesh" uid="uid://b06yuijfyii3h" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_04.res" id="77_wfhd0"]
-[ext_resource type="ArrayMesh" uid="uid://bxkr3h133ket4" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_04.res" id="78_js1ed"]
-[ext_resource type="ArrayMesh" uid="uid://b8jkk11njkllv" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_05.res" id="79_4xcmu"]
-[ext_resource type="ArrayMesh" uid="uid://c6g16dgg462b4" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_05.res" id="80_nte4g"]
-[ext_resource type="ArrayMesh" uid="uid://p4yr38nyn1m1" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_05.res" id="81_78ju8"]
-[ext_resource type="ArrayMesh" uid="uid://244d7dfu75mq" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_05.res" id="82_0lbc8"]
-[ext_resource type="ArrayMesh" uid="uid://dhqwc4o40x7v1" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_05.res" id="83_1akb5"]
-[ext_resource type="ArrayMesh" uid="uid://dvu4n1rkw4150" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_05.res" id="84_ym41a"]
-[ext_resource type="ArrayMesh" uid="uid://c73wuywax086r" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_06.res" id="85_lqfih"]
-[ext_resource type="ArrayMesh" uid="uid://cstv6ahxxs02g" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_06.res" id="86_vekuj"]
-[ext_resource type="ArrayMesh" uid="uid://cnf0ilmmeouaf" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_06.res" id="87_2sauk"]
-[ext_resource type="ArrayMesh" uid="uid://d2kj1rtafuwe4" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_06.res" id="88_033i5"]
-[ext_resource type="ArrayMesh" uid="uid://24fmaw1fpobq" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_06.res" id="89_lymqf"]
-[ext_resource type="ArrayMesh" uid="uid://dv15h4cq6scml" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_06.res" id="90_2mbhd"]
-[ext_resource type="ArrayMesh" uid="uid://bhpq4sraoycs8" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_07.res" id="91_qg420"]
-[ext_resource type="ArrayMesh" uid="uid://bt4yv0pge612j" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_07.res" id="92_fmhfm"]
-[ext_resource type="ArrayMesh" uid="uid://c8268h1mbl4nh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_07.res" id="93_37jxd"]
-[ext_resource type="ArrayMesh" uid="uid://ds7ls1gtphdjb" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_07.res" id="94_27tkt"]
-[ext_resource type="ArrayMesh" uid="uid://dbioafm1jd40s" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_07.res" id="95_ub8pe"]
-[ext_resource type="ArrayMesh" uid="uid://cg0nx3swx5xl5" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_07.res" id="96_m8ugw"]
-[ext_resource type="ArrayMesh" uid="uid://c5xqtjmnfx45r" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_08.res" id="97_587p3"]
-[ext_resource type="ArrayMesh" uid="uid://cas7y0ylyvpkv" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_08.res" id="98_mbkw7"]
-[ext_resource type="ArrayMesh" uid="uid://f74wqs2hydeo" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_08.res" id="99_grv0n"]
-[ext_resource type="ArrayMesh" uid="uid://ccr813ajojj8n" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_08.res" id="100_8ownt"]
-[ext_resource type="ArrayMesh" uid="uid://chimngqkp0ng" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_08.res" id="101_ef5dg"]
-[ext_resource type="ArrayMesh" uid="uid://cqois2m2kbwve" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_08.res" id="102_j4ma3"]
-[ext_resource type="ArrayMesh" uid="uid://dvs254pc0do63" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_09.res" id="103_i0sb2"]
-[ext_resource type="ArrayMesh" uid="uid://ocdjn1oxdtjm" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_09.res" id="104_8nna5"]
-[ext_resource type="ArrayMesh" uid="uid://lyfwwtkvokm0" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_09.res" id="105_kv0ly"]
-[ext_resource type="ArrayMesh" uid="uid://bi8ntcqktp7ex" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_09.res" id="106_wko1w"]
-[ext_resource type="ArrayMesh" uid="uid://dnu8v7ql5o3ol" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_09.res" id="107_38w5w"]
-[ext_resource type="ArrayMesh" uid="uid://oo8t04ordpqd" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_09.res" id="108_xnnhe"]
-[ext_resource type="ArrayMesh" uid="uid://bpfr1u4e8nwy" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_10.res" id="109_hts27"]
-[ext_resource type="ArrayMesh" uid="uid://c7ev45kl2biii" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_10.res" id="110_cxxob"]
-[ext_resource type="ArrayMesh" uid="uid://cknu2icdgqcrb" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_10.res" id="111_0irju"]
-[ext_resource type="ArrayMesh" uid="uid://drjyh38gc4xu7" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_10.res" id="112_5af2t"]
-[ext_resource type="ArrayMesh" uid="uid://hw520plk8ehr" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_10.res" id="113_l87k4"]
-[ext_resource type="ArrayMesh" uid="uid://bgjwy7n22ybj1" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_10.res" id="114_aqss6"]
-[ext_resource type="ArrayMesh" uid="uid://cskthv6qj6uer" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_11.res" id="115_dcekh"]
-[ext_resource type="ArrayMesh" uid="uid://ctr3x04611onx" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_11.res" id="116_ljidy"]
-[ext_resource type="ArrayMesh" uid="uid://cmm5uixpnxiye" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_11.res" id="117_0sdkm"]
-[ext_resource type="ArrayMesh" uid="uid://cf6epgsr4qnx8" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_11.res" id="118_0iiej"]
-[ext_resource type="ArrayMesh" uid="uid://i73hhjs8mja0" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_11.res" id="119_efhoc"]
-[ext_resource type="ArrayMesh" uid="uid://b1n3kajkgurnv" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_11.res" id="120_62k2y"]
-[ext_resource type="ArrayMesh" uid="uid://du2ob4ul6i65w" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_12.res" id="121_m53s7"]
-[ext_resource type="ArrayMesh" uid="uid://cuy5peerds3dw" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_12.res" id="122_7rktp"]
-[ext_resource type="ArrayMesh" uid="uid://mpkq4q5vtsqe" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_12.res" id="123_48mu5"]
-[ext_resource type="ArrayMesh" uid="uid://clt5v4ybntkmy" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_12.res" id="124_5y8q0"]
-[ext_resource type="ArrayMesh" uid="uid://cvuk054i4pplo" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_12.res" id="125_pfhgp"]
-[ext_resource type="ArrayMesh" uid="uid://cooed61a6h5y3" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_12.res" id="126_srqrf"]
-[ext_resource type="ArrayMesh" uid="uid://ht584txsltch" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_13.res" id="127_q8gdv"]
-[ext_resource type="ArrayMesh" uid="uid://dar3qqk3hfpmf" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_13.res" id="128_7vgxe"]
-[ext_resource type="ArrayMesh" uid="uid://bliksicj668yg" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_13.res" id="129_ng4qp"]
-[ext_resource type="ArrayMesh" uid="uid://cwvtue3spgebn" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_13.res" id="130_sgkeo"]
-[ext_resource type="ArrayMesh" uid="uid://cjj1nmthrxhfd" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_13.res" id="131_kgorg"]
-[ext_resource type="ArrayMesh" uid="uid://bwj5groevjc62" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_13.res" id="132_bligc"]
-[ext_resource type="ArrayMesh" uid="uid://ylssmnrm3sw0" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_14.res" id="133_t3mtt"]
-[ext_resource type="ArrayMesh" uid="uid://qkbllwooeov0" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_14.res" id="134_rro1i"]
-[ext_resource type="ArrayMesh" uid="uid://c1cus0mqpo2ir" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_14.res" id="135_51kuq"]
-[ext_resource type="ArrayMesh" uid="uid://ckeywqkf4wvtm" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_14.res" id="136_xvfvw"]
-[ext_resource type="ArrayMesh" uid="uid://nmcmq7qgj13s" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_14.res" id="137_1xtgb"]
-[ext_resource type="ArrayMesh" uid="uid://bhm4j7gu1gdis" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_14.res" id="138_jm52s"]
-[ext_resource type="ArrayMesh" uid="uid://ukq3l8adms4o" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_15.res" id="139_bqpfe"]
-[ext_resource type="ArrayMesh" uid="uid://dx2adlnci5uny" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_15.res" id="140_rrnsx"]
-[ext_resource type="ArrayMesh" uid="uid://doxiy1lefhbj8" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_15.res" id="141_713sl"]
-[ext_resource type="ArrayMesh" uid="uid://dgidv64r57fd8" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_15.res" id="142_etcwt"]
-[ext_resource type="ArrayMesh" uid="uid://dj4tpypccn5qc" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_15.res" id="143_h5lpb"]
-[ext_resource type="ArrayMesh" uid="uid://bfbs0o06gocri" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_15.res" id="144_n2lqd"]
-[ext_resource type="ArrayMesh" uid="uid://coxmsg81tc8uw" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_16.res" id="145_udr0w"]
-[ext_resource type="ArrayMesh" uid="uid://c0tj6424x5i6b" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_16.res" id="146_pnwt7"]
-[ext_resource type="ArrayMesh" uid="uid://cdimtfqvii73f" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_16.res" id="147_5h564"]
-[ext_resource type="ArrayMesh" uid="uid://bcxq7q7as5qpm" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_16.res" id="148_41ccy"]
-[ext_resource type="ArrayMesh" uid="uid://b2f8w4cih7uc0" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_16.res" id="149_rlxxf"]
-[ext_resource type="ArrayMesh" uid="uid://cw3px5jw168m8" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_16.res" id="150_p6ci1"]
-[ext_resource type="ArrayMesh" uid="uid://dn3ll3bv23ew0" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_17.res" id="151_j11em"]
-[ext_resource type="ArrayMesh" uid="uid://b0nj2i4rs7fih" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_17.res" id="152_4gctk"]
-[ext_resource type="ArrayMesh" uid="uid://bjegjbxnvahy1" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_17.res" id="153_csafr"]
-[ext_resource type="ArrayMesh" uid="uid://krjl7yp6ms3u" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_17.res" id="154_slf4g"]
-[ext_resource type="ArrayMesh" uid="uid://bfa7by6ijj5b3" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_17.res" id="155_8lkif"]
-[ext_resource type="ArrayMesh" uid="uid://did1u5pf78383" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_17.res" id="156_xdy5p"]
-[ext_resource type="ArrayMesh" uid="uid://2xwer6ehiliy" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_18.res" id="157_hgnld"]
-[ext_resource type="ArrayMesh" uid="uid://cadbwm173rqfp" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_18.res" id="158_jl4ml"]
-[ext_resource type="ArrayMesh" uid="uid://b0qgfbitipalm" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_18.res" id="159_0mnjn"]
-[ext_resource type="ArrayMesh" uid="uid://t6liddl0o2d7" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_18.res" id="160_tjrku"]
-[ext_resource type="ArrayMesh" uid="uid://dqt648c4638bj" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_18.res" id="161_lrxci"]
-[ext_resource type="ArrayMesh" uid="uid://c36mb6bxj3ohl" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_18.res" id="162_ddmft"]
-[ext_resource type="ArrayMesh" uid="uid://c1x2rqiii505m" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_19.res" id="163_8fyt3"]
-[ext_resource type="ArrayMesh" uid="uid://bxrgrded2wcay" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_19.res" id="164_e3k1f"]
-[ext_resource type="ArrayMesh" uid="uid://3k7bnq5xde4c" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_19.res" id="165_bne68"]
-[ext_resource type="ArrayMesh" uid="uid://0hr5155tifwp" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_19.res" id="166_325sd"]
-[ext_resource type="ArrayMesh" uid="uid://byvtmf3y4by1v" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_19.res" id="167_j3x5r"]
-[ext_resource type="ArrayMesh" uid="uid://cv8vxrne4lo0r" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_19.res" id="168_t5vqv"]
-[ext_resource type="ArrayMesh" uid="uid://c2pca8t0ibxrv" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_20.res" id="169_yecll"]
-[ext_resource type="ArrayMesh" uid="uid://dpoclgbk213ve" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_20.res" id="170_sin44"]
-[ext_resource type="ArrayMesh" uid="uid://cka0ir8c4cby2" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_20.res" id="171_usfak"]
-[ext_resource type="ArrayMesh" uid="uid://bgjco4ayt54xx" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_20.res" id="172_wytbn"]
-[ext_resource type="ArrayMesh" uid="uid://7h67480ksvp3" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_20.res" id="173_5svok"]
-[ext_resource type="ArrayMesh" uid="uid://cyqn5rqp03x3f" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_20.res" id="174_re5k3"]
-[ext_resource type="ArrayMesh" uid="uid://ymba0x71hmvu" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_21.res" id="175_k5u0x"]
-[ext_resource type="ArrayMesh" uid="uid://dx7oq2jf1qso" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_21.res" id="176_l6573"]
-[ext_resource type="ArrayMesh" uid="uid://xp5pcqbqy8ix" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_22.res" id="177_4nrta"]
-[ext_resource type="ArrayMesh" uid="uid://cdfu3mhvt5ph" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_22.res" id="178_tki76"]
-[ext_resource type="ArrayMesh" uid="uid://qdrrdqdwh8uw" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_23.res" id="179_duq46"]
-[ext_resource type="ArrayMesh" uid="uid://b2fgfa6i2pe10" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_23.res" id="180_r7lsg"]
-[ext_resource type="ArrayMesh" uid="uid://bshyxm5dsu28m" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_24.res" id="181_3btlc"]
-[ext_resource type="ArrayMesh" uid="uid://bxunxlkxyi0cm" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_24.res" id="182_rw0af"]
-[ext_resource type="ArrayMesh" uid="uid://omveyuxoq233" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_25.res" id="183_0b0bk"]
-[ext_resource type="ArrayMesh" uid="uid://ss3vpfw4v7ec" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_25.res" id="184_cfe5x"]
-[ext_resource type="ArrayMesh" uid="uid://b0reecx0x33mm" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_26.res" id="185_aemnf"]
-[ext_resource type="ArrayMesh" uid="uid://dfwawxyfl5no8" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_26.res" id="186_l2myc"]
-[ext_resource type="ArrayMesh" uid="uid://cn78cy43dgmld" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_27.res" id="187_xn74o"]
-[ext_resource type="ArrayMesh" uid="uid://dr01b7reureva" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_27.res" id="188_c5isu"]
-[ext_resource type="ArrayMesh" uid="uid://i5gmlejkd4hs" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_28.res" id="189_ict2f"]
-[ext_resource type="ArrayMesh" uid="uid://0qrbg8oxii63" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_28.res" id="190_wps3a"]
-[ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="191_x6htv"]
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_look.gd" id="1_67sew"]
+[ext_resource type="Resource" path="res://data/characters/defaults/default_collision_shape.tres" id="2_hkfud"]
+[ext_resource type="Resource" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_mlw21"]
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_y8t4m"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_00.res" id="7_ju4ak"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_00.res" id="8_m0o1c"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_00.res" id="9_tgbif"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_00.res" id="10_5b3pl"]
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_appearance.gd" id="11_s4d3g"]
+[ext_resource type="Resource" path="res://data/equipment/types/chest_armor.tres" id="12_n2mon"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_01.res" id="13_xgx5b"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_01.res" id="14_tkoi2"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_01.res" id="15_77bwk"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_01.res" id="16_edtfy"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_01.res" id="17_qk7i0"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_01.res" id="18_3ytx3"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_01.res" id="19_b8aj6"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_01.res" id="20_ahgox"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_02.res" id="21_ifb4d"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_02.res" id="22_iqn2i"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_03.res" id="23_6j3xj"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_03.res" id="24_etnkk"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_04.res" id="25_8it4r"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_04.res" id="26_4bk32"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_05.res" id="27_jj3rc"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_05.res" id="28_hgs4x"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_06.res" id="29_r4cgp"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_06.res" id="30_08dkl"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_07.res" id="31_hur7x"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_07.res" id="32_k4cvl"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_08.res" id="33_1gj6h"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_08.res" id="34_ienq8"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_09.res" id="35_b3465"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_09.res" id="36_8bn74"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_10.res" id="37_2edef"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_10.res" id="38_m5j50"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_11.res" id="39_r7wpt"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_11.res" id="40_klokg"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_12.res" id="41_syom1"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_12.res" id="42_pga8g"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_13.res" id="43_co4l7"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_13.res" id="44_4nofi"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_14.res" id="45_g0rnw"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_14.res" id="46_krjhd"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_15.res" id="47_gh1fh"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_15.res" id="48_85lfd"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_16.res" id="49_jv2c0"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_16.res" id="50_g0ocv"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_17.res" id="51_uh8uh"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_17.res" id="52_38b02"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_18.res" id="53_aw7kk"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_18.res" id="54_lockl"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_19.res" id="55_xdcdx"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_19.res" id="56_ooil6"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_20.res" id="57_ev1w3"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_20.res" id="58_bl7ty"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_21.res" id="59_vc1xm"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_21.res" id="60_ujm30"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_02.res" id="61_gi75b"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_02.res" id="62_ixmhj"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_02.res" id="63_wlpsy"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_02.res" id="64_d1r4c"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_02.res" id="65_c5sdo"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_02.res" id="66_sponr"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_03.res" id="67_e40w3"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_03.res" id="68_86ww2"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_03.res" id="69_u834m"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_03.res" id="70_4kcgm"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_03.res" id="71_hqa2c"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_03.res" id="72_tm3u1"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_04.res" id="73_dklma"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_04.res" id="74_xpxua"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_04.res" id="75_r53we"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_04.res" id="76_dwoua"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_04.res" id="77_wfhd0"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_04.res" id="78_js1ed"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_05.res" id="79_4xcmu"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_05.res" id="80_nte4g"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_05.res" id="81_78ju8"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_05.res" id="82_0lbc8"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_05.res" id="83_1akb5"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_05.res" id="84_ym41a"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_06.res" id="85_lqfih"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_06.res" id="86_vekuj"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_06.res" id="87_2sauk"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_06.res" id="88_033i5"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_06.res" id="89_lymqf"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_06.res" id="90_2mbhd"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_07.res" id="91_qg420"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_07.res" id="92_fmhfm"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_07.res" id="93_37jxd"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_07.res" id="94_27tkt"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_07.res" id="95_ub8pe"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_07.res" id="96_m8ugw"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_08.res" id="97_587p3"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_08.res" id="98_mbkw7"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_08.res" id="99_grv0n"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_08.res" id="100_8ownt"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_08.res" id="101_ef5dg"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_08.res" id="102_j4ma3"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_09.res" id="103_i0sb2"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_09.res" id="104_8nna5"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_09.res" id="105_kv0ly"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_09.res" id="106_wko1w"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_09.res" id="107_38w5w"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_09.res" id="108_xnnhe"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_10.res" id="109_hts27"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_10.res" id="110_cxxob"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_10.res" id="111_0irju"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_10.res" id="112_5af2t"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_10.res" id="113_l87k4"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_10.res" id="114_aqss6"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_11.res" id="115_dcekh"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_11.res" id="116_ljidy"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_11.res" id="117_0sdkm"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_11.res" id="118_0iiej"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_11.res" id="119_efhoc"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_11.res" id="120_62k2y"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_12.res" id="121_m53s7"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_12.res" id="122_7rktp"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_12.res" id="123_48mu5"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_12.res" id="124_5y8q0"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_12.res" id="125_pfhgp"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_12.res" id="126_srqrf"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_13.res" id="127_q8gdv"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_13.res" id="128_7vgxe"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_13.res" id="129_ng4qp"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_13.res" id="130_sgkeo"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_13.res" id="131_kgorg"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_13.res" id="132_bligc"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_14.res" id="133_t3mtt"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_14.res" id="134_rro1i"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_14.res" id="135_51kuq"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_14.res" id="136_xvfvw"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_14.res" id="137_1xtgb"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_14.res" id="138_jm52s"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_15.res" id="139_bqpfe"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_15.res" id="140_rrnsx"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_15.res" id="141_713sl"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_15.res" id="142_etcwt"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_15.res" id="143_h5lpb"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_15.res" id="144_n2lqd"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_16.res" id="145_udr0w"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_16.res" id="146_pnwt7"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_16.res" id="147_5h564"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_16.res" id="148_41ccy"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_16.res" id="149_rlxxf"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_16.res" id="150_p6ci1"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_17.res" id="151_j11em"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_17.res" id="152_4gctk"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_17.res" id="153_csafr"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_17.res" id="154_slf4g"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_17.res" id="155_8lkif"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_17.res" id="156_xdy5p"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_18.res" id="157_hgnld"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_18.res" id="158_jl4ml"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_18.res" id="159_0mnjn"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_18.res" id="160_tjrku"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_18.res" id="161_lrxci"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_18.res" id="162_ddmft"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_19.res" id="163_8fyt3"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_19.res" id="164_e3k1f"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_19.res" id="165_bne68"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_19.res" id="166_325sd"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_19.res" id="167_j3x5r"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_19.res" id="168_t5vqv"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_20.res" id="169_yecll"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_20.res" id="170_sin44"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_20.res" id="171_usfak"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_20.res" id="172_wytbn"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_20.res" id="173_5svok"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_20.res" id="174_re5k3"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_21.res" id="175_k5u0x"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_21.res" id="176_l6573"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_22.res" id="177_4nrta"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_22.res" id="178_tki76"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_23.res" id="179_duq46"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_23.res" id="180_r7lsg"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_24.res" id="181_3btlc"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_24.res" id="182_rw0af"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_25.res" id="183_0b0bk"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_25.res" id="184_cfe5x"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_26.res" id="185_aemnf"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_26.res" id="186_l2myc"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_27.res" id="187_xn74o"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_27.res" id="188_c5isu"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_00.res" id="189_67sew"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_28.res" id="189_ict2f"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_00.res" id="190_hkfud"]
+[ext_resource type="ArrayMesh" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_28.res" id="190_wps3a"]
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_catalog.gd" id="191_x6htv"]
 
 [sub_resource type="Resource" id="Resource_uifl3"]
 script = ExtResource("4_y8t4m")
@@ -23318,8 +23320,855 @@ type = ExtResource("12_n2mon")
 appearance = SubResource("Resource_7tvm8")
 name = "Chest Armor 28-00 none"
 
+[sub_resource type="Resource" id="Resource_mlw21"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_y8t4m"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_qacxx"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_8a4ng"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("19_b8aj6")
+
+[sub_resource type="Resource" id="Resource_ju4ak"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("20_ahgox")
+
+[sub_resource type="Resource" id="Resource_m0o1c"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_mlw21"), SubResource("Resource_y8t4m"), SubResource("Resource_qacxx"), SubResource("Resource_8a4ng"), SubResource("Resource_ju4ak")])
+
+[sub_resource type="Resource" id="00_01"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_m0o1c")
+allowed = false
+name = "Chest Armor 00 01"
+
+[sub_resource type="Resource" id="Resource_tgbif"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_5b3pl"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_s4d3g"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_n2mon"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("21_ifb4d")
+
+[sub_resource type="Resource" id="Resource_xgx5b"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("22_iqn2i")
+
+[sub_resource type="Resource" id="Resource_tkoi2"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_tgbif"), SubResource("Resource_5b3pl"), SubResource("Resource_s4d3g"), SubResource("Resource_n2mon"), SubResource("Resource_xgx5b")])
+
+[sub_resource type="Resource" id="00_02"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_tkoi2")
+allowed = false
+name = "Chest Armor 00 02"
+
+[sub_resource type="Resource" id="Resource_77bwk"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_edtfy"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_qk7i0"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_3ytx3"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("23_6j3xj")
+
+[sub_resource type="Resource" id="Resource_b8aj6"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("24_etnkk")
+
+[sub_resource type="Resource" id="Resource_ahgox"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_77bwk"), SubResource("Resource_edtfy"), SubResource("Resource_qk7i0"), SubResource("Resource_3ytx3"), SubResource("Resource_b8aj6")])
+
+[sub_resource type="Resource" id="00_03"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_ahgox")
+allowed = false
+name = "Chest Armor 00 03"
+
+[sub_resource type="Resource" id="Resource_ifb4d"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_iqn2i"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_6j3xj"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_etnkk"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("25_8it4r")
+
+[sub_resource type="Resource" id="Resource_8it4r"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("26_4bk32")
+
+[sub_resource type="Resource" id="Resource_4bk32"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_ifb4d"), SubResource("Resource_iqn2i"), SubResource("Resource_6j3xj"), SubResource("Resource_etnkk"), SubResource("Resource_8it4r")])
+
+[sub_resource type="Resource" id="00_04"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_4bk32")
+allowed = false
+name = "Chest Armor 00 04"
+
+[sub_resource type="Resource" id="Resource_jj3rc"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_hgs4x"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_r4cgp"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_08dkl"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("27_jj3rc")
+
+[sub_resource type="Resource" id="Resource_hur7x"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("28_hgs4x")
+
+[sub_resource type="Resource" id="Resource_k4cvl"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_jj3rc"), SubResource("Resource_hgs4x"), SubResource("Resource_r4cgp"), SubResource("Resource_08dkl"), SubResource("Resource_hur7x")])
+
+[sub_resource type="Resource" id="00_05"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_k4cvl")
+allowed = false
+name = "Chest Armor 00 05"
+
+[sub_resource type="Resource" id="Resource_1gj6h"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_ienq8"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_b3465"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_8bn74"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("29_r4cgp")
+
+[sub_resource type="Resource" id="Resource_2edef"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("30_08dkl")
+
+[sub_resource type="Resource" id="Resource_m5j50"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_1gj6h"), SubResource("Resource_ienq8"), SubResource("Resource_b3465"), SubResource("Resource_8bn74"), SubResource("Resource_2edef")])
+
+[sub_resource type="Resource" id="00_06"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_m5j50")
+allowed = false
+name = "Chest Armor 00 06"
+
+[sub_resource type="Resource" id="Resource_r7wpt"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_klokg"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_syom1"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_pga8g"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("31_hur7x")
+
+[sub_resource type="Resource" id="Resource_co4l7"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("32_k4cvl")
+
+[sub_resource type="Resource" id="Resource_4nofi"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_r7wpt"), SubResource("Resource_klokg"), SubResource("Resource_syom1"), SubResource("Resource_pga8g"), SubResource("Resource_co4l7")])
+
+[sub_resource type="Resource" id="00_07"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_4nofi")
+allowed = false
+name = "Chest Armor 00 07"
+
+[sub_resource type="Resource" id="Resource_g0rnw"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_krjhd"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_gh1fh"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_85lfd"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("33_1gj6h")
+
+[sub_resource type="Resource" id="Resource_jv2c0"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("34_ienq8")
+
+[sub_resource type="Resource" id="Resource_g0ocv"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_g0rnw"), SubResource("Resource_krjhd"), SubResource("Resource_gh1fh"), SubResource("Resource_85lfd"), SubResource("Resource_jv2c0")])
+
+[sub_resource type="Resource" id="00_08"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_g0ocv")
+allowed = false
+name = "Chest Armor 00 08"
+
+[sub_resource type="Resource" id="Resource_uh8uh"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_38b02"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_aw7kk"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_lockl"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("35_b3465")
+
+[sub_resource type="Resource" id="Resource_xdcdx"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("36_8bn74")
+
+[sub_resource type="Resource" id="Resource_ooil6"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_uh8uh"), SubResource("Resource_38b02"), SubResource("Resource_aw7kk"), SubResource("Resource_lockl"), SubResource("Resource_xdcdx")])
+
+[sub_resource type="Resource" id="00_09"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_ooil6")
+allowed = false
+name = "Chest Armor 00 09"
+
+[sub_resource type="Resource" id="Resource_ev1w3"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_bl7ty"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_vc1xm"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_ujm30"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("37_2edef")
+
+[sub_resource type="Resource" id="Resource_gi75b"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("38_m5j50")
+
+[sub_resource type="Resource" id="Resource_ixmhj"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_ev1w3"), SubResource("Resource_bl7ty"), SubResource("Resource_vc1xm"), SubResource("Resource_ujm30"), SubResource("Resource_gi75b")])
+
+[sub_resource type="Resource" id="00_10"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_ixmhj")
+allowed = false
+name = "Chest Armor 00 10"
+
+[sub_resource type="Resource" id="Resource_wlpsy"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_d1r4c"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_c5sdo"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_sponr"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("39_r7wpt")
+
+[sub_resource type="Resource" id="Resource_e40w3"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("40_klokg")
+
+[sub_resource type="Resource" id="Resource_86ww2"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_wlpsy"), SubResource("Resource_d1r4c"), SubResource("Resource_c5sdo"), SubResource("Resource_sponr"), SubResource("Resource_e40w3")])
+
+[sub_resource type="Resource" id="00_11"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_86ww2")
+allowed = false
+name = "Chest Armor 00 11"
+
+[sub_resource type="Resource" id="Resource_u834m"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_4kcgm"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_hqa2c"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_tm3u1"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("41_syom1")
+
+[sub_resource type="Resource" id="Resource_dklma"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("42_pga8g")
+
+[sub_resource type="Resource" id="Resource_xpxua"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_u834m"), SubResource("Resource_4kcgm"), SubResource("Resource_hqa2c"), SubResource("Resource_tm3u1"), SubResource("Resource_dklma")])
+
+[sub_resource type="Resource" id="00_12"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_xpxua")
+allowed = false
+name = "Chest Armor 00 12"
+
+[sub_resource type="Resource" id="Resource_r53we"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_dwoua"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_wfhd0"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_js1ed"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("43_co4l7")
+
+[sub_resource type="Resource" id="Resource_4xcmu"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("44_4nofi")
+
+[sub_resource type="Resource" id="Resource_nte4g"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_r53we"), SubResource("Resource_dwoua"), SubResource("Resource_wfhd0"), SubResource("Resource_js1ed"), SubResource("Resource_4xcmu")])
+
+[sub_resource type="Resource" id="00_13"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_nte4g")
+allowed = false
+name = "Chest Armor 00 13"
+
+[sub_resource type="Resource" id="Resource_78ju8"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_0lbc8"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_1akb5"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_ym41a"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("45_g0rnw")
+
+[sub_resource type="Resource" id="Resource_lqfih"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("46_krjhd")
+
+[sub_resource type="Resource" id="Resource_vekuj"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_78ju8"), SubResource("Resource_0lbc8"), SubResource("Resource_1akb5"), SubResource("Resource_ym41a"), SubResource("Resource_lqfih")])
+
+[sub_resource type="Resource" id="00_14"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_vekuj")
+allowed = false
+name = "Chest Armor 00 14"
+
+[sub_resource type="Resource" id="Resource_2sauk"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_033i5"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_lymqf"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_2mbhd"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("47_gh1fh")
+
+[sub_resource type="Resource" id="Resource_qg420"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("48_85lfd")
+
+[sub_resource type="Resource" id="Resource_fmhfm"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_2sauk"), SubResource("Resource_033i5"), SubResource("Resource_lymqf"), SubResource("Resource_2mbhd"), SubResource("Resource_qg420")])
+
+[sub_resource type="Resource" id="00_15"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_fmhfm")
+allowed = false
+name = "Chest Armor 00 15"
+
+[sub_resource type="Resource" id="Resource_37jxd"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_27tkt"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_ub8pe"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_m8ugw"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("49_jv2c0")
+
+[sub_resource type="Resource" id="Resource_587p3"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("50_g0ocv")
+
+[sub_resource type="Resource" id="Resource_mbkw7"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_37jxd"), SubResource("Resource_27tkt"), SubResource("Resource_ub8pe"), SubResource("Resource_m8ugw"), SubResource("Resource_587p3")])
+
+[sub_resource type="Resource" id="00_16"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_mbkw7")
+allowed = false
+name = "Chest Armor 00 16"
+
+[sub_resource type="Resource" id="Resource_grv0n"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_8ownt"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_ef5dg"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_j4ma3"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("51_uh8uh")
+
+[sub_resource type="Resource" id="Resource_i0sb2"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("52_38b02")
+
+[sub_resource type="Resource" id="Resource_8nna5"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_grv0n"), SubResource("Resource_8ownt"), SubResource("Resource_ef5dg"), SubResource("Resource_j4ma3"), SubResource("Resource_i0sb2")])
+
+[sub_resource type="Resource" id="00_17"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_8nna5")
+allowed = false
+name = "Chest Armor 00 17"
+
+[sub_resource type="Resource" id="Resource_kv0ly"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_wko1w"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_38w5w"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_xnnhe"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("53_aw7kk")
+
+[sub_resource type="Resource" id="Resource_hts27"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("54_lockl")
+
+[sub_resource type="Resource" id="Resource_cxxob"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_kv0ly"), SubResource("Resource_wko1w"), SubResource("Resource_38w5w"), SubResource("Resource_xnnhe"), SubResource("Resource_hts27")])
+
+[sub_resource type="Resource" id="00_18"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_cxxob")
+allowed = false
+name = "Chest Armor 00 18"
+
+[sub_resource type="Resource" id="Resource_0irju"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_5af2t"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_l87k4"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_aqss6"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("55_xdcdx")
+
+[sub_resource type="Resource" id="Resource_dcekh"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("56_ooil6")
+
+[sub_resource type="Resource" id="Resource_ljidy"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_0irju"), SubResource("Resource_5af2t"), SubResource("Resource_l87k4"), SubResource("Resource_aqss6"), SubResource("Resource_dcekh")])
+
+[sub_resource type="Resource" id="00_19"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_ljidy")
+allowed = false
+name = "Chest Armor 00 19"
+
+[sub_resource type="Resource" id="Resource_0sdkm"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_0iiej"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_efhoc"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_62k2y"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("57_ev1w3")
+
+[sub_resource type="Resource" id="Resource_m53s7"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("58_bl7ty")
+
+[sub_resource type="Resource" id="Resource_7rktp"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_0sdkm"), SubResource("Resource_0iiej"), SubResource("Resource_efhoc"), SubResource("Resource_62k2y"), SubResource("Resource_m53s7")])
+
+[sub_resource type="Resource" id="00_20"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_7rktp")
+allowed = false
+name = "Chest Armor 00 20"
+
+[sub_resource type="Resource" id="Resource_48mu5"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_5y8q0"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_pfhgp"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_srqrf"]
+script = ExtResource("4_y8t4m")
+part = 26
+male_mesh = ExtResource("59_vc1xm")
+
+[sub_resource type="Resource" id="Resource_q8gdv"]
+script = ExtResource("4_y8t4m")
+part = 27
+male_mesh = ExtResource("60_ujm30")
+
+[sub_resource type="Resource" id="Resource_7vgxe"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_48mu5"), SubResource("Resource_5y8q0"), SubResource("Resource_pfhgp"), SubResource("Resource_srqrf"), SubResource("Resource_q8gdv")])
+
+[sub_resource type="Resource" id="00_21"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_7vgxe")
+allowed = false
+name = "Chest Armor 00 21"
+
+[sub_resource type="Resource" id="Resource_ng4qp"]
+script = ExtResource("4_y8t4m")
+part = 12
+male_mesh = ExtResource("190_hkfud")
+female_mesh = ExtResource("189_67sew")
+
+[sub_resource type="Resource" id="Resource_sgkeo"]
+script = ExtResource("4_y8t4m")
+part = 2
+male_mesh = ExtResource("8_m0o1c")
+female_mesh = ExtResource("7_ju4ak")
+
+[sub_resource type="Resource" id="Resource_kgorg"]
+script = ExtResource("4_y8t4m")
+part = 3
+male_mesh = ExtResource("10_5b3pl")
+female_mesh = ExtResource("9_tgbif")
+
+[sub_resource type="Resource" id="Resource_bligc"]
+script = ExtResource("11_s4d3g")
+parts = Array[ExtResource("4_y8t4m")]([SubResource("Resource_ng4qp"), SubResource("Resource_sgkeo"), SubResource("Resource_kgorg")])
+
+[sub_resource type="Resource" id="00_none"]
+script = ExtResource("1_67sew")
+type = ExtResource("12_n2mon")
+appearance = SubResource("Resource_bligc")
+allowed = false
+name = "Chest Armor 00 none"
+
 [resource]
 script = ExtResource("191_x6htv")
 type = ExtResource("12_n2mon")
-entries = Array[ExtResource("1_67sew")]([SubResource("01_01"), SubResource("01_02"), SubResource("01_03"), SubResource("01_04"), SubResource("01_05"), SubResource("01_06"), SubResource("01_07"), SubResource("01_08"), SubResource("01_09"), SubResource("01_10"), SubResource("01_11"), SubResource("01_12"), SubResource("01_13"), SubResource("01_14"), SubResource("01_15"), SubResource("01_16"), SubResource("01_17"), SubResource("01_18"), SubResource("01_19"), SubResource("01_20"), SubResource("01_21"), SubResource("01_none"), SubResource("02_01"), SubResource("02_02"), SubResource("02_03"), SubResource("02_04"), SubResource("02_05"), SubResource("02_06"), SubResource("02_07"), SubResource("02_08"), SubResource("02_09"), SubResource("02_10"), SubResource("02_11"), SubResource("02_12"), SubResource("02_13"), SubResource("02_14"), SubResource("02_15"), SubResource("02_16"), SubResource("02_17"), SubResource("02_18"), SubResource("02_19"), SubResource("02_20"), SubResource("02_21"), SubResource("02_none"), SubResource("03_01"), SubResource("03_02"), SubResource("03_03"), SubResource("03_04"), SubResource("03_05"), SubResource("03_06"), SubResource("03_07"), SubResource("03_08"), SubResource("03_09"), SubResource("03_10"), SubResource("03_11"), SubResource("03_12"), SubResource("03_13"), SubResource("03_14"), SubResource("03_15"), SubResource("03_16"), SubResource("03_17"), SubResource("03_18"), SubResource("03_19"), SubResource("03_20"), SubResource("03_21"), SubResource("03_none"), SubResource("04_01"), SubResource("04_02"), SubResource("04_03"), SubResource("04_04"), SubResource("04_05"), SubResource("04_06"), SubResource("04_07"), SubResource("04_08"), SubResource("04_09"), SubResource("04_10"), SubResource("04_11"), SubResource("04_12"), SubResource("04_13"), SubResource("04_14"), SubResource("04_15"), SubResource("04_16"), SubResource("04_17"), SubResource("04_18"), SubResource("04_19"), SubResource("04_20"), SubResource("04_21"), SubResource("04_none"), SubResource("05_01"), SubResource("05_02"), SubResource("05_03"), SubResource("05_04"), SubResource("05_05"), SubResource("05_06"), SubResource("05_07"), SubResource("05_08"), SubResource("05_09"), SubResource("05_10"), SubResource("05_11"), SubResource("05_12"), SubResource("05_13"), SubResource("05_14"), SubResource("05_15"), SubResource("05_16"), SubResource("05_17"), SubResource("05_18"), SubResource("05_19"), SubResource("05_20"), SubResource("05_21"), SubResource("05_none"), SubResource("06_01"), SubResource("06_02"), SubResource("06_03"), SubResource("06_04"), SubResource("06_05"), SubResource("06_06"), SubResource("06_07"), SubResource("06_08"), SubResource("06_09"), SubResource("06_10"), SubResource("06_11"), SubResource("06_12"), SubResource("06_13"), SubResource("06_14"), SubResource("06_15"), SubResource("06_16"), SubResource("06_17"), SubResource("06_18"), SubResource("06_19"), SubResource("06_20"), SubResource("06_21"), SubResource("06_none"), SubResource("07_01"), SubResource("07_02"), SubResource("07_03"), SubResource("07_04"), SubResource("07_05"), SubResource("07_06"), SubResource("07_07"), SubResource("07_08"), SubResource("07_09"), SubResource("07_10"), SubResource("07_11"), SubResource("07_12"), SubResource("07_13"), SubResource("07_14"), SubResource("07_15"), SubResource("07_16"), SubResource("07_17"), SubResource("07_18"), SubResource("07_19"), SubResource("07_20"), SubResource("07_21"), SubResource("07_none"), SubResource("08_01"), SubResource("08_02"), SubResource("08_03"), SubResource("08_04"), SubResource("08_05"), SubResource("08_06"), SubResource("08_07"), SubResource("08_08"), SubResource("08_09"), SubResource("08_10"), SubResource("08_11"), SubResource("08_12"), SubResource("08_13"), SubResource("08_14"), SubResource("08_15"), SubResource("08_16"), SubResource("08_17"), SubResource("08_18"), SubResource("08_19"), SubResource("08_20"), SubResource("08_21"), SubResource("08_none"), SubResource("09_01"), SubResource("09_02"), SubResource("09_03"), SubResource("09_04"), SubResource("09_05"), SubResource("09_06"), SubResource("09_07"), SubResource("09_08"), SubResource("09_09"), SubResource("09_10"), SubResource("09_11"), SubResource("09_12"), SubResource("09_13"), SubResource("09_14"), SubResource("09_15"), SubResource("09_16"), SubResource("09_17"), SubResource("09_18"), SubResource("09_19"), SubResource("09_20"), SubResource("09_21"), SubResource("09_none"), SubResource("10_01"), SubResource("10_02"), SubResource("10_03"), SubResource("10_04"), SubResource("10_05"), SubResource("10_06"), SubResource("10_07"), SubResource("10_08"), SubResource("10_09"), SubResource("10_10"), SubResource("10_11"), SubResource("10_12"), SubResource("10_13"), SubResource("10_14"), SubResource("10_15"), SubResource("10_16"), SubResource("10_17"), SubResource("10_18"), SubResource("10_19"), SubResource("10_20"), SubResource("10_21"), SubResource("10_none"), SubResource("11_01"), SubResource("11_02"), SubResource("11_03"), SubResource("11_04"), SubResource("11_05"), SubResource("11_06"), SubResource("11_07"), SubResource("11_08"), SubResource("11_09"), SubResource("11_10"), SubResource("11_11"), SubResource("11_12"), SubResource("11_13"), SubResource("11_14"), SubResource("11_15"), SubResource("11_16"), SubResource("11_17"), SubResource("11_18"), SubResource("11_19"), SubResource("11_20"), SubResource("11_21"), SubResource("11_none"), SubResource("12_01"), SubResource("12_02"), SubResource("12_03"), SubResource("12_04"), SubResource("12_05"), SubResource("12_06"), SubResource("12_07"), SubResource("12_08"), SubResource("12_09"), SubResource("12_10"), SubResource("12_11"), SubResource("12_12"), SubResource("12_13"), SubResource("12_14"), SubResource("12_15"), SubResource("12_16"), SubResource("12_17"), SubResource("12_18"), SubResource("12_19"), SubResource("12_20"), SubResource("12_21"), SubResource("12_none"), SubResource("13_01"), SubResource("13_02"), SubResource("13_03"), SubResource("13_04"), SubResource("13_05"), SubResource("13_06"), SubResource("13_07"), SubResource("13_08"), SubResource("13_09"), SubResource("13_10"), SubResource("13_11"), SubResource("13_12"), SubResource("13_13"), SubResource("13_14"), SubResource("13_15"), SubResource("13_16"), SubResource("13_17"), SubResource("13_18"), SubResource("13_19"), SubResource("13_20"), SubResource("13_21"), SubResource("13_none"), SubResource("14_01"), SubResource("14_02"), SubResource("14_03"), SubResource("14_04"), SubResource("14_05"), SubResource("14_06"), SubResource("14_07"), SubResource("14_08"), SubResource("14_09"), SubResource("14_10"), SubResource("14_11"), SubResource("14_12"), SubResource("14_13"), SubResource("14_14"), SubResource("14_15"), SubResource("14_16"), SubResource("14_17"), SubResource("14_18"), SubResource("14_19"), SubResource("14_20"), SubResource("14_21"), SubResource("14_none"), SubResource("15_01"), SubResource("15_02"), SubResource("15_03"), SubResource("15_04"), SubResource("15_05"), SubResource("15_06"), SubResource("15_07"), SubResource("15_08"), SubResource("15_09"), SubResource("15_10"), SubResource("15_11"), SubResource("15_12"), SubResource("15_13"), SubResource("15_14"), SubResource("15_15"), SubResource("15_16"), SubResource("15_17"), SubResource("15_18"), SubResource("15_19"), SubResource("15_20"), SubResource("15_21"), SubResource("15_none"), SubResource("16_01"), SubResource("16_02"), SubResource("16_03"), SubResource("16_04"), SubResource("16_05"), SubResource("16_06"), SubResource("16_07"), SubResource("16_08"), SubResource("16_09"), SubResource("16_10"), SubResource("16_11"), SubResource("16_12"), SubResource("16_13"), SubResource("16_14"), SubResource("16_15"), SubResource("16_16"), SubResource("16_17"), SubResource("16_18"), SubResource("16_19"), SubResource("16_20"), SubResource("16_21"), SubResource("16_none"), SubResource("17_01"), SubResource("17_02"), SubResource("17_03"), SubResource("17_04"), SubResource("17_05"), SubResource("17_06"), SubResource("17_07"), SubResource("17_08"), SubResource("17_09"), SubResource("17_10"), SubResource("17_11"), SubResource("17_12"), SubResource("17_13"), SubResource("17_14"), SubResource("17_15"), SubResource("17_16"), SubResource("17_17"), SubResource("17_18"), SubResource("17_19"), SubResource("17_20"), SubResource("17_21"), SubResource("17_none"), SubResource("18_01"), SubResource("18_02"), SubResource("18_03"), SubResource("18_04"), SubResource("18_05"), SubResource("18_06"), SubResource("18_07"), SubResource("18_08"), SubResource("18_09"), SubResource("18_10"), SubResource("18_11"), SubResource("18_12"), SubResource("18_13"), SubResource("18_14"), SubResource("18_15"), SubResource("18_16"), SubResource("18_17"), SubResource("18_18"), SubResource("18_19"), SubResource("18_20"), SubResource("18_21"), SubResource("18_none"), SubResource("19_01"), SubResource("19_02"), SubResource("19_03"), SubResource("19_04"), SubResource("19_05"), SubResource("19_06"), SubResource("19_07"), SubResource("19_08"), SubResource("19_09"), SubResource("19_10"), SubResource("19_11"), SubResource("19_12"), SubResource("19_13"), SubResource("19_14"), SubResource("19_15"), SubResource("19_16"), SubResource("19_17"), SubResource("19_18"), SubResource("19_19"), SubResource("19_20"), SubResource("19_21"), SubResource("19_none"), SubResource("20_01"), SubResource("20_02"), SubResource("20_03"), SubResource("20_04"), SubResource("20_05"), SubResource("20_06"), SubResource("20_07"), SubResource("20_08"), SubResource("20_09"), SubResource("20_10"), SubResource("20_11"), SubResource("20_12"), SubResource("20_13"), SubResource("20_14"), SubResource("20_15"), SubResource("20_16"), SubResource("20_17"), SubResource("20_18"), SubResource("20_19"), SubResource("20_20"), SubResource("20_21"), SubResource("20_none"), SubResource("21x00_01"), SubResource("21x00_02"), SubResource("21x00_03"), SubResource("21x00_04"), SubResource("21x00_05"), SubResource("21x00_06"), SubResource("21x00_07"), SubResource("21x00_08"), SubResource("21x00_09"), SubResource("21x00_10"), SubResource("21x00_11"), SubResource("21x00_12"), SubResource("21x00_13"), SubResource("21x00_14"), SubResource("21x00_15"), SubResource("21x00_16"), SubResource("21x00_17"), SubResource("21x00_18"), SubResource("21x00_19"), SubResource("21x00_20"), SubResource("21x00_21"), SubResource("21x00_none"), SubResource("22x00_01"), SubResource("22x00_02"), SubResource("22x00_03"), SubResource("22x00_04"), SubResource("22x00_05"), SubResource("22x00_06"), SubResource("22x00_07"), SubResource("22x00_08"), SubResource("22x00_09"), SubResource("22x00_10"), SubResource("22x00_11"), SubResource("22x00_12"), SubResource("22x00_13"), SubResource("22x00_14"), SubResource("22x00_15"), SubResource("22x00_16"), SubResource("22x00_17"), SubResource("22x00_18"), SubResource("22x00_19"), SubResource("22x00_20"), SubResource("22x00_21"), SubResource("22x00_none"), SubResource("23x00_01"), SubResource("23x00_02"), SubResource("23x00_03"), SubResource("23x00_04"), SubResource("23x00_05"), SubResource("23x00_06"), SubResource("23x00_07"), SubResource("23x00_08"), SubResource("23x00_09"), SubResource("23x00_10"), SubResource("23x00_11"), SubResource("23x00_12"), SubResource("23x00_13"), SubResource("23x00_14"), SubResource("23x00_15"), SubResource("23x00_16"), SubResource("23x00_17"), SubResource("23x00_18"), SubResource("23x00_19"), SubResource("23x00_20"), SubResource("23x00_21"), SubResource("23x00_none"), SubResource("24x00_01"), SubResource("24x00_02"), SubResource("24x00_03"), SubResource("24x00_04"), SubResource("24x00_05"), SubResource("24x00_06"), SubResource("24x00_07"), SubResource("24x00_08"), SubResource("24x00_09"), SubResource("24x00_10"), SubResource("24x00_11"), SubResource("24x00_12"), SubResource("24x00_13"), SubResource("24x00_14"), SubResource("24x00_15"), SubResource("24x00_16"), SubResource("24x00_17"), SubResource("24x00_18"), SubResource("24x00_19"), SubResource("24x00_20"), SubResource("24x00_21"), SubResource("24x00_none"), SubResource("25x00_01"), SubResource("25x00_02"), SubResource("25x00_03"), SubResource("25x00_04"), SubResource("25x00_05"), SubResource("25x00_06"), SubResource("25x00_07"), SubResource("25x00_08"), SubResource("25x00_09"), SubResource("25x00_10"), SubResource("25x00_11"), SubResource("25x00_12"), SubResource("25x00_13"), SubResource("25x00_14"), SubResource("25x00_15"), SubResource("25x00_16"), SubResource("25x00_17"), SubResource("25x00_18"), SubResource("25x00_19"), SubResource("25x00_20"), SubResource("25x00_21"), SubResource("25x00_none"), SubResource("26x00_01"), SubResource("26x00_02"), SubResource("26x00_03"), SubResource("26x00_04"), SubResource("26x00_05"), SubResource("26x00_06"), SubResource("26x00_07"), SubResource("26x00_08"), SubResource("26x00_09"), SubResource("26x00_10"), SubResource("26x00_11"), SubResource("26x00_12"), SubResource("26x00_13"), SubResource("26x00_14"), SubResource("26x00_15"), SubResource("26x00_16"), SubResource("26x00_17"), SubResource("26x00_18"), SubResource("26x00_19"), SubResource("26x00_20"), SubResource("26x00_21"), SubResource("26x00_none"), SubResource("27x00_01"), SubResource("27x00_02"), SubResource("27x00_03"), SubResource("27x00_04"), SubResource("27x00_05"), SubResource("27x00_06"), SubResource("27x00_07"), SubResource("27x00_08"), SubResource("27x00_09"), SubResource("27x00_10"), SubResource("27x00_11"), SubResource("27x00_12"), SubResource("27x00_13"), SubResource("27x00_14"), SubResource("27x00_15"), SubResource("27x00_16"), SubResource("27x00_17"), SubResource("27x00_18"), SubResource("27x00_19"), SubResource("27x00_20"), SubResource("27x00_21"), SubResource("27x00_none"), SubResource("28x00_01"), SubResource("28x00_02"), SubResource("28x00_03"), SubResource("28x00_04"), SubResource("28x00_05"), SubResource("28x00_06"), SubResource("28x00_07"), SubResource("28x00_08"), SubResource("28x00_09"), SubResource("28x00_10"), SubResource("28x00_11"), SubResource("28x00_12"), SubResource("28x00_13"), SubResource("28x00_14"), SubResource("28x00_15"), SubResource("28x00_16"), SubResource("28x00_17"), SubResource("28x00_18"), SubResource("28x00_19"), SubResource("28x00_20"), SubResource("28x00_21"), SubResource("28x00_none")])
-denied = PackedStringArray("00 01", "00 02", "00 03", "00 04", "00 05", "00 06", "00 07", "00 08", "00 09", "00 10", "00 11", "00 12", "00 13", "00 14", "00 15", "00 16", "00 17", "00 18", "00 19", "00 20", "00 21", "00 none")
+looks = Array[ExtResource("1_67sew")]([SubResource("01_01"), SubResource("01_02"), SubResource("01_03"), SubResource("01_04"), SubResource("01_05"), SubResource("01_06"), SubResource("01_07"), SubResource("01_08"), SubResource("01_09"), SubResource("01_10"), SubResource("01_11"), SubResource("01_12"), SubResource("01_13"), SubResource("01_14"), SubResource("01_15"), SubResource("01_16"), SubResource("01_17"), SubResource("01_18"), SubResource("01_19"), SubResource("01_20"), SubResource("01_21"), SubResource("01_none"), SubResource("02_01"), SubResource("02_02"), SubResource("02_03"), SubResource("02_04"), SubResource("02_05"), SubResource("02_06"), SubResource("02_07"), SubResource("02_08"), SubResource("02_09"), SubResource("02_10"), SubResource("02_11"), SubResource("02_12"), SubResource("02_13"), SubResource("02_14"), SubResource("02_15"), SubResource("02_16"), SubResource("02_17"), SubResource("02_18"), SubResource("02_19"), SubResource("02_20"), SubResource("02_21"), SubResource("02_none"), SubResource("03_01"), SubResource("03_02"), SubResource("03_03"), SubResource("03_04"), SubResource("03_05"), SubResource("03_06"), SubResource("03_07"), SubResource("03_08"), SubResource("03_09"), SubResource("03_10"), SubResource("03_11"), SubResource("03_12"), SubResource("03_13"), SubResource("03_14"), SubResource("03_15"), SubResource("03_16"), SubResource("03_17"), SubResource("03_18"), SubResource("03_19"), SubResource("03_20"), SubResource("03_21"), SubResource("03_none"), SubResource("04_01"), SubResource("04_02"), SubResource("04_03"), SubResource("04_04"), SubResource("04_05"), SubResource("04_06"), SubResource("04_07"), SubResource("04_08"), SubResource("04_09"), SubResource("04_10"), SubResource("04_11"), SubResource("04_12"), SubResource("04_13"), SubResource("04_14"), SubResource("04_15"), SubResource("04_16"), SubResource("04_17"), SubResource("04_18"), SubResource("04_19"), SubResource("04_20"), SubResource("04_21"), SubResource("04_none"), SubResource("05_01"), SubResource("05_02"), SubResource("05_03"), SubResource("05_04"), SubResource("05_05"), SubResource("05_06"), SubResource("05_07"), SubResource("05_08"), SubResource("05_09"), SubResource("05_10"), SubResource("05_11"), SubResource("05_12"), SubResource("05_13"), SubResource("05_14"), SubResource("05_15"), SubResource("05_16"), SubResource("05_17"), SubResource("05_18"), SubResource("05_19"), SubResource("05_20"), SubResource("05_21"), SubResource("05_none"), SubResource("06_01"), SubResource("06_02"), SubResource("06_03"), SubResource("06_04"), SubResource("06_05"), SubResource("06_06"), SubResource("06_07"), SubResource("06_08"), SubResource("06_09"), SubResource("06_10"), SubResource("06_11"), SubResource("06_12"), SubResource("06_13"), SubResource("06_14"), SubResource("06_15"), SubResource("06_16"), SubResource("06_17"), SubResource("06_18"), SubResource("06_19"), SubResource("06_20"), SubResource("06_21"), SubResource("06_none"), SubResource("07_01"), SubResource("07_02"), SubResource("07_03"), SubResource("07_04"), SubResource("07_05"), SubResource("07_06"), SubResource("07_07"), SubResource("07_08"), SubResource("07_09"), SubResource("07_10"), SubResource("07_11"), SubResource("07_12"), SubResource("07_13"), SubResource("07_14"), SubResource("07_15"), SubResource("07_16"), SubResource("07_17"), SubResource("07_18"), SubResource("07_19"), SubResource("07_20"), SubResource("07_21"), SubResource("07_none"), SubResource("08_01"), SubResource("08_02"), SubResource("08_03"), SubResource("08_04"), SubResource("08_05"), SubResource("08_06"), SubResource("08_07"), SubResource("08_08"), SubResource("08_09"), SubResource("08_10"), SubResource("08_11"), SubResource("08_12"), SubResource("08_13"), SubResource("08_14"), SubResource("08_15"), SubResource("08_16"), SubResource("08_17"), SubResource("08_18"), SubResource("08_19"), SubResource("08_20"), SubResource("08_21"), SubResource("08_none"), SubResource("09_01"), SubResource("09_02"), SubResource("09_03"), SubResource("09_04"), SubResource("09_05"), SubResource("09_06"), SubResource("09_07"), SubResource("09_08"), SubResource("09_09"), SubResource("09_10"), SubResource("09_11"), SubResource("09_12"), SubResource("09_13"), SubResource("09_14"), SubResource("09_15"), SubResource("09_16"), SubResource("09_17"), SubResource("09_18"), SubResource("09_19"), SubResource("09_20"), SubResource("09_21"), SubResource("09_none"), SubResource("10_01"), SubResource("10_02"), SubResource("10_03"), SubResource("10_04"), SubResource("10_05"), SubResource("10_06"), SubResource("10_07"), SubResource("10_08"), SubResource("10_09"), SubResource("10_10"), SubResource("10_11"), SubResource("10_12"), SubResource("10_13"), SubResource("10_14"), SubResource("10_15"), SubResource("10_16"), SubResource("10_17"), SubResource("10_18"), SubResource("10_19"), SubResource("10_20"), SubResource("10_21"), SubResource("10_none"), SubResource("11_01"), SubResource("11_02"), SubResource("11_03"), SubResource("11_04"), SubResource("11_05"), SubResource("11_06"), SubResource("11_07"), SubResource("11_08"), SubResource("11_09"), SubResource("11_10"), SubResource("11_11"), SubResource("11_12"), SubResource("11_13"), SubResource("11_14"), SubResource("11_15"), SubResource("11_16"), SubResource("11_17"), SubResource("11_18"), SubResource("11_19"), SubResource("11_20"), SubResource("11_21"), SubResource("11_none"), SubResource("12_01"), SubResource("12_02"), SubResource("12_03"), SubResource("12_04"), SubResource("12_05"), SubResource("12_06"), SubResource("12_07"), SubResource("12_08"), SubResource("12_09"), SubResource("12_10"), SubResource("12_11"), SubResource("12_12"), SubResource("12_13"), SubResource("12_14"), SubResource("12_15"), SubResource("12_16"), SubResource("12_17"), SubResource("12_18"), SubResource("12_19"), SubResource("12_20"), SubResource("12_21"), SubResource("12_none"), SubResource("13_01"), SubResource("13_02"), SubResource("13_03"), SubResource("13_04"), SubResource("13_05"), SubResource("13_06"), SubResource("13_07"), SubResource("13_08"), SubResource("13_09"), SubResource("13_10"), SubResource("13_11"), SubResource("13_12"), SubResource("13_13"), SubResource("13_14"), SubResource("13_15"), SubResource("13_16"), SubResource("13_17"), SubResource("13_18"), SubResource("13_19"), SubResource("13_20"), SubResource("13_21"), SubResource("13_none"), SubResource("14_01"), SubResource("14_02"), SubResource("14_03"), SubResource("14_04"), SubResource("14_05"), SubResource("14_06"), SubResource("14_07"), SubResource("14_08"), SubResource("14_09"), SubResource("14_10"), SubResource("14_11"), SubResource("14_12"), SubResource("14_13"), SubResource("14_14"), SubResource("14_15"), SubResource("14_16"), SubResource("14_17"), SubResource("14_18"), SubResource("14_19"), SubResource("14_20"), SubResource("14_21"), SubResource("14_none"), SubResource("15_01"), SubResource("15_02"), SubResource("15_03"), SubResource("15_04"), SubResource("15_05"), SubResource("15_06"), SubResource("15_07"), SubResource("15_08"), SubResource("15_09"), SubResource("15_10"), SubResource("15_11"), SubResource("15_12"), SubResource("15_13"), SubResource("15_14"), SubResource("15_15"), SubResource("15_16"), SubResource("15_17"), SubResource("15_18"), SubResource("15_19"), SubResource("15_20"), SubResource("15_21"), SubResource("15_none"), SubResource("16_01"), SubResource("16_02"), SubResource("16_03"), SubResource("16_04"), SubResource("16_05"), SubResource("16_06"), SubResource("16_07"), SubResource("16_08"), SubResource("16_09"), SubResource("16_10"), SubResource("16_11"), SubResource("16_12"), SubResource("16_13"), SubResource("16_14"), SubResource("16_15"), SubResource("16_16"), SubResource("16_17"), SubResource("16_18"), SubResource("16_19"), SubResource("16_20"), SubResource("16_21"), SubResource("16_none"), SubResource("17_01"), SubResource("17_02"), SubResource("17_03"), SubResource("17_04"), SubResource("17_05"), SubResource("17_06"), SubResource("17_07"), SubResource("17_08"), SubResource("17_09"), SubResource("17_10"), SubResource("17_11"), SubResource("17_12"), SubResource("17_13"), SubResource("17_14"), SubResource("17_15"), SubResource("17_16"), SubResource("17_17"), SubResource("17_18"), SubResource("17_19"), SubResource("17_20"), SubResource("17_21"), SubResource("17_none"), SubResource("18_01"), SubResource("18_02"), SubResource("18_03"), SubResource("18_04"), SubResource("18_05"), SubResource("18_06"), SubResource("18_07"), SubResource("18_08"), SubResource("18_09"), SubResource("18_10"), SubResource("18_11"), SubResource("18_12"), SubResource("18_13"), SubResource("18_14"), SubResource("18_15"), SubResource("18_16"), SubResource("18_17"), SubResource("18_18"), SubResource("18_19"), SubResource("18_20"), SubResource("18_21"), SubResource("18_none"), SubResource("19_01"), SubResource("19_02"), SubResource("19_03"), SubResource("19_04"), SubResource("19_05"), SubResource("19_06"), SubResource("19_07"), SubResource("19_08"), SubResource("19_09"), SubResource("19_10"), SubResource("19_11"), SubResource("19_12"), SubResource("19_13"), SubResource("19_14"), SubResource("19_15"), SubResource("19_16"), SubResource("19_17"), SubResource("19_18"), SubResource("19_19"), SubResource("19_20"), SubResource("19_21"), SubResource("19_none"), SubResource("20_01"), SubResource("20_02"), SubResource("20_03"), SubResource("20_04"), SubResource("20_05"), SubResource("20_06"), SubResource("20_07"), SubResource("20_08"), SubResource("20_09"), SubResource("20_10"), SubResource("20_11"), SubResource("20_12"), SubResource("20_13"), SubResource("20_14"), SubResource("20_15"), SubResource("20_16"), SubResource("20_17"), SubResource("20_18"), SubResource("20_19"), SubResource("20_20"), SubResource("20_21"), SubResource("20_none"), SubResource("21x00_01"), SubResource("21x00_02"), SubResource("21x00_03"), SubResource("21x00_04"), SubResource("21x00_05"), SubResource("21x00_06"), SubResource("21x00_07"), SubResource("21x00_08"), SubResource("21x00_09"), SubResource("21x00_10"), SubResource("21x00_11"), SubResource("21x00_12"), SubResource("21x00_13"), SubResource("21x00_14"), SubResource("21x00_15"), SubResource("21x00_16"), SubResource("21x00_17"), SubResource("21x00_18"), SubResource("21x00_19"), SubResource("21x00_20"), SubResource("21x00_21"), SubResource("21x00_none"), SubResource("22x00_01"), SubResource("22x00_02"), SubResource("22x00_03"), SubResource("22x00_04"), SubResource("22x00_05"), SubResource("22x00_06"), SubResource("22x00_07"), SubResource("22x00_08"), SubResource("22x00_09"), SubResource("22x00_10"), SubResource("22x00_11"), SubResource("22x00_12"), SubResource("22x00_13"), SubResource("22x00_14"), SubResource("22x00_15"), SubResource("22x00_16"), SubResource("22x00_17"), SubResource("22x00_18"), SubResource("22x00_19"), SubResource("22x00_20"), SubResource("22x00_21"), SubResource("22x00_none"), SubResource("23x00_01"), SubResource("23x00_02"), SubResource("23x00_03"), SubResource("23x00_04"), SubResource("23x00_05"), SubResource("23x00_06"), SubResource("23x00_07"), SubResource("23x00_08"), SubResource("23x00_09"), SubResource("23x00_10"), SubResource("23x00_11"), SubResource("23x00_12"), SubResource("23x00_13"), SubResource("23x00_14"), SubResource("23x00_15"), SubResource("23x00_16"), SubResource("23x00_17"), SubResource("23x00_18"), SubResource("23x00_19"), SubResource("23x00_20"), SubResource("23x00_21"), SubResource("23x00_none"), SubResource("24x00_01"), SubResource("24x00_02"), SubResource("24x00_03"), SubResource("24x00_04"), SubResource("24x00_05"), SubResource("24x00_06"), SubResource("24x00_07"), SubResource("24x00_08"), SubResource("24x00_09"), SubResource("24x00_10"), SubResource("24x00_11"), SubResource("24x00_12"), SubResource("24x00_13"), SubResource("24x00_14"), SubResource("24x00_15"), SubResource("24x00_16"), SubResource("24x00_17"), SubResource("24x00_18"), SubResource("24x00_19"), SubResource("24x00_20"), SubResource("24x00_21"), SubResource("24x00_none"), SubResource("25x00_01"), SubResource("25x00_02"), SubResource("25x00_03"), SubResource("25x00_04"), SubResource("25x00_05"), SubResource("25x00_06"), SubResource("25x00_07"), SubResource("25x00_08"), SubResource("25x00_09"), SubResource("25x00_10"), SubResource("25x00_11"), SubResource("25x00_12"), SubResource("25x00_13"), SubResource("25x00_14"), SubResource("25x00_15"), SubResource("25x00_16"), SubResource("25x00_17"), SubResource("25x00_18"), SubResource("25x00_19"), SubResource("25x00_20"), SubResource("25x00_21"), SubResource("25x00_none"), SubResource("26x00_01"), SubResource("26x00_02"), SubResource("26x00_03"), SubResource("26x00_04"), SubResource("26x00_05"), SubResource("26x00_06"), SubResource("26x00_07"), SubResource("26x00_08"), SubResource("26x00_09"), SubResource("26x00_10"), SubResource("26x00_11"), SubResource("26x00_12"), SubResource("26x00_13"), SubResource("26x00_14"), SubResource("26x00_15"), SubResource("26x00_16"), SubResource("26x00_17"), SubResource("26x00_18"), SubResource("26x00_19"), SubResource("26x00_20"), SubResource("26x00_21"), SubResource("26x00_none"), SubResource("27x00_01"), SubResource("27x00_02"), SubResource("27x00_03"), SubResource("27x00_04"), SubResource("27x00_05"), SubResource("27x00_06"), SubResource("27x00_07"), SubResource("27x00_08"), SubResource("27x00_09"), SubResource("27x00_10"), SubResource("27x00_11"), SubResource("27x00_12"), SubResource("27x00_13"), SubResource("27x00_14"), SubResource("27x00_15"), SubResource("27x00_16"), SubResource("27x00_17"), SubResource("27x00_18"), SubResource("27x00_19"), SubResource("27x00_20"), SubResource("27x00_21"), SubResource("27x00_none"), SubResource("28x00_01"), SubResource("28x00_02"), SubResource("28x00_03"), SubResource("28x00_04"), SubResource("28x00_05"), SubResource("28x00_06"), SubResource("28x00_07"), SubResource("28x00_08"), SubResource("28x00_09"), SubResource("28x00_10"), SubResource("28x00_11"), SubResource("28x00_12"), SubResource("28x00_13"), SubResource("28x00_14"), SubResource("28x00_15"), SubResource("28x00_16"), SubResource("28x00_17"), SubResource("28x00_18"), SubResource("28x00_19"), SubResource("28x00_20"), SubResource("28x00_21"), SubResource("28x00_none"), SubResource("00_01"), SubResource("00_02"), SubResource("00_03"), SubResource("00_04"), SubResource("00_05"), SubResource("00_06"), SubResource("00_07"), SubResource("00_08"), SubResource("00_09"), SubResource("00_10"), SubResource("00_11"), SubResource("00_12"), SubResource("00_13"), SubResource("00_14"), SubResource("00_15"), SubResource("00_16"), SubResource("00_17"), SubResource("00_18"), SubResource("00_19"), SubResource("00_20"), SubResource("00_21"), SubResource("00_none")])

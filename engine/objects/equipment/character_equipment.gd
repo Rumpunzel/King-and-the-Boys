@@ -99,6 +99,9 @@ func _request_equip(equipment_id: String) -> void:
 	if not equipment_look:
 		push_warning("Peer %d requested %s, which is no EquipmentLook; refused!" % [sender_id, equipment_id])
 		return
+	if not equipment_look.allowed:
+		push_warning("Peer %d requested %s, which is not allowed; refused!" % [sender_id, equipment_id])
+		return
 	if not equip(equipment_look): print_debug("Peer %d requested %s, but its slot is blocked; refused!" % [sender_id, equipment_id])
 
 @rpc("any_peer", "call_local", "reliable")

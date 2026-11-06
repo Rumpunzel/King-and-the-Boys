@@ -251,4 +251,4 @@ name = "Cape 14"
 [resource]
 script = ExtResource("22_bsiae")
 type = ExtResource("7_4yi7j")
-entries = Array[ExtResource("1_2c0lt")]([SubResource("01"), SubResource("15"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12"), SubResource("13"), SubResource("14")])
+looks = Array[ExtResource("1_2c0lt")]([SubResource("01"), SubResource("15"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12"), SubResource("13"), SubResource("14")])

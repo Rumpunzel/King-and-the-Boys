@@ -2,15 +2,9 @@
 class_name EquipmentCatalog
 extends Resource
 
-## The combinations of one [EquipmentType] that are allowed as items, and the ones decided against
-## Allowed combinations are [EquipmentLook]s stored inside this file, each with its combination key as ID,
-## so [ResourceId] names them "uid://<catalog>::05_10" without a file per item
-
-enum Status {
-	UNREVIEWED,
-	ALLOWED,
-	DENIED,
-}
+## The looks of one [EquipmentType]: mesh combinations stored inside this file, each with its combination key as ID,
+## so [ResourceId] names them "uid://<catalog>::05_10" without a file per look
+## Each look's [member EquipmentLook.allowed] flag records whether that combination is meant to be used
 
 const CATALOG_DIRECTORY: String = EquipmentLook.ITEM_DIRECTORY + "/catalogs"
 
@@ -18,23 +12,16 @@ const CATALOG_DIRECTORY: String = EquipmentLook.ITEM_DIRECTORY + "/catalogs"
 	set(new_value):
 		type = new_value
 		changed.emit()
-@export var entries: Array[EquipmentLook]:
+@export var looks: Array[EquipmentLook]:
 	set(new_value):
-		entries = new_value
-		changed.emit()
-## Combination keys decided against; kept so a decision is documented and not asked again
-@export var denied: PackedStringArray:
-	set(new_value):
-		denied = new_value
+		looks = new_value
 		changed.emit()
 
 ## @returns the saved catalog of [param for_type], or [code]null[/code] if there is none yet
 static func find_for(for_type: EquipmentType) -> EquipmentCatalog:
-	if not for_type or not DirAccess.dir_exists_absolute(CATALOG_DIRECTORY): return null
-	for file_name: String in DirAccess.get_files_at(CATALOG_DIRECTORY):
-		if file_name.get_extension() != "tres": continue
-		var catalog: EquipmentCatalog = load(CATALOG_DIRECTORY.path_join(file_name)) as EquipmentCatalog
-		if catalog and catalog.type == for_type: return catalog
+	if not for_type: return null
+	for catalog: EquipmentCatalog in find_all():
+		if catalog.type == for_type: return catalog
 	return null
 
 ## @returns the saved catalog of [param for_type], or a new one to be saved at [method get_default_path]
@@ -56,57 +43,50 @@ static func find_all() -> Array[EquipmentCatalog]:
 	return catalogs
 
 ## Stored resource IDs may only hold letters, digits and "_": "21-00 none" becomes "21x00_none"
-static func get_entry_id(combination_key: String) -> String:
+static func get_look_id(combination_key: String) -> String:
 	return combination_key.replace("-", "x").replace(" ", "_")
 
 func get_default_path() -> String:
 	return CATALOG_DIRECTORY.path_join("%s.tres" % type.name.to_snake_case())
 
-func get_entry(combination_key: String) -> EquipmentLook:
-	var entry_id: String = get_entry_id(combination_key)
-	for entry: EquipmentLook in entries:
-		if entry and entry.resource_scene_unique_id == entry_id: return entry
+func get_look(combination_key: String) -> EquipmentLook:
+	var look_id: String = get_look_id(combination_key)
+	for look: EquipmentLook in looks:
+		if look and look.resource_scene_unique_id == look_id: return look
 	return null
 
-func get_status(combination_key: String) -> Status:
-	if get_entry(combination_key): return Status.ALLOWED
-	if denied.has(combination_key): return Status.DENIED
-	return Status.UNREVIEWED
+func get_allowed_looks() -> Array[EquipmentLook]:
+	return looks.filter(func(look: EquipmentLook) -> bool: return look and look.allowed)
 
-## Adds [param entry] as the item for [param combination_key], replacing an earlier one and any denial
-func allow(entry: EquipmentLook, combination_key: String) -> void:
-	assert(entry.type == type, "%s is no %s" % [entry.name, type.name])
-	_remove_entry(combination_key)
-	_remove_denial(combination_key)
-	entry.resource_scene_unique_id = get_entry_id(combination_key)
-	if entry.name.is_empty(): entry.name = type.get_combination_name(combination_key)
-	entries.append(entry)
+## Adds [param look] for [param combination_key], replacing an earlier look of that key
+func add(look: EquipmentLook, combination_key: String, allowed: bool) -> void:
+	assert(look.type == type, "%s is no %s" % [look.name, type.name])
+	var earlier: EquipmentLook = get_look(combination_key)
+	if earlier: looks.erase(earlier)
+	look.resource_scene_unique_id = get_look_id(combination_key)
+	if look.name.is_empty(): look.name = type.get_combination_name(combination_key)
+	look.allowed = allowed
+	looks.append(look)
 	changed.emit()
 
-func deny(combination_key: String) -> void:
-	_remove_entry(combination_key)
-	if not denied.has(combination_key):
-		denied.append(combination_key)
-		denied.sort()
-	changed.emit()
-
-## Forgets any decision, so [param combination_key] is unreviewed again
-func undecide(combination_key: String) -> void:
-	_remove_entry(combination_key)
-	_remove_denial(combination_key)
-	changed.emit()
-
-func _remove_entry(combination_key: String) -> void:
-	var entry: EquipmentLook = get_entry(combination_key)
-	if entry: entries.erase(entry)
-
-func _remove_denial(combination_key: String) -> void:
-	var denied_index: int = denied.find(combination_key)
-	if denied_index >= 0: denied.remove_at(denied_index)
+## Adds every combination [param combinations] lists that this catalog lacks, as not allowed, so nothing new slips in unseen
+## @returns how many looks were added
+func add_missing(combinations: EquipmentCombinations) -> int:
+	assert(combinations.type == type)
+	var shown_meshes: Dictionary[ModularCharacter.Part, Mesh] = combinations.get_shown_meshes()
+	var added: int = 0
+	for combination: Dictionary in combinations.list():
+		var combination_key: String = combination.key
+		if get_look(combination_key): continue
+		combinations.show(combination, shown_meshes)
+		add(EquipmentLook.from_model(combinations.model, type), combination_key, false)
+		added += 1
+	combinations.show_meshes(shown_meshes)
+	return added
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not type: warnings.append("Missing EquipmentType.")
-	for entry: EquipmentLook in entries:
-		if entry and entry.type != type: warnings.append("%s is no %s." % [entry.name, type.name if type else "item of this catalog's type"])
+	for look: EquipmentLook in looks:
+		if look and look.type != type: warnings.append("%s is no %s." % [look.name, type.name if type else "look of this catalog's type"])
 	return warnings

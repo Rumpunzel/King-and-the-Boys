@@ -203,4 +203,4 @@ name = "Belt 12"
 [resource]
 script = ExtResource("19_xig2e")
 type = ExtResource("7_igiv6")
-entries = Array[ExtResource("1_2kdhm")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12")])
+looks = Array[ExtResource("1_2kdhm")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12")])
