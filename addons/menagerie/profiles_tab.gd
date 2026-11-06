@@ -7,6 +7,8 @@ signal look_toggled(look: EquipmentLook)
 
 enum Columns {
 	PROFILE,
+	## Checked catalog looks are offered and can be worn
+	ALLOWED,
 	RESOURCE_PATH,
 }
 
@@ -24,6 +26,8 @@ const DISALLOWED_COLOR: Color = Color(1.0, 1.0, 1.0, 0.35)
 
 ## Rows that group profiles, such as a type or a look's base; never stand for a profile
 var _group_items: Dictionary[StringName, TreeItem]
+## Rows grouping the variations of one base mesh; selecting one previews its first look
+var _base_items: Dictionary[TreeItem, bool]
 var _profile_items: Dictionary[Profile, TreeItem]
 var _filter_string: String = "":
 	set(new_filter_string):
@@ -34,28 +38,45 @@ var _filter_string: String = "":
 func _ready() -> void:
 	_profiles_tree.set_column_title(Columns.PROFILE, "%s [Variations]" % profile_column_title)
 	_profiles_tree.set_column_title_alignment(Columns.PROFILE, HORIZONTAL_ALIGNMENT_LEFT)
+	_profiles_tree.columns = Columns.size()
+	_profiles_tree.set_column_expand(Columns.ALLOWED, false)
+	_profiles_tree.set_column_custom_minimum_width(Columns.ALLOWED, 32)
 	_profiles_tree.set_column_title(Columns.RESOURCE_PATH, "Path")
 	_profiles_tree.set_column_title_alignment(Columns.RESOURCE_PATH, HORIZONTAL_ALIGNMENT_LEFT)
 	if not _profiles_tree.item_edited.is_connected(_on_item_edited): _profiles_tree.item_edited.connect(_on_item_edited)
 	_update_profiles()
 
-func _create_items_for_profiles_in_directory(directory_path: String = _data_path, parent_item: TreeItem = _profiles_tree.create_item()) -> void:
-	var profiles_in_directory: Array[Profile] = _list_profiles_in_directory(directory_path)
-	for profile: Profile in profiles_in_directory:
-		if not _profile_matches_filter_string(profile): continue
-		_create_profile_item(profile, parent_item)
-	var directory_names: PackedStringArray = DirAccess.get_directories_at(directory_path)
-	for directory_name: String in directory_names:
-		_create_items_for_profiles_in_directory(directory_path.path_join(directory_name), parent_item)
+## @returns every profile below [param directory_path], including the looks stored in catalogs
+func _collect_profiles(directory_path: String = _data_path) -> Array[Profile]:
+	var profiles: Array[Profile] = _list_profiles_in_directory(directory_path)
+	for directory_name: String in DirAccess.get_directories_at(directory_path):
+		profiles.append_array(_collect_profiles(directory_path.path_join(directory_name)))
+	return profiles
+
+func _create_items(profiles: Array[Profile]) -> void:
+	var root: TreeItem = _profiles_tree.create_item()
+	# A base row is only worth a click when it holds several variations
+	var base_counts: Dictionary[String, int] = {}
+	for profile: Profile in profiles:
+		if profile is EquipmentLook:
+			var base_key: String = _get_base_key(profile as EquipmentLook)
+			base_counts[base_key] = base_counts.get(base_key, 0) + 1
+	for profile: Profile in profiles:
+		var is_grouped: bool = profile is EquipmentLook and base_counts[_get_base_key(profile as EquipmentLook)] > 1
+		_create_profile_item(profile, root, is_grouped)
 	_update_group_counts()
 
-func _create_profile_item(profile: Profile, parent_item: TreeItem) -> TreeItem:
+static func _get_base_key(look: EquipmentLook) -> String:
+	return "%s/%s" % [look.get_group_name(), look.get_base_name()]
+
+func _create_profile_item(profile: Profile, parent_item: TreeItem, is_grouped_by_base: bool = false) -> TreeItem:
 	var group_item: TreeItem = _get_or_create_group_item(profile.get_group_name(), parent_item)
 	# Looks group once more by their base, e.g. all variations of "Torso 05"
-	if profile is EquipmentLook:
+	if is_grouped_by_base:
 		var look: EquipmentLook = profile
-		var base_item: TreeItem = _get_or_create_group_item("%s/%s" % [profile.get_group_name(), look.get_base_name()], group_item, look.get_base_name())
+		var base_item: TreeItem = _get_or_create_group_item(_get_base_key(look), group_item, look.get_base_name())
 		base_item.collapsed = _filter_string.is_empty()
+		_base_items[base_item] = true
 		group_item = base_item
 	var profile_item: TreeItem = _profiles_tree.create_item(group_item)
 
@@ -79,9 +100,9 @@ func _create_profile_item(profile: Profile, parent_item: TreeItem) -> TreeItem:
 
 	# A catalog look can be checked or unchecked right here
 	if profile is EquipmentLook and profile.resource_path.contains(ResourceId.SEPARATOR):
-		profile_item.set_cell_mode(Columns.PROFILE, TreeItem.CELL_MODE_CHECK)
-		profile_item.set_editable(Columns.PROFILE, true)
-		profile_item.set_tooltip_text(Columns.PROFILE, "Checked looks are offered and can be worn; Space toggles the selection")
+		profile_item.set_cell_mode(Columns.ALLOWED, TreeItem.CELL_MODE_CHECK)
+		profile_item.set_editable(Columns.ALLOWED, true)
+		profile_item.set_tooltip_text(Columns.ALLOWED, "Checked looks are offered and can be worn; Space toggles the selection")
 		_show_allowed(profile_item, profile as EquipmentLook)
 
 	_profile_items[profile] = profile_item
@@ -117,7 +138,7 @@ func _update_group_counts() -> void:
 		group_item.set_text(Columns.PROFILE, "%s (%d/%d)" % [text, allowed_counts[group_item], total] if allowed_counts.has(group_item) else "%s (%d)" % [text, total])
 
 func _show_allowed(profile_item: TreeItem, look: EquipmentLook) -> void:
-	profile_item.set_checked(Columns.PROFILE, look.allowed)
+	profile_item.set_checked(Columns.ALLOWED, look.allowed)
 	var color: Color = look.color if look.allowed else look.color * DISALLOWED_COLOR
 	profile_item.set_custom_color(Columns.PROFILE, color)
 	profile_item.set_custom_color(Columns.RESOURCE_PATH, color.darkened(0.5))
@@ -139,7 +160,9 @@ func update_look(look: EquipmentLook) -> void:
 	_update_group_counts()
 
 func _change_profile(selected_item: TreeItem) -> void:
-	if _group_items.values().has(selected_item): return
+	# A base row previews its first variation
+	if _base_items.has(selected_item): selected_item = selected_item.get_first_child()
+	if not selected_item or _group_items.values().has(selected_item): return
 	var profile_path: String = selected_item.get_metadata(Columns.RESOURCE_PATH)
 	var profile: Profile = ResourceId.find(profile_path) as Profile
 	if is_visible_in_tree(): EditorInterface.get_inspector().edit(profile)
@@ -147,6 +170,7 @@ func _change_profile(selected_item: TreeItem) -> void:
 
 func _clear_profiles() -> void:
 	_group_items.clear()
+	_base_items.clear()
 	_profile_items.clear()
 	_profiles_tree.clear()
 
@@ -176,7 +200,7 @@ func _update_name() -> void:
 
 func _update_profiles() -> void:
 	_clear_profiles()
-	_create_items_for_profiles_in_directory()
+	_create_items(_collect_profiles().filter(_profile_matches_filter_string))
 
 func _on_visibility_changed() -> void:
 	if not is_visible_in_tree():
@@ -193,7 +217,7 @@ func _on_item_multi_selected(item: TreeItem, _column: int, selected: bool) -> vo
 func _on_item_edited() -> void:
 	var edited_item: TreeItem = _profiles_tree.get_edited()
 	var look: EquipmentLook = _get_look_of(edited_item)
-	if look: set_allowed(look, edited_item.is_checked(Columns.PROFILE))
+	if look and _profiles_tree.get_edited_column() == Columns.ALLOWED: set_allowed(look, edited_item.is_checked(Columns.ALLOWED))
 
 func _get_look_of(tree_item: TreeItem) -> EquipmentLook:
 	if not tree_item or _group_items.values().has(tree_item): return null
