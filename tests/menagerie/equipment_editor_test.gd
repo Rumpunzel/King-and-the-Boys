@@ -90,6 +90,30 @@ func test_checking_adds_and_flips_the_shown_look() -> void:
 	assert_bool(look.allowed).is_false()
 	assert_int(catalog.looks.size()).is_equal(1)
 
+func test_reviewing_steps_through_combinations_and_wraps() -> void:
+	var helmet_type: EquipmentType = _use_type("helmet")
+	var head_check: CheckBox = (_editor.get("_vary_check_boxes") as Dictionary)[ModularCharacter.Part.HEAD_NO_ELEMENTS]
+	head_check.button_pressed = false
+	_show_helmet("05", "02")
+	var combinations: EquipmentCombinations = EquipmentCombinations.new(helmet_type, _model)
+	combinations.varied_parts = [ModularCharacter.Part.HELMET_ATTACHMENT]
+	var keys: Array = combinations.list().map(func(combination: Dictionary) -> String: return combination.key)
+	var start: int = keys.find("05 02")
+	_editor.call("_step_combination", 1)
+	assert_str(_editor.call("_get_combination_key") as String).is_equal(keys[(start + 1) % keys.size()] as String)
+	_editor.call("_step_combination", -1)
+	_editor.call("_step_combination", -1)
+	assert_str(_editor.call("_get_combination_key") as String).is_equal(keys[start - 1] as String)
+	var label: Label = _editor.get("_review_label")
+	assert_str(label.text).is_equal("Combination %d / %d" % [start, keys.size()])
+
+func test_toggling_a_flag_does_not_rebuild_previews() -> void:
+	var look: EquipmentLook = EquipmentLook.new()
+	var changes: Array[int] = [0]
+	look.changed.connect(func() -> void: changes[0] += 1)
+	look.allowed = false
+	assert_int(changes[0]).is_equal(0)
+
 func test_empty_combinations_cannot_be_checked() -> void:
 	_use_catalog(_use_type("helmet"))
 	_model.head_no_elements.update_index(-1)

@@ -35,10 +35,8 @@ const _PREVIEW_MODEL_UID: String = "uid://c6oheyitbnlpu"
 		if appearance and not appearance.changed.is_connected(changed.emit): appearance.changed.connect(changed.emit)
 		changed.emit()
 ## Whether this look is meant to be used; unchecked looks of a catalog stay recorded but are not offered or worn
-@export var allowed: bool = true:
-	set(new_value):
-		allowed = new_value
-		changed.emit()
+## Deliberately emits no [signal Resource.changed]: the look still looks the same, and previews rebuild on that signal
+@export var allowed: bool = true
 
 var slot: Slot:
 	get:

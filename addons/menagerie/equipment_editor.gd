@@ -2,7 +2,8 @@
 extends PanelContainer
 
 ## Authors looks: steps through a type's parts on the Menagerie preview, checks or unchecks the shown combination in the type's
-## [EquipmentCatalog], adds missing combinations unchecked, or saves hand-made looks as files of their own
+## [EquipmentCatalog], adds missing combinations checked, or saves hand-made looks as files of their own
+## Reviewing works by keyboard once the panel has focus: Q / E show the previous / next combination of the varied parts, A toggles it
 
 signal equipment_saved(equipment_look: EquipmentLook)
 ## The shown combination's look was checked or unchecked here
@@ -23,6 +24,9 @@ const NO_MODEL_HINT: String = "Select a look, or a modular character to start fr
 @export var _allowed_check: CheckBox
 @export var _look_label: Label
 @export var _add_missing_button: Button
+@export var _previous_combination_button: Button
+@export var _review_label: Label
+@export var _next_combination_button: Button
 @export var _name_edit: LineEdit
 @export var _save_button: Button
 @export var _save_as_new_button: Button
@@ -39,6 +43,11 @@ var _mesh_labels: Dictionary[ModularCharacter.Part, Label] = {}
 var _is_set_up: bool = false
 ## The selected type's catalog, if it has one yet
 var _catalog: EquipmentCatalog
+## Combinations Q / E step through, listed on the first step (see [method EquipmentCombinations.list]); cleared when the parts change
+var _review_combinations: Array[Dictionary] = []
+## What the preview showed when [member _review_combinations] was listed; partners lacking a number keep these
+var _review_meshes: Dictionary[ModularCharacter.Part, Mesh] = {}
+var _review_index: int = -1
 
 func _ready() -> void:
 	# Do not bake generated items into this scene while it is edited itself
@@ -50,12 +59,17 @@ func _ready() -> void:
 	_add_missing_button.pressed.connect(_on_add_missing_pressed)
 	_save_button.pressed.connect(_on_save_pressed)
 	_save_as_new_button.pressed.connect(_on_save_as_new_pressed)
-	var key_event: InputEventKey = InputEventKey.new()
-	key_event.keycode = KEY_A
-	var shortcut: Shortcut = Shortcut.new()
-	shortcut.events = [key_event]
-	_allowed_check.shortcut = shortcut
-	_allowed_check.shortcut_context = self
+	_previous_combination_button.pressed.connect(_step_combination.bind(-1))
+	_next_combination_button.pressed.connect(_step_combination.bind(1))
+	# Letters, as arrow keys move the focus first; the panel needs focus, so typing elsewhere (e.g. the Gear tab's search) is left alone
+	var shortcut_keys: Dictionary[BaseButton, Key] = {_allowed_check: KEY_A, _previous_combination_button: KEY_Q, _next_combination_button: KEY_E}
+	for button: BaseButton in shortcut_keys:
+		var key_event: InputEventKey = InputEventKey.new()
+		key_event.keycode = shortcut_keys[button]
+		var shortcut: Shortcut = Shortcut.new()
+		shortcut.events = [key_event]
+		button.shortcut = shortcut
+		button.shortcut_context = self
 	_is_set_up = true
 	_on_gear_tab_visibility_changed()
 
@@ -120,12 +134,14 @@ func _rebuild_parts() -> void:
 	_mesh_labels.clear()
 	if not _model:
 		_status_label.text = NO_MODEL_HINT
+		_clear_review()
 		_update_look_row()
 		return
 	if _status_label.text == NO_MODEL_HINT: _status_label.text = ""
 	var equipment_type: EquipmentType = _get_type()
 	if equipment_type:
 		for part: ModularCharacter.Part in equipment_type.parts: _parts_container.add_child(_create_part_row(part))
+	_clear_review()
 	_update_look_row()
 
 func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
@@ -133,7 +149,8 @@ func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
 	var part_name: String = ModularCharacter.Part.keys()[part]
 	var vary_check_box: CheckBox = CheckBox.new()
 	vary_check_box.button_pressed = true
-	vary_check_box.tooltip_text = "Vary this part when adding missing combinations; unchecked parts keep the mesh shown"
+	vary_check_box.tooltip_text = "Vary this part when adding missing combinations or reviewing; unchecked parts keep the mesh shown"
+	vary_check_box.toggled.connect(func(_toggled_on: bool) -> void: _clear_review())
 	_vary_check_boxes[part] = vary_check_box
 	var name_label: Label = Label.new()
 	name_label.text = part_name.capitalize()
@@ -247,7 +264,7 @@ func _ensure_catalog() -> bool:
 	_catalog.take_over_path(_catalog.get_default_path())
 	return true
 
-## Adds every combination of the varied parts the catalog lacks, unchecked, so nothing new slips in unseen
+## Adds every combination of the varied parts the catalog lacks, checked; the odd ones are unchecked while reviewing
 func _on_add_missing_pressed() -> void:
 	var combinations: EquipmentCombinations = _get_combinations()
 	if combinations.count() > EquipmentCombinations.MAX_COMBINATIONS:
@@ -262,8 +279,50 @@ func _on_add_missing_pressed() -> void:
 		return
 	CatalogSaver.mark_dirty(_catalog)
 	CatalogSaver.flush()
-	_status_label.text = "Added %d unchecked looks to %s." % [added, _catalog.resource_path]
+	_status_label.text = "Added %d looks to %s. Review them with Q / E and uncheck odd ones with A." % [added, _catalog.resource_path]
 	catalog_changed.emit()
+
+func _clear_review() -> void:
+	_review_combinations.clear()
+	_review_meshes.clear()
+	_review_index = -1
+	_update_review_label()
+
+func _can_review() -> bool:
+	return _model != null and _get_type() != null and not _vary_check_boxes.is_empty()
+
+func _update_review_label() -> void:
+	var can_review: bool = _can_review()
+	_previous_combination_button.disabled = not can_review
+	_next_combination_button.disabled = not can_review
+	if _review_index < 0: _review_label.text = "Q / E: step through combinations" if can_review else ""
+	else: _review_label.text = "Combination %d / %d" % [_review_index + 1, _review_combinations.size()]
+
+## Shows the next ([param direction] [code]1[/code]) or previous ([code]-1[/code]) combination of the varied parts, wrapping around
+## Swaps meshes on the shown model, so stepping is instant; stepping a part by hand in between is picked up by the shown key
+func _step_combination(direction: int) -> void:
+	if not _can_review(): return
+	var combinations: EquipmentCombinations = _get_combinations()
+	if _review_combinations.is_empty():
+		if combinations.count() > EquipmentCombinations.MAX_COMBINATIONS:
+			_report_error("More than %d combinations; uncheck \"vary\" on some parts." % EquipmentCombinations.MAX_COMBINATIONS)
+			return
+		_review_meshes = combinations.get_shown_meshes()
+		_review_combinations = combinations.list()
+		if _review_combinations.is_empty():
+			_status_label.text = "The varied parts have no combinations."
+			return
+	var shown_key: String = combinations.get_shown_key()
+	if _review_index < 0 or _review_combinations[_review_index].key != shown_key:
+		_review_index = _review_combinations.find_custom(func(combination: Dictionary) -> bool: return combination.key == shown_key)
+	# Not one of them (e.g. an empty key): start at the first or the last
+	if _review_index < 0: _review_index = 0 if direction < 0 else -1
+	_review_index = posmod(_review_index + direction, _review_combinations.size())
+	combinations.show(_review_combinations[_review_index], _review_meshes)
+	_update_mesh_labels()
+	_update_look_row()
+	_update_review_label()
+	_status_label.text = ""
 
 func _capture() -> EquipmentLook:
 	var captured: EquipmentLook = EquipmentLook.from_model(_model, _get_type())

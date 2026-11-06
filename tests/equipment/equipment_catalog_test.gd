@@ -42,17 +42,17 @@ func test_look_ids_only_use_characters_godot_keeps() -> void:
 	assert_str(EquipmentCatalog.get_look_id("21-00 00")).is_equal("21x00_00")
 	assert_str(EquipmentCatalog.get_look_id("05 10")).is_equal("05_10")
 
-func test_missing_combinations_are_added_unchecked() -> void:
+func test_missing_combinations_are_added_allowed() -> void:
 	var catalog: EquipmentCatalog = _catalog()
 	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
 	add_child(model)
 	var combinations: EquipmentCombinations = EquipmentCombinations.new(catalog.type, model)
 	combinations.varied_parts = [ModularCharacter.Part.HELMET_ATTACHMENT]
-	catalog.add(_helmet(catalog), "00 02", true)
+	catalog.add(_helmet(catalog), "00 02", false)
 	var added: int = catalog.add_missing(combinations)
 	assert_int(added).is_equal(combinations.list().size() - 1)
-	assert_bool(catalog.get_look("00 02").allowed).is_true()
-	assert_bool(catalog.get_look("00 03").allowed).is_false()
+	assert_bool(catalog.get_look("00 02").allowed).override_failure_message("A decision already made must stay").is_false()
+	assert_bool(catalog.get_look("00 03").allowed).is_true()
 	assert_int(catalog.add_missing(combinations)).is_equal(0)
 
 func test_saved_looks_are_found_again_by_resource_id() -> void:

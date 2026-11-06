@@ -32,6 +32,9 @@ static func find_or_create(for_type: EquipmentType) -> EquipmentCatalog:
 	catalog.type = for_type
 	return catalog
 
+## Held so [method find_all] keeps finding loaded catalogs in the cache: an unreferenced one is freed and read from disk again
+static var _held_catalogs: Array[EquipmentCatalog] = []
+
 ## @returns every saved catalog
 static func find_all() -> Array[EquipmentCatalog]:
 	var catalogs: Array[EquipmentCatalog] = []
@@ -40,6 +43,7 @@ static func find_all() -> Array[EquipmentCatalog]:
 		if file_name.get_extension() != "tres": continue
 		var catalog: EquipmentCatalog = load(CATALOG_DIRECTORY.path_join(file_name)) as EquipmentCatalog
 		if catalog: catalogs.append(catalog)
+	_held_catalogs = catalogs
 	return catalogs
 
 ## Stored resource IDs may only hold letters, digits and "_": "21-00 none" becomes "21x00_none"
@@ -69,7 +73,7 @@ func add(look: EquipmentLook, combination_key: String, allowed: bool) -> void:
 	looks.append(look)
 	changed.emit()
 
-## Adds every combination [param combinations] lists that this catalog lacks, as not allowed, so nothing new slips in unseen
+## Adds every combination [param combinations] lists that this catalog lacks, allowed: most work, the odd ones are unchecked by hand
 ## @returns how many looks were added
 func add_missing(combinations: EquipmentCombinations) -> int:
 	assert(combinations.type == type)
@@ -79,7 +83,7 @@ func add_missing(combinations: EquipmentCombinations) -> int:
 		var combination_key: String = combination.key
 		if get_look(combination_key): continue
 		combinations.show(combination, shown_meshes)
-		add(EquipmentLook.from_model(combinations.model, type), combination_key, false)
+		add(EquipmentLook.from_model(combinations.model, type), combination_key, true)
 		added += 1
 	combinations.show_meshes(shown_meshes)
 	return added

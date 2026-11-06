@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/menagerie/equipment_editor.gd" id="1_eqped"]
 
-[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_type_option", "_edit_type_button", "_type_info_label", "_parts_container", "_allowed_check", "_look_label", "_add_missing_button", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
+[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_type_option", "_edit_type_button", "_type_info_label", "_parts_container", "_allowed_check", "_look_label", "_add_missing_button", "_previous_combination_button", "_review_label", "_next_combination_button", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
 size_flags_vertical = 0
 script = ExtResource("1_eqped")
 _type_option = NodePath("MarginContainer/VBoxContainer/TypeRow/TypeOption")
@@ -12,6 +12,9 @@ _parts_container = NodePath("MarginContainer/VBoxContainer/Parts")
 _allowed_check = NodePath("MarginContainer/VBoxContainer/LookRow/AllowedCheck")
 _look_label = NodePath("MarginContainer/VBoxContainer/LookRow/LookLabel")
 _add_missing_button = NodePath("MarginContainer/VBoxContainer/LookRow/AddMissingButton")
+_previous_combination_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/PreviousCombinationButton")
+_review_label = NodePath("MarginContainer/VBoxContainer/ReviewRow/ReviewLabel")
+_next_combination_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/NextCombinationButton")
 _name_edit = NodePath("MarginContainer/VBoxContainer/SaveRow/NameEdit")
 _save_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveButton")
 _save_as_new_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveAsNewButton")
@@ -78,8 +81,26 @@ theme_type_variation = &"HeaderSmall"
 
 [node name="AddMissingButton" type="Button" parent="MarginContainer/VBoxContainer/LookRow"]
 layout_mode = 2
-tooltip_text = "Add every combination of the varied parts the catalog lacks, unchecked"
+tooltip_text = "Add every combination of the varied parts the catalog lacks, checked; uncheck the odd ones while reviewing"
 text = "Add missing combinations"
+
+[node name="ReviewRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PreviousCombinationButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+tooltip_text = "Show the previous combination of the varied parts (Q)"
+text = "< Q"
+
+[node name="ReviewLabel" type="Label" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="NextCombinationButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+tooltip_text = "Show the next combination of the varied parts (E)"
+text = "E >"
 
 [node name="SaveRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
