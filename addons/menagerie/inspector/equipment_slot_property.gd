@@ -75,14 +75,16 @@ static func _get_cached_items(slot: EquipmentLook.Slot) -> Array[EquipmentLook]:
 		if not file_system.filesystem_changed.is_connected(_invalidate_cache): file_system.filesystem_changed.connect(_invalidate_cache)
 		_cached_items = _sort(_collect_items(EquipmentLook.ITEM_DIRECTORY))
 		_is_cache_valid = true
-	return _cached_items.filter(func(equipment_look: EquipmentLook) -> bool: return equipment_look.slot == slot)
+	# Filtered here, not when collecting, so toggling a look shows before its catalog is saved
+	return _cached_items.filter(func(equipment_look: EquipmentLook) -> bool: return equipment_look.allowed and equipment_look.slot == slot)
 
 static func _invalidate_cache() -> void:
 	_is_cache_valid = false
 
 ## @returns every saved item below [param directory_path] that goes into [param slot], sorted by type and name
+## Only allowed looks are offered
 static func find_items(directory_path: String, slot: EquipmentLook.Slot) -> Array[EquipmentLook]:
-	return _sort(_collect_items(directory_path).filter(func(equipment_look: EquipmentLook) -> bool: return equipment_look.slot == slot))
+	return _sort(_collect_items(directory_path).filter(func(equipment_look: EquipmentLook) -> bool: return equipment_look.allowed and equipment_look.slot == slot))
 
 static func _sort(items: Array[EquipmentLook]) -> Array[EquipmentLook]:
 	items.sort_custom(func(a: EquipmentLook, b: EquipmentLook) -> bool: return a.name.naturalnocasecmp_to(b.name) < 0 if a.type.name == b.type.name else a.type.name < b.type.name)
@@ -94,11 +96,11 @@ static func _collect_items(directory_path: String) -> Array[EquipmentLook]:
 	for file_name: String in DirAccess.get_files_at(directory_path):
 		if file_name.get_extension() != "tres": continue
 		var resource: Resource = load(directory_path.path_join(file_name))
-		# A catalog holds the allowed combinations of a type; hand-made items are files of their own
+		# A catalog holds the looks of a type; hand-made looks are files of their own
 		if resource is EquipmentCatalog:
 			var catalog: EquipmentCatalog = resource
-			for entry: EquipmentLook in catalog.entries:
-				if entry and entry.type: items.append(entry)
+			for look: EquipmentLook in catalog.looks:
+				if look and look.type: items.append(look)
 		elif resource is EquipmentLook:
 			var equipment_look: EquipmentLook = resource
 			if equipment_look.type: items.append(equipment_look)
@@ -106,15 +108,8 @@ static func _collect_items(directory_path: String) -> Array[EquipmentLook]:
 		items.append_array(_collect_items(directory_path.path_join(directory_name)))
 	return items
 
-## @returns the item's mesh for its type's first part, e.g. "Torso 05"; items of one base are variations of each other
 static func get_base(equipment_look: EquipmentLook) -> String:
-	if equipment_look.type.parts.is_empty(): return equipment_look.type.name
-	var lead_part: ModularCharacter.Part = equipment_look.type.parts[0]
-	var part_name: String = ModularCharacter.Part.keys()[lead_part]
-	for part_mesh: EquipmentPartMesh in equipment_look.appearance.parts:
-		if part_mesh and part_mesh.part == lead_part and part_mesh.male_mesh:
-			return "%s %s" % [part_name.capitalize(), ModularBodyPart.get_mesh_number(part_mesh.male_mesh.resource_path)]
-	return "No %s" % part_name.capitalize()
+	return equipment_look.get_base_name()
 
 ## Matches name, type or base, ignoring case; an empty filter matches everything
 static func matches(equipment_look: EquipmentLook, filter: String) -> bool:

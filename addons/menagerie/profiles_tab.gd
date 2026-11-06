@@ -2,13 +2,15 @@
 extends Control
 
 signal profile_changed(new_profile: Profile)
-
-const EXCLUDE_ACTION: StringName = &"exclude"
+## A catalog look was checked or unchecked here
+signal look_toggled(look: EquipmentLook)
 
 enum Columns {
 	PROFILE,
 	RESOURCE_PATH,
 }
+
+const DISALLOWED_COLOR: Color = Color(1.0, 1.0, 1.0, 0.35)
 
 @export var title: String = name:
 	set(new_title):
@@ -20,6 +22,7 @@ enum Columns {
 @export_group("Configuration")
 @export var _profiles_tree: Tree
 
+## Rows that group profiles, such as a type or a look's base; never stand for a profile
 var _group_items: Dictionary[StringName, TreeItem]
 var _profile_items: Dictionary[Profile, TreeItem]
 var _filter_string: String = "":
@@ -33,6 +36,7 @@ func _ready() -> void:
 	_profiles_tree.set_column_title_alignment(Columns.PROFILE, HORIZONTAL_ALIGNMENT_LEFT)
 	_profiles_tree.set_column_title(Columns.RESOURCE_PATH, "Path")
 	_profiles_tree.set_column_title_alignment(Columns.RESOURCE_PATH, HORIZONTAL_ALIGNMENT_LEFT)
+	if not _profiles_tree.item_edited.is_connected(_on_item_edited): _profiles_tree.item_edited.connect(_on_item_edited)
 	_update_profiles()
 
 func _create_items_for_profiles_in_directory(directory_path: String = _data_path, parent_item: TreeItem = _profiles_tree.create_item()) -> void:
@@ -43,13 +47,18 @@ func _create_items_for_profiles_in_directory(directory_path: String = _data_path
 	var directory_names: PackedStringArray = DirAccess.get_directories_at(directory_path)
 	for directory_name: String in directory_names:
 		_create_items_for_profiles_in_directory(directory_path.path_join(directory_name), parent_item)
+	_update_group_counts()
 
 func _create_profile_item(profile: Profile, parent_item: TreeItem) -> TreeItem:
-	var group_item: TreeItem = _group_items.get(profile.get_group_name())
-	if not group_item: group_item = _create_group_item_for_profile(profile, parent_item)
+	var group_item: TreeItem = _get_or_create_group_item(profile.get_group_name(), parent_item)
+	# Looks group once more by their base, e.g. all variations of "Torso 05"
+	if profile is EquipmentLook:
+		var look: EquipmentLook = profile
+		var base_item: TreeItem = _get_or_create_group_item("%s/%s" % [profile.get_group_name(), look.get_base_name()], group_item, look.get_base_name())
+		base_item.collapsed = _filter_string.is_empty()
+		group_item = base_item
 	var profile_item: TreeItem = _profiles_tree.create_item(group_item)
-	group_item.set_text(0, "%s (%d)" % [profile.get_group_name(), group_item.get_child_count()])
-	
+
 	var icon: Texture2D = profile.portrait if profile.portrait else profile.get_default_icon()
 	if icon and icon.get_size().aspect() != 1.0: push_warning("Using a non-square icon for %s" % profile.resource_path)
 	var profile_text: String = profile.name
@@ -61,24 +70,73 @@ func _create_profile_item(profile: Profile, parent_item: TreeItem) -> TreeItem:
 	var variations: PackedStringArray = profile._model_variations.map(func(model: PackedScene) -> String: return model.resource_path)
 	profile_item.set_tooltip_text(Columns.PROFILE, "\n".join(variations))
 	profile_item.set_custom_color(Columns.PROFILE, profile.color)
-	
+
 	var shortened_path: String = profile.resource_path.trim_prefix(_data_path).trim_prefix("/")
 	profile_item.set_text(Columns.RESOURCE_PATH, shortened_path)
 	profile_item.set_metadata(Columns.RESOURCE_PATH, profile.resource_path)
 	profile_item.set_tooltip_text(Columns.RESOURCE_PATH, profile.resource_path)
 	profile_item.set_custom_color(Columns.RESOURCE_PATH, profile.color.darkened(0.5))
-	
+
+	# A catalog look can be checked or unchecked right here
+	if profile is EquipmentLook and profile.resource_path.contains(ResourceId.SEPARATOR):
+		profile_item.set_cell_mode(Columns.PROFILE, TreeItem.CELL_MODE_CHECK)
+		profile_item.set_editable(Columns.PROFILE, true)
+		profile_item.set_tooltip_text(Columns.PROFILE, "Checked looks are offered and can be worn; Space toggles the selection")
+		_show_allowed(profile_item, profile as EquipmentLook)
+
 	_profile_items[profile] = profile_item
 	_update_name()
 	if visible and not _profiles_tree.get_selected(): _profiles_tree.set_selected(profile_item, Columns.PROFILE)
 	return profile_item
 
-func _create_group_item_for_profile(profile: Profile, parent_item: TreeItem) -> TreeItem:
-	var group_item: TreeItem = _profiles_tree.create_item(parent_item)
-	var group_name: StringName = profile.get_group_name()
-	group_item.set_text(0, group_name)
-	_group_items[group_name] = group_item
+func _get_or_create_group_item(key: StringName, parent_item: TreeItem, text: String = key) -> TreeItem:
+	var group_item: TreeItem = _group_items.get(key)
+	if group_item: return group_item
+	group_item = _profiles_tree.create_item(parent_item)
+	group_item.set_text(Columns.PROFILE, text)
+	group_item.set_metadata(Columns.PROFILE, text)
+	_group_items[key] = group_item
 	return group_item
+
+## Group rows show how many profiles they hold, and for looks how many of them are checked
+## One pass over the profiles, each counted into every group row above it
+func _update_group_counts() -> void:
+	var totals: Dictionary[TreeItem, int] = {}
+	var allowed_counts: Dictionary[TreeItem, int] = {}
+	for profile: Profile in _profile_items:
+		var is_catalog_look: bool = profile is EquipmentLook and profile.resource_path.contains(ResourceId.SEPARATOR)
+		var parent: TreeItem = _profile_items[profile].get_parent()
+		while parent:
+			totals[parent] = totals.get(parent, 0) + 1
+			if is_catalog_look:
+				allowed_counts[parent] = allowed_counts.get(parent, 0) + (1 if (profile as EquipmentLook).allowed else 0)
+			parent = parent.get_parent()
+	for group_item: TreeItem in _group_items.values():
+		var text: String = group_item.get_metadata(Columns.PROFILE)
+		var total: int = totals.get(group_item, 0)
+		group_item.set_text(Columns.PROFILE, "%s (%d/%d)" % [text, allowed_counts[group_item], total] if allowed_counts.has(group_item) else "%s (%d)" % [text, total])
+
+func _show_allowed(profile_item: TreeItem, look: EquipmentLook) -> void:
+	profile_item.set_checked(Columns.PROFILE, look.allowed)
+	var color: Color = look.color if look.allowed else look.color * DISALLOWED_COLOR
+	profile_item.set_custom_color(Columns.PROFILE, color)
+	profile_item.set_custom_color(Columns.RESOURCE_PATH, color.darkened(0.5))
+
+## Sets a catalog look's flag; the catalog is saved a moment later, see [CatalogSaver]
+func set_allowed(look: EquipmentLook, allowed: bool) -> void:
+	var catalog: EquipmentCatalog = CatalogSaver.get_catalog_of(look)
+	if not catalog or look.allowed == allowed: return
+	look.allowed = allowed
+	CatalogSaver.mark_dirty(catalog)
+	update_look(look)
+	look_toggled.emit(look)
+
+## Shows a look's flag after it changed elsewhere, e.g. in the Equipment panel
+func update_look(look: EquipmentLook) -> void:
+	var profile_item: TreeItem = _profile_items.get(look)
+	if not profile_item: return
+	_show_allowed(profile_item, look)
+	_update_group_counts()
 
 func _change_profile(selected_item: TreeItem) -> void:
 	if _group_items.values().has(selected_item): return
@@ -100,16 +158,17 @@ func _list_profiles_in_directory(directory_path: String) -> Array[Profile]:
 		var resource_path: String = directory_path.path_join(file_name)
 		var resource: Resource = load(resource_path)
 		if resource is Profile: profiles_in_directory.append(resource)
-		# A catalog's entries are items stored inside it
+		# A catalog's looks are stored inside it
 		elif resource is EquipmentCatalog:
 			var catalog: EquipmentCatalog = resource
-			for entry: EquipmentLook in catalog.entries:
-				if entry: profiles_in_directory.append(entry)
+			for look: EquipmentLook in catalog.looks:
+				if look: profiles_in_directory.append(look)
 	return profiles_in_directory
 
 func _profile_matches_filter_string(profile: Profile) -> bool:
 	if _filter_string.is_empty(): return true
 	if profile.name.containsn(_filter_string): return true
+	if profile is EquipmentLook and (profile as EquipmentLook).get_base_name().containsn(_filter_string): return true
 	return false
 
 func _update_name() -> void:
@@ -120,7 +179,9 @@ func _update_profiles() -> void:
 	_create_items_for_profiles_in_directory()
 
 func _on_visibility_changed() -> void:
-	if not is_visible_in_tree(): _clear_profiles()
+	if not is_visible_in_tree():
+		CatalogSaver.flush()
+		_clear_profiles()
 	if is_visible_in_tree(): _update_profiles()
 
 func _on_item_activated() -> void:
@@ -129,25 +190,52 @@ func _on_item_activated() -> void:
 func _on_item_multi_selected(item: TreeItem, _column: int, selected: bool) -> void:
 	if selected and item == _profiles_tree.get_selected(): _change_profile(item)
 
+func _on_item_edited() -> void:
+	var edited_item: TreeItem = _profiles_tree.get_edited()
+	var look: EquipmentLook = _get_look_of(edited_item)
+	if look: set_allowed(look, edited_item.is_checked(Columns.PROFILE))
+
+func _get_look_of(tree_item: TreeItem) -> EquipmentLook:
+	if not tree_item or _group_items.values().has(tree_item): return null
+	var profile_path: String = tree_item.get_metadata(Columns.RESOURCE_PATH)
+	if not profile_path.contains(ResourceId.SEPARATOR): return null
+	return ResourceId.find(profile_path) as EquipmentLook
+
 func _on_profile_filter_text_changed(new_text: String) -> void:
 	_filter_string = new_text
 
 func _on_rescan_button_pressed() -> void:
+	CatalogSaver.flush()
 	_update_profiles()
 
 func _on_tree_gui_input(event: InputEvent) -> void:
 	if not event is InputEventKey: return
 	var key_event: InputEventKey = event
-	if not key_event.pressed or key_event.echo or key_event.keycode != KEY_DELETE: return
-	_request_delete(_get_selected_paths())
+	if not key_event.pressed or key_event.echo: return
+	match key_event.keycode:
+		KEY_SPACE: _toggle_selected_looks()
+		KEY_DELETE: _request_delete(_get_selected_paths())
+		_: return
 	_profiles_tree.accept_event()
+
+## Toggles every selected catalog look to the opposite of the first one's flag
+func _toggle_selected_looks() -> void:
+	var looks: Array[EquipmentLook] = []
+	var item: TreeItem = _profiles_tree.get_next_selected(null)
+	while item:
+		var look: EquipmentLook = _get_look_of(item)
+		if look: looks.append(look)
+		item = _profiles_tree.get_next_selected(item)
+	if looks.is_empty(): return
+	var allowed: bool = not looks[0].allowed
+	for look: EquipmentLook in looks: set_allowed(look, allowed)
 
 func _on_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index != MOUSE_BUTTON_RIGHT: return
 	var selected_paths: PackedStringArray = _get_selected_paths()
 	if selected_paths.is_empty(): return
 	var context_menu: PopupMenu = PopupMenu.new()
-	context_menu.add_item("Move %d to trash" % selected_paths.size())
+	context_menu.add_item("Delete / uncheck %d" % selected_paths.size())
 	context_menu.id_pressed.connect(func(_id: int) -> void: _request_delete(selected_paths))
 	context_menu.popup_hide.connect(context_menu.queue_free)
 	add_child(context_menu)
@@ -162,40 +250,27 @@ func _get_selected_paths() -> PackedStringArray:
 		item = _profiles_tree.get_next_selected(item)
 	return selected_paths
 
-## Asks before moving [param paths] to the OS trash, listing other data files that still use them
-## Catalog entries are not files: deleting one denies it in its catalog
+## Catalog looks are not files: deleting them unchecks them, without asking
+## Files are moved to the OS trash after a confirmation listing data files that still use them
 func _request_delete(paths: PackedStringArray) -> void:
-	if paths.is_empty(): return
-	var users: PackedStringArray = _find_users(paths, "res://data")
-	var entry_count: int = Array(paths).filter(func(path: String) -> bool: return path.contains(ResourceId.SEPARATOR)).size()
-	var file_count: int = paths.size() - entry_count
-	var shown_paths: PackedStringArray = paths.slice(0, 10)
-	var actions: PackedStringArray = []
-	if file_count > 0: actions.append("move %d file(s) to the trash" % file_count)
-	if entry_count > 0: actions.append("deny %d catalog combination(s)" % entry_count)
-	var action_text: String = " and ".join(actions)
-	var text: String = "%s%s?
-
-%s" % [action_text.left(1).to_upper(), action_text.substr(1), "
-".join(shown_paths)]
-	if paths.size() > shown_paths.size(): text += "
-… and %d more" % (paths.size() - shown_paths.size())
-	if not users.is_empty(): text += "
-
-Still used by:
-%s" % "
-".join(users)
+	var file_paths: PackedStringArray = []
+	for path: String in paths:
+		if not path.contains(ResourceId.SEPARATOR):
+			file_paths.append(path)
+			continue
+		var look: EquipmentLook = ResourceId.find(path) as EquipmentLook
+		if look: set_allowed(look, false)
+	if file_paths.is_empty(): return
+	var users: PackedStringArray = _find_users(file_paths, "res://data")
+	var shown_paths: PackedStringArray = file_paths.slice(0, 10)
+	var text: String = "Move %d file(s) to the trash?\n\n%s" % [file_paths.size(), "\n".join(shown_paths)]
+	if file_paths.size() > shown_paths.size(): text += "\n… and %d more" % (file_paths.size() - shown_paths.size())
+	if not users.is_empty(): text += "\n\nStill used by:\n%s" % "\n".join(users)
 	var dialog: ConfirmationDialog = ConfirmationDialog.new()
 	dialog.title = "Delete profiles"
 	dialog.dialog_text = text
-	dialog.ok_button_text = "Delete"
-	dialog.confirmed.connect(_delete.bind(paths))
-	if file_count > 0 and Array(paths).any(func(path: String) -> bool: return load(path) is EquipmentLook):
-		dialog.add_button("Delete and deny combinations", true, EXCLUDE_ACTION)
-		dialog.custom_action.connect(func(action: StringName) -> void:
-			if action != EXCLUDE_ACTION: return
-			dialog.hide()
-			_delete(paths, true))
+	dialog.ok_button_text = "Move to trash"
+	dialog.confirmed.connect(_delete.bind(file_paths))
 	dialog.visibility_changed.connect(func() -> void: if not dialog.visible: dialog.queue_free())
 	add_child(dialog)
 	dialog.popup_centered()
@@ -230,26 +305,8 @@ func _uses(file_path: String, paths: PackedStringArray, ids: PackedStringArray) 
 		if text.contains('"%s"' % id): return true
 	return false
 
-## Catalog entries are denied in their catalog; files are moved to the OS trash
-## With [param deny_files], the combinations of trashed equipment files are denied in their type's catalog too, so they are not offered again
-func _delete(paths: PackedStringArray, deny_files: bool = false) -> void:
-	var changed_catalogs: Array[EquipmentCatalog] = []
-	var trashed: PackedStringArray = []
+func _delete(paths: PackedStringArray) -> void:
 	for path: String in paths:
-		var is_entry: bool = path.contains(ResourceId.SEPARATOR)
-		if not is_entry: trashed.append(path)
-		if not is_entry and not deny_files: continue
-		var equipment_look: EquipmentLook = ResourceId.find(path) as EquipmentLook
-		if not equipment_look or not equipment_look.type: continue
-		var catalog: EquipmentCatalog = load(path.get_slice(ResourceId.SEPARATOR, 0)) as EquipmentCatalog if is_entry else EquipmentCatalog.find_or_create(equipment_look.type)
-		catalog.deny(equipment_look.type.get_combination_key_of(equipment_look))
-		if not changed_catalogs.has(catalog): changed_catalogs.append(catalog)
-	for catalog: EquipmentCatalog in changed_catalogs:
-		var catalog_path: String = catalog.resource_path if not catalog.resource_path.is_empty() else catalog.get_default_path()
-		DirAccess.make_dir_recursive_absolute(catalog_path.get_base_dir())
-		var error: Error = ResourceSaver.save(catalog, catalog_path)
-		if error != Error.OK: push_error("Could not save %s: %s" % [catalog_path, error_string(error)])
-	for path: String in trashed:
 		var error: Error = OS.move_to_trash(ProjectSettings.globalize_path(path))
 		if error != Error.OK: push_error("Could not move %s to the trash: %s" % [path, error_string(error)])
 	EditorInterface.get_resource_filesystem().scan()

@@ -17,6 +17,8 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
 	if _menagerie_panel: _menagerie_panel.queue_free()
 	remove_inspector_plugin(_equipment_inspector_plugin)
+	# Toggled looks are saved in batches; do not lose the last ones
+	CatalogSaver.flush()
 
 func _has_main_screen() -> bool:
 	return true

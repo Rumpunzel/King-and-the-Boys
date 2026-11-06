@@ -42,3 +42,9 @@ func test_filter_matches_name_type_and_base_ignoring_case() -> void:
 	assert_bool(EquipmentSlotProperty.matches(hood, "HOOD")).is_true()
 	assert_bool(EquipmentSlotProperty.matches(hood, "no hair 01")).is_true()
 	assert_bool(EquipmentSlotProperty.matches(hood, "helmet")).is_false()
+
+func test_pickers_skip_unchecked_looks() -> void:
+	var unchecked: EquipmentLook = EquipmentFixtures.make_item(EquipmentFixtures.load_type("mask"), ModularCharacter.Part.HEAD_COVERINGS_NO_FACIAL_HAIR, EquipmentFixtures.MASK)
+	unchecked.allowed = false
+	var saved: EquipmentLook = EquipmentFixtures.save_item(unchecked, "unchecked_mask.tres")
+	assert_array(EquipmentSlotProperty.find_items(EquipmentFixtures.SAVED_ITEMS, EquipmentLook.Slot.FACE)).not_contains([saved])

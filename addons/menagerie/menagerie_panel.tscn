@@ -104,3 +104,6 @@ _gear_tab = NodePath("../../VBoxContainer/ProfileTabs/Gear (6)")
 [connection signal="model_changed" from="HSplitContainer/VSplitContainer/ModelPreview" to="HSplitContainer/VSplitContainer/EquipmentEditor" method="_on_model_changed"]
 [connection signal="model_removed" from="HSplitContainer/VSplitContainer/ModelPreview" to="HSplitContainer/VSplitContainer/EquipmentEditor" method="_on_model_removed"]
 [connection signal="equipment_saved" from="HSplitContainer/VSplitContainer/EquipmentEditor" to="HSplitContainer/VBoxContainer/ProfileTabs/Gear (6)" method="_on_rescan_button_pressed" unbinds=1]
+[connection signal="look_toggled" from="HSplitContainer/VBoxContainer/ProfileTabs/Gear (6)" to="HSplitContainer/VSplitContainer/EquipmentEditor" method="update_look"]
+[connection signal="look_toggled" from="HSplitContainer/VSplitContainer/EquipmentEditor" to="HSplitContainer/VBoxContainer/ProfileTabs/Gear (6)" method="update_look"]
+[connection signal="catalog_changed" from="HSplitContainer/VSplitContainer/EquipmentEditor" to="HSplitContainer/VBoxContainer/ProfileTabs/Gear (6)" method="_on_rescan_button_pressed"]
