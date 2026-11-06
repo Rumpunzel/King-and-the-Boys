@@ -70,8 +70,8 @@ func test_server_rolls_differ_between_spawns() -> void:
 	assert_bool(differs).is_true()
 
 func test_starting_and_rolled_equipment_reach_peers() -> void:
-	var mask: EquipmentProfile = EquipmentFixtures.save_item(EquipmentFixtures.make_item(EquipmentFixtures.load_type("mask"), ModularCharacter.Part.HEAD_COVERINGS_NO_FACIAL_HAIR, EquipmentFixtures.MASK), "mask.tres")
-	var helmet: EquipmentProfile = EquipmentFixtures.save_item(EquipmentFixtures.make_item(EquipmentFixtures.load_type("helmet"), ModularCharacter.Part.HELMET_ATTACHMENT, EquipmentFixtures.HELMET_ATTACHMENT), "helmet.tres")
+	var mask: EquipmentLook = EquipmentFixtures.save_item(EquipmentFixtures.make_item(EquipmentFixtures.load_type("mask"), ModularCharacter.Part.HEAD_COVERINGS_NO_FACIAL_HAIR, EquipmentFixtures.MASK), "mask.tres")
+	var helmet: EquipmentLook = EquipmentFixtures.save_item(EquipmentFixtures.make_item(EquipmentFixtures.load_type("helmet"), ModularCharacter.Part.HELMET_ATTACHMENT, EquipmentFixtures.HELMET_ATTACHMENT), "helmet.tres")
 	var table: ProfileSpawnTable = ProfileSpawnTable.new()
 	var distribution: Dictionary[Profile, float] = {helmet: 1.0}
 	table._profile_distribution = distribution
@@ -80,8 +80,8 @@ func test_starting_and_rolled_equipment_reach_peers() -> void:
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D())
 	assert_array(data[Character.EQUIPMENT] as PackedStringArray).contains_exactly([ResourceId.of(mask), ResourceId.of(helmet)])
 	var host: Character = auto_free(Character.from_character_data(data))
-	assert_object(host.equipment.get_equipped(EquipmentProfile.Slot.HEAD)).is_same(helmet)
-	assert_object(host.equipment.get_equipped(EquipmentProfile.Slot.FACE)).is_null()
+	assert_object(host.equipment.get_equipped(EquipmentLook.Slot.HEAD)).is_same(helmet)
+	assert_object(host.equipment.get_equipped(EquipmentLook.Slot.FACE)).is_null()
 	var round_trip: Dictionary[StringName, Variant] = host.to_character_data()
 	assert_array(round_trip[Character.EQUIPMENT] as PackedStringArray).contains_exactly([ResourceId.of(helmet)])
 	var peer: Character = _peer_from(round_trip)

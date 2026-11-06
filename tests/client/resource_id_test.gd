@@ -33,7 +33,7 @@ func test_plain_paths_still_find_their_resource() -> void:
 	assert_object(ResourceId.find(helmet_type.resource_path)).is_same(helmet_type)
 
 func test_only_ids_inside_the_item_directory_are_requestable() -> void:
-	var saved: EquipmentProfile = EquipmentFixtures.save_item(EquipmentFixtures.make_item(EquipmentFixtures.load_type("cape"), ModularCharacter.Part.BACK_ATTACHMENT, EquipmentFixtures.CAPE), "cape.tres")
+	var saved: EquipmentLook = EquipmentFixtures.save_item(EquipmentFixtures.make_item(EquipmentFixtures.load_type("cape"), ModularCharacter.Part.BACK_ATTACHMENT, EquipmentFixtures.CAPE), "cape.tres")
 	assert_bool(CharacterEquipment.is_requestable(ResourceId.of(saved))).is_true()
 	assert_bool(CharacterEquipment.is_requestable(ResourceId.of(EquipmentFixtures.load_type("cape")))).is_true()
 	assert_bool(CharacterEquipment.is_requestable(ResourceId.of(load(EquipmentFixtures.KNIGHT) as Resource))).is_false()

@@ -10,8 +10,8 @@ func _catalog() -> EquipmentCatalog:
 	catalog.type = EquipmentFixtures.load_type("helmet")
 	return catalog
 
-func _helmet(catalog: EquipmentCatalog) -> EquipmentProfile:
-	var helmet: EquipmentProfile = EquipmentFixtures.make_item(catalog.type, ModularCharacter.Part.HELMET_ATTACHMENT, EquipmentFixtures.HELMET_ATTACHMENT)
+func _helmet(catalog: EquipmentCatalog) -> EquipmentLook:
+	var helmet: EquipmentLook = EquipmentFixtures.make_item(catalog.type, ModularCharacter.Part.HELMET_ATTACHMENT, EquipmentFixtures.HELMET_ATTACHMENT)
 	helmet.name = ""
 	return helmet
 
@@ -20,7 +20,7 @@ func test_combinations_start_unreviewed() -> void:
 
 func test_allowing_stores_the_item_under_its_key() -> void:
 	var catalog: EquipmentCatalog = _catalog()
-	var helmet: EquipmentProfile = _helmet(catalog)
+	var helmet: EquipmentLook = _helmet(catalog)
 	catalog.allow(helmet, "none 02")
 	assert_int(catalog.get_status("none 02")).is_equal(EquipmentCatalog.Status.ALLOWED)
 	assert_object(catalog.get_entry("none 02")).is_same(helmet)
@@ -50,7 +50,7 @@ func test_saved_entries_are_found_again_by_resource_id() -> void:
 	DirAccess.make_dir_recursive_absolute(EquipmentFixtures.SAVED_ITEMS)
 	assert_int(ResourceSaver.save(catalog, SAVED_CATALOG)).is_equal(OK)
 	var loaded: EquipmentCatalog = ResourceLoader.load(SAVED_CATALOG, "", ResourceLoader.CACHE_MODE_REPLACE)
-	var entry: EquipmentProfile = loaded.get_entry("21-00 none")
+	var entry: EquipmentLook = loaded.get_entry("21-00 none")
 	assert_object(entry).is_not_null()
 	var entry_id: String = ResourceId.of(entry)
 	assert_str(entry_id).ends_with("::21x00_none")
@@ -59,7 +59,7 @@ func test_saved_entries_are_found_again_by_resource_id() -> void:
 
 func test_catalog_warns_about_entries_of_other_types() -> void:
 	var catalog: EquipmentCatalog = _catalog()
-	var cape: EquipmentProfile = EquipmentFixtures.make_item(EquipmentFixtures.load_type("cape"), ModularCharacter.Part.BACK_ATTACHMENT, EquipmentFixtures.CAPE)
+	var cape: EquipmentLook = EquipmentFixtures.make_item(EquipmentFixtures.load_type("cape"), ModularCharacter.Part.BACK_ATTACHMENT, EquipmentFixtures.CAPE)
 	catalog.entries = [cape]
 	assert_int(catalog._get_configuration_warnings().size()).is_equal(1)
 
@@ -70,7 +70,7 @@ func test_committed_catalogs_resolve_every_entry() -> void:
 		assert_array(catalog._get_configuration_warnings()).override_failure_message("%s warns" % catalog.resource_path).is_empty()
 		assert_str(ResourceId.of(catalog)).override_failure_message("%s has no UID" % catalog.resource_path).starts_with("uid://")
 		assert_object(EquipmentCatalog.find_for(catalog.type)).is_same(catalog)
-		for entry: EquipmentProfile in catalog.entries:
+		for entry: EquipmentLook in catalog.entries:
 			var key: String = catalog.type.get_combination_key_of(entry)
 			assert_str(entry.resource_scene_unique_id).override_failure_message("%s is stored under the wrong ID" % entry.name).is_equal(EquipmentCatalog.get_entry_id(key))
 			assert_object(ResourceId.find(ResourceId.of(entry))).is_same(entry)

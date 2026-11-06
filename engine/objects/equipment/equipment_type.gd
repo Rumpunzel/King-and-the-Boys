@@ -12,7 +12,7 @@ extends Resource
 	set(new_value):
 		icon = new_value
 		changed.emit()
-@export var slot: EquipmentProfile.Slot = EquipmentProfile.Slot.HEAD:
+@export var slot: EquipmentLook.Slot = EquipmentLook.Slot.HEAD:
 	set(new_value):
 		slot = new_value
 		changed.emit()
@@ -30,8 +30,8 @@ extends Resource
 		for part_group: EquipmentPartGroup in part_groups:
 			if part_group and not part_group.changed.is_connected(changed.emit): part_group.changed.connect(changed.emit)
 		changed.emit()
-## Slots emptied while an item of this type is equipped, such as a full helmet blocking [constant EquipmentProfile.FACE]
-@export var blocked_slots: Array[EquipmentProfile.Slot]:
+## Slots emptied while an item of this type is equipped, such as a full helmet blocking [constant EquipmentLook.FACE]
+@export var blocked_slots: Array[EquipmentLook.Slot]:
 	set(new_value):
 		blocked_slots = new_value
 		changed.emit()
@@ -52,9 +52,9 @@ func get_combination_key(part_numbers: Dictionary) -> String:
 	return " ".join(numbers)
 
 ## The key of the combination an existing item shows, independent of its file or display name
-func get_combination_key_of(equipment_profile: EquipmentProfile) -> String:
+func get_combination_key_of(equipment_look: EquipmentLook) -> String:
 	var part_numbers: Dictionary = {}
-	for part_mesh: EquipmentPartMesh in equipment_profile.appearance.parts:
+	for part_mesh: EquipmentPartMesh in equipment_look.appearance.parts:
 		if part_mesh and part_mesh.male_mesh: part_numbers[part_mesh.part] = ModularBodyPart.get_mesh_number(part_mesh.male_mesh.resource_path)
 	return get_combination_key(part_numbers)
 
@@ -96,11 +96,11 @@ func get_link_of(part: ModularCharacter.Part) -> Array[ModularCharacter.Part]:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	var slot_name: String = EquipmentProfile.Slot.keys()[slot]
+	var slot_name: String = EquipmentLook.Slot.keys()[slot]
 	if name.is_empty(): warnings.append("Missing name.")
-	if parts.is_empty() and EquipmentProfile.get_slot_parts(slot).size() > 0: warnings.append("No parts selected.")
+	if parts.is_empty() and EquipmentLook.get_slot_parts(slot).size() > 0: warnings.append("No parts selected.")
 	if blocked_slots.has(slot): warnings.append("Slot %s blocks itself." % slot_name)
-	var possible_parts: Array[ModularCharacter.Part] = EquipmentProfile.get_parts_for(slot, blocked_slots)
+	var possible_parts: Array[ModularCharacter.Part] = EquipmentLook.get_parts_for(slot, blocked_slots)
 	for part: ModularCharacter.Part in parts:
 		var part_name: String = ModularCharacter.Part.keys()[part]
 		if not possible_parts.has(part): warnings.append("Part %s is neither owned by slot %s nor by a blocked slot." % [part_name, slot_name])

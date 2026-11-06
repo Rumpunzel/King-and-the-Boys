@@ -1,5 +1,5 @@
 @tool
-class_name EquipmentProfile
+class_name EquipmentLook
 extends Profile
 
 enum Slot {
@@ -37,17 +37,17 @@ const _PREVIEW_MODEL_UID: String = "uid://c6oheyitbnlpu"
 
 var slot: Slot:
 	get:
-		assert(type, "EquipmentProfile %s has no EquipmentType!" % resource_path)
+		assert(type, "EquipmentLook %s has no EquipmentType!" % resource_path)
 		return type.slot if type else Slot.HEAD
 var blocked_slots: Array[Slot]:
 	get: return type.blocked_slots if type else [] as Array[Slot]
 
 ## Captures what [param model] currently shows in the parts of [param for_type] as a new item
 ## Gendered meshes get their other-gender counterpart if one exists with the same number
-static func from_model(model: ModularCharacter, for_type: EquipmentType) -> EquipmentProfile:
-	var equipment_profile: EquipmentProfile = EquipmentProfile.new()
-	equipment_profile.type = for_type
-	equipment_profile.appearance = EquipmentAppearance.new()
+static func from_model(model: ModularCharacter, for_type: EquipmentType) -> EquipmentLook:
+	var equipment_look: EquipmentLook = EquipmentLook.new()
+	equipment_look.type = for_type
+	equipment_look.appearance = EquipmentAppearance.new()
 	var parts: Array[EquipmentPartMesh] = []
 	for part: ModularCharacter.Part in for_type.parts:
 		var body_part: ModularBodyPart = model.get_part(part)
@@ -65,8 +65,8 @@ static func from_model(model: ModularCharacter, for_type: EquipmentType) -> Equi
 				part_mesh.female_mesh = mesh
 			else: part_mesh.female_mesh = other_gender_mesh
 		parts.append(part_mesh)
-	equipment_profile.appearance.parts = parts
-	return equipment_profile
+	equipment_look.appearance.parts = parts
+	return equipment_look
 
 static func _find_other_gender_mesh(mesh: ArrayMesh, gender: ModularBodyPartGendered.Gender) -> ArrayMesh:
 	var mesh_path: String = mesh.resource_path

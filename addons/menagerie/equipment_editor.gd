@@ -4,7 +4,7 @@ extends PanelContainer
 ## Authors equipment: steps through a type's parts on the Menagerie preview and reviews its combinations into the type's
 ## [EquipmentCatalog] (allow / deny), or saves hand-made items as files of their own
 
-signal equipment_saved(equipment_profile: EquipmentProfile)
+signal equipment_saved(equipment_look: EquipmentLook)
 
 const TYPE_DIRECTORY: String = "res://data/equipment/types"
 const NO_MODEL_HINT: String = "Select an item, or a modular character to start from."
@@ -35,7 +35,7 @@ const CONFIRM_COMBINATIONS: int = 50
 
 var _model: ModularCharacter
 ## The item being edited, or [code]null[/code] when another profile is previewed
-var _equipment_profile: EquipmentProfile
+var _equipment_profile: EquipmentLook
 ## Indexed like the items of [member _type_option]
 var _types: Array[EquipmentType] = []
 ## Parts whose meshes are varied when reviewing combinations
@@ -121,10 +121,10 @@ func _update() -> void:
 
 func _describe(equipment_type: EquipmentType) -> String:
 	if not equipment_type: return "Create an EquipmentType in %s first." % TYPE_DIRECTORY
-	var slot_name: String = EquipmentProfile.Slot.keys()[equipment_type.slot]
+	var slot_name: String = EquipmentLook.Slot.keys()[equipment_type.slot]
 	var blocked_names: PackedStringArray = []
-	for blocked_slot: EquipmentProfile.Slot in equipment_type.blocked_slots:
-		var blocked_name: String = EquipmentProfile.Slot.keys()[blocked_slot]
+	for blocked_slot: EquipmentLook.Slot in equipment_type.blocked_slots:
+		var blocked_name: String = EquipmentLook.Slot.keys()[blocked_slot]
 		blocked_names.append(blocked_name.capitalize())
 	var description: String = "Slot: %s" % slot_name.capitalize()
 	if not blocked_names.is_empty(): description += "   Blocks: %s" % ", ".join(blocked_names)
@@ -228,7 +228,7 @@ func _get_combination_name() -> String:
 	return _get_type().get_combination_name(_get_combination_key())
 
 func _get_item_path(item_name: String) -> String:
-	return "%s/%s/%s.tres" % [EquipmentProfile.ITEM_DIRECTORY, _get_type().name.to_snake_case(), item_name.to_snake_case()]
+	return "%s/%s/%s.tres" % [EquipmentLook.ITEM_DIRECTORY, _get_type().name.to_snake_case(), item_name.to_snake_case()]
 
 ## Splits the varied parts into dimensions; linked parts (see [method EquipmentType.get_links]) form one
 ## @returns an [Array] of dimensions, each an [Array] of [enum ModularCharacter.Part]s
@@ -381,7 +381,7 @@ func _decide(allow: bool) -> void:
 		_report_error("An empty combination cannot be an item.")
 		return
 	if not _catalog: _catalog = EquipmentCatalog.find_or_create(_get_type())
-	if allow: _catalog.allow(EquipmentProfile.from_model(_model, _get_type()), combination_key)
+	if allow: _catalog.allow(EquipmentLook.from_model(_model, _get_type()), combination_key)
 	else: _catalog.deny(combination_key)
 	if not _save_catalog(): return
 	_status_label.text = "%s %s." % [_get_type().get_combination_name(combination_key), "allowed" if allow else "denied"]
@@ -426,21 +426,21 @@ func _allow_all(combinations: Array[Dictionary]) -> void:
 		var counters: Array[int] = []
 		counters.assign(combination.counters)
 		_apply_combination(_review_dimensions, _review_options, counters, _review_fallback)
-		_catalog.allow(EquipmentProfile.from_model(_model, _get_type()), combination.key as String)
+		_catalog.allow(EquipmentLook.from_model(_model, _get_type()), combination.key as String)
 	_show_meshes(shown_meshes)
 	if _save_catalog(): _status_label.text = "Allowed %d combinations." % combinations.size()
 	_update_mesh_labels()
 	_update_review()
 
-func _capture() -> EquipmentProfile:
-	var captured: EquipmentProfile = EquipmentProfile.from_model(_model, _get_type())
+func _capture() -> EquipmentLook:
+	var captured: EquipmentLook = EquipmentLook.from_model(_model, _get_type())
 	captured.name = _name_edit.text.strip_edges()
 	return captured
 
-func _save(equipment_profile: EquipmentProfile, item_path: String) -> bool:
-	if not _write(equipment_profile, item_path): return false
-	_status_label.text = "Saved %s with %d parts." % [item_path, equipment_profile.appearance.parts.size()]
-	equipment_saved.emit(equipment_profile)
+func _save(equipment_look: EquipmentLook, item_path: String) -> bool:
+	if not _write(equipment_look, item_path): return false
+	_status_label.text = "Saved %s with %d parts." % [item_path, equipment_look.appearance.parts.size()]
+	equipment_saved.emit(equipment_look)
 	return true
 
 func _write(resource: Resource, path: String) -> bool:
@@ -465,7 +465,7 @@ func _on_save_pressed() -> void:
 	if _name_edit.text.strip_edges().is_empty():
 		_report_error("Set an item name before saving.")
 		return
-	var captured: EquipmentProfile = _capture()
+	var captured: EquipmentLook = _capture()
 	_equipment_profile.name = captured.name
 	_equipment_profile.type = captured.type
 	_equipment_profile.appearance = captured.appearance
@@ -486,7 +486,7 @@ func _on_save_as_new_pressed() -> void:
 	if ResourceLoader.exists(item_path):
 		_report_error("%s already exists; pick another name." % item_path)
 		return
-	var captured: EquipmentProfile = _capture()
+	var captured: EquipmentLook = _capture()
 	if _save(captured, item_path): EditorInterface.get_inspector().edit(load(item_path))
 
 func _on_edit_type_pressed() -> void:
@@ -508,13 +508,13 @@ func _on_gear_tab_visibility_changed() -> void:
 	if _equipment_profile: _show_item(_equipment_profile)
 	_update()
 
-func _show_item(equipment_profile: EquipmentProfile) -> void:
-	_name_edit.text = equipment_profile.name
-	if equipment_profile.type: _select_type(equipment_profile.type)
+func _show_item(equipment_look: EquipmentLook) -> void:
+	_name_edit.text = equipment_look.name
+	if equipment_look.type: _select_type(equipment_look.type)
 
 # The preview may report before this panel is ready; showing the Gear tab then catches up
 func _on_active_profile_changed(active_profile: Profile) -> void:
-	_equipment_profile = active_profile as EquipmentProfile
+	_equipment_profile = active_profile as EquipmentLook
 	if not _is_set_up or not visible: return
 	if _equipment_profile: _show_item(_equipment_profile)
 	_update()

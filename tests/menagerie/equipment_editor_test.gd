@@ -98,7 +98,7 @@ func test_shown_combination_matches_the_saved_item_key() -> void:
 	var helmet_type: EquipmentType = _use_type("helmet")
 	_model.head_no_elements.update_index(_model.head_no_elements.find_mesh_index("05"))
 	_model.helmet_attachment.update_index(_model.helmet_attachment.find_mesh_index("10"))
-	var captured: EquipmentProfile = EquipmentProfile.from_model(_model, helmet_type)
+	var captured: EquipmentLook = EquipmentLook.from_model(_model, helmet_type)
 	var shown_key: String = _editor.call("_get_combination_key")
 	assert_str(shown_key).is_equal("05 10")
 	assert_str(helmet_type.get_combination_key_of(captured)).is_equal(shown_key)

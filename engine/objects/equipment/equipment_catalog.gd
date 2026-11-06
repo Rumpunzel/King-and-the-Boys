@@ -3,7 +3,7 @@ class_name EquipmentCatalog
 extends Resource
 
 ## The combinations of one [EquipmentType] that are allowed as items, and the ones decided against
-## Allowed combinations are [EquipmentProfile]s stored inside this file, each with its combination key as ID,
+## Allowed combinations are [EquipmentLook]s stored inside this file, each with its combination key as ID,
 ## so [ResourceId] names them "uid://<catalog>::05_10" without a file per item
 
 enum Status {
@@ -12,13 +12,13 @@ enum Status {
 	DENIED,
 }
 
-const CATALOG_DIRECTORY: String = EquipmentProfile.ITEM_DIRECTORY + "/catalogs"
+const CATALOG_DIRECTORY: String = EquipmentLook.ITEM_DIRECTORY + "/catalogs"
 
 @export var type: EquipmentType:
 	set(new_value):
 		type = new_value
 		changed.emit()
-@export var entries: Array[EquipmentProfile]:
+@export var entries: Array[EquipmentLook]:
 	set(new_value):
 		entries = new_value
 		changed.emit()
@@ -62,9 +62,9 @@ static func get_entry_id(combination_key: String) -> String:
 func get_default_path() -> String:
 	return CATALOG_DIRECTORY.path_join("%s.tres" % type.name.to_snake_case())
 
-func get_entry(combination_key: String) -> EquipmentProfile:
+func get_entry(combination_key: String) -> EquipmentLook:
 	var entry_id: String = get_entry_id(combination_key)
-	for entry: EquipmentProfile in entries:
+	for entry: EquipmentLook in entries:
 		if entry and entry.resource_scene_unique_id == entry_id: return entry
 	return null
 
@@ -74,7 +74,7 @@ func get_status(combination_key: String) -> Status:
 	return Status.UNREVIEWED
 
 ## Adds [param entry] as the item for [param combination_key], replacing an earlier one and any denial
-func allow(entry: EquipmentProfile, combination_key: String) -> void:
+func allow(entry: EquipmentLook, combination_key: String) -> void:
 	assert(entry.type == type, "%s is no %s" % [entry.name, type.name])
 	_remove_entry(combination_key)
 	_remove_denial(combination_key)
@@ -97,7 +97,7 @@ func undecide(combination_key: String) -> void:
 	changed.emit()
 
 func _remove_entry(combination_key: String) -> void:
-	var entry: EquipmentProfile = get_entry(combination_key)
+	var entry: EquipmentLook = get_entry(combination_key)
 	if entry: entries.erase(entry)
 
 func _remove_denial(combination_key: String) -> void:
@@ -107,6 +107,6 @@ func _remove_denial(combination_key: String) -> void:
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not type: warnings.append("Missing EquipmentType.")
-	for entry: EquipmentProfile in entries:
+	for entry: EquipmentLook in entries:
 		if entry and entry.type != type: warnings.append("%s is no %s." % [entry.name, type.name if type else "item of this catalog's type"])
 	return warnings

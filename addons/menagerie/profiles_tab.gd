@@ -103,7 +103,7 @@ func _list_profiles_in_directory(directory_path: String) -> Array[Profile]:
 		# A catalog's entries are items stored inside it
 		elif resource is EquipmentCatalog:
 			var catalog: EquipmentCatalog = resource
-			for entry: EquipmentProfile in catalog.entries:
+			for entry: EquipmentLook in catalog.entries:
 				if entry: profiles_in_directory.append(entry)
 	return profiles_in_directory
 
@@ -190,7 +190,7 @@ Still used by:
 	dialog.dialog_text = text
 	dialog.ok_button_text = "Delete"
 	dialog.confirmed.connect(_delete.bind(paths))
-	if file_count > 0 and Array(paths).any(func(path: String) -> bool: return load(path) is EquipmentProfile):
+	if file_count > 0 and Array(paths).any(func(path: String) -> bool: return load(path) is EquipmentLook):
 		dialog.add_button("Delete and deny combinations", true, EXCLUDE_ACTION)
 		dialog.custom_action.connect(func(action: StringName) -> void:
 			if action != EXCLUDE_ACTION: return
@@ -239,10 +239,10 @@ func _delete(paths: PackedStringArray, deny_files: bool = false) -> void:
 		var is_entry: bool = path.contains(ResourceId.SEPARATOR)
 		if not is_entry: trashed.append(path)
 		if not is_entry and not deny_files: continue
-		var equipment_profile: EquipmentProfile = ResourceId.find(path) as EquipmentProfile
-		if not equipment_profile or not equipment_profile.type: continue
-		var catalog: EquipmentCatalog = load(path.get_slice(ResourceId.SEPARATOR, 0)) as EquipmentCatalog if is_entry else EquipmentCatalog.find_or_create(equipment_profile.type)
-		catalog.deny(equipment_profile.type.get_combination_key_of(equipment_profile))
+		var equipment_look: EquipmentLook = ResourceId.find(path) as EquipmentLook
+		if not equipment_look or not equipment_look.type: continue
+		var catalog: EquipmentCatalog = load(path.get_slice(ResourceId.SEPARATOR, 0)) as EquipmentCatalog if is_entry else EquipmentCatalog.find_or_create(equipment_look.type)
+		catalog.deny(equipment_look.type.get_combination_key_of(equipment_look))
 		if not changed_catalogs.has(catalog): changed_catalogs.append(catalog)
 	for catalog: EquipmentCatalog in changed_catalogs:
 		var catalog_path: String = catalog.resource_path if not catalog.resource_path.is_empty() else catalog.get_default_path()

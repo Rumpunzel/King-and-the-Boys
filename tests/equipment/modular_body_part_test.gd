@@ -40,12 +40,12 @@ func test_apply_mesh_hides_and_shows_related_parts() -> void:
 func test_capture_takes_only_the_types_visible_parts() -> void:
 	_model.head_coverings_no_hair.update_index(1)
 	_model.helmet_attachment.update_index(2)
-	var captured: EquipmentProfile = EquipmentProfile.from_model(_model, EquipmentFixtures.load_type("hat"))
+	var captured: EquipmentLook = EquipmentLook.from_model(_model, EquipmentFixtures.load_type("hat"))
 	assert_array(captured.appearance.get_parts()).contains_exactly([ModularCharacter.Part.HELMET_ATTACHMENT])
 
 func test_capture_finds_the_other_gender_mesh() -> void:
 	_model.torso.update_index(_model.torso.find_mesh_index("03"))
-	var captured: EquipmentProfile = EquipmentProfile.from_model(_model, EquipmentFixtures.load_type("chest_armor"))
+	var captured: EquipmentLook = EquipmentLook.from_model(_model, EquipmentFixtures.load_type("chest_armor"))
 	var torso_mesh: EquipmentPartMesh
 	for part_mesh: EquipmentPartMesh in captured.appearance.parts:
 		if part_mesh.part == ModularCharacter.Part.TORSO: torso_mesh = part_mesh
@@ -53,7 +53,7 @@ func test_capture_finds_the_other_gender_mesh() -> void:
 	assert_str(torso_mesh.female_mesh.resource_path).is_equal(EquipmentFixtures.TORSO_FEMALE)
 
 func test_item_mesh_follows_body_part_gender() -> void:
-	var chest: EquipmentProfile = EquipmentFixtures.make_item(EquipmentFixtures.load_type("chest_armor"), ModularCharacter.Part.TORSO, EquipmentFixtures.TORSO_MALE, EquipmentFixtures.TORSO_FEMALE)
+	var chest: EquipmentLook = EquipmentFixtures.make_item(EquipmentFixtures.load_type("chest_armor"), ModularCharacter.Part.TORSO, EquipmentFixtures.TORSO_MALE, EquipmentFixtures.TORSO_FEMALE)
 	chest.appearance.configure(_model)
 	assert_str(EquipmentFixtures.mesh_path(_model.torso)).is_equal(EquipmentFixtures.TORSO_MALE)
 	_model.torso.gender = ModularBodyPartGendered.Gender.FEMALE
