@@ -63,6 +63,8 @@ var level: Level
 var look_target: Vector3 = Vector3.BACK
 ## The [Character] currently haunting (controlling) this one, if any
 var haunted_by: Character
+## [code]true[/code] once the [Character] left the cell it spawned on, on every peer
+var has_stepped: bool = false
 
 # Grid state: owned by the host, replicated on change by the CharacterSynchronizer.
 # Every peer turns it into a world position and animates the model itself.
@@ -72,6 +74,7 @@ var grid_cell: Vector2i = Vector2i.ZERO:
 		grid_cell = new_grid_cell
 		_queue_grid_visual_update()
 		if previous_grid_cell == grid_cell or not _has_grid_state: return
+		has_stepped = true
 		exited_grid_cell.emit(previous_grid_cell)
 		entered_grid_cell.emit(grid_cell)
 ## Offset from the center of [member grid_cell], see [method Level.get_free_spots]
@@ -220,6 +223,10 @@ func get_heads_up_anchor() -> Vector3:
 
 func get_grid_position() -> Vector2i:
 	return grid_cell
+
+## @returns [code]true[/code] while the model still moves or turns towards its grid state
+func is_moving() -> bool:
+	return _grid_visual_update_queued or (_grid_tween != null and _grid_tween.is_running())
 
 func _queue_grid_visual_update() -> void:
 	if _grid_visual_update_queued: return

@@ -47,6 +47,8 @@ var _remaining_tile_discover_delay: float = 0.0
 var _board_change_count: int = 0
 
 func _process(delta: float) -> void:
+	# Tiles show once the figures have landed on their new cells
+	if _is_any_character_moving(): return
 	# Reveal one tile at a time
 	_remaining_tile_reveal_delay = maxf(_remaining_tile_reveal_delay - delta, 0.0)
 	if _remaining_tile_reveal_delay <= 0.0:
@@ -163,7 +165,6 @@ func _build_outer_wall() -> void:
 			_spawn_at(DungeonTileSet.TileBlueprint.new(preload("uid://d3cc5nj7ogal8"), wall_roation), wall_position)
 			var wall: Structure = _placed_tiles[wall_position]
 			wall.reveal()
-			wall.shown_status = wall.status
 
 func _place_starting_tile() -> Vector2i:
 	var all_player_spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
@@ -177,7 +178,6 @@ func _place_starting_tile() -> Vector2i:
 	var starting_tile: Structure = _placed_tiles[starting_grid_position]
 	assert(starting_tile)
 	_reveal_tile(starting_tile)
-	starting_tile.shown_status = starting_tile.status
 	return starting_grid_position
 
 func _build_dungeon_from(origin_grid_position: Vector2i) -> void:
@@ -287,6 +287,16 @@ func _is_next_to_revealed_tile(tile: Structure) -> bool:
 		if neighbour and neighbour.status == Structure.Status.REVEALED: return true
 	return false
 
+func _has_any_character_stepped() -> bool:
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if character.has_stepped: return true
+	return false
+
+func _is_any_character_moving() -> bool:
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if character.visible and character.is_moving(): return true
+	return false
+
 func _get_distance_to_nearest_character(grid_position: Vector2i) -> int:
 	var distances: Array[int] = []
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
@@ -336,6 +346,13 @@ func _on_structure_created(structure: Structure) -> void:
 
 ## Queues showing a tile whose status went up; on every peer, as clients get the status replicated
 func _on_tile_status_changed(status: Structure.Status, tile: Structure) -> void:
+	# Until the first step (level build, first sync on clients, loading) everything shows at once.
+	# Decided a frame later: on clients the status may arrive just before the step causing it.
+	await get_tree().process_frame
+	if not is_instance_valid(tile) or tile.status != status: return
+	if not _has_any_character_stepped():
+		tile.shown_status = status
+		return
 	match status:
 		Structure.Status.REVEALED:
 			if not _reveal_queue.has(tile): _reveal_queue.append(tile)
