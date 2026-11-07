@@ -15,15 +15,7 @@ enum Direction {
 
 const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 
-## A tile holds up to five pieces: the center and four corners
-const CENTER_SPOT: int = 0
-const SPOT_COUNT: int = 5
-const NO_SPOT: int = -1
-const _CORNER_SPOT_DIRECTIONS: Array[Vector2] = [Vector2(-1.0, -1.0), Vector2(1.0, -1.0), Vector2(1.0, 1.0), Vector2(-1.0, 1.0)]
-
 @export var grid_size: float = 2.0
-## Distance of the corner spots from the tile center, per axis
-@export var corner_spot_offset: float = 0.5
 @export var grid_extents: Vector2i = Vector2i(13, 13)
 
 @export var _starting_tile: StructureProfile
@@ -145,35 +137,21 @@ func get_step_target(grid_position: Vector2i, direction: Direction) -> Vector2i:
 	assert(target_tile.has_connection(get_direction(target_grid_position, grid_position)), "Stepping %s from %s @ %s into %s @ %s" % [direction, current_tile, grid_position, target_tile, target_grid_position])
 	return target_grid_position
 
-func get_spot_position(grid_position: Vector2i, spot: int) -> Vector3:
-	assert(spot >= CENTER_SPOT and spot < SPOT_COUNT)
-	var tile_position: Vector3 = grid_to_world_position(grid_position)
-	if spot == CENTER_SPOT: return tile_position
-	var corner: Vector2 = _CORNER_SPOT_DIRECTIONS[spot - 1] * corner_spot_offset
-	return tile_position + Vector3(corner.x, 0.0, corner.y)
+func get_spot_position(grid_position: Vector2i, spot: Vector2) -> Vector3:
+	return grid_to_world_position(grid_position) + Vector3(spot.x, 0.0, spot.y)
 
-## The first piece on an empty tile takes the center; later pieces take a free corner.
-## Things (e.g. chests) hold the center.
-## @returns a free spot on [param grid_position] for [param character], or [constant NO_SPOT] if the tile is full
-func find_free_spot(grid_position: Vector2i, character: Character) -> int:
-	return choose_spot(get_taken_spots(grid_position, character))
-
-## @returns the spot a piece entering a tile with [param taken_spots] takes, or [constant NO_SPOT] if the tile is full
-static func choose_spot(taken_spots: Array[int]) -> int:
-	if taken_spots.is_empty(): return CENTER_SPOT
-	for spot: int in range(CENTER_SPOT + 1, SPOT_COUNT):
-		if not taken_spots.has(spot): return spot
-	return CENTER_SPOT if not taken_spots.has(CENTER_SPOT) else NO_SPOT
-
-## @returns the spots on [param grid_position] taken by visible [Character]s other than [param except] and by [Thing]s
-func get_taken_spots(grid_position: Vector2i, except: Character = null) -> Array[int]:
-	var taken_spots: Array[int] = []
-	if _placed_things.has(grid_position): taken_spots.append(CENTER_SPOT)
+## Spots follow the tile's order of preference: the center first, then the corners.
+## Things (e.g. chests) hold the first spot; pieces keep their spot when others leave.
+## @returns the free spots on [param grid_position], ignoring [param except]; empty if the tile is full
+func get_free_spots(grid_position: Vector2i, except: Character = null) -> Array[Vector2]:
+	var tile: Structure = get_placed_tile(grid_position)
+	assert(tile)
+	var free_spots: Array[Vector2] = tile.profile.get_tile_spots()
+	if _placed_things.has(grid_position): free_spots.pop_front()
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if character == except or not character.visible: continue
-		if character.grid_cell != grid_position: continue
-		if not taken_spots.has(character.tile_spot): taken_spots.append(character.tile_spot)
-	return taken_spots
+		if character == except or not character.visible or character.grid_cell != grid_position: continue
+		free_spots.erase(character.tile_spot)
+	return free_spots
 
 func _build_outer_wall() -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):

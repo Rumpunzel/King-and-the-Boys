@@ -30,7 +30,7 @@ var _undo_stacks: Dictionary[Character, Array] = {}
 
 class GridStep extends RefCounted:
 	var grid_cell: Vector2i
-	var tile_spot: int
+	var tile_spot: Vector2
 	var facing: Level.Direction
 
 	func _init(character: Character) -> void:
@@ -65,14 +65,15 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	var character: Character = _get_movable_character(sender_id, character_path)
 	if not character: return
 	var target_cell: Vector2i = _level.get_step_target(character.grid_cell, direction)
-	var target_spot: int = _level.find_free_spot(target_cell, character)
-	if target_cell == character.grid_cell or character.movement_points <= 0 or target_spot == Level.NO_SPOT:
+	var free_spots: Array[Vector2] = _level.get_free_spots(target_cell, character)
+	if target_cell == character.grid_cell or character.movement_points <= 0 or free_spots.is_empty():
 		character.place_on_grid(character.grid_cell, character.tile_spot, direction)
 		return
 	# Record before moving: a move that changes the board clears the stack again
 	var undo_stack: Array = _undo_stacks.get_or_add(character, [])
 	undo_stack.append(GridStep.new(character))
 	character.movement_points -= 1
+	var target_spot: Vector2 = free_spots.front()
 	character.place_on_grid(target_cell, target_spot, direction)
 
 ## Takes back the last step of [param character_path] this turn and refunds its movement point
@@ -85,10 +86,10 @@ func request_undo(character_path: NodePath) -> void:
 	var undo_stack: Array = _undo_stacks.get(character, [])
 	if undo_stack.is_empty(): return
 	var previous_step: GridStep = undo_stack.back()
-	var spot: int = previous_step.tile_spot
-	if _level.get_taken_spots(previous_step.grid_cell, character).has(spot):
-		spot = _level.find_free_spot(previous_step.grid_cell, character)
-	if spot == Level.NO_SPOT: return
+	# Another piece may have taken the old spot meanwhile
+	var free_spots: Array[Vector2] = _level.get_free_spots(previous_step.grid_cell, character)
+	if free_spots.is_empty(): return
+	var spot: Vector2 = previous_step.tile_spot if free_spots.has(previous_step.tile_spot) else free_spots.front()
 	undo_stack.pop_back()
 	character.movement_points += 1
 	character.place_on_grid(previous_step.grid_cell, spot, previous_step.facing)

@@ -74,7 +74,8 @@ var grid_cell: Vector2i = Vector2i.ZERO:
 		if previous_grid_cell == grid_cell or not _has_grid_state: return
 		exited_grid_cell.emit(previous_grid_cell)
 		entered_grid_cell.emit(grid_cell)
-var tile_spot: int = Level.CENTER_SPOT:
+## Offset from the center of [member grid_cell], see [method Level.get_free_spots]
+var tile_spot: Vector2 = Vector2.ZERO:
 	set(new_tile_spot):
 		tile_spot = new_tile_spot
 		_queue_grid_visual_update()
@@ -88,8 +89,6 @@ var movement_points: int = -1:
 		if new_movement_points == movement_points: return
 		movement_points = new_movement_points
 		movement_points_changed.emit(movement_points)
-
-var _is_on_floor: bool = true
 
 var _has_grid_state: bool = false
 var _grid_visual_update_queued: bool = false
@@ -105,7 +104,8 @@ func _ready() -> void:
 		# Initial grid state comes from the spawn transform
 		grid_cell = level.world_to_grid_position(global_position)
 		facing = rotation_to_facing(rotation.y)
-		tile_spot = level.find_free_spot(grid_cell, self)
+		var free_spots: Array[Vector2] = level.get_free_spots(grid_cell, self)
+		if not free_spots.is_empty(): tile_spot = free_spots.front()
 		reset_movement_points()
 	_has_grid_state = true
 	_queue_grid_visual_update()
@@ -156,7 +156,7 @@ func move_into_direction(direction_input: Vector2, delta: float) -> void:
 	velocity.z = move_toward(velocity.z, direction_input.y * move_speed, acceleration)
 
 ## Host only: places the [Character] on the grid; peers follow through replication
-func place_on_grid(new_grid_cell: Vector2i, new_tile_spot: int, new_facing: Level.Direction) -> void:
+func place_on_grid(new_grid_cell: Vector2i, new_tile_spot: Vector2, new_facing: Level.Direction) -> void:
 	assert(multiplayer.is_server())
 	tile_spot = new_tile_spot
 	facing = new_facing
