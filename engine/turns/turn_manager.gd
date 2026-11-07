@@ -49,6 +49,8 @@ func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	if not multiplayer.is_server(): return
 	_level.board_changed.connect(_on_board_changed)
+	# Characters get replaced e.g. when loading a save
+	get_tree().node_removed.connect(_on_node_removed)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
 
 func has_passed(player_id: int) -> bool:
@@ -131,6 +133,9 @@ func _get_movable_character(sender_id: int, character_path: NodePath) -> Charact
 
 func _on_board_changed(character: Character) -> void:
 	_undo_stacks.erase(character)
+
+func _on_node_removed(node: Node) -> void:
+	if node is Character: _undo_stacks.erase(node)
 
 func _on_player_disconnected(player: Player) -> void:
 	if has_passed(player.player_id):

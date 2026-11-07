@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_mvbif"]
 [ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="10_irqko"]
 [ext_resource type="PackedScene" uid="uid://dlla8034gqdsb" path="res://engine/player/haunt_camera.tscn" id="10_jlh3c"]
+[ext_resource type="Script" uid="uid://d1njaboc5v742" path="res://user_interface/hud/turn_status.gd" id="11_turns"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p0vpi"]
 properties/0/path = NodePath("InputReader:direction_input")
@@ -64,6 +65,19 @@ metadata/_custom_type_script = "uid://hcr7qut3ys1y"
 [node name="HUD" type="CanvasLayer" parent="." unique_id=789256689 groups=["HUD"]]
 script = ExtResource("7_cs6u8")
 metadata/_custom_type_script = "uid://cmsnxge6cujxg"
+
+[node name="TurnStatus" type="PanelContainer" parent="HUD" node_paths=PackedStringArray("character", "_label")]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 16.0
+offset_bottom = 16.0
+mouse_filter = 2
+script = ExtResource("11_turns")
+character = NodePath("../../Ghost")
+_label = NodePath("Label")
+
+[node name="Label" type="Label" parent="HUD/TurnStatus"]
+layout_mode = 2
 
 [node name="DefaultCamera" type="Node3D" parent="." unique_id=2055921019 node_paths=PackedStringArray("follow_target", "look_at_target")]
 process_mode = 3

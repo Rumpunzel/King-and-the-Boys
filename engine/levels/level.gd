@@ -156,7 +156,10 @@ func get_spot_position(grid_position: Vector2i, spot: int) -> Vector3:
 ## Things (e.g. chests) hold the center.
 ## @returns a free spot on [param grid_position] for [param character], or [constant NO_SPOT] if the tile is full
 func find_free_spot(grid_position: Vector2i, character: Character) -> int:
-	var taken_spots: Array[int] = get_taken_spots(grid_position, character)
+	return choose_spot(get_taken_spots(grid_position, character))
+
+## @returns the spot a piece entering a tile with [param taken_spots] takes, or [constant NO_SPOT] if the tile is full
+static func choose_spot(taken_spots: Array[int]) -> int:
 	if taken_spots.is_empty(): return CENTER_SPOT
 	for spot: int in range(CENTER_SPOT + 1, SPOT_COUNT):
 		if not taken_spots.has(spot): return spot
