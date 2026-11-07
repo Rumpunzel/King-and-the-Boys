@@ -272,10 +272,13 @@ func _queue_reveal(tile: Structure, _direction: Direction) -> void:
 	_reveal_queue.append(tile)
 	_board_change_count += 1
 
+## A tile already queued, from any direction or for revealing, is no new board change
 func _queue_discover(tile: Structure, direction: Direction) -> void:
-	var queued_discovers: Array[Structure] = _discover_queue.get_or_add(direction, [] as Array[Structure])
-	if queued_discovers.has(tile): return
-	queued_discovers.append(tile)
+	if _reveal_queue.has(tile): return
+	for queued_discovers: Array[Structure] in _discover_queue.values():
+		if queued_discovers.has(tile): return
+	var direction_discovers: Array[Structure] = _discover_queue.get_or_add(direction, [] as Array[Structure])
+	direction_discovers.append(tile)
 	_board_change_count += 1
 
 func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
