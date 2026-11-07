@@ -1,11 +1,13 @@
 @tool
 class_name TurnStatus
 extends PanelContainer
-## Shows the turn number, the movement points left of the controlled [Character], the controls and who has passed
+## Shows the turn number, the movement points left of the controlled [Character], the controls and who has passed.
+## Optionally passes on its own once the controlled [Character] is out of moves.
 
 @export_group("Configuration")
 @export var _state_machine: PlayerStateMachine
 @export var _label: Label
+@export var _auto_pass_toggle: CheckBox
 
 var _character: Character:
 	set(new_character):
@@ -23,6 +25,7 @@ func _ready() -> void:
 	Lobby.player_connected.connect(_update.unbind(1))
 	Lobby.player_disconnected.connect(_update.unbind(1))
 	_state_machine.controlled_character_changed.connect(_on_controlled_character_changed)
+	_auto_pass_toggle.toggled.connect(_on_auto_pass_toggled)
 	_character = _state_machine.get_controlled_character()
 
 func _update() -> void:
@@ -51,9 +54,22 @@ func _on_controlled_character_changed(controlled_character: Character) -> void:
 
 func _on_movement_points_changed(_movement_points: int) -> void:
 	_update()
+	_auto_pass_if_out_of_moves()
+
+func _on_auto_pass_toggled(_toggled_on: bool) -> void:
+	_auto_pass_if_out_of_moves()
+
+func _auto_pass_if_out_of_moves() -> void:
+	# Every ghost carries a HUD; only the local player's one may pass for them
+	if not _state_machine.player_ghost.is_multiplayer_authority(): return
+	if not _auto_pass_toggle.button_pressed or _character.movement_points != 0: return
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	if not turn_manager or turn_manager.has_passed(multiplayer.get_unique_id()): return
+	turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, true)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not _state_machine: warnings.append("Missing PlayerStateMachine reference.")
 	if not _label: warnings.append("Missing Label reference.")
+	if not _auto_pass_toggle: warnings.append("Missing auto pass CheckBox reference.")
 	return warnings
