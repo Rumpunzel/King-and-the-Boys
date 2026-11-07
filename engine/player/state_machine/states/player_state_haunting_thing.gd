@@ -50,10 +50,6 @@ func physics_update(delta: float) -> void:
 	var horizontal_offset: Vector2 = Vector2(input_force.x, input_force.z)
 	var adjusted_direction_input: Vector2 = direction_input - (horizontal_offset * haunted_thing.mass / 100.0)
 
-func handle_input(event: InputEvent) -> void:
-	# The hidden ghost can not move, but may still pass
-	handle_turn_input(event, get_character())
-
 func exit() -> void:
 	super.exit()
 	assert(_haunted)

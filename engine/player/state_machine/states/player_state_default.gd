@@ -18,9 +18,6 @@ func physics_update(delta: float) -> void:
 	var direction_input: Vector2 = get_direction_input()
 	#get_character().move_into_direction.rpc(direction_input, delta)
 
-func handle_input(event: InputEvent) -> void:
-	handle_turn_input(event, get_character())
-
 func exit() -> void:
 	super.exit()
 	get_default_phantom_camera().priority = get_default_camera_priority()

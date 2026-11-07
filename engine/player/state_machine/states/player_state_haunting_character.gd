@@ -51,9 +51,10 @@ func physics_update(delta: float) -> void:
 	assert(haunted_character)
 	character.transform = haunted_character.transform
 
-func handle_input(event: InputEvent) -> void:
-	assert(_haunted)
-	handle_turn_input(event, _haunted.character)
+func get_controlled_character() -> Character:
+	# Resolved from the path, so it also works before enter()
+	var haunted: CharacterHitBox = get_state_machine().get_node_or_null(_haunted_path)
+	return haunted.character if haunted else get_character()
 
 func exit() -> void:
 	super.exit()

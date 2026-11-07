@@ -5,8 +5,8 @@ extends State
 var _state_machine: PlayerStateMachine
 
 ## Called by the state machine when receiving unhandled input events.
-func handle_input(_event: InputEvent) -> void:
-	pass
+func handle_input(event: InputEvent) -> void:
+	handle_turn_input(event)
 
 func handle_interactable(current_interactable: HitBox) -> Interaction:
 	if not current_interactable: return null # Interaction.new(get_state_machine().character, _haunt_action)
@@ -19,6 +19,8 @@ func get_state_machine() -> PlayerStateMachine: return _state_machine
 func get_player_ghost() ->  PlayerGhost: return get_state_machine().player_ghost
 func get_input_reader() ->  InputReader: return get_state_machine().input_reader
 func get_character() ->  Character: return get_state_machine().character
+## The [Character] the player moves in this state; their own one unless they control another
+func get_controlled_character() -> Character: return get_character()
 func get_hit_box() ->  CharacterHitBox: return get_state_machine().hit_box
 func get_interaction_area() ->  InteractionArea: return get_state_machine().interaction_area
 func get_available_interaction() -> Interaction: return get_state_machine().available_interaction
@@ -38,8 +40,9 @@ func set_available_interaction(interaction: Interaction) -> void: get_state_mach
 
 var _haunt_action: Action = preload("uid://cuoqy5wkfjika")
 
-## Sends move, undo and pass input for [param character] to the host's [TurnManager]
-func handle_turn_input(event: InputEvent, character: Character) -> void:
+## Sends move, undo and pass input for the controlled [Character] to the host's [TurnManager]
+func handle_turn_input(event: InputEvent) -> void:
+	var character: Character = get_controlled_character()
 	var turn_manager: TurnManager = TurnManager.get_instance(character.get_tree())
 	if not turn_manager: return
 	var character_path: NodePath = character.get_path()

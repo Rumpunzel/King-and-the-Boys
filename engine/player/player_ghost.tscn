@@ -66,14 +66,14 @@ metadata/_custom_type_script = "uid://hcr7qut3ys1y"
 script = ExtResource("7_cs6u8")
 metadata/_custom_type_script = "uid://cmsnxge6cujxg"
 
-[node name="TurnStatus" type="PanelContainer" parent="HUD" node_paths=PackedStringArray("character", "_label")]
+[node name="TurnStatus" type="PanelContainer" parent="HUD" node_paths=PackedStringArray("_state_machine", "_label")]
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 16.0
 offset_bottom = 16.0
 mouse_filter = 2
 script = ExtResource("11_turns")
-character = NodePath("../../Ghost")
+_state_machine = NodePath("../../StateMachine")
 _label = NodePath("Label")
 
 [node name="Label" type="Label" parent="HUD/TurnStatus"]
