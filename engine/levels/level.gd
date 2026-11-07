@@ -239,6 +239,9 @@ func _update_player_vision(from_grid_position: Vector2i, vision_radius: float, r
 		var direction_vector: Vector2i = direction_to_vector(direction)
 		var tile: Structure = from_tile
 		for radius: int in range(1, ceili(vision_radius) + 1):
+			# Sight follows passages only, like the corridors built in _build_corridor_from,
+			# so coming back to a cell never reveals tiles that were built later
+			if not tile.has_connection(direction): break
 			var next_tile_grid_position: Vector2i = from_grid_position + direction_vector * radius
 			if origin_grid_position.distance_squared_to(next_tile_grid_position) > vision_radius ** 2.0: break
 			if not _placed_tiles.has(next_tile_grid_position): break

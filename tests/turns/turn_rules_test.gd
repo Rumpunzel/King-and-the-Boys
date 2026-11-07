@@ -56,6 +56,29 @@ func _cell_next_to_wall() -> Vector2i:
 				if _blocked_direction(cell) >= 0: return cell
 	return _start_cell()
 
+## Walks [param hero] towards unvisited cells until a step reveals or discovers tiles.
+## @returns the cell the board-changing step came from
+func _walk_until_board_changes(hero: Character) -> Vector2i:
+	var board_changes: Array[Character] = []
+	_level.board_changed.connect(board_changes.append)
+	var visited: Array[Vector2i] = [hero.grid_cell]
+	var previous_cell: Vector2i = hero.grid_cell
+	for _guard: int in 40:
+		hero.movement_points = 8
+		previous_cell = hero.grid_cell
+		await _move(hero, _open_direction_towards_new_cells(hero.grid_cell, visited))
+		visited.append(hero.grid_cell)
+		if not board_changes.is_empty(): break
+	_level.board_changed.disconnect(board_changes.append)
+	assert_array(board_changes).is_not_empty()
+	return previous_cell
+
+func _open_direction_towards_new_cells(cell: Vector2i, visited: Array[Vector2i]) -> int:
+	for direction: Level.Direction in Level.Direction.values():
+		var target: Vector2i = _level.get_step_target(cell, direction)
+		if target != cell and not visited.has(target): return direction
+	return _open_direction(cell)
+
 func _move(hero: Character, direction: int) -> void:
 	_turn_manager.request_move(hero.get_path(), direction as Level.Direction)
 	await await_idle_frame()
@@ -124,18 +147,29 @@ func test_walking_into_a_wall_only_turns() -> void:
 	assert_int(hero.movement_points).is_equal(hero.profile.speed)
 	assert_int(hero.facing).is_equal(wall)
 
-func test_first_step_into_the_dungeon_changes_the_board() -> void:
+func test_board_changes_exactly_when_tile_statuses_rise() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	var board_changes: Array[Character] = []
 	_level.board_changed.connect(board_changes.append)
-	await _move(hero, _open_direction(hero.grid_cell))
-	assert_array(board_changes).contains_exactly([hero])
+	for _step: int in 6:
+		hero.movement_points = 8
+		var statuses_before: Dictionary[Vector2i, Structure.Status] = _tile_statuses()
+		board_changes.clear()
+		await _move(hero, _open_direction(hero.grid_cell))
+		assert_bool(board_changes.is_empty()).is_equal(_tile_statuses() == statuses_before)
+
+## @returns the status of every discovered or revealed tile; newly placed tiles are no board change
+func _tile_statuses() -> Dictionary[Vector2i, Structure.Status]:
+	var statuses: Dictionary[Vector2i, Structure.Status] = {}
+	var placed_tiles: Dictionary[Vector2i, Structure] = _level.get("_placed_tiles")
+	for cell: Vector2i in placed_tiles:
+		if placed_tiles[cell].status > Structure.Status.PLACED: statuses[cell] = placed_tiles[cell].status
+	return statuses
 
 func test_undo_takes_back_any_number_of_steps() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
+	var start: Vector2i = await _walk_until_board_changes(hero)
 	hero.movement_points = 8
-	var start: Vector2i = hero.grid_cell
-	await _move(hero, _open_direction(start))
 	var first_cell: Vector2i = hero.grid_cell
 	var back: Level.Direction = Level.get_direction(first_cell, start)
 	var out: Level.Direction = Level.get_direction(start, first_cell)
@@ -151,9 +185,25 @@ func test_undo_takes_back_any_number_of_steps() -> void:
 	await _undo(hero)
 	assert_vector(hero.grid_cell).is_equal(first_cell)
 	assert_int(hero.movement_points).is_equal(points + 3)
-	# The first step changed the board: undo stops there
+	# The step onto first_cell changed the board: undo stops there
 	await _undo(hero)
 	assert_vector(hero.grid_cell).is_equal(first_cell)
+
+func test_retracing_a_path_changes_nothing_and_undoes_fully() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	var path: Array[Vector2i] = [hero.grid_cell]
+	for _step: int in 10:
+		hero.movement_points = 30
+		await _move(hero, _open_direction_towards_new_cells(hero.grid_cell, path))
+		path.append(hero.grid_cell)
+	var end_cell: Vector2i = hero.grid_cell
+	var board_changes: Array[Character] = []
+	_level.board_changed.connect(board_changes.append)
+	for index: int in range(path.size() - 2, -1, -1):
+		await _move(hero, Level.get_direction(hero.grid_cell, path[index]))
+	assert_array(board_changes).is_empty()
+	for _index: int in path.size() - 1: await _undo(hero)
+	assert_vector(hero.grid_cell).is_equal(end_cell)
 
 func test_undo_stops_at_a_board_change() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
@@ -192,12 +242,28 @@ func test_undo_finds_another_spot_when_the_old_one_is_taken() -> void:
 	assert_vector(hero.grid_cell).is_equal(start)
 	assert_vector(hero.tile_spot).is_equal(tile_spots[1])
 
-func test_a_tile_queued_from_two_directions_is_one_board_change() -> void:
-	var tile: Structure = _level.get_placed_tile(_cell_next_to_wall())
-	var board_change_count: int = _level.get("_board_change_count")
-	_level.call("_queue_discover", tile, Level.Direction.UP)
-	_level.call("_queue_discover", tile, Level.Direction.RIGHT)
-	assert_int(_level.get("_board_change_count")).is_equal(board_change_count + 1)
+func test_a_step_reveals_tiles_at_once_and_shows_them_later() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	await _walk_until_board_changes(hero)
+	var lagging_tiles: Array[Structure] = []
+	for cell: Vector2i in _level.get("_placed_tiles"):
+		var tile: Structure = _level.get_placed_tile(cell)
+		if tile.shown_status < tile.status: lagging_tiles.append(tile)
+	assert_array(lagging_tiles).is_not_empty()
+	for _guard: int in 150:
+		if lagging_tiles.all(func(tile: Structure) -> bool: return tile.shown_status == tile.status): break
+		await await_millis(100)
+	for tile: Structure in lagging_tiles: assert_int(tile.shown_status).is_equal(tile.status)
+
+func test_walking_over_known_tiles_changes_nothing() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	var start: Vector2i = await _walk_until_board_changes(hero)
+	var first_cell: Vector2i = hero.grid_cell
+	var board_changes: Array[Character] = []
+	_level.board_changed.connect(board_changes.append)
+	await _move(hero, Level.get_direction(first_cell, start))
+	await _move(hero, Level.get_direction(start, first_cell))
+	assert_array(board_changes).is_empty()
 
 func test_grid_state_and_points_are_saved() -> void:
 	await _spawn_hero(_start_cell())
