@@ -47,8 +47,8 @@ var _remaining_tile_discover_delay: float = 0.0
 var _board_change_count: int = 0
 
 func _process(delta: float) -> void:
-	# Tiles show once the figures have landed on their new cells
-	if _is_any_character_moving(): return
+	# Tiles wait until the figures cross into their new cells, see _on_figure_entered_grid_cell
+	if _is_any_figure_behind(): return
 	# Reveal one tile at a time
 	_remaining_tile_reveal_delay = maxf(_remaining_tile_reveal_delay - delta, 0.0)
 	if _remaining_tile_reveal_delay <= 0.0:
@@ -292,9 +292,9 @@ func _has_any_character_stepped() -> bool:
 		if character.has_stepped: return true
 	return false
 
-func _is_any_character_moving() -> bool:
+func _is_any_figure_behind() -> bool:
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if character.visible and character.is_moving(): return true
+		if character.visible and character.get_figure_grid_cell() != character.grid_cell: return true
 	return false
 
 func _get_distance_to_nearest_character(grid_position: Vector2i) -> int:
@@ -387,6 +387,7 @@ func _on_agent_created(agent: Agent) -> void:
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	var character: Character = player_ghost.character
 	character.level = self
+	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
 	if not multiplayer.is_server(): return
 	character.entered_grid_cell.connect(_on_player_moved.bind(character))
 
@@ -398,6 +399,11 @@ func _on_player_moved(character_grid_position: Vector2i, character: Character) -
 	_update_player_vision(character_grid_position, character.profile.vision, _reveal_tile)
 	_update_player_vision(character_grid_position, character.profile.dark_vision, _discover_tile)
 	if _board_change_count != board_change_count_before: board_changed.emit(character)
+
+## Visual feedback on every peer: reveals start shortly after the figure crosses into a cell
+func _on_figure_entered_grid_cell(_cell: Vector2i, character: Character) -> void:
+	_remaining_tile_reveal_delay = character.profile.move_animation.duration * 0.1
+	_remaining_tile_discover_delay = character.profile.move_animation.duration * 0.1
 
 func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> void:
 	if profile_to_spawn is StructureProfile:

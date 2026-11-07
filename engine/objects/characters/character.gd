@@ -7,6 +7,8 @@ signal entered_grid_cell(cell: Vector2i)
 signal exited_grid_cell(cell: Vector2i)
 signal destination_reached
 signal movement_points_changed(movement_points: int)
+## Emitted on every peer when the animated figure crosses into [param cell], which lags behind [member grid_cell]
+signal figure_entered_grid_cell(cell: Vector2i)
 
 signal profile_changed
 
@@ -97,6 +99,7 @@ var _has_grid_state: bool = false
 var _grid_visual_update_queued: bool = false
 var _grid_visuals_applied: bool = false
 var _grid_tween: Tween
+var _figure_grid_cell: Vector2i = Vector2i.ZERO
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -124,6 +127,7 @@ func _physics_process(_delta: float) -> void:
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
+	_update_figure_grid_cell()
 	#if model: model.play_animation(_normalized_velocity, _is_on_floor)
 
 static func from_character_data(character_data: Dictionary[StringName, Variant]) -> Character:
@@ -224,9 +228,16 @@ func get_heads_up_anchor() -> Vector3:
 func get_grid_position() -> Vector2i:
 	return grid_cell
 
-## @returns [code]true[/code] while the model still moves or turns towards its grid state
-func is_moving() -> bool:
-	return _grid_visual_update_queued or (_grid_tween != null and _grid_tween.is_running())
+## @returns the cell the animated figure currently stands in
+func get_figure_grid_cell() -> Vector2i:
+	return _figure_grid_cell
+
+func _update_figure_grid_cell() -> void:
+	if not level or not _grid_visuals_applied: return
+	var figure_grid_cell: Vector2i = level.world_to_grid_position(global_position)
+	if figure_grid_cell == _figure_grid_cell: return
+	_figure_grid_cell = figure_grid_cell
+	figure_entered_grid_cell.emit(_figure_grid_cell)
 
 func _queue_grid_visual_update() -> void:
 	if _grid_visual_update_queued: return
@@ -243,6 +254,7 @@ func _apply_grid_visuals() -> void:
 		_grid_visuals_applied = true
 		global_position = target_position
 		rotation.y = target_rotation
+		_update_figure_grid_cell()
 		return
 	_grid_tween = create_tween()
 	_grid_tween.set_parallel()
