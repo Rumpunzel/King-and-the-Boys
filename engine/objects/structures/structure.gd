@@ -5,6 +5,7 @@ extends StaticBody3D
 
 signal spawn_requested(profile_to_spawn: Profile)
 signal status_changed(status: Status)
+signal shown_status_changed(shown_status: Status)
 signal profile_changed
 
 enum Status {
@@ -52,11 +53,22 @@ const STATUS: StringName = "status"
 	set(new_clockwise_turns):
 		rotation.y = TAU - new_clockwise_turns * (PI * 0.5)
 
+## What the players know about the tile; set by the host the moment a move reveals it.
+## [member shown_status] catches up later through the [Level]'s delayed visual queues.
 @export var status: Status = Status.NONE:
 	set(new_status):
 		if new_status == status: return
 		status = new_status
-		match status:
+		# Spawned and loaded tiles show their status right away
+		if not is_node_ready(): shown_status = status
+		status_changed.emit(status)
+
+## What the tile currently looks like on this peer
+var shown_status: Status = Status.NONE:
+	set(new_shown_status):
+		if new_shown_status == shown_status: return
+		shown_status = new_shown_status
+		match shown_status:
 			Status.PLACED:
 				model.visible = false
 			Status.DISCOVERED:
@@ -68,8 +80,8 @@ const STATUS: StringName = "status"
 				model.remove_material_override(_hidden_material)
 				model.play_model_animation(profile.reveal_animation)
 				if level: _debug_draw_connections()
-			_: push_error("Status %s not implemented!" % status)
-		status_changed.emit(status)
+			_: push_error("Status %s not implemented!" % shown_status)
+		shown_status_changed.emit(shown_status)
 
 @export_group("Configuration")
 @export var _collision_shape: CollisionShape3D
@@ -115,13 +127,13 @@ static func validate_structure_data(structure_data: Dictionary[StringName, Varia
 	assert(structure_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM, CLOCKWISE_TURNS, STATUS]))
 	assert(structure_data.size() == 5)
 
-@rpc("call_local", "reliable")
+## Host only; @returns [code]true[/code] if the status went up
 func discover() -> bool:
 	if status >= Status.DISCOVERED: return false
 	status = Status.DISCOVERED
 	return true
 
-@rpc("call_local", "reliable")
+## Host only; @returns [code]true[/code] if the status went up
 func reveal() -> bool:
 	if status >= Status.REVEALED: return false
 	status = Status.REVEALED
