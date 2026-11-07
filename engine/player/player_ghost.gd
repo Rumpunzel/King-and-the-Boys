@@ -15,6 +15,8 @@ const _INACTIVE_CAMERA_PRIORITY: int = 0
 		assert(new_player)
 		player = new_player
 		set_multiplayer_authority(player.get_multiplayer_authority())
+		# The host owns the grid state of every piece
+		character.give_grid_state_to_host()
 		name = player.name
 		_camera.current = player.is_local_player()
 		player.player_info_changed.connect(_on_player_info_changed)

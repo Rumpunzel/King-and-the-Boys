@@ -3,6 +3,9 @@
 class_name Level
 extends Node3D
 
+## Emitted on the host when a [Character] entering a cell changed the visible board (discovered or revealed tiles)
+signal board_changed(character: Character)
+
 enum Direction {
 	UP,
 	RIGHT,
@@ -12,7 +15,15 @@ enum Direction {
 
 const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 
+## A tile holds up to five pieces: the center and four corners
+const CENTER_SPOT: int = 0
+const SPOT_COUNT: int = 5
+const NO_SPOT: int = -1
+const _CORNER_SPOT_DIRECTIONS: Array[Vector2] = [Vector2(-1.0, -1.0), Vector2(1.0, -1.0), Vector2(1.0, 1.0), Vector2(-1.0, 1.0)]
+
 @export var grid_size: float = 2.0
+## Distance of the corner spots from the tile center, per axis
+@export var corner_spot_offset: float = 0.5
 @export var grid_extents: Vector2i = Vector2i(13, 13)
 
 @export var _starting_tile: StructureProfile
@@ -39,6 +50,9 @@ var _discover_queue: Dictionary[Direction, Array] = {}
 
 var _remaining_tile_reveal_delay: float = 0.0
 var _remaining_tile_discover_delay: float = 0.0
+
+## Counts tiles queued for discovering or revealing; used to detect board changes
+var _board_change_count: int = 0
 
 func _process(delta: float) -> void:
 	# Reveal
@@ -119,6 +133,44 @@ func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> 
 
 func get_placed_tile(grid_position: Vector2i) -> Structure: return _placed_tiles.get(grid_position)
 func get_placed_thing(grid_position: Vector2i) -> Thing: return _placed_things.get(grid_position)
+
+## @returns the cell reached by stepping from [param grid_position] into [param direction], or [param grid_position] itself if a wall blocks it
+func get_step_target(grid_position: Vector2i, direction: Direction) -> Vector2i:
+	var current_tile: Structure = get_placed_tile(grid_position)
+	assert(current_tile)
+	if not current_tile.has_connection(direction): return grid_position
+	var target_grid_position: Vector2i = grid_position + direction_to_vector(direction)
+	var target_tile: Structure = get_placed_tile(target_grid_position)
+	assert(target_tile, "Stepping %s from %s @ %s into nothing @ %s" % [direction, current_tile, grid_position, target_grid_position])
+	assert(target_tile.has_connection(get_direction(target_grid_position, grid_position)), "Stepping %s from %s @ %s into %s @ %s" % [direction, current_tile, grid_position, target_tile, target_grid_position])
+	return target_grid_position
+
+func get_spot_position(grid_position: Vector2i, spot: int) -> Vector3:
+	assert(spot >= CENTER_SPOT and spot < SPOT_COUNT)
+	var tile_position: Vector3 = grid_to_world_position(grid_position)
+	if spot == CENTER_SPOT: return tile_position
+	var corner: Vector2 = _CORNER_SPOT_DIRECTIONS[spot - 1] * corner_spot_offset
+	return tile_position + Vector3(corner.x, 0.0, corner.y)
+
+## The first piece on an empty tile takes the center; later pieces take a free corner.
+## Things (e.g. chests) hold the center.
+## @returns a free spot on [param grid_position] for [param character], or [constant NO_SPOT] if the tile is full
+func find_free_spot(grid_position: Vector2i, character: Character) -> int:
+	var taken_spots: Array[int] = get_taken_spots(grid_position, character)
+	if taken_spots.is_empty(): return CENTER_SPOT
+	for spot: int in range(CENTER_SPOT + 1, SPOT_COUNT):
+		if not taken_spots.has(spot): return spot
+	return CENTER_SPOT if not taken_spots.has(CENTER_SPOT) else NO_SPOT
+
+## @returns the spots on [param grid_position] taken by visible [Character]s other than [param except] and by [Thing]s
+func get_taken_spots(grid_position: Vector2i, except: Character = null) -> Array[int]:
+	var taken_spots: Array[int] = []
+	if _placed_things.has(grid_position): taken_spots.append(CENTER_SPOT)
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if character == except or not character.visible: continue
+		if character.grid_cell != grid_position: continue
+		if not taken_spots.has(character.tile_spot): taken_spots.append(character.tile_spot)
+	return taken_spots
 
 func _build_outer_wall() -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
@@ -237,11 +289,13 @@ func _update_player_vision_in_room(from_grid_position: Vector2i, vision_radius: 
 func _queue_reveal(tile: Structure, _direction: Direction) -> void:
 	if _reveal_queue.has(tile): return
 	_reveal_queue.append(tile)
+	_board_change_count += 1
 
 func _queue_discover(tile: Structure, direction: Direction) -> void:
 	var queued_discovers: Array[Structure] = _discover_queue.get_or_add(direction, [] as Array[Structure])
 	if queued_discovers.has(tile): return
 	queued_discovers.append(tile)
+	_board_change_count += 1
 
 func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
 	var surrounding_tiles: Array[Structure] = []
@@ -317,11 +371,13 @@ func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 func _on_player_moved(character_grid_position: Vector2i, character: Character) -> void:
 	var entered_tile: Structure = _placed_tiles[character_grid_position]
 	assert(entered_tile)
+	var board_change_count_before: int = _board_change_count
 	_build_dungeon_from(character_grid_position)
 	_update_player_vision(character_grid_position, character.profile.vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.REVEALED, _queue_reveal)
 	_update_player_vision(character_grid_position, character.profile.dark_vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.DISCOVERED, _queue_discover)
 	_remaining_tile_reveal_delay = character.profile.move_animation.duration * 0.1
 	_remaining_tile_discover_delay = character.profile.move_animation.duration * 0.1
+	if _board_change_count != board_change_count_before: board_changed.emit(character)
 
 func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> void:
 	if profile_to_spawn is StructureProfile:

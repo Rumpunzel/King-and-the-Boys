@@ -38,6 +38,20 @@ func set_available_interaction(interaction: Interaction) -> void: get_state_mach
 
 var _haunt_action: Action = preload("uid://cuoqy5wkfjika")
 
+## Sends move, undo and pass input for [param character] to the host's [TurnManager]
+func handle_turn_input(event: InputEvent, character: Character) -> void:
+	var turn_manager: TurnManager = TurnManager.get_instance(character.get_tree())
+	if not turn_manager: return
+	var character_path: NodePath = character.get_path()
+	if event.is_action_released("move_up"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.UP)
+	elif event.is_action_released("move_right"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.RIGHT)
+	elif event.is_action_released("move_down"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.DOWN)
+	elif event.is_action_released("move_left"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.LEFT)
+	elif event.is_action_released("undo_move"): turn_manager.request_undo.rpc_id(Multiplayer.HOST_ID, character_path)
+	elif event.is_action_released("end_turn"):
+		var has_passed: bool = turn_manager.has_passed(character.multiplayer.get_unique_id())
+		turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, not has_passed)
+
 func _create_charcter_interaction(current_interactable: CharacterHitBox) -> CharacterInteraction:
 	return CharacterInteraction.new(get_state_machine().character, current_interactable, _haunt_action)
 

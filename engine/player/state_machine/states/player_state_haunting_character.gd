@@ -51,8 +51,9 @@ func physics_update(delta: float) -> void:
 	assert(haunted_character)
 	character.transform = haunted_character.transform
 
-func handle_input(_event: InputEvent) -> void:
-	pass
+func handle_input(event: InputEvent) -> void:
+	assert(_haunted)
+	handle_turn_input(event, _haunted.character)
 
 func exit() -> void:
 	super.exit()
@@ -63,6 +64,7 @@ func exit() -> void:
 	var interaction_area: InteractionArea = get_interaction_area()
 	character.velocity = haunted_character.velocity
 	character.unhide_character.rpc()
+	character.snap_to_grid()
 	_haunted.unhaunt.rpc()
 	interaction_area.remove_hit_box_to_ignore(_haunted)
 	interaction_area.configure_collision_shape(character.profile)
