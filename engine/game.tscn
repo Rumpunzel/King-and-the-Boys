@@ -33,17 +33,22 @@ metadata/_custom_type_script = "uid://d12oj323k2wmw"
 
 [node name="PlayerGhostSpawner" parent="." unique_id=225359458 instance=ExtResource("7_fxd01")]
 
-[node name="TurnManager" type="Node" parent="." node_paths=PackedStringArray("_level")]
+[node name="TurnManager" type="Node" parent="." unique_id=825868920 node_paths=PackedStringArray("_level", "_synchronizer")]
 script = ExtResource("14_turns")
 _level = NodePath("../Level")
+_synchronizer = NodePath("TurnSynchronizer")
+metadata/_custom_type_script = "uid://cg1qu4y0xejyk"
 
-[node name="TurnSynchronizer" type="MultiplayerSynchronizer" parent="TurnManager"]
+[node name="TurnSynchronizer" type="MultiplayerSynchronizer" parent="TurnManager" unique_id=2069029412]
 replication_config = SubResource("SceneReplicationConfig_turns")
+public_visibility = false
 script = ExtResource("15_sync")
+metadata/_custom_type_script = "uid://crm43jylxmjbd"
 
-[node name="SynchronizerSerializer" type="Node" parent="TurnManager/TurnSynchronizer" node_paths=PackedStringArray("_synchronizer")]
+[node name="SynchronizerSerializer" type="Node" parent="TurnManager/TurnSynchronizer" unique_id=1539123705 node_paths=PackedStringArray("_synchronizer")]
 script = ExtResource("16_syncser")
 _synchronizer = NodePath("..")
+metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
 [node name="UserInterface" parent="." unique_id=30514551 instance=ExtResource("8_aqpue")]
 

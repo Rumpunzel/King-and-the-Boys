@@ -18,6 +18,7 @@ func _ready() -> void:
 func setup_game() -> void:
 	if not multiplayer.is_server(): return
 	_level.build_level()
+	TurnManager.get_instance(get_tree()).start_syncing_peers()
 	_player_ghost_spawner.start_synching_players()
 
 func save_game() -> Error:
@@ -31,6 +32,7 @@ func load_game() -> Error:
 	assert(multiplayer.is_server())
 	print_debug("Loading game...")
 	var error: Error = _serializer.load_world_state()
+	TurnManager.get_instance(get_tree()).start_syncing_peers()
 	_player_ghost_spawner.start_synching_players()
 	return error
 

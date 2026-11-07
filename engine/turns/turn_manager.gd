@@ -12,6 +12,8 @@ const GROUP: StringName = "TurnManager"
 
 @export_group("Configuration")
 @export var _level: Level
+## Hidden from peers until their [TurnManager] exists, see [method start_syncing_peers]
+@export var _synchronizer: MultiplayerSynchronizer
 
 # Replicated from the host
 var turn_number: int = 1:
@@ -47,11 +49,20 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	if not multiplayer.is_server(): return
+	if not multiplayer.is_server():
+		# RPCs to the host need the host to be visible to this peer's synchronizer
+		_synchronizer.set_visibility_for(Multiplayer.HOST_ID, true)
+		return
 	_level.board_changed.connect(_on_board_changed)
 	# Characters get replaced e.g. when loading a save
 	get_tree().node_removed.connect(_on_node_removed)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
+
+## Host only: this node is part of the game scene, not spawned, so peers only get synced
+## once they have loaded it; call when every peer has, e.g. from [method Game.setup_game]
+func start_syncing_peers() -> void:
+	assert(multiplayer.is_server())
+	for peer_id: int in multiplayer.get_peers(): _synchronizer.set_visibility_for(peer_id, true)
 
 func has_passed(player_id: int) -> bool:
 	return passed_player_ids.has(player_id)
@@ -148,4 +159,5 @@ func _on_player_disconnected(player: Player) -> void:
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not _level: warnings.append("Missing Level reference.")
+	if not _synchronizer: warnings.append("Missing MultiplayerSynchronizer reference.")
 	return warnings
