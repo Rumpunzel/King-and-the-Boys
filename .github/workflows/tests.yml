@@ -1,0 +1,26 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  gdunit4:
+    name: GdUnit4 tests
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      # Meshes and textures are stored in Git LFS; tests load the real meshes
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: godot-gdunit-labs/gdUnit4-action@v1
+        with:
+          godot-version: '4.6'
+          paths: 'res://tests'
+          # Use the gdUnit4 version committed in addons/ instead of downloading the latest
+          version: 'installed'
+          # gdUnit4 v6 refuses headless runs without this
+          arguments: '--ignoreHeadlessMode'
+          timeout: 15
