@@ -40,7 +40,8 @@ func set_available_interaction(interaction: Interaction) -> void: get_state_mach
 
 var _haunt_action: Action = preload("uid://cuoqy5wkfjika")
 
-## Sends move, undo and pass input for the controlled [Character] to the host's [TurnManager]
+## Sends move input for the controlled [Character] to the host's [TurnManager].
+## Undo and pass are the turn panel's buttons, with their actions as shortcuts.
 func handle_turn_input(event: InputEvent) -> void:
 	var character: Character = get_controlled_character()
 	var turn_manager: TurnManager = TurnManager.get_instance(character.get_tree())
@@ -50,8 +51,6 @@ func handle_turn_input(event: InputEvent) -> void:
 	elif event.is_action_released("move_right"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.RIGHT)
 	elif event.is_action_released("move_down"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.DOWN)
 	elif event.is_action_released("move_left"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.LEFT)
-	elif event.is_action_released("undo_move"): get_player_ghost().request_undo()
-	elif event.is_action_released("end_turn"): get_player_ghost().request_pass(not get_player_ghost().has_passed())
 
 func _create_charcter_interaction(current_interactable: CharacterHitBox) -> CharacterInteraction:
 	return CharacterInteraction.new(get_state_machine().character, current_interactable, _haunt_action)
