@@ -2,7 +2,7 @@
 class_name TurnStatus
 extends PanelContainer
 ## Shows the turn number, the movement points left of the controlled [Character], the controls and who has passed.
-## Optionally passes on its own once the controlled [Character] is out of moves.
+## Optionally passes on its own once the controlled [Character] is out of moves and has no step to undo.
 
 @export_group("Configuration")
 @export var _state_machine: PlayerStateMachine
@@ -11,9 +11,12 @@ extends PanelContainer
 
 var _character: Character:
 	set(new_character):
-		if _character: _character.movement_points_changed.disconnect(_on_movement_points_changed)
+		if _character:
+			_character.movement_points_changed.disconnect(_on_movement_points_changed)
+			_character.undo_steps_changed.disconnect(_on_undo_steps_changed)
 		_character = new_character
 		_character.movement_points_changed.connect(_on_movement_points_changed)
+		_character.undo_steps_changed.connect(_on_undo_steps_changed)
 		_update()
 
 func _ready() -> void:
@@ -51,9 +54,13 @@ static func _get_action_key(action: StringName) -> String:
 
 func _on_controlled_character_changed(controlled_character: Character) -> void:
 	_character = controlled_character
+	_auto_pass_if_out_of_moves()
 
 func _on_movement_points_changed(_movement_points: int) -> void:
 	_update()
+	_auto_pass_if_out_of_moves()
+
+func _on_undo_steps_changed(_undo_steps: int) -> void:
 	_auto_pass_if_out_of_moves()
 
 func _on_auto_pass_toggled(_toggled_on: bool) -> void:
@@ -62,7 +69,8 @@ func _on_auto_pass_toggled(_toggled_on: bool) -> void:
 func _auto_pass_if_out_of_moves() -> void:
 	# Every ghost carries a HUD; only the local player's one may pass for them
 	if not _state_machine.player_ghost.is_multiplayer_authority(): return
-	if not _auto_pass_toggle.button_pressed or _character.movement_points != 0: return
+	# Only when nothing is left to do: no moves, and no step to take back
+	if not _auto_pass_toggle.button_pressed or _character.movement_points != 0 or _character.undo_steps > 0: return
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	if not turn_manager or turn_manager.has_passed(multiplayer.get_unique_id()): return
 	turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, true)

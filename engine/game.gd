@@ -32,7 +32,9 @@ func load_game() -> Error:
 	assert(multiplayer.is_server())
 	print_debug("Loading game...")
 	var error: Error = _serializer.load_world_state()
-	TurnManager.get_instance(get_tree()).start_syncing_peers()
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	turn_manager.clear_passes()
+	turn_manager.start_syncing_peers()
 	_player_ghost_spawner.start_synching_players()
 	return error
 

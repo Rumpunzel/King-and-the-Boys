@@ -86,6 +86,7 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	character.movement_points -= 1
 	var target_spot: Vector2 = free_spots.front()
 	character.place_on_grid(target_cell, target_spot, direction)
+	_update_undo_steps(character)
 
 ## Takes back the last step of [param character_path] this turn and refunds its movement point
 @rpc("any_peer", "call_local", "reliable")
@@ -104,6 +105,7 @@ func request_undo(character_path: NodePath) -> void:
 	undo_stack.pop_back()
 	character.movement_points += 1
 	character.place_on_grid(previous_step.grid_cell, spot, previous_step.facing)
+	_update_undo_steps(character)
 
 ## Passes or takes a pass back; the turn ends once every connected player has passed
 @rpc("any_peer", "call_local", "reliable")
@@ -123,13 +125,22 @@ func _end_turn_if_everyone_passed() -> void:
 		if not has_passed(player.player_id): return
 	_start_next_turn()
 
+## Host only: player ids differ between sessions, so passes do not survive loading a game
+func clear_passes() -> void:
+	assert(multiplayer.is_server())
+	passed_player_ids = PackedInt32Array()
+
 func _start_next_turn() -> void:
 	assert(multiplayer.is_server())
 	_undo_stacks.clear()
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
 		character.reset_movement_points()
-	passed_player_ids = PackedInt32Array()
+		character.undo_steps = 0
+	clear_passes()
 	turn_number += 1
+
+func _update_undo_steps(character: Character) -> void:
+	character.undo_steps = (_undo_stacks.get(character, []) as Array).size()
 
 func _get_sender_id() -> int:
 	var sender_id: int = multiplayer.get_remote_sender_id()
@@ -145,6 +156,7 @@ func _get_movable_character(sender_id: int, character_path: NodePath) -> Charact
 
 func _on_board_changed(character: Character) -> void:
 	_undo_stacks.erase(character)
+	_update_undo_steps(character)
 
 func _on_node_removed(node: Node) -> void:
 	if node is Character: _undo_stacks.erase(node)
