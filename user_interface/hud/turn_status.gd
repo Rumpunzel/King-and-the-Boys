@@ -4,8 +4,6 @@ extends PanelContainer
 ## The local player's turn: the other players' turns, auto-pass, undo and pass buttons and the moves of the character
 ## the local player controls. The buttons only ask the local [PlayerGhost]; the rules live there and in [TurnManager].
 
-const _KEY_HINT_INTERVAL: float = 0.25
-
 @export var _player_ghost_spawner: PlayerGhostSpawner
 @export var _turn_manager: TurnManager
 
@@ -33,10 +31,6 @@ var _character: Character:
 		_moves_bar.character = _character
 		_update()
 
-# Buttons show the keys of their actions; checked now and then, as bindings may change during play
-var _undo_text: String
-var _pass_text: String
-var _time_to_key_hints: float = 0.0
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
@@ -44,8 +38,9 @@ func _ready() -> void:
 	hide()
 	assert(_player_ghost_spawner)
 	assert(_turn_manager)
-	_undo_text = _undo_button.text.get_slice("[", 0).strip_edges()
-	_pass_text = _pass_button.untoggled_text.get_slice("[", 0).strip_edges()
+	# The buttons show the keys of their actions
+	_undo_button.text = _with_key_hint(_undo_button.text, &"undo_move")
+	_pass_button.untoggled_text = _with_key_hint(_pass_button.untoggled_text, &"end_turn")
 	_turn_manager.turn_started.connect(_update.unbind(1))
 	_turn_manager.passed_players_changed.connect(_update)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
@@ -53,15 +48,6 @@ func _ready() -> void:
 	_auto_pass_toggle.toggled.connect(_on_auto_pass_toggled)
 	_undo_button.pressed.connect(_on_undo_pressed)
 	_pass_button.toggled.connect(_on_pass_toggled)
-
-func _process(delta: float) -> void:
-	if Engine.is_editor_hint(): return
-	_time_to_key_hints -= delta
-	if _time_to_key_hints > 0.0: return
-	_time_to_key_hints = _KEY_HINT_INTERVAL
-	_undo_button.text = "%s [%s]" % [_undo_text, _get_action_key("undo_move")]
-	var pass_text: String = "%s [%s]" % [_pass_text, _get_action_key("end_turn")]
-	if _pass_button.untoggled_text != pass_text: _pass_button.untoggled_text = pass_text
 
 func _update() -> void:
 	if not is_instance_valid(_player_ghost) or not is_instance_valid(_character): return
@@ -73,6 +59,10 @@ func _update() -> void:
 	_pass_button.update_button()
 	_pass_button.disabled = must_pass
 	for player_id: int in _player_rows: _player_rows[player_id].show_passed(_turn_manager.has_passed(player_id))
+
+## @returns [param text] without a key hint in brackets, followed by the current key of [param action]
+static func _with_key_hint(text: String, action: StringName) -> String:
+	return "%s [%s]" % [text.get_slice("[", 0).strip_edges(), _get_action_key(action)]
 
 static func _get_action_key(action: StringName) -> String:
 	var events: Array[InputEvent] = InputMap.action_get_events(action)

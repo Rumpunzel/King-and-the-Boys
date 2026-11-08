@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://d1njaboc5v742" path="res://user_interface/hud/turn_status.gd" id="1_2xl8u"]
 [ext_resource type="Texture2D" uid="uid://dqr836k1hsm6u" path="res://tools/icons/editor_icons/hero_icons/arrow-uturn-left.svg" id="2_6wncj"]
 [ext_resource type="PackedScene" uid="uid://bcmn57g7wa6ee" path="res://user_interface/hud/player_turn_status.tscn" id="2_ogig8"]
-[ext_resource type="PackedScene" path="res://user_interface/hud/moves_bar.tscn" id="6_moves"]
 [ext_resource type="Texture2D" uid="uid://dcv421pvw07em" path="res://tools/icons/editor_icons/hero_icons/clock.svg" id="3_eyk60"]
 [ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="4_ogig8"]
 [ext_resource type="Texture2D" uid="uid://dijf8incgp7wf" path="res://tools/icons/editor_icons/hero_icons/check-circle.svg" id="5_xdo1c"]
+[ext_resource type="PackedScene" uid="uid://b8ix8nx66t01e" path="res://user_interface/hud/moves_bar.tscn" id="6_moves"]
 
 [node name="TurnStatus" type="PanelContainer" unique_id=1584571151 node_paths=PackedStringArray("_label", "_other_players", "_auto_pass_toggle", "_undo_button", "_pass_button", "_moves_bar")]
 offset_left = 16.0
