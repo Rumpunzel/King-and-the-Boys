@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://d12oj323k2wmw" path="res://client/serialization/serializer.gd" id="2_3bptx"]
 [ext_resource type="PackedScene" uid="uid://bvj0ntif5bqqq" path="res://engine/player/player_ghost_spawner.tscn" id="7_fxd01"]
 [ext_resource type="PackedScene" uid="uid://rmev082m4bw0" path="res://user_interface/user_interface.tscn" id="8_aqpue"]
-[ext_resource type="Script" uid="uid://d1njaboc5v742" path="res://user_interface/hud/turn_status.gd" id="17_turns"]
 [ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://data/levels/level.tscn" id="9_eadau"]
 [ext_resource type="PackedScene" uid="uid://5sd2jgms4uso" path="res://user_interface/menus/pause_menu/pause_menu.tscn" id="13_vkpvb"]
 [ext_resource type="Script" uid="uid://cg1qu4y0xejyk" path="res://engine/turns/turn_manager.gd" id="14_turns"]
@@ -53,32 +52,14 @@ metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
 [node name="UserInterface" parent="." unique_id=30514551 instance=ExtResource("8_aqpue")]
 
-[node name="TurnStatus" type="PanelContainer" parent="UserInterface" node_paths=PackedStringArray("_player_ghost_spawner", "_label", "_auto_pass_toggle")]
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 16.0
-offset_bottom = 16.0
-mouse_filter = 2
-script = ExtResource("17_turns")
-_player_ghost_spawner = NodePath("../../PlayerGhostSpawner")
-_label = NodePath("Rows/Label")
-_auto_pass_toggle = NodePath("Rows/AutoPass")
-
-[node name="Rows" type="VBoxContainer" parent="UserInterface/TurnStatus"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UserInterface/TurnStatus/Rows"]
-layout_mode = 2
-
-[node name="AutoPass" type="CheckBox" parent="UserInterface/TurnStatus/Rows"]
-layout_mode = 2
-tooltip_text = "End your turn on your own once your character is out of moves; undo takes the pass back"
-focus_mode = 0
-button_pressed = true
-text = "Auto-pass when out of moves"
+[node name="TurnStatus" parent="UserInterface/MarginContainer" parent_id_path=PackedInt32Array(30514551, 1277819004) index="0" unique_id=1584571151 node_paths=PackedStringArray("_player_ghost_spawner", "_turn_manager")]
+_player_ghost_spawner = NodePath("../../../PlayerGhostSpawner")
+_turn_manager = NodePath("../../../TurnManager")
 
 [node name="PauseMenu" parent="UserInterface" unique_id=1241718021 instance=ExtResource("13_vkpvb")]
 
 [connection signal="player_ghost_created" from="PlayerGhostSpawner" to="Level" method="_on_player_ghost_created"]
 [connection signal="load_requested" from="UserInterface/PauseMenu" to="." method="_on_load_requested"]
 [connection signal="save_requested" from="UserInterface/PauseMenu" to="." method="_on_save_requested"]
+
+[editable path="UserInterface"]

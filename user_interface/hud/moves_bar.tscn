@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://user_interface/hud/moves_bar.gd" id="1_moves"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_moves"]
+
+[node name="MovesBar" type="MarginContainer" node_paths=PackedStringArray("_moves_left_bar", "_undoable_bar")]
+script = ExtResource("1_moves")
+_moves_left_bar = NodePath("MovesLeft")
+_undoable_bar = NodePath("Undoable")
+
+[node name="Undoable" type="ProgressBar" parent="."]
+layout_mode = 2
+max_value = 4.0
+step = 1.0
+value = 3.0
+show_percentage = false
+
+[node name="MovesLeft" type="ProgressBar" parent="."]
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_moves")
+max_value = 4.0
+step = 1.0
+value = 2.0
+show_percentage = false
