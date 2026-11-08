@@ -217,7 +217,7 @@ func test_quick_steps_stretch_one_move() -> void:
 	hero.movement_points = 8
 	var path: Array[Vector2i] = [hero.grid_cell]
 	var step_duration: float = _hero_profile.move_animation.duration
-	# Three steps right after each other: one move, stretched by half a step for each further step
+	# Three steps right after each other: one move, redirected by each step, with at most one step's time left after it
 	for step: int in 3:
 		var direction: int = _open_direction_towards_new_cells(hero.grid_cell, path)
 		_turn_manager.request_move(hero.get_path(), direction as Level.Direction)
@@ -229,8 +229,8 @@ func test_quick_steps_stretch_one_move() -> void:
 		await await_millis(50)
 		waited += 0.05
 	assert_vector(hero.global_position).is_equal_approx(target, Vector3.ONE * 0.01)
-	# One after another, the steps would end 3 step durations after the first; the stretched move ends after about 2
-	assert_float(waited + step_duration * 0.4).is_less(step_duration * 2.5)
+	# One after another, the steps would end 3 step durations after the first; the one move ends one after the last
+	assert_float(waited + step_duration * 0.4).is_less(step_duration * 2.0)
 
 func test_undo_steps_follow_the_host_stack() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())

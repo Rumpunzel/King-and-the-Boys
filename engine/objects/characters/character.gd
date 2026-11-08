@@ -19,8 +19,6 @@ const PROFILE_PATH: StringName = "profile_path"
 const SPAWN_TRANSFORM: StringName = "spawn_transform"
 
 const _TURN_DURATION: float = 0.5
-## Each further step during a move stretches it by this share of a step's duration
-const _EXTRA_STEP_DURATION_RATIO: float = 0.5
 
 ## Determines the varation of the [Model]
 ## If [code]<0[/code] a random [Model] will be used
@@ -102,18 +100,11 @@ var undo_steps: int = 0
 var _has_grid_state: bool = false
 var _grid_visual_update_queued: bool = false
 var _grid_visuals_applied: bool = false
-# The figure's move: one hop, stretched to a new target when more steps come in while it is under way
+# The figure's move: one hop; a step that comes in while it is under way redirects it to the new target
 var _move_tween: Tween
 var _turn_tween: Tween
 var _model_tween: Tween
-var _model_speed: float = 1.0
-var _move_start: Vector3
 var _move_target: Vector3
-## Share of the move done, 0 to 1
-var _move_progress: float = 1.0
-var _move_duration: float = 0.0
-# Progress the current leg started at; the leg covers the rest of the eased curve from there
-var _move_start_progress: float = 0.0
 var _move_backwards: bool = false
 # The cell the animated figure is in; lags behind grid_cell while it moves
 var _figure_grid_cell: Vector2i = Vector2i.ZERO
@@ -269,7 +260,6 @@ func _apply_grid_visuals() -> void:
 	if not _grid_visuals_applied:
 		_grid_visuals_applied = true
 		for tween: Tween in [_move_tween, _turn_tween, _model_tween]: if tween: tween.kill()
-		_move_progress = 1.0
 		global_position = target_position
 		rotation.y = target_rotation
 		_update_figure_grid_cell()
@@ -290,51 +280,29 @@ func _turn_to(target_rotation: float) -> void:
 	_turn_tween.tween_property(self, "rotation:y", relative_rotation, _TURN_DURATION).as_relative().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _start_move(target_position: Vector3, target_rotation: float) -> void:
-	_move_start = global_position
-	_move_target = target_position
-	_move_progress = 0.0
 	# Steps back (undo) keep facing the way the step went, so the figure walks backwards
 	var facing_vector: Vector3 = Vector3(sin(target_rotation), 0.0, cos(target_rotation))
 	_move_backwards = (target_position - global_position).normalized().dot(facing_vector) < -0.5
 	var animation: ModelAnimation = profile.undo_animation if _move_backwards and profile.undo_animation else profile.move_animation
-	_move_duration = animation.duration
-	_model_tween = model.play_model_animation(animation) if model else null
-	_model_speed = 1.0
-	_run_move()
+	# From standing: the hop-in feel, a little back, then forward into the tile
+	_run_move(target_position, animation, Tween.TRANS_BACK, Tween.EASE_IN)
 
-## Stretches the hop under way to [param target_position]: same move, longer and longer, corners may be cut
+## Redirects the move under way to [param target_position], from where the figure is: at most one step's time
+## is left after any step, so quick steps take hardly longer than one, and corners may be cut
 func _extend_move(target_position: Vector3) -> void:
-	var remaining: float = _move_duration * (1.0 - _move_progress)
-	var new_remaining: float = remaining + profile.move_animation.duration * _EXTRA_STEP_DURATION_RATIO
-	# The progress left now takes the longer time
-	_move_duration = new_remaining / (1.0 - _move_progress)
-	# Carry on from where the figure is, so the path bends without a jump
-	_move_start = global_position
-	_move_target = target_position
 	_move_backwards = false
-	_move_start_progress = _move_progress
-	# The hop slows down so the figure lands when the move ends
-	_model_speed *= remaining / new_remaining
-	if _model_tween and _model_tween.is_valid(): _model_tween.set_speed_scale(_model_speed)
-	_run_move()
+	_run_move(target_position, profile.move_animation, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
 
-func _run_move() -> void:
+func _run_move(target_position: Vector3, animation: ModelAnimation, transition: Tween.TransitionType, easing: Tween.EaseType) -> void:
+	_move_target = target_position
 	if _move_tween: _move_tween.kill()
-	if is_zero_approx(_move_progress): _move_start_progress = 0.0
 	_move_tween = create_tween()
-	_move_tween.tween_method(_set_move_progress, _move_progress, 1.0, _move_duration * (1.0 - _move_progress))
+	_move_tween.tween_property(self, "global_position", target_position, animation.duration).set_trans(transition).set_ease(easing)
 	_move_tween.tween_callback(_on_move_finished)
-
-func _set_move_progress(progress: float) -> void:
-	_move_progress = progress
-	var eased: float = _ease_move(progress)
-	var eased_start: float = _ease_move(_move_start_progress)
-	var share: float = (eased - eased_start) / (1.0 - eased_start) if not is_equal_approx(eased_start, 1.0) else 1.0
-	global_position = _move_start.lerp(_move_target, share)
-
-## The hop-in feel of a step: a little back, then forward into the tile
-static func _ease_move(progress: float) -> float:
-	return Tween.interpolate_value(0.0, 1.0, progress, 1.0, Tween.TRANS_BACK, Tween.EASE_IN) as float
+	# The hop starts over too; its tweens start from where the model is, so a figure in the air stays up and lands with the move
+	if not model: return
+	if _model_tween: _model_tween.kill()
+	_model_tween = model.play_model_animation(animation)
 
 func _on_move_finished() -> void:
 	if not _move_backwards: _look_at_thing_on_tile()
