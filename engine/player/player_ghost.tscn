@@ -85,7 +85,7 @@ layout_mode = 2
 
 [node name="AutoPass" type="CheckBox" parent="HUD/TurnStatus/Rows"]
 layout_mode = 2
-tooltip_text = "End your turn on your own once your character is out of moves and has no step to undo"
+tooltip_text = "End your turn on your own once your character is out of moves; undo takes the pass back"
 focus_mode = 0
 button_pressed = true
 text = "Auto-pass when out of moves"
