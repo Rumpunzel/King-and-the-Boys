@@ -30,6 +30,7 @@ jobs:
       - uses: ./.github/actions/godot
         with:
           cache-name: no-lfs
+          skip-assets: 'true'
       # tests/script_check.tscn compiles every script of ours; the smoke run loads the autoloads and the main scene
       - name: Script and smoke check
         run: |
@@ -46,12 +47,15 @@ jobs:
       - uses: ./.github/actions/godot
         with:
           cache-name: no-lfs
+          skip-assets: 'true'
       - name: Run unit tests
         run: |
           "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/unit 2>&1 | tee tests.log
           # Failing tests fail the pipe (bash runs with pipefail); gdUnit exits with 0 when it finds no tests at all,
           # e.g. because a test script does not compile
           if grep -q "No test cases found" tests.log; then exit 1; fi
+          # Scripts that fail to compile do not always fail a test
+          if grep -E "Parse Error|Compile Error" tests.log; then exit 1; fi
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

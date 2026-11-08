@@ -23,7 +23,7 @@ jobs:
   gdunit:
     name: gdUnit4 (integration)
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 110
     steps:
       - uses: actions/checkout@v5
 
@@ -42,12 +42,16 @@ jobs:
       - uses: ./.github/actions/godot
         with:
           cache-name: lfs
+          # The first import of all assets is slow; later runs reuse the cached import
+          import-timeout: 80m
       - name: Run integration tests
         run: |
           "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/integration 2>&1 | tee tests.log
           # Failing tests fail the pipe (bash runs with pipefail); gdUnit exits with 0 when it finds no tests at all,
           # e.g. because a test script does not compile
           if grep -q "No test cases found" tests.log; then exit 1; fi
+          # Scripts that fail to compile do not always fail a test
+          if grep -E "Parse Error|Compile Error" tests.log; then exit 1; fi
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

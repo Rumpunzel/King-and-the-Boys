@@ -5,6 +5,12 @@ inputs:
   cache-name:
     description: Import cache name; jobs with and without Git LFS assets import different files
     required: true
+  skip-assets:
+    description: Leave the asset folders out of the import, for jobs without Git LFS assets (they only hold LFS stubs then)
+    default: 'false'
+  import-timeout:
+    description: Time limit of the import
+    default: 20m
 
 runs:
   using: composite
@@ -29,6 +35,14 @@ runs:
     - shell: bash
       run: echo "GODOT_BIN=$HOME/godot/godot" >> "$GITHUB_ENV"
 
+    # Without a Blender path, Godot asks how to import .blend files and holds back the whole import until answered,
+    # which nobody does headless: no import, no uid cache, and every uid:// path fails. CI only; the editor keeps it on.
+    - name: Configure import
+      shell: bash
+      run: |
+        printf '\n[filesystem]\n\nimport/blender/enabled=false\n' >> project.godot
+        if [ "${{ inputs.skip-assets }}" = "true" ]; then touch assets/.gdignore protoype_assets/.gdignore; fi
+
     # Godot reimports only what changed since the cached import, so an older cache still helps
     - name: Cache import
       uses: actions/cache@v4
@@ -37,8 +51,11 @@ runs:
         key: import-${{ inputs.cache-name }}-${{ env.GODOT_VERSION }}-${{ hashFiles('**/*.import', 'project.godot') }}
         restore-keys: import-${{ inputs.cache-name }}-${{ env.GODOT_VERSION }}-
 
-    # A fresh checkout has no class cache, so autoload types do not resolve until the editor scanned the project once.
-    # Errors here are assets that can not be imported (e.g. .blend without Blender, LFS pointers), so they are not checked.
+    # A fresh checkout has no class or uid cache, so autoloads and uid:// paths do not resolve until imported once.
+    # Errors here are assets that can not be imported (e.g. .blend), so they are not checked; the caches are.
     - name: Import
       shell: bash
-      run: timeout 20m "$GODOT_BIN" --headless --path . --editor --quit > import.log 2>&1 || true
+      run: |
+        timeout ${{ inputs.import-timeout }} "$GODOT_BIN" --headless --path . --import > import.log 2>&1 || true
+        grep -a -E "Started|DONE" import.log | sort | uniq -c || true
+        test -f .godot/uid_cache.bin || { echo "Import did not finish: no uid cache"; tail -50 import.log; exit 1; }
