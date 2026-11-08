@@ -1,17 +1,18 @@
 extends GdUnitTestSuite
-## Turn rules on a real generated level: movement points, walls, undo, tile spots, pass and turn end
+## Turn rules on a generated level built from model-free tiles (no assets): movement points, walls, undo, tile spots, reveals
 
-const LEVEL_SCENE: String = "res://data/levels/level.tscn"
-const HERO_PROFILE: String = "res://data/characters/people/dwarf.tres"
+const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
 
 var _level: Level
 var _turn_manager: TurnManager
+var _hero_profile: CharacterProfile
 
 func before() -> void:
 	if Lobby.get_connected_players().is_empty(): Lobby.call("_create_local_player")
 
 func before_test() -> void:
-	_level = auto_free((load(LEVEL_SCENE) as PackedScene).instantiate())
+	_level = auto_free(ModelFreeWorld.create_level())
+	_hero_profile = ModelFreeWorld.load_hero_profile()
 	add_child(_level)
 	_level.build_level()
 	_turn_manager = auto_free(TurnManager.new())
@@ -20,8 +21,7 @@ func before_test() -> void:
 	await await_idle_frame()
 
 func _spawn_hero(grid_cell: Vector2i) -> Character:
-	var profile: CharacterProfile = load(HERO_PROFILE)
-	var hero: Character = auto_free(profile.create(0, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(grid_cell))))
+	var hero: Character = auto_free(_hero_profile.create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(grid_cell))))
 	hero.level = _level
 	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
 	add_child(hero)
@@ -59,7 +59,8 @@ func _cell_next_to_wall() -> Vector2i:
 ## @returns the cell the board-changing step came from
 func _walk_until_board_changes(hero: Character) -> Vector2i:
 	var board_changes: Array[Character] = []
-	_level.board_changed.connect(board_changes.append)
+	var record_board_change: Callable = func(character: Character) -> void: board_changes.append(character)
+	_level.board_changed.connect(record_board_change)
 	var visited: Array[Vector2i] = [hero.grid_cell]
 	var previous_cell: Vector2i = hero.grid_cell
 	for _guard: int in 40:
@@ -68,7 +69,7 @@ func _walk_until_board_changes(hero: Character) -> Vector2i:
 		await _move(hero, _open_direction_towards_new_cells(hero.grid_cell, visited))
 		visited.append(hero.grid_cell)
 		if not board_changes.is_empty(): break
-	_level.board_changed.disconnect(board_changes.append)
+	_level.board_changed.disconnect(record_board_change)
 	assert_array(board_changes).is_not_empty()
 	return previous_cell
 
@@ -145,7 +146,7 @@ func test_walking_into_a_wall_only_turns() -> void:
 func test_board_changes_exactly_when_tile_statuses_rise() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	var board_changes: Array[Character] = []
-	_level.board_changed.connect(board_changes.append)
+	_level.board_changed.connect(func(character: Character) -> void: board_changes.append(character))
 	for _step: int in 6:
 		hero.movement_points = 8
 		var statuses_before: Dictionary[Vector2i, Structure.Status] = _tile_statuses()
@@ -193,7 +194,7 @@ func test_retracing_a_path_changes_nothing_and_undoes_fully() -> void:
 		path.append(hero.grid_cell)
 	var end_cell: Vector2i = hero.grid_cell
 	var board_changes: Array[Character] = []
-	_level.board_changed.connect(board_changes.append)
+	_level.board_changed.connect(func(character: Character) -> void: board_changes.append(character))
 	for index: int in range(path.size() - 2, -1, -1):
 		await _move(hero, Level.get_direction(hero.grid_cell, path[index]))
 	assert_array(board_changes).is_empty()
@@ -268,7 +269,7 @@ func test_walking_over_known_tiles_changes_nothing() -> void:
 	var start: Vector2i = await _walk_until_board_changes(hero)
 	var first_cell: Vector2i = hero.grid_cell
 	var board_changes: Array[Character] = []
-	_level.board_changed.connect(board_changes.append)
+	_level.board_changed.connect(func(character: Character) -> void: board_changes.append(character))
 	await _move(hero, Level.get_direction(first_cell, start))
 	await _move(hero, Level.get_direction(start, first_cell))
 	assert_array(board_changes).is_empty()

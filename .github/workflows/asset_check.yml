@@ -1,6 +1,8 @@
-name: Integration tests
+name: Asset check
 
-# Tests on a real generated level with the real meshes. Slower, so only on pull requests into main or started by hand.
+# Runs the main scene with the real Git LFS assets. Tests do not need assets (tests/fixtures), so this only checks
+# that scenes and resources load; it is slower (LFS download and import, cached), so only on pull requests into main
+# or started by hand.
 on:
   pull_request:
     branches: [main]
@@ -8,7 +10,7 @@ on:
 
 # A newer push to the same pull request cancels the run still in progress
 concurrency:
-  group: integration-tests-${{ github.ref }}
+  group: asset-check-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -19,34 +21,24 @@ env:
   GODOT_VERSION: '4.6'
 
 jobs:
-  gdunit:
-    name: gdUnit4 (integration)
+  smoke:
+    name: Main scene with assets
     runs-on: ubuntu-latest
     timeout-minutes: 110
     steps:
       - uses: actions/checkout@v5
-
       - uses: ./.github/actions/godot
         with:
-          # The tests build the real level and characters, which load their meshes and textures
           assets: 'true'
-      # Loads the autoloads and the main scene with the real assets
+      # Loads the autoloads and the main scene
       - name: Smoke run
         run: |
           "$GODOT_BIN" --headless --path . --quit-after 300 2>&1 | tee smoke.log
           if grep -E "SCRIPT ERROR|Compile Error" smoke.log; then exit 1; fi
-      - name: Run integration tests
-        run: |
-          "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/integration 2>&1 | tee tests.log
-          # Failing tests fail the pipe (bash runs with pipefail); gdUnit exits with 0 when it finds no tests at all,
-          # e.g. because a test script does not compile
-          if grep -q "No test cases found" tests.log; then exit 1; fi
-          # Scripts that fail to compile do not always fail a test
-          if grep -E "SCRIPT ERROR: (Parse|Compile) Error" tests.log; then exit 1; fi
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: integration-test-reports
+          name: asset-check-logs
           path: |
-            reports/
+            smoke.log
             import.log

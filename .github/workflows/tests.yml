@@ -1,6 +1,7 @@
-name: Unit tests
+name: Tests
 
-# Script check + unit tests on every push, without the Git LFS assets. Level-based tests live in integration_tests.yml
+# Script check, unit and integration tests on every push, without the Git LFS assets: tests use model-free fixtures
+# (tests/fixtures). Loading the real scenes and assets is asset_check.yml
 
 # Pushes cover the commits of pull requests too, so there is no separate pull_request trigger
 on:
@@ -9,7 +10,7 @@ on:
 
 # A newer push to the same branch cancels the run still in progress
 concurrency:
-  group: unit-tests-${{ github.ref }}
+  group: tests-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -21,8 +22,8 @@ env:
 
 jobs:
   # One job, so the project is imported once for both steps
-  unit:
-    name: Script check and unit tests
+  tests:
+    name: Script check and tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -30,15 +31,15 @@ jobs:
       - uses: ./.github/actions/godot
 
       # gdUnit only compiles the scripts its tests load, so check all of them on their own.
-      # tests/script_check.tscn compiles every script of ours. Running the main scene needs the assets: integration_tests.yml
+      # tests/script_check.tscn compiles every script of ours. Running the main scene needs the assets: asset_check.yml
       - name: Script check
         run: |
           "$GODOT_BIN" --headless --path . res://tests/script_check.tscn 2>&1 | tee check.log
           if grep -E "SCRIPT ERROR|Compile Error" check.log; then exit 1; fi
 
-      - name: Run unit tests
+      - name: Run tests
         run: |
-          "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/unit 2>&1 | tee tests.log
+          "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/unit -a res://tests/integration 2>&1 | tee tests.log
           # Failing tests fail the pipe (bash runs with pipefail); gdUnit exits with 0 when it finds no tests at all,
           # e.g. because a test script does not compile
           if grep -q "No test cases found" tests.log; then exit 1; fi
@@ -47,7 +48,7 @@ jobs:
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: unit-test-reports
+          name: test-reports
           path: |
             reports/
             import.log
