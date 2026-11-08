@@ -23,7 +23,7 @@ metadata/_edit_lock_ = true
 
 [node name="TurnStatus" parent="MarginContainer" unique_id=1584571151 instance=ExtResource("2_ur1vw")]
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 0
 size_flags_vertical = 8
 
 [node name="FPS" type="Label" parent="MarginContainer" unique_id=1064896010]
