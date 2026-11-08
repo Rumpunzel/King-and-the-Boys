@@ -2,7 +2,8 @@
 class_name TurnStatus
 extends PanelContainer
 ## Shows the turn number, the movement points left of the controlled [Character], the controls and who has passed.
-## Optionally passes on its own once the controlled [Character] is out of moves; undo takes such a pass back.
+## Optionally passes on its own once the controlled [Character] is out of moves and its figure arrived;
+## undo takes such a pass back.
 
 @export_group("Configuration")
 @export var _state_machine: PlayerStateMachine
@@ -56,7 +57,8 @@ func _on_controlled_character_changed(controlled_character: Character) -> void:
 
 func _on_movement_points_changed(_movement_points: int) -> void:
 	_update()
-	_auto_pass_if_out_of_moves()
+	# Deferred: on the host the points change just before the step that starts the figure moving
+	_auto_pass_if_out_of_moves.call_deferred()
 
 func _on_auto_pass_toggled(_toggled_on: bool) -> void:
 	_auto_pass_if_out_of_moves()
@@ -68,6 +70,10 @@ func _auto_pass_if_out_of_moves() -> void:
 	if not _auto_pass_toggle.button_pressed or _character.movement_points != 0: return
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	if not turn_manager or turn_manager.has_passed(multiplayer.get_unique_id()): return
+	# Pass when the figure arrived: passing ends the turn at once if everyone else passed, and moves reset
+	if _character.is_figure_moving():
+		if not _character.figure_arrived.is_connected(_auto_pass_if_out_of_moves): _character.figure_arrived.connect(_auto_pass_if_out_of_moves, CONNECT_ONE_SHOT)
+		return
 	turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, true)
 
 func _get_configuration_warnings() -> PackedStringArray:
