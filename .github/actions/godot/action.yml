@@ -1,7 +1,12 @@
 name: Set up Godot
-description: Downloads Godot, restores the import cache and imports the project, so scripts and autoloads resolve
+description: Optionally pulls Git LFS assets, downloads Godot and imports the project, so scripts, autoloads and uid:// paths resolve
 
 inputs:
+  assets:
+    description: >-
+      'true' pulls the Git LFS assets and imports them (tests that load real meshes and textures);
+      'false' leaves the asset folders out, which only needs scripts and small resources and imports in a few minutes
+    default: 'false'
   import-timeout:
     description: Time limit of the import; the first import of all assets is slow, later runs reuse the cached import
     default: 80m
@@ -9,18 +14,20 @@ inputs:
 runs:
   using: composite
   steps:
-    # Scripts preload resources that use LFS textures and meshes, so even the script check needs the real files.
-    # Download LFS objects only when they changed since the cached copy.
+    # Download LFS objects only when they changed since the cached copy
     - name: List LFS objects
+      if: inputs.assets == 'true'
       shell: bash
       run: git lfs ls-files --long | cut -d ' ' -f1 | sort > .lfs-objects
     - name: Cache LFS objects
+      if: inputs.assets == 'true'
       uses: actions/cache@v4
       with:
         path: .git/lfs
         key: lfs-${{ hashFiles('.lfs-objects') }}
         restore-keys: lfs-
     - name: Pull LFS objects
+      if: inputs.assets == 'true'
       shell: bash
       run: git lfs pull
 
@@ -50,17 +57,18 @@ runs:
       shell: bash
       run: |
         printf '\n[filesystem]\n\nimport/blender/enabled=false\n' >> project.godot
+        if [ "${{ inputs.assets }}" != "true" ]; then touch assets/.gdignore protoype_assets/.gdignore; fi
 
     # Godot reimports only what changed since the cached import, so an older cache still helps
     - name: Cache import
       uses: actions/cache@v4
       with:
         path: .godot
-        key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('**/*.import', 'project.godot') }}
-        restore-keys: import-${{ env.GODOT_VERSION }}-
+        key: import-${{ inputs.assets == 'true' && 'assets' || 'scripts' }}-${{ env.GODOT_VERSION }}-${{ hashFiles('**/*.import', 'project.godot') }}
+        restore-keys: import-${{ inputs.assets == 'true' && 'assets' || 'scripts' }}-${{ env.GODOT_VERSION }}-
 
     # A fresh checkout has no class or uid cache, so autoloads and uid:// paths do not resolve until imported once.
-    # Errors here are assets that can not be imported (e.g. .blend), so they are not checked; the caches are.
+    # Errors here are assets that can not be imported (e.g. .blend, LFS stubs), so they are not checked; the caches are.
     - name: Import
       shell: bash
       run: |

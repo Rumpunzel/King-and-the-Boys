@@ -27,6 +27,9 @@ jobs:
       - uses: actions/checkout@v5
 
       - uses: ./.github/actions/godot
+        with:
+          # The tests build the real level and characters, which load their meshes and textures
+          assets: 'true'
       - name: Run integration tests
         run: |
           "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/integration 2>&1 | tee tests.log

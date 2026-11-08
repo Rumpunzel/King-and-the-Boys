@@ -1,6 +1,6 @@
 name: Unit tests
 
-# Script check + unit tests on every push. Level-based tests live in integration_tests.yml
+# Script check + unit tests on every push, without the Git LFS assets. Level-based tests live in integration_tests.yml
 
 # Pushes cover the commits of pull requests too, so there is no separate pull_request trigger
 on:
@@ -24,7 +24,7 @@ jobs:
   unit:
     name: Script check and unit tests
     runs-on: ubuntu-latest
-    timeout-minutes: 110
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/godot

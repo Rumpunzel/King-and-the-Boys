@@ -19,6 +19,8 @@ const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2
 @export var grid_extents: Vector2i = Vector2i(13, 13)
 
 @export var _starting_tile: StructureProfile
+## Set in the scene rather than preloaded, so this script compiles without the tile's textures and meshes
+@export var _wall_tile: StructureProfile
 @export var _tile_set: DungeonTileSet
 
 @export var _reveals_per_second: float = 16.0
@@ -165,7 +167,7 @@ func _build_outer_wall() -> void:
 			if absi(y) != grid_extents.y and absi(x) != grid_extents.x: continue
 			var wall_roation: int = 1 if absi(y) == grid_extents.y else 0
 			var wall_position: Vector2i = Vector2i(x, y)
-			_spawn_at(DungeonTileSet.TileBlueprint.new(preload("uid://d3cc5nj7ogal8"), wall_roation), wall_position)
+			_spawn_at(DungeonTileSet.TileBlueprint.new(_wall_tile, wall_roation), wall_position)
 			var wall: Structure = _placed_tiles[wall_position]
 			wall.reveal()
 
@@ -422,6 +424,7 @@ func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> voi
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if not _wall_tile: warnings.append("Missing wall tile StructureProfile.")
 	if not _structure_spawner: warnings.append("Missing StructureSpawner reference.")
 	if not _thing_spawner: warnings.append("Missing ThingSpawner reference.")
 	if not _agent_spawner: warnings.append("Missing AgentSpawner reference.")

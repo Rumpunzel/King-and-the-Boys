@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dktxo1t8ahw30" path="res://engine/levels/level.gd" id="1_ywn5t"]
 [ext_resource type="Resource" uid="uid://sed2rxcgl038" path="res://data/structures/tiles/room/starting_tile.tres" id="2_c445m"]
 [ext_resource type="Resource" uid="uid://b50fre8sdxsyo" path="res://data/structures/tiles/default_tile_set.tres" id="3_c445m"]
+[ext_resource type="Resource" uid="uid://d3cc5nj7ogal8" path="res://data/structures/tiles/wall.tres" id="3_wall"]
 [ext_resource type="PackedScene" uid="uid://csyirat4yr8h2" path="res://engine/objects/structures/structure_spawner.tscn" id="4_0tvan"]
 [ext_resource type="Script" uid="uid://da4c4gcyqk2rb" path="res://engine/objects/characters/player_spawn_point.gd" id="5_0p5hx"]
 [ext_resource type="PackedScene" uid="uid://beahmsvyce16w" path="res://engine/objects/things/thing_spawner.tscn" id="5_ek2od"]
@@ -30,6 +31,7 @@ process_mode = 1
 script = ExtResource("1_ywn5t")
 grid_size = 2.5
 _starting_tile = ExtResource("2_c445m")
+_wall_tile = ExtResource("3_wall")
 _tile_set = ExtResource("3_c445m")
 _structure_spawner = NodePath("StructureSpawner")
 _thing_spawner = NodePath("ThingSpawner")
