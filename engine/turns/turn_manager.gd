@@ -33,12 +33,10 @@ var _undo_stacks: Dictionary[Character, Array] = {}
 class GridStep extends RefCounted:
 	var grid_cell: Vector2i
 	var tile_spot: Vector2
-	var facing: Level.Direction
 
 	func _init(character: Character) -> void:
 		grid_cell = character.grid_cell
 		tile_spot = character.tile_spot
-		facing = character.facing
 
 static func get_instance(tree: SceneTree) -> TurnManager:
 	return tree.get_first_node_in_group(GROUP)
@@ -104,7 +102,9 @@ func request_undo(character_path: NodePath) -> void:
 	var spot: Vector2 = previous_step.tile_spot if free_spots.has(previous_step.tile_spot) else free_spots.front()
 	undo_stack.pop_back()
 	character.movement_points += 1
-	character.place_on_grid(previous_step.grid_cell, spot, previous_step.facing)
+	# Keep facing the way the step went: the figure walks back, which shows it is an undo
+	var step_direction: Level.Direction = Level.get_direction(previous_step.grid_cell, character.grid_cell)
+	character.place_on_grid(previous_step.grid_cell, spot, step_direction)
 	_update_undo_steps(character)
 
 ## Passes or takes a pass back; the turn ends once every connected player has passed

@@ -76,6 +76,8 @@ var grid_cell: Vector2i = Vector2i.ZERO:
 		grid_cell = new_grid_cell
 		_queue_grid_visual_update()
 		if previous_grid_cell == grid_cell or not _has_grid_state: return
+		# Several steps can land in one frame; the figure walks each of them
+		_passed_cells.append(grid_cell)
 		has_stepped = true
 		exited_grid_cell.emit(previous_grid_cell)
 		entered_grid_cell.emit(grid_cell)
@@ -100,7 +102,23 @@ var undo_steps: int = 0
 var _has_grid_state: bool = false
 var _grid_visual_update_queued: bool = false
 var _grid_visuals_applied: bool = false
-var _grid_tween: Tween
+# Steps the figure still has to walk, oldest first; quick moves queue up and are walked faster
+var _figure_steps: Array[FigureStep] = []
+var _figure_tween: Tween
+var _look_tween: Tween
+# Cells entered since the figure last got its steps, oldest first
+var _passed_cells: Array[Vector2i] = []
+# The cell of the newest queued figure step
+var _figure_target_cell: Vector2i
+
+## Where the figure walks to and how it faces there
+class FigureStep extends RefCounted:
+	var position: Vector3
+	var rotation_y: float
+
+	func _init(new_position: Vector3, new_rotation_y: float) -> void:
+		position = new_position
+		rotation_y = new_rotation_y
 var _figure_grid_cell: Vector2i = Vector2i.ZERO
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -249,22 +267,80 @@ func _queue_grid_visual_update() -> void:
 func _apply_grid_visuals() -> void:
 	_grid_visual_update_queued = false
 	if not level or not is_inside_tree(): return
-	var target_position: Vector3 = level.get_spot_position(grid_cell, tile_spot)
-	var target_rotation: float = facing_to_rotation(facing)
-	if _grid_tween: _grid_tween.kill()
+	var step: FigureStep = FigureStep.new(level.get_spot_position(grid_cell, tile_spot), facing_to_rotation(facing))
+	var passed_cells: Array[Vector2i] = _passed_cells
+	_passed_cells = []
 	if not _grid_visuals_applied:
 		_grid_visuals_applied = true
-		global_position = target_position
-		rotation.y = target_rotation
+		_figure_target_cell = grid_cell
+		_figure_steps.clear()
+		if _figure_tween: _figure_tween.kill()
+		if _look_tween: _look_tween.kill()
+		global_position = step.position
+		rotation.y = step.rotation_y
 		_update_figure_grid_cell()
 		return
-	_grid_tween = create_tween()
-	_grid_tween.set_parallel()
-	var relative_rotation: float = wrapf(target_rotation - rotation.y, -PI, PI)
-	_grid_tween.tween_property(self, "rotation:y", relative_rotation, _TURN_DURATION).as_relative().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	if global_position.is_equal_approx(target_position): return
-	_grid_tween.tween_property(self, "global_position", target_position, profile.move_animation.duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
-	if model: model.play_model_animation(profile.move_animation)
+	# Cells passed on the way: through their middle, facing the way of walking
+	if not passed_cells.is_empty() and passed_cells.back() == grid_cell: passed_cells.pop_back()
+	for cell: Vector2i in passed_cells:
+		var walking_direction: Level.Direction = Level.get_direction(_figure_target_cell, cell) if (cell - _figure_target_cell).length_squared() == 1 else facing
+		_figure_steps.append(FigureStep.new(level.get_spot_position(cell, Vector2.ZERO), facing_to_rotation(walking_direction)))
+		_figure_target_cell = cell
+	_figure_steps.append(step)
+	_figure_target_cell = grid_cell
+	if not _figure_tween or not _figure_tween.is_running():
+		_walk_next_figure_step()
+		return
+	# Catch up: the step under way speeds up as more steps queue behind it
+	_figure_tween.set_speed_scale(1.0 + _figure_steps.size())
+
+## Walks the oldest queued step; the more steps wait behind it, the quicker it goes
+func _walk_next_figure_step() -> void:
+	if _figure_steps.is_empty(): return
+	var step: FigureStep = _figure_steps.pop_front()
+	var steps_behind: int = _figure_steps.size()
+	if _look_tween: _look_tween.kill()
+	var walking: bool = not global_position.is_equal_approx(step.position)
+	var animation: ModelAnimation = _get_step_animation(step, steps_behind)
+	var duration: float = animation.duration / (1.0 + steps_behind) if walking else _TURN_DURATION
+	_figure_tween = create_tween()
+	_figure_tween.set_parallel()
+	var relative_rotation: float = wrapf(step.rotation_y - rotation.y, -PI, PI)
+	_figure_tween.tween_property(self, "rotation:y", relative_rotation, minf(_TURN_DURATION, duration)).as_relative().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if walking:
+		# Chained steps flow into each other; the last one keeps the hop-in feel
+		var transition: Tween.TransitionType = Tween.TRANS_LINEAR if steps_behind > 0 else Tween.TRANS_BACK
+		_figure_tween.tween_property(self, "global_position", step.position, duration).set_trans(transition).set_ease(Tween.EASE_IN)
+		if model: model.play_model_animation(animation)
+	_figure_tween.chain().tween_callback(_on_figure_step_done.bind(walking and not _is_walking_backwards(step)))
+
+## Steps back (undo) keep facing the way the step went, so the figure walks backwards
+func _is_walking_backwards(step: FigureStep) -> bool:
+	var movement: Vector3 = step.position - global_position
+	var facing_vector: Vector3 = Vector3(sin(step.rotation_y), 0.0, cos(step.rotation_y))
+	return movement.length_squared() > 0.0 and movement.normalized().dot(facing_vector) < -0.5
+
+func _get_step_animation(step: FigureStep, steps_behind: int) -> ModelAnimation:
+	if _is_walking_backwards(step) and profile.undo_animation: return profile.undo_animation
+	if steps_behind > 0 and profile.fast_move_animation: return profile.fast_move_animation
+	return profile.move_animation
+
+func _on_figure_step_done(walked_forwards: bool) -> void:
+	if not _figure_steps.is_empty():
+		_walk_next_figure_step()
+		return
+	if walked_forwards: _look_at_thing_on_tile()
+
+## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
+func _look_at_thing_on_tile() -> void:
+	var thing: Thing = level.get_placed_thing(grid_cell)
+	if not thing or not thing.visible: return
+	var to_thing: Vector3 = thing.global_position - global_position
+	to_thing.y = 0.0
+	if to_thing.length_squared() < 0.01: return
+	var relative_rotation: float = wrapf(atan2(to_thing.x, to_thing.z) - rotation.y, -PI, PI)
+	_look_tween = create_tween()
+	_look_tween.tween_property(self, "rotation:y", relative_rotation, _TURN_DURATION).as_relative().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _apply_gravity(delta: float) -> void:
 	velocity.y -= _gravity * delta

@@ -201,6 +201,35 @@ func test_retracing_a_path_changes_nothing_and_undoes_fully() -> void:
 	for _index: int in path.size() - 1: await _undo(hero)
 	assert_vector(hero.grid_cell).is_equal(end_cell)
 
+func test_undo_keeps_facing_the_way_the_step_went() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	var start: Vector2i = await _walk_until_board_changes(hero)
+	var first_cell: Vector2i = hero.grid_cell
+	var back: Level.Direction = Level.get_direction(first_cell, start)
+	await _move(hero, back)
+	await _undo(hero)
+	assert_vector(hero.grid_cell).is_equal(first_cell)
+	# The figure walks back while still facing the way it stepped
+	assert_int(hero.facing).is_equal(back)
+
+func test_quick_steps_walk_every_cell_in_order() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	hero.movement_points = 8
+	var path: Array[Vector2i] = [hero.grid_cell]
+	var figure_cells: Array[Vector2i] = []
+	hero.figure_entered_grid_cell.connect(func(cell: Vector2i) -> void: figure_cells.append(cell))
+	# Three steps in a row, without waiting for the figure
+	for _step: int in 3:
+		var direction: int = _open_direction_towards_new_cells(hero.grid_cell, path)
+		_turn_manager.request_move(hero.get_path(), direction as Level.Direction)
+		path.append(hero.grid_cell)
+	var target: Vector3 = _level.get_spot_position(hero.grid_cell, hero.tile_spot)
+	for _guard: int in 100:
+		if hero.global_position.is_equal_approx(target): break
+		await await_millis(50)
+	assert_array(figure_cells).is_equal(path.slice(1))
+	assert_vector(hero.global_position).is_equal_approx(target, Vector3.ONE * 0.01)
+
 func test_undo_steps_follow_the_host_stack() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	var start: Vector2i = await _walk_until_board_changes(hero)

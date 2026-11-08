@@ -41,7 +41,10 @@ enum Groups {
 @export_category("Animations")
 @export var spawn_animation: ModelAnimation = preload("uid://djq27fwrmrv2")
 @export var move_animation: ModelAnimation = preload("uid://bwiaycc13h0eo")
+## Played for steps that more steps are queued behind
 @export var fast_move_animation: ModelAnimation = preload("uid://bwiaycc13h0eo")
+## Played when undo walks a step back; the move animation if empty
+@export var undo_animation: ModelAnimation
 
 @export_category("")
 @export_group("Configuration")
