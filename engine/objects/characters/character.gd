@@ -7,6 +7,7 @@ signal entered_grid_cell(cell: Vector2i)
 signal exited_grid_cell(cell: Vector2i)
 signal destination_reached
 signal movement_points_changed(movement_points: int)
+signal undo_steps_changed(undo_steps: int)
 ## Emitted on every peer when the animated figure crosses into [param cell], which lags behind [member grid_cell]
 signal figure_entered_grid_cell(cell: Vector2i)
 ## Emitted on every peer when the figure's move ended
@@ -97,7 +98,11 @@ var movement_points: int = -1:
 		movement_points = new_movement_points
 		movement_points_changed.emit(movement_points)
 ## Steps the host can still undo this turn; replicated, the steps themselves stay on the host
-var undo_steps: int = 0
+var undo_steps: int = 0:
+	set(new_undo_steps):
+		if new_undo_steps == undo_steps: return
+		undo_steps = new_undo_steps
+		undo_steps_changed.emit(undo_steps)
 
 var _has_grid_state: bool = false
 var _grid_visual_update_queued: bool = false

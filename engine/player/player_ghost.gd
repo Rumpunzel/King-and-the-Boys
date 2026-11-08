@@ -30,7 +30,8 @@ const _INACTIVE_CAMERA_PRIORITY: int = 0
 @export var _camera: Camera3D
 
 ## Passes for the player once the controlled character is out of moves and its figure arrived;
-## undo takes such a pass back. Only acts on the local player's peer.
+## undo takes such a pass back. Without moves and without a step to undo, the player passes either way.
+## Only acts on the local player's peer.
 var auto_pass: bool = true:
 	set(new_auto_pass):
 		auto_pass = new_auto_pass
@@ -38,9 +39,12 @@ var auto_pass: bool = true:
 
 var _controlled_character: Character:
 	set(new_controlled_character):
-		if is_instance_valid(_controlled_character): _controlled_character.movement_points_changed.disconnect(_on_movement_points_changed)
+		if is_instance_valid(_controlled_character):
+			_controlled_character.movement_points_changed.disconnect(_on_turn_state_changed)
+			_controlled_character.undo_steps_changed.disconnect(_on_turn_state_changed)
 		_controlled_character = new_controlled_character
-		_controlled_character.movement_points_changed.connect(_on_movement_points_changed)
+		_controlled_character.movement_points_changed.connect(_on_turn_state_changed)
+		_controlled_character.undo_steps_changed.connect(_on_turn_state_changed)
 		_auto_pass_if_out_of_moves()
 
 func _ready() -> void:
@@ -99,11 +103,38 @@ func get_default_camera_priority() -> int:
 func get_controlled_character() -> Character:
 	return _state_machine.get_controlled_character()
 
-func _auto_pass_if_out_of_moves() -> void:
-	if not auto_pass or not is_node_ready() or not is_multiplayer_authority(): return
-	if not is_instance_valid(_controlled_character) or _controlled_character.movement_points != 0: return
+## Takes back the controlled character's last step; a pass is taken back first
+func request_undo() -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
-	if not turn_manager or turn_manager.has_passed(multiplayer.get_unique_id()): return
+	if not turn_manager or not can_undo(): return
+	if has_passed(): turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, false)
+	turn_manager.request_undo.rpc_id(Multiplayer.HOST_ID, get_controlled_character().get_path())
+
+## Passes, or takes a pass back while that is still possible
+func request_pass(passed: bool) -> void:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	if not turn_manager or passed == has_passed(): return
+	if not passed and must_pass(): return
+	turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, passed)
+
+func has_passed() -> bool:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	return turn_manager != null and turn_manager.has_passed(player.player_id)
+
+func can_undo() -> bool:
+	return get_controlled_character().undo_steps > 0
+
+## @returns [code]true[/code] if the controlled character has nothing left to do: no moves, no step to undo
+func must_pass() -> bool:
+	var controlled_character: Character = get_controlled_character()
+	return controlled_character.movement_points == 0 and controlled_character.undo_steps == 0
+
+func _auto_pass_if_out_of_moves() -> void:
+	if not is_node_ready() or not is_multiplayer_authority(): return
+	if not is_instance_valid(_controlled_character) or _controlled_character.movement_points != 0: return
+	if not auto_pass and not must_pass(): return
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	if not turn_manager or has_passed(): return
 	# Pass when the figure arrived: passing ends the turn at once if everyone else passed, and moves reset
 	if _controlled_character.is_figure_moving():
 		if not _controlled_character.figure_arrived.is_connected(_auto_pass_if_out_of_moves): _controlled_character.figure_arrived.connect(_auto_pass_if_out_of_moves, CONNECT_ONE_SHOT)
@@ -114,7 +145,7 @@ func _on_controlled_character_changed(controlled_character: Character) -> void:
 	_controlled_character = controlled_character
 	controlled_character_changed.emit(controlled_character)
 
-func _on_movement_points_changed(_movement_points: int) -> void:
+func _on_turn_state_changed(_value: int) -> void:
 	# Deferred: on the host the points change just before the step that starts the figure moving
 	_auto_pass_if_out_of_moves.call_deferred()
 
