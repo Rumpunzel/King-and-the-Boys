@@ -8,8 +8,9 @@ signal text_changed(new_text: String)
 
 @export_category("Toast")
 @export var type: Toaster.Type = Toaster.Type.INFO
+@export var horizontal_position: Toaster.HorizontalPosition = Toaster.HorizontalPosition.CENTER
+@export var vertical_position: Toaster.VerticalPosition = Toaster.VerticalPosition.TOP
 @export var gravity: Toaster.Gravity = Toaster.Gravity.TOP
-@export var direction: Toaster.Direction = Toaster.Direction.CENTER
 @export var text_size: int = 18
 @export var custom_toast_font: bool = false
 
@@ -22,7 +23,7 @@ func _on_pressed() -> void:
 	if message.is_empty():
 		printerr("No message, not showing ClipboardButton toast!")
 		return
-	Toaster.show_toast(message, type, gravity, direction, text_size, custom_toast_font)
+	Toaster.show_toast(message, type, horizontal_position, vertical_position, gravity, text_size, custom_toast_font)
 
 func _set(property: StringName, value: Variant) -> bool:
 	match property:
