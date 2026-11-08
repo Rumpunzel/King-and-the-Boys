@@ -9,6 +9,8 @@ signal destination_reached
 signal movement_points_changed(movement_points: int)
 ## Emitted on every peer when the animated figure crosses into [param cell], which lags behind [member grid_cell]
 signal figure_entered_grid_cell(cell: Vector2i)
+## Emitted on every peer when the figure's move ended
+signal figure_arrived
 
 signal profile_changed
 
@@ -272,6 +274,10 @@ func _apply_grid_visuals() -> void:
 func _is_moving() -> bool:
 	return _move_tween != null and _move_tween.is_running()
 
+## @returns [code]true[/code] until the figure arrived where the grid state says, see [signal figure_arrived]
+func is_figure_moving() -> bool:
+	return _grid_visual_update_queued or _is_moving()
+
 func _turn_to(target_rotation: float) -> void:
 	if _turn_tween: _turn_tween.kill()
 	var relative_rotation: float = wrapf(target_rotation - rotation.y, -PI, PI)
@@ -285,27 +291,30 @@ func _start_move(target_position: Vector3, target_rotation: float) -> void:
 	_move_backwards = (target_position - global_position).normalized().dot(facing_vector) < -0.5
 	var animation: ModelAnimation = profile.undo_animation if _move_backwards and profile.undo_animation else profile.move_animation
 	# From standing: the hop-in feel, a little back, then forward into the tile
-	_run_move(target_position, animation, Tween.TRANS_BACK, Tween.EASE_IN)
+	_run_move(target_position, animation, Tween.TRANS_BACK, Tween.EASE_IN, false)
 
 ## Redirects the move under way to [param target_position], from where the figure is: at most one step's time
 ## is left after any step, so quick steps take hardly longer than one, and corners may be cut
 func _extend_move(target_position: Vector3) -> void:
 	_move_backwards = false
-	_run_move(target_position, profile.move_animation, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+	_run_move(target_position, profile.move_animation, Tween.TRANS_SINE, Tween.EASE_IN_OUT, true)
 
-func _run_move(target_position: Vector3, animation: ModelAnimation, transition: Tween.TransitionType, easing: Tween.EaseType) -> void:
+func _run_move(target_position: Vector3, animation: ModelAnimation, transition: Tween.TransitionType, easing: Tween.EaseType, continuing: bool) -> void:
 	_move_target = target_position
 	if _move_tween: _move_tween.kill()
 	_move_tween = create_tween()
 	_move_tween.tween_property(self, "global_position", target_position, animation.duration).set_trans(transition).set_ease(easing)
 	_move_tween.tween_callback(_on_move_finished)
-	# The hop starts over too; its tweens start from where the model is, so a figure in the air stays up and lands with the move
+	# A redirected move continues the hop: it stays up and lands with the move, without a new lean back
 	if not model: return
 	if _model_tween: _model_tween.kill()
-	_model_tween = model.play_model_animation(animation)
+	_model_tween = model.continue_model_animation(animation) if continuing else model.play_model_animation(animation)
 
 func _on_move_finished() -> void:
+	# The tween still counts as running during its own callback; listeners must see the figure arrived
+	_move_tween = null
 	if not _move_backwards: _look_at_thing_on_tile()
+	figure_arrived.emit()
 
 ## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
 func _look_at_thing_on_tile() -> void:

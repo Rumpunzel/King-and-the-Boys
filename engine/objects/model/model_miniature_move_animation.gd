@@ -2,19 +2,33 @@ class_name ModelMiniatureMoveAnimation
 extends ModelAnimation
 
 @export var _move_height: float = 1.25
-@export var _tilt: float = -0.3
+## Leaning back before the jump; only when a move starts, not when a quick further step redirects it
+@export var _anticipation_tilt: float = -0.45
+## Share of the duration the leaning back takes
+@export_range(0.05, 0.5) var _anticipation_share: float = 0.2
 @export var _side_tilt: float = 0.5
 
 func animate(model: Model) -> Tween:
+	return _animate(model, true)
+
+## Keeps the figure in the air and lands it again, without a new lean back or side tilt
+func continue_animation(model: Model) -> Tween:
+	return _animate(model, false)
+
+func _animate(model: Model, from_standing: bool) -> Tween:
 	var tween: Tween = model.create_tween()
 	tween.set_parallel()
+	# Height: tweens start from the current value, so a figure in the air stays up
 	tween.tween_property(model, "position:y", _move_height, duration * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.tween_property(model, "position:y", 0.0, duration * 0.5).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT).set_delay(duration * 0.8)
-	tween.tween_property(model, "rotation:x", _tilt, duration * 0.75).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
+	# Lean back first (anticipation), then swing upright on landing
+	if from_standing: tween.tween_property(model, "rotation:x", _anticipation_tilt, duration * _anticipation_share).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(model, "rotation:x", 0.0, duration * 0.75).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT).set_delay(duration * 0.9)
-	var random_side_tilt: float = randf_range(-_side_tilt, _side_tilt) ** 2.0
-	tween.tween_property(model, "position:x", random_side_tilt, duration * 0.75).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	# A random sway to the side, settled before landing
+	if from_standing:
+		var random_side_tilt: float = randf_range(-_side_tilt, _side_tilt) ** 2.0
+		tween.tween_property(model, "position:x", random_side_tilt, duration * 0.75).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(model, "rotation:z", random_side_tilt * 0.5, duration * 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(model, "position:x", 0.0, duration * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_delay(duration * 0.75)
-	tween.tween_property(model, "rotation:z", random_side_tilt * 0.5, duration * 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(model, "rotation:z", 0.0, duration * 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_delay(duration * 0.5)
 	return tween

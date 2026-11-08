@@ -29,6 +29,10 @@ func play_model_animation(model_animation: ModelAnimation) -> Tween:
 	assert(model_animation)
 	return model_animation.animate(self)
 
+func continue_model_animation(model_animation: ModelAnimation) -> Tween:
+	assert(model_animation)
+	return model_animation.continue_animation(self)
+
 func apply_material_override(material: Material) -> void:
 	assert(material)
 	for mesh: MeshInstance3D in gather_all_geometry_instances_on(self):
