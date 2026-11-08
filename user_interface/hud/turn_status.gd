@@ -1,38 +1,39 @@
 @tool
 class_name TurnStatus
 extends PanelContainer
-## Shows the turn number, the movement points left of the controlled [Character], the controls and who has passed.
-## Optionally passes on its own once the controlled [Character] is out of moves and its figure arrived;
-## undo takes such a pass back.
+## Shows the turn number, the moves left of the character the local player controls, the controls and who has passed.
+## The auto-pass toggle switches [member PlayerGhost.auto_pass] of the local player.
 
 @export_group("Configuration")
-@export var _state_machine: PlayerStateMachine
+@export var _player_ghost_spawner: PlayerGhostSpawner
 @export var _label: Label
 @export var _auto_pass_toggle: CheckBox
 
+var _player_ghost: PlayerGhost
+
 var _character: Character:
 	set(new_character):
-		if _character:
-			_character.movement_points_changed.disconnect(_on_movement_points_changed)
+		if is_instance_valid(_character): _character.movement_points_changed.disconnect(_on_movement_points_changed)
 		_character = new_character
 		_character.movement_points_changed.connect(_on_movement_points_changed)
 		_update()
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	# Shown once the local player's ghost exists
+	hide()
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	assert(turn_manager)
 	turn_manager.turn_started.connect(_update.unbind(1))
 	turn_manager.passed_players_changed.connect(_update)
 	Lobby.player_connected.connect(_update.unbind(1))
 	Lobby.player_disconnected.connect(_update.unbind(1))
-	_state_machine.controlled_character_changed.connect(_on_controlled_character_changed)
+	_player_ghost_spawner.player_ghost_created.connect(_on_player_ghost_created)
 	_auto_pass_toggle.toggled.connect(_on_auto_pass_toggled)
-	_character = _state_machine.get_controlled_character()
 
 func _update() -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
-	if not turn_manager or not _character: return
+	if not turn_manager or not is_instance_valid(_character): return
 	var lines: PackedStringArray = [
 		"Turn %d" % turn_manager.turn_number,
 		"Moves left: %d / %d" % [maxi(_character.movement_points, 0), _character.profile.speed],
@@ -51,34 +52,26 @@ static func _get_action_key(action: StringName) -> String:
 	if not key_event: return event.as_text()
 	return OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(key_event.physical_keycode))
 
+func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
+	if not player_ghost.player.is_local_player(): return
+	_player_ghost = player_ghost
+	_player_ghost.controlled_character_changed.connect(_on_controlled_character_changed)
+	_player_ghost.auto_pass = _auto_pass_toggle.button_pressed
+	_character = _player_ghost.get_controlled_character()
+	show()
+
 func _on_controlled_character_changed(controlled_character: Character) -> void:
 	_character = controlled_character
-	_auto_pass_if_out_of_moves()
 
 func _on_movement_points_changed(_movement_points: int) -> void:
 	_update()
-	# Deferred: on the host the points change just before the step that starts the figure moving
-	_auto_pass_if_out_of_moves.call_deferred()
 
-func _on_auto_pass_toggled(_toggled_on: bool) -> void:
-	_auto_pass_if_out_of_moves()
-
-func _auto_pass_if_out_of_moves() -> void:
-	# Every ghost carries a HUD; only the local player's one may pass for them
-	if not _state_machine.player_ghost.is_multiplayer_authority(): return
-	# Undo still works after this: it takes the pass back first (PlayerState.handle_turn_input)
-	if not _auto_pass_toggle.button_pressed or _character.movement_points != 0: return
-	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
-	if not turn_manager or turn_manager.has_passed(multiplayer.get_unique_id()): return
-	# Pass when the figure arrived: passing ends the turn at once if everyone else passed, and moves reset
-	if _character.is_figure_moving():
-		if not _character.figure_arrived.is_connected(_auto_pass_if_out_of_moves): _character.figure_arrived.connect(_auto_pass_if_out_of_moves, CONNECT_ONE_SHOT)
-		return
-	turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, true)
+func _on_auto_pass_toggled(toggled_on: bool) -> void:
+	if is_instance_valid(_player_ghost): _player_ghost.auto_pass = toggled_on
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _state_machine: warnings.append("Missing PlayerStateMachine reference.")
+	if not _player_ghost_spawner: warnings.append("Missing PlayerGhostSpawner reference.")
 	if not _label: warnings.append("Missing Label reference.")
 	if not _auto_pass_toggle: warnings.append("Missing auto pass CheckBox reference.")
 	return warnings

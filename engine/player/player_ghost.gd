@@ -3,6 +3,9 @@
 class_name PlayerGhost
 extends Node
 
+## Emitted on the local player's peer when the character they move changes, e.g. when haunting one
+signal controlled_character_changed(controlled_character: Character)
+
 const PLAYER_ID: StringName = "player_id"
 const CHARACTER_DATA: StringName = "character_data"
 
@@ -26,10 +29,26 @@ const _INACTIVE_CAMERA_PRIORITY: int = 0
 @export var _state_machine: PlayerStateMachine
 @export var _camera: Camera3D
 
+## Passes for the player once the controlled character is out of moves and its figure arrived;
+## undo takes such a pass back. Only acts on the local player's peer.
+var auto_pass: bool = true:
+	set(new_auto_pass):
+		auto_pass = new_auto_pass
+		_auto_pass_if_out_of_moves()
+
+var _controlled_character: Character:
+	set(new_controlled_character):
+		if is_instance_valid(_controlled_character): _controlled_character.movement_points_changed.disconnect(_on_movement_points_changed)
+		_controlled_character = new_controlled_character
+		_controlled_character.movement_points_changed.connect(_on_movement_points_changed)
+		_auto_pass_if_out_of_moves()
+
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	if not is_multiplayer_authority(): return
+	_state_machine.controlled_character_changed.connect(_on_controlled_character_changed)
 	_state_machine.start()
+	_controlled_character = get_controlled_character()
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
@@ -75,6 +94,29 @@ func get_active_camera_priority() -> int:
 
 func get_default_camera_priority() -> int:
 	return _DEFAULT_CAMERA_PRIORITY if player.is_local_player() else _INACTIVE_CAMERA_PRIORITY
+
+## @returns the [Character] the player currently moves
+func get_controlled_character() -> Character:
+	return _state_machine.get_controlled_character()
+
+func _auto_pass_if_out_of_moves() -> void:
+	if not auto_pass or not is_node_ready() or not is_multiplayer_authority(): return
+	if not is_instance_valid(_controlled_character) or _controlled_character.movement_points != 0: return
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	if not turn_manager or turn_manager.has_passed(multiplayer.get_unique_id()): return
+	# Pass when the figure arrived: passing ends the turn at once if everyone else passed, and moves reset
+	if _controlled_character.is_figure_moving():
+		if not _controlled_character.figure_arrived.is_connected(_auto_pass_if_out_of_moves): _controlled_character.figure_arrived.connect(_auto_pass_if_out_of_moves, CONNECT_ONE_SHOT)
+		return
+	turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, true)
+
+func _on_controlled_character_changed(controlled_character: Character) -> void:
+	_controlled_character = controlled_character
+	controlled_character_changed.emit(controlled_character)
+
+func _on_movement_points_changed(_movement_points: int) -> void:
+	# Deferred: on the host the points change just before the step that starts the figure moving
+	_auto_pass_if_out_of_moves.call_deferred()
 
 func _on_player_info_changed() -> void:
 	pass#character.variation = player.ghost_sprite_frame
