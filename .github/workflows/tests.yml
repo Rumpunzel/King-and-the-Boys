@@ -30,12 +30,11 @@ jobs:
       - uses: ./.github/actions/godot
 
       # gdUnit only compiles the scripts its tests load, so check all of them on their own.
-      # tests/script_check.tscn compiles every script of ours; the smoke run loads the autoloads and the main scene.
-      - name: Script and smoke check
+      # tests/script_check.tscn compiles every script of ours. Running the main scene needs the assets: integration_tests.yml
+      - name: Script check
         run: |
           "$GODOT_BIN" --headless --path . res://tests/script_check.tscn 2>&1 | tee check.log
-          "$GODOT_BIN" --headless --path . --quit-after 300 2>&1 | tee smoke.log
-          if grep -E "SCRIPT ERROR|Compile Error" check.log smoke.log; then exit 1; fi
+          if grep -E "SCRIPT ERROR|Compile Error" check.log; then exit 1; fi
 
       - name: Run unit tests
         run: |

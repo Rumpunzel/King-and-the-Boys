@@ -30,6 +30,11 @@ jobs:
         with:
           # The tests build the real level and characters, which load their meshes and textures
           assets: 'true'
+      # Loads the autoloads and the main scene with the real assets
+      - name: Smoke run
+        run: |
+          "$GODOT_BIN" --headless --path . --quit-after 300 2>&1 | tee smoke.log
+          if grep -E "SCRIPT ERROR|Compile Error" smoke.log; then exit 1; fi
       - name: Run integration tests
         run: |
           "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/integration 2>&1 | tee tests.log
