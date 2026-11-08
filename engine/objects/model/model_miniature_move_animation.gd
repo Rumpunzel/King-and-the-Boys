@@ -5,7 +5,7 @@ extends ModelAnimation
 @export var _tilt: float = -0.3
 @export var _side_tilt: float = 0.5
 
-func animate(model: Model) -> void:
+func animate(model: Model) -> Tween:
 	var tween: Tween = model.create_tween()
 	tween.set_parallel()
 	tween.tween_property(model, "position:y", _move_height, duration * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
@@ -17,3 +17,4 @@ func animate(model: Model) -> void:
 	tween.tween_property(model, "position:x", 0.0, duration * 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_delay(duration * 0.75)
 	tween.tween_property(model, "rotation:z", random_side_tilt * 0.5, duration * 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(model, "rotation:z", 0.0, duration * 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_delay(duration * 0.5)
+	return tween

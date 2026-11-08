@@ -212,23 +212,25 @@ func test_undo_keeps_facing_the_way_the_step_went() -> void:
 	# The figure walks back while still facing the way it stepped
 	assert_int(hero.facing).is_equal(back)
 
-func test_quick_steps_walk_every_cell_in_order() -> void:
+func test_quick_steps_stretch_one_move() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	hero.movement_points = 8
 	var path: Array[Vector2i] = [hero.grid_cell]
-	var figure_cells: Array[Vector2i] = []
-	hero.figure_entered_grid_cell.connect(func(cell: Vector2i) -> void: figure_cells.append(cell))
-	# Three steps in a row, without waiting for the figure
-	for _step: int in 3:
+	var step_duration: float = _hero_profile.move_animation.duration
+	# Three steps right after each other: one move, stretched by half a step for each further step
+	for step: int in 3:
 		var direction: int = _open_direction_towards_new_cells(hero.grid_cell, path)
 		_turn_manager.request_move(hero.get_path(), direction as Level.Direction)
 		path.append(hero.grid_cell)
+		await await_millis(int(step_duration * 1000.0 * 0.2))
 	var target: Vector3 = _level.get_spot_position(hero.grid_cell, hero.tile_spot)
-	for _guard: int in 100:
-		if hero.global_position.is_equal_approx(target): break
+	var waited: float = step_duration * 0.4
+	while not hero.global_position.is_equal_approx(target) and waited < step_duration * 4.0:
 		await await_millis(50)
-	assert_array(figure_cells).is_equal(path.slice(1))
+		waited += 0.05
 	assert_vector(hero.global_position).is_equal_approx(target, Vector3.ONE * 0.01)
+	# One after another, the steps would end 3 step durations after the first; the stretched move ends after about 2
+	assert_float(waited + step_duration * 0.4).is_less(step_duration * 2.5)
 
 func test_undo_steps_follow_the_host_stack() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())

@@ -25,9 +25,9 @@ func play_animation(normalized_velocity: Vector3, _is_on_floor: bool) -> void:
 	else:
 		_state_machine.travel("Idle")
 
-func play_model_animation(model_animation: ModelAnimation) -> void:
+func play_model_animation(model_animation: ModelAnimation) -> Tween:
 	assert(model_animation)
-	model_animation.animate(self)
+	return model_animation.animate(self)
 
 func apply_material_override(material: Material) -> void:
 	assert(material)
