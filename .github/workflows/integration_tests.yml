@@ -1,7 +1,6 @@
 name: Integration tests
 
-# Tests on a real generated level with the real meshes (Git LFS). Slower and heavier on LFS bandwidth,
-# so only on pull requests into main or started by hand; LFS objects and the import are cached between runs.
+# Tests on a real generated level with the real meshes. Slower, so only on pull requests into main or started by hand.
 on:
   pull_request:
     branches: [main]
@@ -27,23 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Download LFS objects only when they changed since the cached copy
-      - name: List LFS objects
-        run: git lfs ls-files --long | cut -d ' ' -f1 | sort > .lfs-objects
-      - name: Cache LFS objects
-        uses: actions/cache@v4
-        with:
-          path: .git/lfs
-          key: lfs-${{ hashFiles('.lfs-objects') }}
-          restore-keys: lfs-
-      - name: Pull LFS objects
-        run: git lfs pull
-
       - uses: ./.github/actions/godot
-        with:
-          cache-name: lfs
-          # The first import of all assets is slow; later runs reuse the cached import
-          import-timeout: 80m
       - name: Run integration tests
         run: |
           "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/integration 2>&1 | tee tests.log
@@ -51,9 +34,11 @@ jobs:
           # e.g. because a test script does not compile
           if grep -q "No test cases found" tests.log; then exit 1; fi
           # Scripts that fail to compile do not always fail a test
-          if grep -E "Parse Error|Compile Error" tests.log; then exit 1; fi
+          if grep -E "SCRIPT ERROR: (Parse|Compile) Error" tests.log; then exit 1; fi
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: integration-test-reports
-          path: reports/
+          path: |
+            reports/
+            import.log

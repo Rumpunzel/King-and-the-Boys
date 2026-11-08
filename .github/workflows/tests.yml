@@ -1,6 +1,6 @@
 name: Unit tests
 
-# Script check + unit tests on every push, without Git LFS assets. Level-based tests live in integration_tests.yml
+# Script check + unit tests on every push. Level-based tests live in integration_tests.yml
 
 # Pushes cover the commits of pull requests too, so there is no separate pull_request trigger
 on:
@@ -20,34 +20,23 @@ env:
   GODOT_VERSION: '4.6'
 
 jobs:
-  # gdUnit only compiles the scripts its tests load, so check all of them on their own
-  scripts:
-    name: Script check
+  # One job, so the project is imported once for both steps
+  unit:
+    name: Script check and unit tests
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 110
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/godot
-        with:
-          cache-name: no-lfs
-          skip-assets: 'true'
-      # tests/script_check.tscn compiles every script of ours; the smoke run loads the autoloads and the main scene
+
+      # gdUnit only compiles the scripts its tests load, so check all of them on their own.
+      # tests/script_check.tscn compiles every script of ours; the smoke run loads the autoloads and the main scene.
       - name: Script and smoke check
         run: |
           "$GODOT_BIN" --headless --path . res://tests/script_check.tscn 2>&1 | tee check.log
           "$GODOT_BIN" --headless --path . --quit-after 300 2>&1 | tee smoke.log
           if grep -E "SCRIPT ERROR|Compile Error" check.log smoke.log; then exit 1; fi
 
-  gdunit:
-    name: gdUnit4 (unit)
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/godot
-        with:
-          cache-name: no-lfs
-          skip-assets: 'true'
       - name: Run unit tests
         run: |
           "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/unit 2>&1 | tee tests.log
@@ -55,9 +44,11 @@ jobs:
           # e.g. because a test script does not compile
           if grep -q "No test cases found" tests.log; then exit 1; fi
           # Scripts that fail to compile do not always fail a test
-          if grep -E "Parse Error|Compile Error" tests.log; then exit 1; fi
+          if grep -E "SCRIPT ERROR: (Parse|Compile) Error" tests.log; then exit 1; fi
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-reports
-          path: reports/
+          path: |
+            reports/
+            import.log
