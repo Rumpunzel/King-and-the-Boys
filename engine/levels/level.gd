@@ -47,15 +47,18 @@ var _remaining_tile_discover_delay: float = 0.0
 var _board_change_count: int = 0
 
 func _process(delta: float) -> void:
+	if _reveal_queue.is_empty() and _discover_queue.is_empty(): return
 	# Tiles wait until the figures cross into their new cells, see _on_figure_entered_grid_cell
-	if _is_any_figure_behind(): return
+	var characters: Array[Node] = get_tree().get_nodes_in_group(Character.GROUP)
+	if _is_any_figure_behind(characters): return
 	# Reveal one tile at a time
 	_remaining_tile_reveal_delay = maxf(_remaining_tile_reveal_delay - delta, 0.0)
 	if _remaining_tile_reveal_delay <= 0.0:
 		var tile_to_reveal: Structure = null
 		while not _reveal_queue.is_empty() and not tile_to_reveal:
 			tile_to_reveal = _reveal_queue.pop_front()
-			if tile_to_reveal.shown_status >= Structure.Status.REVEALED: tile_to_reveal = null
+			# Loading a game frees the tiles still queued
+			if not is_instance_valid(tile_to_reveal) or tile_to_reveal.shown_status >= Structure.Status.REVEALED: tile_to_reveal = null
 		if tile_to_reveal:
 			tile_to_reveal.shown_status = Structure.Status.REVEALED
 			_remaining_tile_reveal_delay += 1.0 / _reveals_per_second
@@ -63,10 +66,10 @@ func _process(delta: float) -> void:
 	# Then discover ring by ring, nearest to the characters first
 	_remaining_tile_discover_delay = maxf(_remaining_tile_discover_delay - delta, 0.0)
 	if _remaining_tile_discover_delay > 0.0: return
-	_discover_queue = _discover_queue.filter(func(tile: Structure) -> bool: return tile.shown_status < Structure.Status.DISCOVERED)
+	_discover_queue = _discover_queue.filter(func(tile: Structure) -> bool: return is_instance_valid(tile) and tile.shown_status < Structure.Status.DISCOVERED)
 	if _discover_queue.is_empty(): return
 	var distances: Dictionary[Structure, int] = {}
-	for tile: Structure in _discover_queue: distances[tile] = _get_distance_to_nearest_character(tile.get_grid_position())
+	for tile: Structure in _discover_queue: distances[tile] = _get_distance_to_nearest_character(tile.get_grid_position(), characters)
 	var nearest_distance: int = distances.values().min()
 	for tile: Structure in distances:
 		if distances[tile] != nearest_distance: continue
@@ -292,14 +295,15 @@ func _has_any_character_stepped() -> bool:
 		if character.has_stepped: return true
 	return false
 
-func _is_any_figure_behind() -> bool:
-	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if character.visible and character.get_figure_grid_cell() != character.grid_cell: return true
+func _is_any_figure_behind(characters: Array[Node]) -> bool:
+	for character: Character in characters:
+		# Characters on no level have no figure to wait for
+		if character.visible and character.level and character.get_figure_grid_cell() != character.grid_cell: return true
 	return false
 
-func _get_distance_to_nearest_character(grid_position: Vector2i) -> int:
+func _get_distance_to_nearest_character(grid_position: Vector2i, characters: Array[Node]) -> int:
 	var distances: Array[int] = []
-	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+	for character: Character in characters:
 		if not character.visible: continue
 		distances.append(absi(character.grid_cell.x - grid_position.x) + absi(character.grid_cell.y - grid_position.y))
 	return distances.min() if not distances.is_empty() else 0
@@ -382,14 +386,17 @@ func _on_thing_created(thing: Thing) -> void:
 	_placed_things[thing_grid_position] = thing
 
 func _on_agent_created(agent: Agent) -> void:
-	pass # Replace with function body.
+	_register_character(agent.character)
 
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	var character: Character = player_ghost.character
-	character.level = self
-	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
+	_register_character(character)
 	if not multiplayer.is_server(): return
 	character.entered_grid_cell.connect(_on_player_moved.bind(character))
+
+func _register_character(character: Character) -> void:
+	character.level = self
+	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
 
 func _on_player_moved(character_grid_position: Vector2i, character: Character) -> void:
 	var entered_tile: Structure = _placed_tiles[character_grid_position]
