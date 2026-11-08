@@ -21,7 +21,6 @@ env:
   GODOT_VERSION: '4.6'
 
 jobs:
-  # One job, so the project is imported once for both steps
   tests:
     name: Script check and tests
     runs-on: ubuntu-latest
@@ -37,14 +36,11 @@ jobs:
           "$GODOT_BIN" --headless --path . res://tests/script_check.tscn 2>&1 | tee check.log
           if grep -E "SCRIPT ERROR|Compile Error" check.log; then exit 1; fi
 
-      - name: Run tests
-        run: |
-          "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/unit -a res://tests/integration 2>&1 | tee tests.log
-          # Failing tests fail the pipe (bash runs with pipefail); gdUnit exits with 0 when it finds no tests at all,
-          # e.g. because a test script does not compile
-          if grep -q "No test cases found" tests.log; then exit 1; fi
-          # Scripts that fail to compile do not always fail a test
-          if grep -E "SCRIPT ERROR: (Parse|Compile) Error" tests.log; then exit 1; fi
+      # Separate steps, so a failure shows which suite it was; one job, so the project is imported once
+      - name: Unit tests
+        run: ./.github/scripts/run_tests.sh res://tests/unit
+      - name: Integration tests
+        run: ./.github/scripts/run_tests.sh res://tests/integration
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
