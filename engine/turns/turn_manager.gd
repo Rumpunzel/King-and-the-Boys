@@ -140,7 +140,8 @@ func _start_next_turn() -> void:
 	turn_number += 1
 
 func _update_undo_steps(character: Character) -> void:
-	character.undo_steps = (_undo_stacks.get(character, []) as Array).size()
+	var undo_stack: Array = _undo_stacks.get(character, [])
+	character.undo_steps = undo_stack.size()
 
 func _get_sender_id() -> int:
 	var sender_id: int = multiplayer.get_remote_sender_id()
