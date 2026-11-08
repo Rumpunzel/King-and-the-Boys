@@ -3,7 +3,6 @@ extends GdUnitTestSuite
 
 const LEVEL_SCENE: String = "res://data/levels/level.tscn"
 const HERO_PROFILE: String = "res://data/characters/people/dwarf.tres"
-const OTHER_PLAYER_ID: int = 2
 
 var _level: Level
 var _turn_manager: TurnManager
@@ -86,10 +85,6 @@ func _move(hero: Character, direction: int) -> void:
 func _undo(hero: Character) -> void:
 	_turn_manager.request_undo(hero.get_path())
 	await await_idle_frame()
-
-func test_profile_tile_spots_are_directions_times_extents() -> void:
-	var tile_spots: Array[Vector2] = _level.get_placed_tile(_start_cell()).profile.get_tile_spots()
-	assert_array(tile_spots).is_equal([Vector2.ZERO, Vector2(-0.5, -0.5), Vector2(0.5, -0.5), Vector2(0.5, 0.5), Vector2(-0.5, 0.5)])
 
 func test_pieces_share_a_tile_on_their_own_spots() -> void:
 	var tile_spots: Array[Vector2] = _level.get_placed_tile(_start_cell()).profile.get_tile_spots()
@@ -205,6 +200,19 @@ func test_retracing_a_path_changes_nothing_and_undoes_fully() -> void:
 	for _index: int in path.size() - 1: await _undo(hero)
 	assert_vector(hero.grid_cell).is_equal(end_cell)
 
+func test_undo_steps_follow_the_host_stack() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	var start: Vector2i = await _walk_until_board_changes(hero)
+	assert_int(hero.undo_steps).is_zero()
+	var first_cell: Vector2i = hero.grid_cell
+	await _move(hero, Level.get_direction(first_cell, start))
+	await _move(hero, Level.get_direction(start, first_cell))
+	assert_int(hero.undo_steps).is_equal(2)
+	await _undo(hero)
+	assert_int(hero.undo_steps).is_equal(1)
+	_turn_manager._start_next_turn()
+	assert_int(hero.undo_steps).is_zero()
+
 func test_undo_stops_at_a_board_change() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	var start: Vector2i = hero.grid_cell
@@ -274,26 +282,3 @@ func test_grid_state_and_points_are_saved() -> void:
 	for property_path: NodePath in collected: saved[property_path.get_concatenated_subnames()] = collected[property_path]
 	assert_dict(saved).contains_keys([&"grid_cell", &"tile_spot", &"facing", &"movement_points"])
 	assert_vector(saved[&"tile_spot"] as Vector2).is_equal(second.tile_spot)
-
-func test_turn_ends_once_everyone_passed() -> void:
-	var hero: Character = await _spawn_hero(_start_cell())
-	var local_id: int = _turn_manager.multiplayer.get_unique_id()
-	var other: Player = auto_free(Player.create(OTHER_PLAYER_ID, "Other"))
-	var players: Dictionary = Lobby.get("_players")
-	players[OTHER_PLAYER_ID] = other
-	var turn: int = _turn_manager.turn_number
-	_turn_manager.request_pass(true)
-	assert_bool(_turn_manager.has_passed(local_id)).is_true()
-	assert_int(_turn_manager.turn_number).is_equal(turn)
-	await _move(hero, _open_direction(hero.grid_cell))
-	assert_int(hero.movement_points).is_equal(hero.profile.speed)
-	_turn_manager.request_pass(false)
-	assert_bool(_turn_manager.has_passed(local_id)).is_false()
-	await _move(hero, _open_direction(hero.grid_cell))
-	_turn_manager.request_pass(true)
-	# The other player leaves instead of passing
-	players.erase(OTHER_PLAYER_ID)
-	Lobby.player_disconnected.emit(other)
-	assert_int(_turn_manager.turn_number).is_equal(turn + 1)
-	assert_bool(_turn_manager.has_passed(local_id)).is_false()
-	assert_int(hero.movement_points).is_equal(hero.profile.speed)

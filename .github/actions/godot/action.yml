@@ -1,0 +1,44 @@
+name: Set up Godot
+description: Downloads Godot, restores the import cache and imports the project, so scripts and autoloads resolve
+
+inputs:
+  cache-name:
+    description: Import cache name; jobs with and without Git LFS assets import different files
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Cache Godot
+      id: godot-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/godot
+        key: godot-${{ env.GODOT_VERSION }}
+
+    - name: Download Godot
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir -p ~/godot
+        curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+        unzip -q godot.zip -d ~/godot
+        mv ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64 ~/godot/godot
+        rm godot.zip
+
+    - shell: bash
+      run: echo "GODOT_BIN=$HOME/godot/godot" >> "$GITHUB_ENV"
+
+    # Godot reimports only what changed since the cached import, so an older cache still helps
+    - name: Cache import
+      uses: actions/cache@v4
+      with:
+        path: .godot
+        key: import-${{ inputs.cache-name }}-${{ env.GODOT_VERSION }}-${{ hashFiles('**/*.import', 'project.godot') }}
+        restore-keys: import-${{ inputs.cache-name }}-${{ env.GODOT_VERSION }}-
+
+    # A fresh checkout has no class cache, so autoload types do not resolve until the editor scanned the project once.
+    # Errors here are assets that can not be imported (e.g. .blend without Blender, LFS pointers), so they are not checked.
+    - name: Import
+      shell: bash
+      run: timeout 20m "$GODOT_BIN" --headless --path . --editor --quit > import.log 2>&1 || true

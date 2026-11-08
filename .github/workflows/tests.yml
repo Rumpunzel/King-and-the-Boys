@@ -1,26 +1,59 @@
-name: Tests
+name: Unit tests
 
+# Script check + unit tests on every push, without Git LFS assets. Level-based tests live in integration_tests.yml
+
+# Pushes cover the commits of pull requests too, so there is no separate pull_request trigger
 on:
   push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
+
+# A newer push to the same branch cancels the run still in progress
+concurrency:
+  group: unit-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Keep in sync with config/features in project.godot
+  GODOT_VERSION: '4.6'
 
 jobs:
-  gdunit4:
-    name: GdUnit4 tests
-    runs-on: ubuntu-22.04
-    timeout-minutes: 30
+  # gdUnit only compiles the scripts its tests load, so check all of them on their own
+  scripts:
+    name: Script check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      # Meshes and textures are stored in Git LFS; tests load the real meshes
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/godot
         with:
-          lfs: true
-      - uses: godot-gdunit-labs/gdUnit4-action@v1
+          cache-name: no-lfs
+      # tests/script_check.tscn compiles every script of ours; the smoke run loads the autoloads and the main scene
+      - name: Script and smoke check
+        run: |
+          "$GODOT_BIN" --headless --path . res://tests/script_check.tscn 2>&1 | tee check.log
+          "$GODOT_BIN" --headless --path . --quit-after 300 2>&1 | tee smoke.log
+          if grep -E "SCRIPT ERROR|Compile Error" check.log smoke.log; then exit 1; fi
+
+  gdunit:
+    name: gdUnit4 (unit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/godot
         with:
-          godot-version: '4.6'
-          paths: 'res://tests'
-          # Use the gdUnit4 version committed in addons/ instead of downloading the latest
-          version: 'installed'
-          # gdUnit4 v6 refuses headless runs without this
-          arguments: '--ignoreHeadlessMode'
-          timeout: 15
+          cache-name: no-lfs
+      - name: Run unit tests
+        run: |
+          "$GODOT_BIN" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/unit 2>&1 | tee tests.log
+          # Failing tests fail the pipe (bash runs with pipefail); gdUnit exits with 0 when it finds no tests at all,
+          # e.g. because a test script does not compile
+          if grep -q "No test cases found" tests.log; then exit 1; fi
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-reports
+          path: reports/
