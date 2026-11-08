@@ -68,19 +68,8 @@ var shown_status: Status = Status.NONE:
 	set(new_shown_status):
 		if new_shown_status == shown_status: return
 		shown_status = new_shown_status
-		match shown_status:
-			Status.PLACED:
-				model.visible = false
-			Status.DISCOVERED:
-				model.apply_material_override(_hidden_material)
-				model.visible = true
-				model.play_model_animation(profile.discover_animation)
-			Status.REVEALED:
-				model.visible = true
-				model.remove_material_override(_hidden_material)
-				model.play_model_animation(profile.reveal_animation)
-				if level: _debug_draw_connections()
-			_: push_error("Status %s not implemented!" % shown_status)
+		_show_model()
+		if shown_status == Status.REVEALED and level: _debug_draw_connections()
 		shown_status_changed.emit(shown_status)
 
 @export_group("Configuration")
@@ -180,7 +169,7 @@ func get_restriction_to(grid_position: Vector2i) -> ConnectionRestriction:
 func get_restrictions() -> Dictionary[Level.Direction, ConnectionRestriction]: return profile.get_restrictions(clockwise_turns)
 
 func get_portrait() -> Texture:
-	if model.portrait_override: return model.portrait_override
+	if model and model.portrait_override: return model.portrait_override
 	return profile.portrait
 
 func get_heads_up_anchor() -> Vector3:
@@ -197,6 +186,22 @@ func get_grid_cells() -> Array[Vector2i]:
 			var cell_position: Vector2i = Vector2i.RIGHT * x + Vector2i.UP * y
 			grid_cells.append(origin_cell + cell_position)
 	return grid_cells
+
+## Profiles without models (e.g. in tests) have no model to show
+func _show_model() -> void:
+	if not model: return
+	match shown_status:
+		Status.PLACED:
+			model.visible = false
+		Status.DISCOVERED:
+			model.apply_material_override(_hidden_material)
+			model.visible = true
+			model.play_model_animation(profile.discover_animation)
+		Status.REVEALED:
+			model.visible = true
+			model.remove_material_override(_hidden_material)
+			model.play_model_animation(profile.reveal_animation)
+		_: push_error("Status %s not implemented!" % shown_status)
 
 func _get_direction_to_grid_position(grid_position: Vector2i) -> Level.Direction: return Level.get_direction(get_grid_position(), grid_position)
 

@@ -56,7 +56,7 @@ func create(variation: int, spawn_transform: Transform3D) -> Character:
 
 func create_model(variation: int) -> Model:
 	var model: ModularCharacter = super.create_model(variation)
-	setup_model(model)
+	if model: setup_model(model)
 	return model
 
 func setup_model(model: ModularCharacter) -> void:

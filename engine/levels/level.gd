@@ -322,7 +322,9 @@ func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
 func _create_connection(tile: Structure, connection: Direction) -> void:
 	assert(tile)
 	var direction_vector: Vector2i = direction_to_vector(connection)
-	var connection_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * tile.model.get_max_mesh_scale()
+	# Tiles without a model (e.g. in tests) count as unscaled
+	var mesh_scale: float = tile.model.get_max_mesh_scale() if tile.model else 1.0
+	var connection_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * mesh_scale
 	var tile_connection: Structure = _tile_set.tile_connection.create(-1, Transform3D(Basis.IDENTITY, connection_position), connection, Structure.Status.PLACED)
 	var tile_connections: Array[Structure] = _tile_connections.get_or_add(tile, [] as Array[Structure])
 	assert(not tile_connections.has(tile))

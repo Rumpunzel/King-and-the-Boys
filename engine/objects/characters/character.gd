@@ -112,7 +112,7 @@ var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	model.play_model_animation(profile.spawn_animation)
+	if model: model.play_model_animation(profile.spawn_animation)
 	if multiplayer.is_server():
 		# Initial grid state comes from the spawn transform
 		grid_cell = level.world_to_grid_position(global_position)
@@ -226,7 +226,7 @@ func to_character_data() -> Dictionary[StringName, Variant]:
 	return character_data
 
 func get_portrait() -> Texture:
-	if model.portrait_override: return model.portrait_override
+	if model and model.portrait_override: return model.portrait_override
 	return profile.portrait
 
 func get_heads_up_anchor() -> Vector3:
@@ -269,7 +269,7 @@ func _apply_grid_visuals() -> void:
 	_grid_tween.tween_property(self, "rotation:y", relative_rotation, _TURN_DURATION).as_relative().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	if global_position.is_equal_approx(target_position): return
 	_grid_tween.tween_property(self, "global_position", target_position, profile.move_animation.duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
-	model.play_model_animation(profile.move_animation)
+	if model: model.play_model_animation(profile.move_animation)
 
 func _apply_gravity(delta: float) -> void:
 	velocity.y -= _gravity * delta
