@@ -5,16 +5,26 @@ const LEVEL: String = "res://data/levels/level.tscn"
 const DOORWAY_ARCHES: String = "res://data/structures/props/dungeon_doorway_arches.tres"
 const ROOM_PILLARS: String = "res://data/structures/props/dungeon_room_pillars.tres"
 
+const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tres"
+
 var _level: Level
+var _doorway_arch_chance: float
 
 func before_test() -> void:
+	# Every doorway gets an arch, so the checks do not depend on the rolls
+	var decorations: TileDecorations = load(DECORATIONS)
+	_doorway_arch_chance = decorations.doorway_arch_chance
+	decorations.doorway_arch_chance = 1.0
 	seed(4321)
 	_level = auto_free((load(LEVEL) as PackedScene).instantiate())
 	add_child(_level)
 	_level.build_level()
-	# Reveal the start's surroundings in rings, like exploring would
-	for ring: int in 4:
+	# Reveal the start's surroundings in rings, like exploring would; tiles further out stay placed, but hidden
+	for ring: int in 3:
 		for tile: Structure in _tiles_within(ring): tile.status = Structure.Status.REVEALED
+
+func after_test() -> void:
+	(load(DECORATIONS) as TileDecorations).doorway_arch_chance = _doorway_arch_chance
 
 func _tiles_within(radius: int) -> Array[Structure]:
 	var tiles: Array[Structure] = []
@@ -38,7 +48,7 @@ func _props_of(prop_set_path: String) -> Array[Vector2]:
 func _count_near(spots: Array[Vector2], spot: Vector2) -> int:
 	return spots.filter(func(other: Vector2) -> bool: return other.distance_to(spot) < 0.3).size()
 
-func test_doorways_get_at_most_one_arch() -> void:
+func test_each_doorway_gets_one_arch() -> void:
 	var arches: Array[Vector2] = _props_of(DOORWAY_ARCHES)
 	var doorways: int = 0
 	var arched: int = 0
@@ -46,12 +56,12 @@ func test_doorways_get_at_most_one_arch() -> void:
 		if tile.shown_status != Structure.Status.REVEALED: continue
 		for direction: Level.Direction in tile.get_connections():
 			var neighbour: Structure = _level.get_placed_tile(tile.get_grid_position() + Level.DIRECTION_VECTORS[direction])
-			if not neighbour or neighbour.shown_status != Structure.Status.REVEALED: continue
+			if not neighbour: continue
 			if (tile.profile.room_type != null) == (neighbour.profile.room_type != null): continue
 			doorways += 1
 			var opening: Vector3 = (tile.global_position + neighbour.global_position) * 0.5
 			var count: int = _count_near(arches, Vector2(opening.x, opening.z))
-			assert_int(count).override_failure_message("Doorway at %s" % opening).is_less_equal(1)
+			assert_int(count).override_failure_message("Doorway at %s" % opening).is_equal(1)
 			arched += count
 	assert_int(doorways).override_failure_message("The start should lie in a room with doorways").is_greater(0)
 	assert_int(arched).override_failure_message("Some doorways should be arched").is_greater(0)
@@ -67,6 +77,16 @@ func test_pillars_stand_once_on_even_corners_inside_rooms() -> void:
 			var cell: Structure = _level.get_placed_tile(Vector2i(corner_index.round()) - corner)
 			assert_object(cell).is_not_null()
 			assert_object(cell.profile.room_type).override_failure_message("Pillar at %s is not inside a room" % pillar).is_not_null()
+
+func test_arches_stand_before_the_neighbour_is_revealed() -> void:
+	var arches: Array[Vector2] = _props_of(DOORWAY_ARCHES)
+	var beside_hidden: int = 0
+	for arch: Vector2 in arches:
+		var arch_cell: Vector2 = arch / _level.grid_size
+		for cell: Vector2 in [arch_cell.floor(), arch_cell.ceil()]:
+			var neighbour: Structure = _level.get_placed_tile(Vector2i(cell))
+			if neighbour and neighbour.shown_status != Structure.Status.REVEALED: beside_hidden += 1
+	assert_int(beside_hidden).override_failure_message("Some arches should lead into unrevealed tiles").is_greater(0)
 
 func test_no_pillar_stands_beside_a_doorway_arch() -> void:
 	var pillars: Array[Vector2] = _props_of(ROOM_PILLARS)

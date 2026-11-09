@@ -5,13 +5,15 @@ extends Resource
 ## Props a revealed tile is dressed with:
 ## - clutter: some from [member edge_props] along its closed sides (no connection), some from [member corner_props] in corners
 ##   between two closed sides, chosen from the tile's grid position
-## - architecture: arches over openings (always where a corridor enters a room, sometimes between corridor tiles), raised by the
-##   second of the two tiles to be revealed, and pillars on every other grid corner inside rooms, raised by the last of its four
+## - architecture: arches over openings (whole ones where a corridor enters a room, ruins between corridor tiles), raised by the first
+##   of the two tiles to be revealed once the other one exists, and pillars on every other grid corner inside rooms, raised by the last of its four
 ##   room tiles to be revealed
 ## Purely visual: every peer reveals the same tiles and picks alike, so nothing is synced. Props keep clear of the tile spots
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
 
 const NODE_NAME: StringName = &"Decorations"
+## Meta of a tile's decorations: the grid positions of the neighbours whose shared opening it decided, see [method _add_arches]
+const DECIDED_OPENINGS: StringName = &"decided_openings"
 ## The corners of a cell, as offsets from its grid position to the corner's index (see [method _add_pillars])
 const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
 
@@ -80,14 +82,18 @@ func drop(decorations: Node3D, after: Tween = null) -> void:
 	if after and after.is_running(): after.finished.connect(_drop_each.bind(decorations), CONNECT_ONE_SHOT)
 	else: _drop_each(decorations)
 
-## An arch over some openings to an already revealed neighbour: whole ones between a room and a corridor, ruins between two corridors
+## An arch over some openings: whole ones between a room and a corridor, ruins between two corridors. The first of the two tiles to
+## be revealed decides, as soon as the other one exists (it need not be revealed); otherwise the other one decides once revealed
 func _add_arches(decorations: Node3D, tile: Structure) -> void:
 	var grid_position: Vector2i = tile.get_grid_position()
+	var decided: Array[Vector2i] = []
+	decorations.set_meta(DECIDED_OPENINGS, decided)
 	for direction: Level.Direction in tile.get_connections():
 		var neighbour_position: Vector2i = grid_position + Level.DIRECTION_VECTORS[direction]
 		var neighbour: Structure = tile.level.get_placed_tile(neighbour_position)
-		# The neighbour raises the arch once it is revealed
-		if not neighbour or neighbour.shown_status != Structure.Status.REVEALED: continue
+		# Whether it is a doorway depends on the neighbour, so it is decided once the neighbour exists
+		if not neighbour or _has_decided(neighbour, grid_position): continue
+		decided.append(neighbour_position)
 		var is_room: bool = tile.profile.room_type != null
 		var is_doorway: bool = is_room != (neighbour.profile.room_type != null)
 		if not is_doorway and is_room: continue
@@ -100,6 +106,12 @@ func _add_arches(decorations: Node3D, tile: Structure) -> void:
 		# Arches are modelled spanning along x
 		var across: Basis = Basis(Vector3.UP, PI * 0.5) if outward.x != 0.0 else Basis.IDENTITY
 		_add_prop(decorations, arches, _to_model(tile, _on_floor(outward * tile.level.grid_size * 0.5), across), random)
+
+## Whether [param tile] already decided its opening towards [param neighbour_position]
+static func _has_decided(tile: Structure, neighbour_position: Vector2i) -> bool:
+	if not tile.model or not tile.model.has_node(NodePath(NODE_NAME)): return false
+	var decided: Array[Vector2i] = tile.model.get_node(NodePath(NODE_NAME)).get_meta(DECIDED_OPENINGS, [] as Array[Vector2i])
+	return decided.has(neighbour_position)
 
 ## A pillar on each corner with an even index on both axes whose four cells are all room tiles, raised once the last of them is
 ## revealed; corners on a room's border are left to the doorway arches
