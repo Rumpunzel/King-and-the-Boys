@@ -32,7 +32,7 @@ const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1)
 @export_group("Architecture")
 ## Span openings where a corridor enters a room
 @export var doorway_arches: PropSet
-## Span some openings between two corridor tiles, by [member corridor_arch_chance]
+## Span some openings between two corridor tiles, by [member corridor_arch_chance]; ruins rather than whole arches look right there
 @export var corridor_arches: PropSet
 @export_range(0.0, 1.0) var corridor_arch_chance: float = 0.25
 ## Stand on every other grid corner of rooms

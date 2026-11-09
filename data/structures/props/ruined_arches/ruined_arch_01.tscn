@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bl25sd37wikrj"]
+
+[ext_resource type="PackedScene" uid="uid://dvbirb8y68nwv" path="res://assets/polygon_dungeon/Prefabs/Environments/Walls/SM_Env_Wall_Broken_Edge_02.tscn" id="1_piece"]
+[ext_resource type="PackedScene" uid="uid://bgr86ga6roq20" path="res://assets/polygon_dungeon/Prefabs/Environments/Pillars/SM_Env_Pillar_Broken_02.tscn" id="2_piece"]
+[ext_resource type="PackedScene" uid="uid://cox678kybovhg" path="res://assets/polygon_dungeon/Prefabs/Environments/Rocks/SM_Env_Brick_Rubble_01.tscn" id="3_piece"]
+
+[node name="RuinedArch01" type="Node3D"]
+
+[node name="LeftWall" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(-0.45, 0, -5.51091e-17, 0, 0.45, 0, 5.51091e-17, 0, -0.45, -0.9, 0, 0)
+
+[node name="RightStub" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.606218, 0, -0.35, 0, 0.7, 0, 0.35, 0, 0.606218, 1.15, 0, 0)
+
+[node name="Rubble" parent="." instance=ExtResource("3_piece")]
+transform = Transform3D(0.205212, 0, -0.563816, 0, 0.6, 0, 0.563816, 0, 0.205212, 0.75, 0, 0.25)

@@ -10,5 +10,5 @@ props = Dictionary[PackedScene, float]({
 ExtResource("2_prop"): 1.0,
 ExtResource("3_prop"): 1.0
 })
-prop_scale = Vector3(0.39, 0.6, 0.6)
+prop_scale = Vector3(0.39, 1, 0.6)
 center_props = true
