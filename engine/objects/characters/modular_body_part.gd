@@ -8,6 +8,9 @@ enum Type {
 	DECORATIVE,
 }
 
+## The number keys use for a part showing no mesh; the asset pack's own [code]00[/code] meshes are bare skin, so it reads the same
+const EMPTY_MESH_NUMBER: String = "00"
+
 @export var _type: Type = Type.ESSENTIAL
 @export var _index: int = -1:
 	set = update_index
@@ -46,6 +49,41 @@ func update_visibility(new_visibility: bool, sources: Array[ModularBodyPart] = [
 	for related_body_part: ModularBodyPart in _related_parts:
 		if sources.has(related_body_part): continue
 		related_body_part.update_visibility(not new_visibility, sources)
+
+## Sets an exact mesh, bypassing the index into the mesh directory
+## A [code]null[/code] mesh hides this part and shows its related parts
+func apply_mesh(new_mesh: ArrayMesh) -> void:
+	mesh = new_mesh
+	update_visibility(new_mesh != null)
+
+## @returns the position of the shown mesh in this part's mesh directory, or [code]-1[/code] if hidden or not listed there
+func get_mesh_index() -> int:
+	if not visible or not mesh: return -1
+	return _mesh_list.find(mesh.resource_path)
+
+func get_mesh_count() -> int: return _mesh_list.size()
+
+## The mesh files of this part's directory, in directory order
+func get_mesh_paths() -> PackedStringArray: return PackedStringArray(_mesh_list)
+
+## @returns the trailing number of a mesh file, e.g. [code]"05"[/code] for [code]..._Male_05.res[/code]
+static func get_mesh_number(mesh_path: String) -> String:
+	var mesh_name: String = mesh_path.get_file().get_basename()
+	var found: RegExMatch = RegEx.create_from_string("(\\d+)$").search(mesh_name)
+	return found.get_string(1) if found else mesh_name
+
+## @returns the numbers of all meshes in this part's directory, in directory order
+func get_mesh_numbers() -> PackedStringArray:
+	var mesh_numbers: PackedStringArray = []
+	for mesh_path: String in _mesh_list: mesh_numbers.append(get_mesh_number(mesh_path))
+	return mesh_numbers
+
+## @returns the position of the mesh numbered [param mesh_number] in this part's directory, or [code]-1[/code]
+func find_mesh_index(mesh_number: String) -> int:
+	return get_mesh_numbers().find(mesh_number)
+
+## Decorative parts may show no mesh at all, essential parts always show one
+func allows_none() -> bool: return _type == Type.DECORATIVE
 
 func random_mesh() -> void: _index = randi() - (0 if _type == Type.ESSENTIAL else 1)
 func reset_mesh() -> void: _index = 0 if _type == Type.ESSENTIAL else -1

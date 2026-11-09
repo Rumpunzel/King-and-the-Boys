@@ -20,6 +20,8 @@ const GROUP: StringName = "Characters"
 const VARIATION: StringName = "variation"
 const PROFILE_PATH: StringName = "profile_path"
 const SPAWN_TRANSFORM: StringName = "spawn_transform"
+const BODY: StringName = "body"
+const EQUIPMENT: StringName = "equipment"
 
 const _TURN_DURATION: float = 0.5
 
@@ -54,6 +56,7 @@ const _TURN_DURATION: float = 0.5
 @export var _collision_shape: CollisionShape3D
 @export var _navigation_agent: NavigationAgent3D
 @export var _synchronizer: MultiplayerSynchronizer
+@export var equipment: CharacterEquipment
 
 var model: Model:
 	set(new_model):
@@ -63,6 +66,17 @@ var model: Model:
 		model = new_model
 		if not model: return
 		add_child(model, true)
+		_apply_body()
+		if equipment and model is ModularCharacter:
+			var modular_model: ModularCharacter = model
+			equipment.apply_to(modular_model)
+
+## Rolled once by the server, see [method ModelConfigurationRandom.roll]
+## {Part: [enum ModularCharacter.Part] -> mesh [ResourceId]: [String]}, an empty ID meaning no mesh
+var body: Dictionary = {}:
+	set(new_body):
+		body = new_body
+		_apply_body()
 
 var level: Level
 var look_target: Vector3 = Vector3.BACK
@@ -152,11 +166,17 @@ static func from_character_data(character_data: Dictionary[StringName, Variant])
 	var new_character_profile: CharacterProfile = load(new_character_profile_path)
 	assert(new_character_profile)
 	var new_spawn_transform: Transform3D = character_data[SPAWN_TRANSFORM]
-	return new_character_profile.create(new_variation, new_spawn_transform)
+	var new_character: Character = new_character_profile.create(new_variation, new_spawn_transform)
+	new_character.body = character_data[BODY]
+	var new_equipment_ids: PackedStringArray = character_data[EQUIPMENT]
+	new_character.equipment.set_equipped_ids(new_equipment_ids)
+	return new_character
 
 static func validate_character_data(character_data: Dictionary[StringName, Variant]) -> void:
-	assert(character_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM]))
-	assert(character_data.size() == 3)
+	assert(character_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM, BODY, EQUIPMENT]))
+	assert(character_data.size() == 5)
+	assert(character_data[BODY] is Dictionary)
+	assert(character_data[EQUIPMENT] is PackedStringArray)
 
 static func facing_to_rotation(direction: Level.Direction) -> float:
 	return (2 - direction) * PI * 0.5
@@ -224,6 +244,9 @@ func apply_character_data(character_data: Dictionary[StringName, Variant]) -> vo
 	var character_profile_path: String = character_data[PROFILE_PATH]
 	profile = load(character_profile_path)
 	transform = character_data[SPAWN_TRANSFORM]
+	body = character_data[BODY]
+	var equipment_ids: PackedStringArray = character_data[EQUIPMENT]
+	equipment.set_equipped_ids(equipment_ids)
 
 func to_character_data() -> Dictionary[StringName, Variant]:
 	assert(profile)
@@ -231,9 +254,19 @@ func to_character_data() -> Dictionary[StringName, Variant]:
 		VARIATION: variation,
 		PROFILE_PATH: profile.resource_path,
 		SPAWN_TRANSFORM: transform,
+		BODY: body,
+		EQUIPMENT: equipment.get_equipped_ids(),
 	}
 	validate_character_data(character_data)
 	return character_data
+
+func _apply_body() -> void:
+	if not model is ModularCharacter: return
+	var modular_model: ModularCharacter = model
+	for part: int in body:
+		var mesh_id: String = body[part]
+		var mesh: ArrayMesh = ResourceId.find(mesh_id) as ArrayMesh
+		modular_model.get_part(part as ModularCharacter.Part).apply_mesh(mesh)
 
 func get_portrait() -> Texture:
 	if model and model.portrait_override: return model.portrait_override
@@ -385,4 +418,5 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not _collision_shape: warnings.append("Missing CollisionShape3D reference.")
 	if not _navigation_agent: warnings.append("Missing NavigationAgent3D reference.")
 	if not _synchronizer: warnings.append("Missing MultiplayerSynchronizer reference.")
+	if not equipment: warnings.append("Missing CharacterEquipment reference.")
 	return warnings

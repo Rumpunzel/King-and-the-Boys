@@ -1,0 +1,206 @@
+[gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://cn2dhwyt74eq"]
+
+[ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_2kdhm"]
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_toqt4"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_06wgf"]
+[ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_vksy5"]
+[ext_resource type="ArrayMesh" uid="uid://b1kdqgrdhk27o" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_01.res" id="5_0sdt2"]
+[ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="6_57lfv"]
+[ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="7_igiv6"]
+[ext_resource type="ArrayMesh" uid="uid://ck0gcurn62c7j" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_02.res" id="8_dra67"]
+[ext_resource type="ArrayMesh" uid="uid://uxig1bvjpmeu" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_03.res" id="9_ppebf"]
+[ext_resource type="ArrayMesh" uid="uid://bkgrl55jf2eo7" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_04.res" id="10_ucou0"]
+[ext_resource type="ArrayMesh" uid="uid://cfyu6q6rttg38" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_05.res" id="11_wri3l"]
+[ext_resource type="ArrayMesh" uid="uid://c6hpvkb3iu46n" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_06.res" id="12_sau1c"]
+[ext_resource type="ArrayMesh" uid="uid://cf12t52s63mad" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_07.res" id="13_rn3cm"]
+[ext_resource type="ArrayMesh" uid="uid://cr8ggnelir72l" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_08.res" id="14_flx5u"]
+[ext_resource type="ArrayMesh" uid="uid://lsipwk3ypjse" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_09.res" id="15_6yhq7"]
+[ext_resource type="ArrayMesh" uid="uid://iyrbra1kpwrb" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_10.res" id="16_k6ktw"]
+[ext_resource type="ArrayMesh" uid="uid://cd5yfe6gv73ca" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_11.res" id="17_tg5um"]
+[ext_resource type="ArrayMesh" uid="uid://n5cjrfw3l21g" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_12.res" id="18_ba0do"]
+[ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="19_xig2e"]
+
+[sub_resource type="Resource" id="Resource_2kdhm"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("5_0sdt2")
+
+[sub_resource type="Resource" id="Resource_toqt4"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_2kdhm")])
+
+[sub_resource type="Resource" id="01"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_toqt4")
+name = "Belt 01"
+
+[sub_resource type="Resource" id="Resource_06wgf"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("8_dra67")
+
+[sub_resource type="Resource" id="Resource_vksy5"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_06wgf")])
+
+[sub_resource type="Resource" id="02"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_vksy5")
+name = "Belt 02"
+
+[sub_resource type="Resource" id="Resource_0sdt2"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("9_ppebf")
+
+[sub_resource type="Resource" id="Resource_57lfv"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_0sdt2")])
+
+[sub_resource type="Resource" id="03"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_57lfv")
+name = "Belt 03"
+
+[sub_resource type="Resource" id="Resource_igiv6"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("10_ucou0")
+
+[sub_resource type="Resource" id="Resource_dra67"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_igiv6")])
+
+[sub_resource type="Resource" id="04"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_dra67")
+name = "Belt 04"
+
+[sub_resource type="Resource" id="Resource_ppebf"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("11_wri3l")
+
+[sub_resource type="Resource" id="Resource_ucou0"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_ppebf")])
+
+[sub_resource type="Resource" id="05"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_ucou0")
+name = "Belt 05"
+
+[sub_resource type="Resource" id="Resource_wri3l"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("12_sau1c")
+
+[sub_resource type="Resource" id="Resource_sau1c"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_wri3l")])
+
+[sub_resource type="Resource" id="06"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_sau1c")
+name = "Belt 06"
+
+[sub_resource type="Resource" id="Resource_rn3cm"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("13_rn3cm")
+
+[sub_resource type="Resource" id="Resource_flx5u"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_rn3cm")])
+
+[sub_resource type="Resource" id="07"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_flx5u")
+name = "Belt 07"
+
+[sub_resource type="Resource" id="Resource_6yhq7"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("14_flx5u")
+
+[sub_resource type="Resource" id="Resource_k6ktw"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_6yhq7")])
+
+[sub_resource type="Resource" id="08"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_k6ktw")
+name = "Belt 08"
+
+[sub_resource type="Resource" id="Resource_tg5um"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("15_6yhq7")
+
+[sub_resource type="Resource" id="Resource_ba0do"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_tg5um")])
+
+[sub_resource type="Resource" id="09"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_ba0do")
+name = "Belt 09"
+
+[sub_resource type="Resource" id="Resource_xig2e"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("16_k6ktw")
+
+[sub_resource type="Resource" id="Resource_afx0v"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_xig2e")])
+
+[sub_resource type="Resource" id="10"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_afx0v")
+name = "Belt 10"
+
+[sub_resource type="Resource" id="Resource_c3l3e"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("17_tg5um")
+
+[sub_resource type="Resource" id="Resource_nhrql"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_c3l3e")])
+
+[sub_resource type="Resource" id="11"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_nhrql")
+name = "Belt 11"
+
+[sub_resource type="Resource" id="Resource_7edq3"]
+script = ExtResource("4_vksy5")
+part = 23
+male_mesh = ExtResource("18_ba0do")
+
+[sub_resource type="Resource" id="Resource_6pypx"]
+script = ExtResource("6_57lfv")
+parts = Array[ExtResource("4_vksy5")]([SubResource("Resource_7edq3")])
+
+[sub_resource type="Resource" id="12"]
+script = ExtResource("1_2kdhm")
+type = ExtResource("7_igiv6")
+appearance = SubResource("Resource_6pypx")
+name = "Belt 12"
+
+[resource]
+script = ExtResource("19_xig2e")
+type = ExtResource("7_igiv6")
+looks = Array[ExtResource("1_2kdhm")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12")])

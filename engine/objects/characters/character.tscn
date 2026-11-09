@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_b3pdv"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_42yey"]
 [ext_resource type="PackedScene" uid="uid://bmk3aay8c7045" path="res://engine/objects/characters/character_hit_box.tscn" id="4_5i04j"]
+[ext_resource type="Script" uid="uid://ca8rg7sjibiiv" path="res://engine/objects/equipment/character_equipment.gd" id="5_eqp01"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3fwhk"]
 properties/0/path = NodePath(".:transform")
@@ -31,7 +32,12 @@ properties/7/path = NodePath(".:step_count")
 properties/7/spawn = true
 properties/7/replication_mode = 2
 
-[node name="Character" type="CharacterBody3D" unique_id=280801836 node_paths=PackedStringArray("_collision_shape", "_navigation_agent", "_synchronizer") groups=["Characters"]]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_eqp01"]
+properties/0/path = NodePath(".:equipped_ids")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
+[node name="Character" type="CharacterBody3D" unique_id=280801836 node_paths=PackedStringArray("_collision_shape", "_navigation_agent", "_synchronizer", "equipment") groups=["Characters"]]
 collision_layer = 2
 collision_mask = 15
 input_ray_pickable = false
@@ -39,9 +45,19 @@ script = ExtResource("1_f5t6j")
 _collision_shape = NodePath("CollisionShape3D")
 _navigation_agent = NodePath("NavigationAgent3D")
 _synchronizer = NodePath("CharacterSynchronizer")
+equipment = NodePath("CharacterEquipment")
 metadata/_custom_type_script = "uid://cwu2dwpvcrl3s"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=697396135]
+
+[node name="CharacterEquipment" type="Node" parent="." unique_id=1739204561]
+script = ExtResource("5_eqp01")
+metadata/_custom_type_script = "uid://ca8rg7sjibiiv"
+
+[node name="EquipmentSynchronizer" type="MultiplayerSynchronizer" parent="CharacterEquipment" unique_id=1739204562]
+replication_config = SubResource("SceneReplicationConfig_eqp01")
+script = ExtResource("2_b3pdv")
+metadata/_custom_type_script = "uid://crm43jylxmjbd"
 
 [node name="CharacterSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1181153482]
 replication_config = SubResource("SceneReplicationConfig_3fwhk")

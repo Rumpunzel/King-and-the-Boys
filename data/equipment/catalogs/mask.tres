@@ -1,0 +1,78 @@
+[gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://ur1wcmgxj0wb"]
+
+[ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_5oj2n"]
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_reh3q"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_8c3af"]
+[ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_6essj"]
+[ext_resource type="ArrayMesh" uid="uid://by4tqkkwvtjxo" path="res://data/characters/people/meshes/gear/head_coverings_no_facial_hair/modular_character_HeadCoverings_No_FacialHair_01.res" id="5_tytxq"]
+[ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="6_0ur1e"]
+[ext_resource type="Resource" uid="uid://0bh53bwaurow" path="res://data/equipment/types/mask.tres" id="7_e2gbk"]
+[ext_resource type="ArrayMesh" uid="uid://05ot0akquey2" path="res://data/characters/people/meshes/gear/head_coverings_no_facial_hair/modular_character_HeadCoverings_No_FacialHair_02.res" id="8_bbanb"]
+[ext_resource type="ArrayMesh" uid="uid://dtetnj4qssc42" path="res://data/characters/people/meshes/gear/head_coverings_no_facial_hair/modular_character_HeadCoverings_No_FacialHair_03.res" id="9_wndvl"]
+[ext_resource type="ArrayMesh" uid="uid://blu81awmotx0n" path="res://data/characters/people/meshes/gear/head_coverings_no_facial_hair/modular_character_HeadCoverings_No_FacialHair_04.res" id="10_0723p"]
+[ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="11_mdt74"]
+
+[sub_resource type="Resource" id="Resource_gkg6y"]
+script = ExtResource("4_6essj")
+part = 20
+male_mesh = ExtResource("5_tytxq")
+
+[sub_resource type="Resource" id="Resource_g6n61"]
+script = ExtResource("6_0ur1e")
+parts = Array[ExtResource("4_6essj")]([SubResource("Resource_gkg6y")])
+
+[sub_resource type="Resource" id="01"]
+script = ExtResource("1_5oj2n")
+type = ExtResource("7_e2gbk")
+appearance = SubResource("Resource_g6n61")
+name = "Mask 01"
+
+[sub_resource type="Resource" id="Resource_g5bq4"]
+script = ExtResource("4_6essj")
+part = 20
+male_mesh = ExtResource("8_bbanb")
+
+[sub_resource type="Resource" id="Resource_af87u"]
+script = ExtResource("6_0ur1e")
+parts = Array[ExtResource("4_6essj")]([SubResource("Resource_g5bq4")])
+
+[sub_resource type="Resource" id="02"]
+script = ExtResource("1_5oj2n")
+type = ExtResource("7_e2gbk")
+appearance = SubResource("Resource_af87u")
+name = "Mask 02"
+
+[sub_resource type="Resource" id="Resource_h3xxi"]
+script = ExtResource("4_6essj")
+part = 20
+male_mesh = ExtResource("9_wndvl")
+
+[sub_resource type="Resource" id="Resource_x56wb"]
+script = ExtResource("6_0ur1e")
+parts = Array[ExtResource("4_6essj")]([SubResource("Resource_h3xxi")])
+
+[sub_resource type="Resource" id="03"]
+script = ExtResource("1_5oj2n")
+type = ExtResource("7_e2gbk")
+appearance = SubResource("Resource_x56wb")
+name = "Mask 03"
+
+[sub_resource type="Resource" id="Resource_uxc8o"]
+script = ExtResource("4_6essj")
+part = 20
+male_mesh = ExtResource("10_0723p")
+
+[sub_resource type="Resource" id="Resource_g0i20"]
+script = ExtResource("6_0ur1e")
+parts = Array[ExtResource("4_6essj")]([SubResource("Resource_uxc8o")])
+
+[sub_resource type="Resource" id="04"]
+script = ExtResource("1_5oj2n")
+type = ExtResource("7_e2gbk")
+appearance = SubResource("Resource_g0i20")
+name = "Mask 04"
+
+[resource]
+script = ExtResource("11_mdt74")
+type = ExtResource("7_e2gbk")
+looks = Array[ExtResource("1_5oj2n")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04")])

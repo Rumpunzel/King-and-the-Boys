@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EquipmentType" format=3 uid="uid://0bh53bwaurow"]
+
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_type.gd" id="1_4jv8p"]
+
+[resource]
+script = ExtResource("1_4jv8p")
+name = "Mask"
+slot = 1
+parts = Array[int]([20])

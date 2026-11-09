@@ -254,5 +254,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 [connection signal="zoom_value_changed" from="SubViewport/PreviewViewer" to="MarginContainer/GridContainer/GridContainer/ZoomConfiguration" method="_on_zoom_value_changed"]
 [connection signal="model_changed" from="SubViewport/PreviewScene/PreviewModel" to="MarginContainer/GridContainer/PreviewConfiguration" method="_on_model_changed"]
 [connection signal="model_removed" from="SubViewport/PreviewScene/PreviewModel" to="MarginContainer/GridContainer/PreviewConfiguration" method="_on_model_removed"]
+[connection signal="model_changed" from="SubViewport/PreviewScene/PreviewModel" to="." method="_on_preview_model_changed"]
+[connection signal="model_removed" from="SubViewport/PreviewScene/PreviewModel" to="." method="_on_preview_model_removed"]
 
 [editable path="SubViewport/PreviewScene/PreviewModel"]

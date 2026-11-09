@@ -1,0 +1,124 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://addons/menagerie/equipment_editor.gd" id="1_eqped"]
+
+[node name="EquipmentEditor" type="PanelContainer" node_paths=PackedStringArray("_type_option", "_edit_type_button", "_type_info_label", "_parts_container", "_allowed_check", "_look_label", "_add_missing_button", "_previous_combination_button", "_review_label", "_next_combination_button", "_name_edit", "_save_button", "_save_as_new_button", "_status_label")]
+size_flags_vertical = 0
+script = ExtResource("1_eqped")
+_type_option = NodePath("MarginContainer/VBoxContainer/TypeRow/TypeOption")
+_edit_type_button = NodePath("MarginContainer/VBoxContainer/TypeRow/EditTypeButton")
+_type_info_label = NodePath("MarginContainer/VBoxContainer/TypeInfoLabel")
+_parts_container = NodePath("MarginContainer/VBoxContainer/Parts")
+_allowed_check = NodePath("MarginContainer/VBoxContainer/LookRow/AllowedCheck")
+_look_label = NodePath("MarginContainer/VBoxContainer/LookRow/LookLabel")
+_add_missing_button = NodePath("MarginContainer/VBoxContainer/LookRow/AddMissingButton")
+_previous_combination_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/PreviousCombinationButton")
+_review_label = NodePath("MarginContainer/VBoxContainer/ReviewRow/ReviewLabel")
+_next_combination_button = NodePath("MarginContainer/VBoxContainer/ReviewRow/NextCombinationButton")
+_name_edit = NodePath("MarginContainer/VBoxContainer/SaveRow/NameEdit")
+_save_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveButton")
+_save_as_new_button = NodePath("MarginContainer/VBoxContainer/SaveRow/SaveAsNewButton")
+_status_label = NodePath("MarginContainer/VBoxContainer/StatusLabel")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Equipment"
+
+[node name="TypeRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="MarginContainer/VBoxContainer/TypeRow"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Type"
+
+[node name="TypeOption" type="OptionButton" parent="MarginContainer/VBoxContainer/TypeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "The kind of item; it decides the slot, the parts listed below and what the item blocks"
+
+[node name="EditTypeButton" type="Button" parent="MarginContainer/VBoxContainer/TypeRow"]
+layout_mode = 2
+tooltip_text = "Open this EquipmentType in the inspector"
+text = "Edit Type"
+
+[node name="TypeInfoLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderSmall"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Parts" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LookRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AllowedCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/LookRow"]
+layout_mode = 2
+tooltip_text = "Checked looks are offered and can be worn (A); checking a combination the catalog lacks adds it"
+text = "Allowed"
+
+[node name="LookLabel" type="Label" parent="MarginContainer/VBoxContainer/LookRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderSmall"
+
+[node name="AddMissingButton" type="Button" parent="MarginContainer/VBoxContainer/LookRow"]
+layout_mode = 2
+tooltip_text = "Add every combination of the varied parts the catalog lacks, checked; uncheck the odd ones while reviewing"
+text = "Add missing combinations"
+
+[node name="ReviewRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PreviousCombinationButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+tooltip_text = "Show the previous combination of the varied parts (Q)"
+text = "< Q"
+
+[node name="ReviewLabel" type="Label" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="NextCombinationButton" type="Button" parent="MarginContainer/VBoxContainer/ReviewRow"]
+layout_mode = 2
+tooltip_text = "Show the next combination of the varied parts (E)"
+text = "E >"
+
+[node name="SaveRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NameEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/SaveRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Item name"
+
+[node name="SaveButton" type="Button" parent="MarginContainer/VBoxContainer/SaveRow"]
+layout_mode = 2
+text = "Save"
+
+[node name="SaveAsNewButton" type="Button" parent="MarginContainer/VBoxContainer/SaveRow"]
+layout_mode = 2
+tooltip_text = "Save to data/equipment/<type>/<name>.tres; never overwrites"
+text = "Save As New"
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+autowrap_mode = 3

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EquipmentType" format=3 uid="uid://c52b5nth0v8c3"]
+
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_part_group.gd" id="1_g1wry"]
+[ext_resource type="Script" path="res://engine/objects/equipment/equipment_type.gd" id="2_0vghp"]
+
+[resource]
+script = ExtResource("2_0vghp")
+name = "Belt"
+slot = 8
+parts = Array[int]([23])

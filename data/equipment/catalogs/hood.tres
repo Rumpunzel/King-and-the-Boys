@@ -1,0 +1,3810 @@
+[gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://dr46yx64kyfnj"]
+
+[ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_4oni4"]
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_x1d0r"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_bfhx3"]
+[ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_xjn57"]
+[ext_resource type="ArrayMesh" uid="uid://dda6lpa5m1g58" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_01.res" id="5_vasq4"]
+[ext_resource type="ArrayMesh" uid="uid://betkmexbk01da" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_01.res" id="6_ial24"]
+[ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="7_n31uy"]
+[ext_resource type="Resource" uid="uid://dd8ul77e8gmib" path="res://data/equipment/types/hood.tres" id="8_g2s2s"]
+[ext_resource type="ArrayMesh" uid="uid://ckemggsfbwito" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_02.res" id="9_q10mg"]
+[ext_resource type="ArrayMesh" uid="uid://dvvlrs2cvuj4j" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_03.res" id="10_wgawh"]
+[ext_resource type="ArrayMesh" uid="uid://mmqdpny5vaoq" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_04.res" id="11_r2j7a"]
+[ext_resource type="ArrayMesh" uid="uid://do2kmae0t0vgh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_05.res" id="12_rqr30"]
+[ext_resource type="ArrayMesh" uid="uid://bli53ne3xitdr" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_06.res" id="13_n20m6"]
+[ext_resource type="ArrayMesh" uid="uid://ccicq84m03gwj" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_07.res" id="14_kigth"]
+[ext_resource type="ArrayMesh" uid="uid://cvupgaw68s0og" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_08.res" id="15_wrk7j"]
+[ext_resource type="ArrayMesh" uid="uid://cme38nbm27f4t" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_09.res" id="16_d0x4a"]
+[ext_resource type="ArrayMesh" uid="uid://i1koay15lhma" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_10.res" id="17_bdsps"]
+[ext_resource type="ArrayMesh" uid="uid://didinx2ltj734" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_11.res" id="18_2kpw4"]
+[ext_resource type="ArrayMesh" uid="uid://bpfxqpnjilye3" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_12.res" id="19_c0hl0"]
+[ext_resource type="ArrayMesh" uid="uid://c8jknbjt3kvwy" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_13.res" id="20_28wcg"]
+[ext_resource type="ArrayMesh" uid="uid://bi2eti143nl6a" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_02.res" id="21_fwj4t"]
+[ext_resource type="ArrayMesh" uid="uid://co2si32doe3l0" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_03.res" id="22_3o0i6"]
+[ext_resource type="ArrayMesh" uid="uid://dxnui2ewlpqqw" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_04.res" id="23_ldcf2"]
+[ext_resource type="ArrayMesh" uid="uid://cc5bw5no6kxvf" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_05.res" id="24_hl81q"]
+[ext_resource type="ArrayMesh" uid="uid://b1mxu485rxvfj" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_06.res" id="25_m74b7"]
+[ext_resource type="ArrayMesh" uid="uid://binkh3ryetuj7" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_07.res" id="26_op8aa"]
+[ext_resource type="ArrayMesh" uid="uid://b4bv1ejt7jy15" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_08.res" id="27_f8w24"]
+[ext_resource type="ArrayMesh" uid="uid://bgfkk6pnc42jb" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_09.res" id="28_nsfhm"]
+[ext_resource type="ArrayMesh" uid="uid://bdsfb5klqfjy5" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_10.res" id="29_xbpe5"]
+[ext_resource type="ArrayMesh" uid="uid://ddvc5vug65eqo" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_11.res" id="30_6agn6"]
+[ext_resource type="ArrayMesh" uid="uid://mjbiap4ol62e" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_12.res" id="31_40s42"]
+[ext_resource type="ArrayMesh" uid="uid://c67g853tmg2ei" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_13.res" id="32_1rojs"]
+[ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="33_ex6ay"]
+
+[sub_resource type="Resource" id="Resource_dxvgf"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_4485c"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_4f10e"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dxvgf"), SubResource("Resource_4485c")])
+
+[sub_resource type="Resource" id="01_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_4f10e")
+name = "Hood 01 01"
+
+[sub_resource type="Resource" id="Resource_l42om"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_nbspy"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_k4b3x"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_l42om"), SubResource("Resource_nbspy")])
+
+[sub_resource type="Resource" id="01_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_k4b3x")
+name = "Hood 01 02"
+
+[sub_resource type="Resource" id="Resource_iex1u"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_ko2aj"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_uuhmo"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_iex1u"), SubResource("Resource_ko2aj")])
+
+[sub_resource type="Resource" id="01_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_uuhmo")
+name = "Hood 01 03"
+
+[sub_resource type="Resource" id="Resource_iatxj"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_d35px"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_8kabo"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_iatxj"), SubResource("Resource_d35px")])
+
+[sub_resource type="Resource" id="01_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8kabo")
+name = "Hood 01 04"
+
+[sub_resource type="Resource" id="Resource_l3a7r"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_x48g2"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_11xjq"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_l3a7r"), SubResource("Resource_x48g2")])
+
+[sub_resource type="Resource" id="01_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_11xjq")
+name = "Hood 01 05"
+
+[sub_resource type="Resource" id="Resource_vshxq"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_a2yqm"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_3cpdd"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_vshxq"), SubResource("Resource_a2yqm")])
+
+[sub_resource type="Resource" id="01_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_3cpdd")
+name = "Hood 01 06"
+
+[sub_resource type="Resource" id="Resource_s6wr7"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_10j68"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_rccqg"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_s6wr7"), SubResource("Resource_10j68")])
+
+[sub_resource type="Resource" id="01_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rccqg")
+name = "Hood 01 07"
+
+[sub_resource type="Resource" id="Resource_jm8dn"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_ijiao"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_8kh41"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_jm8dn"), SubResource("Resource_ijiao")])
+
+[sub_resource type="Resource" id="01_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8kh41")
+name = "Hood 01 08"
+
+[sub_resource type="Resource" id="Resource_3a2rf"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_ck4l0"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_kph3y"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_3a2rf"), SubResource("Resource_ck4l0")])
+
+[sub_resource type="Resource" id="01_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_kph3y")
+name = "Hood 01 09"
+
+[sub_resource type="Resource" id="Resource_cxp0m"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_xcyf3"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_w55ix"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_cxp0m"), SubResource("Resource_xcyf3")])
+
+[sub_resource type="Resource" id="01_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_w55ix")
+name = "Hood 01 10"
+
+[sub_resource type="Resource" id="Resource_8pg4l"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_7urny"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_7rohn"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_8pg4l"), SubResource("Resource_7urny")])
+
+[sub_resource type="Resource" id="01_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_7rohn")
+name = "Hood 01 11"
+
+[sub_resource type="Resource" id="Resource_o4yl1"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_0dd2h"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_e8s00"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_o4yl1"), SubResource("Resource_0dd2h")])
+
+[sub_resource type="Resource" id="01_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_e8s00")
+name = "Hood 01 12"
+
+[sub_resource type="Resource" id="Resource_48ne6"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_t6heq"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_467ua"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_48ne6"), SubResource("Resource_t6heq")])
+
+[sub_resource type="Resource" id="01_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_467ua")
+name = "Hood 01 13"
+
+[sub_resource type="Resource" id="Resource_07jdv"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("5_vasq4")
+
+[sub_resource type="Resource" id="Resource_gxi18"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_07jdv")])
+
+[sub_resource type="Resource" id="01_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_gxi18")
+name = "Hood 01 00"
+
+[sub_resource type="Resource" id="Resource_ughtp"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_ldqok"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_s6yr0"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ughtp"), SubResource("Resource_ldqok")])
+
+[sub_resource type="Resource" id="02_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_s6yr0")
+name = "Hood 02 01"
+
+[sub_resource type="Resource" id="Resource_gkfsj"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_48g2e"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_hmd7g"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_gkfsj"), SubResource("Resource_48g2e")])
+
+[sub_resource type="Resource" id="02_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_hmd7g")
+name = "Hood 02 02"
+
+[sub_resource type="Resource" id="Resource_g14ac"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_5k46a"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_gbrdp"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_g14ac"), SubResource("Resource_5k46a")])
+
+[sub_resource type="Resource" id="02_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_gbrdp")
+name = "Hood 02 03"
+
+[sub_resource type="Resource" id="Resource_cemcr"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_6c7gp"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_8uplg"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_cemcr"), SubResource("Resource_6c7gp")])
+
+[sub_resource type="Resource" id="02_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8uplg")
+name = "Hood 02 04"
+
+[sub_resource type="Resource" id="Resource_gjqvs"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_omwwn"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_dx880"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_gjqvs"), SubResource("Resource_omwwn")])
+
+[sub_resource type="Resource" id="02_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_dx880")
+name = "Hood 02 05"
+
+[sub_resource type="Resource" id="Resource_l1tvy"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_w0qny"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_4mo0w"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_l1tvy"), SubResource("Resource_w0qny")])
+
+[sub_resource type="Resource" id="02_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_4mo0w")
+name = "Hood 02 06"
+
+[sub_resource type="Resource" id="Resource_nx8rm"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_8skga"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_3h0fb"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_nx8rm"), SubResource("Resource_8skga")])
+
+[sub_resource type="Resource" id="02_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_3h0fb")
+name = "Hood 02 07"
+
+[sub_resource type="Resource" id="Resource_sttue"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_txxbs"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_hy57h"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_sttue"), SubResource("Resource_txxbs")])
+
+[sub_resource type="Resource" id="02_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_hy57h")
+name = "Hood 02 08"
+
+[sub_resource type="Resource" id="Resource_ndgvr"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_uofbk"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_x8wsw"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ndgvr"), SubResource("Resource_uofbk")])
+
+[sub_resource type="Resource" id="02_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_x8wsw")
+name = "Hood 02 09"
+
+[sub_resource type="Resource" id="Resource_6lgd2"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_ypxdo"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_fmk1t"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_6lgd2"), SubResource("Resource_ypxdo")])
+
+[sub_resource type="Resource" id="02_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_fmk1t")
+name = "Hood 02 10"
+
+[sub_resource type="Resource" id="Resource_mq7vp"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_70316"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_llgit"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_mq7vp"), SubResource("Resource_70316")])
+
+[sub_resource type="Resource" id="02_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_llgit")
+name = "Hood 02 11"
+
+[sub_resource type="Resource" id="Resource_5644x"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_quveb"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_37q5b"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_5644x"), SubResource("Resource_quveb")])
+
+[sub_resource type="Resource" id="02_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_37q5b")
+name = "Hood 02 12"
+
+[sub_resource type="Resource" id="Resource_upicv"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_sujcq"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_fkc4p"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_upicv"), SubResource("Resource_sujcq")])
+
+[sub_resource type="Resource" id="02_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_fkc4p")
+name = "Hood 02 13"
+
+[sub_resource type="Resource" id="Resource_xrwti"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("21_fwj4t")
+
+[sub_resource type="Resource" id="Resource_ku5re"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_xrwti")])
+
+[sub_resource type="Resource" id="02_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_ku5re")
+name = "Hood 02 00"
+
+[sub_resource type="Resource" id="Resource_5pwod"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_fdct6"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_tn1g7"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_5pwod"), SubResource("Resource_fdct6")])
+
+[sub_resource type="Resource" id="03_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_tn1g7")
+name = "Hood 03 01"
+
+[sub_resource type="Resource" id="Resource_pug2n"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_hufbv"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_urs2o"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_pug2n"), SubResource("Resource_hufbv")])
+
+[sub_resource type="Resource" id="03_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_urs2o")
+name = "Hood 03 02"
+
+[sub_resource type="Resource" id="Resource_gac1x"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_d0tmh"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_1ccf2"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_gac1x"), SubResource("Resource_d0tmh")])
+
+[sub_resource type="Resource" id="03_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_1ccf2")
+name = "Hood 03 03"
+
+[sub_resource type="Resource" id="Resource_ib105"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_4kth6"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_w1uno"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ib105"), SubResource("Resource_4kth6")])
+
+[sub_resource type="Resource" id="03_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_w1uno")
+name = "Hood 03 04"
+
+[sub_resource type="Resource" id="Resource_vfnui"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_x8v0n"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_7k6pl"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_vfnui"), SubResource("Resource_x8v0n")])
+
+[sub_resource type="Resource" id="03_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_7k6pl")
+name = "Hood 03 05"
+
+[sub_resource type="Resource" id="Resource_1u88i"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_fcbk4"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_gw4v0"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_1u88i"), SubResource("Resource_fcbk4")])
+
+[sub_resource type="Resource" id="03_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_gw4v0")
+name = "Hood 03 06"
+
+[sub_resource type="Resource" id="Resource_72b4h"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_ntrfl"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_cqsri"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_72b4h"), SubResource("Resource_ntrfl")])
+
+[sub_resource type="Resource" id="03_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_cqsri")
+name = "Hood 03 07"
+
+[sub_resource type="Resource" id="Resource_kwnp2"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_nt0ga"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_p5t5c"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_kwnp2"), SubResource("Resource_nt0ga")])
+
+[sub_resource type="Resource" id="03_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_p5t5c")
+name = "Hood 03 08"
+
+[sub_resource type="Resource" id="Resource_r77kj"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_roboq"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_88y0e"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_r77kj"), SubResource("Resource_roboq")])
+
+[sub_resource type="Resource" id="03_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_88y0e")
+name = "Hood 03 09"
+
+[sub_resource type="Resource" id="Resource_dls2f"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_d6iq2"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_rsb1n"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dls2f"), SubResource("Resource_d6iq2")])
+
+[sub_resource type="Resource" id="03_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rsb1n")
+name = "Hood 03 10"
+
+[sub_resource type="Resource" id="Resource_tn6pd"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_dtril"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_avwlt"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_tn6pd"), SubResource("Resource_dtril")])
+
+[sub_resource type="Resource" id="03_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_avwlt")
+name = "Hood 03 11"
+
+[sub_resource type="Resource" id="Resource_a81r5"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_qe4td"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_rj83u"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_a81r5"), SubResource("Resource_qe4td")])
+
+[sub_resource type="Resource" id="03_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rj83u")
+name = "Hood 03 12"
+
+[sub_resource type="Resource" id="Resource_e5yj6"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_wycq8"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_i01br"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_e5yj6"), SubResource("Resource_wycq8")])
+
+[sub_resource type="Resource" id="03_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_i01br")
+name = "Hood 03 13"
+
+[sub_resource type="Resource" id="Resource_0dxs4"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("22_3o0i6")
+
+[sub_resource type="Resource" id="Resource_mught"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_0dxs4")])
+
+[sub_resource type="Resource" id="03_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_mught")
+name = "Hood 03 00"
+
+[sub_resource type="Resource" id="Resource_y536o"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_j6cik"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_hxguw"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_y536o"), SubResource("Resource_j6cik")])
+
+[sub_resource type="Resource" id="04_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_hxguw")
+name = "Hood 04 01"
+
+[sub_resource type="Resource" id="Resource_lo8fp"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_f8xa5"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_x5rm0"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_lo8fp"), SubResource("Resource_f8xa5")])
+
+[sub_resource type="Resource" id="04_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_x5rm0")
+name = "Hood 04 02"
+
+[sub_resource type="Resource" id="Resource_0dujx"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_qrqdp"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_0aukb"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_0dujx"), SubResource("Resource_qrqdp")])
+
+[sub_resource type="Resource" id="04_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_0aukb")
+name = "Hood 04 03"
+
+[sub_resource type="Resource" id="Resource_cirse"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_gfbe4"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_ilroh"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_cirse"), SubResource("Resource_gfbe4")])
+
+[sub_resource type="Resource" id="04_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_ilroh")
+name = "Hood 04 04"
+
+[sub_resource type="Resource" id="Resource_dakhy"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_vei0q"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_07kui"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dakhy"), SubResource("Resource_vei0q")])
+
+[sub_resource type="Resource" id="04_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_07kui")
+name = "Hood 04 05"
+
+[sub_resource type="Resource" id="Resource_d1lih"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_bf1rn"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_hhgk7"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_d1lih"), SubResource("Resource_bf1rn")])
+
+[sub_resource type="Resource" id="04_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_hhgk7")
+name = "Hood 04 06"
+
+[sub_resource type="Resource" id="Resource_myhq8"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_7lcgq"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_tov17"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_myhq8"), SubResource("Resource_7lcgq")])
+
+[sub_resource type="Resource" id="04_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_tov17")
+name = "Hood 04 07"
+
+[sub_resource type="Resource" id="Resource_jpngc"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_4maqu"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_ubvox"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_jpngc"), SubResource("Resource_4maqu")])
+
+[sub_resource type="Resource" id="04_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_ubvox")
+name = "Hood 04 08"
+
+[sub_resource type="Resource" id="Resource_1fq56"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_0veaq"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_ygj44"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_1fq56"), SubResource("Resource_0veaq")])
+
+[sub_resource type="Resource" id="04_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_ygj44")
+name = "Hood 04 09"
+
+[sub_resource type="Resource" id="Resource_6qpfu"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_rqe2c"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_577w3"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_6qpfu"), SubResource("Resource_rqe2c")])
+
+[sub_resource type="Resource" id="04_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_577w3")
+name = "Hood 04 10"
+
+[sub_resource type="Resource" id="Resource_qkrm3"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_rndgc"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_uwksq"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_qkrm3"), SubResource("Resource_rndgc")])
+
+[sub_resource type="Resource" id="04_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_uwksq")
+name = "Hood 04 11"
+
+[sub_resource type="Resource" id="Resource_pual8"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_3akpu"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_6t3ad"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_pual8"), SubResource("Resource_3akpu")])
+
+[sub_resource type="Resource" id="04_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_6t3ad")
+name = "Hood 04 12"
+
+[sub_resource type="Resource" id="Resource_wrsn6"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_6dydr"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_tud3p"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_wrsn6"), SubResource("Resource_6dydr")])
+
+[sub_resource type="Resource" id="04_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_tud3p")
+name = "Hood 04 13"
+
+[sub_resource type="Resource" id="Resource_v6mto"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("23_ldcf2")
+
+[sub_resource type="Resource" id="Resource_pln5t"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_v6mto")])
+
+[sub_resource type="Resource" id="04_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_pln5t")
+name = "Hood 04 00"
+
+[sub_resource type="Resource" id="Resource_0d3bl"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_d37l3"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_dso81"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_0d3bl"), SubResource("Resource_d37l3")])
+
+[sub_resource type="Resource" id="05_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_dso81")
+name = "Hood 05 01"
+
+[sub_resource type="Resource" id="Resource_kbppm"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_b1k3n"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_fgole"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_kbppm"), SubResource("Resource_b1k3n")])
+
+[sub_resource type="Resource" id="05_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_fgole")
+name = "Hood 05 02"
+
+[sub_resource type="Resource" id="Resource_f0rbd"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_7vltf"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_buiut"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_f0rbd"), SubResource("Resource_7vltf")])
+
+[sub_resource type="Resource" id="05_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_buiut")
+name = "Hood 05 03"
+
+[sub_resource type="Resource" id="Resource_d4q64"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_5603m"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_c51e7"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_d4q64"), SubResource("Resource_5603m")])
+
+[sub_resource type="Resource" id="05_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_c51e7")
+name = "Hood 05 04"
+
+[sub_resource type="Resource" id="Resource_3xlmr"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_5aqd5"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_fiqvi"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_3xlmr"), SubResource("Resource_5aqd5")])
+
+[sub_resource type="Resource" id="05_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_fiqvi")
+name = "Hood 05 05"
+
+[sub_resource type="Resource" id="Resource_ygdkj"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_v7pt4"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_rului"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ygdkj"), SubResource("Resource_v7pt4")])
+
+[sub_resource type="Resource" id="05_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rului")
+name = "Hood 05 06"
+
+[sub_resource type="Resource" id="Resource_gcg7n"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_gxmtm"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_8tk55"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_gcg7n"), SubResource("Resource_gxmtm")])
+
+[sub_resource type="Resource" id="05_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8tk55")
+name = "Hood 05 07"
+
+[sub_resource type="Resource" id="Resource_b4qa6"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_ohhqf"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_qijwd"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_b4qa6"), SubResource("Resource_ohhqf")])
+
+[sub_resource type="Resource" id="05_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_qijwd")
+name = "Hood 05 08"
+
+[sub_resource type="Resource" id="Resource_n6ach"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_16112"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_wlis8"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_n6ach"), SubResource("Resource_16112")])
+
+[sub_resource type="Resource" id="05_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_wlis8")
+name = "Hood 05 09"
+
+[sub_resource type="Resource" id="Resource_xog38"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_6e1lp"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_wsyib"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_xog38"), SubResource("Resource_6e1lp")])
+
+[sub_resource type="Resource" id="05_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_wsyib")
+name = "Hood 05 10"
+
+[sub_resource type="Resource" id="Resource_88nty"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_pby1f"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_ovtmr"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_88nty"), SubResource("Resource_pby1f")])
+
+[sub_resource type="Resource" id="05_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_ovtmr")
+name = "Hood 05 11"
+
+[sub_resource type="Resource" id="Resource_1vhkl"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_sov1h"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_41umy"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_1vhkl"), SubResource("Resource_sov1h")])
+
+[sub_resource type="Resource" id="05_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_41umy")
+name = "Hood 05 12"
+
+[sub_resource type="Resource" id="Resource_6k56x"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_qhaut"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_dxhm4"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_6k56x"), SubResource("Resource_qhaut")])
+
+[sub_resource type="Resource" id="05_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_dxhm4")
+name = "Hood 05 13"
+
+[sub_resource type="Resource" id="Resource_0fbn8"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("24_hl81q")
+
+[sub_resource type="Resource" id="Resource_g0f03"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_0fbn8")])
+
+[sub_resource type="Resource" id="05_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_g0f03")
+name = "Hood 05 00"
+
+[sub_resource type="Resource" id="Resource_q5wgx"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_a528o"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_jrsxc"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_q5wgx"), SubResource("Resource_a528o")])
+
+[sub_resource type="Resource" id="06_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_jrsxc")
+name = "Hood 06 01"
+
+[sub_resource type="Resource" id="Resource_3dv53"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_nufgx"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_53moq"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_3dv53"), SubResource("Resource_nufgx")])
+
+[sub_resource type="Resource" id="06_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_53moq")
+name = "Hood 06 02"
+
+[sub_resource type="Resource" id="Resource_3i2dj"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_kw8wc"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_sgnf2"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_3i2dj"), SubResource("Resource_kw8wc")])
+
+[sub_resource type="Resource" id="06_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_sgnf2")
+name = "Hood 06 03"
+
+[sub_resource type="Resource" id="Resource_2nx0l"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_l4o1s"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_hyes3"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_2nx0l"), SubResource("Resource_l4o1s")])
+
+[sub_resource type="Resource" id="06_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_hyes3")
+name = "Hood 06 04"
+
+[sub_resource type="Resource" id="Resource_emshy"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_eg2oo"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_4lr0a"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_emshy"), SubResource("Resource_eg2oo")])
+
+[sub_resource type="Resource" id="06_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_4lr0a")
+name = "Hood 06 05"
+
+[sub_resource type="Resource" id="Resource_8hkey"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_dr85j"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_l485b"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_8hkey"), SubResource("Resource_dr85j")])
+
+[sub_resource type="Resource" id="06_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_l485b")
+name = "Hood 06 06"
+
+[sub_resource type="Resource" id="Resource_s8hrl"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_1uwds"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_08hb8"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_s8hrl"), SubResource("Resource_1uwds")])
+
+[sub_resource type="Resource" id="06_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_08hb8")
+name = "Hood 06 07"
+
+[sub_resource type="Resource" id="Resource_1qbtn"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_h1pnc"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_d75g5"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_1qbtn"), SubResource("Resource_h1pnc")])
+
+[sub_resource type="Resource" id="06_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_d75g5")
+name = "Hood 06 08"
+
+[sub_resource type="Resource" id="Resource_nbitq"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_vywxj"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_6a8gq"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_nbitq"), SubResource("Resource_vywxj")])
+
+[sub_resource type="Resource" id="06_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_6a8gq")
+name = "Hood 06 09"
+
+[sub_resource type="Resource" id="Resource_78ccd"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_ro5yi"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_noqqv"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_78ccd"), SubResource("Resource_ro5yi")])
+
+[sub_resource type="Resource" id="06_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_noqqv")
+name = "Hood 06 10"
+
+[sub_resource type="Resource" id="Resource_mkd7q"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_hmvt2"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_kmj6j"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_mkd7q"), SubResource("Resource_hmvt2")])
+
+[sub_resource type="Resource" id="06_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_kmj6j")
+name = "Hood 06 11"
+
+[sub_resource type="Resource" id="Resource_s1jdf"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_8y1mx"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_3ky4q"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_s1jdf"), SubResource("Resource_8y1mx")])
+
+[sub_resource type="Resource" id="06_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_3ky4q")
+name = "Hood 06 12"
+
+[sub_resource type="Resource" id="Resource_i3sqd"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_hf5uc"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_gfkyf"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_i3sqd"), SubResource("Resource_hf5uc")])
+
+[sub_resource type="Resource" id="06_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_gfkyf")
+name = "Hood 06 13"
+
+[sub_resource type="Resource" id="Resource_0bpr1"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("25_m74b7")
+
+[sub_resource type="Resource" id="Resource_0n6si"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_0bpr1")])
+
+[sub_resource type="Resource" id="06_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_0n6si")
+name = "Hood 06 00"
+
+[sub_resource type="Resource" id="Resource_p5n74"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_rcu0y"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_nqxv8"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_p5n74"), SubResource("Resource_rcu0y")])
+
+[sub_resource type="Resource" id="07_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_nqxv8")
+name = "Hood 07 01"
+
+[sub_resource type="Resource" id="Resource_lyqc3"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_mnvxt"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_015gw"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_lyqc3"), SubResource("Resource_mnvxt")])
+
+[sub_resource type="Resource" id="07_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_015gw")
+name = "Hood 07 02"
+
+[sub_resource type="Resource" id="Resource_mvtv0"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_rj0t6"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_qurhu"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_mvtv0"), SubResource("Resource_rj0t6")])
+
+[sub_resource type="Resource" id="07_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_qurhu")
+name = "Hood 07 03"
+
+[sub_resource type="Resource" id="Resource_nrcsd"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_7ff5i"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_uocu0"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_nrcsd"), SubResource("Resource_7ff5i")])
+
+[sub_resource type="Resource" id="07_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_uocu0")
+name = "Hood 07 04"
+
+[sub_resource type="Resource" id="Resource_k6u2g"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_an53w"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_rlio2"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_k6u2g"), SubResource("Resource_an53w")])
+
+[sub_resource type="Resource" id="07_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rlio2")
+name = "Hood 07 05"
+
+[sub_resource type="Resource" id="Resource_iwsjl"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_q1fo0"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_wjfpl"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_iwsjl"), SubResource("Resource_q1fo0")])
+
+[sub_resource type="Resource" id="07_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_wjfpl")
+name = "Hood 07 06"
+
+[sub_resource type="Resource" id="Resource_v6jws"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_lpu7i"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_fxud0"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_v6jws"), SubResource("Resource_lpu7i")])
+
+[sub_resource type="Resource" id="07_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_fxud0")
+name = "Hood 07 07"
+
+[sub_resource type="Resource" id="Resource_eckug"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_1wnee"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_l18s6"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_eckug"), SubResource("Resource_1wnee")])
+
+[sub_resource type="Resource" id="07_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_l18s6")
+name = "Hood 07 08"
+
+[sub_resource type="Resource" id="Resource_ey0ga"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_evvws"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_6b4o3"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ey0ga"), SubResource("Resource_evvws")])
+
+[sub_resource type="Resource" id="07_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_6b4o3")
+name = "Hood 07 09"
+
+[sub_resource type="Resource" id="Resource_tbs5e"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_kw7ei"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_kvkdf"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_tbs5e"), SubResource("Resource_kw7ei")])
+
+[sub_resource type="Resource" id="07_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_kvkdf")
+name = "Hood 07 10"
+
+[sub_resource type="Resource" id="Resource_ue6fl"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_qi8r7"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_05c2l"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ue6fl"), SubResource("Resource_qi8r7")])
+
+[sub_resource type="Resource" id="07_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_05c2l")
+name = "Hood 07 11"
+
+[sub_resource type="Resource" id="Resource_pk8dg"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_kpfrs"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_wfrba"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_pk8dg"), SubResource("Resource_kpfrs")])
+
+[sub_resource type="Resource" id="07_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_wfrba")
+name = "Hood 07 12"
+
+[sub_resource type="Resource" id="Resource_l063d"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_jpu4r"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_wy8sq"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_l063d"), SubResource("Resource_jpu4r")])
+
+[sub_resource type="Resource" id="07_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_wy8sq")
+name = "Hood 07 13"
+
+[sub_resource type="Resource" id="Resource_svcek"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("26_op8aa")
+
+[sub_resource type="Resource" id="Resource_y5eot"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_svcek")])
+
+[sub_resource type="Resource" id="07_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_y5eot")
+name = "Hood 07 00"
+
+[sub_resource type="Resource" id="Resource_sjjcl"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_h1rkf"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_rq21k"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_sjjcl"), SubResource("Resource_h1rkf")])
+
+[sub_resource type="Resource" id="08_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rq21k")
+name = "Hood 08 01"
+
+[sub_resource type="Resource" id="Resource_24edv"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_178q8"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_8n88u"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_24edv"), SubResource("Resource_178q8")])
+
+[sub_resource type="Resource" id="08_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8n88u")
+name = "Hood 08 02"
+
+[sub_resource type="Resource" id="Resource_2en7b"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_onyjv"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_elyat"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_2en7b"), SubResource("Resource_onyjv")])
+
+[sub_resource type="Resource" id="08_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_elyat")
+name = "Hood 08 03"
+
+[sub_resource type="Resource" id="Resource_dfkpp"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_5hmmd"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_dipc8"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dfkpp"), SubResource("Resource_5hmmd")])
+
+[sub_resource type="Resource" id="08_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_dipc8")
+name = "Hood 08 04"
+
+[sub_resource type="Resource" id="Resource_fltpk"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_d5b7e"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_w2sl5"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_fltpk"), SubResource("Resource_d5b7e")])
+
+[sub_resource type="Resource" id="08_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_w2sl5")
+name = "Hood 08 05"
+
+[sub_resource type="Resource" id="Resource_53y72"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_fsp16"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_fn6yi"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_53y72"), SubResource("Resource_fsp16")])
+
+[sub_resource type="Resource" id="08_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_fn6yi")
+name = "Hood 08 06"
+
+[sub_resource type="Resource" id="Resource_v40kq"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_6uihb"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_jslgj"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_v40kq"), SubResource("Resource_6uihb")])
+
+[sub_resource type="Resource" id="08_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_jslgj")
+name = "Hood 08 07"
+
+[sub_resource type="Resource" id="Resource_36xc6"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_ufhdh"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_o216g"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_36xc6"), SubResource("Resource_ufhdh")])
+
+[sub_resource type="Resource" id="08_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_o216g")
+name = "Hood 08 08"
+
+[sub_resource type="Resource" id="Resource_hit1p"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_byuq6"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_rpwc2"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_hit1p"), SubResource("Resource_byuq6")])
+
+[sub_resource type="Resource" id="08_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rpwc2")
+name = "Hood 08 09"
+
+[sub_resource type="Resource" id="Resource_wcmyg"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_35oh0"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_n3gno"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_wcmyg"), SubResource("Resource_35oh0")])
+
+[sub_resource type="Resource" id="08_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_n3gno")
+name = "Hood 08 10"
+
+[sub_resource type="Resource" id="Resource_ys1dk"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_pvt1n"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_xycda"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ys1dk"), SubResource("Resource_pvt1n")])
+
+[sub_resource type="Resource" id="08_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_xycda")
+name = "Hood 08 11"
+
+[sub_resource type="Resource" id="Resource_ddr2m"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_nnmgw"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_uty7h"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ddr2m"), SubResource("Resource_nnmgw")])
+
+[sub_resource type="Resource" id="08_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_uty7h")
+name = "Hood 08 12"
+
+[sub_resource type="Resource" id="Resource_lhic6"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_w6ax2"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_3bv82"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_lhic6"), SubResource("Resource_w6ax2")])
+
+[sub_resource type="Resource" id="08_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_3bv82")
+name = "Hood 08 13"
+
+[sub_resource type="Resource" id="Resource_dnvh3"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("27_f8w24")
+
+[sub_resource type="Resource" id="Resource_q6xww"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dnvh3")])
+
+[sub_resource type="Resource" id="08_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_q6xww")
+name = "Hood 08 00"
+
+[sub_resource type="Resource" id="Resource_g3xg7"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_llnpf"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_kky6h"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_g3xg7"), SubResource("Resource_llnpf")])
+
+[sub_resource type="Resource" id="09_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_kky6h")
+name = "Hood 09 01"
+
+[sub_resource type="Resource" id="Resource_52hao"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_hnr1n"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_wmmfl"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_52hao"), SubResource("Resource_hnr1n")])
+
+[sub_resource type="Resource" id="09_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_wmmfl")
+name = "Hood 09 02"
+
+[sub_resource type="Resource" id="Resource_cgjld"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_8ws4w"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_y4av5"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_cgjld"), SubResource("Resource_8ws4w")])
+
+[sub_resource type="Resource" id="09_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_y4av5")
+name = "Hood 09 03"
+
+[sub_resource type="Resource" id="Resource_7cseh"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_x5b67"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_q4neq"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_7cseh"), SubResource("Resource_x5b67")])
+
+[sub_resource type="Resource" id="09_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_q4neq")
+name = "Hood 09 04"
+
+[sub_resource type="Resource" id="Resource_4jtki"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_7fktf"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_h4dnq"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_4jtki"), SubResource("Resource_7fktf")])
+
+[sub_resource type="Resource" id="09_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_h4dnq")
+name = "Hood 09 05"
+
+[sub_resource type="Resource" id="Resource_whd4h"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_kllwt"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_lkisk"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_whd4h"), SubResource("Resource_kllwt")])
+
+[sub_resource type="Resource" id="09_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_lkisk")
+name = "Hood 09 06"
+
+[sub_resource type="Resource" id="Resource_vfmfg"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_8htpp"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_2u1kk"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_vfmfg"), SubResource("Resource_8htpp")])
+
+[sub_resource type="Resource" id="09_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_2u1kk")
+name = "Hood 09 07"
+
+[sub_resource type="Resource" id="Resource_eyg1b"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_l3s3x"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_nqu4g"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_eyg1b"), SubResource("Resource_l3s3x")])
+
+[sub_resource type="Resource" id="09_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_nqu4g")
+name = "Hood 09 08"
+
+[sub_resource type="Resource" id="Resource_7duhk"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_4kagq"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_8ah7w"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_7duhk"), SubResource("Resource_4kagq")])
+
+[sub_resource type="Resource" id="09_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8ah7w")
+name = "Hood 09 09"
+
+[sub_resource type="Resource" id="Resource_3iyov"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_gr2ah"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_owwea"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_3iyov"), SubResource("Resource_gr2ah")])
+
+[sub_resource type="Resource" id="09_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_owwea")
+name = "Hood 09 10"
+
+[sub_resource type="Resource" id="Resource_xfknc"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_vwl58"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_74c1o"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_xfknc"), SubResource("Resource_vwl58")])
+
+[sub_resource type="Resource" id="09_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_74c1o")
+name = "Hood 09 11"
+
+[sub_resource type="Resource" id="Resource_xebtf"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_1n37t"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_bh5oy"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_xebtf"), SubResource("Resource_1n37t")])
+
+[sub_resource type="Resource" id="09_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_bh5oy")
+name = "Hood 09 12"
+
+[sub_resource type="Resource" id="Resource_awv81"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_lyphm"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_g53j1"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_awv81"), SubResource("Resource_lyphm")])
+
+[sub_resource type="Resource" id="09_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_g53j1")
+name = "Hood 09 13"
+
+[sub_resource type="Resource" id="Resource_2bawv"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("28_nsfhm")
+
+[sub_resource type="Resource" id="Resource_rfd0t"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_2bawv")])
+
+[sub_resource type="Resource" id="09_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rfd0t")
+name = "Hood 09 00"
+
+[sub_resource type="Resource" id="Resource_dneun"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_y0p82"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_x33x8"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dneun"), SubResource("Resource_y0p82")])
+
+[sub_resource type="Resource" id="10_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_x33x8")
+name = "Hood 10 01"
+
+[sub_resource type="Resource" id="Resource_7e7xt"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_7283f"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_chvjq"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_7e7xt"), SubResource("Resource_7283f")])
+
+[sub_resource type="Resource" id="10_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_chvjq")
+name = "Hood 10 02"
+
+[sub_resource type="Resource" id="Resource_fktxj"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_3dukh"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_f28rp"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_fktxj"), SubResource("Resource_3dukh")])
+
+[sub_resource type="Resource" id="10_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_f28rp")
+name = "Hood 10 03"
+
+[sub_resource type="Resource" id="Resource_ft5k8"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_a1l1b"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_23cov"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ft5k8"), SubResource("Resource_a1l1b")])
+
+[sub_resource type="Resource" id="10_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_23cov")
+name = "Hood 10 04"
+
+[sub_resource type="Resource" id="Resource_elbix"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_pf7br"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_4ikjw"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_elbix"), SubResource("Resource_pf7br")])
+
+[sub_resource type="Resource" id="10_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_4ikjw")
+name = "Hood 10 05"
+
+[sub_resource type="Resource" id="Resource_gm812"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_pfs7y"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_gybiy"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_gm812"), SubResource("Resource_pfs7y")])
+
+[sub_resource type="Resource" id="10_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_gybiy")
+name = "Hood 10 06"
+
+[sub_resource type="Resource" id="Resource_ey5o1"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_22ve3"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_el8ho"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ey5o1"), SubResource("Resource_22ve3")])
+
+[sub_resource type="Resource" id="10_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_el8ho")
+name = "Hood 10 07"
+
+[sub_resource type="Resource" id="Resource_8q3po"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_nvnyu"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_54yam"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_8q3po"), SubResource("Resource_nvnyu")])
+
+[sub_resource type="Resource" id="10_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_54yam")
+name = "Hood 10 08"
+
+[sub_resource type="Resource" id="Resource_dwtdg"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_sl0xg"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_g286f"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dwtdg"), SubResource("Resource_sl0xg")])
+
+[sub_resource type="Resource" id="10_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_g286f")
+name = "Hood 10 09"
+
+[sub_resource type="Resource" id="Resource_pbh1p"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_0ftbr"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_ax76u"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_pbh1p"), SubResource("Resource_0ftbr")])
+
+[sub_resource type="Resource" id="10_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_ax76u")
+name = "Hood 10 10"
+
+[sub_resource type="Resource" id="Resource_nsgx5"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_mc1fv"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_1qugl"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_nsgx5"), SubResource("Resource_mc1fv")])
+
+[sub_resource type="Resource" id="10_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_1qugl")
+name = "Hood 10 11"
+
+[sub_resource type="Resource" id="Resource_0ugd4"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_4bwpd"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_4rdmg"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_0ugd4"), SubResource("Resource_4bwpd")])
+
+[sub_resource type="Resource" id="10_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_4rdmg")
+name = "Hood 10 12"
+
+[sub_resource type="Resource" id="Resource_vh2yi"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_bryp7"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_yyha2"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_vh2yi"), SubResource("Resource_bryp7")])
+
+[sub_resource type="Resource" id="10_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_yyha2")
+name = "Hood 10 13"
+
+[sub_resource type="Resource" id="Resource_dpcys"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("29_xbpe5")
+
+[sub_resource type="Resource" id="Resource_sq12x"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dpcys")])
+
+[sub_resource type="Resource" id="10_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_sq12x")
+name = "Hood 10 00"
+
+[sub_resource type="Resource" id="Resource_hg2h2"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_h7ar6"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_usqry"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_hg2h2"), SubResource("Resource_h7ar6")])
+
+[sub_resource type="Resource" id="11_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_usqry")
+name = "Hood 11 01"
+
+[sub_resource type="Resource" id="Resource_hbeyn"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_bgsfw"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_sk8hw"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_hbeyn"), SubResource("Resource_bgsfw")])
+
+[sub_resource type="Resource" id="11_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_sk8hw")
+name = "Hood 11 02"
+
+[sub_resource type="Resource" id="Resource_h4le7"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_mhuw5"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_7f6ep"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_h4le7"), SubResource("Resource_mhuw5")])
+
+[sub_resource type="Resource" id="11_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_7f6ep")
+name = "Hood 11 03"
+
+[sub_resource type="Resource" id="Resource_kf31w"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_lt2lk"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_rexuf"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_kf31w"), SubResource("Resource_lt2lk")])
+
+[sub_resource type="Resource" id="11_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rexuf")
+name = "Hood 11 04"
+
+[sub_resource type="Resource" id="Resource_ndpav"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_oae0y"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_bpb5u"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ndpav"), SubResource("Resource_oae0y")])
+
+[sub_resource type="Resource" id="11_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_bpb5u")
+name = "Hood 11 05"
+
+[sub_resource type="Resource" id="Resource_epnth"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_w0o7g"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_akkxr"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_epnth"), SubResource("Resource_w0o7g")])
+
+[sub_resource type="Resource" id="11_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_akkxr")
+name = "Hood 11 06"
+
+[sub_resource type="Resource" id="Resource_ophyx"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_r3ciw"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_mkf1s"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ophyx"), SubResource("Resource_r3ciw")])
+
+[sub_resource type="Resource" id="11_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_mkf1s")
+name = "Hood 11 07"
+
+[sub_resource type="Resource" id="Resource_d262s"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_oygq8"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_8dge8"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_d262s"), SubResource("Resource_oygq8")])
+
+[sub_resource type="Resource" id="11_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8dge8")
+name = "Hood 11 08"
+
+[sub_resource type="Resource" id="Resource_p33op"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_u2ic3"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_k6obt"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_p33op"), SubResource("Resource_u2ic3")])
+
+[sub_resource type="Resource" id="11_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_k6obt")
+name = "Hood 11 09"
+
+[sub_resource type="Resource" id="Resource_b04du"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_pt0jx"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_v7wwg"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_b04du"), SubResource("Resource_pt0jx")])
+
+[sub_resource type="Resource" id="11_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_v7wwg")
+name = "Hood 11 10"
+
+[sub_resource type="Resource" id="Resource_fppn2"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_mi1x2"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_l4mk0"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_fppn2"), SubResource("Resource_mi1x2")])
+
+[sub_resource type="Resource" id="11_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_l4mk0")
+name = "Hood 11 11"
+
+[sub_resource type="Resource" id="Resource_nowte"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_d7gtk"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_d8g8h"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_nowte"), SubResource("Resource_d7gtk")])
+
+[sub_resource type="Resource" id="11_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_d8g8h")
+name = "Hood 11 12"
+
+[sub_resource type="Resource" id="Resource_ujt6l"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_hjjas"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_h8j0l"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ujt6l"), SubResource("Resource_hjjas")])
+
+[sub_resource type="Resource" id="11_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_h8j0l")
+name = "Hood 11 13"
+
+[sub_resource type="Resource" id="Resource_gp03f"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("30_6agn6")
+
+[sub_resource type="Resource" id="Resource_rnq6v"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_gp03f")])
+
+[sub_resource type="Resource" id="11_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_rnq6v")
+name = "Hood 11 00"
+
+[sub_resource type="Resource" id="Resource_ln0l4"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_vpoao"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_ijbbl"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ln0l4"), SubResource("Resource_vpoao")])
+
+[sub_resource type="Resource" id="12_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_ijbbl")
+name = "Hood 12 01"
+
+[sub_resource type="Resource" id="Resource_55mkh"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_yop0c"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_iftxf"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_55mkh"), SubResource("Resource_yop0c")])
+
+[sub_resource type="Resource" id="12_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_iftxf")
+name = "Hood 12 02"
+
+[sub_resource type="Resource" id="Resource_af118"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_yv4ui"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_ewjum"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_af118"), SubResource("Resource_yv4ui")])
+
+[sub_resource type="Resource" id="12_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_ewjum")
+name = "Hood 12 03"
+
+[sub_resource type="Resource" id="Resource_g2jqj"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_dw2mj"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_cbmec"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_g2jqj"), SubResource("Resource_dw2mj")])
+
+[sub_resource type="Resource" id="12_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_cbmec")
+name = "Hood 12 04"
+
+[sub_resource type="Resource" id="Resource_2fbvs"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_15fpx"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_6b7gh"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_2fbvs"), SubResource("Resource_15fpx")])
+
+[sub_resource type="Resource" id="12_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_6b7gh")
+name = "Hood 12 05"
+
+[sub_resource type="Resource" id="Resource_lp7wm"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_xa88p"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_swugy"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_lp7wm"), SubResource("Resource_xa88p")])
+
+[sub_resource type="Resource" id="12_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_swugy")
+name = "Hood 12 06"
+
+[sub_resource type="Resource" id="Resource_gemig"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_wstww"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_dxje7"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_gemig"), SubResource("Resource_wstww")])
+
+[sub_resource type="Resource" id="12_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_dxje7")
+name = "Hood 12 07"
+
+[sub_resource type="Resource" id="Resource_chs6k"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_8x4ik"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_nabyn"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_chs6k"), SubResource("Resource_8x4ik")])
+
+[sub_resource type="Resource" id="12_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_nabyn")
+name = "Hood 12 08"
+
+[sub_resource type="Resource" id="Resource_ivhba"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_u1it1"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_xgdo3"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ivhba"), SubResource("Resource_u1it1")])
+
+[sub_resource type="Resource" id="12_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_xgdo3")
+name = "Hood 12 09"
+
+[sub_resource type="Resource" id="Resource_x7qws"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_f4cgt"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_x1v05"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_x7qws"), SubResource("Resource_f4cgt")])
+
+[sub_resource type="Resource" id="12_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_x1v05")
+name = "Hood 12 10"
+
+[sub_resource type="Resource" id="Resource_hmnjh"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_q78ks"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_fn4kv"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_hmnjh"), SubResource("Resource_q78ks")])
+
+[sub_resource type="Resource" id="12_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_fn4kv")
+name = "Hood 12 11"
+
+[sub_resource type="Resource" id="Resource_p8st8"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_427bi"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_5ycyj"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_p8st8"), SubResource("Resource_427bi")])
+
+[sub_resource type="Resource" id="12_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_5ycyj")
+name = "Hood 12 12"
+
+[sub_resource type="Resource" id="Resource_ibs32"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_hxcc1"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_0qfvd"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ibs32"), SubResource("Resource_hxcc1")])
+
+[sub_resource type="Resource" id="12_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_0qfvd")
+name = "Hood 12 13"
+
+[sub_resource type="Resource" id="Resource_344n7"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("31_40s42")
+
+[sub_resource type="Resource" id="Resource_mu2vr"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_344n7")])
+
+[sub_resource type="Resource" id="12_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_mu2vr")
+name = "Hood 12 00"
+
+[sub_resource type="Resource" id="Resource_vhf2v"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_3ebjp"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_v0rxg"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_vhf2v"), SubResource("Resource_3ebjp")])
+
+[sub_resource type="Resource" id="13_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_v0rxg")
+name = "Hood 13 01"
+
+[sub_resource type="Resource" id="Resource_yt381"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_nn0hv"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_p2jqc"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_yt381"), SubResource("Resource_nn0hv")])
+
+[sub_resource type="Resource" id="13_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_p2jqc")
+name = "Hood 13 02"
+
+[sub_resource type="Resource" id="Resource_c7hcx"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_015cw"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_a1t75"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_c7hcx"), SubResource("Resource_015cw")])
+
+[sub_resource type="Resource" id="13_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_a1t75")
+name = "Hood 13 03"
+
+[sub_resource type="Resource" id="Resource_fgiy8"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_58eh0"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_mhgdr"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_fgiy8"), SubResource("Resource_58eh0")])
+
+[sub_resource type="Resource" id="13_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_mhgdr")
+name = "Hood 13 04"
+
+[sub_resource type="Resource" id="Resource_xfi3f"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_xve81"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_nbwdy"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_xfi3f"), SubResource("Resource_xve81")])
+
+[sub_resource type="Resource" id="13_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_nbwdy")
+name = "Hood 13 05"
+
+[sub_resource type="Resource" id="Resource_oafni"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_4t3mm"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_t7u41"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_oafni"), SubResource("Resource_4t3mm")])
+
+[sub_resource type="Resource" id="13_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_t7u41")
+name = "Hood 13 06"
+
+[sub_resource type="Resource" id="Resource_wwm3v"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_hsxud"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_ixmw6"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_wwm3v"), SubResource("Resource_hsxud")])
+
+[sub_resource type="Resource" id="13_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_ixmw6")
+name = "Hood 13 07"
+
+[sub_resource type="Resource" id="Resource_4m32g"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_i2cb7"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_8ytfb"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_4m32g"), SubResource("Resource_i2cb7")])
+
+[sub_resource type="Resource" id="13_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8ytfb")
+name = "Hood 13 08"
+
+[sub_resource type="Resource" id="Resource_4c3lp"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_k7xru"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_t2b3l"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_4c3lp"), SubResource("Resource_k7xru")])
+
+[sub_resource type="Resource" id="13_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_t2b3l")
+name = "Hood 13 09"
+
+[sub_resource type="Resource" id="Resource_15bcn"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_8o5pj"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_sno8j"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_15bcn"), SubResource("Resource_8o5pj")])
+
+[sub_resource type="Resource" id="13_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_sno8j")
+name = "Hood 13 10"
+
+[sub_resource type="Resource" id="Resource_dkor8"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_y7n2y"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_gjjkc"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dkor8"), SubResource("Resource_y7n2y")])
+
+[sub_resource type="Resource" id="13_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_gjjkc")
+name = "Hood 13 11"
+
+[sub_resource type="Resource" id="Resource_iheh3"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_3diis"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_c8fhs"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_iheh3"), SubResource("Resource_3diis")])
+
+[sub_resource type="Resource" id="13_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_c8fhs")
+name = "Hood 13 12"
+
+[sub_resource type="Resource" id="Resource_2ltkx"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_cihqr"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_8x7eh"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_2ltkx"), SubResource("Resource_cihqr")])
+
+[sub_resource type="Resource" id="13_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8x7eh")
+name = "Hood 13 13"
+
+[sub_resource type="Resource" id="Resource_ested"]
+script = ExtResource("4_xjn57")
+part = 21
+male_mesh = ExtResource("32_1rojs")
+
+[sub_resource type="Resource" id="Resource_dtlox"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ested")])
+
+[sub_resource type="Resource" id="13_00"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_dtlox")
+name = "Hood 13 00"
+
+[sub_resource type="Resource" id="Resource_dcnlm"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("6_ial24")
+
+[sub_resource type="Resource" id="Resource_mo4k0"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_dcnlm")])
+
+[sub_resource type="Resource" id="00_01"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_mo4k0")
+name = "Hood 00 01"
+
+[sub_resource type="Resource" id="Resource_pdgmq"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("9_q10mg")
+
+[sub_resource type="Resource" id="Resource_y5qj2"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_pdgmq")])
+
+[sub_resource type="Resource" id="00_02"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_y5qj2")
+name = "Hood 00 02"
+
+[sub_resource type="Resource" id="Resource_tl3e6"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("10_wgawh")
+
+[sub_resource type="Resource" id="Resource_f6cw8"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_tl3e6")])
+
+[sub_resource type="Resource" id="00_03"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_f6cw8")
+name = "Hood 00 03"
+
+[sub_resource type="Resource" id="Resource_5vhbn"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("11_r2j7a")
+
+[sub_resource type="Resource" id="Resource_skeoo"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_5vhbn")])
+
+[sub_resource type="Resource" id="00_04"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_skeoo")
+name = "Hood 00 04"
+
+[sub_resource type="Resource" id="Resource_ril4y"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("12_rqr30")
+
+[sub_resource type="Resource" id="Resource_4a5q3"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_ril4y")])
+
+[sub_resource type="Resource" id="00_05"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_4a5q3")
+name = "Hood 00 05"
+
+[sub_resource type="Resource" id="Resource_igjao"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("13_n20m6")
+
+[sub_resource type="Resource" id="Resource_p45o3"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_igjao")])
+
+[sub_resource type="Resource" id="00_06"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_p45o3")
+name = "Hood 00 06"
+
+[sub_resource type="Resource" id="Resource_lkuup"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("14_kigth")
+
+[sub_resource type="Resource" id="Resource_8ijin"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_lkuup")])
+
+[sub_resource type="Resource" id="00_07"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_8ijin")
+name = "Hood 00 07"
+
+[sub_resource type="Resource" id="Resource_gx4pd"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("15_wrk7j")
+
+[sub_resource type="Resource" id="Resource_5nnt4"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_gx4pd")])
+
+[sub_resource type="Resource" id="00_08"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_5nnt4")
+name = "Hood 00 08"
+
+[sub_resource type="Resource" id="Resource_25601"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("16_d0x4a")
+
+[sub_resource type="Resource" id="Resource_6l861"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_25601")])
+
+[sub_resource type="Resource" id="00_09"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_6l861")
+name = "Hood 00 09"
+
+[sub_resource type="Resource" id="Resource_lq5ed"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("17_bdsps")
+
+[sub_resource type="Resource" id="Resource_i7vgk"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_lq5ed")])
+
+[sub_resource type="Resource" id="00_10"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_i7vgk")
+name = "Hood 00 10"
+
+[sub_resource type="Resource" id="Resource_qujf7"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("18_2kpw4")
+
+[sub_resource type="Resource" id="Resource_4xkw3"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_qujf7")])
+
+[sub_resource type="Resource" id="00_11"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_4xkw3")
+name = "Hood 00 11"
+
+[sub_resource type="Resource" id="Resource_v33eu"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("19_c0hl0")
+
+[sub_resource type="Resource" id="Resource_3ohlp"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_v33eu")])
+
+[sub_resource type="Resource" id="00_12"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_3ohlp")
+name = "Hood 00 12"
+
+[sub_resource type="Resource" id="Resource_r4nya"]
+script = ExtResource("4_xjn57")
+part = 22
+male_mesh = ExtResource("20_28wcg")
+
+[sub_resource type="Resource" id="Resource_x0jjr"]
+script = ExtResource("7_n31uy")
+parts = Array[ExtResource("4_xjn57")]([SubResource("Resource_r4nya")])
+
+[sub_resource type="Resource" id="00_13"]
+script = ExtResource("1_4oni4")
+type = ExtResource("8_g2s2s")
+appearance = SubResource("Resource_x0jjr")
+name = "Hood 00 13"
+
+[resource]
+script = ExtResource("33_ex6ay")
+type = ExtResource("8_g2s2s")
+looks = Array[ExtResource("1_4oni4")]([SubResource("01_01"), SubResource("01_02"), SubResource("01_03"), SubResource("01_04"), SubResource("01_05"), SubResource("01_06"), SubResource("01_07"), SubResource("01_08"), SubResource("01_09"), SubResource("01_10"), SubResource("01_11"), SubResource("01_12"), SubResource("01_13"), SubResource("01_00"), SubResource("02_01"), SubResource("02_02"), SubResource("02_03"), SubResource("02_04"), SubResource("02_05"), SubResource("02_06"), SubResource("02_07"), SubResource("02_08"), SubResource("02_09"), SubResource("02_10"), SubResource("02_11"), SubResource("02_12"), SubResource("02_13"), SubResource("02_00"), SubResource("03_01"), SubResource("03_02"), SubResource("03_03"), SubResource("03_04"), SubResource("03_05"), SubResource("03_06"), SubResource("03_07"), SubResource("03_08"), SubResource("03_09"), SubResource("03_10"), SubResource("03_11"), SubResource("03_12"), SubResource("03_13"), SubResource("03_00"), SubResource("04_01"), SubResource("04_02"), SubResource("04_03"), SubResource("04_04"), SubResource("04_05"), SubResource("04_06"), SubResource("04_07"), SubResource("04_08"), SubResource("04_09"), SubResource("04_10"), SubResource("04_11"), SubResource("04_12"), SubResource("04_13"), SubResource("04_00"), SubResource("05_01"), SubResource("05_02"), SubResource("05_03"), SubResource("05_04"), SubResource("05_05"), SubResource("05_06"), SubResource("05_07"), SubResource("05_08"), SubResource("05_09"), SubResource("05_10"), SubResource("05_11"), SubResource("05_12"), SubResource("05_13"), SubResource("05_00"), SubResource("06_01"), SubResource("06_02"), SubResource("06_03"), SubResource("06_04"), SubResource("06_05"), SubResource("06_06"), SubResource("06_07"), SubResource("06_08"), SubResource("06_09"), SubResource("06_10"), SubResource("06_11"), SubResource("06_12"), SubResource("06_13"), SubResource("06_00"), SubResource("07_01"), SubResource("07_02"), SubResource("07_03"), SubResource("07_04"), SubResource("07_05"), SubResource("07_06"), SubResource("07_07"), SubResource("07_08"), SubResource("07_09"), SubResource("07_10"), SubResource("07_11"), SubResource("07_12"), SubResource("07_13"), SubResource("07_00"), SubResource("08_01"), SubResource("08_02"), SubResource("08_03"), SubResource("08_04"), SubResource("08_05"), SubResource("08_06"), SubResource("08_07"), SubResource("08_08"), SubResource("08_09"), SubResource("08_10"), SubResource("08_11"), SubResource("08_12"), SubResource("08_13"), SubResource("08_00"), SubResource("09_01"), SubResource("09_02"), SubResource("09_03"), SubResource("09_04"), SubResource("09_05"), SubResource("09_06"), SubResource("09_07"), SubResource("09_08"), SubResource("09_09"), SubResource("09_10"), SubResource("09_11"), SubResource("09_12"), SubResource("09_13"), SubResource("09_00"), SubResource("10_01"), SubResource("10_02"), SubResource("10_03"), SubResource("10_04"), SubResource("10_05"), SubResource("10_06"), SubResource("10_07"), SubResource("10_08"), SubResource("10_09"), SubResource("10_10"), SubResource("10_11"), SubResource("10_12"), SubResource("10_13"), SubResource("10_00"), SubResource("11_01"), SubResource("11_02"), SubResource("11_03"), SubResource("11_04"), SubResource("11_05"), SubResource("11_06"), SubResource("11_07"), SubResource("11_08"), SubResource("11_09"), SubResource("11_10"), SubResource("11_11"), SubResource("11_12"), SubResource("11_13"), SubResource("11_00"), SubResource("12_01"), SubResource("12_02"), SubResource("12_03"), SubResource("12_04"), SubResource("12_05"), SubResource("12_06"), SubResource("12_07"), SubResource("12_08"), SubResource("12_09"), SubResource("12_10"), SubResource("12_11"), SubResource("12_12"), SubResource("12_13"), SubResource("12_00"), SubResource("13_01"), SubResource("13_02"), SubResource("13_03"), SubResource("13_04"), SubResource("13_05"), SubResource("13_06"), SubResource("13_07"), SubResource("13_08"), SubResource("13_09"), SubResource("13_10"), SubResource("13_11"), SubResource("13_12"), SubResource("13_13"), SubResource("13_00"), SubResource("00_01"), SubResource("00_02"), SubResource("00_03"), SubResource("00_04"), SubResource("00_05"), SubResource("00_06"), SubResource("00_07"), SubResource("00_08"), SubResource("00_09"), SubResource("00_10"), SubResource("00_11"), SubResource("00_12"), SubResource("00_13")])

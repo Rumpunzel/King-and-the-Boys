@@ -3,6 +3,8 @@
 extends Control
 
 signal active_profile_changed(active_profile: Profile)
+signal model_changed(model: Model)
+signal model_removed
 
 signal zoomed_out
 signal zoomed_in
@@ -29,3 +31,9 @@ func _gui_input(event: InputEvent) -> void:
 
 func _on_profile_changed(new_profile: Profile) -> void:
 	active_profile_changed.emit(new_profile)
+
+func _on_preview_model_changed(model: Model) -> void:
+	model_changed.emit(model)
+
+func _on_preview_model_removed() -> void:
+	model_removed.emit()

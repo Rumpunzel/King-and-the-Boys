@@ -1,7 +1,7 @@
 name: Asset check
 
-# Runs the main scene with the real Git LFS assets, to catch broken asset references. Tests do not need assets
-# (tests/fixtures), so this is started by hand. Run it on main: caches made there serve every branch and stay valid
+# Runs the main scene and the tests in tests/with_assets with the real Git LFS assets, to catch broken asset references
+# and test what needs real meshes. The other tests do not need assets (tests/fixtures), so this is started by hand. Run it on main: caches made there serve every branch and stay valid
 # until the assets change (GitHub drops caches unused for 7 days; then the LFS download and import take ~35 min again).
 on:
   workflow_dispatch:
@@ -33,10 +33,15 @@ jobs:
         run: |
           "$GODOT_BIN" --headless --path . --quit-after 300 2>&1 | tee smoke.log
           if grep -E "SCRIPT ERROR|Compile Error" smoke.log; then exit 1; fi
+      # Suites that load the real meshes, e.g. equipment looks and catalogs
+      - name: Asset tests
+        run: ./.github/scripts/run_tests.sh res://tests/with_assets
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: asset-check-logs
           path: |
             smoke.log
+            with_assets.log
+            reports/
             import.log

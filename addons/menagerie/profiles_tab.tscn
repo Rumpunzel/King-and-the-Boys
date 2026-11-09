@@ -41,11 +41,14 @@ size_flags_vertical = 3
 columns = 2
 column_titles_visible = true
 allow_reselect = true
+allow_rmb_select = true
 hide_root = true
-select_mode = 1
+select_mode = 2
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/ProfileFilter" to="." method="_on_profile_filter_text_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/RescanButton" to="." method="_on_rescan_button_pressed"]
 [connection signal="item_activated" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_activated"]
-[connection signal="item_selected" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_selected"]
+[connection signal="multi_selected" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_multi_selected"]
+[connection signal="item_mouse_selected" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_mouse_selected"]
+[connection signal="gui_input" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_tree_gui_input"]

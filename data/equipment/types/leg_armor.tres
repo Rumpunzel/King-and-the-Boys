@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentType" format=3 uid="uid://c7ec6d8vlckig"]
+
+[ext_resource type="Script" uid="uid://cqs8kcvo1rnj6" path="res://engine/objects/equipment/equipment_part_group.gd" id="1_2puwj"]
+[ext_resource type="Script" uid="uid://du4jsk247kff3" path="res://engine/objects/equipment/equipment_type.gd" id="1_lcvyn"]
+
+[sub_resource type="Resource" id="Resource_dexy2"]
+script = ExtResource("1_2puwj")
+parts = Array[int]([9, 10, 11])
+
+[resource]
+script = ExtResource("1_lcvyn")
+name = "Leg Armor"
+slot = 4
+parts = Array[int]([9, 10, 11, 24, 25])
+part_groups = Array[ExtResource("1_2puwj")]([SubResource("Resource_dexy2")])

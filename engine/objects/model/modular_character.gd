@@ -2,6 +2,37 @@
 class_name ModularCharacter
 extends Model
 
+enum Part {
+	ARM_LOWER_LEFT,
+	ARM_LOWER_RIGHT,
+	ARM_UPPER_LEFT,
+	ARM_UPPER_RIGHT,
+	EARS,
+	HAND_LEFT,
+	HAND_RIGHT,
+	HEAD,
+	HEAD_NO_ELEMENTS,
+	HIPS,
+	LEG_LEFT,
+	LEG_RIGHT,
+	TORSO,
+	EYEBROW,
+	FACIAL_HAIR,
+	HAIR,
+	BACK_ATTACHMENT,
+	ELBOW_ATTACH_LEFT,
+	ELBOW_ATTACH_RIGHT,
+	HEAD_COVERINGS_BASE_HAIR,
+	HEAD_COVERINGS_NO_FACIAL_HAIR,
+	HEAD_COVERINGS_NO_HAIR,
+	HELMET_ATTACHMENT,
+	HIPS_ATTACHMENT,
+	KNEE_ATTACH_LEFT,
+	KNEE_ATTACH_RIGHT,
+	SHOULDER_ATTACH_LEFT,
+	SHOULDER_ATTACH_RIGHT,
+}
+
 @export_tool_button("Randomize Base", "RandomNumberGenerator") var randomize_base_action: Callable = randomize_base
 @export_tool_button("Randomize Gear", "AudioStreamRandomizer") var randomize_gear_action: Callable = randomize_gear
 @export_tool_button("Reset Gear", "Clear") var reset_gear_action: Callable = reset_gear
@@ -37,6 +68,13 @@ extends Model
 @export var knee_attach_right: ModularBodyPart
 @export var shoulder_attach_left: ModularBodyPart
 @export var shoulder_attach_right: ModularBodyPart
+
+## Every body part export is named like its [enum Part] in lower case
+func get_part(part: Part) -> ModularBodyPart:
+	var part_name: String = Part.keys()[part]
+	var body_part: ModularBodyPart = get(part_name.to_lower())
+	assert(body_part, "Part %s not implemented!" % part_name)
+	return body_part
 
 func randomize_base() -> void:
 	ears.random_mesh()
