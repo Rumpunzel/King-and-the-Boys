@@ -20,6 +20,8 @@ const KNIGHT: String = "res://data/characters/people/knight.tres"
 ## Saved test items live here, as peers may only request items below [constant EquipmentLook.ITEM_DIRECTORY]
 const SAVED_ITEMS: String = EquipmentLook.ITEM_DIRECTORY + "/__tests__"
 
+static var _saved_count: int = 0
+
 static func load_type(type_name: String) -> EquipmentType:
 	return load("%s/%s.tres" % [TYPES, type_name])
 
@@ -43,8 +45,6 @@ static func make_item(equipment_type: EquipmentType, part: ModularCharacter.Part
 	item.appearance = EquipmentAppearance.new()
 	item.appearance.parts = [part_mesh]
 	return item
-
-static var _saved_count: int = 0
 
 ## Saves [param item] as its own file, as synchronization and starting slots refer to saved items
 ## Each call gets a file of its own, so a reloaded item is never a stale cached copy

@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+
 var _character: Character
 var _equipment: CharacterEquipment
 var _helmet: EquipmentLook
@@ -7,10 +9,8 @@ var _mask: EquipmentLook
 var _hat: EquipmentLook
 
 func before_test() -> void:
-	var knight: CharacterProfile = load(EquipmentFixtures.KNIGHT)
-	_character = auto_free(knight.create(0, Transform3D()))
 	# Out of the tree, every node a test creates counts as an orphan
-	_enter_tree_with_level()
+	await _enter_tree_with_level(load(EquipmentFixtures.KNIGHT) as CharacterProfile)
 	_equipment = _character.equipment
 	_equipment.unequip_all()
 	_helmet = EquipmentFixtures.make_item(EquipmentFixtures.load_type("helmet"), ModularCharacter.Part.HELMET_ATTACHMENT, EquipmentFixtures.HELMET_ATTACHMENT)
@@ -20,12 +20,16 @@ func before_test() -> void:
 func after() -> void:
 	EquipmentFixtures.remove_saved_items()
 
-## Characters need a level once they enter the tree
-func _enter_tree_with_level() -> void:
-	var level: Level = auto_free(Level.new())
+## Characters need a level with a tile under them once they enter the tree: a model-free one, on its spawn point
+func _enter_tree_with_level(profile: CharacterProfile) -> void:
+	var level: Level = auto_free(ModelFreeWorld.create_level())
 	add_child(level)
+	level.build_level()
+	var spawn_point: Node3D = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS).front()
+	_character = auto_free(profile.create(0, Transform3D(Basis.IDENTITY, spawn_point.global_position)))
 	_character.level = level
 	add_child(_character)
+	await await_idle_frame()
 
 func _model() -> ModularCharacter:
 	return _character.model
@@ -85,7 +89,7 @@ func test_plain_paths_from_older_saves_still_equip() -> void:
 func test_equipment_stays_server_authoritative_inside_a_client_subtree() -> void:
 	# A PlayerGhost hands its subtree to its player before the character enters the tree
 	var knight: CharacterProfile = load(EquipmentFixtures.KNIGHT)
-	var client_character: Character = auto_free(knight.create(0, Transform3D()))
+	var client_character: Character = auto_free(knight.create(0, _character.transform))
 	client_character.set_multiplayer_authority(5)
 	client_character.level = _character.level
 	add_child(client_character)

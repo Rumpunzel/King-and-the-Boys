@@ -16,7 +16,11 @@ static func mark_dirty(catalog: EquipmentCatalog) -> void:
 	var generation: int = _generation
 	var tree: SceneTree = Engine.get_main_loop() as SceneTree
 	if not tree: return
-	tree.create_timer(DELAY).timeout.connect(func() -> void: if generation == _generation: flush())
+	tree.create_timer(DELAY).timeout.connect(_flush_if_latest.bind(generation))
+
+## Only the timer of the latest change saves
+static func _flush_if_latest(generation: int) -> void:
+	if generation == _generation: flush()
 
 static func has_unsaved() -> bool:
 	return not _dirty.is_empty()

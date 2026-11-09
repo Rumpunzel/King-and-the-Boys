@@ -43,7 +43,7 @@ func update(_delta: float) -> void:
 	#if available_action.is_action_just_released():
 		#_haunt_timer.stop()
 
-func physics_update(delta: float) -> void:
+func physics_update(_delta: float) -> void:
 	assert(_haunted)
 	var direction_input: Vector2 = get_direction_input()
 	var character: Character = get_character()
@@ -51,8 +51,10 @@ func physics_update(delta: float) -> void:
 	assert(haunted_character)
 	character.transform = haunted_character.transform
 
-func handle_input(_event: InputEvent) -> void:
-	pass
+func get_controlled_character() -> Character:
+	# Resolved from the path, so it also works before enter()
+	var haunted: CharacterHitBox = get_state_machine().get_node_or_null(_haunted_path)
+	return haunted.character if haunted else get_character()
 
 func exit() -> void:
 	super.exit()
@@ -63,6 +65,7 @@ func exit() -> void:
 	var interaction_area: InteractionArea = get_interaction_area()
 	character.velocity = haunted_character.velocity
 	character.unhide_character.rpc()
+	character.snap_to_grid()
 	_haunted.unhaunt.rpc()
 	interaction_area.remove_hit_box_to_ignore(_haunted)
 	interaction_area.configure_collision_shape(character.profile)

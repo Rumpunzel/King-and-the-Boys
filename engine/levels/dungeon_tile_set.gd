@@ -89,36 +89,36 @@ func _count_true_bits(bitflag: int) -> int:
 class TileBlueprint extends RefCounted:
 	var profile: StructureProfile
 	var clockwise_turns: int
-	
+
 	func _init(for_profile: StructureProfile, with_clockwise_turns: int = 0) -> void:
 		profile = for_profile
 		clockwise_turns = with_clockwise_turns
-	
+
 	func is_legal_neighbour(grid_position: Vector2i, existing_tile: Structure) -> bool:
 		assert(has_connection(grid_position, existing_tile) == existing_tile.has_connection_to(grid_position))
 		return can_connect(grid_position, existing_tile) and existing_tile.can_connect_to(grid_position, profile)
-	
+
 	func can_connect(grid_position: Vector2i, existing_tile: Structure) -> bool:
 		var direction: Level.Direction = _get_direction_to_tile(grid_position, existing_tile)
 		return profile.can_connect(direction, clockwise_turns, existing_tile.profile)
-	
+
 	func has_connection(grid_position: Vector2i, existing_tile: Structure) -> bool:
 		var direction: Level.Direction = _get_direction_to_tile(grid_position, existing_tile)
 		return profile.has_connection(direction, clockwise_turns)
-	
+
 	func get_connections() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
 	func get_connection_vectors() -> Array[Vector2i]: return profile.get_connection_vectors(clockwise_turns)
 	func get_connection_bitflag() -> int:
 		var connection_bitflag: int = 0
 		for connection: Level.Direction in get_connections(): connection_bitflag |= 2 ** connection
 		return connection_bitflag
-	
+
 	func get_restriction(grid_position: Vector2i, existing_tile: Structure) -> ConnectionRestriction:
 		var direction: Level.Direction = _get_direction_to_tile(grid_position, existing_tile)
 		return profile.get_restriction(direction, clockwise_turns)
-	
+
 	func get_restrictions() -> Dictionary[Level.Direction, ConnectionRestriction]: return profile.get_restrictions(clockwise_turns)
-	
+
 	func _get_direction_to_tile(grid_position: Vector2i, tile: Structure) -> Level.Direction: return Level.get_direction(grid_position, tile.get_grid_position())
-	
+
 	func _to_string() -> String: return "%s rotated %d times" % [profile.name, clockwise_turns]

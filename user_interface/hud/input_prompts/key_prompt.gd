@@ -3,7 +3,8 @@
 class_name KeyPrompt
 extends Button
 
-const KEY_PROMPT_SCENE: PackedScene = preload("uid://bgqwt7hjsgn3o")
+# Loaded on use: a preload would load the scene, which uses this script, while the script is still loading
+const KEY_PROMPT_SCENE_PATH: String = "uid://bgqwt7hjsgn3o"
 
 var input_event_key: InputEventKey:
 	set(new_input_event_key):
@@ -14,7 +15,7 @@ var input_event_key: InputEventKey:
 
 static func create(for_input_event_key: InputEventKey) -> KeyPrompt:
 	assert(for_input_event_key)
-	var new_key_prompt: KeyPrompt = KEY_PROMPT_SCENE.instantiate()
+	var new_key_prompt: KeyPrompt = (load(KEY_PROMPT_SCENE_PATH) as PackedScene).instantiate()
 	new_key_prompt.input_event_key = for_input_event_key
 	return new_key_prompt
 

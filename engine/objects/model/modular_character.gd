@@ -2,10 +2,6 @@
 class_name ModularCharacter
 extends Model
 
-@export_tool_button("Randomize Base", "RandomNumberGenerator") var randomize_base_action: Callable = randomize_base
-@export_tool_button("Randomize Gear", "AudioStreamRandomizer") var randomize_gear_action: Callable = randomize_gear
-@export_tool_button("Reset Gear", "Clear") var reset_gear_action: Callable = reset_gear
-
 enum Part {
 	ARM_LOWER_LEFT,
 	ARM_LOWER_RIGHT,
@@ -36,6 +32,10 @@ enum Part {
 	SHOULDER_ATTACH_LEFT,
 	SHOULDER_ATTACH_RIGHT,
 }
+
+@export_tool_button("Randomize Base", "RandomNumberGenerator") var randomize_base_action: Callable = randomize_base
+@export_tool_button("Randomize Gear", "AudioStreamRandomizer") var randomize_gear_action: Callable = randomize_gear
+@export_tool_button("Reset Gear", "Clear") var reset_gear_action: Callable = reset_gear
 
 @export_group("Body Parts")
 @export var arm_lower_left: ModularBodyPartGendered
@@ -69,39 +69,12 @@ enum Part {
 @export var shoulder_attach_left: ModularBodyPart
 @export var shoulder_attach_right: ModularBodyPart
 
+## Every body part export is named like its [enum Part] in lower case
 func get_part(part: Part) -> ModularBodyPart:
-	match part:
-		Part.ARM_LOWER_LEFT: return arm_lower_left
-		Part.ARM_LOWER_RIGHT: return arm_lower_right
-		Part.ARM_UPPER_LEFT: return arm_upper_left
-		Part.ARM_UPPER_RIGHT: return arm_upper_right
-		Part.EARS: return ears
-		Part.HAND_LEFT: return hand_left
-		Part.HAND_RIGHT: return hand_right
-		Part.HEAD: return head
-		Part.HEAD_NO_ELEMENTS: return head_no_elements
-		Part.HIPS: return hips
-		Part.LEG_LEFT: return leg_left
-		Part.LEG_RIGHT: return leg_right
-		Part.TORSO: return torso
-		Part.EYEBROW: return eyebrow
-		Part.FACIAL_HAIR: return facial_hair
-		Part.HAIR: return hair
-		Part.BACK_ATTACHMENT: return back_attachment
-		Part.ELBOW_ATTACH_LEFT: return elbow_attach_left
-		Part.ELBOW_ATTACH_RIGHT: return elbow_attach_right
-		Part.HEAD_COVERINGS_BASE_HAIR: return head_coverings_base_hair
-		Part.HEAD_COVERINGS_NO_FACIAL_HAIR: return head_coverings_no_facial_hair
-		Part.HEAD_COVERINGS_NO_HAIR: return head_coverings_no_hair
-		Part.HELMET_ATTACHMENT: return helmet_attachment
-		Part.HIPS_ATTACHMENT: return hips_attachment
-		Part.KNEE_ATTACH_LEFT: return knee_attach_left
-		Part.KNEE_ATTACH_RIGHT: return knee_attach_right
-		Part.SHOULDER_ATTACH_LEFT: return shoulder_attach_left
-		Part.SHOULDER_ATTACH_RIGHT: return shoulder_attach_right
-		_: push_error("Part %s not implemented!" % part)
-	assert(false)
-	return null
+	var part_name: String = Part.keys()[part]
+	var body_part: ModularBodyPart = get(part_name.to_lower())
+	assert(body_part, "Part %s not implemented!" % part_name)
+	return body_part
 
 func randomize_base() -> void:
 	ears.random_mesh()

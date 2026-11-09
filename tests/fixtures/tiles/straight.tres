@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3]
+
+[ext_resource type="Resource" path="res://data/characters/defaults/default_collision_shape.tres" id="1_nlmd7"]
+[ext_resource type="Resource" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_lb57f"]
+[ext_resource type="Resource" path="res://data/model_animations/bounce_animation.tres" id="3_kne22"]
+[ext_resource type="Resource" path="res://data/model_animations/flip_animation.tres" id="4_o2fhi"]
+[ext_resource type="Script" path="res://engine/objects/structures/structure_profile.gd" id="5_66p0w"]
+
+[resource]
+script = ExtResource("5_66p0w")
+group = 2
+_connection_up = true
+_connection_down = true
+name = "Straight"

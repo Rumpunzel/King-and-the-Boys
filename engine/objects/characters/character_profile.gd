@@ -8,6 +8,9 @@ enum Groups {
 	MONSTERS,
 }
 
+# miniature_move_animation.tres, the default of both move animations
+const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
+
 @export var group: Groups = Groups.HEROES:
 	set(new_value):
 		group = new_value
@@ -90,8 +93,10 @@ enum Groups {
 
 @export_category("Animations")
 @export var spawn_animation: ModelAnimation = preload("uid://djq27fwrmrv2")
-@export var move_animation: ModelAnimation = preload("uid://bwiaycc13h0eo")
-@export var fast_move_animation: ModelAnimation = preload("uid://bwiaycc13h0eo")
+@export var move_animation: ModelAnimation = _MOVE_ANIMATION
+@export var fast_move_animation: ModelAnimation = _MOVE_ANIMATION
+## Played when undo walks a step back; the move animation if empty
+@export var undo_animation: ModelAnimation
 
 @export_category("")
 @export_group("Configuration")
@@ -138,7 +143,7 @@ func roll_equipment() -> Array[EquipmentLook]:
 func create_model(variation: int) -> Model:
 	var model: ModularCharacter = super.create_model(variation)
 	# In game the server rolls the look once and sends it as [constant Character.BODY]
-	if Engine.is_editor_hint(): setup_model(model)
+	if model and Engine.is_editor_hint(): setup_model(model)
 	return model
 
 ## Randomizes the look and equipment locally, for previews only

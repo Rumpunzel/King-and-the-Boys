@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cy4skffv6sbru" path="res://user_interface/user_interface.gd" id="1_dbod7"]
 [ext_resource type="Script" uid="uid://cm7ublv6tq6oc" path="res://user_interface/info/fps_label.gd" id="2_dbod7"]
+[ext_resource type="PackedScene" uid="uid://cw72v1nws5l21" path="res://user_interface/hud/turn_status.tscn" id="2_ur1vw"]
 
 [node name="UserInterface" type="CanvasLayer" unique_id=137708046]
 layer = 10
@@ -19,6 +20,11 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 12
 metadata/_edit_lock_ = true
+
+[node name="TurnStatus" parent="MarginContainer" unique_id=1584571151 instance=ExtResource("2_ur1vw")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
 
 [node name="FPS" type="Label" parent="MarginContainer" unique_id=1064896010]
 layout_mode = 2

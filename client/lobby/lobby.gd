@@ -84,12 +84,12 @@ func _remove_player(player: Player) -> void:
 	print_debug("Removed player: %s!" % player.get_player_info())
 
 func _setup_toaster() -> void:
-	var _toaster: Toaster = Toaster.new()
-	_toaster._vertical_position = Toaster.VerticalPosition.BOTTOM
-	_toaster._gravity = Toaster.Gravity.BOTTOM
-	player_connected.connect(func(player: Player) -> void: _toaster.toast_success("%s joined!" % player.player_name))
-	player_disconnected.connect(func(player: Player) -> void: _toaster.toast_info("%s left!" % player.player_name))
-	add_child(_toaster)
+	var toaster: Toaster = Toaster.new()
+	toaster._vertical_position = Toaster.VerticalPosition.BOTTOM
+	toaster._gravity = Toaster.Gravity.BOTTOM
+	player_connected.connect(func(player: Player) -> void: toaster.toast_success("%s joined!" % player.player_name))
+	player_disconnected.connect(func(player: Player) -> void: toaster.toast_info("%s left!" % player.player_name))
+	add_child(toaster)
 
 func _on_game_started() -> void:
 	_create_local_player()

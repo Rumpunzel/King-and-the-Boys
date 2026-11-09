@@ -3,7 +3,8 @@
 class_name InputPrompt
 extends HeadsUpDisplay
 
-const INPUT_PROMPT_SCENE: PackedScene = preload("uid://d3ufd1hkx3mvi")
+# Loaded on use: a preload would load the scene, which uses this script, while the script is still loading
+const INPUT_PROMPT_SCENE_PATH: String = "uid://d3ufd1hkx3mvi"
 
 @export_group("Configuration")
 @export var _timer: Timer
@@ -45,7 +46,7 @@ var _input_event_index: int = 0:
 
 static func create(for_available_interaction: Interaction) -> InputPrompt:
 	assert(for_available_interaction)
-	var new_input_prompt: InputPrompt = INPUT_PROMPT_SCENE.instantiate()
+	var new_input_prompt: InputPrompt = (load(INPUT_PROMPT_SCENE_PATH) as PackedScene).instantiate()
 	new_input_prompt.available_interaction = for_available_interaction
 	return new_input_prompt
 

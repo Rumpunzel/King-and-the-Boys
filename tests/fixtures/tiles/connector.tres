@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3]
+
+[ext_resource type="Resource" path="res://data/characters/defaults/default_collision_shape.tres" id="1_ww1i0"]
+[ext_resource type="Resource" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_dof5g"]
+[ext_resource type="Resource" path="res://data/model_animations/bounce_animation.tres" id="3_ig78l"]
+[ext_resource type="Resource" path="res://data/model_animations/flip_animation.tres" id="4_enkn6"]
+[ext_resource type="Script" path="res://engine/objects/structures/structure_profile.gd" id="5_31cc3"]
+
+[resource]
+script = ExtResource("5_31cc3")
+group = 2
+name = "Connector"

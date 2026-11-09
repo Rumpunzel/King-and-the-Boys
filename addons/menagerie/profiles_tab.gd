@@ -295,7 +295,7 @@ func _request_delete(paths: PackedStringArray) -> void:
 	dialog.dialog_text = text
 	dialog.ok_button_text = "Move to trash"
 	dialog.confirmed.connect(_delete.bind(file_paths))
-	dialog.visibility_changed.connect(func() -> void: if not dialog.visible: dialog.queue_free())
+	dialog.visibility_changed.connect(_free_when_hidden.bind(dialog))
 	add_child(dialog)
 	dialog.popup_centered()
 
@@ -328,6 +328,9 @@ func _uses(file_path: String, paths: PackedStringArray, ids: PackedStringArray) 
 	for id: String in ids:
 		if text.contains('"%s"' % id): return true
 	return false
+
+static func _free_when_hidden(dialog: Window) -> void:
+	if not dialog.visible: dialog.queue_free()
 
 func _delete(paths: PackedStringArray) -> void:
 	for path: String in paths:

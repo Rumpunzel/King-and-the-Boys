@@ -41,7 +41,7 @@ func update(_delta: float) -> void:
 	#if available_action.is_action_just_released():
 		#_haunt_timer.stop()
 
-func physics_update(delta: float) -> void:
+func physics_update(_delta: float) -> void:
 	assert(_haunted)
 	var direction_input: Vector2 = get_direction_input()
 	var character: Character = get_character()
@@ -50,9 +50,6 @@ func physics_update(delta: float) -> void:
 	var horizontal_offset: Vector2 = Vector2(input_force.x, input_force.z)
 	var adjusted_direction_input: Vector2 = direction_input - (horizontal_offset * haunted_thing.mass / 100.0)
 
-func handle_input(_event: InputEvent) -> void:
-	pass
-
 func exit() -> void:
 	super.exit()
 	assert(_haunted)
@@ -60,6 +57,7 @@ func exit() -> void:
 	var haunted_thing: Thing = _haunted.thing
 	assert(haunted_thing)
 	character.unhide_character.rpc()
+	character.snap_to_grid()
 	_haunted.unhaunt.rpc()
 	get_interaction_area().remove_hit_box_to_ignore(_haunted)
 	_haunt_camera.queue_free()

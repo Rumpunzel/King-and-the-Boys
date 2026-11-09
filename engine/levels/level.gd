@@ -3,6 +3,9 @@
 class_name Level
 extends Node3D
 
+## Emitted on the host when a [Character] entering a cell discovered or revealed tiles
+signal board_changed(character: Character)
+
 enum Direction {
 	UP,
 	RIGHT,
@@ -16,6 +19,8 @@ const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2
 @export var grid_extents: Vector2i = Vector2i(13, 13)
 
 @export var _starting_tile: StructureProfile
+## Set in the scene rather than preloaded, so this script compiles without the tile's textures and meshes
+@export var _wall_tile: StructureProfile
 @export var _tile_set: DungeonTileSet
 
 @export var _reveals_per_second: float = 16.0
@@ -33,37 +38,85 @@ var _tile_connectors: Dictionary[Vector3, Structure]
 
 var _placed_things: Dictionary[Vector2i, Thing]
 
-var _reveal_queue: Array[Structure] = []
-# Direction -> Array[Structure]
-var _discover_queue: Dictionary[Direction, Array] = {}
+# Visual queues, on every peer: tiles whose shown status lags behind their status, one per character whose step
+# raised it. Each waits for its own character's figure, see _process.
+var _reveal_queues: Dictionary[Character, Array] = {}
+var _discover_queues: Dictionary[Character, Array] = {}
+var _remaining_tile_reveal_delays: Dictionary[Character, float] = {}
+var _remaining_tile_discover_delays: Dictionary[Character, float] = {}
+# Host only: the character whose step is being processed, for tiles placed during it
+var _stepping_character: Character
 
-var _remaining_tile_reveal_delay: float = 0.0
-var _remaining_tile_discover_delay: float = 0.0
+## Host only: counts tile status raises; used to detect board changes
+var _board_change_count: int = 0
 
 func _process(delta: float) -> void:
-	# Reveal
-	_remaining_tile_reveal_delay = maxf(_remaining_tile_reveal_delay - delta, 0.0)
-	if _remaining_tile_reveal_delay <= 0.0:
-		var tile_to_reveal: Structure = null
-		while not _reveal_queue.is_empty() and not tile_to_reveal:
-			tile_to_reveal = _reveal_queue.pop_front()
-			if tile_to_reveal.status >= Structure.Status.REVEALED: tile_to_reveal = null
-		if tile_to_reveal:
-			tile_to_reveal.reveal()
-			_remaining_tile_reveal_delay += 1.0 / _reveals_per_second
-	if not _reveal_queue.is_empty(): return
-	# Discover
-	_remaining_tile_discover_delay = maxf(_remaining_tile_discover_delay - delta, 0.0)
-	if _remaining_tile_discover_delay <= 0.0:
-		for direction: Direction in Direction.values():
-			var discover_queue: Array[Structure] = _discover_queue.get(direction, [] as Array[Structure])
-			var tile_to_discover: Structure = null
-			while not discover_queue.is_empty() and not tile_to_discover:
-				tile_to_discover = discover_queue.pop_front()
-				if tile_to_discover.status >= Structure.Status.DISCOVERED: tile_to_discover = null
-			if tile_to_discover:
-				tile_to_discover.discover()
-				_remaining_tile_discover_delay += 1.0 / _discovers_per_second / Direction.size()
+	for character: Character in _reveal_queues.keys(): _process_queues(character, delta)
+
+## Shows [param character]'s queued tiles once its figure entered the cell of the step that raised them:
+## revealed tiles one by one, then discovered ones ring by ring, nearest to the character first
+func _process_queues(character: Character, delta: float) -> void:
+	var reveal_queue: Array = _reveal_queues[character]
+	var discover_queue: Array = _discover_queues[character]
+	reveal_queue.assign(reveal_queue.filter(_is_waiting_to_show.bind(Structure.Status.REVEALED)))
+	discover_queue.assign(discover_queue.filter(_is_waiting_to_show.bind(Structure.Status.DISCOVERED)))
+	if reveal_queue.is_empty() and discover_queue.is_empty():
+		_forget_queues(character)
+		return
+	if not _has_figure_caught_up(character, reveal_queue + discover_queue): return
+	_remaining_tile_reveal_delays[character] = maxf(_remaining_tile_reveal_delays[character] - delta, 0.0)
+	if not reveal_queue.is_empty():
+		if _remaining_tile_reveal_delays[character] > 0.0: return
+		var tile_to_reveal: Structure = reveal_queue.pop_front()
+		tile_to_reveal.shown_status = Structure.Status.REVEALED
+		_remaining_tile_reveal_delays[character] += 1.0 / _reveals_per_second
+		return
+	_remaining_tile_discover_delays[character] = maxf(_remaining_tile_discover_delays[character] - delta, 0.0)
+	if _remaining_tile_discover_delays[character] > 0.0: return
+	var distances: Dictionary[Structure, int] = {}
+	for tile: Structure in discover_queue: distances[tile] = _get_distance(tile.get_grid_position(), character.grid_cell)
+	var nearest_distance: int = distances.values().min()
+	for tile: Structure in distances:
+		if distances[tile] != nearest_distance: continue
+		discover_queue.erase(tile)
+		tile.shown_status = Structure.Status.DISCOVERED
+	_remaining_tile_discover_delays[character] += 1.0 / _discovers_per_second
+
+func _is_waiting_to_show(tile: Structure, target_status: Structure.Status) -> bool:
+	# Loading a game frees the tiles still queued
+	return is_instance_valid(tile) and tile.shown_status < target_status
+
+## @returns [code]true[/code] once this peer has the steps that raised [param tiles] and the figure entered its cell
+func _has_figure_caught_up(character: Character, tiles: Array) -> bool:
+	if not character.visible or not character.level: return true
+	for tile: Structure in tiles:
+		if character.step_count < tile.status_cause_step: return false
+	return character.get_figure_grid_cell() == character.grid_cell
+
+func _queue_tile(tile: Structure, character: Character) -> void:
+	if not _reveal_queues.has(character):
+		_reveal_queues[character] = [] as Array[Structure]
+		_discover_queues[character] = [] as Array[Structure]
+		_remaining_tile_reveal_delays[character] = 0.0
+		_remaining_tile_discover_delays[character] = 0.0
+		# A character that leaves has no figure to wait for
+		character.tree_exiting.connect(_show_queued_tiles_at_once.bind(character), CONNECT_ONE_SHOT)
+	var queue: Array = _reveal_queues[character] if tile.status == Structure.Status.REVEALED else _discover_queues[character]
+	if not queue.has(tile): queue.append(tile)
+
+func _show_queued_tiles_at_once(character: Character) -> void:
+	if not _reveal_queues.has(character): return
+	for queue: Array in [_reveal_queues[character], _discover_queues[character]]:
+		for tile: Structure in queue:
+			if is_instance_valid(tile): tile.shown_status = maxi(tile.shown_status, tile.status) as Structure.Status
+	_forget_queues(character)
+
+func _forget_queues(character: Character) -> void:
+	if character.tree_exiting.is_connected(_show_queued_tiles_at_once.bind(character)): character.tree_exiting.disconnect(_show_queued_tiles_at_once.bind(character))
+	_reveal_queues.erase(character)
+	_discover_queues.erase(character)
+	_remaining_tile_reveal_delays.erase(character)
+	_remaining_tile_discover_delays.erase(character)
 
 static func direction_to_vector(direction: Direction) -> Vector2i:
 	match direction:
@@ -120,13 +173,40 @@ func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> 
 func get_placed_tile(grid_position: Vector2i) -> Structure: return _placed_tiles.get(grid_position)
 func get_placed_thing(grid_position: Vector2i) -> Thing: return _placed_things.get(grid_position)
 
+## @returns the cell reached by stepping from [param grid_position] into [param direction], or [param grid_position] itself if a wall blocks it
+func get_step_target(grid_position: Vector2i, direction: Direction) -> Vector2i:
+	var current_tile: Structure = get_placed_tile(grid_position)
+	assert(current_tile)
+	if not current_tile.has_connection(direction): return grid_position
+	var target_grid_position: Vector2i = grid_position + direction_to_vector(direction)
+	var target_tile: Structure = get_placed_tile(target_grid_position)
+	assert(target_tile, "Stepping %s from %s @ %s into nothing @ %s" % [direction, current_tile, grid_position, target_grid_position])
+	assert(target_tile.has_connection(get_direction(target_grid_position, grid_position)), "Stepping %s from %s @ %s into %s @ %s" % [direction, current_tile, grid_position, target_tile, target_grid_position])
+	return target_grid_position
+
+func get_spot_position(grid_position: Vector2i, spot: Vector2) -> Vector3:
+	return grid_to_world_position(grid_position) + Vector3(spot.x, 0.0, spot.y)
+
+## Spots follow the tile's order of preference: the center first, then the corners.
+## Things (e.g. chests) hold the first spot; pieces keep their spot when others leave.
+## @returns the free spots on [param grid_position], ignoring [param except]; empty if the tile is full
+func get_free_spots(grid_position: Vector2i, except: Character = null) -> Array[Vector2]:
+	var tile: Structure = get_placed_tile(grid_position)
+	assert(tile)
+	var free_spots: Array[Vector2] = tile.profile.get_tile_spots()
+	if _placed_things.has(grid_position): free_spots.pop_front()
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if character == except or not character.visible or character.grid_cell != grid_position: continue
+		free_spots.erase(character.tile_spot)
+	return free_spots
+
 func _build_outer_wall() -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
 		for x: int in range(-grid_extents.x, grid_extents.x + 1):
 			if absi(y) != grid_extents.y and absi(x) != grid_extents.x: continue
 			var wall_roation: int = 1 if absi(y) == grid_extents.y else 0
 			var wall_position: Vector2i = Vector2i(x, y)
-			_spawn_at(DungeonTileSet.TileBlueprint.new(preload("uid://d3cc5nj7ogal8"), wall_roation), wall_position)
+			_spawn_at(DungeonTileSet.TileBlueprint.new(_wall_tile, wall_roation), wall_position)
 			var wall: Structure = _placed_tiles[wall_position]
 			wall.reveal()
 
@@ -141,7 +221,7 @@ func _place_starting_tile() -> Vector2i:
 	_spawn_at(starting_tile_blueprint, starting_grid_position)
 	var starting_tile: Structure = _placed_tiles[starting_grid_position]
 	assert(starting_tile)
-	starting_tile.reveal()
+	_reveal_tile(starting_tile)
 	return starting_grid_position
 
 func _build_dungeon_from(origin_grid_position: Vector2i) -> void:
@@ -189,13 +269,8 @@ func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vect
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position)
 	_structure_spawner.spawn_at(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status)
 
-func _update_player_vision(
-	from_grid_position: Vector2i,
-	vision_radius: float,
-	reveal_check: Callable,
-	reveal_function: Callable,
-	origin_grid_position: Vector2i = from_grid_position,
-) -> void:
+## Calls [param reveal_function] with every tile in sight within [param vision_radius]
+func _update_player_vision(from_grid_position: Vector2i, vision_radius: float, reveal_function: Callable, origin_grid_position: Vector2i = from_grid_position) -> void:
 	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
 	var from_tile: Structure = _placed_tiles[from_grid_position]
 	assert(from_tile)
@@ -203,24 +278,27 @@ func _update_player_vision(
 	assert(origin_room)
 	var origin_tile_room_type: RoomType = origin_room.profile.room_type
 	if origin_tile_room_type and origin_tile_room_type == from_tile.profile.room_type:
-		_update_player_vision_in_room(from_grid_position, vision_radius, reveal_check, reveal_function, origin_grid_position)
+		_update_player_vision_in_room(from_grid_position, vision_radius, reveal_function, origin_grid_position)
 	for direction: Direction in from_tile.get_connections():
 		var direction_vector: Vector2i = direction_to_vector(direction)
+		var tile: Structure = from_tile
 		for radius: int in range(1, ceili(vision_radius) + 1):
+			# Sight follows passages only, like the corridors built in _build_corridor_from,
+			# so coming back to a cell never reveals tiles that were built later
+			if not tile.has_connection(direction): break
 			var next_tile_grid_position: Vector2i = from_grid_position + direction_vector * radius
 			if origin_grid_position.distance_squared_to(next_tile_grid_position) > vision_radius ** 2.0: break
 			if not _placed_tiles.has(next_tile_grid_position): break
-			var next_tile: Structure = _placed_tiles[next_tile_grid_position]
-			assert(next_tile)
-			if reveal_check.call(next_tile): reveal_function.call(next_tile, direction)
+			tile = _placed_tiles[next_tile_grid_position]
+			reveal_function.call(tile)
 
-func _update_player_vision_in_room(from_grid_position: Vector2i, vision_radius: float, reveal_check: Callable, reveal_function: Callable, origin_grid_position: Vector2i, already_visited: Array[Vector2i] = []) -> void:
+func _update_player_vision_in_room(from_grid_position: Vector2i, vision_radius: float, reveal_function: Callable, origin_grid_position: Vector2i, already_visited: Array[Vector2i] = []) -> void:
 	assert(not already_visited.has(from_grid_position))
 	already_visited.append(from_grid_position)
 	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
 	var from_tile: Structure = _placed_tiles[from_grid_position]
 	assert(from_tile)
-	if reveal_check.call(from_tile): reveal_function.call(from_tile, Direction.UP)
+	reveal_function.call(from_tile)
 	var origin_room: Structure = _placed_tiles[origin_grid_position]
 	assert(origin_room)
 	var origin_tile_room_type: RoomType = origin_room.profile.room_type
@@ -232,16 +310,40 @@ func _update_player_vision_in_room(from_grid_position: Vector2i, vision_radius: 
 		var room_tile: Structure = _placed_tiles[room_tile_grid_position]
 		assert(room_tile)
 		if origin_tile_room_type == room_tile.profile.room_type and not already_visited.has(room_tile_grid_position):
-			_update_player_vision_in_room(room_tile_grid_position, vision_radius, reveal_check, reveal_function, origin_grid_position, already_visited)
+			_update_player_vision_in_room(room_tile_grid_position, vision_radius, reveal_function, origin_grid_position, already_visited)
 
-func _queue_reveal(tile: Structure, _direction: Direction) -> void:
-	if _reveal_queue.has(tile): return
-	_reveal_queue.append(tile)
+## Host only: reveals [param tile] right away and discovers its neighbours; peers show it later, after the step of
+## [param character] that caused it, or at once if no step did
+func _reveal_tile(tile: Structure, character: Character = null) -> void:
+	if tile.status >= Structure.Status.REVEALED: return
+	_set_status_cause(tile, character)
+	tile.reveal()
+	_board_change_count += 1
+	# Neighbours not built yet are discovered once they are placed, see _on_structure_created
+	for connection: Direction in tile.get_connections():
+		var neighbour: Structure = _placed_tiles.get(tile.get_grid_position() + direction_to_vector(connection))
+		if neighbour: _discover_tile(neighbour, character)
 
-func _queue_discover(tile: Structure, direction: Direction) -> void:
-	var queued_discovers: Array[Structure] = _discover_queue.get_or_add(direction, [] as Array[Structure])
-	if queued_discovers.has(tile): return
-	queued_discovers.append(tile)
+## Host only: discovers [param tile] right away; peers show it later, see [method _reveal_tile]
+func _discover_tile(tile: Structure, character: Character = null) -> void:
+	if tile.status >= Structure.Status.DISCOVERED: return
+	_set_status_cause(tile, character)
+	tile.discover()
+	_board_change_count += 1
+
+## Set before the status: peers read the cause when the status changes
+static func _set_status_cause(tile: Structure, character: Character) -> void:
+	tile.status_cause = character.get_path() if character else NodePath()
+	tile.status_cause_step = character.step_count if character else 0
+
+func _is_next_to_revealed_tile(tile: Structure) -> bool:
+	for connection: Direction in tile.get_connections():
+		var neighbour: Structure = _placed_tiles.get(tile.get_grid_position() + direction_to_vector(connection))
+		if neighbour and neighbour.status == Structure.Status.REVEALED: return true
+	return false
+
+static func _get_distance(from_grid_position: Vector2i, to_grid_position: Vector2i) -> int:
+	return absi(from_grid_position.x - to_grid_position.x) + absi(from_grid_position.y - to_grid_position.y)
 
 func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
 	var surrounding_tiles: Array[Structure] = []
@@ -255,7 +357,9 @@ func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
 func _create_connection(tile: Structure, connection: Direction) -> void:
 	assert(tile)
 	var direction_vector: Vector2i = direction_to_vector(connection)
-	var connection_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * tile.model.get_max_mesh_scale()
+	# Tiles without a model (e.g. in tests) count as unscaled
+	var mesh_scale: float = tile.model.get_max_mesh_scale() if tile.model else 1.0
+	var connection_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * mesh_scale
 	var tile_connection: Structure = _tile_set.tile_connection.create(-1, Transform3D(Basis.IDENTITY, connection_position), connection, Structure.Status.PLACED)
 	var tile_connections: Array[Structure] = _tile_connections.get_or_add(tile, [] as Array[Structure])
 	assert(not tile_connections.has(tile))
@@ -278,50 +382,73 @@ func _on_structure_created(structure: Structure) -> void:
 		_create_connection(structure, connection)
 		_create_connector(structure.global_position, connection)
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
+	structure.shown_status_changed.connect(_on_tile_shown_status_changed.bind(structure))
 	if not multiplayer.is_server(): return
 	structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
+	if _is_next_to_revealed_tile(structure): structure.ready.connect(_discover_tile.bind(structure, _stepping_character), CONNECT_ONE_SHOT)
 
+## Queues showing a tile whose status went up after the step that caused it; on every peer, as clients get the
+## status replicated. Statuses no step raised (level build, spawning, loading) show at once.
 func _on_tile_status_changed(status: Structure.Status, tile: Structure) -> void:
+	if status < Structure.Status.DISCOVERED: return
+	var character: Character = get_node_or_null(tile.status_cause) as Character if not tile.status_cause.is_empty() else null
+	if not character or tile.status_cause_step == 0:
+		tile.shown_status = status
+		return
+	_queue_tile(tile, character)
+
+func _on_tile_shown_status_changed(shown_status: Structure.Status, tile: Structure) -> void:
 	var grid_position: Vector2i = tile.get_grid_position()
 	if _placed_things.has(grid_position):
 		var thing_on_tile: Thing = _placed_things[grid_position]
-		thing_on_tile.status = Thing.structure_status_to_thing_status(tile.status)
-	if not status == Structure.Status.REVEALED: return
+		thing_on_tile.status = Thing.structure_status_to_thing_status(shown_status)
+	if not shown_status == Structure.Status.REVEALED: return
 	await get_tree().create_timer(0.5).timeout
+	for tile_connection: Structure in _tile_connections.get(tile, []): tile_connection.shown_status = Structure.Status.REVEALED
 	for connection: Direction in tile.get_connections():
 		var direction_vector: Vector2i = direction_to_vector(connection)
-		for tile_connection: Structure in _tile_connections[tile]: tile_connection.reveal()
 		var neighbour_position: Vector2i = grid_position + direction_vector
 		assert(_placed_tiles.has(neighbour_position))
 		var neighbour: Structure = _placed_tiles[neighbour_position]
-		if not neighbour.status == Structure.Status.REVEALED:
-			neighbour.discover()
-			continue
+		if not neighbour.shown_status == Structure.Status.REVEALED: continue
 		var connector_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
 		var tile_connector: Structure = _tile_connectors[connector_position]
-		tile_connector.reveal()
+		tile_connector.shown_status = Structure.Status.REVEALED
 
 func _on_thing_created(thing: Thing) -> void:
 	var thing_grid_position: Vector2i = world_to_grid_position(thing.global_position)
 	_placed_things[thing_grid_position] = thing
 
 func _on_agent_created(agent: Agent) -> void:
-	pass # Replace with function body.
+	_register_character(agent.character)
 
 func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
 	var character: Character = player_ghost.character
-	character.level = self
+	_register_character(character)
 	if not multiplayer.is_server(): return
 	character.entered_grid_cell.connect(_on_player_moved.bind(character))
+
+func _register_character(character: Character) -> void:
+	character.level = self
+	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
 
 func _on_player_moved(character_grid_position: Vector2i, character: Character) -> void:
 	var entered_tile: Structure = _placed_tiles[character_grid_position]
 	assert(entered_tile)
+	var board_change_count_before: int = _board_change_count
+	# Tiles placed while building are discovered with this step too, see _on_structure_created
+	_stepping_character = character
 	_build_dungeon_from(character_grid_position)
-	_update_player_vision(character_grid_position, character.profile.vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.REVEALED, _queue_reveal)
-	_update_player_vision(character_grid_position, character.profile.dark_vision, func(tile: Structure) -> bool: return tile.status < Structure.Status.DISCOVERED, _queue_discover)
-	_remaining_tile_reveal_delay = character.profile.move_animation.duration * 0.1
-	_remaining_tile_discover_delay = character.profile.move_animation.duration * 0.1
+	_update_player_vision(character_grid_position, character.profile.vision, _reveal_tile.bind(character))
+	_update_player_vision(character_grid_position, character.profile.dark_vision, _discover_tile.bind(character))
+	_stepping_character = null
+	if _board_change_count != board_change_count_before: board_changed.emit(character)
+
+## Visual feedback on every peer: reveals start shortly after the figure crosses into a cell
+func _on_figure_entered_grid_cell(_cell: Vector2i, character: Character) -> void:
+	if not _reveal_queues.has(character): return
+	_remaining_tile_reveal_delays[character] = character.profile.move_animation.duration * 0.1
+	_remaining_tile_discover_delays[character] = character.profile.move_animation.duration * 0.1
 
 func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> void:
 	if profile_to_spawn is StructureProfile:
@@ -333,6 +460,7 @@ func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> voi
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if not _wall_tile: warnings.append("Missing wall tile StructureProfile.")
 	if not _structure_spawner: warnings.append("Missing StructureSpawner reference.")
 	if not _thing_spawner: warnings.append("Missing ThingSpawner reference.")
 	if not _agent_spawner: warnings.append("Missing AgentSpawner reference.")

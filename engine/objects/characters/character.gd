@@ -6,14 +6,24 @@ extends CharacterBody3D
 signal entered_grid_cell(cell: Vector2i)
 signal exited_grid_cell(cell: Vector2i)
 signal destination_reached
+signal movement_points_changed(movement_points: int)
+signal undo_steps_changed(undo_steps: int)
+## Emitted on every peer when the animated figure crosses into [param cell], which lags behind [member grid_cell]
+signal figure_entered_grid_cell(cell: Vector2i)
+## Emitted on every peer when the figure's move ended
+signal figure_arrived
 
 signal profile_changed
+
+const GROUP: StringName = "Characters"
 
 const VARIATION: StringName = "variation"
 const PROFILE_PATH: StringName = "profile_path"
 const SPAWN_TRANSFORM: StringName = "spawn_transform"
 const BODY: StringName = "body"
 const EQUIPMENT: StringName = "equipment"
+
+const _TURN_DURATION: float = 0.5
 
 ## Determines the varation of the [Model]
 ## If [code]<0[/code] a random [Model] will be used
@@ -45,6 +55,7 @@ const EQUIPMENT: StringName = "equipment"
 @export_group("Configuration")
 @export var _collision_shape: CollisionShape3D
 @export var _navigation_agent: NavigationAgent3D
+@export var _synchronizer: MultiplayerSynchronizer
 @export var equipment: CharacterEquipment
 
 var model: Model:
@@ -69,32 +80,83 @@ var body: Dictionary = {}:
 
 var level: Level
 var look_target: Vector3 = Vector3.BACK
+## The [Character] currently haunting (controlling) this one, if any
+var haunted_by: Character
+## Steps taken so far, undos included; counted by the host, replicated. Tiles a step reveals carry its number
+## (see [member Structure.status_cause_step]), so peers know which step to show them after.
+var step_count: int = 0
 
-var _previous_grid_position: Vector2i = Vector2i.ZERO
-var _is_on_floor: bool = true
+# Grid state: owned by the host, replicated on change by the CharacterSynchronizer.
+# Every peer turns it into a world position and animates the model itself.
+var grid_cell: Vector2i = Vector2i.ZERO:
+	set(new_grid_cell):
+		var previous_grid_cell: Vector2i = grid_cell
+		grid_cell = new_grid_cell
+		_queue_grid_visual_update()
+		if previous_grid_cell == grid_cell or not _has_grid_state: return
+		exited_grid_cell.emit(previous_grid_cell)
+		entered_grid_cell.emit(grid_cell)
+## Offset from the center of [member grid_cell], see [method Level.get_free_spots]
+var tile_spot: Vector2 = Vector2.ZERO:
+	set(new_tile_spot):
+		tile_spot = new_tile_spot
+		_queue_grid_visual_update()
+var facing: Level.Direction = Level.Direction.DOWN:
+	set(new_facing):
+		facing = new_facing
+		_queue_grid_visual_update()
+## Movement points left in the current turn; [code]<0[/code] until the host first resets them
+var movement_points: int = -1:
+	set(new_movement_points):
+		if new_movement_points == movement_points: return
+		movement_points = new_movement_points
+		movement_points_changed.emit(movement_points)
+## Steps the host can still undo this turn; replicated, the steps themselves stay on the host
+var undo_steps: int = 0:
+	set(new_undo_steps):
+		if new_undo_steps == undo_steps: return
+		undo_steps = new_undo_steps
+		undo_steps_changed.emit(undo_steps)
+
+var _has_grid_state: bool = false
+var _grid_visual_update_queued: bool = false
+var _grid_visuals_applied: bool = false
+# The figure's move: one hop; a step that comes in while it is under way redirects it to the new target
+var _move_tween: Tween
+var _turn_tween: Tween
+var _model_tween: Tween
+var _move_target: Vector3
+var _move_backwards: bool = false
+# The cell the animated figure is in; lags behind grid_cell while it moves
+var _figure_grid_cell: Vector2i = Vector2i.ZERO
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	model.play_model_animation(profile.spawn_animation)
-	entered_grid_cell.emit(get_grid_position())
+	if model: model.play_model_animation(profile.spawn_animation)
+	if multiplayer.is_server():
+		# Initial grid state comes from the spawn transform
+		grid_cell = level.world_to_grid_position(global_position)
+		facing = rotation_to_facing(rotation.y)
+		var free_spots: Array[Vector2] = level.get_free_spots(grid_cell, self)
+		if not free_spots.is_empty(): tile_spot = free_spots.front()
+		reset_movement_points()
+	_has_grid_state = true
+	_queue_grid_visual_update()
+	entered_grid_cell.emit(grid_cell)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	#_is_on_floor = is_on_floor()
 	#if not _is_on_floor: _apply_gravity(delta)
 	#_handle_pathfinding()
 	#move_and_slide()
 	#_look_forward(delta)
-	var grid_position: Vector2i = get_grid_position()
-	if grid_position != _previous_grid_position:
-		_previous_grid_position = grid_position
-		exited_grid_cell.emit(grid_position)
-		entered_grid_cell.emit(grid_position)
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
+	_update_figure_grid_cell()
 	#if model: model.play_animation(_normalized_velocity, _is_on_floor)
 
 static func from_character_data(character_data: Dictionary[StringName, Variant]) -> Character:
@@ -116,6 +178,12 @@ static func validate_character_data(character_data: Dictionary[StringName, Varia
 	assert(character_data[BODY] is Dictionary)
 	assert(character_data[EQUIPMENT] is PackedStringArray)
 
+static func facing_to_rotation(direction: Level.Direction) -> float:
+	return (2 - direction) * PI * 0.5
+
+static func rotation_to_facing(rotation_y: float) -> Level.Direction:
+	return posmod(2 - roundi(rotation_y / (PI * 0.5)), Level.Direction.size()) as Level.Direction
+
 ## Used to move the [Character] without pathfinding
 @rpc("any_peer", "call_local")
 func move_into_direction(direction_input: Vector2, delta: float) -> void:
@@ -129,30 +197,29 @@ func move_into_direction(direction_input: Vector2, delta: float) -> void:
 	velocity.x = move_toward(velocity.x, direction_input.x * move_speed, acceleration)
 	velocity.z = move_toward(velocity.z, direction_input.y * move_speed, acceleration)
 
-@rpc("any_peer", "call_local", "reliable")
-func move_on_grid(direction_input: Level.Direction) -> void:
-	assert(level)
-	var current_grid_position: Vector2i = get_grid_position()
-	var current_tile: Structure = level.get_placed_tile(current_grid_position)
-	assert(current_tile)
-	var tween: Tween = create_tween()
-	tween.set_parallel()
-	var relative_rotation: float = (2 - direction_input) * PI * 0.5 - rotation.y
-	while relative_rotation <= -PI: relative_rotation += TAU
-	while relative_rotation >= PI: relative_rotation -= TAU
-	tween.tween_property(self, "rotation:y", relative_rotation, 0.5).as_relative().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	if not current_tile.has_connection(direction_input):
-		print("WALKING INTO WALL!")
-		return
-	var quantized_global_position: Vector3 = level.grid_to_world_position(current_grid_position)
-	var direction_vector: Vector2i = Level.direction_to_vector(direction_input)
-	var desired_position: Vector3 = quantized_global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * level.grid_size
-	var desired_grid_position: Vector2i = level.world_to_grid_position(desired_position)
-	var desired_tile: Structure = level.get_placed_tile(desired_grid_position)
-	assert(desired_tile, "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [direction_input, current_tile, current_grid_position, desired_tile, desired_grid_position])
-	assert(desired_tile.has_connection(Level.get_direction(desired_grid_position, current_grid_position)), "Desired direction: %s;\n - from %s @ %s\n - into %s @ %s" % [direction_input, current_tile, current_grid_position, desired_tile, desired_grid_position])
-	tween.tween_property(self, "global_position", desired_position, profile.move_animation.duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
-	model.play_model_animation(profile.move_animation)
+## Host only: places the [Character] on the grid; peers follow through replication
+func place_on_grid(new_grid_cell: Vector2i, new_tile_spot: Vector2, new_facing: Level.Direction) -> void:
+	assert(multiplayer.is_server())
+	# Counted before the cell changes: entering the cell reveals tiles, which carry this step's number
+	if new_grid_cell != grid_cell: step_count += 1
+	tile_spot = new_tile_spot
+	facing = new_facing
+	grid_cell = new_grid_cell
+
+## The host owns the grid state of every piece, whoever controls it.
+## Call after changing the multiplayer authority of this [Character].
+func give_grid_state_to_host() -> void:
+	_synchronizer.set_multiplayer_authority(Multiplayer.HOST_ID)
+
+## Host only
+func reset_movement_points() -> void:
+	assert(multiplayer.is_server())
+	movement_points = profile.speed
+
+## Snaps the model back onto its grid state, e.g. after something else moved it locally
+func snap_to_grid() -> void:
+	_grid_visuals_applied = false
+	_queue_grid_visual_update()
 
 @rpc("any_peer", "call_local", "reliable")
 func move_to_position(position_input: Vector3) -> void:
@@ -202,15 +269,101 @@ func _apply_body() -> void:
 		modular_model.get_part(part as ModularCharacter.Part).apply_mesh(mesh)
 
 func get_portrait() -> Texture:
-	if model.portrait_override: return model.portrait_override
+	if model and model.portrait_override: return model.portrait_override
 	return profile.portrait
 
 func get_heads_up_anchor() -> Vector3:
 	return position + profile.heads_up_display_offset
 
 func get_grid_position() -> Vector2i:
-	assert(level)
-	return level.world_to_grid_position(global_position)
+	return grid_cell
+
+## @returns the cell the animated figure currently stands in
+func get_figure_grid_cell() -> Vector2i:
+	return _figure_grid_cell
+
+func _update_figure_grid_cell() -> void:
+	if not level or not _grid_visuals_applied: return
+	var figure_grid_cell: Vector2i = level.world_to_grid_position(global_position)
+	if figure_grid_cell == _figure_grid_cell: return
+	_figure_grid_cell = figure_grid_cell
+	figure_entered_grid_cell.emit(_figure_grid_cell)
+
+func _queue_grid_visual_update() -> void:
+	if _grid_visual_update_queued: return
+	_grid_visual_update_queued = true
+	_apply_grid_visuals.call_deferred()
+
+func _apply_grid_visuals() -> void:
+	_grid_visual_update_queued = false
+	if not level or not is_inside_tree(): return
+	var target_position: Vector3 = level.get_spot_position(grid_cell, tile_spot)
+	var target_rotation: float = facing_to_rotation(facing)
+	if not _grid_visuals_applied:
+		_grid_visuals_applied = true
+		for tween: Tween in [_move_tween, _turn_tween, _model_tween]: if tween: tween.kill()
+		global_position = target_position
+		rotation.y = target_rotation
+		_update_figure_grid_cell()
+		return
+	_turn_to(target_rotation)
+	if target_position.is_equal_approx(_move_target if _is_moving() else global_position): return
+	if _is_moving(): _extend_move(target_position)
+	else: _start_move(target_position, target_rotation)
+
+func _is_moving() -> bool:
+	return _move_tween != null and _move_tween.is_running()
+
+## @returns [code]true[/code] until the figure arrived where the grid state says, see [signal figure_arrived]
+func is_figure_moving() -> bool:
+	return _grid_visual_update_queued or _is_moving()
+
+func _turn_to(target_rotation: float) -> void:
+	if _turn_tween: _turn_tween.kill()
+	var relative_rotation: float = wrapf(target_rotation - rotation.y, -PI, PI)
+	if is_zero_approx(relative_rotation): return
+	_turn_tween = create_tween()
+	_turn_tween.tween_property(self, "rotation:y", relative_rotation, _TURN_DURATION).as_relative().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+func _start_move(target_position: Vector3, target_rotation: float) -> void:
+	# Steps back (undo) keep facing the way the step went, so the figure walks backwards
+	var facing_vector: Vector3 = Vector3(sin(target_rotation), 0.0, cos(target_rotation))
+	_move_backwards = (target_position - global_position).normalized().dot(facing_vector) < -0.5
+	var animation: ModelAnimation = profile.undo_animation if _move_backwards and profile.undo_animation else profile.move_animation
+	# From standing: the hop-in feel, a little back, then forward into the tile
+	_run_move(target_position, animation, Tween.TRANS_BACK, Tween.EASE_IN, false)
+
+## Redirects the move under way to [param target_position], from where the figure is: at most one step's time
+## is left after any step, so quick steps take hardly longer than one, and corners may be cut
+func _extend_move(target_position: Vector3) -> void:
+	_move_backwards = false
+	_run_move(target_position, profile.move_animation, Tween.TRANS_SINE, Tween.EASE_IN_OUT, true)
+
+func _run_move(target_position: Vector3, animation: ModelAnimation, transition: Tween.TransitionType, easing: Tween.EaseType, continuing: bool) -> void:
+	_move_target = target_position
+	if _move_tween: _move_tween.kill()
+	_move_tween = create_tween()
+	_move_tween.tween_property(self, "global_position", target_position, animation.duration).set_trans(transition).set_ease(easing)
+	_move_tween.tween_callback(_on_move_finished)
+	# A redirected move continues the hop: it stays up and lands with the move, without a new lean back
+	if not model: return
+	if _model_tween: _model_tween.kill()
+	_model_tween = model.continue_model_animation(animation) if continuing else model.play_model_animation(animation)
+
+func _on_move_finished() -> void:
+	# The tween still counts as running during its own callback; listeners must see the figure arrived
+	_move_tween = null
+	if not _move_backwards: _look_at_thing_on_tile()
+	figure_arrived.emit()
+
+## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
+func _look_at_thing_on_tile() -> void:
+	var thing: Thing = level.get_placed_thing(grid_cell)
+	if not thing or not thing.visible: return
+	var to_thing: Vector3 = thing.global_position - global_position
+	to_thing.y = 0.0
+	if to_thing.length_squared() < 0.01: return
+	_turn_to(atan2(to_thing.x, to_thing.z))
 
 func _apply_gravity(delta: float) -> void:
 	velocity.y -= _gravity * delta
@@ -241,6 +394,17 @@ func _disable_physics() -> void:
 	set_physics_process(false)
 	set_process(false)
 
+## @returns [code]true[/code] if the peer [param peer_id] may move this [Character]
+func is_controlled_by(peer_id: int) -> bool:
+	if haunted_by: return haunted_by.get_multiplayer_authority() == peer_id
+	return get_multiplayer_authority() == peer_id
+
+func _on_haunted(haunting: Character) -> void:
+	haunted_by = haunting
+
+func _on_unhaunted() -> void:
+	haunted_by = null
+
 func _on_navigation_agent_velocity_computed(safe_velocity: Vector3) -> void:
 	if _navigation_agent.is_navigation_finished(): return
 	velocity = safe_velocity
@@ -253,5 +417,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not _collision_shape: warnings.append("Missing CollisionShape3D reference.")
 	if not _navigation_agent: warnings.append("Missing NavigationAgent3D reference.")
+	if not _synchronizer: warnings.append("Missing MultiplayerSynchronizer reference.")
 	if not equipment: warnings.append("Missing CharacterEquipment reference.")
 	return warnings

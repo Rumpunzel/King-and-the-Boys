@@ -2,7 +2,7 @@
 class_name TopDownCamera
 extends Camera3D
 
-const _ray_length: float = 1000.0
+const _RAY_LENGTH: float = 1000.0
 
 @export var distance_off_ground: float = 24.0
 @export var distance_from_follow: float = 24.0
@@ -14,7 +14,7 @@ const _ray_length: float = 1000.0
 @export_tool_button("Frame origin", "Camera3D") var _frame_origin_action: Callable = frame_point.bind(Vector3.ZERO, true)
 @export var _smoothing_speed: float = 12.0
 
-var _turnIndex: int = 0
+var _turn_index: int = 0
 var _point_to_frame: Vector3
 var _position_to_smooth_to: Vector3:
 	set(new_position_to_smooth_to):
@@ -34,16 +34,16 @@ func frame_node(node_to_frame: Node3D, instant: bool = false) -> void:
 func frame_point(point_to_frame: Vector3, instant: bool = false) -> void:
 	assert(point_to_frame != null)
 	_point_to_frame = point_to_frame
-	var angle: float = deg_to_rad(_turnIndex * camera_turn_angle + camera_angle_offset)
+	var angle: float = deg_to_rad(_turn_index * camera_turn_angle + camera_angle_offset)
 	var inverse_zoom: float = 1.0 / zoom
 	var inverse_zoom_root: float = sqrt(inverse_zoom)
-	
+
 	var offset: Vector3 = Vector3(
 		distance_from_follow * cos(angle) * inverse_zoom_root,
 		distance_off_ground * inverse_zoom - _point_to_frame.y,
 		distance_from_follow * sin(angle) * inverse_zoom_root,
 	)
-	
+
 	if not instant:
 		_position_to_smooth_to = _point_to_frame + offset
 		return
@@ -62,14 +62,14 @@ func get_adjusted_movement(input_vector: Vector2) -> Vector2:
 func mouse_as_world_point() -> CameraRay:
 	var mouse_position: Vector2 = get_viewport().get_mouse_position()
 	var from: Vector3 = project_ray_origin(mouse_position)
-	var to: Vector3 = from + project_ray_normal(mouse_position) * _ray_length
+	var to: Vector3 = from + project_ray_normal(mouse_position) * _RAY_LENGTH
 	return CameraRay.new(from, to)
 
 
 class CameraRay:
 	var from: Vector3
 	var to: Vector3
-	
+
 	func _init(new_from: Vector3, new_to: Vector3) -> void:
 		from = new_from
 		to = new_to

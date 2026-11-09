@@ -7,28 +7,44 @@
 [ext_resource type="Script" uid="uid://ca8rg7sjibiiv" path="res://engine/objects/equipment/character_equipment.gd" id="5_eqp01"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3fwhk"]
-properties/0/path = NodePath(".:_is_on_floor")
+properties/0/path = NodePath(".:transform")
 properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:transform")
+properties/0/replication_mode = 0
+properties/1/path = NodePath(".:visible")
 properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:visible")
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:grid_cell")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath(".:tile_spot")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:facing")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:movement_points")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath(".:undo_steps")
+properties/6/spawn = false
+properties/6/replication_mode = 2
+properties/7/path = NodePath(".:step_count")
+properties/7/spawn = true
+properties/7/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_eqp01"]
 properties/0/path = NodePath(".:equipped_ids")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="Character" type="CharacterBody3D" unique_id=280801836 node_paths=PackedStringArray("_collision_shape", "_navigation_agent", "equipment") groups=["Characters"]]
+[node name="Character" type="CharacterBody3D" unique_id=280801836 node_paths=PackedStringArray("_collision_shape", "_navigation_agent", "_synchronizer", "equipment") groups=["Characters"]]
 collision_layer = 2
 collision_mask = 15
 input_ray_pickable = false
 script = ExtResource("1_f5t6j")
 _collision_shape = NodePath("CollisionShape3D")
 _navigation_agent = NodePath("NavigationAgent3D")
+_synchronizer = NodePath("CharacterSynchronizer")
 equipment = NodePath("CharacterEquipment")
 metadata/_custom_type_script = "uid://cwu2dwpvcrl3s"
 

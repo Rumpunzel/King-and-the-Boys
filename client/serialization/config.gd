@@ -62,7 +62,7 @@ static func _load_config_file(config_file_path: String) -> ConfigFile:
 		print_debug("No config file found, creating default!")
 		var default_error: Error = _create_default_config_file(config_file_path)
 		if default_error != OK: return null
-	
+
 	var config: ConfigFile = ConfigFile.new()
 	# Load data from a file.
 	var error: Error = config.load(config_file_path)

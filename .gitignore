@@ -42,3 +42,8 @@ addons/godot-git-plugin/
 
 # gdUnit4 test reports
 reports/
+# gdUnit4 command line tool (excluded by bin/ above)
+!addons/gdUnit4/bin/
+
+# Claude Code notes for this machine
+CLAUDE.local.md

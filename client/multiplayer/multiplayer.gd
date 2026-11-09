@@ -82,17 +82,17 @@ func _go_offline() -> void:
 	disconnected_from_multiplayer.emit()
 
 func _setup_toaster() -> void:
-	var _toaster: Toaster = Toaster.new()
-	_toaster._vertical_position = Toaster.VerticalPosition.TOP
-	_toaster._gravity = Toaster.Gravity.BOTTOM
-	multiplayer.connection_failed.connect(_toaster.toast_error.bind("Connection failed!"))
-	multiplayer.server_disconnected.connect(_toaster.toast_error.bind("Connection to server lost!"))
-	connected_to_multiplayer.connect(_toaster.toast.bind("Connecting to multiplayer..."))
-	disconnected_from_multiplayer.connect(_toaster.toast.bind("Disconnected from multiplayer..."))
-	game_hosted.connect(func(_ip_address: StringName, _port: int) -> void: _toaster.toast_info("Game hosted!"))
-	game_joined.connect(func(host_player_info: Dictionary) -> void: _toaster.toast_success("Joined %s's game!" % host_player_info[Player.NAME]))
-	joining_multiplayer.connect(_toaster.toast.bind("Joining multiplayer..."))
-	add_child(_toaster)
+	var toaster: Toaster = Toaster.new()
+	toaster._vertical_position = Toaster.VerticalPosition.TOP
+	toaster._gravity = Toaster.Gravity.BOTTOM
+	multiplayer.connection_failed.connect(toaster.toast_error.bind("Connection failed!"))
+	multiplayer.server_disconnected.connect(toaster.toast_error.bind("Connection to server lost!"))
+	connected_to_multiplayer.connect(toaster.toast.bind("Connecting to multiplayer..."))
+	disconnected_from_multiplayer.connect(toaster.toast.bind("Disconnected from multiplayer..."))
+	game_hosted.connect(func(_ip_address: StringName, _port: int) -> void: toaster.toast_info("Game hosted!"))
+	game_joined.connect(func(host_player_info: Dictionary) -> void: toaster.toast_success("Joined %s's game!" % host_player_info[Player.NAME]))
+	joining_multiplayer.connect(toaster.toast.bind("Joining multiplayer..."))
+	add_child(toaster)
 
 ## When a peer connects, send them the host info.
 ## This allows transfer of all desired data for each player, not only the unique ID.

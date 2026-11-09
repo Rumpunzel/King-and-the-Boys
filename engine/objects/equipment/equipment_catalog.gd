@@ -8,6 +8,9 @@ extends Resource
 
 const CATALOG_DIRECTORY: String = EquipmentLook.ITEM_DIRECTORY + "/catalogs"
 
+## Held so [method find_all] keeps finding loaded catalogs in the cache: an unreferenced one is freed and read from disk again
+static var _held_catalogs: Array[EquipmentCatalog] = []
+
 @export var type: EquipmentType:
 	set(new_value):
 		type = new_value
@@ -31,9 +34,6 @@ static func find_or_create(for_type: EquipmentType) -> EquipmentCatalog:
 	catalog = EquipmentCatalog.new()
 	catalog.type = for_type
 	return catalog
-
-## Held so [method find_all] keeps finding loaded catalogs in the cache: an unreferenced one is freed and read from disk again
-static var _held_catalogs: Array[EquipmentCatalog] = []
 
 ## @returns every saved catalog
 static func find_all() -> Array[EquipmentCatalog]:

@@ -48,7 +48,7 @@ func remove_hit_box_to_ignore(hit_box: HitBox) -> void:
 	_hit_boxes_to_ignore.erase(hit_box)
 	if not current_interactable: current_interactable = nearest_hit_box_in_area()
 
-func configure_collision_shape(character_profile: CharacterProfile) -> void:
+func configure_collision_shape(_character_profile: CharacterProfile) -> void:
 	#character_profile.configure_interaction_area_shape(_collision_shape)
 	current_interactable = nearest_hit_box_in_area()
 
