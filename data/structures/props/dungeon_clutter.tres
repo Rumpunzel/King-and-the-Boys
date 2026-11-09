@@ -35,6 +35,7 @@
 [ext_resource type="PackedScene" uid="uid://dgb0soy6hsm4x" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Meat_Bucket_01.tscn" id="10_more"]
 [ext_resource type="PackedScene" uid="uid://b47jnutnxtc3i" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Bowl_01.tscn" id="11_more"]
 [ext_resource type="PackedScene" uid="uid://e271xxhlrtps" path="res://data/structures/props/ambience/bone_pile_flies.tscn" id="12_more"]
+[ext_resource type="Resource" uid="uid://chys4vhu4htfk" path="res://data/structures/props/dwarven_clutter.tres" id="1_collection"]
 
 [resource]
 script = ExtResource("1_script")
@@ -73,4 +74,7 @@ ExtResource("9_more"): 0.4,
 ExtResource("10_more"): 0.2,
 ExtResource("11_more"): 0.3,
 ExtResource("12_more"): 0.4
+})
+collections = Dictionary[ExtResource("1_script"), float]({
+ExtResource("1_collection"): 5.0
 })

@@ -213,8 +213,11 @@ static func _random_turn(random: RandomNumberGenerator) -> Transform3D:
 	return Transform3D(Basis(Vector3.UP, random.randf() * TAU), Vector3.ZERO)
 
 ## Adds a prop picked from [param prop_set] at [param prop_transform], in the tile model's space
-func _add_prop(decorations: Node3D, prop_set: PropSet, prop_transform: Transform3D, random: RandomNumberGenerator) -> void:
-	var scene: PackedScene = prop_set.pick(random) if prop_set else null
+func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transform3D, random: RandomNumberGenerator) -> void:
+	if not collection: return
+	# Scale and material come from the (sub-)collection the prop is taken from
+	var prop_set: PropSet = collection.pick_collection(random)
+	var scene: PackedScene = prop_set.pick(random)
 	if not scene: return
 	var mesh: Node3D = scene.instantiate()
 	# Decorations never block clicks or movement

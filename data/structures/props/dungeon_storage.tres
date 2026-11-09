@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://di87oqbv8vmi" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Crate_01.tscn" id="4_more"]
 [ext_resource type="PackedScene" uid="uid://dji6qjigjesig" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Chest_01.tscn" id="5_more"]
 [ext_resource type="PackedScene" uid="uid://vir2dnd14nkp" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Keg_01.tscn" id="6_more"]
+[ext_resource type="Resource" uid="uid://bebiwa8prxkbm" path="res://data/structures/props/dwarven_storage.tres" id="1_collection"]
 
 [resource]
 script = ExtResource("1_script")
@@ -41,4 +42,7 @@ ExtResource("3_more"): 0.8,
 ExtResource("4_more"): 0.6,
 ExtResource("5_more"): 0.3,
 ExtResource("6_more"): 0.3
+})
+collections = Dictionary[ExtResource("1_script"), float]({
+ExtResource("1_collection"): 4.0
 })
