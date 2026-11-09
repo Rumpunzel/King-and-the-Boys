@@ -5,6 +5,7 @@ extends StaticBody3D
 
 signal spawn_requested(profile_to_spawn: Profile)
 signal status_changed(status: Status)
+signal shown_status_changed(shown_status: Status)
 signal profile_changed
 
 enum Status {
@@ -52,24 +53,30 @@ const STATUS: StringName = "status"
 	set(new_clockwise_turns):
 		rotation.y = TAU - new_clockwise_turns * (PI * 0.5)
 
+## What the players know about the tile; set by the host the moment a move reveals it.
+## [member shown_status] catches up later through the [Level]'s delayed visual queues.
 @export var status: Status = Status.NONE:
 	set(new_status):
 		if new_status == status: return
 		status = new_status
-		match status:
-			Status.PLACED:
-				model.visible = false
-			Status.DISCOVERED:
-				model.apply_material_override(_hidden_material)
-				model.visible = true
-				model.play_model_animation(profile.discover_animation)
-			Status.REVEALED:
-				model.visible = true
-				model.remove_material_override(_hidden_material)
-				model.play_model_animation(profile.reveal_animation)
-				if level: _debug_draw_connections()
-			_: push_error("Status %s not implemented!" % status)
+		# Spawned and loaded tiles show their status right away
+		if not is_node_ready(): shown_status = status
 		status_changed.emit(status)
+
+## The [Character] whose step raised [member status] last, empty if no step did (level build, spawning, loading).
+## Replicated before [member status], so peers know it when the status changes.
+var status_cause: NodePath
+## The cause's [member Character.step_count] at that step; [code]0[/code] if no step raised the status
+var status_cause_step: int = 0
+
+## What the tile currently looks like on this peer
+var shown_status: Status = Status.NONE:
+	set(new_shown_status):
+		if new_shown_status == shown_status: return
+		shown_status = new_shown_status
+		_show_model()
+		if shown_status == Status.REVEALED and level: _debug_draw_connections()
+		shown_status_changed.emit(shown_status)
 
 @export_group("Configuration")
 @export var _collision_shape: CollisionShape3D
@@ -115,13 +122,13 @@ static func validate_structure_data(structure_data: Dictionary[StringName, Varia
 	assert(structure_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM, CLOCKWISE_TURNS, STATUS]))
 	assert(structure_data.size() == 5)
 
-@rpc("call_local", "reliable")
+## Host only; @returns [code]true[/code] if the status went up
 func discover() -> bool:
 	if status >= Status.DISCOVERED: return false
 	status = Status.DISCOVERED
 	return true
 
-@rpc("call_local", "reliable")
+## Host only; @returns [code]true[/code] if the status went up
 func reveal() -> bool:
 	if status >= Status.REVEALED: return false
 	status = Status.REVEALED
@@ -168,7 +175,7 @@ func get_restriction_to(grid_position: Vector2i) -> ConnectionRestriction:
 func get_restrictions() -> Dictionary[Level.Direction, ConnectionRestriction]: return profile.get_restrictions(clockwise_turns)
 
 func get_portrait() -> Texture:
-	if model.portrait_override: return model.portrait_override
+	if model and model.portrait_override: return model.portrait_override
 	return profile.portrait
 
 func get_heads_up_anchor() -> Vector3:
@@ -185,6 +192,22 @@ func get_grid_cells() -> Array[Vector2i]:
 			var cell_position: Vector2i = Vector2i.RIGHT * x + Vector2i.UP * y
 			grid_cells.append(origin_cell + cell_position)
 	return grid_cells
+
+## Profiles without models (e.g. in tests) have no model to show
+func _show_model() -> void:
+	if not model: return
+	match shown_status:
+		Status.PLACED:
+			model.visible = false
+		Status.DISCOVERED:
+			model.apply_material_override(_hidden_material)
+			model.visible = true
+			model.play_model_animation(profile.discover_animation)
+		Status.REVEALED:
+			model.visible = true
+			model.remove_material_override(_hidden_material)
+			model.play_model_animation(profile.reveal_animation)
+		_: push_error("Status %s not implemented!" % shown_status)
 
 func _get_direction_to_grid_position(grid_position: Vector2i) -> Level.Direction: return Level.get_direction(get_grid_position(), grid_position)
 

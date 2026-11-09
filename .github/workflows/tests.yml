@@ -1,0 +1,50 @@
+name: Tests
+
+# Script check, unit and integration tests on every push, without the Git LFS assets: tests use model-free fixtures
+# (tests/fixtures). Loading the real scenes and assets is asset_check.yml
+
+# Pushes cover the commits of pull requests too, so there is no separate pull_request trigger
+on:
+  push:
+  workflow_dispatch:
+
+# A newer push to the same branch cancels the run still in progress
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Keep in sync with config/features in project.godot
+  GODOT_VERSION: '4.6'
+
+jobs:
+  tests:
+    name: Script check and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/godot
+
+      # gdUnit only compiles the scripts its tests load, so check all of them on their own.
+      # tests/script_check.tscn compiles every script of ours. Running the main scene needs the assets: asset_check.yml
+      - name: Script check
+        run: |
+          "$GODOT_BIN" --headless --path . res://tests/script_check.tscn 2>&1 | tee check.log
+          if grep -E "SCRIPT ERROR|Compile Error" check.log; then exit 1; fi
+
+      # Separate steps, so a failure shows which suite it was; one job, so the project is imported once
+      - name: Unit tests
+        run: ./.github/scripts/run_tests.sh res://tests/unit
+      - name: Integration tests
+        run: ./.github/scripts/run_tests.sh res://tests/integration
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            reports/
+            import.log

@@ -65,8 +65,9 @@ func configure_hit_box_mesh(hit_box_mesh: MeshInstance3D) -> void:
 	if not _hit_box_shape: configure_collision_mesh(hit_box_mesh)
 	else: _hit_box_shape.configure_mesh(hit_box_mesh)
 
+## @returns a random model variation, or [code]-1[/code] for a profile without models (e.g. in tests)
 func get_random_variation() -> int:
-	assert(not _model_variations.is_empty())
+	if _model_variations.is_empty(): return -1
 	return randi() % get_variation_count()
 
 func get_variation_count() -> int:

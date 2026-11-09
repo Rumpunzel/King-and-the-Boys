@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://b8ix8nx66t01e"]
+
+[ext_resource type="Script" uid="uid://o4wjmoakv43" path="res://user_interface/hud/moves_bar.gd" id="1_moves"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_moves"]
+
+[node name="MovesBar" type="MarginContainer" unique_id=1679096801 node_paths=PackedStringArray("_used_bar", "_undoable_bar")]
+offset_right = 173.0
+offset_bottom = 32.0
+script = ExtResource("1_moves")
+_used_bar = NodePath("Used")
+_undoable_bar = NodePath("Undoable")
+metadata/_custom_type_script = "uid://o4wjmoakv43"
+
+[node name="Undoable" type="ProgressBar" parent="." unique_id=774445842]
+layout_mode = 2
+max_value = 4.0
+step = 1.0
+value = 3.0
+show_percentage = false
+
+[node name="Used" type="ProgressBar" parent="." unique_id=528461117]
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_moves")
+max_value = 4.0
+step = 1.0
+value = 2.0
+show_percentage = false

@@ -42,6 +42,8 @@ enum Groups {
 @export var spawn_animation: ModelAnimation = preload("uid://djq27fwrmrv2")
 @export var move_animation: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var fast_move_animation: ModelAnimation = preload("uid://bwiaycc13h0eo")
+## Played when undo walks a step back; the move animation if empty
+@export var undo_animation: ModelAnimation
 
 @export_category("")
 @export_group("Configuration")
@@ -56,7 +58,7 @@ func create(variation: int, spawn_transform: Transform3D) -> Character:
 
 func create_model(variation: int) -> Model:
 	var model: ModularCharacter = super.create_model(variation)
-	setup_model(model)
+	if model: setup_model(model)
 	return model
 
 func setup_model(model: ModularCharacter) -> void:

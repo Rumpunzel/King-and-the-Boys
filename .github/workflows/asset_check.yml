@@ -1,0 +1,42 @@
+name: Asset check
+
+# Runs the main scene with the real Git LFS assets, to catch broken asset references. Tests do not need assets
+# (tests/fixtures), so this is started by hand. Run it on main: caches made there serve every branch and stay valid
+# until the assets change (GitHub drops caches unused for 7 days; then the LFS download and import take ~35 min again).
+on:
+  workflow_dispatch:
+
+# A newer run on the same branch cancels the one still in progress
+concurrency:
+  group: asset-check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Keep in sync with config/features in project.godot
+  GODOT_VERSION: '4.6'
+
+jobs:
+  smoke:
+    name: Main scene with assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/godot
+        with:
+          assets: 'true'
+      # Loads the autoloads and the main scene
+      - name: Smoke run
+        run: |
+          "$GODOT_BIN" --headless --path . --quit-after 300 2>&1 | tee smoke.log
+          if grep -E "SCRIPT ERROR|Compile Error" smoke.log; then exit 1; fi
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asset-check-logs
+          path: |
+            smoke.log
+            import.log

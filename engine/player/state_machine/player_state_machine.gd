@@ -3,6 +3,7 @@ class_name PlayerStateMachine
 extends StateMachine
 
 signal available_interactions_changed(available_interactions: Array[Interaction])
+signal controlled_character_changed(controlled_character: Character)
 
 @export_group("Configuration")
 @export var player_ghost: PlayerGhost
@@ -36,10 +37,17 @@ func handle_interactable(current_interactable: HitBox) -> void:
 func get_state() -> PlayerState:
 	return _state
 
+## @returns the [Character] the player currently moves
+func get_controlled_character() -> Character:
+	return _state.get_controlled_character() if _state else character
+
 func set_state(state: State) -> void:
 	assert(state is PlayerState)
+	var previous_controlled_character: Character = get_controlled_character()
 	_state = state
 	_state.set_state_machine(self)
+	if get_controlled_character() != previous_controlled_character:
+		controlled_character_changed.emit(get_controlled_character())
 
 func _on_current_interactable_changed(current_interactable: HitBox) -> void:
 	handle_interactable(current_interactable)

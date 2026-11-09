@@ -1,7 +1,6 @@
 [gd_scene format=4 uid="uid://xfsixac560jc"]
 
 [ext_resource type="Script" uid="uid://ciovr5f7m5so8" path="res://addons/menagerie/preview/preview_model.gd" id="1_dsd7c"]
-[ext_resource type="Resource" uid="uid://dy6kyxtiog1ac" path="res://data/characters/ghosts/ghost.tres" id="2_fv6ce"]
 [ext_resource type="Shader" uid="uid://cgperstehn6y3" path="res://addons/menagerie/preview/wireframe.gdshader" id="3_ew30f"]
 [ext_resource type="PackedScene" uid="uid://cpmcbnpcemt61" path="res://engine/objects/heads_up_anchor.tscn" id="4_e3hi2"]
 
@@ -118,7 +117,6 @@ _surfaces = [{
 [node name="PreviewModel" type="RigidBody3D" unique_id=1211098797 node_paths=PackedStringArray("_collision_shape", "_collision_mesh", "_hit_box_mesh", "_interaction_area_mesh", "_heads_up_anchor")]
 script = ExtResource("1_dsd7c")
 variation = 16
-profile = ExtResource("2_fv6ce")
 _collision_shape = NodePath("CollisionShape3D")
 _collision_mesh = NodePath("CollisionMesh")
 _hit_box_mesh = NodePath("HitBoxMesh")
