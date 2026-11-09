@@ -2,17 +2,20 @@
 class_name EquipmentSlotProperty
 extends EditorProperty
 
-## Dresses one starting equipment slot of a [CharacterProfile]: a dropdown for the kind of item, then one carousel per linked
-## group of parts (the base, then its attachment) stepping through the looks of the type's [EquipmentCatalog]
-## Changes go through the inspector, so they can be undone and are saved with the profile. Unchecked looks are offered, greyed
+## Dresses one starting equipment slot of a [CharacterProfile]: a dropdown for the kind of item, then a carousel per part of that
+## type stepping through the part's meshes. Left and right parts share a carousel until split, so the sides can differ
+## Choosing a type starts from its catalog's first look; every change stores a copy in the profile (see [method EquipmentLook.with_part_mesh])
+## Changes go through the inspector, so they can be undone and are saved with the profile
 
-const UNCHECKED_COLOR: Color = Color(1.0, 1.0, 1.0, 0.4)
+const BLOCKED_COLOR: Color = Color(1.0, 1.0, 1.0, 0.4)
 
 var _slot: EquipmentLook.Slot
 var _slot_types: Array[EquipmentType] = []
 var _type_option: OptionButton = OptionButton.new()
 var _clear_button: Button = Button.new()
 var _carousels: VBoxContainer = VBoxContainer.new()
+## Left parts whose pair was split here although both sides still show the same mesh
+var _split_pairs: Dictionary[ModularCharacter.Part, bool] = {}
 var _is_refresh_queued: bool = false
 
 func _init(slot: EquipmentLook.Slot) -> void:
@@ -45,34 +48,74 @@ static func get_slot_types(slot: EquipmentLook.Slot) -> Array[EquipmentType]:
 		if equipment_type.slot == slot: slot_types.append(equipment_type)
 	return slot_types
 
-## The key a catalog look is stored under, or the key of the combination a hand-made look shows
-static func get_key(equipment_look: EquipmentLook) -> String:
-	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(equipment_look.type)
-	if catalog and catalog.looks.has(equipment_look): return EquipmentCatalog.get_key_of(equipment_look)
-	return equipment_look.type.get_combination_key_of(equipment_look)
-
 ## The starting look of [param profile] that blocks [param slot], if any
 static func get_blocker(profile: CharacterProfile, slot: EquipmentLook.Slot) -> EquipmentLook:
 	for equipment_look: EquipmentLook in profile.get_starting_equipment():
 		if equipment_look.blocked_slots.has(slot): return equipment_look
 	return null
 
-## The first allowed look of [param equipment_type]'s catalog, or [code]null[/code] without a catalog
+## A copy of the first allowed look of [param equipment_type]'s catalog, or [code]null[/code] without a catalog
 static func get_first_look(equipment_type: EquipmentType) -> EquipmentLook:
 	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(equipment_type)
-	return catalog.get_look(catalog.get_first_key()) if catalog else null
+	return catalog.get_look(catalog.get_first_key()).make_local() if catalog else null
 
-## The look one option further along the [param link_index]th link, see [method EquipmentCatalog.step]
-static func step_look(equipment_look: EquipmentLook, link_index: int, direction: int) -> EquipmentLook:
-	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(equipment_look.type)
-	if not catalog: return null
-	return catalog.get_look(catalog.step(get_key(equipment_look), link_index, direction))
+## The right counterpart of a left part among [param equipment_type]'s parts, or [code]-1[/code]
+static func get_right_partner(equipment_type: EquipmentType, part: ModularCharacter.Part) -> int:
+	var part_name: String = ModularCharacter.Part.keys()[part]
+	if not part_name.ends_with("_LEFT"): return -1
+	var partner: int = ModularCharacter.Part.keys().find(part_name.trim_suffix("_LEFT") + "_RIGHT")
+	return partner if equipment_type.parts.has(partner) else -1
 
-## A carousel's text, e.g. "Helmet Attachment 05": the link's first part without its side, and its number
-static func describe_link(equipment_look: EquipmentLook, link_index: int) -> String:
-	var leader: ModularCharacter.Part = equipment_look.type.get_key_links()[link_index][0]
+## The trailing number of what [param part] shows in [param equipment_look], [constant ModularBodyPart.EMPTY_MESH_NUMBER] for none
+static func get_mesh_number(equipment_look: EquipmentLook, part: ModularCharacter.Part) -> String:
+	var mesh: ArrayMesh = equipment_look.get_part_mesh(part)
+	return ModularBodyPart.get_mesh_number(mesh.resource_path) if mesh else ModularBodyPart.EMPTY_MESH_NUMBER
+
+## The carousels of [param equipment_look]: one per part, left and right ones together unless they differ or are in [param split_pairs]
+static func get_carousel_parts(equipment_look: EquipmentLook, split_pairs: Dictionary[ModularCharacter.Part, bool]) -> Array[Array]:
+	var carousels: Array[Array] = []
+	var paired: Array[int] = []
+	for part: ModularCharacter.Part in equipment_look.type.parts:
+		if paired.has(part): continue
+		var partner: int = get_right_partner(equipment_look.type, part)
+		var is_split: bool = split_pairs.has(part) or (partner >= 0 and get_mesh_number(equipment_look, part) != get_mesh_number(equipment_look, partner as ModularCharacter.Part))
+		if partner >= 0 and not is_split:
+			paired.append(partner)
+			carousels.append([part, partner])
+		else: carousels.append([part])
+	return carousels
+
+## A carousel's text, e.g. "Shoulder Attach 05" for a pair or "Shoulder Attach Left 05" for one side
+static func describe_carousel(equipment_look: EquipmentLook, parts: Array) -> String:
+	var leader: ModularCharacter.Part = parts[0]
 	var part_name: String = ModularCharacter.Part.keys()[leader]
-	return "%s %s" % [part_name.capitalize().trim_suffix(" Left"), get_key(equipment_look).split(" ")[link_index]]
+	var label: String = part_name.capitalize()
+	if parts.size() > 1: label = label.trim_suffix(" Left")
+	return "%s %s" % [label, get_mesh_number(equipment_look, leader)]
+
+## A copy of [param equipment_look] one mesh further for the carousel's first part, wrapping around; the others take the same number
+## where they have it
+static func step_parts(equipment_look: EquipmentLook, parts: Array, direction: int) -> EquipmentLook:
+	var leader: ModularCharacter.Part = parts[0]
+	var options: PackedStringArray = EquipmentLook.get_mesh_options(leader)
+	if options.is_empty(): return equipment_look
+	var shown_mesh: ArrayMesh = equipment_look.get_part_mesh(leader)
+	var shown_index: int = options.find(shown_mesh.resource_path if shown_mesh else "")
+	if shown_index < 0: shown_index = 0 if direction > 0 else options.size()
+	var stepped: EquipmentLook = _with_mesh_path(equipment_look, leader, options[posmod(shown_index + direction, options.size())])
+	for part_index: int in range(1, parts.size()): stepped = match_part(stepped, parts[part_index] as ModularCharacter.Part, leader)
+	return stepped
+
+## A copy where [param part] shows the mesh numbered like [param model_part]'s, if it has one
+static func match_part(equipment_look: EquipmentLook, part: ModularCharacter.Part, model_part: ModularCharacter.Part) -> EquipmentLook:
+	var mesh_number: String = get_mesh_number(equipment_look, model_part)
+	for mesh_path: String in EquipmentLook.get_mesh_options(part):
+		var number: String = ModularBodyPart.get_mesh_number(mesh_path) if not mesh_path.is_empty() else ModularBodyPart.EMPTY_MESH_NUMBER
+		if number == mesh_number: return _with_mesh_path(equipment_look, part, mesh_path)
+	return equipment_look
+
+static func _with_mesh_path(equipment_look: EquipmentLook, part: ModularCharacter.Part, mesh_path: String) -> EquipmentLook:
+	return equipment_look.with_part_mesh(part, load(mesh_path) as ArrayMesh if not mesh_path.is_empty() else null)
 
 func _update_property() -> void:
 	var profile: CharacterProfile = get_edited_object()
@@ -84,10 +127,8 @@ func _exit_tree() -> void:
 	var profile: CharacterProfile = get_edited_object() as CharacterProfile
 	if profile and profile.changed.is_connected(_queue_refresh): profile.changed.disconnect(_queue_refresh)
 
-## The slot stores a [ResourceId]
 func _get_current() -> EquipmentLook:
-	var equipment_id: String = get_edited_object().get(get_edited_property())
-	return ResourceId.find(equipment_id) as EquipmentLook
+	return get_edited_object().get(get_edited_property()) as EquipmentLook
 
 func _queue_refresh() -> void:
 	if _is_refresh_queued: return
@@ -106,39 +147,55 @@ func _refresh() -> void:
 	for child: Node in _carousels.get_children():
 		_carousels.remove_child(child)
 		child.queue_free()
-	_carousels.modulate = Color.WHITE
-	_carousels.tooltip_text = ""
 	if blocker:
 		var blocked_label: Label = Label.new()
 		blocked_label.text = "Blocked by %s" % blocker.name
-		blocked_label.modulate = UNCHECKED_COLOR
+		blocked_label.modulate = BLOCKED_COLOR
 		_carousels.add_child(blocked_label)
 		return
 	if not equipment_look or not equipment_look.type: return
-	for link_index: int in equipment_look.type.get_key_links().size(): _carousels.add_child(_create_carousel(equipment_look, link_index))
-	if not equipment_look.allowed:
-		_carousels.modulate = UNCHECKED_COLOR
-		_carousels.tooltip_text = "%s is unchecked in its catalog." % equipment_look.name
+	for parts: Array in get_carousel_parts(equipment_look, _split_pairs): _carousels.add_child(_create_carousel(equipment_look, parts))
 
-func _create_carousel(equipment_look: EquipmentLook, link_index: int) -> HBoxContainer:
+func _create_carousel(equipment_look: EquipmentLook, parts: Array) -> HBoxContainer:
 	var carousel: HBoxContainer = HBoxContainer.new()
 	var previous_button: Button = Button.new()
 	previous_button.text = "<"
-	previous_button.pressed.connect(_step.bind(equipment_look, link_index, -1))
+	previous_button.pressed.connect(_step.bind(equipment_look, parts, -1))
 	var value_label: Label = Label.new()
-	value_label.text = describe_link(equipment_look, link_index)
+	value_label.text = describe_carousel(equipment_look, parts)
 	value_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	value_label.clip_text = true
 	var next_button: Button = Button.new()
 	next_button.text = ">"
-	next_button.pressed.connect(_step.bind(equipment_look, link_index, 1))
+	next_button.pressed.connect(_step.bind(equipment_look, parts, 1))
 	for control: Control in [previous_button, value_label, next_button]: carousel.add_child(control)
+	var leader: ModularCharacter.Part = parts[0]
+	var partner: int = get_right_partner(equipment_look.type, leader)
+	if parts.size() > 1:
+		carousel.add_child(_create_pair_button("Split", "Give the left and right side meshes of their own", _split.bind(leader)))
+	elif partner >= 0:
+		carousel.add_child(_create_pair_button("Link", "Show the left side's mesh on both sides again", _link.bind(equipment_look, leader, partner)))
 	return carousel
 
-func _step(equipment_look: EquipmentLook, link_index: int, direction: int) -> void:
-	var stepped: EquipmentLook = step_look(equipment_look, link_index, direction)
-	if stepped: _set_look(stepped)
+func _create_pair_button(text: String, tooltip: String, action: Callable) -> Button:
+	var button: Button = Button.new()
+	button.text = text
+	button.tooltip_text = tooltip
+	button.pressed.connect(action)
+	return button
+
+func _step(equipment_look: EquipmentLook, parts: Array, direction: int) -> void:
+	_set_look(step_parts(equipment_look, parts, direction))
+
+func _split(left_part: ModularCharacter.Part) -> void:
+	_split_pairs[left_part] = true
+	_queue_refresh()
+
+func _link(equipment_look: EquipmentLook, left_part: ModularCharacter.Part, right_part: int) -> void:
+	_split_pairs.erase(left_part)
+	_set_look(match_part(equipment_look, right_part as ModularCharacter.Part, left_part))
+	_queue_refresh()
 
 func _on_type_selected(index: int) -> void:
 	_set_look(get_first_look(_slot_types[index - 1]) if index > 0 else null)
@@ -148,5 +205,5 @@ func _set_look(equipment_look: EquipmentLook) -> void:
 	var profile: CharacterProfile = get_edited_object()
 	if equipment_look:
 		for blocked_slot: EquipmentLook.Slot in equipment_look.blocked_slots:
-			if not profile.get_starting_equipment_id(blocked_slot).is_empty(): emit_changed(CharacterProfile.get_slot_property(blocked_slot), "")
-	emit_changed(get_edited_property(), ResourceId.of(equipment_look) if equipment_look else "")
+			if profile.get_starting_equipment_for(blocked_slot): emit_changed(CharacterProfile.get_slot_property(blocked_slot), null)
+	emit_changed(get_edited_property(), equipment_look)

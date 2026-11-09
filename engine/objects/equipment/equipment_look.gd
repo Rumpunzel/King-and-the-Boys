@@ -21,6 +21,9 @@ const ITEM_DIRECTORY: String = "res://data/equipment"
 ## Loaded on demand instead of preloaded, as the [ModularCharacter] scene itself depends on this script
 const _PREVIEW_MODEL_UID: String = "uid://c6oheyitbnlpu"
 
+## Every part's mesh files, read once from a plain [ModularCharacter], see [method get_mesh_options]
+static var _mesh_options: Dictionary[ModularCharacter.Part, PackedStringArray] = {}
+
 ## Decides the slot, the parts this item may set and the slots it blocks
 @export var type: EquipmentType:
 	set(new_value):
@@ -80,6 +83,48 @@ static func _find_other_gender_mesh(mesh: ArrayMesh, gender: ModularBodyPartGend
 		_: push_error("Gender %s not implemented!" % gender)
 	if other_mesh_path == mesh_path or not ResourceLoader.exists(other_mesh_path): return null
 	return load(other_mesh_path)
+
+## The mesh files [param part] can show (the male ones of gendered parts), in directory order; an empty path first where it may show none
+static func get_mesh_options(part: ModularCharacter.Part) -> PackedStringArray:
+	if _mesh_options.is_empty():
+		var scene: PackedScene = load(_PREVIEW_MODEL_UID)
+		var model: ModularCharacter = scene.instantiate()
+		for each_part: ModularCharacter.Part in ModularCharacter.Part.values():
+			var body_part: ModularBodyPart = model.get_part(each_part)
+			var options: PackedStringArray = [""] if body_part.allows_none() else []
+			options.append_array(body_part.get_mesh_paths())
+			_mesh_options[each_part] = options
+		model.free()
+	return _mesh_options[part]
+
+## The male mesh [param part] shows in this look, or [code]null[/code] where it shows none
+func get_part_mesh(part: ModularCharacter.Part) -> ArrayMesh:
+	if not appearance: return null
+	for part_mesh: EquipmentPartMesh in appearance.parts:
+		if part_mesh and part_mesh.part == part: return part_mesh.male_mesh
+	return null
+
+## A copy for its owner to store, e.g. a character's starting look, so it can change without touching this one; meshes and type stay shared
+func make_local() -> EquipmentLook:
+	return duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL) as EquipmentLook
+
+## A local copy showing [param male_mesh] on [param part] (none if [code]null[/code]) with its other-gender twin, named after what it shows
+func with_part_mesh(part: ModularCharacter.Part, male_mesh: ArrayMesh) -> EquipmentLook:
+	var copy: EquipmentLook = make_local()
+	if not copy.appearance: copy.appearance = EquipmentAppearance.new()
+	var parts: Array[EquipmentPartMesh] = []
+	for part_mesh: EquipmentPartMesh in copy.appearance.parts:
+		if part_mesh and part_mesh.part != part: parts.append(part_mesh)
+	if male_mesh:
+		var part_mesh: EquipmentPartMesh = EquipmentPartMesh.new()
+		part_mesh.part = part
+		part_mesh.male_mesh = male_mesh
+		part_mesh.female_mesh = _find_other_gender_mesh(male_mesh, ModularBodyPartGendered.Gender.MALE)
+		parts.append(part_mesh)
+	parts.sort_custom(func(first: EquipmentPartMesh, second: EquipmentPartMesh) -> bool: return type.parts.find(first.part) < type.parts.find(second.part))
+	copy.appearance.parts = parts
+	copy.name = type.get_combination_name(type.get_combination_key_of(copy))
+	return copy
 
 ## @returns the [ModularCharacter.Part]s a [enum Slot] owns and resets on equip
 static func get_slot_parts(for_slot: Slot) -> Array[ModularCharacter.Part]:

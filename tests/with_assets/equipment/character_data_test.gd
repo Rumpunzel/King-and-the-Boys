@@ -75,7 +75,7 @@ func test_starting_and_rolled_equipment_reach_peers() -> void:
 	var table: ProfileSpawnTable = ProfileSpawnTable.new()
 	var distribution: Dictionary[Profile, float] = {helmet: 1.0}
 	table._profile_distribution = distribution
-	_knight.face = ResourceId.of(mask)
+	_knight.starting_face = mask
 	_knight.random_equipment = [table, null]
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D())
 	assert_array(data[Character.EQUIPMENT] as PackedStringArray).contains_exactly([ResourceId.of(mask), ResourceId.of(helmet)])
@@ -87,3 +87,17 @@ func test_starting_and_rolled_equipment_reach_peers() -> void:
 	var peer: Character = _peer_from(round_trip)
 	var peer_model: ModularCharacter = peer.model
 	assert_str(EquipmentFixtures.mesh_path(peer_model.helmet_attachment)).is_equal(EquipmentFixtures.HELMET_ATTACHMENT)
+
+func test_looks_stored_in_a_profile_reach_peers_by_resource_id() -> void:
+	var profile: CharacterProfile = _knight.duplicate() as CharacterProfile
+	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(EquipmentFixtures.load_type("cape"))
+	profile.set_starting_equipment_for(EquipmentLook.Slot.BACK, catalog.get_look(catalog.get_first_key()))
+	var path: String = EquipmentFixtures.SAVED_ITEMS + "/profile_with_look.tres"
+	DirAccess.make_dir_recursive_absolute(EquipmentFixtures.SAVED_ITEMS)
+	assert_int(ResourceSaver.save(profile, path)).is_equal(OK)
+	var loaded: CharacterProfile = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_REPLACE)
+	var stored: EquipmentLook = loaded.get_starting_equipment_for(EquipmentLook.Slot.BACK)
+	var look_id: String = ResourceId.of(stored)
+	assert_str(look_id).contains(ResourceId.SEPARATOR)
+	assert_object(ResourceId.find(look_id)).is_same(stored)
+	assert_array(loaded.create_character_data(0, Transform3D())[Character.EQUIPMENT] as PackedStringArray).contains([look_id])

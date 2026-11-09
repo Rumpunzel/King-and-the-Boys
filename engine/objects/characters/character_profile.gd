@@ -50,44 +50,44 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 		random_equipment = new_value
 		changed.emit()
 
-## One item per slot, as [ResourceId]s (a catalog entry lives inside another file, which an export cannot point into)
-## Each field only accepts items of its slot and is named after it, see [method set_starting_equipment_for]
-@export_group("Starting Equipment")
-@export var head: String:
+## One look per slot, named after it (the group drops the "starting_" in the inspector), see [method set_starting_equipment_for]
+## Usually a copy stored in this profile, so each character can be dressed part by part; hand-made look files are referenced
+@export_group("Starting Equipment", "starting_")
+@export var starting_head: EquipmentLook:
 	set(new_value):
-		head = _accept_equipment(head, new_value, EquipmentLook.Slot.HEAD)
+		starting_head = _accept_equipment(starting_head, new_value, EquipmentLook.Slot.HEAD)
 		changed.emit()
-@export var face: String:
+@export var starting_face: EquipmentLook:
 	set(new_value):
-		face = _accept_equipment(face, new_value, EquipmentLook.Slot.FACE)
+		starting_face = _accept_equipment(starting_face, new_value, EquipmentLook.Slot.FACE)
 		changed.emit()
-@export var torso: String:
+@export var starting_torso: EquipmentLook:
 	set(new_value):
-		torso = _accept_equipment(torso, new_value, EquipmentLook.Slot.TORSO)
+		starting_torso = _accept_equipment(starting_torso, new_value, EquipmentLook.Slot.TORSO)
 		changed.emit()
-@export var hands: String:
+@export var starting_hands: EquipmentLook:
 	set(new_value):
-		hands = _accept_equipment(hands, new_value, EquipmentLook.Slot.HANDS)
+		starting_hands = _accept_equipment(starting_hands, new_value, EquipmentLook.Slot.HANDS)
 		changed.emit()
-@export var legs: String:
+@export var starting_legs: EquipmentLook:
 	set(new_value):
-		legs = _accept_equipment(legs, new_value, EquipmentLook.Slot.LEGS)
+		starting_legs = _accept_equipment(starting_legs, new_value, EquipmentLook.Slot.LEGS)
 		changed.emit()
-@export var back: String:
+@export var starting_back: EquipmentLook:
 	set(new_value):
-		back = _accept_equipment(back, new_value, EquipmentLook.Slot.BACK)
+		starting_back = _accept_equipment(starting_back, new_value, EquipmentLook.Slot.BACK)
 		changed.emit()
-@export var waist: String:
+@export var starting_waist: EquipmentLook:
 	set(new_value):
-		waist = _accept_equipment(waist, new_value, EquipmentLook.Slot.WAIST)
+		starting_waist = _accept_equipment(starting_waist, new_value, EquipmentLook.Slot.WAIST)
 		changed.emit()
-@export var main_hand: String:
+@export var starting_main_hand: EquipmentLook:
 	set(new_value):
-		main_hand = _accept_equipment(main_hand, new_value, EquipmentLook.Slot.MAIN_HAND)
+		starting_main_hand = _accept_equipment(starting_main_hand, new_value, EquipmentLook.Slot.MAIN_HAND)
 		changed.emit()
-@export var off_hand: String:
+@export var starting_off_hand: EquipmentLook:
 	set(new_value):
-		off_hand = _accept_equipment(off_hand, new_value, EquipmentLook.Slot.OFF_HAND)
+		starting_off_hand = _accept_equipment(starting_off_hand, new_value, EquipmentLook.Slot.OFF_HAND)
 		changed.emit()
 @export_group("")
 
@@ -182,39 +182,43 @@ func get_starting_equipment() -> Array[EquipmentLook]:
 	return starting_equipment
 
 func get_starting_equipment_for(slot: EquipmentLook.Slot) -> EquipmentLook:
-	return ResourceId.find(get_starting_equipment_id(slot)) as EquipmentLook
-
-func get_starting_equipment_id(slot: EquipmentLook.Slot) -> String:
 	return get(get_slot_property(slot))
 
-## [param equipment_look] must be saved, as the slot stores its [ResourceId]
+## A look stored inside another file, such as a catalog entry, is copied into this profile (see [method EquipmentLook.make_local])
 func set_starting_equipment_for(slot: EquipmentLook.Slot, equipment_look: EquipmentLook) -> void:
-	var equipment_id: String = ResourceId.of(equipment_look)
-	assert(equipment_look == null or not equipment_id.is_empty(), "Only saved EquipmentProfiles can be starting equipment!")
-	set(get_slot_property(slot), equipment_id)
+	if equipment_look and equipment_look.resource_path.contains(ResourceId.SEPARATOR) and equipment_look.resource_path.get_slice(ResourceId.SEPARATOR, 0) != resource_path:
+		equipment_look = equipment_look.make_local()
+	set(get_slot_property(slot), equipment_look)
 
-## Each slot's field is named after it, e.g. [member head] for [constant EquipmentLook.HEAD]
+## Each slot's field is named after it, e.g. [member starting_head] for [constant EquipmentLook.HEAD]
 static func get_slot_property(slot: EquipmentLook.Slot) -> StringName:
 	var slot_name: String = EquipmentLook.Slot.keys()[slot]
-	return StringName(slot_name.to_lower())
+	return StringName("starting_" + slot_name.to_lower())
 
-## Keeps [param old_id] if [param new_id] names no item, an untyped one or one of another slot, so a field never holds a mismatching item
-func _accept_equipment(old_id: String, new_id: String, slot: EquipmentLook.Slot) -> String:
-	var new_profile: EquipmentLook = ResourceId.find(new_id) as EquipmentLook
-	if not new_id.is_empty():
+## Profiles saved before slots held looks stored a [ResourceId] under the slot's plain name; it loads as a local copy
+func _set(property: StringName, value: Variant) -> bool:
+	if not value is String: return false
+	for slot: EquipmentLook.Slot in EquipmentLook.Slot.values():
 		var slot_name: String = EquipmentLook.Slot.keys()[slot]
-		if not new_profile:
-			push_error("%s names no EquipmentLook; %s keeps its %s." % [new_id, name, slot_name.capitalize()])
-			return old_id
-		if not new_profile.type:
-			push_error("%s has no EquipmentType and cannot be starting equipment of %s." % [new_id, name])
-			return old_id
-		if new_profile.slot != slot:
-			var item_slot_name: String = EquipmentLook.Slot.keys()[new_profile.slot]
-			push_error("%s goes into slot %s, not %s." % [new_profile.name, item_slot_name.capitalize(), slot_name.capitalize()])
-			return old_id
-	_forward_changes([ResourceId.find(old_id)], [new_profile])
-	return new_id
+		if property != StringName(slot_name.to_lower()): continue
+		var legacy_id: String = value
+		if not legacy_id.is_empty(): set_starting_equipment_for(slot, ResourceId.find(legacy_id) as EquipmentLook)
+		return true
+	return false
+
+## Keeps [param old_look] if [param new_look] is untyped or of another slot, so a field never holds a mismatching look
+func _accept_equipment(old_look: EquipmentLook, new_look: EquipmentLook, slot: EquipmentLook.Slot) -> EquipmentLook:
+	if new_look:
+		var slot_name: String = EquipmentLook.Slot.keys()[slot]
+		if not new_look.type:
+			push_error("%s has no EquipmentType and cannot be starting equipment of %s." % [new_look.name, name])
+			return old_look
+		if new_look.slot != slot:
+			var look_slot_name: String = EquipmentLook.Slot.keys()[new_look.slot]
+			push_error("%s goes into slot %s, not %s." % [new_look.name, look_slot_name.capitalize(), slot_name.capitalize()])
+			return old_look
+	_forward_changes([old_look], [new_look])
+	return new_look
 
 ## Re-emits [signal Resource.changed] of nested resources, so previews also update when an item is edited
 func _forward_changes(old_resources: Array, new_resources: Array) -> void:
@@ -234,8 +238,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if _model_variations.is_empty(): warnings.append("Missing model variations scene.")
 	for equipment_look: EquipmentLook in get_starting_equipment():
-		# Kept rather than refused, so unchecking a look in a catalog never silently empties a slot
-		if not equipment_look.allowed: warnings.append("%s is unchecked in its catalog." % equipment_look.name)
 		for blocked_slot: EquipmentLook.Slot in equipment_look.blocked_slots:
 			var blocked_profile: EquipmentLook = get_starting_equipment_for(blocked_slot)
 			if blocked_profile: warnings.append("%s blocks %s, so %s is never worn." % [equipment_look.name, EquipmentLook.Slot.keys()[blocked_slot], blocked_profile.name])

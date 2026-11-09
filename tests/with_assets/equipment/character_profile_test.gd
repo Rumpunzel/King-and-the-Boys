@@ -17,7 +17,7 @@ func after_test() -> void:
 func _count_change() -> void:
 	_changes += 1
 
-## Starting slots store IDs, so their items are saved
+## Hand-made look files, which slots reference rather than copy
 func _helmet() -> EquipmentLook:
 	return EquipmentFixtures.save_item(EquipmentFixtures.make_item(EquipmentFixtures.load_type("helmet"), ModularCharacter.Part.HELMET_ATTACHMENT, EquipmentFixtures.HELMET_ATTACHMENT), "profile_helmet.tres")
 
@@ -37,28 +37,25 @@ func test_every_slot_has_a_starting_field() -> void:
 func test_fields_list_items_in_slot_order() -> void:
 	var helmet: EquipmentLook = _helmet()
 	var cape: EquipmentLook = _cape()
-	_knight.back = ResourceId.of(cape)
-	_knight.head = ResourceId.of(helmet)
+	_knight.starting_back = cape
+	_knight.starting_head = helmet
 	assert_array(_knight.get_starting_equipment()).contains_exactly([helmet, cape])
 
 func test_fields_reject_items_of_other_slots_and_untyped_items() -> void:
 	var helmet: EquipmentLook = _helmet()
-	_knight.head = ResourceId.of(helmet)
-	_knight.torso = ResourceId.of(_cape())
-	assert_str(_knight.torso).is_empty()
-	_knight.head = ResourceId.of(_cape())
+	_knight.starting_head = helmet
+	_knight.starting_torso = _cape()
+	assert_object(_knight.starting_torso).is_null()
+	_knight.starting_head = _cape()
 	assert_object(_knight.get_starting_equipment_for(EquipmentLook.Slot.HEAD)).is_same(helmet)
-	var untyped: EquipmentLook = EquipmentFixtures.save_item(EquipmentLook.new(), "untyped.tres")
-	_knight.back = ResourceId.of(untyped)
-	assert_str(_knight.back).is_empty()
-	_knight.back = "uid://doesnotexist"
-	assert_str(_knight.back).is_empty()
+	_knight.starting_back = EquipmentLook.new()
+	assert_object(_knight.starting_back).is_null()
 
 func test_blocking_starting_items_are_warned_about() -> void:
-	_knight.head = ResourceId.of(_helmet())
-	_knight.face = ResourceId.of(_mask())
+	_knight.starting_head = _helmet()
+	_knight.starting_face = _mask()
 	assert_bool(_has_warning("blocks FACE")).is_true()
-	_knight.face = ""
+	_knight.starting_face = null
 	assert_bool(_has_warning("blocks")).is_false()
 
 func _has_warning(text: String) -> bool:
@@ -68,7 +65,7 @@ func _has_warning(text: String) -> bool:
 
 func test_editing_equipment_refreshes_previews() -> void:
 	var cape: EquipmentLook = _cape()
-	_knight.back = ResourceId.of(cape)
+	_knight.starting_back = cape
 	assert_int(_changes).is_greater(0)
 	_changes = 0
 	cape.emit_changed()
@@ -76,19 +73,19 @@ func test_editing_equipment_refreshes_previews() -> void:
 	_changes = 0
 	cape.appearance.emit_changed()
 	assert_int(_changes).override_failure_message("Editing a worn item's appearance does not reach the character").is_greater(0)
-	_knight.back = ""
+	_knight.starting_back = null
 	_changes = 0
 	cape.emit_changed()
 	assert_int(_changes).override_failure_message("A removed item still refreshes the character").is_equal(0)
 
 func test_previews_show_starting_equipment_and_drop_removed_items() -> void:
 	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
-	_knight.head = ResourceId.of(_helmet())
-	_knight.back = ResourceId.of(_cape())
+	_knight.starting_head = _helmet()
+	_knight.starting_back = _cape()
 	_knight.setup_model(model)
 	assert_str(EquipmentFixtures.mesh_path(model.helmet_attachment)).is_equal(EquipmentFixtures.HELMET_ATTACHMENT)
 	assert_str(EquipmentFixtures.mesh_path(model.back_attachment)).is_equal(EquipmentFixtures.CAPE)
-	_knight.back = ""
+	_knight.starting_back = null
 	_knight.setup_model(model)
 	assert_str(EquipmentFixtures.mesh_path(model.back_attachment)).is_not_equal(EquipmentFixtures.CAPE)
 
@@ -99,13 +96,27 @@ func test_items_preview_themselves_on_a_plain_character() -> void:
 	assert_str(EquipmentFixtures.mesh_path(model.helmet_attachment)).is_equal(EquipmentFixtures.HELMET_ATTACHMENT)
 	assert_object(model.back_attachment.mesh).is_null()
 
-func test_unchecked_starting_looks_are_kept_but_warned_about() -> void:
-	var unchecked: EquipmentLook = EquipmentFixtures.make_item(EquipmentFixtures.load_type("cape"), ModularCharacter.Part.BACK_ATTACHMENT, EquipmentFixtures.CAPE)
-	unchecked.allowed = false
-	var saved: EquipmentLook = EquipmentFixtures.save_item(unchecked, "unchecked_cape.tres")
-	_knight.back = ResourceId.of(saved)
-	assert_str(_knight.back).is_equal(ResourceId.of(saved))
-	assert_bool(_has_warning("unchecked")).is_true()
+func test_catalog_looks_are_copied_into_the_profile() -> void:
+	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(EquipmentFixtures.load_type("helmet"))
+	var catalog_look: EquipmentLook = catalog.get_look(catalog.get_first_key())
+	_knight.set_starting_equipment_for(EquipmentLook.Slot.HEAD, catalog_look)
+	var stored: EquipmentLook = _knight.get_starting_equipment_for(EquipmentLook.Slot.HEAD)
+	assert_object(stored).is_not_same(catalog_look)
+	assert_object(stored.appearance).is_not_same(catalog_look.appearance)
+	assert_object(stored.type).is_same(catalog_look.type)
+	assert_object(stored.get_part_mesh(ModularCharacter.Part.HELMET_ATTACHMENT)).is_same(catalog_look.get_part_mesh(ModularCharacter.Part.HELMET_ATTACHMENT))
+	var hand_made: EquipmentLook = _cape()
+	_knight.set_starting_equipment_for(EquipmentLook.Slot.BACK, hand_made)
+	assert_object(_knight.get_starting_equipment_for(EquipmentLook.Slot.BACK)).is_same(hand_made)
+
+func test_slots_saved_as_ids_load_as_copies() -> void:
+	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(EquipmentFixtures.load_type("cape"))
+	var catalog_look: EquipmentLook = catalog.get_look(catalog.get_first_key())
+	_knight.set(&"back", ResourceId.of(catalog_look))
+	var stored: EquipmentLook = _knight.get_starting_equipment_for(EquipmentLook.Slot.BACK)
+	assert_object(stored).is_not_null()
+	assert_object(stored).is_not_same(catalog_look)
+	assert_object(stored.get_part_mesh(ModularCharacter.Part.BACK_ATTACHMENT)).is_same(catalog_look.get_part_mesh(ModularCharacter.Part.BACK_ATTACHMENT))
 
 func test_previews_keep_their_face_until_rerolled() -> void:
 	var first: ModularCharacter = auto_free(_knight.create_model(0))

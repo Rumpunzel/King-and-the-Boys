@@ -63,6 +63,9 @@ func get_mesh_index() -> int:
 
 func get_mesh_count() -> int: return _mesh_list.size()
 
+## The mesh files of this part's directory, in directory order
+func get_mesh_paths() -> PackedStringArray: return PackedStringArray(_mesh_list)
+
 ## @returns the trailing number of a mesh file, e.g. [code]"05"[/code] for [code]..._Male_05.res[/code]
 static func get_mesh_number(mesh_path: String) -> String:
 	var mesh_name: String = mesh_path.get_file().get_basename()
