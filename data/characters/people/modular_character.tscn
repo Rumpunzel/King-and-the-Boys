@@ -710,7 +710,6 @@ metadata/extras = {
 }
 
 [node name="FacialHair" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1980668562]
-visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
 script = ExtResource("13_scytm")
@@ -723,7 +722,6 @@ metadata/extras = {
 }
 
 [node name="Hair" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=1028685510]
-visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")

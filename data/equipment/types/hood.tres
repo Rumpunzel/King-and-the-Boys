@@ -1,10 +1,9 @@
 [gd_resource type="Resource" script_class="EquipmentType" format=3 uid="uid://dd8ul77e8gmib"]
 
-[ext_resource type="Script" path="res://engine/objects/equipment/equipment_type.gd" id="1_lbfv6"]
-[ext_resource type="Script" path="res://engine/objects/equipment/equipment_part_group.gd" id="1_vm86b"]
+[ext_resource type="Script" uid="uid://du4jsk247kff3" path="res://engine/objects/equipment/equipment_type.gd" id="1_lbfv6"]
+[ext_resource type="Script" uid="uid://cqs8kcvo1rnj6" path="res://engine/objects/equipment/equipment_part_group.gd" id="1_vm86b"]
 
 [resource]
 script = ExtResource("1_lbfv6")
 name = "Hood"
 parts = Array[int]([21, 22])
-blocked_slots = Array[int]([1])
