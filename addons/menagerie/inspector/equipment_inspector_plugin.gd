@@ -1,7 +1,7 @@
 @tool
 extends EditorInspectorPlugin
 
-## Replaces the starting equipment fields of [CharacterProfile]s with pickers filtered by slot
+## Replaces the starting equipment fields of [CharacterProfile]s with a type dropdown and carousels per slot, see [EquipmentSlotProperty]
 
 func _can_handle(object: Object) -> bool:
 	return object is CharacterProfile
