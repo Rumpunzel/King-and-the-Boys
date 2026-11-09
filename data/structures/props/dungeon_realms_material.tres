@@ -1,8 +1,9 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://dojugi1n63fxu"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dojugi1n63fxu"]
 
-[ext_resource type="Texture2D" uid="uid://cl52s4iwlb3rf" path="res://assets/polygon_dungeon_realms/SourceFiles/Textures/Dungeons_2_Texture_01_A.png" id="1_albedo"]
+[ext_resource type="Shader" path="res://engine/objects/structures/occludable.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" uid="uid://cl52s4iwlb3rf" path="res://assets/polygon_dungeon_realms/SourceFiles/Textures/Dungeons_2_Texture_01_A.png" id="2_albedo"]
 
 [resource]
 resource_name = "Dungeon Realms"
-albedo_texture = ExtResource("1_albedo")
-roughness = 0.8
+shader = ExtResource("1_shader")
+shader_parameter/albedo_texture = ExtResource("2_albedo")

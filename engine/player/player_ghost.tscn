@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="10_irqko"]
 [ext_resource type="PackedScene" uid="uid://dlla8034gqdsb" path="res://engine/player/haunt_camera.tscn" id="10_jlh3c"]
 [ext_resource type="Script" path="res://engine/turns/tile_highlight.gd" id="12_highlight"]
+[ext_resource type="Script" path="res://engine/player/occlusion_target.gd" id="20_occlusion"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p0vpi"]
 properties/0/path = NodePath("InputReader:direction_input")
@@ -87,6 +88,10 @@ align_transform_with_view = Callable()
 align_position_with_view = Callable()
 align_rotation_with_view = Callable()
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+
+[node name="OcclusionTarget" type="Node" parent="." unique_id=1468322091 node_paths=PackedStringArray("_player_ghost")]
+script = ExtResource("20_occlusion")
+_player_ghost = NodePath("..")
 
 [node name="TopDownCamera" type="Camera3D" parent="." unique_id=113072833]
 physics_interpolation_mode = 1
