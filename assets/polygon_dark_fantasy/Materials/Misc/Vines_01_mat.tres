@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dl1tkwwp12d1w"]
+
+[ext_resource type="Texture2D" uid="uid://bivpltguk7jaf" path="res://assets/polygon_dark_fantasy/Textures/Misc/Vines_01.png" id="1_6qmsj"]
+[ext_resource type="Texture2D" uid="uid://cfgftnawj8jv0" path="res://assets/polygon_dark_fantasy/Textures/Misc/Vines_01_Normals.png" id="2_rdt41"]
+
+[resource]
+resource_name = "Vines_01_mat"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+depth_draw_mode = 1
+albedo_color = Color(0.12164688, 0.13207549, 0.10175627, 1)
+albedo_texture = ExtResource("1_6qmsj")
+roughness = 0.898
+normal_enabled = true
+normal_texture = ExtResource("2_rdt41")
+uv1_scale = Vector3(1, 1, 0)

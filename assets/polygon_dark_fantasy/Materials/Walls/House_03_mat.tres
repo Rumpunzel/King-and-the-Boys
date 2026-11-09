@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bg6b8awityr0o"]
+
+[ext_resource type="Texture2D" uid="uid://d4kfpmhjg4fw8" path="res://assets/polygon_dark_fantasy/Textures/Misc/House_03.png" id="1_0wltl"]
+[ext_resource type="Texture2D" uid="uid://fwhv3bx61kfj" path="res://assets/polygon_dark_fantasy/Textures/Misc/House_Wall_01_Normals.png" id="2_oxjk2"]
+
+[resource]
+resource_name = "House_03_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_0wltl")
+roughness = 0.8
+normal_enabled = true
+normal_texture = ExtResource("2_oxjk2")
+uv1_scale = Vector3(1, 1, 0)

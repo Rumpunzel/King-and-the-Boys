@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cocc6edlsmihh"]
+
+[ext_resource type="Texture2D" uid="uid://c3ngtra501a7s" path="res://assets/polygon_dark_fantasy/Textures/Windows/PolygonDarkFantasy_Window_03.tga" id="1_5ouee"]
+[ext_resource type="Texture2D" uid="uid://jxl7syrjbo17" path="res://assets/polygon_dark_fantasy/Textures/Windows/PolygonDarkFantasy_Window_Metallic_02.roughness.png" id="2_fiqdm"]
+[ext_resource type="Texture2D" uid="uid://uqj6vnt44uio" path="res://assets/polygon_dark_fantasy/Textures/Windows/PolygonDarkFantasy_Window_01_Normals_Round.png" id="3_mqpg6"]
+
+[resource]
+resource_name = "Window_Glass_03_mat"
+transparency = 1
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_5ouee")
+metallic = 0.15399995
+metallic_texture = ExtResource("2_fiqdm")
+roughness_texture = ExtResource("2_fiqdm")
+roughness_texture_channel = 3
+normal_enabled = true
+normal_texture = ExtResource("3_mqpg6")
+uv1_scale = Vector3(1, 1, 0)

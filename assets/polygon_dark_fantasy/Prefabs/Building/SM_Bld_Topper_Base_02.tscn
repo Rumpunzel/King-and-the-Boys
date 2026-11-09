@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://0hf0nbexpmxx"]
+
+[ext_resource type="ArrayMesh" uid="uid://bmcp83lm7whdb" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Topper_Base_02.res" id="1_2w4vp"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_j1oue"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_04e5l"]
+points = PackedVector3Array(0.22849828, 0.1025136, -0.37347648, 0.22293955, 0.65476406, -0.021801382, 0.43021345, 0.1025136, 0.01637289, 0.3586235, 0.03733302, -0.1122995, 0.21788609, 0.037082564, -0.35608432, -0.2107271, 0.028567137, -0.36581215, -0.22858247, 0.1025136, -0.37340277, -0.116481036, 0.6681633, -0.20405044, 0.116396844, 0.6681633, -0.20405044, 0.12524033, 0.65845823, 0.19095764, 0.20777929, 0.032887463, 0.36672148, -0.2200759, 0.034014504, 0.35235086, -0.43021345, 0.1025136, 0.016299188, -0.22664534, 0.6596479, 0.015488565, -0.12532452, 0.65845823, 0.19095764, -0.21510673, 0.1025136, 0.37939712)
+
+[node name="SM_Bld_Topper_Base_02" type="MeshInstance3D" unique_id=1198292785]
+gi_mode = 2
+mesh = ExtResource("1_2w4vp")
+surface_material_override/0 = ExtResource("2_j1oue")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=2127254306]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1056696683]
+shape = SubResource("ConvexPolygonShape3D_04e5l")

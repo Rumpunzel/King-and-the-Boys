@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dehiaor3fepxg"]
+
+[ext_resource type="Texture2D" uid="uid://c72p3x6k78cba" path="res://assets/polygon_dark_fantasy/Textures/Misc/Brick_Large_04.png" id="1_ovdri"]
+[ext_resource type="Texture2D" uid="uid://tsv4gx00fimy" path="res://assets/polygon_dark_fantasy/Textures/Misc/Brick_Large_01_Normals.png" id="2_ffh6s"]
+
+[resource]
+resource_name = "Brick_04_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_ovdri")
+roughness = 0.8
+normal_enabled = true
+normal_texture = ExtResource("2_ffh6s")
+uv1_scale = Vector3(1, 1, 0)

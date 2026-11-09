@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://qwn8wj8gnd2e"]
+
+[ext_resource type="ArrayMesh" uid="uid://wkxlibloe0hx" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Roof_Trim_End_01.res" id="1_4viua"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_w8l81"]
+
+[node name="SM_Bld_Roof_Trim_End_01" type="MeshInstance3D" unique_id=1700899827]
+gi_mode = 2
+mesh = ExtResource("1_4viua")
+surface_material_override/0 = ExtResource("2_w8l81")

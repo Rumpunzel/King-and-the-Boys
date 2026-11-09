@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://ciau5sbus1ff0"]
+
+[ext_resource type="ArrayMesh" uid="uid://botaxpl0ydi0n" path="res://assets/polygon_dark_fantasy/Models/Base/extracted/SM_Bld_Base_Roof_Trim_Corner_01.res" id="1_bnbgk"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="2_ngd18"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_bnbgk"]
+points = PackedVector3Array(-0.035393067, 0.075962044, -0.034560155, 0.119395636, -0.08763086, -0.025533464, -0.023469122, -0.058774713, -0.023206996, -0.025917504, -0.08763086, 0.11635001, -0.023564514, -0.022472337, 0.25420094, -0.023564514, 0.0088979155, 0.2823357, -0.023564514, 0.05027654, 0.2823357, 0.28184748, 0.05027654, 0.274891, 0.289447, 0.05027654, -0.023331074, 0.289447, 0.0088979155, -0.023331074, 0.26063874, -0.022472337, -0.023331074, 0.19380105, -0.08763086, -0.023331074, -0.023564514, -0.08763086, 0.1889668, 0.19383284, -0.08763086, 0.1889668, 0.25637794, -0.022472337, 0.25004432, 0.28321475, 0.0088979155, 0.27625585)
+
+[node name="SM_Bld_Base_Roof_Trim_Corner_01" type="MeshInstance3D" unique_id=1072015400]
+gi_mode = 2
+mesh = ExtResource("1_bnbgk")
+surface_material_override/0 = ExtResource("2_ngd18")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1339577615]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=2001162163]
+shape = SubResource("ConvexPolygonShape3D_bnbgk")

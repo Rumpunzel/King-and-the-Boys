@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://d1ra56wa6j4qg"]
+
+[ext_resource type="ArrayMesh" uid="uid://c7em1ltomy764" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Torch_01.res" id="1_fa6nq"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_limhc"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_pal1u"]
+points = PackedVector3Array(-0.32135433, 0.62806267, 0.0009807236, -0.30272406, 0.635135, -0.013137678, -0.13049757, 0.07163858, -0.03078568, -0.1145879, 0.07163858, 0.032803148, -0.066918075, 0.8664305, 0.5415698, -0.14640723, 0.9618574, 0.4142241, -0.13049757, 0.9300816, -0.03078568, 0.101404935, 0.0785117, -0.016163051, -0.003397733, -0.007950187, 0.032803148, 0.26943225, 0.6376253, -0.01812394, 0.07609141, 0.8664305, 0.5415698, -0.019248247, 1.0096704, 0.016891938, 0.1341114, 0.9457205, 0.42402852, 0.10134578, 0.9231089, -0.016107025, 0.28285784, 0.6120254, 0.016891938, 0.10791075, 0.07163858, 0.032803148)
+
+[node name="SM_Prop_Torch_01" type="MeshInstance3D" unique_id=85544146]
+gi_mode = 2
+mesh = ExtResource("1_fa6nq")
+surface_material_override/0 = ExtResource("2_limhc")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1864789051]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1234070408]
+shape = SubResource("ConvexPolygonShape3D_pal1u")

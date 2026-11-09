@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b2ee0xrt72ad3"]
+
+[ext_resource type="ArrayMesh" uid="uid://de581s8mn5cqp" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Tomb_Stone_01.res" id="1_4m2ol"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_o2k4o"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_3bnb5"]
+points = PackedVector3Array(-0.37267044, 0.812771, 0.028392613, -0.08664894, 1.2347008, 0.09123871, -0.36733758, 0.9738053, -0.06917824, -0.34735814, -0.028576314, 0.1112766, -0.2871194, -0.008352827, 0.29178834, 0.1338009, 1.2347008, 0.09123871, -0.08311874, 1.2065638, -0.06610425, -0.2871194, 0.0116194375, -0.26967096, -0.12668295, -0.008352827, -0.28976578, 0.27418277, -0.04854858, 0.27169353, 0.39466032, 0.9338607, 0.09123871, 0.12403652, 1.189983, -0.064282626, 0.25412825, 0.0116194375, -0.26967096, 0.29431245, -0.008352827, -0.2296521, 0.39466032, 0.71353775, 0.011030227, 0.39466032, 0.71353775, -0.06917824)
+
+[node name="SM_Prop_Tomb_Stone_01" type="MeshInstance3D" unique_id=719598596]
+gi_mode = 2
+mesh = ExtResource("1_4m2ol")
+surface_material_override/0 = ExtResource("2_o2k4o")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=740609912]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1817894135]
+shape = SubResource("ConvexPolygonShape3D_3bnb5")

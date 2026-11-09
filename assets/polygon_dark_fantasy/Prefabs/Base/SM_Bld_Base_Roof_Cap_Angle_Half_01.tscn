@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cxkscqn6615kt"]
+
+[ext_resource type="ArrayMesh" uid="uid://ii4eofixtcd3" path="res://assets/polygon_dark_fantasy/Models/Base/extracted/SM_Bld_Base_Roof_Cap_Angle_Half_01.res" id="1_a3cf3"]
+[ext_resource type="Material" uid="uid://bu2x5orxdspn8" path="res://assets/polygon_dark_fantasy/Materials/Misc/Stone_02_mat.tres" id="2_pu17p"]
+
+[node name="SM_Bld_Base_Roof_Cap_Angle_Half_01" type="MeshInstance3D" unique_id=1662174688]
+gi_mode = 2
+mesh = ExtResource("1_a3cf3")
+surface_material_override/0 = ExtResource("2_pu17p")

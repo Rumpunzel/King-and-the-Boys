@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://2an2vqbxkqja"]
+
+[ext_resource type="ArrayMesh" uid="uid://diyljemi1cnip" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Boarded_Wood_03.res" id="1_bmtur"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_njbhc"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_uj205"]
+points = PackedVector3Array(-0.41485694, 0.6220799, -0.09455158, -0.3758968, 0.46637136, 0.02207698, 0.5567487, 0.44695276, -0.016799204, 0.38196754, 0.34973985, -0.09455158, -0.4536972, -0.05805093, -0.09455158, -0.60929793, -0.3110922, -0.07510397, -0.4926573, 0.54404587, -0.036227785, -0.47299743, -0.1749222, 0.08038175, -0.026094794, 0.07763958, 0.099848375, 0.61524874, -0.34968966, 0.0026483983, 0.5864783, -0.33326775, -0.052897163, 0.44034785, -0.11654648, 0.08038175, 0.5567487, -0.6024912, -0.055656362, -0.5897579, -0.5830726, -0.036208756, -0.4536972, -0.50539815, 0.08038175, 0.42080778, -0.5246969, 0.08038175)
+
+[node name="SM_Prop_Boarded_Wood_03" type="MeshInstance3D" unique_id=283168325]
+gi_mode = 2
+mesh = ExtResource("1_bmtur")
+surface_material_override/0 = ExtResource("2_njbhc")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1200961815]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=448431137]
+shape = SubResource("ConvexPolygonShape3D_uj205")

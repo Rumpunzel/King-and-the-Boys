@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dcholk1vinn58"]
+
+[ext_resource type="Texture2D" uid="uid://bxkt1vik6msp4" path="res://assets/polygon_dark_fantasy/Textures/Misc/Stonewall_02.png" id="1_nt0kf"]
+[ext_resource type="Texture2D" uid="uid://c6is3iqe1vvy7" path="res://assets/polygon_dark_fantasy/Textures/Misc/Stonewall_02_Normals.png" id="2_mpjsf"]
+
+[resource]
+resource_name = "Stonewall_01_A_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_nt0kf")
+roughness = 0.8
+normal_enabled = true
+normal_texture = ExtResource("2_mpjsf")
+uv1_scale = Vector3(1, 1, 0)

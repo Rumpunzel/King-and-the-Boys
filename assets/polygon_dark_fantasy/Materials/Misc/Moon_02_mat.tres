@@ -1,0 +1,19 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ctw04xo06djdf"]
+
+[ext_resource type="Texture2D" uid="uid://dqn6deashfks0" path="res://assets/polygon_dark_fantasy/Textures/Misc/Moon_01.png" id="1_fmaio"]
+
+[resource]
+resource_name = "Moon_02_mat"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+depth_draw_mode = 1
+albedo_color = Color(0, 0.618237, 1, 1)
+albedo_texture = ExtResource("1_fmaio")
+roughness = 0.5
+emission_enabled = true
+emission = Color(0.69791585, 0.8662032, 1, 1)
+emission_energy_multiplier = 3.2678878
+emission_operator = 1
+emission_texture = ExtResource("1_fmaio")
+uv1_scale = Vector3(1, 1, 0)

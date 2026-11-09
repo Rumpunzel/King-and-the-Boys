@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://daan06yxgy23h"]
+
+[ext_resource type="ArrayMesh" uid="uid://sgmxpt8351l1" path="res://assets/polygon_dark_fantasy/Models/Base/extracted/SM_Bld_Base_Stairwell_Wall_01.res" id="1_nem7e"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="2_atna0"]
+[ext_resource type="Shape3D" uid="uid://c3sg1f3biy8l6" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Base_Stairwell_Wall_01_Collision.res" id="3_atna0"]
+
+[node name="SM_Bld_Base_Stairwell_Wall_01" type="MeshInstance3D" unique_id=1347766726]
+gi_mode = 2
+mesh = ExtResource("1_nem7e")
+surface_material_override/0 = ExtResource("2_atna0")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1523892120]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=626788511]
+shape = ExtResource("3_atna0")

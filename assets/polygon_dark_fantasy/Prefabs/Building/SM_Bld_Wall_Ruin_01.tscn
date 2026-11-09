@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dqqis8terkq6l"]
+
+[ext_resource type="ArrayMesh" uid="uid://cvc5k5mp40i6c" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Ruin_01.res" id="1_b2m82"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_lwh7w"]
+[ext_resource type="Material" uid="uid://c2mqn78tlc021" path="res://assets/polygon_dark_fantasy/Materials/Walls/Stucco_Brown_02_mat.tres" id="3_moalv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6ix7l"]
+size = Vector3(2.4999914, 3.0057423, 0.225)
+
+[node name="SM_Bld_Wall_Ruin_01" type="MeshInstance3D" unique_id=479965507]
+gi_mode = 2
+mesh = ExtResource("1_b2m82")
+surface_material_override/0 = ExtResource("2_lwh7w")
+surface_material_override/1 = ExtResource("3_moalv")
+surface_material_override/2 = ExtResource("3_moalv")
+
+[node name="BoxCollider" type="StaticBody3D" parent="." unique_id=1884620746]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoxCollider" unique_id=1423030774]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2499957, 1.5028712, 0)
+shape = SubResource("BoxShape3D_6ix7l")

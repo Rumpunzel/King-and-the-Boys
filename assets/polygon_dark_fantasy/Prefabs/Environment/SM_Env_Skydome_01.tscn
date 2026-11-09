@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://ct7gx3i1fuwry"]
+
+[ext_resource type="ArrayMesh" uid="uid://bxc8233v1uemb" path="res://assets/polygon_dark_fantasy/Models/extracted/INVERTED_NORMAL_SPHERE.res" id="1_wn2ob"]
+[ext_resource type="Material" uid="uid://d2vf0x1o33cvt" path="res://assets/polygon_dark_fantasy/Materials/Misc/Sky_01_mat.tres" id="2_tiknt"]
+
+[node name="SM_Env_Skydome_01" type="MeshInstance3D" unique_id=1145504120]
+gi_mode = 2
+mesh = ExtResource("1_wn2ob")
+surface_material_override/0 = ExtResource("2_tiknt")

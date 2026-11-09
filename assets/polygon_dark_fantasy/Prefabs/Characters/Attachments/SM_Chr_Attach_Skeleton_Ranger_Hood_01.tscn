@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://caqfpfigconhi"]
+
+[ext_resource type="ArrayMesh" uid="uid://hfwn08xjy3ga" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Skeleton_Ranger_Hood_01.res" id="1_f5dtp"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_mwf1i"]
+
+[node name="SM_Chr_Attach_Skeleton_Ranger_Hood_01" type="MeshInstance3D" unique_id=217179593]
+gi_mode = 2
+mesh = ExtResource("1_f5dtp")
+surface_material_override/0 = ExtResource("2_mwf1i")

@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://clqh62cvodgmd"]
+
+[ext_resource type="ArrayMesh" uid="uid://dhlggspynmxrq" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Chandelier_01_Damaged_01.res" id="1_b0rgb"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_uhxur"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_jeunc"]
+points = PackedVector3Array(0.9690802, 1.1761863, 0.5112827, 0.08265436, 1.210532, 1.022856, 0.59371877, 1.0396696, 1.022856, 0.7981446, 0.119408056, 0.20409441, 0.8668673, 0.9032972, -0.78424174, 0.42355752, 1.1079279, -1.056823, -0.2925135, 1.517334, -0.6478493, -0.56488764, 1.517334, -0.1366831, -0.3945328, 0.5628711, 1.022856, -1.0085845, 1.039381, 0.067905545, 0.21855104, 0.08535102, 0.98865604, 0.72961545, 0.051149677, -0.09780109, 0.2528156, 0.051149677, -0.9888304, -0.8378425, 0.8689515, -0.6478493, -1.0085845, 0.97169983, 0.067905545, -0.4589966, 0.043068346, -0.00029075146)
+
+[node name="SM_Prop_Chandelier_01_Damaged_01" type="MeshInstance3D" unique_id=271739520]
+gi_mode = 2
+mesh = ExtResource("1_b0rgb")
+surface_material_override/0 = ExtResource("2_uhxur")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=655146717]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=674691666]
+shape = SubResource("ConvexPolygonShape3D_jeunc")

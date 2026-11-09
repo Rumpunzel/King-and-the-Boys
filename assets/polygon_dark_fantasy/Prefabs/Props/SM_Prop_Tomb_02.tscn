@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://c1ebmfrae01sj"]
+
+[ext_resource type="ArrayMesh" uid="uid://cpk1ng72v25f1" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Tomb_02.res" id="1_apf33"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_vnf01"]
+[ext_resource type="ArrayMesh" uid="uid://c0px6c8ugakql" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Tomb_02_Lid_01.res" id="3_vnf01"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_i7wfr"]
+points = PackedVector3Array(0.7387899, 0.16506246, -1.1659889, 0.65580094, 0.010513726, -1.2744399, 0.60415685, 0.16506246, -1.4351497, 0.5631101, 0.8966111, -1.0892864, 0.56370723, 0.89705986, 0.62907195, 0.6937132, 0.16506246, 1.345242, 0.5696776, 0.011321472, 1.3564804, -0.660827, 0.010513726, 1.3165839, -0.660827, 0.010513726, -1.2744399, -0.69620174, 0.16506246, -1.3901958, 0.42474556, 0.92739516, -1.3002883, 0.2901125, 0.92739516, 1.3002882, -0.6064961, 0.16506246, 1.4351497, -0.56321055, 0.8923031, 1.0783288, -0.78605664, 0.16506246, 0.3138336, -0.53007466, 0.89966255, -1.1814418)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_xoqd3"]
+points = PackedVector3Array(0.6067548, 1.0361822, 0.5689299, 0.5680226, 0.89097244, 0.49628818, 0.59603643, 0.9599885, -0.7736636, 0.52380943, 1.0775918, -0.8409339, 0.35791862, 1.1190664, 1.2741177, 0.44086397, 0.9117909, 1.2324255, 0.39920866, 0.87028384, -1.2972469, 0.108838916, 0.87028384, 1.31581, 0.025893569, 1.2020805, -1.2972469, 0.025893569, 1.2020805, 1.2741177, -0.6375476, 0.87028384, -1.2555547, -0.596014, 0.87028384, 1.31581, -0.55448043, 1.0775918, -1.1726817, -0.0566864, 1.2020805, 1.2741177, -0.6375476, 0.99474007, 1.2741177, -0.596014, 1.0361822, 1.2741177)
+
+[node name="SM_Prop_Tomb_02" type="MeshInstance3D" unique_id=1517403325]
+gi_mode = 2
+mesh = ExtResource("1_apf33")
+surface_material_override/0 = ExtResource("2_vnf01")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=810730480]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1464911649]
+shape = SubResource("ConvexPolygonShape3D_i7wfr")
+
+[node name="SM_Prop_Tomb_02_Lid_01" type="MeshInstance3D" parent="." unique_id=2012662998]
+gi_mode = 2
+mesh = ExtResource("3_vnf01")
+surface_material_override/0 = ExtResource("2_vnf01")
+
+[node name="MeshCollider" type="StaticBody3D" parent="SM_Prop_Tomb_02_Lid_01" unique_id=977345742]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Prop_Tomb_02_Lid_01/MeshCollider" unique_id=957832493]
+shape = SubResource("ConvexPolygonShape3D_xoqd3")

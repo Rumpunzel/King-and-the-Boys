@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://nr1rhu0wc5k"]
+
+[ext_resource type="ArrayMesh" uid="uid://bd0grpk4c3hwf" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Bones_Rotten_01.res" id="1_eecnq"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_n3k1x"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_jk6d2"]
+points = PackedVector3Array(0.15076002, 0.00766222, 0.07651271, 0.14433101, 0.048132665, -0.024399802, 0.12524664, 0.08417997, -0.03566985, 0.12521768, 0.033165306, 0.09180342, -0.08384143, 0.022969166, 0.15814434, -0.012427136, 0.002559905, 0.10712458, 0.0028055906, -0.0025509, -0.025496349, 0.079316765, 0.0025429255, -0.13773984, 0.079316765, 0.038250644, -0.13773984, -0.03796947, 0.06377071, -0.15303053, -0.08896726, 0.06886453, 0.15814434, -0.114480644, 0.028071482, 0.14790992, -0.14509091, 0.0025429255, -0.03566985, -0.048163243, 0.017849872, -0.15303053, -0.13895148, 0.02429356, -0.033019863, -0.14509091, 0.043361448, -0.0051189065)
+
+[node name="SM_Prop_Bones_Rotten_01" type="MeshInstance3D" unique_id=1717761898]
+gi_mode = 2
+mesh = ExtResource("1_eecnq")
+surface_material_override/0 = ExtResource("2_n3k1x")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=11646160]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=2082171969]
+shape = SubResource("ConvexPolygonShape3D_jk6d2")

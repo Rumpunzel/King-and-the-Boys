@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bmgtxpgkxjgw2"]
+
+[ext_resource type="ArrayMesh" uid="uid://cxq1dgwtvgyvt" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Wep_Crossbow_01_Rigged.res" id="1_hi0oq"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="3_e4cjj"]
+
+[sub_resource type="Skin" id="Skin_6fluh"]
+resource_name = "Skin"
+bind_count = 2
+bind/0/name = &"Prop_Bow_Rigged_01"
+bind/0/bone = 0
+bind/0/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/1/name = &"Prop_Bow_01"
+bind/1/bone = 1
+bind/1/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.4274168)
+
+[node name="SM_Wep_Crossbow_01_Rigged" type="Node3D" unique_id=1684188534]
+
+[node name="Skeleton3D" type="Skeleton3D" parent="." unique_id=1737624734]
+bones/0/name = "Prop_Bow_Rigged_01"
+bones/0/parent = -1
+bones/0/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bones/0/enabled = true
+bones/0/position = Vector3(0, 0, 0)
+bones/0/rotation = Quaternion(0, 0, 0, 1)
+bones/0/scale = Vector3(1, 1, 1)
+bones/1/name = "Prop_Bow_01"
+bones/1/parent = 0
+bones/1/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.4274168)
+bones/1/enabled = true
+bones/1/position = Vector3(0, 0, 0.4274168)
+bones/1/rotation = Quaternion(0, 0, 0, 1)
+bones/1/scale = Vector3(1, 1, 1)
+
+[node name="SM_Wep_Crossbow_01_Rigged" type="MeshInstance3D" parent="Skeleton3D" unique_id=2132176696]
+lod_bias = 128.0
+mesh = ExtResource("1_hi0oq")
+skin = SubResource("Skin_6fluh")
+skeleton = NodePath("..")
+surface_material_override/0 = ExtResource("3_e4cjj")

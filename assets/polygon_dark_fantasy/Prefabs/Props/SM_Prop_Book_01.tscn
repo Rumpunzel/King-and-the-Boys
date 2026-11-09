@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bajejx6m68tay"]
+
+[ext_resource type="ArrayMesh" uid="uid://0qw5dcp3vvf6" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Book_01.res" id="1_ofsgo"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_8rst1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ofsgo"]
+size = Vector3(0.27026367, 0.07849121, 0.28619385)
+
+[node name="SM_Prop_Book_01" type="MeshInstance3D" unique_id=2107432657]
+gi_mode = 2
+mesh = ExtResource("1_ofsgo")
+surface_material_override/0 = ExtResource("2_8rst1")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1687827141]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1042852823]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00012207031, 0.03741455, 0.002532959)
+shape = SubResource("BoxShape3D_ofsgo")

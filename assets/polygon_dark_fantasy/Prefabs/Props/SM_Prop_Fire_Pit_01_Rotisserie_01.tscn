@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://c8c4rjhdudxf1"]
+
+[ext_resource type="ArrayMesh" uid="uid://duaj0gvlnymq1" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Fire_Pit_01_Rotisserie_01.res" id="1_mhkxa"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_sj6k6"]
+[ext_resource type="ArrayMesh" uid="uid://cllp7hoyxw4vs" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Fire_Pit_01_Rotisserie_01_Pig.res" id="3_sj6k6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mhkxa"]
+size = Vector3(0.119628906, 1.6345215, 0.12359619)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sj6k6"]
+size = Vector3(0.106933594, 1.6503906, 0.111450195)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_i7hen"]
+points = PackedVector3Array(-1.0625551, -0.58990157, -0.115730844, -1.7041386, 0.3487587, 0.18057212, -1.7041386, 0.3487587, 0.13113995, -3.087582, -0.34274065, 0.08176579, -1.7533484, 0.20037025, -0.26391134, -0.024817705, -0.046515033, 0.08176579, -0.9635166, -0.24406002, 0.27937847, -1.0130358, -0.19462784, -0.31334352, -3.087582, -0.19462784, -0.06635669, -0.024817705, 0.052257463, -0.06635669, -0.9635166, -0.58990157, 0.08176579, -3.087582, -0.34274065, -0.06635669, -0.8152684, 0.2993265, -0.016982526, -1.7041386, 0.2993265, 0.22994629, -2.6923568, 0.052257463, -0.06635669, -0.76574916, 0.24980244, 0.13113995, -3.087582, -0.19462784, 0.08176579, -0.07433689, -0.09594722, -0.06635669, -1.7041386, 0.2993265, -0.165105, -0.024817705, 0.052257463, 0.08176579, -0.9965855, 0.03003143, 0.24126604, -0.9635166, -0.58990157, -0.115730844, -1.5561999, -0.5404694, -0.115730844, -1.5561999, -0.5404694, 0.08176579, -1.1117648, -0.19462784, -0.31334352, -1.1343625, 0.027117122, -0.27023375, -1.0625551, -0.24406002, 0.27937847, -2.0498447, 0.24980244, -0.06635669, -0.8152684, 0.2993265, 0.08176579, -0.07433689, -0.09594722, 0.08176579, -1.7041386, 0.20037025, -0.26391134, 0.024701595, -0.046515033, -0.016982526)
+
+[node name="SM_Prop_Fire_Pit_01_Rotisserie_01" type="MeshInstance3D" unique_id=1563156427]
+gi_mode = 2
+mesh = ExtResource("1_mhkxa")
+surface_material_override/0 = ExtResource("2_sj6k6")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1113030681]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=2089291576]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0622559, 0.807251, 0.0718689)
+shape = SubResource("BoxShape3D_mhkxa")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="MeshCollider" unique_id=68266956]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1018066, 0.8183594, 0.06732178)
+shape = SubResource("BoxShape3D_sj6k6")
+
+[node name="SM_Prop_Fire_Pit_01_Rotisserie_01_Pig" type="MeshInstance3D" parent="." unique_id=1050390593]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3184097, 1.3237752, 0.06596469)
+gi_mode = 2
+mesh = ExtResource("3_sj6k6")
+surface_material_override/0 = ExtResource("2_sj6k6")
+
+[node name="MeshCollider" type="StaticBody3D" parent="SM_Prop_Fire_Pit_01_Rotisserie_01_Pig" unique_id=1005549897]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Prop_Fire_Pit_01_Rotisserie_01_Pig/MeshCollider" unique_id=1453765624]
+shape = SubResource("ConvexPolygonShape3D_i7hen")

@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://de0etbaofixgw"]
+
+[ext_resource type="ArrayMesh" uid="uid://culkmm1pys7k4" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Holy_Water_01.res" id="1_vruwc"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_ovtmp"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_kw23s"]
+points = PackedVector3Array(0.26514578, 0.052033234, 0.51443905, 0.49171138, 1.2709045, 0.13237643, 0.21644574, 1.2996151, 0.4567272, -0.20628753, 1.2998681, 0.45683318, -0.24783507, 0.0077658338, 0.49961394, 0.5283153, 0.023449142, 0.07222909, 0.45237273, 0.052033234, -0.3592856, 0.39757204, 1.2994887, -0.3081392, 0.035214245, 1.2973386, -0.48794582, -0.4031914, 1.2725488, -0.3052801, -0.47692516, 1.2650865, 0.15048414, -0.546136, 0.052033234, 0.16075581, -0.42675254, 0.012572009, -0.34784913, -0.4960686, 0.026105186, -0.065749705, 0.50464904, 0.028255317, -0.02646333, 0.015334487, 0.052033234, -0.5673657)
+
+[node name="SM_Prop_Holy_Water_01" type="MeshInstance3D" unique_id=500387591]
+gi_mode = 2
+mesh = ExtResource("1_vruwc")
+surface_material_override/0 = ExtResource("2_ovtmp")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1475362681]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=24112012]
+shape = SubResource("ConvexPolygonShape3D_kw23s")

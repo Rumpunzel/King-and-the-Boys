@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cxwm5ogk0yxs7"]
+
+[ext_resource type="ArrayMesh" uid="uid://tk5mug61nyb5" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Wagon_01_Damaged_01.res" id="1_7eiby"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_hdl0j"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_u5o5d"]
+points = PackedVector3Array(1.9079807, -0.14636292, 1.134146, 1.3587339, 1.1369698, -0.14464521, 1.577277, 1.0111251, 1.3817208, 0.5855062, -0.0632083, 2.7874074, 0.5855062, -0.22891057, 1.2164984, 0.8332789, 0.019137025, -1.7590611, 0.99846077, 0.68032753, -2.4209871, 1.1636426, 1.424268, -0.76669, -0.3240137, 1.5895656, 1.3822389, -0.4069445, 1.0934705, 2.8702774, -1.1407462, -0.008176535, 1.5396924, -1.4816462, 0.019137025, -1.3457458, -0.81989914, 1.4244703, -2.0895061, -0.48953545, 1.8380178, -1.4280981, -1.3987154, 0.68052983, -0.84956026, -1.5642371, 0.26718462, -0.51859725)
+
+[node name="SM_Prop_Wagon_01_Damaged_01" type="MeshInstance3D" unique_id=1039398723]
+gi_mode = 2
+mesh = ExtResource("1_7eiby")
+surface_material_override/0 = ExtResource("2_hdl0j")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=429469563]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1620974888]
+shape = SubResource("ConvexPolygonShape3D_u5o5d")

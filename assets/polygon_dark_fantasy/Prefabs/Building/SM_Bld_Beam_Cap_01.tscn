@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://chk7pndu6fqil"]
+
+[ext_resource type="ArrayMesh" uid="uid://c52ht5xnaobl7" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Beam_Cap_01.res" id="1_5gotp"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_dcjsg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5gotp"]
+size = Vector3(0.57177734, 0.6420288, 0.6508789)
+
+[node name="SM_Bld_Beam_Cap_01" type="MeshInstance3D" unique_id=492603102]
+gi_mode = 2
+mesh = ExtResource("1_5gotp")
+surface_material_override/0 = ExtResource("2_dcjsg")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=204461129]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=2021373871]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.013916016, 0.0069885254, 0.011474609)
+shape = SubResource("BoxShape3D_5gotp")

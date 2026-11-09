@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://0uo6028rr7uw"]
+
+[ext_resource type="ArrayMesh" uid="uid://cgmdsks4vy84d" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Gargoyle_Small_01.res" id="1_lsblb"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_3prni"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_4pd8t"]
+points = PackedVector3Array(0.11361177, 0.5504752, 0.11458711, 0.13238119, 0.536646, 0.14391638, 0.30196625, 0.11083901, -0.097, 0.0542487, -0.007685721, 0.20459999, -0.333489, 0.1647088, 0.07530911, -0.1006377, 0.4747739, -0.109201945, -0.13165593, 0.49615854, 0.17446385, -0.3011663, 0.035454825, -0.03232082, 0.3234923, 0.33693567, -0.010828573, 0.334289, 0.15392366, 0.07530911, -0.3011663, 0.38007623, -0.03232082, 0.21334395, 0.4045292, -0.109737255, 0.30196625, 0.046184078, -0.043117553, -0.11809417, 0.5632, 0.07530911, 0.12916419, 0.47087824, 0.18081687, -0.08900529, 0.014393672, 0.18130744, -0.20419812, 0.26166326, -0.14008571, 0.04345197, 0.52005947, -0.08620326, -0.3011663, 0.11083901, -0.097, 0.020717163, 0.0074964575, -0.028886037, 0.24811757, 0.44467527, -0.053914286, 0.20266281, 0.3333277, -0.12957846, 0.09730068, -0.007685721, 0.19380325, -0.1306919, 0.47436932, 0.1835024, -0.24700287, 0.37570393, -0.11208273, 0.11889415, 0.5632, 0.07530911, -0.10729743, -0.007685721, 0.118428566, -0.10729743, 0.11083901, -0.10776299, -0.333489, 0.2830659, 0.010731153, -0.2580468, 0.43389013, -0.053914286, 0.34508574, 0.20779346, 0.053783126, 0.27582154, 0.30316445, -0.11056704)
+
+[node name="SM_Prop_Gargoyle_Small_01" type="MeshInstance3D" unique_id=371217153]
+gi_mode = 2
+mesh = ExtResource("1_lsblb")
+surface_material_override/0 = ExtResource("2_3prni")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1577582967]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1527475827]
+shape = SubResource("ConvexPolygonShape3D_4pd8t")

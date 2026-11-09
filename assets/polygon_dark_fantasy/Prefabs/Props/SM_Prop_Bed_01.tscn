@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://d2pwqwlekk0yk"]
+
+[ext_resource type="ArrayMesh" uid="uid://dt2uq50cjc40e" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Bed_01.res" id="1_ll2xi"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_uuok8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ll2xi"]
+size = Vector3(1.6549072, 1.1252441, 0.106933594)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uuok8"]
+size = Vector3(1.5604248, 0.48883057, 2.064209)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wibiv"]
+size = Vector3(1.7017822, 0.836792, 0.08850098)
+
+[node name="SM_Prop_Bed_01" type="MeshInstance3D" unique_id=725698920]
+gi_mode = 2
+mesh = ExtResource("1_ll2xi")
+surface_material_override/0 = ExtResource("2_uuok8")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1148613966]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1627677598]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0022583008, 0.54626465, -1.0881348)
+shape = SubResource("BoxShape3D_ll2xi")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="MeshCollider" unique_id=1598507011]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0010375977, 0.283844, -0.002319336)
+shape = SubResource("BoxShape3D_uuok8")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="MeshCollider" unique_id=1159680558]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0022583008, 0.41619873, 1.0646362)
+shape = SubResource("BoxShape3D_wibiv")

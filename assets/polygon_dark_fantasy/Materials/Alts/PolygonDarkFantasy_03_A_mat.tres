@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://crnybqhxebool"]
+
+[ext_resource type="Texture2D" uid="uid://cgd8py8mfvx1q" path="res://assets/polygon_dark_fantasy/Textures/Alts/PolygonDarkFantasy_03_A.png" id="1_21j1f"]
+[ext_resource type="Texture2D" uid="uid://csvmo67hkun66" path="res://assets/polygon_dark_fantasy/Textures/Emissive/PolygonDarkFantasy_03_A_Emissive.png" id="2_kt7fi"]
+[ext_resource type="Texture2D" uid="uid://wlx4ytpmmt2w" path="res://assets/polygon_dark_fantasy/Textures/Misc/PolygonDarkFantasy_01_Normals.png" id="3_87k5f"]
+
+[resource]
+resource_name = "PolygonDarkFantasy_03_A_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_21j1f")
+roughness = 0.8
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_operator = 1
+emission_texture = ExtResource("2_kt7fi")
+normal_enabled = true
+normal_texture = ExtResource("3_87k5f")
+uv1_scale = Vector3(1, 1, 0)

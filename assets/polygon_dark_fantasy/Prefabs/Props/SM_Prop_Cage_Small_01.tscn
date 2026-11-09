@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://dsckwbxp53ydt"]
+
+[ext_resource type="ArrayMesh" uid="uid://gsvjeqghnqou" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Cage_Small_01.res" id="1_ks7oj"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_cm7ct"]
+[ext_resource type="ArrayMesh" uid="uid://pdac1ulvndyo" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Cage_Small_01_Gate_01.res" id="3_cm7ct"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ks7oj"]
+size = Vector3(1.2088623, 0.15374756, 1.1674805)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cm7ct"]
+size = Vector3(1.2365723, 0.1347351, 1.1767578)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cync1"]
+size = Vector3(1.2226563, 0.9157715, 0.1491394)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_328qo"]
+size = Vector3(0.15185547, 0.92211914, 1.0317383)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ww7w5"]
+size = Vector3(0.16265869, 0.91693115, 1.1860352)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wp7g6"]
+size = Vector3(1.1669816, 1.1590841, 0.09927071)
+
+[node name="SM_Prop_Cage_Small_01" type="MeshInstance3D" unique_id=1958515711]
+gi_mode = 2
+mesh = ExtResource("1_ks7oj")
+surface_material_override/0 = ExtResource("2_cm7ct")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=605412587]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=128327006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0068969727, 1.1856995, -0.083740234)
+shape = SubResource("BoxShape3D_ks7oj")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="MeshCollider" unique_id=1001726285]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002319336, 0.12098694, -0.088378906)
+shape = SubResource("BoxShape3D_cm7ct")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="MeshCollider" unique_id=829002973]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.651001, -0.60847473)
+shape = SubResource("BoxShape3D_cync1")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="MeshCollider" unique_id=1552607561]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5344238, 0.63708496, -0.01586914)
+shape = SubResource("BoxShape3D_328qo")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="MeshCollider" unique_id=567412586]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52890015, 0.65078735, -0.09301758)
+shape = SubResource("BoxShape3D_ww7w5")
+
+[node name="SM_Prop_Cage_Small_01_Gate_01" type="MeshInstance3D" parent="." unique_id=30744979]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.56022793, 0.64405686, 0.51718086)
+gi_mode = 2
+mesh = ExtResource("3_cm7ct")
+surface_material_override/0 = ExtResource("2_cm7ct")
+
+[node name="MeshCollider" type="StaticBody3D" parent="SM_Prop_Cage_Small_01_Gate_01" unique_id=1954101317]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55795765, 0, 0.082268246)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Prop_Cage_Small_01_Gate_01/MeshCollider" unique_id=1486543166]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.05305332)
+shape = SubResource("BoxShape3D_wp7g6")

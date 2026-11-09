@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://daihbnqw1h7sm"]
+
+[ext_resource type="ArrayMesh" uid="uid://bqe6u7q83x1kh" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Barricade_01.res" id="1_g18kh"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_5vdfg"]
+[ext_resource type="ArrayMesh" uid="uid://clvurw346la8v" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Barricade_01_Wheel_l.res" id="3_5vdfg"]
+[ext_resource type="ArrayMesh" uid="uid://cpkqd0iwuh56m" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Barricade_01_Wheel_r.res" id="4_10a7p"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g18kh"]
+size = Vector3(2.0278077, 2.346233, 0.17643851)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5vdfg"]
+size = Vector3(0.17937624, 0.1344046, 2.059298)
+
+[node name="SM_Prop_Barricade_01" type="MeshInstance3D" unique_id=1817108040]
+gi_mode = 2
+mesh = ExtResource("1_g18kh")
+surface_material_override/0 = ExtResource("2_5vdfg")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1289878024]
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="MeshCollider" unique_id=1550400116]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.011725545, 1.2959083, 0.2829336)
+shape = SubResource("BoxShape3D_g18kh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=2048403844]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0009498, 0.25701597, -0.8401836)
+shape = SubResource("BoxShape3D_5vdfg")
+
+[node name="SM_Prop_Barricade_01_Wheel_l" type="MeshInstance3D" parent="." unique_id=1557995762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.50336397, 0.26215652, 0.07103083)
+gi_mode = 2
+mesh = ExtResource("3_5vdfg")
+surface_material_override/0 = ExtResource("2_5vdfg")
+
+[node name="SM_Prop_Barricade_01_Wheel_r" type="MeshInstance3D" parent="." unique_id=1808337365]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.50336397, 0.26215652, 0.07103085)
+gi_mode = 2
+mesh = ExtResource("4_10a7p")
+surface_material_override/0 = ExtResource("2_5vdfg")

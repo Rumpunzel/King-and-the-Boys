@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://sjfmkn65f1rf"]
+
+[ext_resource type="ArrayMesh" uid="uid://dq1pd3hjt04rb" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Crypt_Door_Chained_01.res" id="1_3nvm0"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_8ey1d"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3nvm0"]
+size = Vector3(1.0043945, 1.9621582, 0.20922852)
+
+[node name="SM_Prop_Crypt_Door_Chained_01" type="MeshInstance3D" unique_id=1387894865]
+gi_mode = 2
+mesh = ExtResource("1_3nvm0")
+surface_material_override/0 = ExtResource("2_8ey1d")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=736339177]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=728665695]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.49975586, 0.98327637, -0.06994629)
+shape = SubResource("BoxShape3D_3nvm0")

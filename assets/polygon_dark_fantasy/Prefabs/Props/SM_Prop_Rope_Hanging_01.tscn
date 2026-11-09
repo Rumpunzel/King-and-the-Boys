@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://eqjxugt1w76l"]
+
+[ext_resource type="ArrayMesh" uid="uid://fsn1g2fq3mw1" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Rope_Hanging_01.res" id="1_56way"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_athf1"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_qtmdo"]
+points = PackedVector3Array(-0.12020923, -0.5740372, 0.010825574, -0.03794709, -0.5575335, 0.09310758, -0.07087256, -0.031026363, -0.022019602, -0.07087256, -0.5740372, -0.10427746, -0.05438406, -2.0213284, -0.038442194, -0.05884111, -1.2031893, 0.10800867, 0.09362596, -0.06403375, 0.027296469, 0.077163234, -1.429209, 0.12600106, 0.060674727, -0.047529936, -0.038442194, 0.027775034, -0.6398506, -0.1207242, 0.027800798, -1.3138845, -0.10425331, -0.0050216243, -2.0871418, -0.022019602, -0.021510117, -2.0543356, 0.043743208, 0.1429884, -0.67245543, -0.021995455, 0.11006293, -1.6429516, 0.07661255, 0.1278396, -1.2816823, -0.033732772)
+
+[node name="SM_Prop_Rope_Hanging_01" type="MeshInstance3D" unique_id=1068746411]
+gi_mode = 2
+mesh = ExtResource("1_56way")
+surface_material_override/0 = ExtResource("2_athf1")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=303727028]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1389574201]
+shape = SubResource("ConvexPolygonShape3D_qtmdo")

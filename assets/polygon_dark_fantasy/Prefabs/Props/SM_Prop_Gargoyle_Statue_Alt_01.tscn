@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cqfhfl0bil4wc"]
+
+[ext_resource type="ArrayMesh" uid="uid://kqkjetsko4ii" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Gargoyle_Statue_Alt_01.res" id="1_gh2ui"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_3sble"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_gh2ui"]
+points = PackedVector3Array(-1.0452006, 1.5471232, 0.10408954, -1.0064766, 1.0804414, -0.47903812, 1.053444, 1.0416603, -0.440082, 0.23707443, 0.76986563, 0.57056963, 0.43142495, 0.07000661, 0.2595829, 1.248038, 1.1193861, -0.012337349, -0.4348023, 0.5192463, -0.40929753, -0.30676603, 0.18667704, 0.41507626, -1.2400382, 1.0804414, -0.05118309, -0.46214902, 1.6248488, 0.3372744, 0.23707443, 0.14773238, -0.12898496, -0.57880807, 1.2362201, -0.47903812, -0.2677985, 0.88604516, 0.57056963, -0.61777556, 0.2644028, -0.12898496, 0.43142495, 1.6637936, 0.3372744, 0.82036954, 1.391508, -0.2844783, 1.0147201, 1.5859041, 0.14293529, -0.77315855, 1.6637936, 0.18178105, -0.30676603, 0.031061888, 0.29842865, 0.15938294, 0.34212857, 0.49276775, -0.8121261, 1.3527269, -0.3234344, -0.065800905, 1.0593566, 0.55760247, -1.0064766, 1.0027156, -0.47903812, -1.2008271, 1.2362201, 0.026508402, -0.228831, 0.14773238, -0.12898496, 1.2090706, 1.3137822, -0.05118309, 0.7037105, 1.7027383, 0.22062679, 0.12041542, 0.07000661, 0.3762305, -1.2400382, 1.2362201, -0.09013921, 1.131379, 1.3527269, 0.10408954, -0.61777556, 0.2644028, 0.06535415, 0.039523765, 0.81346077, 0.6017868)
+
+[node name="SM_Prop_Gargoyle_Statue_Alt_01" type="MeshInstance3D" unique_id=1653559821]
+gi_mode = 2
+mesh = ExtResource("1_gh2ui")
+surface_material_override/0 = ExtResource("2_3sble")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1526952390]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1753110223]
+shape = SubResource("ConvexPolygonShape3D_gh2ui")

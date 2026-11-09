@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://chty4tfy6we1n"]
+
+[ext_resource type="ArrayMesh" uid="uid://c53gg5h7ip8gd" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Rubble_Pile_Burnt_03.res" id="1_mp4nr"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_ngusm"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_tyvpf"]
+points = PackedVector3Array(0.0073220134, 0.54392886, -0.8041338, -0.5023636, -0.026932916, -0.7215079, -0.77922606, 0.08728413, -0.19499731, -0.094153166, 0.49313465, -0.017657697, 0.5907657, 0.41702718, -0.49964204, 0.5907657, 0.3662889, -0.5505947, 0.22551668, -0.026932916, -0.7458366, -0.7451957, -0.026932916, -0.16317105, -0.57612175, 0.06185911, 0.36272752, -0.2716962, 0.06185911, 0.59101975, 0.2607789, 0.2647564, 0.5654669, 0.41322267, 0.3407521, 0.23588145, 0.7938701, 0.23944317, -0.017657697, 0.7350483, -0.026765278, -0.066009104, 0.5168536, -0.026932916, 0.56454885, 0.17701185, -0.026932916, 0.7590257)
+
+[node name="SM_Prop_Rubble_Pile_Burnt_03" type="MeshInstance3D" unique_id=1068957800]
+gi_mode = 2
+mesh = ExtResource("1_mp4nr")
+surface_material_override/0 = ExtResource("2_ngusm")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=2065828351]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=990320827]
+shape = SubResource("ConvexPolygonShape3D_tyvpf")

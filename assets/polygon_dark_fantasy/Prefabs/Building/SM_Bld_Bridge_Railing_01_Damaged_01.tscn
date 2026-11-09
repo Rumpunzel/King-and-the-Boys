@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bq2fx6itgiiqe"]
+
+[ext_resource type="ArrayMesh" uid="uid://dyw60gdt4urfh" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Bridge_Railing_01_Damaged_01.res" id="1_3cbkc"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_3l7gr"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_yg6p4"]
+points = PackedVector3Array(2.4798193, 0.64725745, -0.37853956, 2.4288564, 0.6126983, 0.20094419, 2.5195951, 0.4090066, 0.25641274, 2.5198436, -0.18614274, -0.5769214, -0.019841194, -0.18614274, -0.5769214, 0.061947793, 0.61859083, -0.3326964, 0.024160784, 0.61811304, 0.08853871, 0.05448983, 0.59836495, 0.23194134, 2.5198436, -0.3051089, 0.13731843, -0.019841194, 0.44866192, 0.25641274, -0.019841194, -0.3051089, 0.13731843, 2.4591856, -0.9797282, -0.5570995, 0.040568303, -0.9797282, -0.5570995, 0.07860391, -0.9180952, -0.032350242, 2.4517276, -0.9747912, -0.06652868, 0.048026264, -0.9747912, -0.06652868)
+
+[node name="SM_Bld_Bridge_Railing_01_Damaged_01" type="MeshInstance3D" unique_id=1490153967]
+gi_mode = 2
+mesh = ExtResource("1_3cbkc")
+surface_material_override/0 = ExtResource("2_3l7gr")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=2104590416]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1483577733]
+shape = SubResource("ConvexPolygonShape3D_yg6p4")

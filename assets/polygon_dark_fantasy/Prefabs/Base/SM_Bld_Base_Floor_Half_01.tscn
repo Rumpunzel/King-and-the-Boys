@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bq06d21el4qyt"]
+
+[ext_resource type="ArrayMesh" uid="uid://dd0vpc0w4xa1b" path="res://assets/polygon_dark_fantasy/Models/Base/extracted/SM_Bld_Base_Floor_Half_01.res" id="1_xc2aq"]
+[ext_resource type="Material" uid="uid://dgce64ph5aoac" path="res://assets/polygon_dark_fantasy/Materials/Misc/Floor_Tiles_01_mat.tres" id="2_5020q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xc2aq"]
+size = Vector3(2.4917603, 0.097717285, 1.2604065)
+
+[node name="SM_Bld_Base_Floor_Half_01" type="MeshInstance3D" unique_id=837011509]
+gi_mode = 2
+mesh = ExtResource("1_xc2aq")
+surface_material_override/0 = ExtResource("2_5020q")
+surface_material_override/1 = ExtResource("2_5020q")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=875469714]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1144862066]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2483826, -0.041900635, 0.62294006)
+shape = SubResource("BoxShape3D_xc2aq")

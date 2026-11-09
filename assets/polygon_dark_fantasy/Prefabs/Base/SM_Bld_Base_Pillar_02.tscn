@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dp1lfd8yl8c52"]
+
+[ext_resource type="ArrayMesh" uid="uid://b3vljdm3tlq6e" path="res://assets/polygon_dark_fantasy/Models/Base/extracted/SM_Bld_Base_Pillar_02.res" id="1_28aq0"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="2_xx5yg"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_28aq0"]
+points = PackedVector3Array(-0.21410279, -0.007608411, -0.21410157, -0.21410279, -0.007608411, 0.21410035, -0.21410279, 0.13948826, -0.21410157, -1.8328428e-06, -0.007608411, -0.21410157, -1.8328428e-06, -0.017079424, -6.109476e-07, 0.21409912, -0.007608411, 0.21410035, -0.21410279, 0.13948826, 0.21410035, -1.8328428e-06, 0.13948826, -0.21410157, -0.19561835, 2.9769447, -0.19561712, 0.21409912, -0.007608411, -6.109476e-07, 0.21409912, 0.13948826, 0.21410035, -0.19561835, 2.9769447, 0.195574, 0.21409912, 0.13948826, -6.109476e-07, -1.8328428e-06, 2.9769447, -0.19561712, -0.18551688, 2.9997344, -0.18551566, 0.19557278, 2.9769447, 0.195574, -0.18551688, 2.9997344, 0.1854725, 0.19557278, 2.9769447, -6.109476e-07, -1.8328428e-06, 2.9997344, -0.18551566, -1.8328428e-06, 3.0065417, -6.109476e-07, 0.18547128, 2.9997344, 0.1854725, 0.18547128, 2.9997344, -6.109476e-07)
+
+[node name="SM_Bld_Base_Pillar_02" type="MeshInstance3D" unique_id=1839155187]
+gi_mode = 2
+mesh = ExtResource("1_28aq0")
+surface_material_override/0 = ExtResource("2_xx5yg")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1341958895]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=434697127]
+shape = SubResource("ConvexPolygonShape3D_28aq0")

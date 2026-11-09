@@ -1,0 +1,26 @@
+[gd_resource type="Skin" format=3 uid="uid://ks0fqkkj4cah"]
+
+[resource]
+resource_name = "Skin2"
+bind_count = 7
+bind/0/name = &"Cape_Rig"
+bind/0/bone = -1
+bind/0/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/1/name = &"Cape_01"
+bind/1/bone = -1
+bind/1/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0276412, 0.13511305)
+bind/2/name = &"Cape_02"
+bind/2/bone = -1
+bind/2/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17900752, 0.17670213)
+bind/3/name = &"Cape_03"
+bind/3/bone = -1
+bind/3/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.44686687, 0.18660246)
+bind/4/name = &"Cape_04"
+bind/4/bone = -1
+bind/4/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.73429996, 0.19841394)
+bind/5/name = &"Cape_05"
+bind/5/bone = -1
+bind/5/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9720778, 0.20830636)
+bind/6/name = &"Cape_06"
+bind/6/bone = -1
+bind/6/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1206445, 0.21809828)

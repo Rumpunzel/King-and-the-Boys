@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cxxes343gh0qt"]
+
+[ext_resource type="ArrayMesh" uid="uid://drhwklhavyg57" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Boarded_Wood_01.res" id="1_pdifm"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_eqjvm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pdifm"]
+size = Vector3(1.1529541, 1.1530762, 0.17828369)
+
+[node name="SM_Prop_Boarded_Wood_01" type="MeshInstance3D" unique_id=1243268445]
+gi_mode = 2
+mesh = ExtResource("1_pdifm")
+surface_material_override/0 = ExtResource("2_eqjvm")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=852803556]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1028953682]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0026245117, 0.005004883, -0.00015258789)
+shape = SubResource("BoxShape3D_pdifm")

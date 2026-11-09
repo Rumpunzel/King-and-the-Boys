@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://csw6bul1gl8xm"]
+
+[ext_resource type="ArrayMesh" uid="uid://dtu4fvqg0lbh6" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Brick_Greeble_01.res" id="1_wkjn8"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_kju8e"]
+
+[node name="SM_Bld_Wall_Brick_Greeble_01" type="MeshInstance3D" unique_id=1907057273]
+gi_mode = 2
+mesh = ExtResource("1_wkjn8")
+surface_material_override/0 = ExtResource("2_kju8e")

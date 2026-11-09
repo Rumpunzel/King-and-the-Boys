@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b5nq0krmo6n54"]
+
+[ext_resource type="ArrayMesh" uid="uid://dn03rdmjwsu6e" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Scroll_01.res" id="1_vptvx"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_x14ym"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_toc12"]
+points = PackedVector3Array(0.14573231, 0.07332678, -0.23704801, 0.12518677, 0.032781523, -0.21798465, -0.005999595, -0.0025507743, -0.2749993, 0.08878608, 0.18711898, -0.2939457, 0.12671188, 0.0923203, 0.3034508, 0.1016774, 0.0038206242, 0.28643408, 0.03189741, -0.012011334, 0.009430677, -0.10084281, 0.10178086, -0.2749993, 0.0034962445, 0.21557306, -0.2939457, -0.08380786, 0.007006323, -0.252018, 0.04139325, 0.23454244, -0.018988937, -0.015466645, 0.22505775, 0.28438744, -0.1387686, 0.0923203, 0.26538256, -0.110424966, 0.0064753722, 0.24438944, -0.14823565, 0.07332678, 0.25596783, -0.11030987, 0.13021082, 0.009430677)
+
+[node name="SM_Prop_Scroll_01" type="MeshInstance3D" unique_id=1651716638]
+gi_mode = 2
+mesh = ExtResource("1_vptvx")
+surface_material_override/0 = ExtResource("2_x14ym")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=658497141]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1416810087]
+shape = SubResource("ConvexPolygonShape3D_toc12")

@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://re5kqhg2jgea"]
+
+[ext_resource type="ArrayMesh" uid="uid://bjyuf5ujun72a" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Priest_Fangs_01.res" id="1_m8bbm"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_xyc7j"]
+
+[node name="SM_Chr_Attach_Priest_Fangs_01" type="MeshInstance3D" unique_id=1001544284]
+gi_mode = 2
+mesh = ExtResource("1_m8bbm")
+surface_material_override/0 = ExtResource("2_xyc7j")

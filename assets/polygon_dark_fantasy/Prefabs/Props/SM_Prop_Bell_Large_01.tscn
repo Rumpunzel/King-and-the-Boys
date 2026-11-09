@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://blsxpwlmvntt1"]
+
+[ext_resource type="ArrayMesh" uid="uid://bf5v5fqpjb63w" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Bell_Large_01.res" id="1_qjax7"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_vvk4n"]
+[ext_resource type="ArrayMesh" uid="uid://dnx2ck76mebvy" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Bell_Large_01_Clapper_01.res" id="3_vvk4n"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_irxsq"]
+points = PackedVector3Array(0.027668595, -1.2504581, 0.6604909, 0.049415767, -0.0777421, 0.17355871, -0.35729456, -1.358438, 0.5729028, 0.34777176, -1.3611042, 0.575112, 0.005285561, -0.019219637, -0.10869819, -0.19387281, -0.0777421, 0.018525302, 0.3588361, -0.46860301, -0.0025269985, -0.57171404, -1.3811005, 0.31741613, 0.34637278, -1.3797674, -0.5574243, 0.66927385, -1.3611042, -0.02422905, 0.6667303, -1.3585714, 0.039577603, 0.58063185, -1.2504581, -0.33507553, 0.005285561, -1.2504581, -0.66710424, -0.18013775, -0.4704693, -0.311814, -0.59282535, -1.3593712, -0.32324985, -0.6299609, -1.3324429, 0.07934308)
+
+[node name="SM_Prop_Bell_Large_01" type="MeshInstance3D" unique_id=2017597056]
+gi_mode = 2
+mesh = ExtResource("1_qjax7")
+surface_material_override/0 = ExtResource("2_vvk4n")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1249094634]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1862735762]
+shape = SubResource("ConvexPolygonShape3D_irxsq")
+
+[node name="SM_Prop_Bell_Large_01_Clapper_01" type="MeshInstance3D" parent="." unique_id=1991122437]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.59023255, 0)
+gi_mode = 2
+mesh = ExtResource("3_vvk4n")
+surface_material_override/0 = ExtResource("2_vvk4n")

@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b0xylj61ylxc6"]
+
+[ext_resource type="Texture2D" uid="uid://bwaee8pftjrno" path="res://assets/polygon_dark_fantasy/Textures/Wallpaper/PolygonDarkFantasy_Rug_10.png" id="1_netru"]
+
+[resource]
+resource_name = "Wallpaper_10_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_netru")
+roughness = 0.8
+uv1_scale = Vector3(1, 1, 0)

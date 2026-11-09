@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dbknka6tsfvai"]
+
+[ext_resource type="Texture2D" uid="uid://c2f3wa6mynmd2" path="res://assets/polygon_dark_fantasy/Textures/Misc/Floor_Tiles_03.png" id="1_x3511"]
+[ext_resource type="Texture2D" uid="uid://bxpockruqd4gi" path="res://assets/polygon_dark_fantasy/Textures/Misc/Floor_Tiles_01_Normals.png" id="2_qemdv"]
+
+[resource]
+resource_name = "Floor_Tiles_03_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_x3511")
+roughness = 0.8
+normal_enabled = true
+normal_texture = ExtResource("2_qemdv")
+uv1_scale = Vector3(1, 1, 0)

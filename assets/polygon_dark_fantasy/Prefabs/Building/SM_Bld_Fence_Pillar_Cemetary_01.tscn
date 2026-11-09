@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://msc38j75j8gw"]
+
+[ext_resource type="ArrayMesh" uid="uid://dj8j66y1igeo6" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Fence_Pillar_Cemetary_01.res" id="1_c7mfu"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_ps1k7"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_c7mfu"]
+points = PackedVector3Array(-0.44239137, 0.003173914, -0.43504533, 0.46044084, 0.003173914, -0.43504533, -0.44239137, 0.003173914, 0.4350454, -0.32987982, 1.9327177, -0.25601923, -0.24715336, 1.9327177, -0.3298611, 0.46044084, 0.003173914, 0.43496022, 0.24372575, 1.9327177, -0.3298611, 0.32972237, 1.9327177, -0.25184593, 0.24372575, 1.9327177, 0.32977602, -0.24317612, 1.9327177, 0.32977602, -0.32987982, 1.9327177, 0.2526125, -0.12925044, 2.2405841, -0.13516381, 0.32972237, 1.9327177, 0.2526125, 0.12891623, 2.2405841, -0.1343973, 0.12865111, 2.2405841, 0.13439736, -0.12872016, 2.2405841, 0.13465288, -0.014882863, 2.3661826, -0.015074968, 0.014195144, 2.3661826, -0.014989793, 0.014195144, 2.3661826, 0.0144788325, -0.014794469, 2.3661826, 0.0144788325)
+
+[node name="SM_Bld_Fence_Pillar_Cemetary_01" type="MeshInstance3D" unique_id=649840749]
+gi_mode = 2
+mesh = ExtResource("1_c7mfu")
+surface_material_override/0 = ExtResource("2_ps1k7")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1419737532]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1649430452]
+shape = SubResource("ConvexPolygonShape3D_c7mfu")

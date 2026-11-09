@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bxlo7cp1aw4gp"]
+
+[ext_resource type="ArrayMesh" uid="uid://dxcawn620jrqe" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Railing_01.res" id="1_uscj1"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_tglxn"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_gyehf"]
+points = PackedVector3Array(2.5195851, 0.9721012, 0.092219174, 2.5195851, 0.89267826, 0.13189831, 2.5198336, 0.09932287, 0.17161244, 2.5195851, 0.9721012, -0.06646248, -0.019880414, 0.9721012, 0.092219174, -0.019880414, 0.89267826, 0.13189831, 2.5198336, 0.09932287, -0.1855349, -0.019880414, 0.09932287, 0.17161244, 2.4688702, -4.3269247e-06, 0.1644457, 2.5198336, -0.019811511, -0.1855349, 2.5195851, 0.93238974, -0.106141634, -0.019880414, 0.9721012, -0.06646248, -0.019880414, 0.09932287, -0.1855349, -0.019880414, -0.019811511, -0.1855349, 0.030834313, -4.3269247e-06, 0.1644457, -0.019880414, 0.93238974, -0.106141634)
+
+[node name="SM_Bld_Railing_01" type="MeshInstance3D" unique_id=2107844095]
+gi_mode = 2
+mesh = ExtResource("1_uscj1")
+surface_material_override/0 = ExtResource("2_tglxn")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=527936402]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=2116433931]
+shape = SubResource("ConvexPolygonShape3D_gyehf")

@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bfukuhox03gsj"]
+
+[ext_resource type="ArrayMesh" uid="uid://dwmcvglofc4s5" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Roof_Ruin_Straight_04.res" id="1_8ctim"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_hsk4i"]
+[ext_resource type="Material" uid="uid://dpvxocog65dl3" path="res://assets/polygon_dark_fantasy/Materials/Misc/Wood_Floor_Boards_01_mat.tres" id="3_cl6c2"]
+[ext_resource type="Material" uid="uid://bsnb4hmv2eed0" path="res://assets/polygon_dark_fantasy/Materials/Misc/Roof_01_mat.tres" id="4_o4uyv"]
+[ext_resource type="Shape3D" uid="uid://pp8uro03bkut" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Roof_Ruin_Straight_04_Collision.res" id="5_hsk4i"]
+
+[node name="SM_Bld_Roof_Ruin_Straight_04" type="MeshInstance3D" unique_id=428264019]
+gi_mode = 2
+mesh = ExtResource("1_8ctim")
+surface_material_override/0 = ExtResource("2_hsk4i")
+surface_material_override/1 = ExtResource("3_cl6c2")
+surface_material_override/2 = ExtResource("4_o4uyv")
+surface_material_override/3 = ExtResource("4_o4uyv")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1836626324]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=741771882]
+shape = ExtResource("5_hsk4i")

@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b68r2kvnjn454"]
+
+[ext_resource type="ArrayMesh" uid="uid://cqs78b4rfnd6t" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Demon_Hair_01.res" id="1_5pysl"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_mvlrh"]
+
+[node name="SM_Chr_Attach_Demon_Hair_01" type="MeshInstance3D" unique_id=708549587]
+gi_mode = 2
+mesh = ExtResource("1_5pysl")
+surface_material_override/0 = ExtResource("2_mvlrh")

@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bdpsqg7sbiu2q"]
+
+[ext_resource type="ArrayMesh" uid="uid://c1ctc5w0hvelm" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Statue_People_Damaged_02.res" id="1_6svpg"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_sxij6"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ky354"]
+points = PackedVector3Array(0.3232202, 0.017426431, 0.20432866, 0.26467407, 0.19276452, 0.3066135, 0.23602664, -0.11221322, 0.2644862, 0.042475432, 0.066788465, -0.40536433, 0.045241386, 0.2073546, -0.3511884, 0.014420718, 0.123092055, 0.4610235, -0.1885479, 0.5143891, 0.014456511, -0.20323382, 0.52910775, 0.14588016, -0.109652236, -0.0957592, 0.399926, 0.070069164, -0.12751031, -0.012716919, -0.16582753, 0.1096589, -0.38656512, -0.16885692, -0.0051335767, -0.33871254, -0.20303625, 0.16345581, 0.4676032, -0.33231187, 0.04030779, 0.05658385, -0.34640506, -0.015224509, 0.33404326, -0.34956616, -0.031292886, 0.33694863)
+
+[node name="SM_Prop_Statue_People_Damaged_02" type="MeshInstance3D" unique_id=638219106]
+gi_mode = 2
+mesh = ExtResource("1_6svpg")
+surface_material_override/0 = ExtResource("2_sxij6")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1025079572]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1942662850]
+shape = SubResource("ConvexPolygonShape3D_ky354")

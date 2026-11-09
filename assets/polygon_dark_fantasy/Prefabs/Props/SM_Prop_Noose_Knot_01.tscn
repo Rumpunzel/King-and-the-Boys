@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://c02vg81qycej3"]
+
+[ext_resource type="ArrayMesh" uid="uid://br770j2nsqbmt" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Noose_Knot_01.res" id="1_12cp1"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_csnbo"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_wcdxn"]
+points = PackedVector3Array(-0.06689411, -0.058931537, -0.029687244, -0.0028262883, -0.05124477, -0.06811771, -0.039336093, -0.078258276, -0.011392988, -0.045867786, -0.024043012, 0.051233508, -0.045932844, 0.024069898, 0.05130869, -0.06331599, 0.03153704, -0.02833397, 0.05353883, -0.043557998, -0.03225596, 0.007062331, 0.04131022, -0.06727818, 0.06534011, -0.041267656, -0.01620463, 0.022780024, -0.056374513, 0.04206132, 0.034203976, -0.03198078, 0.059891954, 0.03393074, 0.06099777, 0.056959853, 0.017640546, 0.08200304, 0.036936425, -0.021939937, 0.060448706, 0.027375795, 0.0046552345, 0.061044827, -0.04804415, 0.066029705, 0.04905975, -0.016329933)
+
+[node name="SM_Prop_Noose_Knot_01" type="MeshInstance3D" unique_id=1170234374]
+gi_mode = 2
+mesh = ExtResource("1_12cp1")
+surface_material_override/0 = ExtResource("2_csnbo")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=114040884]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1902765025]
+shape = SubResource("ConvexPolygonShape3D_wcdxn")

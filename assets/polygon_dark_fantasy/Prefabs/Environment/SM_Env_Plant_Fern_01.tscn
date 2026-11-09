@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bb0axbrnyl2w"]
+
+[ext_resource type="ArrayMesh" uid="uid://d3tya8yrx4n7" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Env_Plant_Fern_01.res" id="1_ufutc"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_3ox43"]
+
+[node name="SM_Env_Plant_Fern_01" type="MeshInstance3D" unique_id=1909916535]
+gi_mode = 2
+mesh = ExtResource("1_ufutc")
+surface_material_override/0 = ExtResource("2_3ox43")

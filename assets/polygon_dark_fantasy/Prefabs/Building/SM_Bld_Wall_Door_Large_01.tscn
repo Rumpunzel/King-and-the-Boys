@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://eb3hkq6m5va7"]
+
+[ext_resource type="ArrayMesh" uid="uid://d4igikeonccj5" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_Large_01.res" id="1_cel0v"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_fg65s"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="3_bp3eu"]
+[ext_resource type="ArrayMesh" uid="uid://bxtrmmcabch2y" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_Large_01_Door_01.res" id="4_fg65s"]
+[ext_resource type="Shape3D" uid="uid://e1q5ufbt0eyi" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Wall_Door_Large_01_Collision.res" id="4_y33xc"]
+[ext_resource type="ArrayMesh" uid="uid://cgygeoojvrgya" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_Large_01_Door_02.res" id="5_bp3eu"]
+[ext_resource type="Shape3D" uid="uid://bgkk1wnqg1iat" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Wall_Door_Large_01_Door_01_Collision.res" id="6_qlycq"]
+[ext_resource type="Shape3D" uid="uid://c7t2bruf2f42y" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Wall_Door_Large_01_Door_02_Collision.res" id="8_ftpky"]
+
+[node name="SM_Bld_Wall_Door_Large_01" type="MeshInstance3D" unique_id=1068856649]
+gi_mode = 2
+mesh = ExtResource("1_cel0v")
+surface_material_override/0 = ExtResource("2_fg65s")
+surface_material_override/1 = ExtResource("3_bp3eu")
+surface_material_override/2 = ExtResource("3_bp3eu")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1340282521]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1714053745]
+shape = ExtResource("4_y33xc")
+
+[node name="SM_Bld_Wall_Door_Large_01_Door_01" type="MeshInstance3D" parent="." unique_id=774258795]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6618242, 1.1865321, 0)
+gi_mode = 2
+mesh = ExtResource("4_fg65s")
+surface_material_override/0 = ExtResource("2_fg65s")
+
+[node name="MeshCollider" type="StaticBody3D" parent="SM_Bld_Wall_Door_Large_01_Door_01" unique_id=1603749825]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Bld_Wall_Door_Large_01_Door_01/MeshCollider" unique_id=352014951]
+shape = ExtResource("6_qlycq")
+
+[node name="SM_Bld_Wall_Door_Large_01_Door_02" type="MeshInstance3D" parent="." unique_id=482676614]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8343387, 1.1865321, 0)
+gi_mode = 2
+mesh = ExtResource("5_bp3eu")
+surface_material_override/0 = ExtResource("2_fg65s")
+
+[node name="MeshCollider" type="StaticBody3D" parent="SM_Bld_Wall_Door_Large_01_Door_02" unique_id=1969844753]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Bld_Wall_Door_Large_01_Door_02/MeshCollider" unique_id=1988019993]
+shape = ExtResource("8_ftpky")

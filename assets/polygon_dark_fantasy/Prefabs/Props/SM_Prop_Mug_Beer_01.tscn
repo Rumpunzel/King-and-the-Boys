@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cwin4db1u5bx3"]
+
+[ext_resource type="ArrayMesh" uid="uid://4ovilf6iur86" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Beer_Mug_01.res" id="1_aigj2"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_5ha5j"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_eno4p"]
+points = PackedVector3Array(0.056951076, 0.0014895181, -0.09221764, 0.0072163045, 0.002285596, -0.11253903, 0.007199079, 0.013165329, -0.11216876, 0.04933667, 0.1919796, -0.080739215, 0.08821833, 0.023855519, -0.025677621, 0.06251544, 0.003801935, 0.027663298, -0.06320827, 0.0020770994, -0.08457262, -0.017246239, 0.19512601, -0.09439571, 0.0680798, 0.19228287, -0.017008908, 0.022203922, 0.034848973, 0.106313385, -0.023258515, 0.0067777503, 0.04691743, -0.08777417, 0.023855519, -0.025677621, -0.066636465, 0.19220705, -0.024632148, -0.021776982, 0.18513712, 0.09531412, 0.007147394, 0.17715739, 0.10422244, -0.0181076, 0.034848973, 0.10995076)
+
+[node name="SM_Prop_Mug_Beer_01" type="MeshInstance3D" unique_id=775604294]
+gi_mode = 2
+mesh = ExtResource("1_aigj2")
+surface_material_override/0 = ExtResource("2_5ha5j")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1834316224]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1327769954]
+shape = SubResource("ConvexPolygonShape3D_eno4p")

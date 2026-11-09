@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://baq5b3fe0cirt"]
+
+[ext_resource type="ArrayMesh" uid="uid://c7i6rpxmdp7f8" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_01.res" id="1_twloe"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="2_fp08d"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="3_ucuer"]
+[ext_resource type="Shape3D" uid="uid://dukrw5akahlwx" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Wall_Door_01_Collision.res" id="4_7iadb"]
+[ext_resource type="ArrayMesh" uid="uid://b0te7j315pioh" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_01_Door_L.res" id="4_fp08d"]
+[ext_resource type="ArrayMesh" uid="uid://dhhd4pawr2e55" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_01_Glass_01.res" id="5_ucuer"]
+[ext_resource type="Shape3D" uid="uid://ccwsdvfxue86b" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Wall_Door_01_Door_L_Collision.res" id="6_khwq3"]
+[ext_resource type="Material" uid="uid://cygy0qtqfg334" path="res://assets/polygon_dark_fantasy/Materials/WindowGlass/Window_Glass_01_mat.tres" id="6_vjm7o"]
+[ext_resource type="ArrayMesh" uid="uid://b6xvdq538xegf" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_01_Door_R.res" id="7_7iadb"]
+[ext_resource type="ArrayMesh" uid="uid://c5jil31pumouv" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_01_Glass_02.res" id="8_khwq3"]
+[ext_resource type="Shape3D" uid="uid://pd1kb3ctfl80" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Wall_Door_01_Door_R_Collision.res" id="10_vjm7o"]
+
+[node name="SM_Bld_Wall_Door_01" type="MeshInstance3D" unique_id=1558709922]
+gi_mode = 2
+mesh = ExtResource("1_twloe")
+surface_material_override/0 = ExtResource("2_fp08d")
+surface_material_override/1 = ExtResource("2_fp08d")
+surface_material_override/2 = ExtResource("3_ucuer")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1065722834]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1733162531]
+shape = ExtResource("4_7iadb")
+
+[node name="SM_Bld_Wall_Door_01_Door_L" type="MeshInstance3D" parent="." unique_id=1741675282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6679683, 2.3841857e-09, -0.11142952)
+gi_mode = 2
+mesh = ExtResource("4_fp08d")
+surface_material_override/0 = ExtResource("3_ucuer")
+
+[node name="MeshCollider" type="StaticBody3D" parent="SM_Bld_Wall_Door_01_Door_L" unique_id=467687747]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Bld_Wall_Door_01_Door_L/MeshCollider" unique_id=1681206589]
+shape = ExtResource("6_khwq3")
+
+[node name="SM_Bld_Wall_Door_01_Glass_01" type="MeshInstance3D" parent="SM_Bld_Wall_Door_01_Door_L" unique_id=1651839270]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6679683, -2.3841857e-09, 0.12619044)
+gi_mode = 2
+mesh = ExtResource("5_ucuer")
+surface_material_override/0 = ExtResource("6_vjm7o")
+
+[node name="SM_Bld_Wall_Door_01_Door_R" type="MeshInstance3D" parent="." unique_id=1776799077]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.830545, 2.3841857e-09, -0.11142952)
+gi_mode = 2
+mesh = ExtResource("7_7iadb")
+surface_material_override/0 = ExtResource("3_ucuer")
+
+[node name="MeshCollider" type="StaticBody3D" parent="SM_Bld_Wall_Door_01_Door_R" unique_id=1786126322]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Bld_Wall_Door_01_Door_R/MeshCollider" unique_id=654319932]
+shape = ExtResource("10_vjm7o")
+
+[node name="SM_Bld_Wall_Door_01_Glass_02" type="MeshInstance3D" parent="SM_Bld_Wall_Door_01_Door_R" unique_id=946466549]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.830545, -2.3841857e-09, 0.11142952)
+gi_mode = 2
+mesh = ExtResource("8_khwq3")
+surface_material_override/0 = ExtResource("6_vjm7o")

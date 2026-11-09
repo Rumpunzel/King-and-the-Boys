@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bn0c46y46uwsw"]
+
+[ext_resource type="ArrayMesh" uid="uid://bd0bvvqqgf5lq" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Rack_Weapon_01.res" id="1_iplxu"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_ja2q0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iplxu"]
+size = Vector3(1.3991699, 0.91134644, 0.28729248)
+
+[node name="SM_Prop_Rack_Weapon_01" type="MeshInstance3D" unique_id=728126881]
+gi_mode = 2
+mesh = ExtResource("1_iplxu")
+surface_material_override/0 = ExtResource("2_ja2q0")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=65252199]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1855886244]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0028076172, 0.44752502, 0.010772705)
+shape = SubResource("BoxShape3D_iplxu")

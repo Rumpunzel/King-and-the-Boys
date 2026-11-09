@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cwk5wr5dbt5ck"]
+
+[ext_resource type="ArrayMesh" uid="uid://clkdlb4ux8jr6" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Env_Rock_03.res" id="1_etnp8"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_p8bt6"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_etnp8"]
+points = PackedVector3Array(-0.3860775, -0.16355753, -0.18646064, -0.3019599, 0.77831256, 0.3133847, -0.30194193, 0.778251, 0.23392904, 0.49180353, -0.04542359, -0.004197094, -0.5893059, -0.12374035, 0.40175608, -0.48644176, 0.48423123, -0.42842695, 0.4003099, 0.5841389, 0.3379897, -0.81440747, 0.58720756, -0.14658827, 0.37333938, 0.6202948, -0.06343045, 0.26118463, -0.1421465, -0.26681644, 0.2874035, -0.1277012, 0.2824534, -0.76852906, -0.08088193, -0.16541035, -0.54992366, 0.40416002, 0.4436044, -0.4668732, -0.0013514806, -0.44985616, -0.4049755, 0.7455297, -0.24568765, -0.002878302, 0.38246986, -0.40462142, -0.7373089, -0.025592633, 0.34429374, 0.01856667, 0.585171, 0.44019336, -0.75744873, 0.65071565, 0.07766598, 0.34158775, 0.22173731, -0.28673017, 0.30539986, -0.1865497, -0.065176286, -0.26481357, 0.7293384, 0.4635484, -0.8206468, 0.09705546, -0.18913957, -0.30195174, 0.6791324, -0.3410528, 0.15806466, 0.14184459, 0.3773144, 0.49359328, 0.46647984, 0.20089686, -0.7271575, 0.6850194, -0.20547095, -0.36567232, -0.12280543, -0.3889067, -0.63199794, 0.4857892, 0.38306406, 0.4494173, 0.077864856, 0.24077675, 0.4263782, -0.08376173, -0.22763705, 0.039850023, -0.1848548, 0.15820472)
+
+[node name="SM_Env_Rock_03" type="MeshInstance3D" unique_id=2059852012]
+gi_mode = 2
+mesh = ExtResource("1_etnp8")
+surface_material_override/0 = ExtResource("2_p8bt6")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=398740987]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=543834753]
+shape = SubResource("ConvexPolygonShape3D_etnp8")

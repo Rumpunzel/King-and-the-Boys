@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://ccm8lag0gai31"]
+
+[ext_resource type="ArrayMesh" uid="uid://bcnw0kqf7lkcp" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Stairs_Quarter_01.res" id="1_g46gv"]
+[ext_resource type="Material" uid="uid://bu2x5orxdspn8" path="res://assets/polygon_dark_fantasy/Materials/Misc/Stone_02_mat.tres" id="2_ke0b8"]
+[ext_resource type="Shape3D" uid="uid://cjl4cw1wbjkvu" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Stairs_Quarter_01_Collision.res" id="3_ke0b8"]
+
+[node name="SM_Bld_Stairs_Quarter_01" type="MeshInstance3D" unique_id=1171247178]
+gi_mode = 2
+mesh = ExtResource("1_g46gv")
+surface_material_override/0 = ExtResource("2_ke0b8")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=201890823]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=215677098]
+shape = ExtResource("3_ke0b8")

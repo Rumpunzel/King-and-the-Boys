@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bbr6tjrx4qoqd"]
+
+[ext_resource type="ArrayMesh" uid="uid://bnfnncwgsxir" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Gargoyle_02.res" id="1_73x5s"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_5wx6y"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_04x2e"]
+points = PackedVector3Array(-0.15032333, 0.022424936, 0.32040668, 0.13991529, 0.037702434, 0.2911535, 0.017602652, 0.61036605, 1.3699441, -0.045271963, 0.6313423, 1.3699441, -0.40229046, 0.6940285, 0.69801533, -0.1207996, 0.10317741, 0.17644018, 0.119217396, 0.079533674, 0.1489754, 0.39563143, 0.7362235, 0.69801533, 0.12257594, 1.072086, 1.4118438, -0.108380884, 1.0511097, 1.453999, -0.23428635, 0.9040335, 0.27837917, -0.31832746, 1.0300121, 0.8447921, -0.080497354, 0.80545723, 0.18627639, 0.21505243, 0.88996845, 0.30673814, 0.21544296, 1.1488372, 0.70350826, -0.108380884, 1.2611146, 0.69801533)
+
+[node name="SM_Prop_Gargoyle_02" type="MeshInstance3D" unique_id=250482901]
+gi_mode = 2
+mesh = ExtResource("1_73x5s")
+surface_material_override/0 = ExtResource("2_5wx6y")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=2070914473]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1171662783]
+shape = SubResource("ConvexPolygonShape3D_04x2e")

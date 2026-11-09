@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://g0koak7as4jf"]
+
+[ext_resource type="Texture2D" uid="uid://mwrmrrk1hpwk" path="res://assets/polygon_dark_fantasy/Textures/Misc/Roof_Uncoloured_01.png" id="1_552aq"]
+[ext_resource type="Texture2D" uid="uid://cluejgtqpeceg" path="res://assets/polygon_dark_fantasy/Textures/Misc/Roof_02_Normals.png" id="2_1203v"]
+
+[resource]
+resource_name = "Roof_Uncoloured_01_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_552aq")
+roughness = 0.8
+normal_enabled = true
+normal_texture = ExtResource("2_1203v")
+uv1_scale = Vector3(1, 1, 0)

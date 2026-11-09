@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://crr6ml20vtwmd"]
+
+[ext_resource type="ArrayMesh" uid="uid://b265q85k8sncw" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Cage_Large_01_Insert_01.res" id="1_6rct1"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_wcqv6"]
+
+[node name="SM_Prop_Cage_Large_01_Insert_01" type="MeshInstance3D" unique_id=666778082]
+gi_mode = 2
+mesh = ExtResource("1_6rct1")
+surface_material_override/0 = ExtResource("2_wcqv6")

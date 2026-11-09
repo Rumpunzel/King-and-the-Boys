@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c4065fljt72ib"]
+
+[ext_resource type="ArrayMesh" uid="uid://dbcx0hpinf1tt" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Priest_Hat_01.res" id="1_8a5bn"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_labim"]
+
+[node name="SM_Chr_Attach_Priest_Hat_01" type="MeshInstance3D" unique_id=914420945]
+gi_mode = 2
+mesh = ExtResource("1_8a5bn")
+surface_material_override/0 = ExtResource("2_labim")

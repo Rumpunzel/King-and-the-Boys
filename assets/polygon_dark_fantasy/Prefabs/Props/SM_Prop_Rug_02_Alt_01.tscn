@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dfm8u8to1qu08"]
+
+[ext_resource type="ArrayMesh" uid="uid://c2u7uoe7rn05j" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Rug_02_Alt_01.res" id="1_gl786"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_lfolc"]
+
+[node name="SM_Prop_Rug_02_Alt_01" type="MeshInstance3D" unique_id=1011746108]
+gi_mode = 2
+mesh = ExtResource("1_gl786")
+surface_material_override/0 = ExtResource("2_lfolc")

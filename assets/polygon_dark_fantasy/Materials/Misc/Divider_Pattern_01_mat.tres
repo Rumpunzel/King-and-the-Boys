@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://buv3cd3do3fpd"]
+
+[ext_resource type="Texture2D" uid="uid://bs7ygs637dk1n" path="res://assets/polygon_dark_fantasy/Textures/Misc/Divider_Pattern_01.tga" id="1_8rvek"]
+
+[resource]
+resource_name = "Divider_Pattern_01_mat"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_8rvek")
+roughness = 0.8
+uv1_scale = Vector3(6, 1, 0)

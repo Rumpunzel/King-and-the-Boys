@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bcvlc4ehvbyou"]
+
+[ext_resource type="ArrayMesh" uid="uid://ci1vpt3t5pwrh" path="res://assets/polygon_dark_fantasy/Models/Base/extracted/SM_Bld_Base_Wall_Angle_Half_01.res" id="1_jjq02"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="2_ycpsr"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_gretg"]
+data = PackedVector3Array(0, 0, 0.1125, -0.0111, 1.5, 0.1125, 1.2389, 0, 0.1125, 1.2389, 0, 0, 0, 0, 0, 0, 0, 0.1125, 0, 0, 0.1125, 1.2389, 0, 0.1125, 1.2389, 0, 0, 0, 0, 0, -0.0111, 1.5029, 0, -0.0111, 1.5, 0.1125, -0.0111, 1.5, 0.1125, 0, 0, 0.1125, 0, 0, 0, -0.0111, 1.5, 0.1125, -0.0111, 1.5029, 0, 1.2389, 0, 0, 1.2389, 0, 0, 1.2389, 0, 0.1125, -0.0111, 1.5, 0.1125, 1.2389, 0, 0, 1.2389, 0, -0.1125, 0, 0, -0.1125, 0, 0, -0.1125, 0, 0, 0, 1.2389, 0, 0, 0, 0, -0.1125, 1.2389, 0, -0.1125, -0.0111, 1.5, -0.1125, 0, 0, 0, 0, 0, -0.1125, -0.0111, 1.5, -0.1125, -0.0111, 1.5, -0.1125, -0.0111, 1.5029, 0, 0, 0, 0, -0.0111, 1.5, -0.1125, 1.2389, 0, -0.1125, 1.2389, 0, 0, 1.2389, 0, 0, -0.0111, 1.5029, 0, -0.0111, 1.5, -0.1125)
+
+[node name="SM_Bld_Base_Wall_Angle_Half_01" type="MeshInstance3D" unique_id=1261437665]
+gi_mode = 2
+mesh = ExtResource("1_jjq02")
+surface_material_override/0 = ExtResource("2_ycpsr")
+surface_material_override/1 = ExtResource("2_ycpsr")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=753970286]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1432698036]
+shape = SubResource("ConcavePolygonShape3D_gretg")

@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://2edxwosw64d3"]
+
+[ext_resource type="ArrayMesh" uid="uid://by1kigq4uhrex" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Env_Vine_09.res" id="1_kdvtt"]
+[ext_resource type="Material" uid="uid://dl1tkwwp12d1w" path="res://assets/polygon_dark_fantasy/Materials/Misc/Vines_01_mat.tres" id="2_62plg"]
+
+[node name="SM_Env_Vine_09" type="MeshInstance3D" unique_id=1769945792]
+gi_mode = 2
+mesh = ExtResource("1_kdvtt")
+surface_material_override/0 = ExtResource("2_62plg")

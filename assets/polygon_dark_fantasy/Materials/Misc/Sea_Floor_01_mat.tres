@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c67fwvlmqk5gt"]
+
+[ext_resource type="Texture2D" uid="uid://lnycgc0eilkn" path="res://assets/polygon_dark_fantasy/Textures/Misc/Water_Refraction_01_Normals.png" id="1_sb26b"]
+
+[resource]
+resource_name = "Sea_Floor_01_mat"
+depth_draw_mode = 1
+albedo_color = Color(0.1509434, 0.1509434, 0.1509434, 1)
+normal_enabled = true
+normal_texture = ExtResource("1_sb26b")
+uv1_scale = Vector3(20, 20, 0)

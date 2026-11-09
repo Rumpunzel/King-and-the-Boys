@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://ci753ssyl1fy2"]
+
+[ext_resource type="ArrayMesh" uid="uid://4ng8wsb7jhuc" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Roof_Cap_01.res" id="1_045tw"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_83ep6"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_4cc1j"]
+points = PackedVector3Array(2.5314088, 0.39858007, 0.14013878, 2.5314088, 0.39858007, -0.14017716, -0.03140831, 0.39858007, 0.14013878, 2.5314088, 0.07820444, 0.26031786, 2.5314088, 0.31846067, -0.18023685, -0.03140831, 0.39858007, -0.14017716, -0.03140831, 0.07820444, 0.26031786, 2.5314088, -0.0019149482, 0.26031786, 2.5314088, -0.0019149482, -0.26035625, -0.03140831, 0.07820444, -0.26035625, -0.03140831, -0.0019149482, 0.26031786, 2.5314088, -0.082034335, 0.18019846, 2.5314088, -0.122094035, -0.060057774, -0.03140831, -0.082034335, -0.18023685, -0.03140831, -0.0019149482, -0.26035625, -0.03140831, -0.122094035, 0.060019374)
+
+[node name="SM_Bld_Roof_Cap_01" type="MeshInstance3D" unique_id=324804005]
+gi_mode = 2
+mesh = ExtResource("1_045tw")
+surface_material_override/0 = ExtResource("2_83ep6")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=953172338]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=625028960]
+shape = SubResource("ConvexPolygonShape3D_4cc1j")

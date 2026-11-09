@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://f4p080fvg75j"]
+
+[ext_resource type="ArrayMesh" uid="uid://dfo5snptbqxcy" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Fish_Rotten_01.res" id="1_pgajq"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_w23pk"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_632ld"]
+points = PackedVector3Array(0.07664665, 0.04905404, 0.0173212, 0.07664665, 0.037538398, 0.0173212, 0.024655297, 0.04905404, -0.18471128, 0.001590468, 0.095241465, 0.08082023, 0.041990645, 0.06638033, 0.10964069, 0.007349327, 0.03175657, -0.17317586, 0.01689846, 0.033178013, 0.15082827, 0.01889643, -0.0028767958, 0.08082023, -0.061889224, 0.037538398, -0.18471128, -0.061889224, 0.04905404, -0.18471128, -0.061889224, 0.060608096, 0.121176094, -0.00992725, 0.06638033, 0.17310354, -0.00992725, 0.03175657, 0.18471128, -0.015715498, -0.0028767958, 0.07503444, -0.07343633, 0.03175657, 0.06349902, -0.06913187, 0.04867947, -0.035184816)
+
+[node name="SM_Prop_Fish_Rotten_01" type="MeshInstance3D" unique_id=456141619]
+gi_mode = 2
+mesh = ExtResource("1_pgajq")
+surface_material_override/0 = ExtResource("2_w23pk")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=886352904]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=2048750105]
+shape = SubResource("ConvexPolygonShape3D_632ld")

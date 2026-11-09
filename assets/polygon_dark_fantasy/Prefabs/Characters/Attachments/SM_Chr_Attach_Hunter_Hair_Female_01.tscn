@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://8f8to4vu8bfp"]
+
+[ext_resource type="ArrayMesh" uid="uid://6hq2nbjtm0or" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Hunter_Hair_Female_01.res" id="1_sca7c"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_20kiq"]
+
+[node name="SM_Chr_Attach_Hunter_Hair_Female_01" type="MeshInstance3D" unique_id=1341561279]
+gi_mode = 2
+mesh = ExtResource("1_sca7c")
+surface_material_override/0 = ExtResource("2_20kiq")

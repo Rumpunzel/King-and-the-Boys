@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://drifdwietnq8p"]
+
+[ext_resource type="ArrayMesh" uid="uid://cudo00qo7f5ll" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Env_Rocks_Small_01.res" id="1_b7fbo"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_ukcau"]
+
+[node name="SM_Env_Rocks_Small_01" type="MeshInstance3D" unique_id=533486227]
+gi_mode = 2
+mesh = ExtResource("1_b7fbo")
+surface_material_override/0 = ExtResource("2_ukcau")

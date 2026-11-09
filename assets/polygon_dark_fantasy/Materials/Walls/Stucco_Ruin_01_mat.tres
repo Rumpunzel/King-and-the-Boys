@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://6i7skyl0gf8t"]
+
+[ext_resource type="Texture2D" uid="uid://dpdpgrpkp51bs" path="res://assets/polygon_dark_fantasy/Textures/Misc/Stucco_Ruin_01.png" id="1_kct31"]
+[ext_resource type="Texture2D" uid="uid://cxs2n0mbvbvih" path="res://assets/polygon_dark_fantasy/Textures/Misc/Stucco_Ruin_Normals_01.png" id="2_n8jih"]
+
+[resource]
+resource_name = "Stucco_Ruin_01_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_kct31")
+roughness = 0.8
+normal_enabled = true
+normal_texture = ExtResource("2_n8jih")
+uv1_scale = Vector3(1, 1, 0)

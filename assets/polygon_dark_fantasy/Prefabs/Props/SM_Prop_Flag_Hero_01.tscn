@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b1sl6d1uofu0v"]
+
+[ext_resource type="ArrayMesh" uid="uid://bdpx3nw3w5kae" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Flag_Hero_01.res" id="1_8kclp"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_xdqfn"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_y2np4"]
+points = PackedVector3Array(-0.730767, 2.360209, 0.108407766, -0.587795, 2.4079976, 0.15613824, -0.01532805, 3.0274572, -0.034596927, -0.6354041, 2.3124204, 0.0131102055, -0.39677975, 0.6914912, 0.06074731, -0.20605391, 0.4531456, 0.108407766, 0.6044586, 2.4079976, 0.15613824, -0.01532805, 2.8846889, 0.06074731, 0.7475753, 2.3124204, 0.108407766, 0.7475753, 2.3124204, 0.06074731, 0.65206766, 2.360209, 0.0131102055, -0.06308186, 2.741622, -0.08230406, -0.06308186, -0.023545623, -0.08230406, -0.06308186, -0.023545623, 0.06074731, 0.41358805, 0.64400125, 0.108407766, 0.03213632, -0.023545623, -0.08230406)
+
+[node name="SM_Prop_Flag_Hero_01" type="MeshInstance3D" unique_id=1111435823]
+gi_mode = 2
+mesh = ExtResource("1_8kclp")
+surface_material_override/0 = ExtResource("2_xdqfn")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=415865536]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=465503240]
+shape = SubResource("ConvexPolygonShape3D_y2np4")

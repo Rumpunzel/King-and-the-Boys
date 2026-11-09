@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://i3o1og65ds11"]
+
+[ext_resource type="ArrayMesh" uid="uid://1r8iawdb38vs" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Window_Village_01.res" id="1_7ass2"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_vx1kq"]
+[ext_resource type="Material" uid="uid://cpu4p20lppcjj" path="res://assets/polygon_dark_fantasy/Materials/Walls/Stucco_Brown_03_mat.tres" id="3_dwn2h"]
+[ext_resource type="Material" uid="uid://bijuvld4722nu" path="res://assets/polygon_dark_fantasy/Materials/Walls/Stucco_Brown_01_mat.tres" id="4_m5gj5"]
+[ext_resource type="ArrayMesh" uid="uid://b2ttu1wg7eghn" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Window_Village_01_Shutter_L.res" id="5_vx1kq"]
+[ext_resource type="ArrayMesh" uid="uid://bdqun8svf8kkt" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Window_Village_01_Shutter_R.res" id="6_dwn2h"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c0pl3"]
+size = Vector3(2.4999926, 3.0057428, 0.26008606)
+
+[node name="SM_Bld_Window_Village_01" type="MeshInstance3D" unique_id=1454634793]
+gi_mode = 2
+mesh = ExtResource("1_7ass2")
+surface_material_override/0 = ExtResource("2_vx1kq")
+surface_material_override/1 = ExtResource("3_dwn2h")
+surface_material_override/2 = ExtResource("4_m5gj5")
+
+[node name="BoxCollider" type="StaticBody3D" parent="." unique_id=1502786417]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoxCollider" unique_id=543520827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2499963, 1.5028714, 0.0013618469)
+shape = SubResource("BoxShape3D_c0pl3")
+
+[node name="SM_Bld_Window_Village_01_Shutter_L" type="MeshInstance3D" parent="." unique_id=2023460224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6716705, 1.3301823, 0.049252696)
+gi_mode = 2
+mesh = ExtResource("5_vx1kq")
+surface_material_override/0 = ExtResource("2_vx1kq")
+
+[node name="SM_Bld_Window_Village_01_Shutter_R" type="MeshInstance3D" parent="." unique_id=950469579]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8384299, 1.3301824, 0.048287757)
+gi_mode = 2
+mesh = ExtResource("6_dwn2h")
+surface_material_override/0 = ExtResource("2_vx1kq")

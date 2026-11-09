@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dgq8y5qbh3ce4"]
+
+[ext_resource type="ArrayMesh" uid="uid://c5t6k5hxctn00" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Gates_Cemetary_01.res" id="1_fgc83"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_m57re"]
+[ext_resource type="Shape3D" uid="uid://cnvx17kfucru6" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Gates_Cemetary_01_Collision.res" id="3_m57re"]
+
+[node name="SM_Bld_Gates_Cemetary_01" type="MeshInstance3D" unique_id=1820150888]
+gi_mode = 2
+mesh = ExtResource("1_fgc83")
+surface_material_override/0 = ExtResource("2_m57re")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=773781674]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=676763911]
+shape = ExtResource("3_m57re")

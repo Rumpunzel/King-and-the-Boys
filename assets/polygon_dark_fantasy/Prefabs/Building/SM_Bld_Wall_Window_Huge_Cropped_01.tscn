@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://qqxbqnx1ojat"]
+
+[ext_resource type="ArrayMesh" uid="uid://3sd351pfw2fa" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Window_Huge_Cropped_01.res" id="1_akj3d"]
+[ext_resource type="Material" uid="uid://y2gba4kps13y" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_02_mat.tres" id="2_1y7y7"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="3_xlwpd"]
+[ext_resource type="ArrayMesh" uid="uid://dxmw66lyimh0w" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Window_Huge_01_Glass_01.res" id="4_1y7y7"]
+[ext_resource type="Material" uid="uid://bb25luobgc36c" path="res://assets/polygon_dark_fantasy/Materials/WindowGlass/Window_Glass_04_mat.tres" id="5_3ctyu"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_5ipc6"]
+points = PackedVector3Array(-0.004110813, -0.047664642, 0.16752753, 5.0471525, -0.047664642, 0.16752753, 3.374441, 0.75677365, 0.3362368, 0.14273974, 2.73353, 0.33594677, 0.090822875, 4.813006, 0.16752753, -0.004110813, 3.2877383, -0.40443102, 1.424839, 0.71556634, -0.40443102, 4.8894243, 0.14224729, -0.11254296, 4.7608685, 4.1459255, -0.40443102, 5.0471525, 4.6218996, 0.16752753, 4.8894243, 3.1808383, 0.33435175, 1.5800952, 5.242398, 0.33529428, 1.139049, 6.053406, 0.16752753, 1.6156954, 5.385728, -0.40443102, 3.617214, 0.71556634, -0.40443102, 3.807576, 6.053406, 0.16752753)
+
+[node name="SM_Bld_Wall_Window_Huge_Cropped_01" type="MeshInstance3D" unique_id=507827951]
+gi_mode = 2
+mesh = ExtResource("1_akj3d")
+surface_material_override/0 = ExtResource("2_1y7y7")
+surface_material_override/1 = ExtResource("2_1y7y7")
+surface_material_override/2 = ExtResource("3_xlwpd")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1715146911]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1840649153]
+shape = SubResource("ConvexPolygonShape3D_5ipc6")
+
+[node name="SM_Bld_Wall_Window_Huge_01_Glass_01" type="MeshInstance3D" parent="." unique_id=66733551]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4999917, 3.005742, 9.536743e-09)
+gi_mode = 2
+mesh = ExtResource("4_1y7y7")
+surface_material_override/0 = ExtResource("5_3ctyu")

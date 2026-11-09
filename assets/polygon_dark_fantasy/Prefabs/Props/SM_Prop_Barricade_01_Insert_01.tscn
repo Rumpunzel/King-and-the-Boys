@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://t2cts0jq6xtb"]
+
+[ext_resource type="ArrayMesh" uid="uid://c2y45oceruujw" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Barricade_01_Insert_01.res" id="1_ksba8"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_72nq4"]
+
+[node name="SM_Prop_Barricade_01_Insert_01" type="MeshInstance3D" unique_id=1630791208]
+gi_mode = 2
+mesh = ExtResource("1_ksba8")
+surface_material_override/0 = ExtResource("2_72nq4")

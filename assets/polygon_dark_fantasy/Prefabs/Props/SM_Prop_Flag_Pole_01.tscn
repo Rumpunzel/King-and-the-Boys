@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://cyl53008mcviy"]
+
+[ext_resource type="ArrayMesh" uid="uid://bd5ljr6rxpvg5" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Flag_Pole_01.res" id="1_dhvma"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_fs26b"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ab8v5"]
+points = PackedVector3Array(0.10701501, -0.01962921, -0.6447835, 0.10701501, 0.098161526, -0.6447835, 0.6568793, 0.098161526, -0.095045984, 0.6568793, -0.01962921, 0.10088122, -0.6386497, -0.01962921, -0.095045984, -0.36384436, 0.13735594, -0.44860268, 0.22482497, 0.21590614, -0.25229502, -0.24616122, 0.21590614, -0.25229502, 0.22482497, 0.21590614, 0.21869117, 0.42100585, 0.13735594, 0.41487205, 0.10701501, 0.098161526, 0.6507455, -0.08891219, -0.01962921, 0.6507455, -0.6386497, -0.01962921, 0.10088122, -0.6386497, 0.098161526, -0.095045984, -0.24616122, 0.21590614, 0.21869117, -0.4030298, 0.13735594, 0.41487205)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dhvma"]
+size = Vector3(1.6005859, 0.17901611, 0.22961426)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fs26b"]
+size = Vector3(0.19921875, 5.682907, 0.19458008)
+
+[node name="SM_Prop_Flag_Pole_01" type="MeshInstance3D" unique_id=59765368]
+gi_mode = 2
+mesh = ExtResource("1_dhvma")
+surface_material_override/0 = ExtResource("2_fs26b")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=432836671]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=593611401]
+shape = SubResource("ConvexPolygonShape3D_ab8v5")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="MeshCollider" unique_id=155558636]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.30029297, 5.505829, -0.0010375977)
+shape = SubResource("BoxShape3D_dhvma")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="MeshCollider" unique_id=1784440312]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01171875, 3.0230331, 0.0057373047)
+shape = SubResource("BoxShape3D_fs26b")

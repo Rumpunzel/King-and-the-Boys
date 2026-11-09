@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c2mqn78tlc021"]
+
+[ext_resource type="Texture2D" uid="uid://ow1pvj3qafc8" path="res://assets/polygon_dark_fantasy/Textures/Misc/Stucco_Brown_02.png" id="1_pgogk"]
+[ext_resource type="Texture2D" uid="uid://dhn4dvssdt1up" path="res://assets/polygon_dark_fantasy/Textures/Misc/Stucco_02_Normals.png" id="2_ciffi"]
+
+[resource]
+resource_name = "Stucco_Brown_02_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_pgogk")
+roughness = 0.8
+normal_enabled = true
+normal_texture = ExtResource("2_ciffi")
+uv1_scale = Vector3(1, 1, 0)

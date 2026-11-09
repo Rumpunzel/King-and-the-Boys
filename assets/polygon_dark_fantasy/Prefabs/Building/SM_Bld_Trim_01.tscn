@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bay6gwiweu8cs"]
+
+[ext_resource type="ArrayMesh" uid="uid://bx6l7mtlhdbg4" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Trim_01.res" id="1_chcb8"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_qhxx0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6po2t"]
+size = Vector3(2.5131211, 2.4834437, 0.69900644)
+
+[node name="SM_Bld_Trim_01" type="MeshInstance3D" unique_id=924138371]
+gi_mode = 2
+mesh = ExtResource("1_chcb8")
+surface_material_override/0 = ExtResource("2_qhxx0")
+
+[node name="BoxCollider" type="StaticBody3D" parent="." unique_id=680147570]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoxCollider" unique_id=5801574]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2499957, 1.1571112, 0.3052534)
+shape = SubResource("BoxShape3D_6po2t")

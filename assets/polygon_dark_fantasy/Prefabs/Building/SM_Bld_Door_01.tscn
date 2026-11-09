@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bsjj2w0megfx1"]
+
+[ext_resource type="ArrayMesh" uid="uid://upcfyc885q6k" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Door_01.res" id="1_3a3rk"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_p8ai4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ivtnp"]
+size = Vector3(1.0443686, 1.9853715, 0.13887024)
+
+[node name="SM_Bld_Door_01" type="MeshInstance3D" unique_id=1043297510]
+gi_mode = 2
+mesh = ExtResource("1_3a3rk")
+surface_material_override/0 = ExtResource("2_p8ai4")
+
+[node name="BoxCollider" type="StaticBody3D" parent="." unique_id=96519039]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoxCollider" unique_id=1945016428]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5221843, 0.99268574, -0.00034332275)
+shape = SubResource("BoxShape3D_ivtnp")

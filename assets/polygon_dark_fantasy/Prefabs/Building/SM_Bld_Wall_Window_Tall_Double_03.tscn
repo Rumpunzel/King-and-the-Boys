@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://c0jlwt801fkae"]
+
+[ext_resource type="ArrayMesh" uid="uid://pithju13xmpw" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Window_Tall_Double_03.res" id="1_yk14b"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="2_tm280"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="3_a3kxn"]
+[ext_resource type="ArrayMesh" uid="uid://sgm6c1w3gafb" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Window_Tall_Double_03_Glass_01.res" id="4_tm280"]
+[ext_resource type="Material" uid="uid://deedwdscxbw6q" path="res://assets/polygon_dark_fantasy/Materials/WindowGlass/Window_Glass_02_mat.tres" id="5_2spq8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_esim2"]
+size = Vector3(2.4999914, 6.0057406, 0.23600769)
+
+[node name="SM_Bld_Wall_Window_Tall_Double_03" type="MeshInstance3D" unique_id=1361114870]
+gi_mode = 2
+mesh = ExtResource("1_yk14b")
+surface_material_override/0 = ExtResource("2_tm280")
+surface_material_override/1 = ExtResource("2_tm280")
+surface_material_override/2 = ExtResource("3_a3kxn")
+
+[node name="BoxCollider" type="StaticBody3D" parent="." unique_id=561740783]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoxCollider" unique_id=1194948623]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2499957, 3.0028703, -0.0017929077)
+shape = SubResource("BoxShape3D_esim2")
+
+[node name="SM_Bld_Wall_Window_Tall_Double_03_Glass_01" type="MeshInstance3D" parent="." unique_id=943835795]
+gi_mode = 2
+mesh = ExtResource("4_tm280")
+surface_material_override/0 = ExtResource("5_2spq8")

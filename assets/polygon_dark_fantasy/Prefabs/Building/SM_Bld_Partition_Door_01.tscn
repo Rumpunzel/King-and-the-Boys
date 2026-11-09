@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://c1xg0ky1vxmyf"]
+
+[ext_resource type="ArrayMesh" uid="uid://e78a2mppddab" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Partition_Door_01.res" id="1_gwl4l"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_0go0o"]
+[ext_resource type="Material" uid="uid://buv3cd3do3fpd" path="res://assets/polygon_dark_fantasy/Materials/Misc/Divider_Pattern_01_mat.tres" id="3_tf6px"]
+[ext_resource type="Shape3D" uid="uid://curyv8lrogtec" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Partition_Door_01_Collision.res" id="4_0go0o"]
+
+[node name="SM_Bld_Partition_Door_01" type="MeshInstance3D" unique_id=1178343054]
+gi_mode = 2
+mesh = ExtResource("1_gwl4l")
+surface_material_override/0 = ExtResource("2_0go0o")
+surface_material_override/1 = ExtResource("3_tf6px")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1422920396]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1880956853]
+shape = ExtResource("4_0go0o")

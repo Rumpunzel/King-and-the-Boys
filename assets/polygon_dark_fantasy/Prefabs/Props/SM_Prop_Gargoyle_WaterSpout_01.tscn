@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dsm4r4uqk180r"]
+
+[ext_resource type="ArrayMesh" uid="uid://bip4rdf2j3etj" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Gargoyle_WaterSpout_01.res" id="1_wjg06"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_q4p2q"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ko713"]
+points = PackedVector3Array(0.16070881, 0.06232667, 0.41393864, 0.25216776, 0.3181782, 0.5235911, 0.08763182, 0.3546671, 1.2726653, 0.014554858, 0.13546544, 1.1448462, -0.14983082, 0.06232667, 0.43221402, -0.1444715, 0.07236111, 0.16134636, 0.14588305, 0.08695667, 0.19234928, 0.23343518, 0.47186083, 0.1825589, 0.21555412, 0.55567795, 0.7977223, -0.040140197, 0.2086042, 1.2726653, 0.17904067, 0.61051863, 0.7977223, -0.113317356, 0.48259285, 1.2178391, -0.25952142, 0.3181782, 0.5235911, -0.2430428, 0.45603108, 0.1775549, -0.18634427, 0.61051863, 0.7977223, -0.14051463, 0.59297174, 0.91281384)
+
+[node name="SM_Prop_Gargoyle_WaterSpout_01" type="MeshInstance3D" unique_id=1089597447]
+gi_mode = 2
+mesh = ExtResource("1_wjg06")
+surface_material_override/0 = ExtResource("2_q4p2q")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1353607865]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1056955897]
+shape = SubResource("ConvexPolygonShape3D_ko713")

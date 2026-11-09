@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://d2vf0x1o33cvt"]
+
+[resource]
+resource_name = "Sky_01_mat"
+depth_draw_mode = 1
+shading_mode = 0
+albedo_color = Color(0.52568203, 0.21418235, 0.16058186, 1)
+uv1_scale = Vector3(1, 1, 0)

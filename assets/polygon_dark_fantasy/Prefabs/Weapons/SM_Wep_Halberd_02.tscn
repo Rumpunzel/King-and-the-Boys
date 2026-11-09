@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cjspxginboi6d"]
+
+[ext_resource type="ArrayMesh" uid="uid://dflvpfjfam7k4" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Wep_Halberd_02.res" id="1_bwck7"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_gwud6"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_bwck7"]
+points = PackedVector3Array(-0.18494171, 0.73652214, -0.008807529, -0.18494171, 0.73652214, 0.018512495, -0.0051036566, -0.68924874, -0.008633435, -0.007027358, 0.709332, -0.09094173, 0.020328835, 0.6819544, 0.08694315, -0.007027358, 1.1882529, 0.018512495, -0.007027358, -0.56316483, 0.059570886, -0.007027358, -0.6589865, -0.04986592, 0.2939403, 0.8049662, -0.02249366, 0.32134604, 0.73652214, 0.018512495, 0.04773458, -0.6589865, -0.02249366, -0.04806164, -0.6589865, 0.032198627, -0.020655893, 1.1471865, -0.02249366, 0.04773458, -0.6589865, 0.032198627, 0.2939403, 0.6135104, -0.02249366, -0.034383543, -0.59054244, -0.04986592, 0.03400693, -0.59054244, -0.04986592, -0.007027358, 0.72302085, 0.08694315, 0.2802622, 0.8049662, 0.032198627, 0.32134604, 0.640888, -0.008807529, 0.2802622, 0.6135104, 0.032198627, -0.17121406, 0.75021094, -0.02249366, -0.04806164, -0.6589865, -0.02249366, 0.020328835, 1.1471865, -0.02249366, 0.020328835, -0.24832219, -0.06355205, 0.020328835, 1.1745641, 0.018512495, -0.18494171, 0.76389974, 0.018512495, 0.30756885, 0.8049662, 0.018512495, -0.007027358, 0.6682656, -0.09094173, 0.03400693, -0.6179201, 0.045884755, 0.30756885, 0.6135104, 0.018512495, 0.020328835, 0.709332, 0.08694315)
+
+[node name="SM_Wep_Halberd_02" type="MeshInstance3D" unique_id=169872687]
+gi_mode = 2
+mesh = ExtResource("1_bwck7")
+surface_material_override/0 = ExtResource("2_gwud6")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=955498478]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=74377721]
+shape = SubResource("ConvexPolygonShape3D_bwck7")

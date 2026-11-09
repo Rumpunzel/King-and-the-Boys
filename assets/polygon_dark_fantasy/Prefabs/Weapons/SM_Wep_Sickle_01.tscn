@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://y6ob6bmitls"]
+
+[ext_resource type="ArrayMesh" uid="uid://cyi80fg3cn1yc" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Wep_Sickle_01.res" id="1_mx1in"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_58452"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_syw8y"]
+points = PackedVector3Array(-0.1830813, 0.3815814, -0.0016948879, -0.1830813, 0.3815814, 0.009412192, -0.094137646, 0.49268678, -0.012801964, 0.005806461, 0.11492854, -0.057262905, -0.02743861, -0.11842608, -0.04615583, -0.038543522, -0.10728218, 0.04275518, 0.016876563, 0.49268678, 0.020530142, -0.0052636266, 0.11492854, 0.05387313, 0.072470695, 0.45932183, -0.023919918, -0.026289836, 0.49662384, -0.0016948879, 0.028051078, -0.11842608, -0.04615583, 0.17255405, 0.34821644, -0.012801964, 0.016946182, -0.18502256, -0.012801964, 0.03915599, -0.10728218, 0.04275518, 0.1279952, 0.42602357, 0.020530142, 0.17255405, 0.28161997, 0.009412192)
+
+[node name="SM_Wep_Sickle_01" type="MeshInstance3D" unique_id=430280585]
+gi_mode = 2
+mesh = ExtResource("1_mx1in")
+surface_material_override/0 = ExtResource("2_58452")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1609616220]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=151411955]
+shape = SubResource("ConvexPolygonShape3D_syw8y")

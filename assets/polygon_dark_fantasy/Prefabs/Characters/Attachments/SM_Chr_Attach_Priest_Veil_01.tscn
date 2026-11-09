@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cm8nueuxym50e"]
+
+[ext_resource type="ArrayMesh" uid="uid://dmyssmj8uv8p1" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Priest_Veil_01.res" id="1_jp0vy"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_x6mpj"]
+
+[node name="SM_Chr_Attach_Priest_Veil_01" type="MeshInstance3D" unique_id=883524104]
+gi_mode = 2
+mesh = ExtResource("1_jp0vy")
+surface_material_override/0 = ExtResource("2_x6mpj")

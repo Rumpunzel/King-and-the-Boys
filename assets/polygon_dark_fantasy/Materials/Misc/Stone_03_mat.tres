@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cjx1tfk4gq52a"]
+
+[ext_resource type="Texture2D" uid="uid://bpjp6tv8wl2md" path="res://assets/polygon_dark_fantasy/Textures/Misc/PolygonDarkFantasy_Stone_03.png" id="1_vrn0c"]
+
+[resource]
+resource_name = "Stone_03_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_vrn0c")
+roughness = 0.8
+uv1_scale = Vector3(1, 1, 0)

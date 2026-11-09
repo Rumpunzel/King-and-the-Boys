@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://dkqodljj61m26"]
+
+[ext_resource type="ArrayMesh" uid="uid://cdugldq8y02sx" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Pyre_Stake_01_Burnt_01.res" id="1_fcpxo"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_qkmkd"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fcpxo"]
+size = Vector3(0.85443115, 5.1398926, 0.6672363)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qkmkd"]
+size = Vector3(3.4771118, 0.3982544, 0.25280762)
+
+[node name="SM_Prop_Pyre_Stake_01_Burnt_01" type="MeshInstance3D" unique_id=1213338511]
+gi_mode = 2
+mesh = ExtResource("1_fcpxo")
+surface_material_override/0 = ExtResource("2_qkmkd")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=2045687132]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=374542668]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.023345947, 2.329956, -0.04675293)
+shape = SubResource("BoxShape3D_fcpxo")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="MeshCollider" unique_id=51799019]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07015991, 4.478485, 0.18548584)
+shape = SubResource("BoxShape3D_qkmkd")

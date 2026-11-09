@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cio77kaef5xl7"]
+
+[ext_resource type="ArrayMesh" uid="uid://bhq8vm3jpiulw" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Hunter_Hat_Male_01.res" id="1_lubh1"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_amstw"]
+
+[node name="SM_Chr_Attach_Hunter_Hat_Male_01" type="MeshInstance3D" unique_id=100225456]
+gi_mode = 2
+mesh = ExtResource("1_lubh1")
+surface_material_override/0 = ExtResource("2_amstw")

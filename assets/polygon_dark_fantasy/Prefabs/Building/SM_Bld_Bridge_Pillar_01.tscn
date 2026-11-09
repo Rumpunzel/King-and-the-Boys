@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://c63qx58ja5qra"]
+
+[ext_resource type="ArrayMesh" uid="uid://gcuh4cgl23f2" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Bridge_Pillar_01.res" id="1_lowc7"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_4ollh"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_prlgn"]
+points = PackedVector3Array(-0.70128393, 0.6303097, -0.5672492, 0.49685633, -1.0290072, -0.4173745, -0.5098199, -1.021808, -0.4141763, -0.57054496, -0.9910655, -0.35330006, -0.70128393, 0.6303097, 0.55940247, -0.6785467, 0.88675666, 0.22965616, -0.642084, 0.816905, -0.48288265, 0.5647907, 0.85095525, -0.48442662, 0.61844504, 0.7268177, -0.5350465, 0.5629884, -1.0369847, 0.35118806, -0.4886078, -1.1009991, 0.35207033, 0.71507823, 0.6303097, -0.051896513, 0.46372104, -1.0237538, 0.43764997, 0.5940441, 0.8170996, 0.5369047, -0.680765, 0.8274119, 0.5429703, 0.71507823, 0.6303097, 0.14087826)
+
+[node name="SM_Bld_Bridge_Pillar_01" type="MeshInstance3D" unique_id=629857566]
+gi_mode = 2
+mesh = ExtResource("1_lowc7")
+surface_material_override/0 = ExtResource("2_4ollh")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1771748130]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1300620166]
+shape = SubResource("ConvexPolygonShape3D_prlgn")

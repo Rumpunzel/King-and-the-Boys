@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://6ec4tswdh33t"]
+
+[ext_resource type="ArrayMesh" uid="uid://bteb5dknrkxay" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Witch_Crown_01.res" id="1_6mueh"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_oed5v"]
+
+[node name="SM_Chr_Attach_Witch_Crown_01" type="MeshInstance3D" unique_id=838970535]
+gi_mode = 2
+mesh = ExtResource("1_6mueh")
+surface_material_override/0 = ExtResource("2_oed5v")

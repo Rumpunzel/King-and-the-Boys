@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://juhv7uw34uck"]
+
+[ext_resource type="ArrayMesh" uid="uid://7rjgbbiwlymg" path="res://assets/polygon_dark_fantasy/Models/extracted/Demon_Tail_Mesh.mesh" id="1_iq17m"]
+[ext_resource type="ArrayMesh" uid="uid://ggm387de4ehd" path="res://assets/polygon_dark_fantasy/Models/extracted/Gargoyle_Tail_Mesh.mesh" id="2_2tf2c"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_yeomk"]
+
+[sub_resource type="Skin" id="Skin_caf7r"]
+resource_name = "Skin"
+bind_count = 5
+bind/0/name = &"Tail_01"
+bind/0/bone = 0
+bind/0/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/1/name = &"Tail_02"
+bind/1/bone = 1
+bind/1/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01126059, 0.29413185)
+bind/2/name = &"Tail_03"
+bind/2/bone = 2
+bind/2/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0984268, 0.5228792)
+bind/3/name = &"Tail_04"
+bind/3/bone = 3
+bind/3/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21258387, 0.65522707)
+bind/4/name = &"Tail_05"
+bind/4/bone = 4
+bind/4/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38669, 0.6894396)
+
+[sub_resource type="Skin" id="Skin_4rurq"]
+resource_name = "Skin"
+bind_count = 5
+bind/0/name = &"Tail_01"
+bind/0/bone = 0
+bind/0/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bind/1/name = &"Tail_02"
+bind/1/bone = 1
+bind/1/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01126059, 0.29413185)
+bind/2/name = &"Tail_03"
+bind/2/bone = 2
+bind/2/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0984268, 0.5228792)
+bind/3/name = &"Tail_04"
+bind/3/bone = 3
+bind/3/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21258387, 0.65522707)
+bind/4/name = &"Tail_05"
+bind/4/bone = 4
+bind/4/pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38669, 0.6894396)
+
+[node name="SM_Chr_Demon_Tail_01" type="Node3D" unique_id=1825190561]
+transform = Transform3D(1.8098301, 0, 0, 0, 1.8098301, 0, 0, 0, 1.8098301, 0, 0, 0)
+
+[node name="Skeleton3D" type="Skeleton3D" parent="." unique_id=1914967848]
+bones/0/name = "Tail_01"
+bones/0/parent = -1
+bones/0/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bones/0/enabled = true
+bones/0/position = Vector3(0, 0, 0)
+bones/0/rotation = Quaternion(0, 0, 0, 1)
+bones/0/scale = Vector3(1, 1, 1)
+bones/1/name = "Tail_02"
+bones/1/parent = 0
+bones/1/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.011260586, -0.29413185)
+bones/1/enabled = true
+bones/1/position = Vector3(0, -0.011260586, -0.29413185)
+bones/1/rotation = Quaternion(0, 0, 0, 1)
+bones/1/scale = Vector3(1, 1, 1)
+bones/2/name = "Tail_03"
+bones/2/parent = 1
+bones/2/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08716621, -0.22874731)
+bones/2/enabled = true
+bones/2/position = Vector3(0, -0.08716621, -0.22874731)
+bones/2/rotation = Quaternion(0, 0, 0, 1)
+bones/2/scale = Vector3(1, 1, 1)
+bones/3/name = "Tail_04"
+bones/3/parent = 2
+bones/3/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.114157066, -0.13234793)
+bones/3/enabled = true
+bones/3/position = Vector3(0, -0.114157066, -0.13234793)
+bones/3/rotation = Quaternion(0, 0, 0, 1)
+bones/3/scale = Vector3(1, 1, 1)
+bones/4/name = "Tail_05"
+bones/4/parent = 3
+bones/4/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.17410612, -0.03421251)
+bones/4/enabled = true
+bones/4/position = Vector3(0, -0.17410612, -0.03421251)
+bones/4/rotation = Quaternion(0, 0, 0, 1)
+bones/4/scale = Vector3(1, 1, 1)
+
+[node name="SM_Chr_Demon_Tail_01" type="MeshInstance3D" parent="Skeleton3D" unique_id=1759840129]
+lod_bias = 128.0
+mesh = ExtResource("1_iq17m")
+skin = SubResource("Skin_caf7r")
+skeleton = NodePath("..")
+surface_material_override/0 = ExtResource("2_yeomk")
+
+[node name="SM_Chr_Gargoyle_Tail_01" type="MeshInstance3D" parent="Skeleton3D" unique_id=1552423909]
+visible = false
+lod_bias = 128.0
+mesh = ExtResource("2_2tf2c")
+skin = SubResource("Skin_4rurq")
+skeleton = NodePath("..")
+surface_material_override/0 = ExtResource("2_yeomk")

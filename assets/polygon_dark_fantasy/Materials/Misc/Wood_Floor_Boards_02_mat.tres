@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bqdatr25h660d"]
+
+[ext_resource type="Texture2D" uid="uid://bpvo7jtydjffl" path="res://assets/polygon_dark_fantasy/Textures/Misc/Wood_FloorBoards_02.png" id="1_no7be"]
+[ext_resource type="Texture2D" uid="uid://ddamgt5ejdbkn" path="res://assets/polygon_dark_fantasy/Textures/Misc/Wood_FloorBoards_02_Normals.png" id="2_b5v7n"]
+
+[resource]
+resource_name = "Wood_Floor_Boards_02_mat"
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_no7be")
+roughness = 0.8
+normal_enabled = true
+normal_texture = ExtResource("2_b5v7n")
+uv1_scale = Vector3(1, 1, 0)

@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c0f16athv2j3h"]
+
+[ext_resource type="ArrayMesh" uid="uid://bnhpb42u6hx58" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Witch_Hair_01.res" id="1_7cimp"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_bvjob"]
+
+[node name="SM_Chr_Attach_Witch_Hair_01" type="MeshInstance3D" unique_id=2063910509]
+gi_mode = 2
+mesh = ExtResource("1_7cimp")
+surface_material_override/0 = ExtResource("2_bvjob")

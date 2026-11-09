@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dmxj8eeukxae1"]
+
+[ext_resource type="ArrayMesh" uid="uid://clvg20h354b01" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Gallows_01.res" id="1_kia8b"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_c7rid"]
+[ext_resource type="Shape3D" uid="uid://lj1opkc2setj" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Prop_Gallows_01_Collision.res" id="3_c7rid"]
+
+[node name="SM_Prop_Gallows_01" type="MeshInstance3D" unique_id=1968618001]
+gi_mode = 2
+mesh = ExtResource("1_kia8b")
+surface_material_override/0 = ExtResource("2_c7rid")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=556514970]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=457916186]
+shape = ExtResource("3_c7rid")

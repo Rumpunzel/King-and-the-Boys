@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://ces3ndunxgfn0"]
+
+[ext_resource type="ArrayMesh" uid="uid://dmyahy62uglmt" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Wep_Pitchfork_01.res" id="1_aptb0"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_gkd7t"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_0n83n"]
+points = PackedVector3Array(-0.17747813, 1.0523949, 0.05238734, -0.16478442, 0.9891771, -0.023414988, -0.051060513, -0.4260353, 0.014462054, -0.1395083, 1.1156126, 0.07767087, -0.1015756, 1.3307264, 0.03972949, -0.1395083, 1.1408998, -0.023414988, -0.1645246, 1.0691953, 0.014027789, 0.012111187, 0.79987013, -0.07399812, -0.0005083084, -0.4260353, -0.048714597, 0.012111187, -0.43867886, 0.039745577, 0.18900678, 1.0652117, 0.06501302, 0.12583509, 1.3179096, 0.05238734, 0.024730682, 0.73647916, 0.09031263, 0.18900678, 1.1156126, -0.023414988, 0.050006777, -0.41339174, -0.010789305, 0.20170051, 1.0778552, 0.0018524528)
+
+[node name="SM_Wep_Pitchfork_01" type="MeshInstance3D" unique_id=2077613114]
+gi_mode = 2
+mesh = ExtResource("1_aptb0")
+surface_material_override/0 = ExtResource("2_gkd7t")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=820593989]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=58763010]
+shape = SubResource("ConvexPolygonShape3D_0n83n")

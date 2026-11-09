@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://j0unojl6103e"]
+
+[ext_resource type="ArrayMesh" uid="uid://b8no2fhisfmrm" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Wep_Crossbow_01_Arrow_01.res" id="1_x0o74"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_chlgf"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_p5goj"]
+points = PackedVector3Array(0.0471006, 0.005895961, 0.16701809, 0.0471006, -0.00106184, 0.16701809, 0.008811057, 0.0024185944, -0.2889043, 0.00533437, 0.0093763955, -0.25408882, 0.040138032, 0.0093763955, 0.18788522, -0.0016190037, -0.011503141, -0.25060174, -0.001536224, -0.0009851782, 0.2765568, 0.015773628, -0.014983576, 0.20875236, -0.008572377, 0.0024185944, -0.2889043, -0.0050956905, 0.0093763955, -0.25408882, -0.001609806, 0.016343396, 0.20875236, -0.015525751, -0.014983576, 0.21229482, -0.04686192, -0.00106184, 0.18788522, 0.0018484853, -0.014983576, 0.2192136, -0.03989015, 0.0093763955, 0.18788522, -0.04686192, 0.005895961, 0.18788522)
+
+[node name="SM_Wep_Crossbow_01_Arrow_01" type="MeshInstance3D" unique_id=47566360]
+gi_mode = 2
+mesh = ExtResource("1_x0o74")
+surface_material_override/0 = ExtResource("2_chlgf")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1535423864]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=112104686]
+shape = SubResource("ConvexPolygonShape3D_p5goj")

@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://cjsmprnkwvvmu"]
+
+[ext_resource type="ArrayMesh" uid="uid://b557d0qa8chpe" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_DarkLord_Cape_01.res" id="1_efyds"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_2n4qt"]
+[ext_resource type="ArrayMesh" uid="uid://dvnrj30iejvvf" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_PlagueDoctor_Cape_01.res" id="3_8qyu1"]
+[ext_resource type="ArrayMesh" uid="uid://cw7l0x3dvn5yo" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Skeleton_Ranger_Cape_01.res" id="4_bgatn"]
+[ext_resource type="ArrayMesh" uid="uid://chu134w8v4pja" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Hunter_Cape_01.res" id="5_ac6ub"]
+
+[node name="SM_Chr_Attach_PlagueDoctor_Cape_01" type="Node3D" unique_id=1734936558]
+
+[node name="Skeleton3D" type="Skeleton3D" parent="." unique_id=837054100]
+bones/0/name = "Cape_Rig"
+bones/0/parent = -1
+bones/0/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+bones/0/enabled = true
+bones/0/position = Vector3(0, 0, 0)
+bones/0/rotation = Quaternion(0, 0, 0, 1)
+bones/0/scale = Vector3(1, 1, 1)
+bones/1/name = "Cape_01"
+bones/1/parent = 0
+bones/1/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.027641196, -0.13511305)
+bones/1/enabled = true
+bones/1/position = Vector3(0, 0.027641196, -0.13511305)
+bones/1/rotation = Quaternion(0, 0, 0, 1)
+bones/1/scale = Vector3(1, 1, 1)
+bones/2/name = "Cape_02"
+bones/2/parent = 1
+bones/2/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2066487, -0.04158907)
+bones/2/enabled = true
+bones/2/position = Vector3(0, -0.162, -0.042)
+bones/2/rotation = Quaternion(0, 0, 0, 1)
+bones/2/scale = Vector3(1, 1, 1)
+bones/3/name = "Cape_03"
+bones/3/parent = 2
+bones/3/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3312027e-32, -0.26785937, -0.009900341)
+bones/3/enabled = true
+bones/3/position = Vector3(-1.3312027e-32, -0.26785937, -0.009900341)
+bones/3/rotation = Quaternion(0, 0, 0, 1)
+bones/3/scale = Vector3(1, 1, 1)
+bones/4/name = "Cape_04"
+bones/4/parent = 3
+bones/4/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.953076e-19, -0.28743306, -0.011811485)
+bones/4/enabled = true
+bones/4/position = Vector3(-3.953076e-19, -0.28743306, -0.011811485)
+bones/4/rotation = Quaternion(0, 0, 0, 1)
+bones/4/scale = Vector3(1, 1, 1)
+bones/5/name = "Cape_05"
+bones/5/parent = 4
+bones/5/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6742393e-19, -0.23777786, -0.009892406)
+bones/5/enabled = true
+bones/5/position = Vector3(-3.6742393e-19, -0.23777786, -0.009892406)
+bones/5/rotation = Quaternion(0, 0, 0, 1)
+bones/5/scale = Vector3(1, 1, 1)
+bones/6/name = "Cape_06"
+bones/6/parent = 5
+bones/6/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4314632e-18, -0.14856666, -0.009791927)
+bones/6/enabled = true
+bones/6/position = Vector3(-1.4314632e-18, -0.14856666, -0.009791927)
+bones/6/rotation = Quaternion(0, 0, 0, 1)
+bones/6/scale = Vector3(1, 1, 1)
+
+[node name="SM_Chr_Attach_DarkLord_Cape_01" type="MeshInstance3D" parent="Skeleton3D" unique_id=1488438425]
+visible = false
+lod_bias = 128.0
+mesh = ExtResource("1_efyds")
+skeleton = NodePath("..")
+surface_material_override/0 = ExtResource("2_2n4qt")
+
+[node name="SM_Chr_Attach_PlagueDoctor_Cape_01" type="MeshInstance3D" parent="Skeleton3D" unique_id=1605725060]
+lod_bias = 128.0
+mesh = ExtResource("3_8qyu1")
+skeleton = NodePath("..")
+surface_material_override/0 = ExtResource("2_2n4qt")
+
+[node name="SM_Chr_Attach_Skeleton_Ranger_Cape_01" type="MeshInstance3D" parent="Skeleton3D" unique_id=573534266]
+visible = false
+lod_bias = 128.0
+mesh = ExtResource("4_bgatn")
+skeleton = NodePath("..")
+surface_material_override/0 = ExtResource("2_2n4qt")
+
+[node name="SM_Chr_Attach_Hunter_Cape_01" type="MeshInstance3D" parent="Skeleton3D" unique_id=916447314]
+visible = false
+lod_bias = 128.0
+mesh = ExtResource("5_ac6ub")
+skeleton = NodePath("..")
+surface_material_override/0 = ExtResource("2_2n4qt")

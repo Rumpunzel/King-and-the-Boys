@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://ck600brasevfo"]
+
+[ext_resource type="ArrayMesh" uid="uid://332lk18op6pc" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Env_Moss_04.res" id="1_6db4h"]
+[ext_resource type="Material" uid="uid://bdu23evftogkq" path="res://assets/polygon_dark_fantasy/Materials/Misc/Moss_01_mat.tres" id="2_fgbvj"]
+
+[node name="SM_Env_Moss_04" type="MeshInstance3D" unique_id=573157127]
+gi_mode = 2
+mesh = ExtResource("1_6db4h")
+surface_material_override/0 = ExtResource("2_fgbvj")

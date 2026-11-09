@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cex061oor31cr"]
+
+[ext_resource type="ArrayMesh" uid="uid://box23i0j8a26s" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Skeleton_HeavyArmor_Helmet_01.res" id="1_g7qfs"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_4ywkm"]
+
+[node name="SM_Chr_Attach_Skeleton_HeavyArmor_Helmet_01" type="MeshInstance3D" unique_id=924154225]
+gi_mode = 2
+mesh = ExtResource("1_g7qfs")
+surface_material_override/0 = ExtResource("2_4ywkm")

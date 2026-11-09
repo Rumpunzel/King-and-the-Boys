@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bga41wj8n8pke"]
+
+[ext_resource type="ArrayMesh" uid="uid://oko0s572wi76" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Gravedigger_Hat_01.res" id="1_ixajt"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_by2jj"]
+
+[node name="SM_Chr_Attach_Gravedigger_Hat_01" type="MeshInstance3D" unique_id=1450548348]
+gi_mode = 2
+mesh = ExtResource("1_ixajt")
+surface_material_override/0 = ExtResource("2_by2jj")

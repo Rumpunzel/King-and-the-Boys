@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://dib7ahk0le176"]
+
+[ext_resource type="ArrayMesh" uid="uid://nfub2j3heg26" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Crypt_02.res" id="1_7222c"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_ujfkc"]
+[ext_resource type="Material" uid="uid://bsnb4hmv2eed0" path="res://assets/polygon_dark_fantasy/Materials/Misc/Roof_01_mat.tres" id="3_jhg7o"]
+[ext_resource type="Shape3D" uid="uid://irrbcvmhq8wt" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Prop_Crypt_02_Collision2.res" id="4_jhg7o"]
+[ext_resource type="ArrayMesh" uid="uid://3ot7wt55db2c" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Crypt_02_Glass_01.res" id="4_ujfkc"]
+[ext_resource type="Material" uid="uid://dvhvgxel8aodj" path="res://assets/polygon_dark_fantasy/Materials/Misc/Glass_01_mat.tres" id="5_xd03v"]
+
+[node name="SM_Prop_Crypt_02" type="MeshInstance3D" unique_id=907423905]
+gi_mode = 2
+mesh = ExtResource("1_7222c")
+surface_material_override/0 = ExtResource("2_ujfkc")
+surface_material_override/1 = ExtResource("3_jhg7o")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=475043868]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1294049657]
+shape = ExtResource("4_jhg7o")
+
+[node name="SM_Prop_Crypt_02_Glass_01" type="MeshInstance3D" parent="." unique_id=2016111485]
+gi_mode = 2
+mesh = ExtResource("4_ujfkc")
+surface_material_override/0 = ExtResource("5_xd03v")

@@ -1,0 +1,38 @@
+[gd_resource type="Environment" format=3 uid="uid://cf7gd7dnnpkrq"]
+
+[resource]
+background_mode = 2
+background_energy_multiplier = 0.37
+ambient_light_color = Color(0.24477637, 0.2447764, 0.24477637, 1)
+ambient_light_sky_contribution = 0.61
+ambient_light_energy = 6.62
+ssao_enabled = true
+ssao_radius = 3.85
+ssao_intensity = 1.5
+ssao_power = 1.66435
+ssao_detail = 1.24
+ssao_horizon = 0.08
+ssao_sharpness = 1.0
+glow_enabled = true
+glow_intensity = 2.69
+glow_strength = 0.38
+glow_bloom = 0.21
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.28141606, 0.36078015, 0.4144126, 1)
+fog_light_energy = 1.33
+fog_density = 0.8988
+fog_aerial_perspective = 0.415
+fog_sky_affect = 0.0
+fog_depth_begin = 0.0
+fog_depth_end = 453.6
+volumetric_fog_density = 0.0316
+volumetric_fog_albedo = Color(0.525101, 0.525101, 0.525101, 1)
+volumetric_fog_emission_energy = 0.0
+volumetric_fog_length = 61.27
+volumetric_fog_detail_spread = 1.7411
+volumetric_fog_sky_affect = 0.676
+adjustment_enabled = true
+adjustment_brightness = 1.08
+adjustment_contrast = 1.02
+adjustment_saturation = 1.4

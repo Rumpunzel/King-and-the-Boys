@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bqnf0hpmnsarq"]
+
+[ext_resource type="ArrayMesh" uid="uid://cghwumfet5vgx" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Gates_Cemetary_02.res" id="1_68klx"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_eoul0"]
+[ext_resource type="ArrayMesh" uid="uid://cj4ijbgqeelbu" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Gates_Cemetary_02_Door_01.res" id="3_eoul0"]
+[ext_resource type="ArrayMesh" uid="uid://daoiqgw1imp5s" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Gates_Cemetary_02_Door_02.res" id="4_b0l3k"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_80cbs"]
+points = PackedVector3Array(3.1828518, 0.13628004, 0.45312208, 2.2730699, 0.13628004, 0.45312208, 3.1828518, -0.03419125, 0.45312208, 3.1828518, 0.13628004, -0.45683795, 3.06904, 2.752335, 0.33919895, 2.4293606, 2.6071873, 0.29671156, 2.2730699, 0.13628004, -0.45683795, 2.2730699, -0.03419125, 0.45312208, 3.1828518, -0.03419125, -0.45683795, 3.06904, 2.752335, -0.34300387, 2.8985004, 3.0935864, 0.1685369, 2.5575104, 3.0935864, 0.1685369, 2.4297168, 2.6062608, -0.30016023, 2.5575104, 3.0935864, -0.1724309, 2.2730699, -0.03419125, -0.45683795, 2.7817497, 3.1207633, -0.055657446)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_2ls5q"]
+points = PackedVector3Array(-0.4568103, -0.03419125, -0.45683795, -0.4568103, -0.03419125, 0.45312208, -0.4568103, 0.13629399, -0.45683795, 0.45314974, -0.03419125, -0.45683795, 0.45314974, -0.03419125, 0.45312208, -0.4568103, 0.13629399, 0.45312208, -0.3429762, 2.752254, -0.34300387, 0.45314974, 0.13629399, -0.45683795, 0.45314974, 0.13629399, 0.45312208, -0.3429762, 2.752254, 0.33919895, -0.17231417, 3.0935335, -0.1724309, 0.3392266, 2.752254, -0.34300387, 0.3392266, 2.752254, 0.33919895, 0.16874272, 3.0935335, 0.1685369, -0.05554071, 3.1210213, 0.051763415, 0.16874272, 3.0935335, -0.1724309)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h8q1o"]
+size = Vector3(1.0719681, 3.418098, 0.1690712)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wo3ao"]
+size = Vector3(1.0889928, 3.418106, 0.133461)
+
+[node name="SM_Bld_Gates_Cemetary_02" type="MeshInstance3D" unique_id=42304820]
+gi_mode = 2
+mesh = ExtResource("1_68klx")
+surface_material_override/0 = ExtResource("2_eoul0")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1356160213]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1466600076]
+shape = SubResource("ConvexPolygonShape3D_80cbs")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="MeshCollider" unique_id=1794214515]
+shape = SubResource("ConvexPolygonShape3D_2ls5q")
+
+[node name="SM_Bld_Gates_Cemetary_02_Door_01" type="MeshInstance3D" parent="." unique_id=966137869]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29300016, 1.302, 0)
+gi_mode = 2
+mesh = ExtResource("3_eoul0")
+surface_material_override/0 = ExtResource("2_eoul0")
+
+[node name="BoxCollider" type="StaticBody3D" parent="SM_Bld_Gates_Cemetary_02_Door_01" unique_id=1141334900]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Bld_Gates_Cemetary_02_Door_01/BoxCollider" unique_id=1711366928]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53410673, 0.42781377, 0.07282066)
+shape = SubResource("BoxShape3D_h8q1o")
+
+[node name="SM_Bld_Gates_Cemetary_02_Door_02" type="MeshInstance3D" parent="." unique_id=1764905617]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.42, 1.302, 0)
+gi_mode = 2
+mesh = ExtResource("4_b0l3k")
+surface_material_override/0 = ExtResource("2_eoul0")
+
+[node name="BoxCollider" type="StaticBody3D" parent="SM_Bld_Gates_Cemetary_02_Door_02" unique_id=532997897]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Bld_Gates_Cemetary_02_Door_02/BoxCollider" unique_id=636913036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5271915, 0.4233315, 0.084617615)
+shape = SubResource("BoxShape3D_wo3ao")

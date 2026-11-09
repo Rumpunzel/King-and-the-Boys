@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c1l0gfvhrb1gw"]
+
+[ext_resource type="ArrayMesh" uid="uid://c4k1yre2wl6t1" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Wing_02.res" id="1_ynhso"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_5bth8"]
+
+[node name="SM_Chr_Attach_Wing_02" type="MeshInstance3D" unique_id=1879188329]
+gi_mode = 2
+mesh = ExtResource("1_ynhso")
+surface_material_override/0 = ExtResource("2_5bth8")

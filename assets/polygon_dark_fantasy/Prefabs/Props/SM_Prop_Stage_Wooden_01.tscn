@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cehprsp1rxn3s"]
+
+[ext_resource type="ArrayMesh" uid="uid://b083vovl4ojr3" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Stage_Wooden_01.res" id="1_mgsl7"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_ant6d"]
+[ext_resource type="Shape3D" uid="uid://dqq4nnicr5p3o" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Prop_Stage_Wooden_01_Collision.res" id="3_ant6d"]
+
+[node name="SM_Prop_Stage_Wooden_01" type="MeshInstance3D" unique_id=728968508]
+gi_mode = 2
+mesh = ExtResource("1_mgsl7")
+surface_material_override/0 = ExtResource("2_ant6d")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1327625267]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=527882214]
+shape = ExtResource("3_ant6d")

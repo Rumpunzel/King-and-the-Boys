@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://ethv5iceegjv"]
+
+[ext_resource type="ArrayMesh" uid="uid://cxb7fk28jxnkq" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Env_Plant_Grass_Patch_01.res" id="1_k3usc"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_i82ml"]
+
+[node name="SM_Env_Plant_Grass_Patch_01" type="MeshInstance3D" unique_id=1788959099]
+gi_mode = 2
+mesh = ExtResource("1_k3usc")
+surface_material_override/0 = ExtResource("2_i82ml")

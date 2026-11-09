@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://1543iudt0gjb"]
+
+[ext_resource type="ArrayMesh" uid="uid://cqx3krq1wps6a" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Alcove_01.res" id="1_iuiw8"]
+[ext_resource type="Material" uid="uid://dy24h357ehpml" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_02_mat.tres" id="2_0p7ek"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="3_hulmr"]
+[ext_resource type="Material" uid="uid://bsnb4hmv2eed0" path="res://assets/polygon_dark_fantasy/Materials/Misc/Roof_01_mat.tres" id="4_lapwe"]
+[ext_resource type="Material" uid="uid://bqdatr25h660d" path="res://assets/polygon_dark_fantasy/Materials/Misc/Wood_Floor_Boards_02_mat.tres" id="5_pwckj"]
+[ext_resource type="ArrayMesh" uid="uid://dkfjm0orn4dn2" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Alcove_01_Glass_01.res" id="6_0p7ek"]
+[ext_resource type="Shape3D" uid="uid://sr1ujiaprapl" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Alcove_01_Collision.res" id="6_hulmr"]
+[ext_resource type="Material" uid="uid://cygy0qtqfg334" path="res://assets/polygon_dark_fantasy/Materials/WindowGlass/Window_Glass_01_mat.tres" id="7_tptf5"]
+[ext_resource type="Shape3D" uid="uid://cel3gpmehxtxg" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Alcove_01_Glass_01_Collision.res" id="9_lapwe"]
+
+[node name="SM_Bld_Alcove_01" type="MeshInstance3D" unique_id=45964925]
+gi_mode = 2
+mesh = ExtResource("1_iuiw8")
+surface_material_override/0 = ExtResource("2_0p7ek")
+surface_material_override/1 = ExtResource("3_hulmr")
+surface_material_override/2 = ExtResource("4_lapwe")
+surface_material_override/3 = ExtResource("5_pwckj")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1972708874]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1260771167]
+shape = ExtResource("6_hulmr")
+
+[node name="SM_Bld_Alcove_01_Glass_01" type="MeshInstance3D" parent="." unique_id=563340401]
+gi_mode = 2
+mesh = ExtResource("6_0p7ek")
+surface_material_override/0 = ExtResource("7_tptf5")
+
+[node name="MeshCollider" type="StaticBody3D" parent="SM_Bld_Alcove_01_Glass_01" unique_id=1426059508]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Bld_Alcove_01_Glass_01/MeshCollider" unique_id=732551434]
+shape = ExtResource("9_lapwe")

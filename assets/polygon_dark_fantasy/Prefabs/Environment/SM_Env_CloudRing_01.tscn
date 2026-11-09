@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dbn0n5kpfyj3q"]
+
+[ext_resource type="ArrayMesh" uid="uid://cxf6ynefobisu" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Env_CloudRing_01.res" id="1_oa1uk"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_bir7o"]
+
+[node name="SM_Env_CloudRing_01" type="MeshInstance3D" unique_id=1818998859]
+cast_shadow = 0
+gi_mode = 2
+mesh = ExtResource("1_oa1uk")
+surface_material_override/0 = ExtResource("2_bir7o")

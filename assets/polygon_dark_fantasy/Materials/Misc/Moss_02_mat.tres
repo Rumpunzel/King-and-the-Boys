@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c3s7j8s47prts"]
+
+[ext_resource type="Texture2D" uid="uid://bvbrmyix4qe05" path="res://assets/polygon_dark_fantasy/Textures/Misc/Moss_Uncoloured_01_TGA.tga" id="1_2tnee"]
+[ext_resource type="Texture2D" uid="uid://bxofbmdxplyr1" path="res://assets/polygon_dark_fantasy/Textures/Misc/Moss_02_Normals.roughness.png" id="2_3esmv"]
+
+[resource]
+resource_name = "Moss_02_mat"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+depth_draw_mode = 1
+albedo_texture = ExtResource("1_2tnee")
+metallic_texture = ExtResource("2_3esmv")
+roughness_texture = ExtResource("2_3esmv")
+roughness_texture_channel = 3
+uv1_scale = Vector3(1, 1, 0)

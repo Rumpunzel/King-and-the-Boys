@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://danqm8vfr0dh6"]
+
+[ext_resource type="ArrayMesh" uid="uid://brjiq2qoo3ekd" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Env_Rock_02.res" id="1_rkny6"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_21aak"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_rkny6"]
+points = PackedVector3Array(0.71731716, 0.26138678, 0.47034174, -0.19442245, -0.022218503, -0.696371, -0.19419868, 0.0070544495, -0.6950553, -0.99863774, 0.001988547, 0.3300667, -0.08082786, 1.0283735, -0.24111891, 0.81710064, 0.011931479, -0.49232388, 0.46173862, 0.8319529, 0.61382955, -0.79239815, 0.8878833, 0.12805004, -0.052452113, -0.10878877, 0.61243844, 0.5996005, 0.97117573, -0.32598713, -0.7675573, 0.83292586, -0.3288208, -0.95436424, -0.06333441, -0.30487216, 0.2626628, 0.66108775, -0.67260814, -0.052726828, 0.85565746, 0.6062337, 0.6377135, -0.027746946, 0.61813027, 0.43170086, -0.08013653, -0.66911197, 0.7961308, 0.6304585, 0.09870663, 0.78975177, -0.06156015, 0.30510214, -0.8265955, 0.74779034, 0.35884243, -1.0085748, 0.13160717, -0.28270385, -0.19362676, -0.0753021, 0.63477176, 0.42640746, 0.9962728, 0.09821695, 0.54473895, 0.48913965, -0.6396169, -0.42105216, 0.035569176, -0.6380392, -0.25137132, -0.107966974, -0.38391438, 0.29250878, 1.0064889, -0.38733503, 0.8303642, 0.43254238, -0.2702965, 0.3738412, -0.10749093, -0.12782198, 0.34857312, 0.6324972, 0.64439267, -0.7344673, 0.8872044, 0.26994044, -0.99440587, 0.2611003, 0.27127698, -0.9864975, -0.04856993, 0.26868233)
+
+[node name="SM_Env_Rock_02" type="MeshInstance3D" unique_id=286884346]
+gi_mode = 2
+mesh = ExtResource("1_rkny6")
+surface_material_override/0 = ExtResource("2_21aak")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=713160883]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=216990140]
+shape = SubResource("ConvexPolygonShape3D_rkny6")

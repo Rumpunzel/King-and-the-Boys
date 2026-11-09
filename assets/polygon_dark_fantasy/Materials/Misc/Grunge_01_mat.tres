@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cd6sltcs0ufl4"]
+
+[ext_resource type="Texture2D" uid="uid://qvwrpvxf36wv" path="res://assets/polygon_dark_fantasy/Textures/Misc/Grunge_01.png" id="1_d1ghv"]
+[ext_resource type="Texture2D" uid="uid://bun58trlxjtc2" path="res://assets/polygon_dark_fantasy/Textures/Misc/Grunge_01_Normal.png" id="2_5fygd"]
+
+[resource]
+resource_name = "Grunge_01_mat"
+transparency = 1
+depth_draw_mode = 1
+albedo_color = Color(0.066037714, 0.066037714, 0.066037714, 0.70980394)
+albedo_texture = ExtResource("1_d1ghv")
+metallic = 0.256
+roughness = 0.911
+normal_enabled = true
+normal_texture = ExtResource("2_5fygd")
+uv1_scale = Vector3(1, 1, 0)

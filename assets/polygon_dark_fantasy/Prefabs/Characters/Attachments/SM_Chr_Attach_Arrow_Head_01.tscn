@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bisi1u3xurlei"]
+
+[ext_resource type="ArrayMesh" uid="uid://h7415vjxk1s" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Arrow_Head_01.res" id="1_7roww"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_7ftj4"]
+
+[node name="SM_Chr_Attach_Arrow_Head_01" type="MeshInstance3D" unique_id=72428483]
+gi_mode = 2
+mesh = ExtResource("1_7roww")
+surface_material_override/0 = ExtResource("2_7ftj4")

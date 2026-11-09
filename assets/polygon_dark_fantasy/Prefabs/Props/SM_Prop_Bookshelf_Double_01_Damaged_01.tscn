@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b8f2v6yam02b"]
+
+[ext_resource type="ArrayMesh" uid="uid://be7feh186t36w" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Bookshelf_Double_01_Damaged_01.res" id="1_rus7w"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_6ld5u"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_f26pe"]
+points = PackedVector3Array(-0.22101784, 2.0901353, 0.666082, -0.12898561, 2.136403, 0.7582267, 0.008927777, 2.8714826, 0.16093041, 0.008927777, 2.8714826, 0.06893869, -0.03695339, 0.20657954, -0.022976577, -0.17486678, 1.6764649, 0.7582267, 2.4897494, 2.871209, 0.5743197, 1.1575763, 2.9180238, 0.4364468, 2.5361705, 0.20657954, 0.66631144, 2.4897494, 2.871209, 0.48232794, 2.4897494, 2.5500734, 0.069091626, 2.5361705, 0.20657954, -0.022976577, 0.07990864, 0.12116247, 0.015257724, 0.08287743, 0.12444774, 0.63633573, 2.3977172, 0.12444774, 0.63633573, 2.400956, 0.12116247, 0.015257724)
+
+[node name="SM_Prop_Bookshelf_Double_01_Damaged_01" type="MeshInstance3D" unique_id=518484036]
+gi_mode = 2
+mesh = ExtResource("1_rus7w")
+surface_material_override/0 = ExtResource("2_6ld5u")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1163532175]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=713331975]
+shape = SubResource("ConvexPolygonShape3D_f26pe")

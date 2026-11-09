@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://d0m2yh4g5prdg"]
+
+[ext_resource type="ArrayMesh" uid="uid://ddkqm8cw7pn08" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Buttress_01.res" id="1_hx8tn"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_ey42m"]
+[ext_resource type="Material" uid="uid://bsnb4hmv2eed0" path="res://assets/polygon_dark_fantasy/Materials/Misc/Roof_01_mat.tres" id="3_iteny"]
+[ext_resource type="Shape3D" uid="uid://c6clwnjfembml" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Buttress_01_Collision.res" id="4_ey42m"]
+
+[node name="SM_Bld_Buttress_01" type="MeshInstance3D" unique_id=409436476]
+gi_mode = 2
+mesh = ExtResource("1_hx8tn")
+surface_material_override/0 = ExtResource("2_ey42m")
+surface_material_override/1 = ExtResource("3_iteny")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1827931373]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1694275953]
+shape = ExtResource("4_ey42m")

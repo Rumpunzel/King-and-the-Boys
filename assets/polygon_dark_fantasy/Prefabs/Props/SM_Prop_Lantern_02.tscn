@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://6hstdp0ejclb"]
+
+[ext_resource type="ArrayMesh" uid="uid://c3yb75dnum6s3" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Lantern_02.res" id="1_d7pcc"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_qj8ri"]
+[ext_resource type="ArrayMesh" uid="uid://dyfyg764vrspj" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Lantern_02_Glow_01.res" id="3_qj8ri"]
+[ext_resource type="ArrayMesh" uid="uid://cb5ddh7o0ugee" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Lantern_02_Handle_01.res" id="4_ortx5"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_twwad"]
+points = PackedVector3Array(-0.016056985, 0.22044891, 0.1407867, 0.092034206, 0.22873297, 0.1075155, 0.033808723, 0.5281053, 0.016005784, -0.032643393, 0.5281053, -0.025514044, -0.115868285, 0.22044891, 0.07424426, -0.09089549, -0.004158497, 0.09918384, 0.09200758, -0.004158497, 0.09918384, 0.12920052, 0.20143205, 0.014511064, 0.13114405, 0.20049423, -0.015936807, 0.092034206, 0.22044891, -0.10869211, 0.008862555, 0.22873297, -0.14196333, -0.09092212, 0.22873297, -0.10869211, -0.14081445, 0.22044891, -0.008906111, -0.13250794, -0.004158497, -0.008906111, 0.100340724, -0.004158497, -0.08375253, 0.008862555, -0.004158497, -0.13365936)
+
+[node name="SM_Prop_Lantern_02" type="MeshInstance3D" unique_id=1740132838]
+gi_mode = 2
+mesh = ExtResource("1_d7pcc")
+surface_material_override/0 = ExtResource("2_qj8ri")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=160144822]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1213793027]
+shape = SubResource("ConvexPolygonShape3D_twwad")
+
+[node name="SM_Prop_Lantern_02_Glow_01" type="MeshInstance3D" parent="." unique_id=1944995799]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8146972e-08, 4.9016922e-05, -3.8146972e-08)
+gi_mode = 2
+mesh = ExtResource("3_qj8ri")
+surface_material_override/0 = ExtResource("2_qj8ri")
+
+[node name="SM_Prop_Lantern_02_Handle_01" type="MeshInstance3D" parent="." unique_id=1753473319]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8146972e-08, 0.50306046, -0.00032125026)
+gi_mode = 2
+mesh = ExtResource("4_ortx5")
+surface_material_override/0 = ExtResource("2_qj8ri")

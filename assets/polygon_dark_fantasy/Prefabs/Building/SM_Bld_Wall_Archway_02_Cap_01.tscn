@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://yhejt3d56ev8"]
+
+[ext_resource type="ArrayMesh" uid="uid://dvraf62x7033" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Archway_02_Cap_01.res" id="1_axlih"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_uhay0"]
+
+[node name="SM_Bld_Wall_Archway_02_Cap_01" type="MeshInstance3D" unique_id=1748783711]
+gi_mode = 2
+mesh = ExtResource("1_axlih")
+surface_material_override/0 = ExtResource("2_uhay0")

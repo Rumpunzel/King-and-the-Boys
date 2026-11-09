@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://cjfdce684v0ke"]
+
+[ext_resource type="ArrayMesh" uid="uid://bv8kc67wvityu" path="res://assets/polygon_dark_fantasy/Models/Base/extracted/SM_Bld_Base_Wall_Window_Half_01.res" id="1_o5vrq"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="2_6u5gp"]
+[ext_resource type="ArrayMesh" uid="uid://cdtn62npah4bb" path="res://assets/polygon_dark_fantasy/Models/Base/extracted/SM_Bld_Base_Wall_Window_Half_01_Glass.res" id="3_6u5gp"]
+[ext_resource type="Material" uid="uid://cygy0qtqfg334" path="res://assets/polygon_dark_fantasy/Materials/WindowGlass/Window_Glass_01_mat.tres" id="4_rlrcb"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_o5vrq"]
+points = PackedVector3Array(2.4999924, 1.5057446, 0, 2.4999924, 1.4999964, 0.11249149, 2.4999924, 1.4999964, -0.112516515, 0, 1.5057446, 0, 0, 1.4999964, 0.11249149, 2.3984363, 1.4765612, 0.12780395, 2.4999924, 0, 0.11249149, 2.4999924, 0, -0.112516515, 2.3984363, 1.4765612, -0.12780395, 0, 1.4999964, -0.112516515, 0, 0, 0.11249149, 0.101311356, 1.4765612, 0.12780395, 2.3984363, 0.107153125, 0.12780395, 2.3984363, 0.107153125, -0.12780395, 0, 0, -0.112516515, 0.101311356, 1.4765612, -0.12780395, 0.101311356, 0.107153125, 0.12780395, 0.101311356, 0.107153125, -0.12780395)
+
+[node name="SM_Bld_Base_Wall_Window_Half_01" type="MeshInstance3D" unique_id=1441160824]
+gi_mode = 2
+mesh = ExtResource("1_o5vrq")
+surface_material_override/0 = ExtResource("2_6u5gp")
+surface_material_override/1 = ExtResource("2_6u5gp")
+surface_material_override/2 = ExtResource("2_6u5gp")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1525212322]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1181824934]
+shape = SubResource("ConvexPolygonShape3D_o5vrq")
+
+[node name="SM_Bld_Base_Wall_Window_Half_01_Glass" type="MeshInstance3D" parent="." unique_id=1714463366]
+gi_mode = 2
+mesh = ExtResource("3_6u5gp")
+surface_material_override/0 = ExtResource("4_rlrcb")

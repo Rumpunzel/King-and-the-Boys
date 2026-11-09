@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://c2ovbb45im8y6"]
+
+[ext_resource type="ArrayMesh" uid="uid://46w110u2xo6u" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Bridge_Base_01_Damaged_02.res" id="1_78gys"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_aqgn1"]
+[ext_resource type="Material" uid="uid://bu2x5orxdspn8" path="res://assets/polygon_dark_fantasy/Materials/Misc/Stone_02_mat.tres" id="3_altt7"]
+[ext_resource type="Shape3D" uid="uid://db86vobnwxq0x" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Bridge_Base_01_Damaged_02_collision.res" id="4_aqgn1"]
+
+[node name="SM_Bld_Bridge_Base_01_Damaged_02" type="MeshInstance3D" unique_id=783069018]
+gi_mode = 2
+mesh = ExtResource("1_78gys")
+surface_material_override/0 = ExtResource("2_aqgn1")
+surface_material_override/1 = ExtResource("3_altt7")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1826879672]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=513706241]
+shape = ExtResource("4_aqgn1")

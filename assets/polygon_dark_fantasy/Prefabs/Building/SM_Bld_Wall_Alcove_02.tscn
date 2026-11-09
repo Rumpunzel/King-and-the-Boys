@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://crstsyhgcsvy6"]
+
+[ext_resource type="ArrayMesh" uid="uid://qyncu6s6bov5" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Alcove_02.res" id="1_xnxii"]
+[ext_resource type="Material" uid="uid://bf2cciyxaoq86" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_B_mat.tres" id="2_pvffk"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="3_26mqr"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_elyoo"]
+points = PackedVector3Array(1.9628887, 0.67456675, -0.5539035, 2.5235991, 0.6917979, 0.12931722, 2.4607482, 0.6740064, -0.1448563, 2.0828996, -3.9692968e-05, -0.45259458, 1.9495267, -3.9692968e-05, -0.5417317, 0.52473813, -3.9692968e-05, -0.5417317, 0.52325344, 0.66868293, -0.5429612, -0.0042994022, 0.6917979, 0.12931722, 2.5235991, -0.023785055, 0.12931722, 0.7110642, 0.21478929, 0.70213085, 2.3323243, 0.21478929, 0.6543042, -0.0042994022, -0.023785055, 0.12931722, 0.042715155, 0.67841923, -0.14780706, 0.2753135, 0.13710904, 0.65073866, 2.2130556, 0.0012911689, 0.6142232, 1.1054916, 0.0037427545, 0.6983195)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_hdo77"]
+points = PackedVector3Array(0.053679377, 2.9755375, -0.15671036, 0.053679377, 0.7458584, -0.15671036, 0.07055624, 2.959605, 0.11247182, 2.4483187, 2.959605, 0.11247182, 2.4462092, 2.957859, -0.15671036, 1.9549048, 2.8249426, -0.5605652, 0.5344356, 2.8046448, -0.5520819, 2.4483187, 0.76157266, 0.11247182, 0.07055624, 0.76157266, 0.11247182, 0.5344356, 0.7840527, -0.5520819, 1.9549048, 0.76091784, -0.5605652, 0.47231933, 1.7891107, 0.27275753, 1.1879451, 2.9340694, 0.22495735, 2.0465555, 1.7891107, 0.27275753, 2.0721054, 0.7840527, -0.4642306, 0.5372484, 0.78819954, 0.1934712)
+
+[node name="SM_Bld_Wall_Alcove_02" type="MeshInstance3D" unique_id=1260020192]
+gi_mode = 2
+mesh = ExtResource("1_xnxii")
+surface_material_override/0 = ExtResource("2_pvffk")
+surface_material_override/1 = ExtResource("3_26mqr")
+surface_material_override/2 = ExtResource("3_26mqr")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=910039594]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=647323985]
+shape = SubResource("ConvexPolygonShape3D_elyoo")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="MeshCollider" unique_id=799096180]
+shape = SubResource("ConvexPolygonShape3D_hdo77")

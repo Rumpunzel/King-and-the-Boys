@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cs0mjcyjthcew"]
+
+[ext_resource type="ArrayMesh" uid="uid://dekegn35ort0h" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_Arrow_Chest_01.res" id="1_katk8"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_2k4pn"]
+
+[node name="SM_Chr_Attach_Arrow_Chest_01" type="MeshInstance3D" unique_id=1661317962]
+gi_mode = 2
+mesh = ExtResource("1_katk8")
+surface_material_override/0 = ExtResource("2_2k4pn")

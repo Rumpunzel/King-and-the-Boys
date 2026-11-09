@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dy0kwvj2nlgom"]
+
+[ext_resource type="ArrayMesh" uid="uid://iym146kmeso7" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_DarkLord_Mask_01.res" id="1_7i61j"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_mi5qd"]
+
+[node name="SM_Chr_Attach_DarkLord_Mask_01" type="MeshInstance3D" unique_id=1610976398]
+gi_mode = 2
+mesh = ExtResource("1_7i61j")
+surface_material_override/0 = ExtResource("2_mi5qd")

@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://diae4bgfcny2o"]
+
+[ext_resource type="ArrayMesh" uid="uid://ds8gi8821d05x" path="res://assets/polygon_dark_fantasy/Models/Base/extracted/SM_Bld_Base_45_Wall_01.res" id="1_elo0e"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="2_xe50g"]
+[ext_resource type="Shape3D" uid="uid://dut42ipcjf07g" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Base_45_Wall_01_Collision.res" id="3_xe50g"]
+
+[node name="SM_Bld_Base_45_Wall_01" type="MeshInstance3D" unique_id=993041156]
+gi_mode = 2
+mesh = ExtResource("1_elo0e")
+surface_material_override/0 = ExtResource("2_xe50g")
+surface_material_override/1 = ExtResource("2_xe50g")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1691336310]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=523050799]
+shape = ExtResource("3_xe50g")

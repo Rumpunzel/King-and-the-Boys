@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b4a2dchu6a07s"]
+
+[ext_resource type="ArrayMesh" uid="uid://bupk740pje8dr" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Attach_PlagueDoctor_Stilt_01.res" id="1_oh2a5"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_a00b2"]
+
+[node name="SM_Chr_Attach_PlagueDoctor_Stilt_01" type="MeshInstance3D" unique_id=1149619624]
+gi_mode = 2
+mesh = ExtResource("1_oh2a5")
+surface_material_override/0 = ExtResource("2_a00b2")

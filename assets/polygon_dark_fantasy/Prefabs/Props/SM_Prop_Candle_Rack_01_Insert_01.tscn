@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b4b52ls6raa1w"]
+
+[ext_resource type="ArrayMesh" uid="uid://v0hag410h80g" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Candle_Rack_01_Insert_01.res" id="1_agnjx"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_0ctt4"]
+
+[node name="SM_Prop_Candle_Rack_01_Insert_01" type="MeshInstance3D" unique_id=964365118]
+gi_mode = 2
+mesh = ExtResource("1_agnjx")
+surface_material_override/0 = ExtResource("2_0ctt4")

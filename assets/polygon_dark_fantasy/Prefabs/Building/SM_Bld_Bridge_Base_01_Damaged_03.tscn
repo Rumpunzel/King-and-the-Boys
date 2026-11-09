@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dekthwqfn0j2k"]
+
+[ext_resource type="ArrayMesh" uid="uid://demeek1ir8bxb" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Bridge_Base_01_Damaged_03.res" id="1_8t2h4"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_aci8t"]
+[ext_resource type="Material" uid="uid://bu2x5orxdspn8" path="res://assets/polygon_dark_fantasy/Materials/Misc/Stone_02_mat.tres" id="3_ys1s3"]
+[ext_resource type="Material" uid="uid://dy24h357ehpml" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_02_mat.tres" id="4_6ciwh"]
+[ext_resource type="Material" uid="uid://dgce64ph5aoac" path="res://assets/polygon_dark_fantasy/Materials/Misc/Floor_Tiles_01_mat.tres" id="5_jpiy8"]
+[ext_resource type="Shape3D" uid="uid://b5l8lx8g1tstq" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Bridge_Base_01_Damaged_03_Collision.res" id="6_aci8t"]
+
+[node name="SM_Bld_Bridge_Base_01_Damaged_03" type="MeshInstance3D" unique_id=1724527245]
+gi_mode = 2
+mesh = ExtResource("1_8t2h4")
+surface_material_override/0 = ExtResource("2_aci8t")
+surface_material_override/1 = ExtResource("3_ys1s3")
+surface_material_override/2 = ExtResource("4_6ciwh")
+surface_material_override/3 = ExtResource("5_jpiy8")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1453064496]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=472060018]
+shape = ExtResource("6_aci8t")

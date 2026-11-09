@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://doh4iug2il7ic"]
+
+[ext_resource type="ArrayMesh" uid="uid://b2rept45crvm" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_02.res" id="1_fj2pi"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_00u8u"]
+[ext_resource type="Material" uid="uid://ses7qtgtqyxd" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_01_mat.tres" id="3_v1scd"]
+[ext_resource type="ArrayMesh" uid="uid://v84djthj2ikw" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Wall_Door_02_Skull_01.res" id="4_00u8u"]
+[ext_resource type="Shape3D" uid="uid://bx5x3scr48ryq" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Wall_Door_02_Collision.res" id="4_v1scd"]
+[ext_resource type="Shape3D" uid="uid://bv7bfjmd3e2w4" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Bld_Wall_Door_02_Skull_01_Collision.res" id="6_fchq6"]
+
+[node name="SM_Bld_Wall_Door_02" type="MeshInstance3D" unique_id=1854316909]
+gi_mode = 2
+mesh = ExtResource("1_fj2pi")
+surface_material_override/0 = ExtResource("2_00u8u")
+surface_material_override/1 = ExtResource("3_v1scd")
+surface_material_override/2 = ExtResource("3_v1scd")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1995183385]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=2020094753]
+shape = ExtResource("4_v1scd")
+
+[node name="SM_Bld_Wall_Door_02_Skull_01" type="MeshInstance3D" parent="." unique_id=399853445]
+gi_mode = 2
+mesh = ExtResource("4_00u8u")
+surface_material_override/0 = ExtResource("2_00u8u")
+
+[node name="MeshCollider" type="StaticBody3D" parent="SM_Bld_Wall_Door_02_Skull_01" unique_id=40562787]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SM_Bld_Wall_Door_02_Skull_01/MeshCollider" unique_id=896976121]
+shape = ExtResource("6_fchq6")

@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bpin0fkt50xjp"]
+
+[ext_resource type="ArrayMesh" uid="uid://1hd6muhscdbv" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Bld_Bridge_Ramp_01.res" id="1_2vp5j"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_yfv13"]
+[ext_resource type="Material" uid="uid://bu2x5orxdspn8" path="res://assets/polygon_dark_fantasy/Materials/Misc/Stone_02_mat.tres" id="3_i4moa"]
+[ext_resource type="Material" uid="uid://dgce64ph5aoac" path="res://assets/polygon_dark_fantasy/Materials/Misc/Floor_Tiles_01_mat.tres" id="4_hb4bn"]
+[ext_resource type="Material" uid="uid://dy24h357ehpml" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_02_mat.tres" id="5_1wgdm"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_6ma1g"]
+points = PackedVector3Array(-0.12936279, -4.760213, -5.465948, -0.06484468, -15.5, -5.29599, -0.12936279, -4.760213, 0.46534872, -0.12936279, -4.6902266, -5.535476, -0.06484468, -15.5, 0.29539108, 6.294656, -15.5, -5.29599, -0.12936279, -4.6902266, 0.53547144, -0.12936279, -4.4787474, -5.535476, 6.455455, -4.6902266, -5.535476, 6.294656, -15.5, 0.29539108, 9.99998, -0.3206749, -5.3381824, 10.010898, -1.3415556, -5.1165237, 9.989061, -1.5865059, -4.912693, 9.994024, -1.5788984, -0.08196354, 6.5993795, -4.6902266, 0.53547144, -0.12936279, -4.4787474, 0.53547144, 6.455455, -4.4802694, -5.535476, -0.12936279, -4.408762, -5.4653535, -0.00032657385, -1.9440422, -5.3381824, 5.01819, 0.006433487, -5.3381824, 9.99998, 0.006433487, -5.3381824, 10.005935, -1.3369913, 0.11949015, 9.99998, -0.29937458, 0.33758307, 9.99998, 0.04294777, -5.2627115, 9.99998, 0.04294777, 0.26211262, 6.5993795, -4.4802694, 0.53547144, -0.12936279, -4.408762, 0.46475458, 9.99998, 0.006433487, 0.33758307, 4.9993305, 0.006433487, 0.33758307, -0.00032657385, -1.9440422, 0.33758307, -0.00032657385, -1.9075279, -5.2627115, 5.01819, 0.04294777, -5.2627115, 4.9993305, 0.04294777, 0.26211262, -0.00032657385, -1.9075279, 0.26211262)
+
+[node name="SM_Bld_Bridge_Ramp_01" type="MeshInstance3D" unique_id=398713334]
+gi_mode = 2
+mesh = ExtResource("1_2vp5j")
+surface_material_override/0 = ExtResource("2_yfv13")
+surface_material_override/1 = ExtResource("3_i4moa")
+surface_material_override/2 = ExtResource("4_hb4bn")
+surface_material_override/3 = ExtResource("5_1wgdm")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1574769418]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1238607409]
+shape = SubResource("ConvexPolygonShape3D_6ma1g")

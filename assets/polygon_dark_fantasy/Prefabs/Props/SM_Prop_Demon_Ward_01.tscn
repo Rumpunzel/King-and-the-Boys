@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bc23axu0vc0sy"]
+
+[ext_resource type="ArrayMesh" uid="uid://drp6lxifwgipv" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Demon_Ward_01.res" id="1_e4og8"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_20a5m"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ji04p"]
+points = PackedVector3Array(-0.7107167, 2.7243805, 0.2282671, -0.7107167, 2.7243805, 0.2788955, -0.35609505, -0.060016632, 0.025902271, 0.09933734, 2.4712534, -0.2780167, 0.45381033, 0.44687176, 0.32952386, 0.15004006, -0.060016632, -0.2780167, -0.50790584, 0.800869, 0.38015226, 0.8082833, 2.9270725, 0.17763872, 0.048783302, 2.0157518, 0.48148334, -0.4573518, 0.44687176, -0.07535449, -0.5586086, 3.1805167, 0.2788955, -0.20413557, 2.4205012, -0.22723964, 0.15004006, -0.060016632, 0.2788955, 0.7068779, 2.6231933, 0.38015226, -0.66001403, 2.775133, 0.38015226, 0.45381033, 0.44687176, 0.025902271, -0.052324772, -0.060016632, -0.2780167, -0.5586086, 3.1805167, 0.17763872, -0.50790584, 0.44687176, 0.32952386, -0.7107167, 3.028577, 0.17763872, 0.7068779, 3.028577, 0.17763872, 0.8082833, 2.6231933, 0.32952386, 0.30185086, -0.060016632, 0.07653065, 0.7068779, 3.028577, 0.2788955, -0.50790584, 0.44687176, 0.025902271, -0.15358153, 1.9646823, 0.48148334, -0.20413557, -0.060016632, -0.22723964, 0.8082833, 2.6231933, 0.17763872, -0.10287881, 2.3700662, -0.2780167, -0.15358153, -0.060016632, 0.2282671, 0.45381033, 1.1551833, 0.38015226, -0.4573518, 1.2062528, -0.07535449)
+
+[node name="SM_Prop_Demon_Ward_01" type="MeshInstance3D" unique_id=1197884358]
+gi_mode = 2
+mesh = ExtResource("1_e4og8")
+surface_material_override/0 = ExtResource("2_20a5m")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1284975956]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=2022640066]
+shape = SubResource("ConvexPolygonShape3D_ji04p")

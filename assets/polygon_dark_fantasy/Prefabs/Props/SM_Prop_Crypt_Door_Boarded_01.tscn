@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://h1i5t856t4ee"]
+
+[ext_resource type="ArrayMesh" uid="uid://dis2d1t8si767" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Crypt_Door_Boarded_01.res" id="1_m2idd"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_7kwu0"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_gsa3s"]
+points = PackedVector3Array(-0.23237586, 0.734287, -0.044852078, -0.013047278, -0.017493486, -0.13884607, -0.04436022, 0.13906206, 0.04900399, -0.20064908, 0.734287, 0.08031693, -0.04408434, 1.8609768, 0.04900399, -0.012909323, 1.9867313, -0.13881849, 1.0201421, -0.017493486, -0.13884607, 1.0201421, -0.017493486, 0.017691046, 0.7695006, 1.2035613, -0.17018661, 0.049854517, 0.7654804, 0.11165747, 0.079650104, 1.4499695, 0.101670444, 1.0200042, 1.9867313, 0.017691046, 0.95737827, 1.5478657, 0.11165747, 1.0200042, 1.9867313, -0.13881849, 1.1768448, 0.64031446, -0.044852078, 1.1452559, 1.5166724, 0.04900399)
+
+[node name="SM_Prop_Crypt_Door_Boarded_01" type="MeshInstance3D" unique_id=1794901582]
+gi_mode = 2
+mesh = ExtResource("1_m2idd")
+surface_material_override/0 = ExtResource("2_7kwu0")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=102523756]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1511499041]
+shape = SubResource("ConvexPolygonShape3D_gsa3s")

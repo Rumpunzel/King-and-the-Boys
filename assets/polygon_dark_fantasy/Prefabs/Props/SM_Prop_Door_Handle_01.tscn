@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://xl6bgard8yob"]
+
+[ext_resource type="ArrayMesh" uid="uid://vbi750ta2bt" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Door_Handle_01.res" id="1_sq0br"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_vhvp3"]
+[ext_resource type="ArrayMesh" uid="uid://bpsj33fdvds5e" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Door_Handle_01_Handle_01.res" id="3_vhvp3"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_oc17e"]
+points = PackedVector3Array(0.014218811, -0.02356445, 0.07206264, -0.017907782, -0.02356445, 0.07206264, -0.009261349, -0.06807135, 0.02712245, 0.03389191, -0.050939165, 0.02636298, 0.015836317, 0.008280762, 0.07086501, -0.019571315, 0.008351497, 0.07120824, -0.033280678, -0.050939165, 0.02636298, -0.026139975, 0.0042063817, 0.06524932, 0.010201342, -0.070405625, -0.0017739306, -0.032261517, -0.049382977, -0.0025407034, 0.032629468, -0.049029298, -0.0022705072, 0.03156428, 0.028016016, -0.001021763, 0.0153497495, 0.06482687, 0.02636298, -0.01011613, 0.07412154, 0.02636298, -0.03137386, 0.028397992, -0.0015037345, 0.00814987, 0.07178726, -0.0025041904)
+
+[node name="SM_Prop_Door_Handle_01" type="MeshInstance3D" unique_id=1762420042]
+gi_mode = 2
+mesh = ExtResource("1_sq0br")
+surface_material_override/0 = ExtResource("2_vhvp3")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=520909485]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1226918016]
+shape = SubResource("ConvexPolygonShape3D_oc17e")
+
+[node name="SM_Prop_Door_Handle_01_Handle_01" type="MeshInstance3D" parent="." unique_id=37539540]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.007185974, 0.048171405)
+gi_mode = 2
+mesh = ExtResource("3_vhvp3")
+surface_material_override/0 = ExtResource("2_vhvp3")

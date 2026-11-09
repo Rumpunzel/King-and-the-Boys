@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://qx4m2rh7qby7"]
+
+[ext_resource type="ArrayMesh" uid="uid://d0aqdhtks4d3y" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Gargoyle_Base_01.res" id="1_8ayso"]
+[ext_resource type="Material" uid="uid://y2gba4kps13y" path="res://assets/polygon_dark_fantasy/Materials/Walls/Brick_Small_02_mat.tres" id="2_ldhta"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="3_v6kjx"]
+[ext_resource type="Shape3D" uid="uid://bt88jwjkkmcus" path="res://assets/polygon_dark_fantasy/Models/Collision/extracted/SM_Prop_Gargoyle_Base_01_Collision.res" id="4_ldhta"]
+
+[node name="SM_Prop_Gargoyle_Base_01" type="MeshInstance3D" unique_id=512527706]
+gi_mode = 2
+mesh = ExtResource("1_8ayso")
+surface_material_override/0 = ExtResource("2_ldhta")
+surface_material_override/1 = ExtResource("3_v6kjx")
+surface_material_override/2 = ExtResource("3_v6kjx")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=413596383]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=960849202]
+shape = ExtResource("4_ldhta")

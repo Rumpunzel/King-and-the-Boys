@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://boto6brg274rw"]
+
+[ext_resource type="ArrayMesh" uid="uid://cqtjqx3euowlh" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Chair_01.res" id="1_bbeju"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="2_vn3pf"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_426fn"]
+points = PackedVector3Array(-0.35287583, 0.03851681, 0.30589142, -0.33341524, -0.01994431, -0.19959131, -0.33334672, -0.01994431, 0.15022373, 0.33461702, 0.0022221971, 0.2951279, 0.30816704, 0.66039693, 0.3447747, -0.2944941, 0.66039693, 0.3447747, -0.31388617, 1.1463549, -0.25791624, 0.34715676, -0.01994431, 0.15022373, -0.30052415, 0.0068503693, -0.3023831, 0.31310076, 0.0074593388, -0.30204675, 0.30816704, 1.1853291, -0.25791624, 0.01653251, 1.2243031, -0.25791624, -0.274965, 1.2243031, -0.29673225, 0.32769614, 0.058003843, -0.31617388, -0.0028595328, 1.2023802, -0.3424773, 0.2869249, 1.0729132, -0.33057013)
+
+[node name="SM_Prop_Chair_01" type="MeshInstance3D" unique_id=1090886081]
+gi_mode = 2
+mesh = ExtResource("1_bbeju")
+surface_material_override/0 = ExtResource("2_vn3pf")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1488523536]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=885467419]
+shape = SubResource("ConvexPolygonShape3D_426fn")

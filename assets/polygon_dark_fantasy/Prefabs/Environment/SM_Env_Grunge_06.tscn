@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://kg3buqesm5fj"]
+
+[ext_resource type="ArrayMesh" uid="uid://buogdcxa3jwj0" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Env_Grunge_06.res" id="1_nmyb4"]
+[ext_resource type="Material" uid="uid://cd6sltcs0ufl4" path="res://assets/polygon_dark_fantasy/Materials/Misc/Grunge_01_mat.tres" id="2_5irrx"]
+
+[node name="SM_Env_Grunge_06" type="MeshInstance3D" unique_id=769376282]
+cast_shadow = 0
+gi_mode = 2
+mesh = ExtResource("1_nmyb4")
+surface_material_override/0 = ExtResource("2_5irrx")
