@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ModelConfigurationRandom" format=3 uid="uid://d4l2t2lakts58"]
+
+[ext_resource type="Script" uid="uid://cblm5blx0poy3" path="res://engine/objects/model/model_configuration_random.gd" id="1_random"]
+
+[resource]
+script = ExtResource("1_random")
+randomized_parts = PackedStringArray("HAIR", "BEARD", "BEARD_ATTACHMENT")
+metadata/_custom_type_script = "uid://cblm5blx0poy3"

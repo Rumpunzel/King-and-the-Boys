@@ -99,7 +99,7 @@ func _on_randomized() -> void:
 	assert(profile)
 	assert(profile is CharacterProfile)
 	assert(_model)
-	assert(_model is ModularCharacter)
+	assert(_model is ModularModel)
 	var character_profile: CharacterProfile = profile
-	var modular_character: ModularCharacter = _model
-	character_profile.setup_model(modular_character, true)
+	var modular_model: ModularModel = _model
+	character_profile.setup_model(modular_model, true)

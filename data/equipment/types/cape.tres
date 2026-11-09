@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="EquipmentType" format=3 uid="uid://dnkb4svltrc47"]
 
 [ext_resource type="Script" path="res://engine/objects/equipment/equipment_type.gd" id="1_nw34g"]
+[ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="1_model"]
 
 [resource]
 script = ExtResource("1_nw34g")
 name = "Cape"
+model = ExtResource("1_model")
 slot = 5
 parts = Array[int]([16])

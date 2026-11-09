@@ -1,0 +1,158 @@
+[gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://brolol4c7mmms"]
+
+[ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_iofaw"]
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_gcolq"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_ew1ll"]
+[ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_todi7"]
+[ext_resource type="ArrayMesh" uid="uid://bceap8tam0bk0" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_fancy_01.res" id="5_te5nt"]
+[ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="6_53e7t"]
+[ext_resource type="Resource" uid="uid://cppjifks7xifq" path="res://data/equipment/types/dwarf_headwear.tres" id="7_vohnl"]
+[ext_resource type="ArrayMesh" uid="uid://cc01pjxjmeihg" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_horns_02.res" id="8_y3ega"]
+[ext_resource type="ArrayMesh" uid="uid://dgjcnfn5lmc1j" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_king_03.res" id="9_1cuas"]
+[ext_resource type="ArrayMesh" uid="uid://be1nrj2aaoq7j" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_leather_04.res" id="10_01ftf"]
+[ext_resource type="ArrayMesh" uid="uid://cd7wj3dyceeph" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_light_05.res" id="11_pvyfk"]
+[ext_resource type="ArrayMesh" uid="uid://bs8qxeya6rgp0" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_light_06.res" id="12_fhs7g"]
+[ext_resource type="ArrayMesh" uid="uid://dxmgwslqep4iw" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_light_07.res" id="13_cik2v"]
+[ext_resource type="ArrayMesh" uid="uid://cnlxbtocemsv5" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_soldier_08.res" id="14_75aa7"]
+[ext_resource type="ArrayMesh" uid="uid://2rtct0qd4hl8" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_bandana_09.res" id="15_x0aj3"]
+[ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="16_3eqtr"]
+
+[sub_resource type="Resource" id="Resource_acxrq"]
+script = ExtResource("4_todi7")
+part = 4
+male_mesh = ExtResource("5_te5nt")
+
+[sub_resource type="Resource" id="Resource_ieqlq"]
+script = ExtResource("6_53e7t")
+parts = Array[ExtResource("4_todi7")]([SubResource("Resource_acxrq")])
+
+[sub_resource type="Resource" id="01"]
+script = ExtResource("1_iofaw")
+type = ExtResource("7_vohnl")
+appearance = SubResource("Resource_ieqlq")
+name = "Dwarf Headwear 01"
+
+[sub_resource type="Resource" id="Resource_e8vwh"]
+script = ExtResource("4_todi7")
+part = 4
+male_mesh = ExtResource("8_y3ega")
+
+[sub_resource type="Resource" id="Resource_0cot2"]
+script = ExtResource("6_53e7t")
+parts = Array[ExtResource("4_todi7")]([SubResource("Resource_e8vwh")])
+
+[sub_resource type="Resource" id="02"]
+script = ExtResource("1_iofaw")
+type = ExtResource("7_vohnl")
+appearance = SubResource("Resource_0cot2")
+name = "Dwarf Headwear 02"
+
+[sub_resource type="Resource" id="Resource_wnkfv"]
+script = ExtResource("4_todi7")
+part = 4
+male_mesh = ExtResource("9_1cuas")
+
+[sub_resource type="Resource" id="Resource_j6eyd"]
+script = ExtResource("6_53e7t")
+parts = Array[ExtResource("4_todi7")]([SubResource("Resource_wnkfv")])
+
+[sub_resource type="Resource" id="03"]
+script = ExtResource("1_iofaw")
+type = ExtResource("7_vohnl")
+appearance = SubResource("Resource_j6eyd")
+name = "Dwarf Headwear 03"
+
+[sub_resource type="Resource" id="Resource_8rqgw"]
+script = ExtResource("4_todi7")
+part = 4
+male_mesh = ExtResource("10_01ftf")
+
+[sub_resource type="Resource" id="Resource_yujcl"]
+script = ExtResource("6_53e7t")
+parts = Array[ExtResource("4_todi7")]([SubResource("Resource_8rqgw")])
+
+[sub_resource type="Resource" id="04"]
+script = ExtResource("1_iofaw")
+type = ExtResource("7_vohnl")
+appearance = SubResource("Resource_yujcl")
+name = "Dwarf Headwear 04"
+
+[sub_resource type="Resource" id="Resource_c4w44"]
+script = ExtResource("4_todi7")
+part = 4
+male_mesh = ExtResource("11_pvyfk")
+
+[sub_resource type="Resource" id="Resource_4yrnh"]
+script = ExtResource("6_53e7t")
+parts = Array[ExtResource("4_todi7")]([SubResource("Resource_c4w44")])
+
+[sub_resource type="Resource" id="05"]
+script = ExtResource("1_iofaw")
+type = ExtResource("7_vohnl")
+appearance = SubResource("Resource_4yrnh")
+name = "Dwarf Headwear 05"
+
+[sub_resource type="Resource" id="Resource_tnv2p"]
+script = ExtResource("4_todi7")
+part = 4
+male_mesh = ExtResource("12_fhs7g")
+
+[sub_resource type="Resource" id="Resource_xr35b"]
+script = ExtResource("6_53e7t")
+parts = Array[ExtResource("4_todi7")]([SubResource("Resource_tnv2p")])
+
+[sub_resource type="Resource" id="06"]
+script = ExtResource("1_iofaw")
+type = ExtResource("7_vohnl")
+appearance = SubResource("Resource_xr35b")
+name = "Dwarf Headwear 06"
+
+[sub_resource type="Resource" id="Resource_o6ekm"]
+script = ExtResource("4_todi7")
+part = 4
+male_mesh = ExtResource("13_cik2v")
+
+[sub_resource type="Resource" id="Resource_ctec2"]
+script = ExtResource("6_53e7t")
+parts = Array[ExtResource("4_todi7")]([SubResource("Resource_o6ekm")])
+
+[sub_resource type="Resource" id="07"]
+script = ExtResource("1_iofaw")
+type = ExtResource("7_vohnl")
+appearance = SubResource("Resource_ctec2")
+name = "Dwarf Headwear 07"
+
+[sub_resource type="Resource" id="Resource_gb8pu"]
+script = ExtResource("4_todi7")
+part = 4
+male_mesh = ExtResource("14_75aa7")
+
+[sub_resource type="Resource" id="Resource_8vxyl"]
+script = ExtResource("6_53e7t")
+parts = Array[ExtResource("4_todi7")]([SubResource("Resource_gb8pu")])
+
+[sub_resource type="Resource" id="08"]
+script = ExtResource("1_iofaw")
+type = ExtResource("7_vohnl")
+appearance = SubResource("Resource_8vxyl")
+name = "Dwarf Headwear 08"
+
+[sub_resource type="Resource" id="Resource_0g040"]
+script = ExtResource("4_todi7")
+part = 4
+male_mesh = ExtResource("15_x0aj3")
+
+[sub_resource type="Resource" id="Resource_lp00j"]
+script = ExtResource("6_53e7t")
+parts = Array[ExtResource("4_todi7")]([SubResource("Resource_0g040")])
+
+[sub_resource type="Resource" id="09"]
+script = ExtResource("1_iofaw")
+type = ExtResource("7_vohnl")
+appearance = SubResource("Resource_lp00j")
+name = "Dwarf Headwear 09"
+
+[resource]
+script = ExtResource("16_3eqtr")
+type = ExtResource("7_vohnl")
+looks = Array[ExtResource("1_iofaw")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09")])

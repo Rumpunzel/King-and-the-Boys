@@ -4,6 +4,8 @@ class_name Model
 extends Node3D
 
 @export var portrait_override: Texture
+## Moves this model in menu previews (e.g. the lobby), so bodies of other sizes stay framed like a human, e.g. raises the smaller dwarf
+@export var preview_offset: Vector3 = Vector3.ZERO
 
 @export_group("Configuration")
 @export var _animation_tree: AnimationTree

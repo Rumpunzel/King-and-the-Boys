@@ -4,8 +4,5 @@
 
 [resource]
 script = ExtResource("1_hy0ga")
-_randomize_ears = true
-_randomize_head = true
-_randomize_eyebrow = true
-_randomize_hair = true
+randomized_parts = PackedStringArray("EARS", "HEAD", "EYEBROW", "HAIR")
 metadata/_custom_type_script = "uid://cblm5blx0poy3"

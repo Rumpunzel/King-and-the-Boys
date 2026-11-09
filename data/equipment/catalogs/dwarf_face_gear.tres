@@ -1,0 +1,62 @@
+[gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://cpk6pkgrt0l5p"]
+
+[ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_65xam"]
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_7xwba"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_nobln"]
+[ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_u2nbb"]
+[ext_resource type="ArrayMesh" uid="uid://cimybl6axjkgw" path="res://data/characters/dwarves/meshes/face/dwarf_face_face_plate_01.res" id="5_hiyd4"]
+[ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="6_obuv2"]
+[ext_resource type="Resource" uid="uid://jo2i1l83tycp" path="res://data/equipment/types/dwarf_face_gear.tres" id="7_b1m5x"]
+[ext_resource type="ArrayMesh" uid="uid://c1umjs62ujx6w" path="res://data/characters/dwarves/meshes/face/dwarf_face_gasmask_02.res" id="8_ashq4"]
+[ext_resource type="ArrayMesh" uid="uid://bt6ideg8720hx" path="res://data/characters/dwarves/meshes/face/dwarf_face_gas_bag_03.res" id="9_posml"]
+[ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="10_ge2yi"]
+
+[sub_resource type="Resource" id="Resource_rkwqn"]
+script = ExtResource("4_u2nbb")
+part = 5
+male_mesh = ExtResource("5_hiyd4")
+
+[sub_resource type="Resource" id="Resource_6hjfv"]
+script = ExtResource("6_obuv2")
+parts = Array[ExtResource("4_u2nbb")]([SubResource("Resource_rkwqn")])
+
+[sub_resource type="Resource" id="01"]
+script = ExtResource("1_65xam")
+type = ExtResource("7_b1m5x")
+appearance = SubResource("Resource_6hjfv")
+name = "Dwarf Face Gear 01"
+
+[sub_resource type="Resource" id="Resource_7tvxk"]
+script = ExtResource("4_u2nbb")
+part = 5
+male_mesh = ExtResource("8_ashq4")
+
+[sub_resource type="Resource" id="Resource_nptw8"]
+script = ExtResource("6_obuv2")
+parts = Array[ExtResource("4_u2nbb")]([SubResource("Resource_7tvxk")])
+
+[sub_resource type="Resource" id="02"]
+script = ExtResource("1_65xam")
+type = ExtResource("7_b1m5x")
+appearance = SubResource("Resource_nptw8")
+name = "Dwarf Face Gear 02"
+
+[sub_resource type="Resource" id="Resource_7g00l"]
+script = ExtResource("4_u2nbb")
+part = 5
+male_mesh = ExtResource("9_posml")
+
+[sub_resource type="Resource" id="Resource_5unwk"]
+script = ExtResource("6_obuv2")
+parts = Array[ExtResource("4_u2nbb")]([SubResource("Resource_7g00l")])
+
+[sub_resource type="Resource" id="03"]
+script = ExtResource("1_65xam")
+type = ExtResource("7_b1m5x")
+appearance = SubResource("Resource_5unwk")
+name = "Dwarf Face Gear 03"
+
+[resource]
+script = ExtResource("10_ge2yi")
+type = ExtResource("7_b1m5x")
+looks = Array[ExtResource("1_65xam")]([SubResource("01"), SubResource("02"), SubResource("03")])

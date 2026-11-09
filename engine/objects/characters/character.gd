@@ -67,12 +67,12 @@ var model: Model:
 		if not model: return
 		add_child(model, true)
 		_apply_body()
-		if equipment and model is ModularCharacter:
-			var modular_model: ModularCharacter = model
+		if equipment and model is ModularModel:
+			var modular_model: ModularModel = model
 			equipment.apply_to(modular_model)
 
 ## Rolled once by the server, see [method ModelConfigurationRandom.roll]
-## {Part: [enum ModularCharacter.Part] -> mesh [ResourceId]: [String]}, an empty ID meaning no mesh
+## {part: [int] of the model's [code]Part[/code] enum -> mesh [ResourceId]: [String]}, an empty ID meaning no mesh
 var body: Dictionary = {}:
 	set(new_body):
 		body = new_body
@@ -261,12 +261,12 @@ func to_character_data() -> Dictionary[StringName, Variant]:
 	return character_data
 
 func _apply_body() -> void:
-	if not model is ModularCharacter: return
-	var modular_model: ModularCharacter = model
+	if not model is ModularModel: return
+	var modular_model: ModularModel = model
 	for part: int in body:
 		var mesh_id: String = body[part]
 		var mesh: ArrayMesh = ResourceId.find(mesh_id) as ArrayMesh
-		modular_model.get_part(part as ModularCharacter.Part).apply_mesh(mesh)
+		if modular_model.has_part(part): modular_model.get_part(part).apply_mesh(mesh)
 
 func get_portrait() -> Texture:
 	if model and model.portrait_override: return model.portrait_override

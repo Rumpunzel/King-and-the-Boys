@@ -7,10 +7,10 @@ extends ModelConfiguration
 		parts = new_value
 		changed.emit()
 
-func configure(model: ModularCharacter) -> void:
+func configure(model: ModularModel) -> void:
 	for part_mesh: EquipmentPartMesh in parts: part_mesh.apply_to(model)
 
-func get_parts() -> Array[ModularCharacter.Part]:
-	var configured_parts: Array[ModularCharacter.Part] = []
+func get_parts() -> Array[int]:
+	var configured_parts: Array[int] = []
 	for part_mesh: EquipmentPartMesh in parts: configured_parts.append(part_mesh.part)
 	return configured_parts

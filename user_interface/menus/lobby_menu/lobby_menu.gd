@@ -7,11 +7,14 @@ extends Menu
 @export var _left_player_panels_container: Container
 @export var _local_player_panel: LobbyPlayerPanel
 @export var _right_player_panels_container: Container
-@export var _local_player_character_preview: ModularCharacter
+## Shows the local player's character; its model is built from the chosen profile, so dwarves show as dwarves
+@export var _character_preview: Node3D
 @export_file("*.tscn") var _game_scene_path: String
 @export var _guest_player_panel_scene: PackedScene
 
 var _player_panels: Dictionary[Player, LobbyPlayerPanel] = {}
+var _preview_model: Model
+var _preview_profile: CharacterProfile
 
 func _enter_tree() -> void:
 	super._enter_tree()
@@ -29,6 +32,7 @@ func _ready() -> void:
 		if player.is_local_player():
 			_local_player_panel.player = player
 			player.player_info_changed.connect(_on_local_player_info_changed)
+			_on_local_player_info_changed()
 		else: _add_player(player)
 	Lobby.player_created.connect(_add_player)
 
@@ -76,9 +80,17 @@ func _on_leave_pressed() -> void:
 func _on_disconnected_from_multiplayer() -> void:
 	SceneManager.to_main(false)
 
+## Rebuilds the preview model when another profile was chosen, as profiles may use other bodies
 func _on_local_player_info_changed() -> void:
-	_local_player_character_preview.reset()
-	_local_player_panel.player.character.setup_model(_local_player_character_preview)
+	var profile: CharacterProfile = _local_player_panel.player.character
+	if profile != _preview_profile:
+		_preview_profile = profile
+		if _preview_model: _preview_model.queue_free()
+		_preview_model = profile.create_model(0) if profile else null
+		if _preview_model:
+			_preview_model.position = _preview_model.preview_offset
+			_character_preview.add_child(_preview_model)
+	if _preview_model is ModularModel: profile.setup_model(_preview_model as ModularModel)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
@@ -86,6 +98,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not _left_player_panels_container: warnings.append("Missing left player infos container reference.")
 	if not _local_player_panel: warnings.append("Missing local PlayerPanel reference.")
 	if not _right_player_panels_container: warnings.append("Missing right player infos container reference.")
+	if not _character_preview: warnings.append("Missing character preview reference.")
 	if _game_scene_path.is_empty(): warnings.append("Missing game scene path.")
 	if not _guest_player_panel_scene: warnings.append("Missing guest LobbyPlayerPanel reference.")
 	return warnings

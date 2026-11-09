@@ -15,12 +15,20 @@ func _chest() -> EquipmentLook:
 	return EquipmentSlotProperty.get_first_look(EquipmentFixtures.load_type("chest_armor"))
 
 func _parts(carousels: Array[Array]) -> Array:
-	return carousels.map(func(parts: Array) -> String: return ", ".join(parts.map(func(part: ModularCharacter.Part) -> String: return ModularCharacter.Part.keys()[part])))
+	return carousels.map(func(parts: Array) -> String: return ", ".join(parts.map(func(part: int) -> String: return ModularCharacter.Part.keys()[part])))
+
+func _type_names(slot: EquipmentLook.Slot, profile: CharacterProfile) -> Array:
+	return EquipmentSlotProperty.get_slot_types(slot, profile).map(func(equipment_type: EquipmentType) -> String: return equipment_type.name)
 
 func test_slots_offer_only_their_types() -> void:
-	var head_types: Array = EquipmentSlotProperty.get_slot_types(EquipmentLook.Slot.HEAD).map(func(equipment_type: EquipmentType) -> String: return equipment_type.name)
-	assert_array(head_types).contains_exactly_in_any_order(["Helmet", "Hood", "Hat"])
-	assert_array(EquipmentSlotProperty.get_slot_types(EquipmentLook.Slot.MAIN_HAND)).is_empty()
+	assert_array(_type_names(EquipmentLook.Slot.HEAD, _knight)).contains_exactly_in_any_order(["Helmet", "Hood", "Hat"])
+	assert_array(EquipmentSlotProperty.get_slot_types(EquipmentLook.Slot.MAIN_HAND, _knight)).is_empty()
+
+func test_dwarves_are_offered_dwarf_gear_only() -> void:
+	var dwarf: CharacterProfile = load(EquipmentFixtures.DWARF)
+	assert_array(_type_names(EquipmentLook.Slot.HEAD, dwarf)).contains_exactly(["Dwarf Headwear"])
+	assert_array(_type_names(EquipmentLook.Slot.TORSO, dwarf)).contains_exactly(["Dwarf Outfit"])
+	assert_array(_type_names(EquipmentLook.Slot.LEGS, dwarf)).is_empty()
 
 func test_choosing_a_type_starts_from_a_copy_of_its_first_look() -> void:
 	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(EquipmentFixtures.load_type("chest_armor"))
@@ -31,7 +39,7 @@ func test_choosing_a_type_starts_from_a_copy_of_its_first_look() -> void:
 func test_every_part_gets_a_carousel_and_pairs_share_one() -> void:
 	var carousels: Array[Array] = EquipmentSlotProperty.get_carousel_parts(_chest(), {})
 	assert_array(_parts(carousels)).contains_exactly(["TORSO", "ARM_UPPER_LEFT, ARM_UPPER_RIGHT", "SHOULDER_ATTACH_LEFT, SHOULDER_ATTACH_RIGHT"])
-	var split: Dictionary[ModularCharacter.Part, bool] = {ModularCharacter.Part.SHOULDER_ATTACH_LEFT: true}
+	var split: Dictionary[int, bool] = {ModularCharacter.Part.SHOULDER_ATTACH_LEFT: true}
 	assert_array(_parts(EquipmentSlotProperty.get_carousel_parts(_chest(), split))).contains_exactly(["TORSO", "ARM_UPPER_LEFT, ARM_UPPER_RIGHT", "SHOULDER_ATTACH_LEFT", "SHOULDER_ATTACH_RIGHT"])
 
 func test_stepping_a_part_leaves_the_others_and_moves_its_partner() -> void:
@@ -59,7 +67,7 @@ func test_decorative_parts_can_show_none() -> void:
 	var shoulders: Array = [ModularCharacter.Part.SHOULDER_ATTACH_LEFT, ModularCharacter.Part.SHOULDER_ATTACH_RIGHT]
 	var seen_none: bool = false
 	var look: EquipmentLook = chest
-	for step_index: int in EquipmentLook.get_mesh_options(ModularCharacter.Part.SHOULDER_ATTACH_LEFT).size():
+	for step_index: int in chest.type.get_mesh_options(ModularCharacter.Part.SHOULDER_ATTACH_LEFT).size():
 		look = EquipmentSlotProperty.step_parts(look, shoulders, 1)
 		if not look.get_part_mesh(ModularCharacter.Part.SHOULDER_ATTACH_LEFT):
 			seen_none = true

@@ -12,6 +12,9 @@ enum Type {
 const EMPTY_MESH_NUMBER: String = "00"
 
 @export var _type: Type = Type.ESSENTIAL
+## Only mesh files starting with this are listed; the mesh directories hold some leftovers of other names
+## Declared before [member _index], whose setter lists the meshes when a scene loads
+@export var _mesh_prefix: String = "modular_character_"
 @export var _index: int = -1:
 	set = update_index
 
@@ -101,8 +104,10 @@ func _get_mesh_filenames() -> Array[String]:
 	dir.list_dir_begin()
 	var filename: String = dir.get_next()
 	while filename != "":
-		if not dir.current_is_dir() and filename.begins_with("modular_character_"): filenames.append("%s/%s" % [dir.get_current_dir(), filename])
+		if not dir.current_is_dir() and filename.begins_with(_mesh_prefix): filenames.append("%s/%s" % [dir.get_current_dir(), filename])
 		filename = dir.get_next()
+	# By number, as files named after what they show (e.g. "..._king_07") would otherwise sort by name
+	filenames.sort_custom(func(first: String, second: String) -> bool: return get_mesh_number(first).naturalnocasecmp_to(get_mesh_number(second)) < 0)
 	return filenames
 
 @abstract func _get_mesh_directory() -> String

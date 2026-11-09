@@ -1,0 +1,629 @@
+[gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://cpqr8hx5wshiv"]
+
+[ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_xas1r"]
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_c3u1c"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_cwi6n"]
+[ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_23yyt"]
+[ext_resource type="ArrayMesh" uid="uid://ncry2ovu6xmb" path="res://data/characters/dwarves/meshes/body/dwarf_body_casual_male_01.res" id="5_gh7pw"]
+[ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="6_0g0gf"]
+[ext_resource type="Resource" uid="uid://dvgy2n8emi8k0" path="res://data/equipment/types/dwarf_outfit.tres" id="7_5kbma"]
+[ext_resource type="ArrayMesh" uid="uid://bk7eow7fox7tn" path="res://data/characters/dwarves/meshes/body/dwarf_body_casual_female_02.res" id="8_o38na"]
+[ext_resource type="ArrayMesh" uid="uid://cg877hotdluci" path="res://data/characters/dwarves/meshes/body/dwarf_body_soldier_male_03.res" id="9_xjh1d"]
+[ext_resource type="ArrayMesh" uid="uid://bmc5nmslo0itc" path="res://data/characters/dwarves/meshes/body/dwarf_body_soldier_female_04.res" id="10_cmxk8"]
+[ext_resource type="ArrayMesh" uid="uid://d4bg2n7ihtlay" path="res://data/characters/dwarves/meshes/body/dwarf_body_worker_05.res" id="11_dj7r6"]
+[ext_resource type="ArrayMesh" uid="uid://0anuk6pi3ogq" path="res://data/characters/dwarves/meshes/body/dwarf_body_miner_06.res" id="12_kqivm"]
+[ext_resource type="ArrayMesh" uid="uid://j2eqxpgvxvnb" path="res://data/characters/dwarves/meshes/body/dwarf_body_king_07.res" id="13_ha1lx"]
+[ext_resource type="ArrayMesh" uid="uid://bd2npqjr05qrk" path="res://data/characters/dwarves/meshes/shoulder_left/dwarf_shoulder_left_fancy_01.res" id="14_0l6r7"]
+[ext_resource type="ArrayMesh" uid="uid://cr47keevwrcvo" path="res://data/characters/dwarves/meshes/shoulder_right/dwarf_shoulder_right_fancy_01.res" id="15_64mge"]
+[ext_resource type="ArrayMesh" uid="uid://bdxwnxrparrd3" path="res://data/characters/dwarves/meshes/shoulder_left/dwarf_shoulder_left_king_02.res" id="16_wya1u"]
+[ext_resource type="ArrayMesh" uid="uid://duwxlvqs55ogq" path="res://data/characters/dwarves/meshes/shoulder_right/dwarf_shoulder_right_king_02.res" id="17_d7vxt"]
+[ext_resource type="ArrayMesh" uid="uid://cb38chm0dukym" path="res://data/characters/dwarves/meshes/shoulder_left/dwarf_shoulder_left_soldier_03.res" id="18_fng65"]
+[ext_resource type="ArrayMesh" uid="uid://d1pf2uxxn0vt7" path="res://data/characters/dwarves/meshes/shoulder_right/dwarf_shoulder_right_soldier_03.res" id="19_f00hk"]
+[ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="20_oiwvs"]
+
+[sub_resource type="Resource" id="Resource_f6he1"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("5_gh7pw")
+
+[sub_resource type="Resource" id="Resource_w0cyh"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_f6he1")])
+
+[sub_resource type="Resource" id="01_00"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_w0cyh")
+name = "Dwarf Outfit 01 00"
+
+[sub_resource type="Resource" id="Resource_6xvwp"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("8_o38na")
+
+[sub_resource type="Resource" id="Resource_netuc"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_6xvwp")])
+
+[sub_resource type="Resource" id="02_00"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_netuc")
+name = "Dwarf Outfit 02 00"
+
+[sub_resource type="Resource" id="Resource_21e4p"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("9_xjh1d")
+
+[sub_resource type="Resource" id="Resource_3uqfk"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_21e4p")])
+
+[sub_resource type="Resource" id="03_00"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_3uqfk")
+name = "Dwarf Outfit 03 00"
+
+[sub_resource type="Resource" id="Resource_xss6f"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("10_cmxk8")
+
+[sub_resource type="Resource" id="Resource_aodt1"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_xss6f")])
+
+[sub_resource type="Resource" id="04_00"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_aodt1")
+name = "Dwarf Outfit 04 00"
+
+[sub_resource type="Resource" id="Resource_ed8mm"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("11_dj7r6")
+
+[sub_resource type="Resource" id="Resource_fmpdo"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_ed8mm")])
+
+[sub_resource type="Resource" id="05_00"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_fmpdo")
+name = "Dwarf Outfit 05 00"
+
+[sub_resource type="Resource" id="Resource_22lv3"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("12_kqivm")
+
+[sub_resource type="Resource" id="Resource_vbt7w"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_22lv3")])
+
+[sub_resource type="Resource" id="06_00"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_vbt7w")
+name = "Dwarf Outfit 06 00"
+
+[sub_resource type="Resource" id="Resource_nllq3"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("13_ha1lx")
+
+[sub_resource type="Resource" id="Resource_0p2gp"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_nllq3")])
+
+[sub_resource type="Resource" id="07_00"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_0p2gp")
+name = "Dwarf Outfit 07 00"
+
+[sub_resource type="Resource" id="Resource_prvik"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("5_gh7pw")
+
+[sub_resource type="Resource" id="Resource_6jw4n"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("14_0l6r7")
+
+[sub_resource type="Resource" id="Resource_jx2q3"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("15_64mge")
+
+[sub_resource type="Resource" id="Resource_morca"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_prvik"), SubResource("Resource_6jw4n"), SubResource("Resource_jx2q3")])
+
+[sub_resource type="Resource" id="01_01"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_morca")
+name = "Dwarf Outfit 01 01"
+
+[sub_resource type="Resource" id="Resource_5kvan"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("8_o38na")
+
+[sub_resource type="Resource" id="Resource_ccvv3"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("14_0l6r7")
+
+[sub_resource type="Resource" id="Resource_w4e35"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("15_64mge")
+
+[sub_resource type="Resource" id="Resource_7ivx0"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_5kvan"), SubResource("Resource_ccvv3"), SubResource("Resource_w4e35")])
+
+[sub_resource type="Resource" id="02_01"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_7ivx0")
+name = "Dwarf Outfit 02 01"
+
+[sub_resource type="Resource" id="Resource_whq18"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("9_xjh1d")
+
+[sub_resource type="Resource" id="Resource_cp71d"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("14_0l6r7")
+
+[sub_resource type="Resource" id="Resource_egox1"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("15_64mge")
+
+[sub_resource type="Resource" id="Resource_0pu75"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_whq18"), SubResource("Resource_cp71d"), SubResource("Resource_egox1")])
+
+[sub_resource type="Resource" id="03_01"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_0pu75")
+name = "Dwarf Outfit 03 01"
+
+[sub_resource type="Resource" id="Resource_xi8la"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("10_cmxk8")
+
+[sub_resource type="Resource" id="Resource_ab10s"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("14_0l6r7")
+
+[sub_resource type="Resource" id="Resource_kxomo"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("15_64mge")
+
+[sub_resource type="Resource" id="Resource_cnna4"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_xi8la"), SubResource("Resource_ab10s"), SubResource("Resource_kxomo")])
+
+[sub_resource type="Resource" id="04_01"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_cnna4")
+name = "Dwarf Outfit 04 01"
+
+[sub_resource type="Resource" id="Resource_q4ay5"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("11_dj7r6")
+
+[sub_resource type="Resource" id="Resource_ffohj"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("14_0l6r7")
+
+[sub_resource type="Resource" id="Resource_jrkny"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("15_64mge")
+
+[sub_resource type="Resource" id="Resource_7xfvw"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_q4ay5"), SubResource("Resource_ffohj"), SubResource("Resource_jrkny")])
+
+[sub_resource type="Resource" id="05_01"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_7xfvw")
+name = "Dwarf Outfit 05 01"
+
+[sub_resource type="Resource" id="Resource_jc2gm"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("12_kqivm")
+
+[sub_resource type="Resource" id="Resource_4qyae"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("14_0l6r7")
+
+[sub_resource type="Resource" id="Resource_7rpfh"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("15_64mge")
+
+[sub_resource type="Resource" id="Resource_tjn48"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_jc2gm"), SubResource("Resource_4qyae"), SubResource("Resource_7rpfh")])
+
+[sub_resource type="Resource" id="06_01"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_tjn48")
+name = "Dwarf Outfit 06 01"
+
+[sub_resource type="Resource" id="Resource_o8p3n"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("13_ha1lx")
+
+[sub_resource type="Resource" id="Resource_1wc4l"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("14_0l6r7")
+
+[sub_resource type="Resource" id="Resource_27vlx"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("15_64mge")
+
+[sub_resource type="Resource" id="Resource_ygxp7"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_o8p3n"), SubResource("Resource_1wc4l"), SubResource("Resource_27vlx")])
+
+[sub_resource type="Resource" id="07_01"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_ygxp7")
+name = "Dwarf Outfit 07 01"
+
+[sub_resource type="Resource" id="Resource_m6bms"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("5_gh7pw")
+
+[sub_resource type="Resource" id="Resource_u3q7t"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("16_wya1u")
+
+[sub_resource type="Resource" id="Resource_05r2n"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("17_d7vxt")
+
+[sub_resource type="Resource" id="Resource_0c2ok"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_m6bms"), SubResource("Resource_u3q7t"), SubResource("Resource_05r2n")])
+
+[sub_resource type="Resource" id="01_02"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_0c2ok")
+name = "Dwarf Outfit 01 02"
+
+[sub_resource type="Resource" id="Resource_esoui"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("8_o38na")
+
+[sub_resource type="Resource" id="Resource_fjgtb"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("16_wya1u")
+
+[sub_resource type="Resource" id="Resource_0n1ib"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("17_d7vxt")
+
+[sub_resource type="Resource" id="Resource_pnlu2"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_esoui"), SubResource("Resource_fjgtb"), SubResource("Resource_0n1ib")])
+
+[sub_resource type="Resource" id="02_02"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_pnlu2")
+name = "Dwarf Outfit 02 02"
+
+[sub_resource type="Resource" id="Resource_ir8s8"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("9_xjh1d")
+
+[sub_resource type="Resource" id="Resource_bac7e"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("16_wya1u")
+
+[sub_resource type="Resource" id="Resource_m8jj2"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("17_d7vxt")
+
+[sub_resource type="Resource" id="Resource_tb264"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_ir8s8"), SubResource("Resource_bac7e"), SubResource("Resource_m8jj2")])
+
+[sub_resource type="Resource" id="03_02"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_tb264")
+name = "Dwarf Outfit 03 02"
+
+[sub_resource type="Resource" id="Resource_e17m0"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("10_cmxk8")
+
+[sub_resource type="Resource" id="Resource_03wn8"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("16_wya1u")
+
+[sub_resource type="Resource" id="Resource_nmmnv"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("17_d7vxt")
+
+[sub_resource type="Resource" id="Resource_f4y78"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_e17m0"), SubResource("Resource_03wn8"), SubResource("Resource_nmmnv")])
+
+[sub_resource type="Resource" id="04_02"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_f4y78")
+name = "Dwarf Outfit 04 02"
+
+[sub_resource type="Resource" id="Resource_orcge"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("11_dj7r6")
+
+[sub_resource type="Resource" id="Resource_clbnp"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("16_wya1u")
+
+[sub_resource type="Resource" id="Resource_c8fj8"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("17_d7vxt")
+
+[sub_resource type="Resource" id="Resource_fslfh"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_orcge"), SubResource("Resource_clbnp"), SubResource("Resource_c8fj8")])
+
+[sub_resource type="Resource" id="05_02"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_fslfh")
+name = "Dwarf Outfit 05 02"
+
+[sub_resource type="Resource" id="Resource_ij26u"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("12_kqivm")
+
+[sub_resource type="Resource" id="Resource_eocg7"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("16_wya1u")
+
+[sub_resource type="Resource" id="Resource_2sir4"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("17_d7vxt")
+
+[sub_resource type="Resource" id="Resource_u6rnv"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_ij26u"), SubResource("Resource_eocg7"), SubResource("Resource_2sir4")])
+
+[sub_resource type="Resource" id="06_02"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_u6rnv")
+name = "Dwarf Outfit 06 02"
+
+[sub_resource type="Resource" id="Resource_rp4mv"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("13_ha1lx")
+
+[sub_resource type="Resource" id="Resource_2ejfk"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("16_wya1u")
+
+[sub_resource type="Resource" id="Resource_4simt"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("17_d7vxt")
+
+[sub_resource type="Resource" id="Resource_yui5b"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_rp4mv"), SubResource("Resource_2ejfk"), SubResource("Resource_4simt")])
+
+[sub_resource type="Resource" id="07_02"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_yui5b")
+name = "Dwarf Outfit 07 02"
+
+[sub_resource type="Resource" id="Resource_txbai"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("5_gh7pw")
+
+[sub_resource type="Resource" id="Resource_xoox6"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("18_fng65")
+
+[sub_resource type="Resource" id="Resource_o3qt7"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("19_f00hk")
+
+[sub_resource type="Resource" id="Resource_n3hj2"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_txbai"), SubResource("Resource_xoox6"), SubResource("Resource_o3qt7")])
+
+[sub_resource type="Resource" id="01_03"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_n3hj2")
+name = "Dwarf Outfit 01 03"
+
+[sub_resource type="Resource" id="Resource_3rim8"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("8_o38na")
+
+[sub_resource type="Resource" id="Resource_lggfb"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("18_fng65")
+
+[sub_resource type="Resource" id="Resource_3xnmo"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("19_f00hk")
+
+[sub_resource type="Resource" id="Resource_dcwpm"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_3rim8"), SubResource("Resource_lggfb"), SubResource("Resource_3xnmo")])
+
+[sub_resource type="Resource" id="02_03"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_dcwpm")
+name = "Dwarf Outfit 02 03"
+
+[sub_resource type="Resource" id="Resource_auftr"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("9_xjh1d")
+
+[sub_resource type="Resource" id="Resource_dbkd0"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("18_fng65")
+
+[sub_resource type="Resource" id="Resource_qptli"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("19_f00hk")
+
+[sub_resource type="Resource" id="Resource_da6jk"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_auftr"), SubResource("Resource_dbkd0"), SubResource("Resource_qptli")])
+
+[sub_resource type="Resource" id="03_03"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_da6jk")
+name = "Dwarf Outfit 03 03"
+
+[sub_resource type="Resource" id="Resource_kvqkd"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("10_cmxk8")
+
+[sub_resource type="Resource" id="Resource_bklko"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("18_fng65")
+
+[sub_resource type="Resource" id="Resource_48avf"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("19_f00hk")
+
+[sub_resource type="Resource" id="Resource_8y1ng"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_kvqkd"), SubResource("Resource_bklko"), SubResource("Resource_48avf")])
+
+[sub_resource type="Resource" id="04_03"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_8y1ng")
+name = "Dwarf Outfit 04 03"
+
+[sub_resource type="Resource" id="Resource_dygu5"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("11_dj7r6")
+
+[sub_resource type="Resource" id="Resource_1icdl"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("18_fng65")
+
+[sub_resource type="Resource" id="Resource_6xfx2"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("19_f00hk")
+
+[sub_resource type="Resource" id="Resource_hoif2"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_dygu5"), SubResource("Resource_1icdl"), SubResource("Resource_6xfx2")])
+
+[sub_resource type="Resource" id="05_03"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_hoif2")
+name = "Dwarf Outfit 05 03"
+
+[sub_resource type="Resource" id="Resource_ggixp"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("12_kqivm")
+
+[sub_resource type="Resource" id="Resource_jo62e"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("18_fng65")
+
+[sub_resource type="Resource" id="Resource_eqwnd"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("19_f00hk")
+
+[sub_resource type="Resource" id="Resource_kcrtt"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_ggixp"), SubResource("Resource_jo62e"), SubResource("Resource_eqwnd")])
+
+[sub_resource type="Resource" id="06_03"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_kcrtt")
+name = "Dwarf Outfit 06 03"
+
+[sub_resource type="Resource" id="Resource_2e8hv"]
+script = ExtResource("4_23yyt")
+male_mesh = ExtResource("13_ha1lx")
+
+[sub_resource type="Resource" id="Resource_nisn8"]
+script = ExtResource("4_23yyt")
+part = 6
+male_mesh = ExtResource("18_fng65")
+
+[sub_resource type="Resource" id="Resource_xv2ul"]
+script = ExtResource("4_23yyt")
+part = 7
+male_mesh = ExtResource("19_f00hk")
+
+[sub_resource type="Resource" id="Resource_coili"]
+script = ExtResource("6_0g0gf")
+parts = Array[ExtResource("4_23yyt")]([SubResource("Resource_2e8hv"), SubResource("Resource_nisn8"), SubResource("Resource_xv2ul")])
+
+[sub_resource type="Resource" id="07_03"]
+script = ExtResource("1_xas1r")
+type = ExtResource("7_5kbma")
+appearance = SubResource("Resource_coili")
+name = "Dwarf Outfit 07 03"
+
+[resource]
+script = ExtResource("20_oiwvs")
+type = ExtResource("7_5kbma")
+looks = Array[ExtResource("1_xas1r")]([SubResource("01_00"), SubResource("02_00"), SubResource("03_00"), SubResource("04_00"), SubResource("05_00"), SubResource("06_00"), SubResource("07_00"), SubResource("01_01"), SubResource("02_01"), SubResource("03_01"), SubResource("04_01"), SubResource("05_01"), SubResource("06_01"), SubResource("07_01"), SubResource("01_02"), SubResource("02_02"), SubResource("03_02"), SubResource("04_02"), SubResource("05_02"), SubResource("06_02"), SubResource("07_02"), SubResource("01_03"), SubResource("02_03"), SubResource("03_03"), SubResource("04_03"), SubResource("05_03"), SubResource("06_03"), SubResource("07_03")])

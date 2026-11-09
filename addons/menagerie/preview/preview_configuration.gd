@@ -58,7 +58,7 @@ func _on_active_profile_changed(active_profile: Profile) -> void:
 	else: _variation_spin_box.value = 0
 
 func _on_model_changed(model: Model) -> void:
-	_randomize_button.disabled = not model is ModularCharacter
+	_randomize_button.disabled = not model is ModularModel
 
 func _on_model_removed() -> void:
 	_randomize_button.disabled = true

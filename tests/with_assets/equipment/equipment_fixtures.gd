@@ -15,6 +15,8 @@ const CAPE: String = MESHES + "/back_attachment/modular_character_BackAttachment
 
 const TYPES: String = "res://data/equipment/types"
 const MODULAR_CHARACTER: String = "res://data/characters/people/modular_character.tscn"
+const DWARF_CHARACTER: String = "res://data/characters/dwarves/dwarf_character.tscn"
+const DWARF: String = "res://data/characters/people/dwarf.tres"
 const CHARACTER: String = "uid://cvj6b1m2b65hd"
 const KNIGHT: String = "res://data/characters/people/knight.tres"
 ## Saved test items live here, as peers may only request items below [constant EquipmentLook.ITEM_DIRECTORY]
@@ -25,22 +27,23 @@ static var _saved_count: int = 0
 static func load_type(type_name: String) -> EquipmentType:
 	return load("%s/%s.tres" % [TYPES, type_name])
 
-## A type that may set every part of [param slot] and of [param blocked_slots]
-static func make_type(slot: EquipmentLook.Slot, blocked_slots: Array[EquipmentLook.Slot] = []) -> EquipmentType:
+## A human type that may set every part of [param slot] and of [param blocked_slots]
+static func make_type(slot: EquipmentLook.Slot, blocked_slots: Array[EquipmentLook.Slot] = [], model_path: String = MODULAR_CHARACTER) -> EquipmentType:
 	var equipment_type: EquipmentType = EquipmentType.new()
 	equipment_type.name = "Test %s" % EquipmentLook.Slot.keys()[slot]
+	equipment_type.model = load(model_path)
 	equipment_type.slot = slot
-	equipment_type.parts = EquipmentLook.get_parts_for(slot, blocked_slots)
 	equipment_type.blocked_slots = blocked_slots
+	equipment_type.parts = equipment_type.get_reset_parts()
 	return equipment_type
 
-static func make_item(equipment_type: EquipmentType, part: ModularCharacter.Part, male_mesh_path: String, female_mesh_path: String = "") -> EquipmentLook:
+static func make_item(equipment_type: EquipmentType, part: int, male_mesh_path: String, female_mesh_path: String = "") -> EquipmentLook:
 	var part_mesh: EquipmentPartMesh = EquipmentPartMesh.new()
 	part_mesh.part = part
 	part_mesh.male_mesh = load(male_mesh_path) if not male_mesh_path.is_empty() else null
 	if not female_mesh_path.is_empty(): part_mesh.female_mesh = load(female_mesh_path)
 	var item: EquipmentLook = EquipmentLook.new()
-	item.name = "Test %s" % ModularCharacter.Part.keys()[part]
+	item.name = "Test %s" % equipment_type.get_part_key(part)
 	item.type = equipment_type
 	item.appearance = EquipmentAppearance.new()
 	item.appearance.parts = [part_mesh]
@@ -63,6 +66,12 @@ static func remove_saved_items() -> void:
 static func make_model() -> ModularCharacter:
 	var scene: PackedScene = load(MODULAR_CHARACTER)
 	var model: ModularCharacter = scene.instantiate()
+	model.reset_gear()
+	return model
+
+static func make_dwarf_model() -> DwarfCharacter:
+	var scene: PackedScene = load(DWARF_CHARACTER)
+	var model: DwarfCharacter = scene.instantiate()
 	model.reset_gear()
 	return model
 

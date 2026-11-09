@@ -2,12 +2,61 @@
 
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_riycf"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_x2406"]
-[ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_34kdi"]
+[ext_resource type="PackedScene" uid="uid://k2selbak4kwk" path="res://data/characters/dwarves/dwarf_character.tscn" id="3_ki3nk"]
 [ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_34kdi"]
 [ext_resource type="Texture2D" uid="uid://d3kpui0ngdvp8" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_3.png" id="4_xk1ji"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_34kdi"]
-[ext_resource type="Resource" uid="uid://c1i0e1p4feqhe" path="res://data/characters/people/random_human.tres" id="5_65vhf"]
+[ext_resource type="Resource" uid="uid://d4l2t2lakts58" path="res://data/characters/dwarves/random_dwarf.tres" id="5_yyphc"]
 [ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_65vhf"]
+[ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_ki3nk"]
+[ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_iigc1"]
+[ext_resource type="ArrayMesh" uid="uid://cnlxbtocemsv5" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_soldier_08.res" id="11_eyc0a"]
+[ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="12_csvx1"]
+[ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="13_0usee"]
+[ext_resource type="Resource" uid="uid://cppjifks7xifq" path="res://data/equipment/types/dwarf_headwear.tres" id="14_lk1de"]
+[ext_resource type="ArrayMesh" uid="uid://cg877hotdluci" path="res://data/characters/dwarves/meshes/body/dwarf_body_soldier_male_03.res" id="15_p3175"]
+[ext_resource type="ArrayMesh" uid="uid://bd2npqjr05qrk" path="res://data/characters/dwarves/meshes/shoulder_left/dwarf_shoulder_left_fancy_01.res" id="16_yyphc"]
+[ext_resource type="ArrayMesh" uid="uid://cr47keevwrcvo" path="res://data/characters/dwarves/meshes/shoulder_right/dwarf_shoulder_right_fancy_01.res" id="17_mwfbt"]
+[ext_resource type="Resource" uid="uid://dvgy2n8emi8k0" path="res://data/equipment/types/dwarf_outfit.tres" id="18_xtw46"]
+
+[sub_resource type="Resource" id="Resource_iigc1"]
+script = ExtResource("10_iigc1")
+part = 4
+male_mesh = ExtResource("11_eyc0a")
+
+[sub_resource type="Resource" id="Resource_eyc0a"]
+script = ExtResource("12_csvx1")
+parts = Array[ExtResource("10_iigc1")]([SubResource("Resource_iigc1")])
+
+[sub_resource type="Resource" id="Resource_csvx1"]
+script = ExtResource("13_0usee")
+type = ExtResource("14_lk1de")
+appearance = SubResource("Resource_eyc0a")
+name = "Dwarf Headwear 08"
+
+[sub_resource type="Resource" id="Resource_0usee"]
+script = ExtResource("10_iigc1")
+male_mesh = ExtResource("15_p3175")
+
+[sub_resource type="Resource" id="Resource_lk1de"]
+script = ExtResource("10_iigc1")
+part = 6
+male_mesh = ExtResource("16_yyphc")
+
+[sub_resource type="Resource" id="Resource_p3175"]
+script = ExtResource("10_iigc1")
+part = 7
+male_mesh = ExtResource("17_mwfbt")
+
+[sub_resource type="Resource" id="Resource_c5b3e"]
+script = ExtResource("12_csvx1")
+parts = Array[ExtResource("10_iigc1")]([SubResource("Resource_0usee"), SubResource("Resource_lk1de"), SubResource("Resource_p3175")])
+
+[sub_resource type="Resource" id="Resource_cmreh"]
+script = ExtResource("13_0usee")
+type = ExtResource("18_xtw46")
+appearance = SubResource("Resource_c5b3e")
+name = "Dwarf Outfit 03 01"
 
 [resource]
 script = ExtResource("5_34kdi")
@@ -15,9 +64,11 @@ strength = 4
 agility = 2
 speed = 2
 dark_vision = 16.0
+model_configuration = ExtResource("5_yyphc")
+starting_head = SubResource("Resource_csvx1")
+starting_torso = SubResource("Resource_cmreh")
 name = "Dwarf"
 portrait = ExtResource("4_xk1ji")
 color = Color(0.878431, 0.878431, 0.878431, 1)
-_model_variations = Array[PackedScene]([ExtResource("3_34kdi")])
-heads_up_display_offset = Vector3(0, 2.25, 0)
+_model_variations = Array[PackedScene]([ExtResource("3_ki3nk")])
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

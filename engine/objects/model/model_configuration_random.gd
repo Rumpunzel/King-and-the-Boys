@@ -2,38 +2,25 @@
 class_name ModelConfigurationRandom
 extends ModelConfiguration
 
-## Every part [method configure] touches, either by randomizing or by resetting it
-const BODY_PARTS: Array[ModularCharacter.Part] = [
-	ModularCharacter.Part.HEAD,
-	ModularCharacter.Part.HAIR,
-	ModularCharacter.Part.EYEBROW,
-	ModularCharacter.Part.EARS,
-	ModularCharacter.Part.FACIAL_HAIR,
-]
+## Rolls a body: every body part (the parts no slot owns, see [method ModularModel.get_body_parts]) named in
+## [member randomized_parts] gets a random mesh, the others their default
 
-@export_group("Body Parts")
-@export var _randomize_ears: bool
-@export var _randomize_head: bool
-@export_group("Hair")
-@export var _randomize_eyebrow: bool
-@export var _randomize_facial_hair: bool
-@export var _randomize_hair: bool
+## Names of the model's parts, e.g. "HAIR" or "FACIAL_HAIR"; parts a body lacks are ignored, so one configuration can serve several
+@export var randomized_parts: PackedStringArray = []:
+	set(new_value):
+		randomized_parts = new_value
+		changed.emit()
 
-func configure(model: ModularCharacter) -> void:
-	if _randomize_head: model.head.random_mesh()
-	if _randomize_hair: model.hair.random_mesh()
-	if _randomize_eyebrow: model.eyebrow.random_mesh()
-	if _randomize_ears: model.ears.random_mesh()
-	else: model.ears.reset_mesh()
-	if _randomize_facial_hair: model.facial_hair.random_mesh()
-	else: model.facial_hair.reset_mesh()
+func configure(model: ModularModel) -> void:
+	var part_keys: PackedStringArray = model.get_part_keys()
+	for part: int in model.get_body_parts():
+		if randomized_parts.has(part_keys[part]): model.get_part(part).random_mesh()
+		else: model.get_part(part).reset_mesh()
 
 ## Randomizes [param model] and returns the result as mesh [ResourceId]s, so peers can apply the exact same look
-## @returns {Part: [enum ModularCharacter.Part] -> mesh ID: [String]}, an empty ID meaning no mesh
-func roll(model: ModularCharacter) -> Dictionary:
+## @returns {part: [int] -> mesh ID: [String]}, an empty ID meaning no mesh
+func roll(model: ModularModel) -> Dictionary:
 	configure(model)
 	var body: Dictionary = {}
-	for part: ModularCharacter.Part in BODY_PARTS:
-		var body_part: ModularBodyPart = model.get_part(part)
-		body[part] = ResourceId.of(body_part.mesh)
+	for part: int in model.get_body_parts(): body[part] = ResourceId.of(model.get_part(part).mesh)
 	return body
