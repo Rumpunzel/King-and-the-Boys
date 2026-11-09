@@ -8,12 +8,13 @@ extends Resource
 ## - architecture: arches over openings (whole ones where a corridor enters a room, ruins between corridor tiles), raised by the first
 ##   of the two tiles to be revealed once the other one exists, and pillars on every other grid corner inside rooms, raised by the last of its four
 ##   room tiles to be revealed
+## - walls: mostly crumbling, along some closed sides; an edge is shared too, so the first of its tiles to be revealed decides it
 ## Purely visual: every peer reveals the same tiles and picks alike, so nothing is synced. Props keep clear of the tile spots
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
 
 const NODE_NAME: StringName = &"Decorations"
-## Meta of a tile's decorations: the grid positions of the neighbours whose shared opening it decided, see [method _add_arches]
-const DECIDED_OPENINGS: StringName = &"decided_openings"
+## Meta of a tile's decorations: the grid positions of the neighbours whose shared edge (an opening or a wall) it decided
+const DECIDED_EDGES: StringName = &"decided_edges"
 ## The corners of a cell, as offsets from its grid position to the corner's index (see [method _add_pillars])
 const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
 
@@ -41,6 +42,10 @@ const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1)
 @export_range(0.0, 1.0) var corridor_arch_chance: float = 0.15
 ## Stand on every other grid corner inside rooms, where no arch can stand (arches need a corridor on one side)
 @export var room_pillars: PropSet
+@export_group("Walls")
+## Stand on some sides without a connection, by [member wall_chance]; modelled spanning along x
+@export var walls: PropSet
+@export_range(0.0, 1.0) var wall_chance: float = 0.5
 @export_group("Animation")
 ## Played on each prop as it drops in, one after another
 @export var drop_animation: ModelAnimation = preload("uid://bf0msgn2okdfo")
@@ -50,7 +55,10 @@ const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1)
 ## Builds the props of [param tile], which must be in a [Level] and just revealed
 func create(tile: Structure) -> Node3D:
 	var decorations: Node3D = create_clutter(tile.profile.get_connections(0), tile.get_grid_position(), tile.level.grid_size)
-	_add_arches(decorations, tile)
+	var decided: Array[Vector2i] = []
+	decorations.set_meta(DECIDED_EDGES, decided)
+	_add_arches(decorations, tile, decided)
+	_add_walls(decorations, tile, decided)
 	_add_pillars(decorations, tile)
 	return decorations
 
@@ -84,10 +92,8 @@ func drop(decorations: Node3D, after: Tween = null) -> void:
 
 ## An arch over some openings: whole ones between a room and a corridor, ruins between two corridors. The first of the two tiles to
 ## be revealed decides, as soon as the other one exists (it need not be revealed); otherwise the other one decides once revealed
-func _add_arches(decorations: Node3D, tile: Structure) -> void:
+func _add_arches(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) -> void:
 	var grid_position: Vector2i = tile.get_grid_position()
-	var decided: Array[Vector2i] = []
-	decorations.set_meta(DECIDED_OPENINGS, decided)
 	for direction: Level.Direction in tile.get_connections():
 		var neighbour_position: Vector2i = grid_position + Level.DIRECTION_VECTORS[direction]
 		var neighbour: Structure = tile.level.get_placed_tile(neighbour_position)
@@ -102,15 +108,37 @@ func _add_arches(decorations: Node3D, tile: Structure) -> void:
 		random.seed = hash(grid_position) ^ hash(neighbour_position)
 		if random.randf() >= (doorway_arch_chance if is_doorway else corridor_arch_chance): continue
 		var arches: PropSet = doorway_arches if is_doorway else corridor_arches
-		var outward: Vector2 = Vector2(Level.DIRECTION_VECTORS[direction])
-		# Arches are modelled spanning along x
-		var across: Basis = Basis(Vector3.UP, PI * 0.5) if outward.x != 0.0 else Basis.IDENTITY
-		_add_prop(decorations, arches, _to_model(tile, _on_floor(outward * tile.level.grid_size * 0.5), across), random)
+		_add_prop(decorations, arches, _on_edge(tile, direction, Basis.IDENTITY), random)
 
-## Whether [param tile] already decided its opening towards [param neighbour_position]
+## A wall on some sides without a connection; a neighbour across, if any, may have decided the edge already
+func _add_walls(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) -> void:
+	if not walls: return
+	var grid_position: Vector2i = tile.get_grid_position()
+	var connections: Array[Level.Direction] = tile.get_connections()
+	for direction: Level.Direction in Level.Direction.values():
+		if connections.has(direction): continue
+		var neighbour_position: Vector2i = grid_position + Level.DIRECTION_VECTORS[direction]
+		var neighbour: Structure = tile.level.get_placed_tile(neighbour_position)
+		if neighbour and _has_decided(neighbour, grid_position): continue
+		decided.append(neighbour_position)
+		# Seeded by the edge, so it does not matter which side decides
+		var random: RandomNumberGenerator = RandomNumberGenerator.new()
+		random.seed = hash(grid_position) ^ hash(neighbour_position) ^ hash(&"wall")
+		if random.randf() >= wall_chance: continue
+		# Either face may look into the tile, so crumbling ends vary
+		var flip: Basis = Basis(Vector3.UP, PI) if random.randf() < 0.5 else Basis.IDENTITY
+		_add_prop(decorations, walls, _on_edge(tile, direction, flip), random)
+
+## The middle of the tile's edge in [param direction] (in the level's axes), turned so a piece modelled along x spans the edge
+static func _on_edge(tile: Structure, direction: Level.Direction, turn: Basis) -> Transform3D:
+	var outward: Vector2 = Vector2(Level.DIRECTION_VECTORS[direction])
+	var across: Basis = Basis(Vector3.UP, PI * 0.5) if outward.x != 0.0 else Basis.IDENTITY
+	return _to_model(tile, _on_floor(outward * tile.level.grid_size * 0.5), across * turn)
+
+## Whether [param tile] already decided its edge towards [param neighbour_position]
 static func _has_decided(tile: Structure, neighbour_position: Vector2i) -> bool:
 	if not tile.model or not tile.model.has_node(NodePath(NODE_NAME)): return false
-	var decided: Array[Vector2i] = tile.model.get_node(NodePath(NODE_NAME)).get_meta(DECIDED_OPENINGS, [] as Array[Vector2i])
+	var decided: Array[Vector2i] = tile.model.get_node(NodePath(NODE_NAME)).get_meta(DECIDED_EDGES, [] as Array[Vector2i])
 	return decided.has(neighbour_position)
 
 ## A pillar on each corner with an even index on both axes whose four cells are all room tiles, raised once the last of them is

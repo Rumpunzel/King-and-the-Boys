@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://b5pxwyve86sqh"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="Material" uid="uid://dojugi1n63fxu" path="res://data/structures/props/dungeon_realms_material.tres" id="2_material"]
+[ext_resource type="PackedScene" uid="uid://bpr546wuut5gk" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Wall_Broken_01.fbx" id="3_wall"]
+[ext_resource type="PackedScene" uid="uid://cuqth3t0akvpb" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Wall_Cap_Broken_01.fbx" id="4_wall"]
+[ext_resource type="PackedScene" uid="uid://ri61k0qbhm60" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Wall_01.fbx" id="5_wall"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("3_wall"): 1.0,
+ExtResource("4_wall"): 0.6,
+ExtResource("5_wall"): 0.2
+})
+prop_scale = Vector3(0.4, 0.4, 0.4)
+center_props = true
+material_override = ExtResource("2_material")

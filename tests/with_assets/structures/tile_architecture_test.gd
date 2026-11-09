@@ -4,6 +4,7 @@ extends GdUnitTestSuite
 const LEVEL: String = "res://data/levels/level.tscn"
 const DOORWAY_ARCHES: String = "res://data/structures/props/dungeon_doorway_arches.tres"
 const ROOM_PILLARS: String = "res://data/structures/props/dungeon_room_pillars.tres"
+const WALLS: String = "res://data/structures/props/dungeon_walls.tres"
 
 const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tres"
 
@@ -92,3 +93,17 @@ func test_no_pillar_stands_beside_a_doorway_arch() -> void:
 	var pillars: Array[Vector2] = _props_of(ROOM_PILLARS)
 	for arch: Vector2 in _props_of(DOORWAY_ARCHES):
 		for pillar: Vector2 in pillars: assert_float(pillar.distance_to(arch)).is_greater(0.9)
+
+func test_walls_stand_once_on_closed_edges() -> void:
+	var walls: Array[Vector2] = _props_of(WALLS)
+	assert_array(walls).is_not_empty()
+	for wall: Vector2 in walls:
+		assert_int(_count_near(walls, wall)).override_failure_message("Two walls at %s" % wall).is_equal(1)
+		# A wall stands on the edge between two cells; neither may have an opening there
+		var cell: Vector2 = wall / _level.grid_size
+		var sides: Array[Vector2i] = [Vector2i(cell.floor()), Vector2i(cell.ceil())]
+		for side: Vector2i in sides:
+			var tile: Structure = _level.get_placed_tile(side)
+			if not tile: continue
+			var other: Vector2i = sides[1] if side == sides[0] else sides[0]
+			assert_bool(tile.has_connection_to(other)).override_failure_message("Wall in the opening of %s at %s" % [tile.name, wall]).is_false()
