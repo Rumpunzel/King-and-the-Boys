@@ -3,6 +3,7 @@ class_name PlayerState
 extends State
 
 var _state_machine: PlayerStateMachine
+var _haunt_action: Action = preload("uid://cuoqy5wkfjika")
 
 ## Called by the state machine when receiving unhandled input events.
 func handle_input(event: InputEvent) -> void:
@@ -37,8 +38,6 @@ func set_state_machine(state_machine: StateMachine) -> void:
 	_state_machine = state_machine
 
 func set_available_interaction(interaction: Interaction) -> void: get_state_machine().available_interaction = interaction
-
-var _haunt_action: Action = preload("uid://cuoqy5wkfjika")
 
 ## Sends move input for the controlled [Character] to the host's [TurnManager].
 ## Undo and pass are the turn panel's buttons, with their actions as shortcuts.

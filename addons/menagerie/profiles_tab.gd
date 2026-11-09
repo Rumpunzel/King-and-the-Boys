@@ -47,7 +47,7 @@ func _create_profile_item(profile: Profile, parent_item: TreeItem) -> TreeItem:
 	if not group_item: group_item = _create_group_item_for_profile(profile, parent_item)
 	var profile_item: TreeItem = _profiles_tree.create_item(group_item)
 	group_item.set_text(0, "%s (%d)" % [profile.get_group_name(), group_item.get_child_count()])
-	
+
 	var icon: Texture2D = profile.portrait if profile.portrait else profile.get_default_icon()
 	if icon and icon.get_size().aspect() != 1.0: push_warning("Using a non-square icon for %s" % profile.resource_path)
 	var profile_text: String = profile.name
@@ -59,13 +59,13 @@ func _create_profile_item(profile: Profile, parent_item: TreeItem) -> TreeItem:
 	var variations: PackedStringArray = profile._model_variations.map(func(model: PackedScene) -> String: return model.resource_path)
 	profile_item.set_tooltip_text(Columns.PROFILE, "\n".join(variations))
 	profile_item.set_custom_color(Columns.PROFILE, profile.color)
-	
+
 	var shortened_path: String = profile.resource_path.trim_prefix(_data_path).trim_prefix("/")
 	profile_item.set_text(Columns.RESOURCE_PATH, shortened_path)
 	profile_item.set_metadata(Columns.RESOURCE_PATH, profile.resource_path)
 	profile_item.set_tooltip_text(Columns.RESOURCE_PATH, profile.resource_path)
 	profile_item.set_custom_color(Columns.RESOURCE_PATH, profile.color.darkened(0.5))
-	
+
 	_profile_items[profile] = profile_item
 	_update_name()
 	if visible and not _profiles_tree.get_selected(): _profiles_tree.set_selected(profile_item, Columns.PROFILE)

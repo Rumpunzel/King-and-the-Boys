@@ -1,7 +1,7 @@
 class_name SteamNetwork
 extends Network
 
-func create_multiplayer_server(port: int, max_connections: int) -> SteamMultiplayerPeer:
+func create_multiplayer_server(_port: int, max_connections: int) -> SteamMultiplayerPeer:
 	Steam.createLobby(Steam.LOBBY_TYPE_FRIENDS_ONLY, max_connections + 1)
 	var server_peer: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
 	#var error: Error = server_peer.host_with_lobby()

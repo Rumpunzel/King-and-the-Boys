@@ -70,7 +70,7 @@ func _on_thing_created(thing: Thing) -> void:
 	assert(_level)
 	_level._on_thing_created(thing)
 
-func _on_agent_created(agent: Agent) -> void:
+func _on_agent_created(_agent: Agent) -> void:
 	assert(_level)
 	#agent.character.entered_grid_cell.connect(_level._on_character_entered_grid_cell)
 

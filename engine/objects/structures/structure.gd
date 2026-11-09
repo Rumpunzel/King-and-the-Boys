@@ -63,6 +63,10 @@ const STATUS: StringName = "status"
 		if not is_node_ready(): shown_status = status
 		status_changed.emit(status)
 
+@export_group("Configuration")
+@export var _collision_shape: CollisionShape3D
+@export var _hidden_material: Material
+
 ## The [Character] whose step raised [member status] last, empty if no step did (level build, spawning, loading).
 ## Replicated before [member status], so peers know it when the status changes.
 var status_cause: NodePath
@@ -77,10 +81,6 @@ var shown_status: Status = Status.NONE:
 		_show_model()
 		if shown_status == Status.REVEALED and level: _debug_draw_connections()
 		shown_status_changed.emit(shown_status)
-
-@export_group("Configuration")
-@export var _collision_shape: CollisionShape3D
-@export var _hidden_material: Material
 
 var model: Model:
 	set(new_model):

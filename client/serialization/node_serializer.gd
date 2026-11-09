@@ -53,15 +53,15 @@ func restore_state(collected_nodes: Dictionary[SpawnType, Variant]) -> void:
 	# Clean state
 	var nodes_freed: Array[NodePath] = _spawner.remove_all_spawned_nodes()
 	print_debug("Removed %d nodes for %s" % [nodes_freed.size(), _spawner.get_path()])
-	
+
 	var collected_added_nodes: Dictionary[StringName, int] = collected_nodes[SpawnType.ADDED_NODES]
 	assert(collected_added_nodes is Dictionary[StringName, int])
 	var added_nodes_restored: Array[NodePath] = _restore_added_nodes(collected_added_nodes)
-	
+
 	var collected_data_nodes: Array[Variant] = collected_nodes[SpawnType.DATA_NODES]
 	assert(collected_data_nodes is Array[Variant])
 	var data_nodes_restored: Array[NodePath] = _restore_data_nodes(collected_data_nodes)
-	
+
 	print_debug("Restored %d nodes for %s" % [added_nodes_restored.size() + data_nodes_restored.size(), _spawner.get_path()])
 
 func _restore_added_nodes(collected_added_nodes: Dictionary[StringName, int]) -> Array[NodePath]:

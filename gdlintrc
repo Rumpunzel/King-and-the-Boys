@@ -1,0 +1,60 @@
+# gdlint (gdtoolkit) config. Run: gdlint . (or python -m gdtoolkit.linter .)
+# Taken from the sibling project Vagrant. Long one-liners are the project's style, hence the line length.
+# Only the vendored addons are excluded (matched by directory name); our own addon menagerie is linted.
+class-definitions-order:
+- tools
+- classnames
+- extends
+- docstrings
+- signals
+- enums
+- consts
+- staticvars
+- exports
+- pubvars
+- prvvars
+- onreadypubvars
+- onreadyprvvars
+- others
+class-load-variable-name: (([A-Z][a-z0-9]*)+|_?[a-z][a-z0-9]*(_[a-z0-9]+)*)
+class-name: ([A-Z][a-z0-9]*)+
+class-variable-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
+comparison-with-itself: null
+constant-name: _?[A-Z][A-Z0-9]*(_[A-Z0-9]+)*
+disable: []
+duplicated-load: null
+enum-element-name: '[A-Z][A-Z0-9]*(_[A-Z0-9]+)*'
+enum-name: ([A-Z][a-z0-9]*)+
+excluded_directories: !!set
+  .git: null
+  .godot: null
+  debug_draw_3d: null
+  gdUnit4: null
+  godot-git-plugin: null
+  godot-plugin-refresher: null
+  godotsteam: null
+  phantom_camera: null
+  radial_progress: null
+  reports: null
+  toastparty: null
+expression-not-assigned: null
+function-argument-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
+function-arguments-number: 10
+function-name: (_on_([A-Z][a-z0-9]*)+(_[a-z0-9]+)*|_?[a-z][a-z0-9]*(_[a-z0-9]+)*)
+function-preload-variable-name: ([A-Z][a-z0-9]*)+
+function-variable-name: '[a-z][a-z0-9]*(_[a-z0-9]+)*'
+load-constant-name: (([A-Z][a-z0-9]*)+|_?[A-Z][A-Z0-9]*(_[A-Z0-9]+)*|d[0-9]+)
+loop-variable-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
+max-file-lines: 1000
+max-line-length: 240
+max-public-methods: 25
+max-returns: 6
+mixed-tabs-and-spaces: null
+no-elif-return: null
+no-else-return: null
+signal-name: '[a-z][a-z0-9]*(_[a-z0-9]+)*'
+sub-class-name: _?([A-Z][a-z0-9]*)+
+tab-characters: 1
+trailing-whitespace: null
+unnecessary-pass: null
+unused-argument: null

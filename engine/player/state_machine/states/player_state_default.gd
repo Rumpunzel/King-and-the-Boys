@@ -14,7 +14,7 @@ func update(_delta: float) -> void:
 	#if available_interaction.is_action_just_released():
 		#_haunt_timer.stop()
 
-func physics_update(delta: float) -> void:
+func physics_update(_delta: float) -> void:
 	var direction_input: Vector2 = get_direction_input()
 	#get_character().move_into_direction.rpc(direction_input, delta)
 

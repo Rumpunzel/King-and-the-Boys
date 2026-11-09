@@ -27,7 +27,7 @@ enum VerticalPosition {
 	BOTTOM,
 }
 
-const text_colors: Dictionary[Type, Color] = {
+const TEXT_COLORS: Dictionary[Type, Color] = {
 	Type.DEFAULT: Color.WHITE,
 	Type.INFO: Color.WHITE,
 	Type.SUCCESS: Color.WHITE,
@@ -35,7 +35,7 @@ const text_colors: Dictionary[Type, Color] = {
 	Type.ERROR: Color.WHITE,
 }
 
-const background_colors: Dictionary[Type, Color] = {
+const BACKGROUND_COLORS: Dictionary[Type, Color] = {
 	Type.DEFAULT: Color("#414042"),
 	Type.INFO: Color("#196ab1"),
 	Type.SUCCESS: Color("#158a43"),
@@ -55,7 +55,7 @@ static func show_toast(
 	horizontal_position: HorizontalPosition,
 	vertical_position: VerticalPosition,
 	gravity: Gravity,
-	text_size: int, 
+	text_size: int,
 	custom_toast_font: bool,
 ) -> void:
 	assert(not message.is_empty())
@@ -85,7 +85,7 @@ class ToasterConfig extends RefCounted:
 	var gravity: Gravity
 	var text_size: int
 	var use_font: bool
-	
+
 	func _init(
 		with_message: String,
 		type: Type,
@@ -96,8 +96,8 @@ class ToasterConfig extends RefCounted:
 		with_custom_font: bool
 	) -> void:
 		text = with_message
-		bgcolor = background_colors[type]
-		color = text_colors[type]
+		bgcolor = BACKGROUND_COLORS[type]
+		color = TEXT_COLORS[type]
 		horizontal_position = with_horizontal_position
 		vertical_position = with_vertical_position
 		gravity = with_gravity

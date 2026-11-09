@@ -51,7 +51,7 @@ var _rotation_tween: Tween
 func _ready() -> void:
 	_target_rotation = fmod(abs(rotation_degrees.y), 180.0)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if not is_visible_in_tree(): return
 	var look_at_position: Vector3 = (_view_target.global_position + _view_target.get_heads_up_anchor()) / 2.0
 	_camera.look_at(look_at_position)

@@ -17,13 +17,13 @@ static func gather_all_geometry_instances_on(node: Node) -> Array[MeshInstance3D
 
 func play_animation(normalized_velocity: Vector3, _is_on_floor: bool) -> void:
 	if not _animation_tree: return
-	var _state_machine: AnimationNodeStateMachinePlayback = _animation_tree["parameters/playback"]
-	assert(_state_machine)
+	var playback: AnimationNodeStateMachinePlayback = _animation_tree["parameters/playback"]
+	assert(playback)
 	if normalized_velocity:
-		_state_machine.travel("Walk")
+		playback.travel("Walk")
 		_animation_tree.set("parameters/Walk/blend_position", normalized_velocity.length_squared())
 	else:
-		_state_machine.travel("Idle")
+		playback.travel("Idle")
 
 func play_model_animation(model_animation: ModelAnimation) -> Tween:
 	assert(model_animation)
