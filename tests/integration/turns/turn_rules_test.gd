@@ -314,3 +314,51 @@ func test_grid_state_and_points_are_saved() -> void:
 	for property_path: NodePath in collected: saved[property_path.get_concatenated_subnames()] = collected[property_path]
 	assert_dict(saved).contains_keys([&"grid_cell", &"tile_spot", &"facing", &"movement_points"])
 	assert_vector(saved[&"tile_spot"] as Vector2).is_equal(second.tile_spot)
+
+## A second player keeps the turn open while the local one passes
+func _add_other_player() -> Player:
+	var other: Player = auto_free(Player.create(2, "Other"))
+	var players: Dictionary = Lobby.get("_players")
+	players[2] = other
+	return other
+
+func _remove_other_player() -> void:
+	var players: Dictionary = Lobby.get("_players")
+	players.erase(2)
+
+func test_auto_pass_only_without_moves_left() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	_add_other_player()
+	var local_id: int = _turn_manager.multiplayer.get_unique_id()
+	# A peer that still sees the last turn's moves asks too early
+	_turn_manager.request_auto_pass(hero.get_path())
+	assert_bool(_turn_manager.has_passed(local_id)).is_false()
+	hero.movement_points = 0
+	_turn_manager.request_auto_pass(hero.get_path())
+	assert_bool(_turn_manager.has_passed(local_id)).is_true()
+	_remove_other_player()
+
+func test_undo_takes_a_pass_back_only_when_it_undoes() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	_add_other_player()
+	var local_id: int = _turn_manager.multiplayer.get_unique_id()
+	var start: Vector2i = await _walk_until_board_changes(hero)
+	await _move(hero, Level.get_direction(hero.grid_cell, start))
+	_turn_manager.request_pass(true)
+	await _undo(hero)
+	assert_bool(_turn_manager.has_passed(local_id)).is_false()
+	# Nothing left to undo: the pass stays
+	_turn_manager.request_pass(true)
+	await _undo(hero)
+	assert_bool(_turn_manager.has_passed(local_id)).is_true()
+	_remove_other_player()
+
+func test_undo_steps_go_with_their_character() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	var start: Vector2i = await _walk_until_board_changes(hero)
+	await _move(hero, Level.get_direction(hero.grid_cell, start))
+	var undo_stacks: Dictionary = _turn_manager.get("_undo_stacks")
+	assert_bool(undo_stacks.has(hero)).is_true()
+	hero.queue_free()
+	await await_idle_frame()
+	assert_bool(undo_stacks.has(hero)).is_false()

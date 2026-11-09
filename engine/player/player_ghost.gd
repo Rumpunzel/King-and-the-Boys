@@ -107,7 +107,7 @@ func get_controlled_character() -> Character:
 func request_undo() -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	if not turn_manager or not can_undo(): return
-	if has_passed(): turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, false)
+	# The host takes a pass back along with a successful undo
 	turn_manager.request_undo.rpc_id(Multiplayer.HOST_ID, get_controlled_character().get_path())
 
 ## Passes, or takes a pass back while that is still possible
@@ -139,7 +139,8 @@ func _auto_pass_if_out_of_moves() -> void:
 	if _controlled_character.is_figure_moving():
 		if not _controlled_character.figure_arrived.is_connected(_auto_pass_if_out_of_moves): _controlled_character.figure_arrived.connect(_auto_pass_if_out_of_moves, CONNECT_ONE_SHOT)
 		return
-	turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, true)
+	# The host checks the moves again: this peer may still see the last turn's moves
+	turn_manager.request_auto_pass.rpc_id(Multiplayer.HOST_ID, _controlled_character.get_path())
 
 func _on_controlled_character_changed(controlled_character: Character) -> void:
 	_controlled_character = controlled_character

@@ -52,8 +52,6 @@ func _ready() -> void:
 		_synchronizer.set_visibility_for(Multiplayer.HOST_ID, true)
 		return
 	_level.board_changed.connect(_on_board_changed)
-	# Characters get replaced e.g. when loading a save
-	get_tree().node_removed.connect(_on_node_removed)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
 
 ## Host only: this node is part of the game scene, not spawned, so peers only get synced
@@ -71,7 +69,8 @@ func has_passed(player_id: int) -> bool:
 func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	if not multiplayer.is_server(): return
 	var sender_id: int = _get_sender_id()
-	var character: Character = _get_movable_character(sender_id, character_path)
+	if has_passed(sender_id): return
+	var character: Character = _get_controlled_character(sender_id, character_path)
 	if not character: return
 	var target_cell: Vector2i = _level.get_step_target(character.grid_cell, direction)
 	var free_spots: Array[Vector2] = _level.get_free_spots(target_cell, character)
@@ -79,6 +78,9 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 		character.place_on_grid(character.grid_cell, character.tile_spot, direction)
 		return
 	# Record before moving: a move that changes the board clears the stack again
+	if not _undo_stacks.has(character) and not character.tree_exiting.is_connected(_on_character_exiting.bind(character)):
+		# Characters get replaced e.g. when loading a save
+		character.tree_exiting.connect(_on_character_exiting.bind(character), CONNECT_ONE_SHOT)
 	var undo_stack: Array = _undo_stacks.get_or_add(character, [])
 	undo_stack.append(GridStep.new(character))
 	character.movement_points -= 1
@@ -86,12 +88,13 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	character.place_on_grid(target_cell, target_spot, direction)
 	_update_undo_steps(character)
 
-## Takes back the last step of [param character_path] this turn and refunds its movement point
+## Takes back the last step of [param character_path] this turn and refunds its movement point.
+## A pass of the sender is taken back with it, but only if the step could be undone.
 @rpc("any_peer", "call_local", "reliable")
 func request_undo(character_path: NodePath) -> void:
 	if not multiplayer.is_server(): return
 	var sender_id: int = _get_sender_id()
-	var character: Character = _get_movable_character(sender_id, character_path)
+	var character: Character = _get_controlled_character(sender_id, character_path)
 	if not character: return
 	var undo_stack: Array = _undo_stacks.get(character, [])
 	if undo_stack.is_empty(): return
@@ -106,6 +109,7 @@ func request_undo(character_path: NodePath) -> void:
 	var step_direction: Level.Direction = Level.get_direction(previous_step.grid_cell, character.grid_cell)
 	character.place_on_grid(previous_step.grid_cell, spot, step_direction)
 	_update_undo_steps(character)
+	_set_passed(sender_id, false)
 
 ## Passes or takes a pass back; the turn ends once every connected player has passed
 @rpc("any_peer", "call_local", "reliable")
@@ -113,12 +117,18 @@ func request_pass(passed: bool) -> void:
 	if not multiplayer.is_server(): return
 	var sender_id: int = _get_sender_id()
 	if not Lobby.get_player(sender_id): return
-	if passed == has_passed(sender_id): return
-	var new_passed_player_ids: PackedInt32Array = passed_player_ids.duplicate()
-	if passed: new_passed_player_ids.append(sender_id)
-	else: new_passed_player_ids.remove_at(new_passed_player_ids.find(sender_id))
-	passed_player_ids = new_passed_player_ids
+	_set_passed(sender_id, passed)
 	_end_turn_if_everyone_passed()
+
+## Passes for the sender only if [param character_path] really is out of moves. Auto-pass uses this, as a peer may
+## still see the moves of the last turn while the new turn's state is on its way.
+@rpc("any_peer", "call_local", "reliable")
+func request_auto_pass(character_path: NodePath) -> void:
+	if not multiplayer.is_server(): return
+	var sender_id: int = _get_sender_id()
+	var character: Character = _get_controlled_character(sender_id, character_path)
+	if not character or character.movement_points != 0: return
+	request_pass(true)
 
 func _end_turn_if_everyone_passed() -> void:
 	for player: Player in Lobby.get_connected_players():
@@ -143,13 +153,19 @@ func _update_undo_steps(character: Character) -> void:
 	var undo_stack: Array = _undo_stacks.get(character, [])
 	character.undo_steps = undo_stack.size()
 
+func _set_passed(player_id: int, passed: bool) -> void:
+	if passed == has_passed(player_id): return
+	var new_passed_player_ids: PackedInt32Array = passed_player_ids.duplicate()
+	if passed: new_passed_player_ids.append(player_id)
+	else: new_passed_player_ids.remove_at(new_passed_player_ids.find(player_id))
+	passed_player_ids = new_passed_player_ids
+
 func _get_sender_id() -> int:
 	var sender_id: int = multiplayer.get_remote_sender_id()
 	return sender_id if sender_id != 0 else multiplayer.get_unique_id()
 
-## @returns the [Character] at [param character_path] if [param sender_id] may move it right now
-func _get_movable_character(sender_id: int, character_path: NodePath) -> Character:
-	if has_passed(sender_id): return null
+## @returns the [Character] at [param character_path] if [param sender_id] controls it
+func _get_controlled_character(sender_id: int, character_path: NodePath) -> Character:
 	var character: Character = get_node_or_null(character_path) as Character
 	if not character or not character.visible: return null
 	if not character.is_controlled_by(sender_id): return null
@@ -159,14 +175,11 @@ func _on_board_changed(character: Character) -> void:
 	_undo_stacks.erase(character)
 	_update_undo_steps(character)
 
-func _on_node_removed(node: Node) -> void:
-	if node is Character: _undo_stacks.erase(node)
+func _on_character_exiting(character: Character) -> void:
+	_undo_stacks.erase(character)
 
 func _on_player_disconnected(player: Player) -> void:
-	if has_passed(player.player_id):
-		var new_passed_player_ids: PackedInt32Array = passed_player_ids.duplicate()
-		new_passed_player_ids.remove_at(new_passed_player_ids.find(player.player_id))
-		passed_player_ids = new_passed_player_ids
+	_set_passed(player.player_id, false)
 	_end_turn_if_everyone_passed()
 
 func _get_configuration_warnings() -> PackedStringArray:
