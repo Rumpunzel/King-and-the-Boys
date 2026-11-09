@@ -7,7 +7,6 @@
 [ext_resource type="Resource" uid="uid://cv041ktdn6jph" path="res://data/structures/props/dungeon_doorway_arches.tres" id="4_doorways"]
 [ext_resource type="Resource" uid="uid://d08bvlx052dw3" path="res://data/structures/props/dungeon_ruined_arches.tres" id="5_ruins"]
 [ext_resource type="Resource" uid="uid://bifb83r2doed1" path="res://data/structures/props/dungeon_room_pillars.tres" id="6_pillars"]
-[ext_resource type="Resource" uid="uid://b5pxwyve86sqh" path="res://data/structures/props/dungeon_walls.tres" id="7_walls"]
 
 [resource]
 script = ExtResource("1_script")
@@ -16,4 +15,3 @@ corner_props = ExtResource("3_storage")
 doorway_arches = ExtResource("4_doorways")
 corridor_arches = ExtResource("5_ruins")
 room_pillars = ExtResource("6_pillars")
-walls = ExtResource("7_walls")

@@ -4,18 +4,25 @@ extends GdUnitTestSuite
 const LEVEL: String = "res://data/levels/level.tscn"
 const DOORWAY_ARCHES: String = "res://data/structures/props/dungeon_doorway_arches.tres"
 const ROOM_PILLARS: String = "res://data/structures/props/dungeon_room_pillars.tres"
-const WALLS: String = "res://data/structures/props/dungeon_walls.tres"
+## The dungeon has no walls yet; the arch ruins stand in for them, so the shared edges are still checked
+const WALLS: String = "res://data/structures/props/dungeon_ruined_arches.tres"
 
 const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tres"
 
 var _level: Level
 var _doorway_arch_chance: float
+var _walls: PropSet
+var _wall_chance: float
 
 func before_test() -> void:
 	# Every doorway gets an arch, so the checks do not depend on the rolls
 	var decorations: TileDecorations = load(DECORATIONS)
 	_doorway_arch_chance = decorations.doorway_arch_chance
 	decorations.doorway_arch_chance = 1.0
+	_walls = decorations.walls
+	_wall_chance = decorations.wall_chance
+	decorations.walls = load(WALLS)
+	decorations.wall_chance = 0.5
 	seed(4321)
 	_level = auto_free((load(LEVEL) as PackedScene).instantiate())
 	add_child(_level)
@@ -25,7 +32,10 @@ func before_test() -> void:
 		for tile: Structure in _tiles_within(ring): tile.status = Structure.Status.REVEALED
 
 func after_test() -> void:
-	(load(DECORATIONS) as TileDecorations).doorway_arch_chance = _doorway_arch_chance
+	var decorations: TileDecorations = load(DECORATIONS)
+	decorations.doorway_arch_chance = _doorway_arch_chance
+	decorations.walls = _walls
+	decorations.wall_chance = _wall_chance
 
 func _tiles_within(radius: int) -> Array[Structure]:
 	var tiles: Array[Structure] = []
@@ -95,7 +105,8 @@ func test_no_pillar_stands_beside_a_doorway_arch() -> void:
 		for pillar: Vector2 in pillars: assert_float(pillar.distance_to(arch)).is_greater(0.9)
 
 func test_walls_stand_once_on_closed_edges() -> void:
-	var walls: Array[Vector2] = _props_of(WALLS)
+	# The stand-in walls are arch ruins, which also stand in openings
+	var walls: Array[Vector2] = _props_of(WALLS).filter(func(spot: Vector2) -> bool: return not _is_opening(spot))
 	assert_array(walls).is_not_empty()
 	for wall: Vector2 in walls:
 		assert_int(_count_near(walls, wall)).override_failure_message("Two walls at %s" % wall).is_equal(1)
@@ -107,3 +118,9 @@ func test_walls_stand_once_on_closed_edges() -> void:
 			if not tile: continue
 			var other: Vector2i = sides[1] if side == sides[0] else sides[0]
 			assert_bool(tile.has_connection_to(other)).override_failure_message("Wall in the opening of %s at %s" % [tile.name, wall]).is_false()
+
+## Whether [param spot] (an edge's middle) lies in an opening between two tiles
+func _is_opening(spot: Vector2) -> bool:
+	var cell: Vector2 = spot / _level.grid_size
+	var first: Structure = _level.get_placed_tile(Vector2i(cell.floor()))
+	return first != null and first.has_connection_to(Vector2i(cell.ceil()))
