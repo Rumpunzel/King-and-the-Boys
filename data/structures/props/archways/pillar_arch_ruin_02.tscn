@@ -8,13 +8,13 @@
 [node name="PillarArchRuin02" type="Node3D"]
 
 [node name="LeftPillar" parent="." instance=ExtResource("1_piece")]
-transform = Transform3D(-0.9, 0, -1.10218e-16, 0, 0.9, 0, 1.10218e-16, 0, -0.9, -1, 0, 0)
+transform = Transform3D(-0.6, 0, -7.34788e-17, 0, 0.9, 0, 7.34788e-17, 0, -0.6, -1, 0, 0)
 
 [node name="ArchStub" parent="." instance=ExtResource("2_piece")]
-transform = Transform3D(-0.510204, 0, -6.2482e-17, 0, 0.9, 0, 1.10218e-16, 0, -0.9, -1, 2.952, 0)
+transform = Transform3D(-0.510204, 0, -6.2482e-17, 0, 0.9, 0, 7.34788e-17, 0, -0.6, -1, 2.952, 0)
 
 [node name="RightPillar" parent="." instance=ExtResource("3_piece")]
-transform = Transform3D(0.869333, 0, -0.232937, 0, 0.9, 0, 0.232937, 0, 0.869333, 1, 0, 0)
+transform = Transform3D(0.579555, 0, -0.155291, 0, 0.9, 0, 0.155291, 0, 0.579555, 1, 0, 0)
 
 [node name="Fallen" parent="." instance=ExtResource("4_piece")]
-transform = Transform3D(0.184691, 0, -0.507434, 0, 0.54, 0, 0.507434, 0, 0.184691, 0.75, 0, 0.5)
+transform = Transform3D(0.188111, 0, -0.516831, 0, 0.55, 0, 0.516831, 0, 0.188111, 0.75, 0, 0.5)
