@@ -38,9 +38,10 @@ func _props_of(prop_set_path: String) -> Array[Vector2]:
 func _count_near(spots: Array[Vector2], spot: Vector2) -> int:
 	return spots.filter(func(other: Vector2) -> bool: return other.distance_to(spot) < 0.3).size()
 
-func test_each_doorway_gets_one_arch() -> void:
+func test_doorways_get_at_most_one_arch() -> void:
 	var arches: Array[Vector2] = _props_of(DOORWAY_ARCHES)
 	var doorways: int = 0
+	var arched: int = 0
 	for tile: Structure in _tiles_within(3):
 		if tile.shown_status != Structure.Status.REVEALED: continue
 		for direction: Level.Direction in tile.get_connections():
@@ -49,8 +50,11 @@ func test_each_doorway_gets_one_arch() -> void:
 			if (tile.profile.room_type != null) == (neighbour.profile.room_type != null): continue
 			doorways += 1
 			var opening: Vector3 = (tile.global_position + neighbour.global_position) * 0.5
-			assert_int(_count_near(arches, Vector2(opening.x, opening.z))).override_failure_message("Doorway at %s" % opening).is_equal(1)
+			var count: int = _count_near(arches, Vector2(opening.x, opening.z))
+			assert_int(count).override_failure_message("Doorway at %s" % opening).is_less_equal(1)
+			arched += count
 	assert_int(doorways).override_failure_message("The start should lie in a room with doorways").is_greater(0)
+	assert_int(arched).override_failure_message("Some doorways should be arched").is_greater(0)
 
 func test_pillars_stand_once_on_even_corners_inside_rooms() -> void:
 	var pillars: Array[Vector2] = _props_of(ROOM_PILLARS)

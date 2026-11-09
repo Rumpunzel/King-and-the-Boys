@@ -31,11 +31,12 @@ const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1)
 ## How far props on a side may stray from its middle, as a fraction of half the tile
 @export_range(0.0, 1.0) var edge_spread: float = 0.3
 @export_group("Architecture")
-## Span openings where a corridor enters a room
+## Span openings where a corridor enters a room, by [member doorway_arch_chance]
 @export var doorway_arches: PropSet
+@export_range(0.0, 1.0) var doorway_arch_chance: float = 0.6
 ## Span some openings between two corridor tiles, by [member corridor_arch_chance]; ruins rather than whole arches look right there
 @export var corridor_arches: PropSet
-@export_range(0.0, 1.0) var corridor_arch_chance: float = 0.25
+@export_range(0.0, 1.0) var corridor_arch_chance: float = 0.15
 ## Stand on every other grid corner inside rooms, where no arch can stand (arches need a corridor on one side)
 @export var room_pillars: PropSet
 @export_group("Animation")
@@ -79,7 +80,7 @@ func drop(decorations: Node3D, after: Tween = null) -> void:
 	if after and after.is_running(): after.finished.connect(_drop_each.bind(decorations), CONNECT_ONE_SHOT)
 	else: _drop_each(decorations)
 
-## An arch over each opening to an already revealed neighbour: always between a room and a corridor, sometimes between two corridors
+## An arch over some openings to an already revealed neighbour: whole ones between a room and a corridor, ruins between two corridors
 func _add_arches(decorations: Node3D, tile: Structure) -> void:
 	var grid_position: Vector2i = tile.get_grid_position()
 	for direction: Level.Direction in tile.get_connections():
@@ -88,12 +89,13 @@ func _add_arches(decorations: Node3D, tile: Structure) -> void:
 		# The neighbour raises the arch once it is revealed
 		if not neighbour or neighbour.shown_status != Structure.Status.REVEALED: continue
 		var is_room: bool = tile.profile.room_type != null
-		var arches: PropSet = doorway_arches if is_room != (neighbour.profile.room_type != null) else null
+		var is_doorway: bool = is_room != (neighbour.profile.room_type != null)
+		if not is_doorway and is_room: continue
 		# Seeded by the opening, so it does not matter which side raises the arch
 		var random: RandomNumberGenerator = RandomNumberGenerator.new()
 		random.seed = hash(grid_position) ^ hash(neighbour_position)
-		if not arches and not is_room and random.randf() < corridor_arch_chance: arches = corridor_arches
-		if not arches: continue
+		if random.randf() >= (doorway_arch_chance if is_doorway else corridor_arch_chance): continue
+		var arches: PropSet = doorway_arches if is_doorway else corridor_arches
 		var outward: Vector2 = Vector2(Level.DIRECTION_VECTORS[direction])
 		# Arches are modelled spanning along x
 		var across: Basis = Basis(Vector3.UP, PI * 0.5) if outward.x != 0.0 else Basis.IDENTITY
