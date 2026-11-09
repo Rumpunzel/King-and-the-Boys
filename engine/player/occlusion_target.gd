@@ -17,6 +17,7 @@ func _process(_delta: float) -> void:
 	var character: Character = _player_ghost.character
 	if not character: return
 	# The model is the figure, which moves ahead of or behind the character's grid cell
-	var figure: Node3D = character.model if character.model else character
+	var figure: Node3D = character
+	if character.model: figure = character.model
 	RenderingServer.global_shader_parameter_set(PARAMETER, figure.global_position + Vector3.UP * height)
 
