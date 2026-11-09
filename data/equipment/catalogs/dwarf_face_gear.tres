@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="6_obuv2"]
 [ext_resource type="Resource" uid="uid://jo2i1l83tycp" path="res://data/equipment/types/dwarf_face_gear.tres" id="7_b1m5x"]
 [ext_resource type="ArrayMesh" uid="uid://c1umjs62ujx6w" path="res://data/characters/dwarves/meshes/face/dwarf_face_gasmask_02.res" id="8_ashq4"]
-[ext_resource type="ArrayMesh" uid="uid://bt6ideg8720hx" path="res://data/characters/dwarves/meshes/face/dwarf_face_gas_bag_03.res" id="9_posml"]
+[ext_resource type="ArrayMesh" uid="uid://dc7nubpv1qpkv" path="res://data/characters/dwarves/meshes/face/dwarf_face_gas_bag_03.res" id="9_posml"]
 [ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="10_ge2yi"]
 
 [sub_resource type="Resource" id="Resource_rkwqn"]
