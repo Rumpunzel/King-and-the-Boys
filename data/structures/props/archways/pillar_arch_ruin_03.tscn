@@ -1,20 +1,16 @@
 [gd_scene format=3 uid="uid://d17fp842iynet"]
 
-[ext_resource type="PackedScene" uid="uid://d3dai7ve83b17" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_01.fbx" id="1_piece"]
-[ext_resource type="PackedScene" uid="uid://xlygivlyjkue" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_02.fbx" id="2_piece"]
-[ext_resource type="PackedScene" uid="uid://cmhejj43i8wcj" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_01.fbx" id="3_piece"]
-[ext_resource type="PackedScene" uid="uid://xdqb3olaaoxc" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_03.fbx" id="4_piece"]
+[ext_resource type="PackedScene" uid="uid://xlygivlyjkue" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_02.fbx" id="1_piece"]
+[ext_resource type="PackedScene" uid="uid://cmhejj43i8wcj" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_01.fbx" id="2_piece"]
+[ext_resource type="PackedScene" uid="uid://xdqb3olaaoxc" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_03.fbx" id="3_piece"]
 
 [node name="PillarArchRuin03" type="Node3D"]
 
-[node name="LeftLower" parent="." instance=ExtResource("1_piece")]
-transform = Transform3D(0.5, 0, -0, 0, 0.5, 0, 0, 0, 0.5, -1, 0, 0)
+[node name="LeftPillar" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(0.9, 0, -0, 0, 0.9, 0, 0, 0, 0.9, -1, 0, 0)
 
-[node name="LeftUpper" parent="." instance=ExtResource("2_piece")]
-transform = Transform3D(0.5, 0, -0, 0, 0.5, 0, 0, 0, 0.5, -1, 1.64, 0)
+[node name="RightPillar" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(-0.45, 0, -0.779423, 0, 0.9, 0, 0.779423, 0, -0.45, 1, 0, 0)
 
-[node name="RightLower" parent="." instance=ExtResource("3_piece")]
-transform = Transform3D(-0.25, 0, -0.433013, 0, 0.5, 0, 0.433013, 0, -0.25, 1, 0, 0)
-
-[node name="Fallen" parent="." instance=ExtResource("4_piece")]
-transform = Transform3D(0.517024, 0, -0.0911653, 0, 0.525, 0, 0.0911653, 0, 0.517024, -0.75, 0, -0.5)
+[node name="Fallen" parent="." instance=ExtResource("3_piece")]
+transform = Transform3D(0.531796, 0, -0.09377, 0, 0.54, 0, 0.09377, 0, 0.531796, -0.75, 0, -0.5)
