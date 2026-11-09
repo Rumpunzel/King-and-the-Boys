@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://bjafnf5vmyki4"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dqnlllfa348ga" path="res://assets/polygon_dungeon/Prefabs/Environments/Bones/SM_Env_BonePile_Small_01.tscn" id="2_prop"]
+[ext_resource type="PackedScene" uid="uid://gukglsse5f4t" path="res://assets/polygon_dungeon/Prefabs/Environments/Bones/SM_Env_BonePile_Small_02.tscn" id="3_prop"]
+[ext_resource type="PackedScene" uid="uid://jf6ak14qd8ag" path="res://assets/polygon_dungeon/Prefabs/Environments/Misc/SM_Env_Mushroom_Small_01.tscn" id="4_prop"]
+[ext_resource type="PackedScene" uid="uid://d2ghx3awi87t4" path="res://assets/polygon_dungeon/Prefabs/Environments/Misc/SM_Env_Mushroom_Small_02.tscn" id="5_prop"]
+[ext_resource type="PackedScene" uid="uid://bl0nxagaj7gas" path="res://assets/polygon_dungeon/Prefabs/Environments/Misc/SM_Env_Mushroom_Small_03.tscn" id="6_prop"]
+[ext_resource type="PackedScene" uid="uid://cox678kybovhg" path="res://assets/polygon_dungeon/Prefabs/Environments/Rocks/SM_Env_Brick_Rubble_01.tscn" id="7_prop"]
+[ext_resource type="PackedScene" uid="uid://b3b7ltkrfnhcw" path="res://assets/polygon_dungeon/Prefabs/Environments/Rocks/SM_Env_Brick_Rubble_02.tscn" id="8_prop"]
+[ext_resource type="PackedScene" uid="uid://b563lin5fdrj6" path="res://assets/polygon_dungeon/Prefabs/Environments/Rocks/SM_Env_Brick_Rubble_03.tscn" id="9_prop"]
+[ext_resource type="PackedScene" uid="uid://b1et8o55s63bl" path="res://assets/polygon_dungeon/Prefabs/Environments/Rocks/SM_Env_Rubble_Pebbles_01.tscn" id="10_prop"]
+[ext_resource type="PackedScene" uid="uid://co3a0fueyd2a2" path="res://assets/polygon_dungeon/Prefabs/Environments/Rocks/SM_Env_Rubble_Pebbles_02.tscn" id="11_prop"]
+[ext_resource type="PackedScene" uid="uid://cq5y03tc5mou8" path="res://assets/polygon_dungeon/Prefabs/Items/SM_Item_Coins_01.tscn" id="12_prop"]
+[ext_resource type="PackedScene" uid="uid://dnnsxpgfc6vls" path="res://assets/polygon_dungeon/Prefabs/Items/SM_Item_Jar_01.tscn" id="13_prop"]
+[ext_resource type="PackedScene" uid="uid://bgmyxpcl5i5s1" path="res://assets/polygon_dungeon/Prefabs/Items/SM_Item_Jar_02.tscn" id="14_prop"]
+[ext_resource type="PackedScene" uid="uid://d0d4vc4q4gdc1" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Candles_01.tscn" id="15_prop"]
+[ext_resource type="PackedScene" uid="uid://c85o7nl21oygi" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Candles_02.tscn" id="16_prop"]
+[ext_resource type="PackedScene" uid="uid://cgbhojpbbfqqa" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Candle_01.tscn" id="17_prop"]
+[ext_resource type="PackedScene" uid="uid://brnq5wxipy01s" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Vase_01.tscn" id="18_prop"]
+[ext_resource type="PackedScene" uid="uid://c2vvypmvfcty1" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Vase_03.tscn" id="19_prop"]
+[ext_resource type="PackedScene" uid="uid://c2qhd1a6gvbu2" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Vase_05.tscn" id="20_prop"]
+[ext_resource type="PackedScene" uid="uid://menylk3rceqb" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Vase_Broken_01.tscn" id="21_prop"]
+[ext_resource type="PackedScene" uid="uid://cpmiy1g40mk5r" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Vase_Broken_02.tscn" id="22_prop"]
+[ext_resource type="PackedScene" uid="uid://de1p3wxgrgq8q" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Skeleton_01.tscn" id="23_prop"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("2_prop"): 1.0,
+ExtResource("3_prop"): 1.0,
+ExtResource("4_prop"): 1.0,
+ExtResource("5_prop"): 1.0,
+ExtResource("6_prop"): 1.0,
+ExtResource("7_prop"): 1.0,
+ExtResource("8_prop"): 1.0,
+ExtResource("9_prop"): 1.0,
+ExtResource("10_prop"): 1.0,
+ExtResource("11_prop"): 1.0,
+ExtResource("12_prop"): 0.4,
+ExtResource("13_prop"): 1.0,
+ExtResource("14_prop"): 1.0,
+ExtResource("15_prop"): 1.0,
+ExtResource("16_prop"): 1.0,
+ExtResource("17_prop"): 1.0,
+ExtResource("18_prop"): 1.0,
+ExtResource("19_prop"): 1.0,
+ExtResource("20_prop"): 1.0,
+ExtResource("21_prop"): 1.0,
+ExtResource("22_prop"): 1.0,
+ExtResource("23_prop"): 0.3
+})

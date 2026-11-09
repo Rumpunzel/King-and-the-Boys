@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://ffideuo22lr7"]
 
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_53knh"]
+[ext_resource type="Resource" uid="uid://boyg6u55haqfd" path="res://data/structures/tiles/dungeon_decorations.tres" id="1_decorations"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/tiles/room/room_tile.tscn" id="2_2kovo"]
 [ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="3_53knh"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="4_c83ux"]
@@ -10,7 +11,6 @@
 [ext_resource type="Script" uid="uid://ds4gq17440h4n" path="res://engine/objects/nested_spawn_table.gd" id="6_u27yi"]
 [ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="7_o73u8"]
 [ext_resource type="Resource" uid="uid://80ut5hvuftsw" path="res://data/model_animations/flip_animation.tres" id="8_2q87q"]
-[ext_resource type="Resource" uid="uid://boyg6u55haqfd" path="res://data/structures/tiles/dungeon_decorations.tres" id="1_decorations"]
 
 [sub_resource type="Resource" id="Resource_jpwya"]
 script = ExtResource("6_u27yi")
@@ -23,8 +23,8 @@ metadata/_custom_type_script = "uid://ds4gq17440h4n"
 [resource]
 script = ExtResource("5_fonyd")
 group = 2
-decorations = ExtResource("1_decorations")
 room_type = ExtResource("4_kji3m")
+decorations = ExtResource("1_decorations")
 _connection_up = true
 _connection_right = true
 _connection_down = true

@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://db08p2a1kv7wb"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://b8ss83q7ysisn" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Barrel_01.tscn" id="2_prop"]
+[ext_resource type="PackedScene" uid="uid://dogixbwctgtp6" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Barrel_02.tscn" id="3_prop"]
+[ext_resource type="PackedScene" uid="uid://brw6cyoss7j2s" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Barrel_03.tscn" id="4_prop"]
+[ext_resource type="PackedScene" uid="uid://dseto5tfirhs0" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Barrel_Broken_01.tscn" id="5_prop"]
+[ext_resource type="PackedScene" uid="uid://cnghkuxd8e278" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Crate_Wood_01.tscn" id="6_prop"]
+[ext_resource type="PackedScene" uid="uid://chmy86ogxu0gj" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Crate_Wood_02.tscn" id="7_prop"]
+[ext_resource type="PackedScene" uid="uid://jc0w5tcdt1k3" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Crate_Metal_01.tscn" id="8_prop"]
+[ext_resource type="PackedScene" uid="uid://jsmwi4x01sc0" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Crate_Rocks_01.tscn" id="9_prop"]
+[ext_resource type="PackedScene" uid="uid://bobrm6esvxnko" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Vase_Group_01.tscn" id="10_prop"]
+[ext_resource type="PackedScene" uid="uid://ck6t01ij164c3" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Candle_Stand_01.tscn" id="11_prop"]
+[ext_resource type="PackedScene" uid="uid://beschixy66ip5" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Chest_Wood_01.tscn" id="12_prop"]
+[ext_resource type="PackedScene" uid="uid://bet65vsbjjd3p" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Stool_01.tscn" id="13_prop"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("2_prop"): 1.0,
+ExtResource("3_prop"): 1.0,
+ExtResource("4_prop"): 1.0,
+ExtResource("5_prop"): 1.0,
+ExtResource("6_prop"): 1.0,
+ExtResource("7_prop"): 1.0,
+ExtResource("8_prop"): 1.0,
+ExtResource("9_prop"): 1.0,
+ExtResource("10_prop"): 1.0,
+ExtResource("11_prop"): 0.6,
+ExtResource("12_prop"): 0.4,
+ExtResource("13_prop"): 1.0
+})

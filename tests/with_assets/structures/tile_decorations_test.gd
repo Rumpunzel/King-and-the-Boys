@@ -12,7 +12,7 @@ func _props(connections: Array[Level.Direction], grid_position: Vector2i) -> Arr
 
 func _describe(props: Array[Node3D]) -> PackedStringArray:
 	var described: PackedStringArray = []
-	for prop: Node3D in props: described.append("%s %s %.2f" % [prop.scene_file_path, prop.position, prop.rotation.y])
+	for prop: Node3D in props: described.append("%s %s %.2f" % [prop.get_child(0).scene_file_path, prop.position, (prop.get_child(0) as Node3D).rotation.y])
 	return described
 
 func test_a_tile_gets_the_same_props_on_every_peer() -> void:
@@ -36,3 +36,17 @@ func test_props_keep_to_closed_sides_and_clear_of_tile_spots() -> void:
 			assert_bool(prop.find_children("*", "CollisionObject3D", true, false).is_empty()).is_true()
 			for spot: Vector2 in spots: assert_float(Vector2(prop.position.x, prop.position.z).distance_to(spot)).is_greater(0.25)
 	assert_int(placed).is_greater(0)
+
+func test_props_drop_in_one_after_another() -> void:
+	var decorations_resource: TileDecorations = load(DECORATIONS)
+	var closed: Array[Level.Direction] = []
+	var decorations: Node3D = auto_free(decorations_resource.create(closed, Vector2i(2, 2), TILE_SIZE))
+	add_child(decorations)
+	var props: Array[Node] = decorations.get_children()
+	assert_int(props.size()).is_greater(1)
+	for prop: Node in props: assert_object(prop).is_instanceof(Model)
+	decorations_resource.drop(decorations)
+	# Hidden until their turn comes
+	for prop: Node in props: assert_bool((prop as Node3D).visible).is_false()
+	await await_millis(int(decorations_resource.drop_interval * 1000.0 * props.size()) + 200)
+	for prop: Node in props: assert_bool((prop as Node3D).visible).is_true()
