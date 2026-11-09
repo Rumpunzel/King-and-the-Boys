@@ -91,7 +91,13 @@ var model: Model:
 		if not model: return
 		add_child(model, true)
 
-var level: Level
+var level: Level:
+	set(new_level):
+		level = new_level
+		# Spawned and loaded tiles may be revealed before they know their level; they are dressed once they do
+		if shown_status != Status.REVEALED or not model: return
+		var decorations: Node3D = _decorate()
+		if decorations: profile.decorations.drop(decorations)
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
@@ -216,7 +222,7 @@ func _show_model() -> void:
 ## @returns the new props, or [code]null[/code] if the model already has them or the profile none
 func _decorate() -> Node3D:
 	if not profile.decorations or not level or model.has_node(NodePath(TileDecorations.NODE_NAME)): return null
-	var decorations: Node3D = profile.decorations.create(profile.get_connections(0), get_grid_position(), level.grid_size)
+	var decorations: Node3D = profile.decorations.create(self)
 	model.add_child(decorations)
 	return decorations
 

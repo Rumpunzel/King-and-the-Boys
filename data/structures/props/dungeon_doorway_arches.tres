@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://cv041ktdn6jph"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dmqr06afu0a3w" path="res://assets/polygon_dungeon/Prefabs/Environments/Walls/SM_Env_Wall_Archway_01.tscn" id="2_prop"]
+[ext_resource type="PackedScene" uid="uid://dnol1ptmx4lu0" path="res://assets/polygon_dungeon/Prefabs/Environments/Walls/SM_Env_Wall_Archway_02.tscn" id="3_prop"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("2_prop"): 1.0,
+ExtResource("3_prop"): 1.0
+})
+prop_scale = Vector3(0.39, 0.6, 0.6)
+center_props = true

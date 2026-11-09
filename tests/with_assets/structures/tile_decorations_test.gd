@@ -5,7 +5,7 @@ const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tre
 const TILE_SIZE: float = 2.0
 
 func _props(connections: Array[Level.Direction], grid_position: Vector2i) -> Array[Node3D]:
-	var decorations: Node3D = auto_free((load(DECORATIONS) as TileDecorations).create(connections, grid_position, TILE_SIZE))
+	var decorations: Node3D = auto_free((load(DECORATIONS) as TileDecorations).create_clutter(connections, grid_position, TILE_SIZE))
 	var props: Array[Node3D] = []
 	for child: Node in decorations.get_children(): props.append(child as Node3D)
 	return props
@@ -40,7 +40,7 @@ func test_props_keep_to_closed_sides_and_clear_of_tile_spots() -> void:
 func test_props_drop_in_one_after_another() -> void:
 	var decorations_resource: TileDecorations = load(DECORATIONS)
 	var closed: Array[Level.Direction] = []
-	var decorations: Node3D = auto_free(decorations_resource.create(closed, Vector2i(2, 2), TILE_SIZE))
+	var decorations: Node3D = auto_free(decorations_resource.create_clutter(closed, Vector2i(2, 2), TILE_SIZE))
 	add_child(decorations)
 	var props: Array[Node] = decorations.get_children()
 	assert_int(props.size()).is_greater(1)
