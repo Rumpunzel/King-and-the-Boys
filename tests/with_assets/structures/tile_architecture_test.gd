@@ -52,11 +52,19 @@ func test_each_doorway_gets_one_arch() -> void:
 			assert_int(_count_near(arches, Vector2(opening.x, opening.z))).override_failure_message("Doorway at %s" % opening).is_equal(1)
 	assert_int(doorways).override_failure_message("The start should lie in a room with doorways").is_greater(0)
 
-func test_each_even_room_corner_gets_one_pillar() -> void:
+func test_pillars_stand_once_on_even_corners_inside_rooms() -> void:
 	var pillars: Array[Vector2] = _props_of(ROOM_PILLARS)
-	for pillar: Vector2 in pillars: assert_int(_count_near(pillars, pillar)).is_equal(1)
-	assert_array(pillars).is_not_empty()
 	for pillar: Vector2 in pillars:
+		assert_int(_count_near(pillars, pillar)).is_equal(1)
 		var corner_index: Vector2 = pillar / _level.grid_size + Vector2.ONE * 0.5
 		assert_vector(corner_index.round()).is_equal_approx(corner_index, Vector2.ONE * 0.01)
 		assert_int(posmod(roundi(corner_index.x), 2) + posmod(roundi(corner_index.y), 2)).is_equal(0)
+		for corner: Vector2i in TileDecorations.CORNERS:
+			var cell: Structure = _level.get_placed_tile(Vector2i(corner_index.round()) - corner)
+			assert_object(cell).is_not_null()
+			assert_object(cell.profile.room_type).override_failure_message("Pillar at %s is not inside a room" % pillar).is_not_null()
+
+func test_no_pillar_stands_beside_a_doorway_arch() -> void:
+	var pillars: Array[Vector2] = _props_of(ROOM_PILLARS)
+	for arch: Vector2 in _props_of(DOORWAY_ARCHES):
+		for pillar: Vector2 in pillars: assert_float(pillar.distance_to(arch)).is_greater(0.9)

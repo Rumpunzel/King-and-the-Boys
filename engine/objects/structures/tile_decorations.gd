@@ -5,8 +5,9 @@ extends Resource
 ## Props a revealed tile is dressed with:
 ## - clutter: some from [member edge_props] along its closed sides (no connection), some from [member corner_props] in corners
 ##   between two closed sides, chosen from the tile's grid position
-## - architecture: arches over openings (always where a corridor enters a room, sometimes between corridor tiles) and pillars on
-##   every other grid corner of rooms; both are shared with neighbours, so the second of them to be revealed raises them
+## - architecture: arches over openings (always where a corridor enters a room, sometimes between corridor tiles), raised by the
+##   second of the two tiles to be revealed, and pillars on every other grid corner inside rooms, raised by the last of its four
+##   room tiles to be revealed
 ## Purely visual: every peer reveals the same tiles and picks alike, so nothing is synced. Props keep clear of the tile spots
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
 
@@ -35,7 +36,7 @@ const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1)
 ## Span some openings between two corridor tiles, by [member corridor_arch_chance]; ruins rather than whole arches look right there
 @export var corridor_arches: PropSet
 @export_range(0.0, 1.0) var corridor_arch_chance: float = 0.25
-## Stand on every other grid corner of rooms
+## Stand on every other grid corner inside rooms, where no arch can stand (arches need a corridor on one side)
 @export var room_pillars: PropSet
 @export_group("Animation")
 ## Played on each prop as it drops in, one after another
@@ -98,27 +99,27 @@ func _add_arches(decorations: Node3D, tile: Structure) -> void:
 		var across: Basis = Basis(Vector3.UP, PI * 0.5) if outward.x != 0.0 else Basis.IDENTITY
 		_add_prop(decorations, arches, _to_model(tile, _on_floor(outward * tile.level.grid_size * 0.5), across), random)
 
-## A pillar on each corner of a room tile with an even index on both axes, raised by the first revealed room tile around it
+## A pillar on each corner with an even index on both axes whose four cells are all room tiles, raised once the last of them is
+## revealed; corners on a room's border are left to the doorway arches
 func _add_pillars(decorations: Node3D, tile: Structure) -> void:
 	if not room_pillars or not tile.profile.room_type: return
 	var grid_position: Vector2i = tile.get_grid_position()
 	for corner: Vector2i in CORNERS:
 		var corner_index: Vector2i = grid_position + corner
 		if posmod(corner_index.x, 2) != 0 or posmod(corner_index.y, 2) != 0: continue
-		if _has_revealed_room_tile_around(tile, corner_index): continue
+		if not _is_last_room_tile_around(tile, corner_index): continue
 		var random: RandomNumberGenerator = RandomNumberGenerator.new()
 		random.seed = hash(corner_index) ^ hash(&"pillar")
 		var spot: Vector2 = (Vector2(corner) - Vector2.ONE * 0.5) * tile.level.grid_size
 		_add_prop(decorations, room_pillars, _to_model(tile, _on_floor(spot), _random_turn(random).basis), random)
 
-## Whether a room tile other than [param tile] around the corner [param corner_index] was revealed before, and so raised its pillar
-static func _has_revealed_room_tile_around(tile: Structure, corner_index: Vector2i) -> bool:
+## Whether all four cells around the corner [param corner_index] are room tiles and the others are revealed already
+static func _is_last_room_tile_around(tile: Structure, corner_index: Vector2i) -> bool:
 	for corner: Vector2i in CORNERS:
-		var other_position: Vector2i = corner_index - corner
-		if other_position == tile.get_grid_position(): continue
-		var other: Structure = tile.level.get_placed_tile(other_position)
-		if other and other.profile.room_type and other.shown_status == Structure.Status.REVEALED: return true
-	return false
+		var other: Structure = tile.level.get_placed_tile(corner_index - corner)
+		if not other or not other.profile.room_type: return false
+		if other != tile and other.shown_status != Structure.Status.REVEALED: return false
+	return true
 
 ## A transform given in the level's axes, in the tile model's space (the tile is turned by its connections)
 static func _to_model(tile: Structure, level_transform: Transform3D, level_basis: Basis = Basis.IDENTITY) -> Transform3D:
