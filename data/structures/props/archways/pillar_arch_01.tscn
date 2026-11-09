@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://47vudcd73mmb"]
+
+[ext_resource type="PackedScene" uid="uid://d3dai7ve83b17" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_01.fbx" id="1_piece"]
+[ext_resource type="PackedScene" uid="uid://dlfjlgt8fxh34" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Arch_01.fbx" id="2_piece"]
+
+[node name="PillarArch01" type="Node3D"]
+
+[node name="LeftPillar" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(0.75, 0, -0, 0, 0.75, 0, 0, 0, 0.75, -1, 0, 0)
+
+[node name="RightPillar" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(0.75, 0, -0, 0, 0.75, 0, 0, 0, 0.75, 1, 0, 0)
+
+[node name="Arch" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.510204, 0, -0, 0, 0.75, 0, 0, 0, 0.75, 1, 2.46, 0)

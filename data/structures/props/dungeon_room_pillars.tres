@@ -1,21 +1,17 @@
 [gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://bifb83r2doed1"]
 
 [ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://bmxwo1m2rin5q" path="res://assets/polygon_dungeon/Prefabs/Environments/Pillars/SM_Env_Pillar_Round_01.tscn" id="2_prop"]
-[ext_resource type="PackedScene" uid="uid://ctsph4ex8vyun" path="res://assets/polygon_dungeon/Prefabs/Environments/Pillars/SM_Env_Pillar_Round_02.tscn" id="3_prop"]
-[ext_resource type="PackedScene" uid="uid://cfbr6jnqj1aik" path="res://assets/polygon_dungeon/Prefabs/Environments/Pillars/SM_Env_Pillar_Round_03.tscn" id="4_prop"]
-[ext_resource type="PackedScene" uid="uid://bx7xuceiv6oxs" path="res://assets/polygon_dungeon/Prefabs/Environments/Pillars/SM_Env_Pillar_Round_Simple_01.tscn" id="5_prop"]
-[ext_resource type="PackedScene" uid="uid://cnnkecjc50d8x" path="res://assets/polygon_dungeon/Prefabs/Environments/Pillars/SM_Env_Pillar_Broken_01.tscn" id="6_prop"]
-[ext_resource type="PackedScene" uid="uid://bgr86ga6roq20" path="res://assets/polygon_dungeon/Prefabs/Environments/Pillars/SM_Env_Pillar_Broken_02.tscn" id="7_prop"]
+[ext_resource type="Material" uid="uid://dojugi1n63fxu" path="res://data/structures/props/dungeon_realms_material.tres" id="2_material"]
+[ext_resource type="PackedScene" uid="uid://d3dai7ve83b17" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_01.fbx" id="3_pillar"]
+[ext_resource type="PackedScene" uid="uid://cmhejj43i8wcj" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_01.fbx" id="4_pillar"]
+[ext_resource type="PackedScene" uid="uid://xlygivlyjkue" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_02.fbx" id="5_pillar"]
 
 [resource]
 script = ExtResource("1_script")
 props = Dictionary[PackedScene, float]({
-ExtResource("2_prop"): 1.0,
-ExtResource("3_prop"): 1.0,
-ExtResource("4_prop"): 1.0,
-ExtResource("5_prop"): 1.0,
-ExtResource("6_prop"): 0.3,
-ExtResource("7_prop"): 0.3
+ExtResource("3_pillar"): 1.0,
+ExtResource("4_pillar"): 0.3,
+ExtResource("5_pillar"): 0.2
 })
-prop_scale = Vector3(0.6, 0.6, 0.6)
+prop_scale = Vector3(0.75, 0.75, 0.75)
+material_override = ExtResource("2_material")

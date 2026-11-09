@@ -11,6 +11,8 @@ extends Resource
 @export var prop_scale: Vector3 = Vector3.ONE * 0.6
 ## Centres each prop's footprint on its spot, for pieces pivoted at one end (e.g. Synty walls and arches)
 @export var center_props: bool = false
+## Given to every mesh of the props, e.g. a pack's texture atlas for FBX imports that carry no texture of their own
+@export var material_override: Material
 
 ## @returns a prop picked by weight, or [code]null[/code] for an empty set
 func pick(random: RandomNumberGenerator) -> PackedScene:

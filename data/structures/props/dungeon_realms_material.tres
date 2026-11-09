@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dojugi1n63fxu"]
+
+[ext_resource type="Texture2D" uid="uid://cl52s4iwlb3rf" path="res://assets/polygon_dungeon_realms/SourceFiles/Textures/Dungeons_2_Texture_01_A.png" id="1_albedo"]
+
+[resource]
+resource_name = "Dungeon Realms"
+albedo_texture = ExtResource("1_albedo")
+roughness = 0.8

@@ -139,6 +139,10 @@ func _add_prop(decorations: Node3D, prop_set: PropSet, prop_transform: Transform
 	# Decorations never block clicks or movement
 	for body: Node in mesh.find_children("*", "CollisionObject3D", true, false): body.free()
 	mesh.scale = prop_set.prop_scale
+	if prop_set.material_override:
+		var meshes: Array[MeshInstance3D] = Model.gather_all_geometry_instances_on(mesh)
+		if mesh is MeshInstance3D: meshes.append(mesh as MeshInstance3D)
+		for mesh_instance: MeshInstance3D in meshes: mesh_instance.material_override = prop_set.material_override
 	if prop_set.center_props:
 		var footprint: Vector3 = _get_bounds(mesh).get_center() * prop_set.prop_scale
 		mesh.position = -Vector3(footprint.x, 0.0, footprint.z)
