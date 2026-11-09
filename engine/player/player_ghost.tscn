@@ -111,11 +111,12 @@ type = 64
 collision_layer = 1048576
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Ghost" unique_id=772574322]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 2, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 4, 1)
 light_color = Color(0.99999994, 0.7550197, 0.57437825, 1)
-light_energy = 4.0
+light_energy = 5.5
+light_size = 0.4
 shadow_enabled = true
-omni_range = 10.0
+omni_range = 12.0
 
 [connection signal="available_interactions_changed" from="StateMachine" to="HUD" method="_on_available_interactions_changed"]
 
