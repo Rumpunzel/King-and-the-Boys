@@ -4,8 +4,5 @@
 
 [resource]
 script = ExtResource("1_nldjn")
-_randomize_head = true
-_randomize_eyebrow = true
-_randomize_facial_hair = true
-_randomize_hair = true
+randomized_parts = PackedStringArray("HEAD", "EYEBROW", "FACIAL_HAIR", "HAIR")
 metadata/_custom_type_script = "uid://cblm5blx0poy3"

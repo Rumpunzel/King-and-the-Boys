@@ -2,7 +2,8 @@
 class_name EquipmentPartMesh
 extends Resource
 
-@export var part: ModularCharacter.Part:
+## A part number of the look's [member EquipmentType.model]
+@export var part: int:
 	set(new_value):
 		part = new_value
 		changed.emit()
@@ -16,7 +17,7 @@ extends Resource
 		female_mesh = new_value
 		changed.emit()
 
-func apply_to(model: ModularCharacter) -> void:
+func apply_to(model: ModularModel) -> void:
 	var body_part: ModularBodyPart = model.get_part(part)
 	assert(body_part)
 	body_part.apply_mesh(get_mesh_for(body_part))

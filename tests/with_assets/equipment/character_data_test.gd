@@ -24,21 +24,22 @@ func _peer_from(character_data: Dictionary[StringName, Variant]) -> Character:
 	return peer
 
 func _body_mesh_paths(character: Character) -> PackedStringArray:
-	var model: ModularCharacter = character.model
+	var model: ModularModel = character.model
 	var paths: PackedStringArray = []
-	for part: ModularCharacter.Part in ModelConfigurationRandom.BODY_PARTS: paths.append(EquipmentFixtures.mesh_path(model.get_part(part)))
+	for part: int in model.get_body_parts(): paths.append(EquipmentFixtures.mesh_path(model.get_part(part)))
 	return paths
 
 func test_character_data_has_all_keys() -> void:
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(-1, Transform3D())
 	Character.validate_character_data(data)
 	assert_int(data[Character.VARIATION] as int).is_greater_equal(0)
-	assert_int((data[Character.BODY] as Dictionary).size()).is_equal(ModelConfigurationRandom.BODY_PARTS.size())
+	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
+	assert_array((data[Character.BODY] as Dictionary).keys()).contains_exactly(model.get_body_parts())
 	assert_array(data[Character.EQUIPMENT] as PackedStringArray).is_empty()
 
 func test_body_is_sent_as_mesh_uids() -> void:
 	var body: Dictionary = _knight.create_character_data(0, Transform3D())[Character.BODY]
-	for part: ModularCharacter.Part in body:
+	for part: int in body:
 		var mesh_id: String = body[part]
 		if mesh_id.is_empty(): continue
 		assert_str(mesh_id).starts_with("uid://")
@@ -49,7 +50,7 @@ func test_peers_show_the_body_the_server_rolled() -> void:
 	var peer: Character = _peer_from(data)
 	var body: Dictionary = data[Character.BODY]
 	var rolled: PackedStringArray = []
-	for part: ModularCharacter.Part in ModelConfigurationRandom.BODY_PARTS:
+	for part: int in body:
 		var mesh: Resource = ResourceId.find(body[part] as String)
 		rolled.append(mesh.resource_path if mesh else "")
 	assert_array(_body_mesh_paths(host)).is_equal(rolled)

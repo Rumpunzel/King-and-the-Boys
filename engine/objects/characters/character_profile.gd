@@ -103,6 +103,8 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 
 ## The body and random equipment previews show, see [method setup_model]
 var _preview_body: Dictionary = {}
+## The model scene [member _preview_body] was rolled for; another one (e.g. a dwarf instead of a human) rolls anew
+var _preview_model_path: String = ""
 var _preview_random_equipment: Array[EquipmentLook] = []
 
 func create(variation: int, spawn_transform: Transform3D) -> Character:
@@ -116,9 +118,9 @@ func create(variation: int, spawn_transform: Transform3D) -> Character:
 ## Rolls the variation, the body and [member random_equipment], so only call this where character data is authored, i.e. on the server
 func create_character_data(variation: int, spawn_transform: Transform3D) -> Dictionary[StringName, Variant]:
 	var rolled_variation: int = variation if variation >= 0 else get_random_variation()
-	var model: ModularCharacter = create_model(rolled_variation)
-	var body: Dictionary = model_configuration.roll(model)
-	model.free()
+	var model: Model = create_model(rolled_variation)
+	var body: Dictionary = model_configuration.roll(model as ModularModel) if model is ModularModel and model_configuration else {}
+	if model: model.free()
 	var equipment_ids: PackedStringArray = []
 	for equipment_look: EquipmentLook in roll_equipment():
 		var equipment_id: String = ResourceId.of(equipment_look)
@@ -151,20 +153,20 @@ func _roll_random_equipment() -> Array[EquipmentLook]:
 	return rolled_equipment
 
 func create_model(variation: int) -> Model:
-	var model: ModularCharacter = super.create_model(variation)
+	var model: Model = super.create_model(variation)
 	# In game the server rolls the look once and sends it as [constant Character.BODY]
-	if model and Engine.is_editor_hint(): setup_model(model)
+	if model is ModularModel and Engine.is_editor_hint(): setup_model(model as ModularModel)
 	return model
 
 ## Rolls the body and [member random_equipment] locally, for previews only; later previews keep that roll, so editing the
 ## profile (e.g. its outfit) does not change the face, until [param reroll] asks for a new one
-func setup_model(model: ModularCharacter, reroll: bool = false) -> void:
+func setup_model(model: ModularModel, reroll: bool = false) -> void:
 	model.reset_gear()
-	if reroll or _preview_body.is_empty():
-		_preview_body = model_configuration.roll(model)
+	if reroll or _preview_body.is_empty() or _preview_model_path != model.scene_file_path:
+		_preview_model_path = model.scene_file_path
+		_preview_body = model_configuration.roll(model) if model_configuration else {}
 		_preview_random_equipment = _roll_random_equipment()
-	for part: int in _preview_body:
-		model.get_part(part as ModularCharacter.Part).apply_mesh(ResourceId.find(_preview_body[part] as String) as ArrayMesh)
+	model.apply_body(_preview_body)
 	# A detached [CharacterEquipment] applies the same slot and blocking rules as in game
 	var preview_equipment: CharacterEquipment = CharacterEquipment.new()
 	preview_equipment.apply_to(model)
@@ -172,6 +174,13 @@ func setup_model(model: ModularCharacter, reroll: bool = false) -> void:
 	shown_equipment.append_array(_preview_random_equipment)
 	for equipment_look: EquipmentLook in shown_equipment: preview_equipment.equip(equipment_look)
 	preview_equipment.free()
+
+## Whether items of [param equipment_type] fit one of this profile's model variations, e.g. dwarf gear a dwarf
+func fits(equipment_type: EquipmentType) -> bool:
+	if not equipment_type or not equipment_type.model: return false
+	for model_variation: PackedScene in _model_variations:
+		if model_variation and model_variation.resource_path == equipment_type.model.resource_path: return true
+	return false
 
 ## @returns the starting items in slot order, empty slots left out
 func get_starting_equipment() -> Array[EquipmentLook]:
@@ -238,6 +247,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if _model_variations.is_empty(): warnings.append("Missing model variations scene.")
 	for equipment_look: EquipmentLook in get_starting_equipment():
+		if not fits(equipment_look.type): warnings.append("%s is not made for this profile's models." % equipment_look.name)
 		for blocked_slot: EquipmentLook.Slot in equipment_look.blocked_slots:
 			var blocked_profile: EquipmentLook = get_starting_equipment_for(blocked_slot)
 			if blocked_profile: warnings.append("%s blocks %s, so %s is never worn." % [equipment_look.name, EquipmentLook.Slot.keys()[blocked_slot], blocked_profile.name])

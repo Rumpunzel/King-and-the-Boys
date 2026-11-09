@@ -11,7 +11,7 @@ signal look_toggled(look: EquipmentLook)
 ## Looks were added to a catalog, so lists of looks need to be rebuilt
 signal catalog_changed
 
-const NO_MODEL_HINT: String = "Select a look, or a modular character to start from."
+const NO_MODEL_HINT: String = "Select a look, or a modular character (human or dwarf) to start from."
 
 @export_group("Configuration")
 ## This panel is only shown while this tab is open
@@ -31,21 +31,21 @@ const NO_MODEL_HINT: String = "Select a look, or a modular character to start fr
 @export var _save_as_new_button: Button
 @export var _status_label: Label
 
-var _model: ModularCharacter
+var _model: ModularModel
 ## The look being edited, or [code]null[/code] when another profile is previewed
 var _equipment_look: EquipmentLook
-## Indexed like the items of [member _type_option]
+## Indexed like the items of [member _type_option]; only types fitting the shown model, see [method EquipmentType.fits]
 var _types: Array[EquipmentType] = []
 ## Parts varied when adding missing combinations
-var _vary_check_boxes: Dictionary[ModularCharacter.Part, CheckBox] = {}
-var _mesh_labels: Dictionary[ModularCharacter.Part, Label] = {}
+var _vary_check_boxes: Dictionary[int, CheckBox] = {}
+var _mesh_labels: Dictionary[int, Label] = {}
 var _is_set_up: bool = false
 ## The selected type's catalog, if it has one yet
 var _catalog: EquipmentCatalog
 ## Combinations Q / E step through, listed on the first step (see [method EquipmentCombinations.list]); cleared when the parts change
 var _review_combinations: Array[Dictionary] = []
 ## What the preview showed when [member _review_combinations] was listed; partners lacking a number keep these
-var _review_meshes: Dictionary[ModularCharacter.Part, Mesh] = {}
+var _review_meshes: Dictionary[int, Mesh] = {}
 var _review_index: int = -1
 
 func _ready() -> void:
@@ -73,10 +73,12 @@ func _ready() -> void:
 	_on_gear_tab_visibility_changed()
 
 func _load_types() -> void:
-	var selected_type: EquipmentType = _get_type()
+	# The edited look's type first: the profile and the model change one after the other, in either order
+	var selected_type: EquipmentType = _equipment_look.type if _equipment_look and _equipment_look.type else _get_type()
 	_types.clear()
 	_type_option.clear()
 	for equipment_type: EquipmentType in EquipmentType.find_all():
+		if _model and not equipment_type.fits(_model): continue
 		_types.append(equipment_type)
 		if equipment_type.icon: _type_option.add_icon_item(equipment_type.icon, equipment_type.name)
 		else: _type_option.add_item(equipment_type.name)
@@ -96,7 +98,7 @@ func _select_type(equipment_type: EquipmentType) -> void:
 func _get_combinations() -> EquipmentCombinations:
 	var combinations: EquipmentCombinations = EquipmentCombinations.new(_get_type(), _model)
 	combinations.varied_parts.clear()
-	for part: ModularCharacter.Part in _vary_check_boxes:
+	for part: int in _vary_check_boxes:
 		if _vary_check_boxes[part].button_pressed: combinations.varied_parts.append(part)
 	return combinations
 
@@ -135,13 +137,13 @@ func _rebuild_parts() -> void:
 	if _status_label.text == NO_MODEL_HINT: _status_label.text = ""
 	var equipment_type: EquipmentType = _get_type()
 	if equipment_type:
-		for part: ModularCharacter.Part in equipment_type.parts: _parts_container.add_child(_create_part_row(part))
+		for part: int in equipment_type.parts: _parts_container.add_child(_create_part_row(part))
 	_clear_review()
 	_update_look_row()
 
-func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
+func _create_part_row(part: int) -> HBoxContainer:
 	var row: HBoxContainer = HBoxContainer.new()
-	var part_name: String = ModularCharacter.Part.keys()[part]
+	var part_name: String = _get_type().get_part_key(part)
 	var vary_check_box: CheckBox = CheckBox.new()
 	vary_check_box.button_pressed = true
 	vary_check_box.tooltip_text = "Vary this part when adding missing combinations or reviewing; unchecked parts keep the mesh shown"
@@ -166,7 +168,7 @@ func _create_part_row(part: ModularCharacter.Part) -> HBoxContainer:
 
 ## Steps through the part's mesh directory; decorative parts include showing no mesh
 ## Linked parts follow to the same mesh number where they have it
-func _step_part(part: ModularCharacter.Part, direction: int) -> void:
+func _step_part(part: int, direction: int) -> void:
 	var body_part: ModularBodyPart = _model.get_part(part)
 	var mesh_count: int = body_part.get_mesh_count()
 	if mesh_count == 0: return
@@ -177,16 +179,16 @@ func _step_part(part: ModularCharacter.Part, direction: int) -> void:
 	body_part.update_index(new_index)
 	var combinations: EquipmentCombinations = _get_combinations()
 	var mesh_number: String = EquipmentCombinations.get_mesh_number(body_part)
-	for linked_part: ModularCharacter.Part in _get_type().get_link_of(part):
+	for linked_part: int in _get_type().get_link_of(part):
 		if linked_part != part: combinations.show_mesh_number(linked_part, mesh_number)
 	_update_mesh_labels()
 	_update_look_row()
 	_status_label.text = ""
 
 func _update_mesh_labels() -> void:
-	for part: ModularCharacter.Part in _mesh_labels: _update_mesh_label(part, _mesh_labels[part])
+	for part: int in _mesh_labels: _update_mesh_label(part, _mesh_labels[part])
 
-func _update_mesh_label(part: ModularCharacter.Part, mesh_label: Label) -> void:
+func _update_mesh_label(part: int, mesh_label: Label) -> void:
 	var body_part: ModularBodyPart = _model.get_part(part)
 	var mesh_index: int = body_part.get_mesh_index()
 	if not body_part.visible or not body_part.mesh:
@@ -402,8 +404,11 @@ func _on_active_profile_changed(active_profile: Profile) -> void:
 	_update()
 
 func _on_model_changed(model: Model) -> void:
-	_model = model as ModularCharacter
-	if _is_set_up and visible: _update()
+	_model = model as ModularModel
+	if not _is_set_up or not visible: return
+	# Another body (e.g. a dwarf instead of a human) fits other types
+	_load_types()
+	_update()
 
 func _on_model_removed() -> void:
 	_model = null

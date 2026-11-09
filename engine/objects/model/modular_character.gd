@@ -1,6 +1,8 @@
 @tool
 class_name ModularCharacter
-extends Model
+extends ModularModel
+
+## The modular human body: gendered meshes per part, where equipment swaps individual parts such as arms or knees
 
 enum Part {
 	ARM_LOWER_LEFT,
@@ -33,9 +35,16 @@ enum Part {
 	SHOULDER_ATTACH_RIGHT,
 }
 
-@export_tool_button("Randomize Base", "RandomNumberGenerator") var randomize_base_action: Callable = randomize_base
-@export_tool_button("Randomize Gear", "AudioStreamRandomizer") var randomize_gear_action: Callable = randomize_gear
-@export_tool_button("Reset Gear", "Clear") var reset_gear_action: Callable = reset_gear
+## The parts each slot owns; weapons attach to bone sockets, not body parts
+const SLOT_PARTS: Dictionary[EquipmentLook.Slot, Array] = {
+	EquipmentLook.Slot.HEAD: [Part.HEAD_COVERINGS_BASE_HAIR, Part.HEAD_COVERINGS_NO_HAIR, Part.HEAD_NO_ELEMENTS, Part.HELMET_ATTACHMENT],
+	EquipmentLook.Slot.FACE: [Part.HEAD_COVERINGS_NO_FACIAL_HAIR],
+	EquipmentLook.Slot.TORSO: [Part.TORSO, Part.ARM_UPPER_LEFT, Part.ARM_UPPER_RIGHT, Part.SHOULDER_ATTACH_LEFT, Part.SHOULDER_ATTACH_RIGHT],
+	EquipmentLook.Slot.HANDS: [Part.ARM_LOWER_LEFT, Part.ARM_LOWER_RIGHT, Part.HAND_LEFT, Part.HAND_RIGHT, Part.ELBOW_ATTACH_LEFT, Part.ELBOW_ATTACH_RIGHT],
+	EquipmentLook.Slot.LEGS: [Part.HIPS, Part.LEG_LEFT, Part.LEG_RIGHT, Part.KNEE_ATTACH_LEFT, Part.KNEE_ATTACH_RIGHT],
+	EquipmentLook.Slot.WAIST: [Part.HIPS_ATTACHMENT],
+	EquipmentLook.Slot.BACK: [Part.BACK_ATTACHMENT],
+}
 
 @export_group("Body Parts")
 @export var arm_lower_left: ModularBodyPartGendered
@@ -69,74 +78,9 @@ enum Part {
 @export var shoulder_attach_left: ModularBodyPart
 @export var shoulder_attach_right: ModularBodyPart
 
-## Every body part export is named like its [enum Part] in lower case
-func get_part(part: Part) -> ModularBodyPart:
-	var part_name: String = Part.keys()[part]
-	var body_part: ModularBodyPart = get(part_name.to_lower())
-	assert(body_part, "Part %s not implemented!" % part_name)
-	return body_part
+func get_part_keys() -> PackedStringArray: return PackedStringArray(Part.keys())
 
-func randomize_base() -> void:
-	ears.random_mesh()
-	head.random_mesh()
-	eyebrow.random_mesh()
-	facial_hair.random_mesh()
-	hair.random_mesh()
-
-func randomize_gear() -> void:
-	arm_lower_left.random_mesh()
-	arm_lower_right.random_mesh()
-	arm_upper_left.random_mesh()
-	arm_upper_right.random_mesh()
-	hand_left.random_mesh()
-	hand_right.random_mesh()
-	head_no_elements.random_mesh()
-	hips.random_mesh()
-	leg_left.random_mesh()
-	leg_right.random_mesh()
-	torso.random_mesh()
-	back_attachment.random_mesh()
-	elbow_attach_left.random_mesh()
-	elbow_attach_right.random_mesh()
-	head_coverings_base_hair.random_mesh()
-	head_coverings_no_facial_hair.random_mesh()
-	head_coverings_no_hair.random_mesh()
-	helmet_attachment.random_mesh()
-	hips_attachment.random_mesh()
-	knee_attach_left.random_mesh()
-	knee_attach_right.random_mesh()
-	shoulder_attach_left.random_mesh()
-	shoulder_attach_right.random_mesh()
-
-func reset() -> void:
-	ears.reset_mesh()
-	head.reset_mesh()
-	eyebrow.reset_mesh()
-	facial_hair.reset_mesh()
-	hair.reset_mesh()
-	reset_gear()
-
-func reset_gear() -> void:
-	arm_lower_left.reset_mesh()
-	arm_lower_right.reset_mesh()
-	arm_upper_left.reset_mesh()
-	arm_upper_right.reset_mesh()
-	hand_left.reset_mesh()
-	hand_right.reset_mesh()
-	head_no_elements.reset_mesh()
-	hips.reset_mesh()
-	leg_left.reset_mesh()
-	leg_right.reset_mesh()
-	torso.reset_mesh()
-	back_attachment.reset_mesh()
-	elbow_attach_left.reset_mesh()
-	elbow_attach_right.reset_mesh()
-	head_coverings_base_hair.reset_mesh()
-	head_coverings_no_facial_hair.reset_mesh()
-	head_coverings_no_hair.reset_mesh()
-	helmet_attachment.reset_mesh()
-	hips_attachment.reset_mesh()
-	knee_attach_left.reset_mesh()
-	knee_attach_right.reset_mesh()
-	shoulder_attach_left.reset_mesh()
-	shoulder_attach_right.reset_mesh()
+func get_slot_parts(slot: EquipmentLook.Slot) -> Array[int]:
+	var parts: Array[int] = []
+	parts.assign(SLOT_PARTS.get(slot, []) as Array)
+	return parts

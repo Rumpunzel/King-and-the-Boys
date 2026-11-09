@@ -118,7 +118,7 @@ func add(look: EquipmentLook, combination_key: String, allowed: bool) -> void:
 ## @returns how many looks were added
 func add_missing(combinations: EquipmentCombinations) -> int:
 	assert(combinations.type == type)
-	var shown_meshes: Dictionary[ModularCharacter.Part, Mesh] = combinations.get_shown_meshes()
+	var shown_meshes: Dictionary[int, Mesh] = combinations.get_shown_meshes()
 	var added: int = 0
 	for combination: Dictionary in combinations.list():
 		var combination_key: String = combination.key

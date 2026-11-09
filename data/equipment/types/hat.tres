@@ -2,8 +2,10 @@
 
 [ext_resource type="Script" uid="uid://du4jsk247kff3" path="res://engine/objects/equipment/equipment_type.gd" id="1_4yh50"]
 [ext_resource type="Script" uid="uid://cqs8kcvo1rnj6" path="res://engine/objects/equipment/equipment_part_group.gd" id="1_an1y0"]
+[ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="1_model"]
 
 [resource]
 script = ExtResource("1_4yh50")
 name = "Hat"
+model = ExtResource("1_model")
 parts = Array[int]([19, 22])

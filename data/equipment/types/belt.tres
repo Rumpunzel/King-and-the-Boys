@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" path="res://engine/objects/equipment/equipment_part_group.gd" id="1_g1wry"]
 [ext_resource type="Script" path="res://engine/objects/equipment/equipment_type.gd" id="2_0vghp"]
+[ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="1_model"]
 
 [resource]
 script = ExtResource("2_0vghp")
 name = "Belt"
+model = ExtResource("1_model")
 slot = 8
 parts = Array[int]([23])

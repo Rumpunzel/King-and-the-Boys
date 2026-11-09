@@ -7,8 +7,9 @@ func test_starter_types_load_without_warnings() -> void:
 		assert_array(equipment_type._get_configuration_warnings()).override_failure_message("%s warns" % file_name).is_empty()
 
 func test_hip_attachment_is_its_own_waist_item() -> void:
-	assert_array(EquipmentLook.get_slot_parts(EquipmentLook.Slot.LEGS)).not_contains([ModularCharacter.Part.HIPS_ATTACHMENT])
-	assert_array(EquipmentLook.get_slot_parts(EquipmentLook.Slot.WAIST)).contains_exactly([ModularCharacter.Part.HIPS_ATTACHMENT])
+	var belt: EquipmentType = EquipmentFixtures.load_type("belt")
+	assert_array(belt.get_slot_parts(EquipmentLook.Slot.LEGS)).not_contains([ModularCharacter.Part.HIPS_ATTACHMENT])
+	assert_array(belt.get_slot_parts(EquipmentLook.Slot.WAIST)).contains_exactly([ModularCharacter.Part.HIPS_ATTACHMENT])
 	assert_int(EquipmentFixtures.load_type("belt").slot).is_equal(EquipmentLook.Slot.WAIST)
 	assert_array(EquipmentFixtures.load_type("leg_armor").parts).not_contains([ModularCharacter.Part.HIPS_ATTACHMENT])
 
@@ -16,10 +17,10 @@ func test_hoods_carry_helmet_attachments() -> void:
 	assert_array(EquipmentFixtures.load_type("hood").parts).contains([ModularCharacter.Part.HELMET_ATTACHMENT])
 
 func test_blocked_slot_parts_are_listed_once() -> void:
-	var head_with_face: Array[ModularCharacter.Part] = EquipmentLook.get_parts_for(EquipmentLook.Slot.HEAD, [EquipmentLook.Slot.FACE])
+	var head_with_face: Array[int] = EquipmentFixtures.make_type(EquipmentLook.Slot.HEAD, [EquipmentLook.Slot.FACE]).get_reset_parts()
 	assert_array(head_with_face).contains([ModularCharacter.Part.HEAD_COVERINGS_NO_FACIAL_HAIR])
-	var head_blocking_itself: Array[ModularCharacter.Part] = EquipmentLook.get_parts_for(EquipmentLook.Slot.HEAD, [EquipmentLook.Slot.HEAD])
-	assert_int(head_blocking_itself.size()).is_equal(EquipmentLook.get_slot_parts(EquipmentLook.Slot.HEAD).size())
+	var head_blocking_itself: EquipmentType = EquipmentFixtures.make_type(EquipmentLook.Slot.HEAD, [EquipmentLook.Slot.HEAD])
+	assert_int(head_blocking_itself.get_reset_parts().size()).is_equal(head_blocking_itself.get_slot_parts(EquipmentLook.Slot.HEAD).size())
 
 func test_gloves_link_arms_with_hands_and_pair_elbows() -> void:
 	var links: Array[Array] = EquipmentFixtures.load_type("gloves").get_links()
