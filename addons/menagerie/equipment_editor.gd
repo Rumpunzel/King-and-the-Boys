@@ -11,7 +11,6 @@ signal look_toggled(look: EquipmentLook)
 ## Looks were added to a catalog, so lists of looks need to be rebuilt
 signal catalog_changed
 
-const TYPE_DIRECTORY: String = "res://data/equipment/types"
 const NO_MODEL_HINT: String = "Select a look, or a modular character to start from."
 
 @export_group("Configuration")
@@ -77,14 +76,10 @@ func _load_types() -> void:
 	var selected_type: EquipmentType = _get_type()
 	_types.clear()
 	_type_option.clear()
-	if DirAccess.dir_exists_absolute(TYPE_DIRECTORY):
-		for file_name: String in DirAccess.get_files_at(TYPE_DIRECTORY):
-			if file_name.get_extension() != "tres": continue
-			var equipment_type: EquipmentType = load(TYPE_DIRECTORY.path_join(file_name)) as EquipmentType
-			if not equipment_type: continue
-			_types.append(equipment_type)
-			if equipment_type.icon: _type_option.add_icon_item(equipment_type.icon, equipment_type.name)
-			else: _type_option.add_item(equipment_type.name)
+	for equipment_type: EquipmentType in EquipmentType.find_all():
+		_types.append(equipment_type)
+		if equipment_type.icon: _type_option.add_icon_item(equipment_type.icon, equipment_type.name)
+		else: _type_option.add_item(equipment_type.name)
 	_select_type(selected_type)
 
 func _get_type() -> EquipmentType:
@@ -116,7 +111,7 @@ func _update() -> void:
 	_rebuild_parts()
 
 func _describe(equipment_type: EquipmentType) -> String:
-	if not equipment_type: return "Create an EquipmentType in %s first." % TYPE_DIRECTORY
+	if not equipment_type: return "Create an EquipmentType in %s first." % EquipmentType.DIRECTORY
 	var slot_name: String = EquipmentLook.Slot.keys()[equipment_type.slot]
 	var blocked_names: PackedStringArray = []
 	for blocked_slot: EquipmentLook.Slot in equipment_type.blocked_slots:

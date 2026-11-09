@@ -106,3 +106,17 @@ func test_unchecked_starting_looks_are_kept_but_warned_about() -> void:
 	_knight.back = ResourceId.of(saved)
 	assert_str(_knight.back).is_equal(ResourceId.of(saved))
 	assert_bool(_has_warning("unchecked")).is_true()
+
+func test_previews_keep_their_face_until_rerolled() -> void:
+	var first: ModularCharacter = auto_free(_knight.create_model(0))
+	add_child(first)
+	var face: String = EquipmentFixtures.mesh_path(first.head) + EquipmentFixtures.mesh_path(first.hair)
+	for attempt: int in 5:
+		var rebuilt: ModularCharacter = auto_free(_knight.create_model(0))
+		add_child(rebuilt)
+		assert_str(EquipmentFixtures.mesh_path(rebuilt.head) + EquipmentFixtures.mesh_path(rebuilt.hair)).is_equal(face)
+	var rerolled: bool = false
+	for attempt: int in 20:
+		_knight.setup_model(first, true)
+		if EquipmentFixtures.mesh_path(first.head) + EquipmentFixtures.mesh_path(first.hair) != face: rerolled = true
+	assert_bool(rerolled).override_failure_message("Rerolling never changed the face").is_true()

@@ -86,3 +86,24 @@ func test_committed_catalogs_resolve_every_look() -> void:
 			var key: String = catalog.type.get_combination_key_of(look)
 			assert_str(look.resource_scene_unique_id).override_failure_message("%s is stored under the wrong ID" % look.name).is_equal(EquipmentCatalog.get_look_id(key))
 			assert_object(ResourceId.find(ResourceId.of(look))).is_same(look)
+			assert_str(EquipmentCatalog.get_key_of(look)).is_equal(key)
+
+func test_stepping_an_attachment_keeps_the_base() -> void:
+	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(EquipmentFixtures.load_type("helmet"))
+	var start: String = catalog.get_first_key()
+	var attachments: PackedStringArray = catalog.get_options(start, 1)
+	var stepped: String = catalog.step(start, 1, 1)
+	assert_str(stepped.split(" ")[0]).is_equal(start.split(" ")[0])
+	assert_str(stepped.split(" ")[1]).is_equal(attachments[(attachments.find(start.split(" ")[1]) + 1) % attachments.size()])
+	assert_str(catalog.step(stepped, 1, -1)).is_equal(start)
+
+func test_stepping_a_base_reaches_every_base_and_always_names_a_look() -> void:
+	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(EquipmentFixtures.load_type("chest_armor"))
+	var key: String = catalog.get_first_key()
+	var bases: PackedStringArray = catalog.get_options(key, 0)
+	var seen: Dictionary[String, bool] = {}
+	for step_index: int in bases.size():
+		key = catalog.step(key, 0, 1)
+		assert_object(catalog.get_look(key)).override_failure_message("%s names no look" % key).is_not_null()
+		seen[key.split(" ")[0]] = true
+	assert_int(seen.size()).is_equal(bases.size())

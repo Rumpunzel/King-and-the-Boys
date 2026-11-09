@@ -4,6 +4,8 @@ extends Resource
 
 ## A kind of item, such as a helmet or a hood: where it goes, which parts it shows and what it covers
 
+const DIRECTORY: String = "res://data/equipment/types"
+
 @export var name: String:
 	set(new_value):
 		name = new_value
@@ -35,6 +37,27 @@ extends Resource
 	set(new_value):
 		blocked_slots = new_value
 		changed.emit()
+## @returns every saved type
+static func find_all() -> Array[EquipmentType]:
+	var types: Array[EquipmentType] = []
+	if not DirAccess.dir_exists_absolute(DIRECTORY): return types
+	for file_name: String in DirAccess.get_files_at(DIRECTORY):
+		if file_name.get_extension() != "tres": continue
+		var equipment_type: EquipmentType = load(DIRECTORY.path_join(file_name)) as EquipmentType
+		if equipment_type: types.append(equipment_type)
+	return types
+
+## The linked parts in the order keys list them: one entry per number of [method get_combination_key], led by its first part
+func get_key_links() -> Array[Array]:
+	var links: Array[Array] = []
+	var keyed: Array[ModularCharacter.Part] = []
+	for part: ModularCharacter.Part in parts:
+		if keyed.has(part): continue
+		var link: Array[ModularCharacter.Part] = get_link_of(part)
+		keyed.append_array(link)
+		links.append(link)
+	return links
+
 ## One mesh number per linked group of parts, e.g. "05 03"; linked parts with different numbers are joined, e.g. "05-07"
 ## @param part_numbers {Part: [enum ModularCharacter.Part] -> mesh number: [String]}; missing parts count as "none"
 func get_combination_key(part_numbers: Dictionary) -> String:

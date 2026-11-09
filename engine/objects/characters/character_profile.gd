@@ -101,6 +101,10 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export_category("")
 @export_group("Configuration")
 
+## The body and random equipment previews show, see [method setup_model]
+var _preview_body: Dictionary = {}
+var _preview_random_equipment: Array[EquipmentLook] = []
+
 func create(variation: int, spawn_transform: Transform3D) -> Character:
 	var scene: PackedScene = load("uid://cvj6b1m2b65hd")
 	var new_character: Character = scene.instantiate()
@@ -130,8 +134,14 @@ func create_character_data(variation: int, spawn_transform: Transform3D) -> Dict
 	Character.validate_character_data(character_data)
 	return character_data
 
+## The starting equipment plus one roll of each [member random_equipment] table
 func roll_equipment() -> Array[EquipmentLook]:
 	var rolled_equipment: Array[EquipmentLook] = get_starting_equipment()
+	rolled_equipment.append_array(_roll_random_equipment())
+	return rolled_equipment
+
+func _roll_random_equipment() -> Array[EquipmentLook]:
+	var rolled_equipment: Array[EquipmentLook] = []
 	for spawn_table: SpawnTable in random_equipment:
 		# Empty entries are left over from editing the array in the inspector
 		if not spawn_table: continue
@@ -146,14 +156,21 @@ func create_model(variation: int) -> Model:
 	if model and Engine.is_editor_hint(): setup_model(model)
 	return model
 
-## Randomizes the look and equipment locally, for previews only
-func setup_model(model: ModularCharacter) -> void:
+## Rolls the body and [member random_equipment] locally, for previews only; later previews keep that roll, so editing the
+## profile (e.g. its outfit) does not change the face, until [param reroll] asks for a new one
+func setup_model(model: ModularCharacter, reroll: bool = false) -> void:
 	model.reset_gear()
-	model_configuration.configure(model)
+	if reroll or _preview_body.is_empty():
+		_preview_body = model_configuration.roll(model)
+		_preview_random_equipment = _roll_random_equipment()
+	for part: int in _preview_body:
+		model.get_part(part as ModularCharacter.Part).apply_mesh(ResourceId.find(_preview_body[part] as String) as ArrayMesh)
 	# A detached [CharacterEquipment] applies the same slot and blocking rules as in game
 	var preview_equipment: CharacterEquipment = CharacterEquipment.new()
 	preview_equipment.apply_to(model)
-	for equipment_look: EquipmentLook in roll_equipment(): preview_equipment.equip(equipment_look)
+	var shown_equipment: Array[EquipmentLook] = get_starting_equipment()
+	shown_equipment.append_array(_preview_random_equipment)
+	for equipment_look: EquipmentLook in shown_equipment: preview_equipment.equip(equipment_look)
 	preview_equipment.free()
 
 ## @returns the starting items in slot order, empty slots left out

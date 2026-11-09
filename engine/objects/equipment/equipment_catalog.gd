@@ -50,6 +50,47 @@ static func find_all() -> Array[EquipmentCatalog]:
 static func get_look_id(combination_key: String) -> String:
 	return combination_key.replace("-", "x").replace(" ", "_")
 
+## The combination key a stored look is kept under, read back from its ID (see [method get_look_id]); mesh numbers are digits
+static func get_key_of(look: EquipmentLook) -> String:
+	return look.resource_scene_unique_id.replace("_", " ").replace("x", "-")
+
+## The key of the first allowed look, or of the first look if none is allowed; empty for an empty catalog
+func get_first_key() -> String:
+	for look: EquipmentLook in looks:
+		if look.allowed: return get_key_of(look)
+	return get_key_of(looks.front() as EquipmentLook) if not looks.is_empty() else ""
+
+## The numbers the [param link_index]th link takes among the looks that share [param combination_key]'s earlier numbers, in natural order
+## So a base (link 0) offers every base, and an attachment only those stored with the shown base
+func get_options(combination_key: String, link_index: int) -> PackedStringArray:
+	var shown: PackedStringArray = combination_key.split(" ")
+	var options: PackedStringArray = []
+	for look: EquipmentLook in looks:
+		var numbers: PackedStringArray = get_key_of(look).split(" ")
+		if numbers.size() != shown.size() or options.has(numbers[link_index]): continue
+		if numbers.slice(0, link_index) == shown.slice(0, link_index): options.append(numbers[link_index])
+	var sorted: Array = Array(options)
+	sorted.sort_custom(func(first: String, second: String) -> bool: return first.naturalnocasecmp_to(second) < 0)
+	return PackedStringArray(sorted)
+
+## The key one option further along the [param link_index]th link, wrapping around; later numbers stay where such a look exists,
+## otherwise the first look with the new earlier numbers is taken, an allowed one if there is
+func step(combination_key: String, link_index: int, direction: int) -> String:
+	var options: PackedStringArray = get_options(combination_key, link_index)
+	if options.is_empty(): return combination_key
+	var numbers: PackedStringArray = combination_key.split(" ")
+	numbers[link_index] = options[posmod(options.find(numbers[link_index]) + direction, options.size())]
+	var stepped_key: String = " ".join(numbers)
+	if get_look(stepped_key): return stepped_key
+	var leading: PackedStringArray = numbers.slice(0, link_index + 1)
+	var fallback: String = ""
+	for look: EquipmentLook in looks:
+		var look_key: String = get_key_of(look)
+		if look_key.split(" ").slice(0, link_index + 1) != leading: continue
+		if look.allowed: return look_key
+		if fallback.is_empty(): fallback = look_key
+	return fallback
+
 func get_default_path() -> String:
 	return CATALOG_DIRECTORY.path_join("%s.tres" % type.name.to_snake_case())
 

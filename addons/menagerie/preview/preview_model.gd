@@ -102,4 +102,4 @@ func _on_randomized() -> void:
 	assert(_model is ModularCharacter)
 	var character_profile: CharacterProfile = profile
 	var modular_character: ModularCharacter = _model
-	character_profile.setup_model(modular_character)
+	character_profile.setup_model(modular_character, true)

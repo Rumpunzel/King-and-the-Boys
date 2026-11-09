@@ -48,7 +48,7 @@ func show_mesh_number(part: ModularCharacter.Part, mesh_number: String) -> bool:
 ## Shows the combination [param combination_key] names; each linked group takes the first of its numbers each part has
 ## @returns [code]false[/code] if the key does not fit this type
 func show_key(combination_key: String) -> bool:
-	var links: Array[Array] = _get_links_in_key_order()
+	var links: Array[Array] = type.get_key_links()
 	var tokens: PackedStringArray = combination_key.split(" ")
 	if tokens.size() != links.size(): return false
 	for link_index: int in links.size():
@@ -61,17 +61,6 @@ func show_key(combination_key: String) -> bool:
 					break
 			if not shown: return false
 	return true
-
-## The links of [member type] in the order its keys list them
-func _get_links_in_key_order() -> Array[Array]:
-	var links: Array[Array] = []
-	var keyed: Array[ModularCharacter.Part] = []
-	for part: ModularCharacter.Part in type.parts:
-		if keyed.has(part): continue
-		var link: Array[ModularCharacter.Part] = type.get_link_of(part)
-		keyed.append_array(link)
-		links.append(link)
-	return links
 
 ## The varied parts split into dimensions; linked varied parts form one, led by the first
 func get_dimensions() -> Array[Array]:
