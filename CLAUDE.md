@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Running
 
-No Godot binary is on PATH. Use 4.6: `/f/Users/Kesepian/Godots/versions/Godot_v4_6-stable_win64_exe/Godot_v4.6-stable_win64.exe` (`..._console.exe` for command line output).
+Use Godot 4.6 (`<godot>` below). Where it is installed on this machine is in `CLAUDE.local.md` (not committed); without one, ask for the path.
 
 - Run game: `<godot> --path .`
 - Open editor: `<godot> -e --path .`
@@ -21,7 +21,7 @@ Assets (meshes, textures, `.blend`) are in Git LFS (~1.7 GB); `.blend` files nee
 
 Tests are gdUnit4 suites (`addons/gdUnit4`, `extends GdUnitTestSuite`, `test_*` funcs), split in two: `tests/unit/` (no level, no assets) and `tests/integration/` (turn rules on a generated level). **No test needs assets**: integration tests build the level from `engine/levels/level.tscn` (the plain level) with the model-free tiles and hero in `tests/fixtures/` (`tests/fixtures/model_free_world.gd`); real profiles hold their model scenes and load meshes and textures with themselves. The fixture profiles are files because spawners replicate structures by their profile's path. Run headless: `<godot> --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests/unit -a res://tests/integration` (exit 0 = pass, 100 = failures). Reports go to `reports/` (gitignored). gdUnit can print a green summary while project scripts fail to compile: also grep for `SCRIPT ERROR`. Test pitfalls: offline, `Player.is_local_player()` is true for every player; Godot treats `append` of two different arrays as the same callable (connect a lambda per array); lambdas copy local variables (share a flag through an array).
 
-Lint: `gdlint .` (gdtoolkit 4.5.0, config in `gdlintrc`, taken from Vagrant: line length 240, only the vendored addons excluded by directory name, so `menagerie` and `tests` are linted). If `gdlint` is not on PATH: `python -m gdtoolkit.linter .`. Don't use `gdformat`.
+Lint: `gdlint .` (gdtoolkit 4.5.0, config in `gdlintrc`, taken from Vagrant: line length 240). Excluded are the vendored addons plus `reports`, `.git` and `.godot`; everything else is linted, including `menagerie`, `tests` and the scripts asset packs ship in `assets/`. gdtoolkit excludes by directory name at any depth, so a folder of ours named like one of those is skipped too. If `gdlint` is not on PATH: `python -m gdtoolkit.linter .`. Don't use `gdformat`.
 
 CI (`.github/workflows/`): **Tests** runs on every push (which covers PR commits): `gdlint`, and `Script check and tests` (script check, then unit and integration tests as separate steps of one job). It needs no Git LFS: the shared setup action (`.github/actions/godot`) leaves `assets/` and `protoype_assets/` out (`.gdignore`) and imports only scripts and small resources. **Asset check** (`asset_check.yml`) runs the main scene with the real assets, only by hand (Actions → Run workflow); run it on `main`, whose caches serve every branch (GitHub drops caches unused for 7 days; then LFS download and import take ~35 min again). CI turns the Blender importer off before importing: without a Blender path, Godot asks how to import `.blend` files and holds back the whole import, so no uid cache is written and every `uid://` path fails. Keep `GODOT_VERSION` in the workflows in sync with `project.godot`. `main` is protected: a pull request merges once `gdlint` and `Script check and tests` passed (no force pushes; merged branches are deleted on GitHub).
 
