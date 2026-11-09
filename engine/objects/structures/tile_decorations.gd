@@ -8,6 +8,8 @@ extends Resource
 ## - architecture: arches over openings (whole ones where a corridor enters a room, ruins between corridor tiles), raised by the first
 ##   of the two tiles to be revealed once the other one exists, and pillars on every other grid corner inside rooms, raised by the last of its four
 ##   room tiles to be revealed
+## - lights: now and then a torch, brazier or candles in the middle of a closed side, which then gets no other clutter
+## - rooms: rugs under the middle of some room tiles (flat, so pieces stand on them) and ambience such as dust
 ## - walls: mostly crumbling, along some closed sides; an edge is shared too, so the first of its tiles to be revealed decides it
 ## Purely visual: every peer reveals the same tiles and picks alike, so nothing is synced. Props keep clear of the tile spots
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
@@ -33,6 +35,17 @@ const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1)
 @export_range(0.0, 1.0) var edge_distance: float = 0.8
 ## How far props on a side may stray from its middle, as a fraction of half the tile
 @export_range(0.0, 1.0) var edge_spread: float = 0.3
+@export_group("Lights")
+## Light sources: torches, braziers, candles; at most one per tile, in the middle of a closed side
+@export var lights: PropSet
+@export_range(0.0, 1.0) var light_chance: float = 0.2
+@export_group("Rooms")
+## Lie under the middle of room tiles, e.g. rugs; turned in quarter turns to the grid
+@export var room_floors: PropSet
+@export_range(0.0, 1.0) var room_floor_chance: float = 0.3
+## Over the middle of room tiles, e.g. drifting dust
+@export var room_ambience: PropSet
+@export_range(0.0, 1.0) var room_ambience_chance: float = 0.2
 @export_group("Architecture")
 ## Span openings where a corridor enters a room, by [member doorway_arch_chance]
 @export var doorway_arches: PropSet
@@ -60,6 +73,7 @@ func create(tile: Structure) -> Node3D:
 	_add_arches(decorations, tile, decided)
 	_add_walls(decorations, tile, decided)
 	_add_pillars(decorations, tile)
+	_add_room_props(decorations, tile)
 	return decorations
 
 ## Builds the clutter of a tile whose open sides are [param connections], as its model sees them (unrotated)
@@ -69,18 +83,42 @@ func create_clutter(connections: Array[Level.Direction], grid_position: Vector2i
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(grid_position)
 	var half_tile: float = tile_size * 0.5
+	var lit_side: int = _add_light(decorations, connections, half_tile, random)
 	for direction: Level.Direction in Level.Direction.values():
 		var outward: Vector2 = Vector2(Level.DIRECTION_VECTORS[direction])
 		var next_direction: Level.Direction = ((direction + 1) % Level.DIRECTION_VECTORS.size()) as Level.Direction
 		for edge_prop: int in props_per_edge:
 			var along: Vector2 = Vector2(-outward.y, outward.x) * random.randf_range(-edge_spread, edge_spread)
-			if not connections.has(direction) and random.randf() < edge_chance:
+			if not connections.has(direction) and direction != lit_side and random.randf() < edge_chance:
 				_add_prop(decorations, edge_props, _on_floor((outward * edge_distance + along) * half_tile) * _random_turn(random), random)
 		var corner_roll: float = random.randf()
 		if not connections.has(direction) and not connections.has(next_direction) and corner_roll < corner_chance:
 			var corner: Vector2 = outward + Vector2(Level.DIRECTION_VECTORS[next_direction])
 			_add_prop(decorations, corner_props, _on_floor(corner * edge_distance * half_tile) * _random_turn(random), random)
 	return decorations
+
+## Now and then a light source in the middle of a closed side
+## @returns the side it stands on, or [code]-1[/code]
+func _add_light(decorations: Node3D, connections: Array[Level.Direction], half_tile: float, random: RandomNumberGenerator) -> int:
+	var closed: Array[Level.Direction] = []
+	for direction: Level.Direction in Level.Direction.values():
+		if not connections.has(direction): closed.append(direction)
+	var roll: float = random.randf()
+	if not lights or closed.is_empty() or roll >= light_chance: return -1
+	var side: Level.Direction = closed[random.randi() % closed.size()]
+	_add_prop(decorations, lights, _on_floor(Vector2(Level.DIRECTION_VECTORS[side]) * edge_distance * half_tile) * _random_turn(random), random)
+	return side
+
+## A rug under the middle of some room tiles, and some ambience above it
+func _add_room_props(decorations: Node3D, tile: Structure) -> void:
+	if not tile.profile.room_type: return
+	var random: RandomNumberGenerator = RandomNumberGenerator.new()
+	random.seed = hash(tile.get_grid_position()) ^ hash(&"room")
+	var quarter_turn: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4))
+	if room_floors and random.randf() < room_floor_chance:
+		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), quarter_turn), random)
+	if room_ambience and random.randf() < room_ambience_chance:
+		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO)), random)
 
 ## Hides the props of [param decorations] and drops them in one after another once [param after] (e.g. the tile's reveal) finished
 func drop(decorations: Node3D, after: Tween = null) -> void:

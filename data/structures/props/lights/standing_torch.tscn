@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://d4nh43eoiavr7"]
+
+[ext_resource type="PackedScene" uid="uid://dvn4drvw3s3bh" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_TorchStick_01.tscn" id="1_piece"]
+[ext_resource type="PackedScene" uid="uid://cbh8li7jllmet" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Fire_Small_01.tscn" id="2_piece"]
+
+[node name="StandingTorch" type="Node3D"]
+
+[node name="Torch" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Fire" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0, 1.22, 0)
+local_coords = true
+
+[node name="FX_Fire_Embers_01" parent="Fire" index="0"]
+local_coords = true
+
+[node name="Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+light_color = Color(1, 0.62, 0.3, 1)
+light_energy = 1.2
+omni_range = 3.5
+omni_attenuation = 1.5
+distance_fade_enabled = true
+distance_fade_begin = 20.0
+distance_fade_length = 5.0

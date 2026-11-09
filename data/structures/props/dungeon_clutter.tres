@@ -23,6 +23,18 @@
 [ext_resource type="PackedScene" uid="uid://menylk3rceqb" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Vase_Broken_01.tscn" id="21_prop"]
 [ext_resource type="PackedScene" uid="uid://cpmiy1g40mk5r" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Vase_Broken_02.tscn" id="22_prop"]
 [ext_resource type="PackedScene" uid="uid://de1p3wxgrgq8q" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Skeleton_01.tscn" id="23_prop"]
+[ext_resource type="PackedScene" uid="uid://wud2fv47ijb8" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Skull_01.tscn" id="1_more"]
+[ext_resource type="PackedScene" uid="uid://ctoyc57k6cvhg" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Skull_Pile_01.tscn" id="2_more"]
+[ext_resource type="PackedScene" uid="uid://nr1rhu0wc5k" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Bones_Rotten_01.tscn" id="3_more"]
+[ext_resource type="PackedScene" uid="uid://bajejx6m68tay" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Book_01.tscn" id="4_more"]
+[ext_resource type="PackedScene" uid="uid://b5nq0krmo6n54" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Scroll_01.tscn" id="5_more"]
+[ext_resource type="PackedScene" uid="uid://chlh3raf3jvpg" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Bottle_01.tscn" id="6_more"]
+[ext_resource type="PackedScene" uid="uid://ietx7rkvmy7e" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Goblet_01.tscn" id="7_more"]
+[ext_resource type="PackedScene" uid="uid://dtvnhwcypxg6t" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Candle_Blob_01.tscn" id="8_more"]
+[ext_resource type="PackedScene" uid="uid://261a5onvnbbs" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Candle_Drip_01.tscn" id="9_more"]
+[ext_resource type="PackedScene" uid="uid://dgb0soy6hsm4x" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Meat_Bucket_01.tscn" id="10_more"]
+[ext_resource type="PackedScene" uid="uid://b47jnutnxtc3i" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Bowl_01.tscn" id="11_more"]
+[ext_resource type="PackedScene" uid="uid://e271xxhlrtps" path="res://data/structures/props/ambience/bone_pile_flies.tscn" id="12_more"]
 
 [resource]
 script = ExtResource("1_script")
@@ -48,5 +60,17 @@ ExtResource("19_prop"): 1.0,
 ExtResource("20_prop"): 1.0,
 ExtResource("21_prop"): 1.0,
 ExtResource("22_prop"): 1.0,
-ExtResource("23_prop"): 0.3
+ExtResource("23_prop"): 0.3,
+ExtResource("1_more"): 0.6,
+ExtResource("2_more"): 0.4,
+ExtResource("3_more"): 0.6,
+ExtResource("4_more"): 0.4,
+ExtResource("5_more"): 0.4,
+ExtResource("6_more"): 0.5,
+ExtResource("7_more"): 0.3,
+ExtResource("8_more"): 0.4,
+ExtResource("9_more"): 0.4,
+ExtResource("10_more"): 0.2,
+ExtResource("11_more"): 0.3,
+ExtResource("12_more"): 0.4
 })

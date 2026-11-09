@@ -13,6 +13,12 @@
 [ext_resource type="PackedScene" uid="uid://ck6t01ij164c3" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Candle_Stand_01.tscn" id="11_prop"]
 [ext_resource type="PackedScene" uid="uid://beschixy66ip5" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Chest_Wood_01.tscn" id="12_prop"]
 [ext_resource type="PackedScene" uid="uid://bet65vsbjjd3p" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Stool_01.tscn" id="13_prop"]
+[ext_resource type="PackedScene" uid="uid://b8ij0836bqeal" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Barrel_01.tscn" id="1_more"]
+[ext_resource type="PackedScene" uid="uid://vn54bvhltudg" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Barrel_Open_01.tscn" id="2_more"]
+[ext_resource type="PackedScene" uid="uid://8ocshdrtdyg" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Sack_01.tscn" id="3_more"]
+[ext_resource type="PackedScene" uid="uid://di87oqbv8vmi" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Crate_01.tscn" id="4_more"]
+[ext_resource type="PackedScene" uid="uid://dji6qjigjesig" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Chest_01.tscn" id="5_more"]
+[ext_resource type="PackedScene" uid="uid://vir2dnd14nkp" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Keg_01.tscn" id="6_more"]
 
 [resource]
 script = ExtResource("1_script")
@@ -28,5 +34,11 @@ ExtResource("9_prop"): 1.0,
 ExtResource("10_prop"): 1.0,
 ExtResource("11_prop"): 0.6,
 ExtResource("12_prop"): 0.4,
-ExtResource("13_prop"): 1.0
+ExtResource("13_prop"): 1.0,
+ExtResource("1_more"): 0.8,
+ExtResource("2_more"): 0.6,
+ExtResource("3_more"): 0.8,
+ExtResource("4_more"): 0.6,
+ExtResource("5_more"): 0.3,
+ExtResource("6_more"): 0.3
 })

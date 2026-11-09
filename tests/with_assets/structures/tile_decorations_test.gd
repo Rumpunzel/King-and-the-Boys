@@ -50,3 +50,16 @@ func test_props_drop_in_one_after_another() -> void:
 	for prop: Node in props: assert_bool((prop as Node3D).visible).is_false()
 	await await_millis(int(decorations_resource.drop_interval * 1000.0 * props.size()) + 200)
 	for prop: Node in props: assert_bool((prop as Node3D).visible).is_true()
+
+func test_a_light_stands_in_the_middle_of_a_closed_side() -> void:
+	var decorations_resource: TileDecorations = load(DECORATIONS)
+	var light_chance: float = decorations_resource.light_chance
+	decorations_resource.light_chance = 1.0
+	var hallway: Array[Level.Direction] = [Level.Direction.UP, Level.Direction.DOWN]
+	for x: int in 10:
+		var lights: Array[Node3D] = _props(hallway, Vector2i(x, 3)).filter(func(prop: Node3D) -> bool: return prop.get_child(0).scene_file_path.contains("/lights/"))
+		assert_int(lights.size()).is_equal(1)
+		# Up and down are open, so the light stands left or right, in the middle
+		assert_float(absf(lights[0].position.x)).is_equal_approx(decorations_resource.edge_distance * TILE_SIZE * 0.5, 0.01)
+		assert_float(lights[0].position.z).is_equal_approx(0.0, 0.01)
+	decorations_resource.light_chance = light_chance
