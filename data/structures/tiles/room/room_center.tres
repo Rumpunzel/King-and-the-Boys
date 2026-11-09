@@ -7,10 +7,12 @@
 [ext_resource type="Resource" uid="uid://80ut5hvuftsw" path="res://data/model_animations/flip_animation.tres" id="5_6yybe"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_uyw6g"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_wldt0"]
+[ext_resource type="Resource" uid="uid://boyg6u55haqfd" path="res://data/structures/tiles/dungeon_decorations.tres" id="1_decorations"]
 
 [resource]
 script = ExtResource("6_wldt0")
 group = 2
+decorations = ExtResource("1_decorations")
 room_type = ExtResource("5_uyw6g")
 _connection_up = true
 _connection_right = true

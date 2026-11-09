@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://ds4gq17440h4n" path="res://engine/objects/nested_spawn_table.gd" id="6_u27yi"]
 [ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="7_o73u8"]
 [ext_resource type="Resource" uid="uid://80ut5hvuftsw" path="res://data/model_animations/flip_animation.tres" id="8_2q87q"]
+[ext_resource type="Resource" uid="uid://boyg6u55haqfd" path="res://data/structures/tiles/dungeon_decorations.tres" id="1_decorations"]
 
 [sub_resource type="Resource" id="Resource_jpwya"]
 script = ExtResource("6_u27yi")
@@ -22,6 +23,7 @@ metadata/_custom_type_script = "uid://ds4gq17440h4n"
 [resource]
 script = ExtResource("5_fonyd")
 group = 2
+decorations = ExtResource("1_decorations")
 room_type = ExtResource("4_kji3m")
 _connection_up = true
 _connection_right = true

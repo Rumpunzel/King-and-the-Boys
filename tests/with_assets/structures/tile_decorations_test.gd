@@ -1,0 +1,38 @@
+extends GdUnitTestSuite
+## The dungeon tiles' props: the same on every peer, along closed sides only and clear of the tile spots
+
+const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tres"
+const TILE_SIZE: float = 2.0
+
+func _props(connections: Array[Level.Direction], grid_position: Vector2i) -> Array[Node3D]:
+	var decorations: Node3D = auto_free((load(DECORATIONS) as TileDecorations).create(connections, grid_position, TILE_SIZE))
+	var props: Array[Node3D] = []
+	for child: Node in decorations.get_children(): props.append(child as Node3D)
+	return props
+
+func _describe(props: Array[Node3D]) -> PackedStringArray:
+	var described: PackedStringArray = []
+	for prop: Node3D in props: described.append("%s %s %.2f" % [prop.scene_file_path, prop.position, prop.rotation.y])
+	return described
+
+func test_a_tile_gets_the_same_props_on_every_peer() -> void:
+	var closed: Array[Level.Direction] = []
+	assert_array(_describe(_props(closed, Vector2i(3, -2)))).is_equal(_describe(_props(closed, Vector2i(3, -2))))
+	assert_array(_describe(_props(closed, Vector2i(3, -2)))).is_not_equal(_describe(_props(closed, Vector2i(-5, 7))))
+
+func test_open_tiles_stay_empty() -> void:
+	var open: Array[Level.Direction] = [Level.Direction.UP, Level.Direction.RIGHT, Level.Direction.DOWN, Level.Direction.LEFT]
+	for x: int in 10: assert_array(_props(open, Vector2i(x, 0))).is_empty()
+
+func test_props_keep_to_closed_sides_and_clear_of_tile_spots() -> void:
+	var hallway: Array[Level.Direction] = [Level.Direction.UP, Level.Direction.DOWN]
+	var spots: Array[Vector2] = (load("res://data/structures/tiles/hallway.tres") as StructureProfile).get_tile_spots()
+	var placed: int = 0
+	for x: int in 20:
+		for prop: Node3D in _props(hallway, Vector2i(x, 1)):
+			placed += 1
+			# Up and down are open, so props stand on the left or right side
+			assert_float(absf(prop.position.x)).is_greater(0.6)
+			assert_bool(prop.find_children("*", "CollisionObject3D", true, false).is_empty()).is_true()
+			for spot: Vector2 in spots: assert_float(Vector2(prop.position.x, prop.position.z).distance_to(spot)).is_greater(0.25)
+	assert_int(placed).is_greater(0)
