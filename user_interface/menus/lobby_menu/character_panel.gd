@@ -19,6 +19,14 @@ func set_character(new_character: CharacterProfile) -> void:
 	_character_portrait.texture = character.portrait
 	_character_name.text = character.name
 
+## The portrait's centre on screen (viewport coordinates), where the lobby stands the character's model
+func get_portrait_screen_center() -> Vector2:
+	return _character_portrait.get_global_transform_with_canvas() * (_character_portrait.size * 0.5)
+
+## Hides the portrait while a 3D model stands in its place; the space stays
+func set_portrait_shown(shown: bool) -> void:
+	_character_portrait.self_modulate.a = 1.0 if shown else 0.0
+
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not _character_portrait: warnings.append("Missing character portrait reference.")

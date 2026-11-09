@@ -26,16 +26,31 @@ func get_part(part: int) -> ModularBodyPart:
 
 func has_part(part: int) -> bool: return part >= 0 and part < get_part_keys().size()
 
-## Shows a rolled body (see [method ModelConfigurationRandom.roll]); an entry naming a part this body lacks, or a mesh that is not
-## one of that part's, is skipped, e.g. from a save made when the profile still used another body
+## Shows a rolled body (see [method ModelConfigurationRandom.roll]); an entry that does not fit (see [method fits_part]) is skipped,
+## e.g. from a save made when the profile still used another body
 ## @param body {part: [int] -> mesh [ResourceId]: [String]}, an empty ID meaning no mesh
 func apply_body(body: Dictionary) -> void:
-	for part: int in body:
-		var mesh: ArrayMesh = ResourceId.find(body[part] as String) as ArrayMesh
-		if not has_part(part) or (mesh and not get_part(part).get_mesh_paths().has(mesh.resource_path)):
-			push_warning("%s does not fit part %d of %s; skipped." % [body[part], part, scene_file_path])
+	for part: Variant in body:
+		if not part is int or not body[part] is String or not fits_part(part as int, body[part] as String):
+			push_warning("%s does not fit part %s of %s; skipped." % [body[part], part, scene_file_path])
 			continue
-		get_part(part).apply_mesh(mesh)
+		get_part(part as int).apply_mesh(ResourceId.find(body[part] as String) as ArrayMesh)
+
+## Whether [param body] names a mesh for exactly this body's body parts (see [method get_body_parts]), each fitting its part, e.g. a
+## body a peer rolled in the lobby
+func is_complete_body(body: Dictionary) -> bool:
+	if body.size() != get_body_parts().size(): return false
+	for part: int in get_body_parts():
+		if not body.get(part) is String or not fits_part(part, body[part] as String): return false
+	return true
+
+## Whether [param mesh_id] names one of [param part]'s own meshes, or none where the part may show none; checked by file path, so
+## IDs from peers are never loaded unless they fit
+func fits_part(part: int, mesh_id: String) -> bool:
+	if not has_part(part): return false
+	var body_part: ModularBodyPart = get_part(part)
+	if mesh_id.is_empty(): return body_part.allows_none()
+	return body_part.get_mesh_paths().has(ResourceId.get_file_path(mesh_id))
 
 ## @returns every part some slot owns
 func get_gear_parts() -> Array[int]:

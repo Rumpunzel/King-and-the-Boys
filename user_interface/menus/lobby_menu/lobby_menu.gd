@@ -7,14 +7,20 @@ extends Menu
 @export var _left_player_panels_container: Container
 @export var _local_player_panel: LobbyPlayerPanel
 @export var _right_player_panels_container: Container
-## Shows the local player's character; its model is built from the chosen profile, so dwarves show as dwarves
+## Where the local player's character stands; other players' characters stand at the same depth and floor, below their
+## portraits. Models are built from the chosen profiles, so dwarves show as dwarves
 @export var _character_preview: Node3D
+## How much further from the camera other players' characters stand than the local one, in metres
+@export var _other_characters_depth: float = 0.5
 @export_file("*.tscn") var _game_scene_path: String
 @export var _guest_player_panel_scene: PackedScene
 
 var _player_panels: Dictionary[Player, LobbyPlayerPanel] = {}
-var _preview_model: Model
-var _preview_profile: CharacterProfile
+## Each player's character model and the profile it was built from
+var _preview_models: Dictionary[Player, Model] = {}
+var _preview_profiles: Dictionary[Player, CharacterProfile] = {}
+## Where other players' models stand, moved below their portraits every frame
+var _preview_anchors: Dictionary[Player, Node3D] = {}
 
 func _enter_tree() -> void:
 	super._enter_tree()
@@ -31,8 +37,8 @@ func _ready() -> void:
 		if player.is_host(): _title.text = "%s's Lobby" % player.player_name
 		if player.is_local_player():
 			_local_player_panel.player = player
-			player.player_info_changed.connect(_on_local_player_info_changed)
-			_on_local_player_info_changed()
+			player.player_info_changed.connect(_update_preview.bind(player))
+			_update_preview(player)
 		else: _add_player(player)
 	Lobby.player_created.connect(_add_player)
 
@@ -61,11 +67,22 @@ func _add_player(player: Player) -> void:
 	empty_player_info.player = player
 	player.tree_exiting.connect(_remove_player.bind(player))
 	_player_panels[player] = empty_player_info
+	var anchor: Node3D = Node3D.new()
+	_character_preview.add_sibling(anchor)
+	_preview_anchors[player] = anchor
+	player.player_info_changed.connect(_update_preview.bind(player))
+	_update_preview(player)
 
 func _remove_player(player: Player) -> void:
 	assert(player)
 	var player_panel_to_clear: LobbyPlayerPanel = _player_panels[player]
 	player_panel_to_clear.player = null
+	player_panel_to_clear.get_character_panel().set_portrait_shown(true)
+	_player_panels.erase(player)
+	_preview_models.erase(player)
+	_preview_profiles.erase(player)
+	if _preview_anchors.has(player): _preview_anchors[player].queue_free()
+	_preview_anchors.erase(player)
 
 func _get_player_panels(in_container: Container) -> Array[LobbyPlayerPanel]:
 	var children: Array[Node] = in_container.get_children()
@@ -80,17 +97,37 @@ func _on_leave_pressed() -> void:
 func _on_disconnected_from_multiplayer() -> void:
 	SceneManager.to_main(false)
 
-## Rebuilds the preview model when another profile was chosen, as profiles may use other bodies
-func _on_local_player_info_changed() -> void:
-	var profile: CharacterProfile = _local_player_panel.player.character
-	if profile != _preview_profile:
-		_preview_profile = profile
-		if _preview_model: _preview_model.queue_free()
-		_preview_model = profile.create_model(0) if profile else null
-		if _preview_model:
-			_preview_model.position = _preview_model.preview_offset
-			_character_preview.add_child(_preview_model)
-	if _preview_model is ModularModel: profile.setup_model(_preview_model as ModularModel)
+func _process(_delta: float) -> void:
+	if Engine.is_editor_hint() or _preview_anchors.is_empty(): return
+	var camera: Camera3D = get_viewport().get_camera_3d()
+	if not camera: return
+	var depth: float = (_character_preview.global_position - camera.global_position).dot(-camera.global_basis.z) + _other_characters_depth
+	for player: Player in _preview_anchors:
+		var anchor: Node3D = _preview_anchors[player]
+		var below_portrait: Vector3 = camera.project_position(_player_panels[player].get_character_panel().get_portrait_screen_center(), depth)
+		anchor.global_basis = _character_preview.global_basis
+		anchor.global_position = Vector3(below_portrait.x, _character_preview.global_position.y, below_portrait.z)
+
+## Rebuilds a player's model when they chose another profile, as profiles may use other bodies
+func _update_preview(player: Player) -> void:
+	var profile: CharacterProfile = player.character
+	var model: Model = _preview_models.get(player)
+	if profile != _preview_profiles.get(player):
+		_preview_profiles[player] = profile
+		if model: model.queue_free()
+		model = profile.create_model(0) if profile else null
+		_preview_models[player] = model
+		if model:
+			model.position = model.preview_offset
+			var anchor: Node3D = _preview_anchors.get(player, _character_preview)
+			anchor.add_child(model)
+		# The model stands where the portrait was
+		if _player_panels.has(player): _player_panels[player].get_character_panel().set_portrait_shown(model == null)
+	if not model is ModularModel: return
+	# Each player's own look, as they rolled it; it is used in game as well. Character and body reach peers one after the other,
+	# so a body of the previous character waits until the new one arrives
+	var modular_model: ModularModel = model
+	profile.dress_model(modular_model, player.body if modular_model.is_complete_body(player.body) else {})
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

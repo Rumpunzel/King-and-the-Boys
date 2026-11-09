@@ -102,3 +102,35 @@ func test_looks_stored_in_a_profile_reach_peers_by_resource_id() -> void:
 	assert_str(look_id).contains(ResourceId.SEPARATOR)
 	assert_object(ResourceId.find(look_id)).is_same(stored)
 	assert_array(loaded.create_character_data(0, Transform3D())[Character.EQUIPMENT] as PackedStringArray).contains([look_id])
+
+func test_the_body_chosen_in_the_lobby_carries_into_the_game() -> void:
+	var chosen: Dictionary = _knight.roll_body(0)
+	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D(), chosen)
+	assert_dict(data[Character.BODY] as Dictionary).is_equal(chosen)
+	var character: Character = auto_free(Character.from_character_data(data))
+	var shown: PackedStringArray = []
+	for part: int in chosen: shown.append(ResourceId.get_file_path(chosen[part] as String))
+	assert_array(_body_mesh_paths(character)).is_equal(shown)
+
+func test_a_body_that_does_not_fit_is_rolled_anew() -> void:
+	var dwarf_body: Dictionary = (load(EquipmentFixtures.DWARF) as CharacterProfile).roll_body(0)
+	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D(), dwarf_body)
+	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
+	assert_bool(model.is_complete_body(data[Character.BODY] as Dictionary)).is_true()
+	assert_dict(data[Character.BODY] as Dictionary).is_not_equal(dwarf_body)
+
+func test_peer_sent_meshes_outside_the_part_are_refused_unloaded() -> void:
+	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
+	var body: Dictionary = _knight.roll_body(0)
+	body[ModularCharacter.Part.HAIR] = "res://data/characters/people/knight.tres"
+	assert_bool(model.is_complete_body(body)).is_false()
+	assert_bool(model.fits_part(ModularCharacter.Part.HAIR, EquipmentFixtures.HELMET_ATTACHMENT)).is_false()
+
+func test_picking_a_character_rolls_its_body() -> void:
+	var player: Player = auto_free(Player.create(Multiplayer.HOST_ID, "Test"))
+	player.character = _knight
+	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
+	assert_bool(model.is_complete_body(player.body)).is_true()
+	player.character = load(EquipmentFixtures.DWARF)
+	var dwarf: DwarfCharacter = auto_free(EquipmentFixtures.make_dwarf_model())
+	assert_bool(dwarf.is_complete_body(player.body)).is_true()
