@@ -73,7 +73,8 @@ func _ready() -> void:
 	_on_gear_tab_visibility_changed()
 
 func _load_types() -> void:
-	var selected_type: EquipmentType = _get_type()
+	# The edited look's type first: the profile and the model change one after the other, in either order
+	var selected_type: EquipmentType = _equipment_look.type if _equipment_look and _equipment_look.type else _get_type()
 	_types.clear()
 	_type_option.clear()
 	for equipment_type: EquipmentType in EquipmentType.find_all():

@@ -47,7 +47,7 @@ func get_blocker(slot: EquipmentLook.Slot) -> EquipmentLook:
 
 ## Refused while another item blocks its slot, or once a model is shown that the item was not made for (e.g. dwarf gear on a human)
 func can_equip(equipment_look: EquipmentLook) -> bool:
-	if not equipment_look or get_blocker(equipment_look.slot): return false
+	if not equipment_look or not equipment_look.type or get_blocker(equipment_look.slot): return false
 	return not _model or equipment_look.type.fits(_model)
 
 ## Replaces the item in its slot and empties the slots it blocks

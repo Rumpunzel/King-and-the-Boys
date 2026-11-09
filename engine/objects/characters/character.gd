@@ -263,10 +263,7 @@ func to_character_data() -> Dictionary[StringName, Variant]:
 func _apply_body() -> void:
 	if not model is ModularModel: return
 	var modular_model: ModularModel = model
-	for part: int in body:
-		var mesh_id: String = body[part]
-		var mesh: ArrayMesh = ResourceId.find(mesh_id) as ArrayMesh
-		if modular_model.has_part(part): modular_model.get_part(part).apply_mesh(mesh)
+	modular_model.apply_body(body)
 
 func get_portrait() -> Texture:
 	if model and model.portrait_override: return model.portrait_override

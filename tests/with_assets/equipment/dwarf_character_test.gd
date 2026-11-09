@@ -79,3 +79,24 @@ func test_the_dwarf_profile_spawns_a_dressed_dwarf() -> void:
 	assert_str(EquipmentFixtures.mesh_path(model.body)).ends_with("dwarf_body_soldier_male_03.res")
 	assert_str(EquipmentFixtures.mesh_path(model.headwear)).ends_with("dwarf_headwear_helmet_soldier_08.res")
 	assert_array((data[Character.BODY] as Dictionary).keys()).contains_exactly(model.get_body_parts())
+
+func test_a_body_rolled_for_another_model_is_skipped() -> void:
+	# Saves made before the dwarf had its own body hold human part numbers, e.g. EARS (4), which is HEADWEAR on a dwarf
+	var human: ModularCharacter = auto_free(EquipmentFixtures.make_model())
+	human.ears.update_index(0)
+	var body: Dictionary = {ModularCharacter.Part.EARS: ResourceId.of(human.ears.mesh)}
+	_dwarf.apply_body(body)
+	assert_bool(_dwarf.headwear.visible).is_false()
+	var dwarf_body: Dictionary = {DwarfCharacter.Part.HAIR: ResourceId.of(load(_dwarf.hair.get_mesh_paths()[2]) as ArrayMesh)}
+	_dwarf.apply_body(dwarf_body)
+	assert_str(EquipmentFixtures.mesh_path(_dwarf.hair)).is_equal(_dwarf.hair.get_mesh_paths()[2])
+
+func test_looks_without_a_type_are_refused() -> void:
+	assert_bool(_equipment.can_equip(EquipmentLook.new())).is_false()
+
+func test_scenes_without_a_modular_body_offer_no_parts() -> void:
+	var plain: Node3D = Node3D.new()
+	var scene: PackedScene = PackedScene.new()
+	scene.pack(plain)
+	plain.free()
+	assert_object(ModularModelParts.of(scene)).is_null()

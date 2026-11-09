@@ -132,7 +132,10 @@ func _refresh() -> void:
 	# The profile's models may have changed, e.g. from a human to a dwarf
 	var slot_types: Array[EquipmentType] = get_slot_types(_slot, profile)
 	if slot_types != _slot_types or _type_option.item_count == 0: _fill_type_option(slot_types)
-	_type_option.select(_slot_types.find(equipment_look.type) + 1 if equipment_look else 0)
+	var type_index: int = _slot_types.find(equipment_look.type) if equipment_look else -1
+	_type_option.select(type_index + 1 if not equipment_look or type_index >= 0 else -1)
+	# A look of a type the profile's models do not wear (e.g. after switching to a dwarf) is named, not shown as "None"
+	if equipment_look and type_index < 0: _type_option.text = "%s (does not fit)" % (equipment_look.type.name if equipment_look.type else equipment_look.name)
 	_type_option.disabled = blocker != null
 	_clear_button.disabled = not equipment_look
 	for child: Node in _carousels.get_children():

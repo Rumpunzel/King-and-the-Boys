@@ -166,8 +166,7 @@ func setup_model(model: ModularModel, reroll: bool = false) -> void:
 		_preview_model_path = model.scene_file_path
 		_preview_body = model_configuration.roll(model) if model_configuration else {}
 		_preview_random_equipment = _roll_random_equipment()
-	for part: int in _preview_body:
-		model.get_part(part).apply_mesh(ResourceId.find(_preview_body[part] as String) as ArrayMesh)
+	model.apply_body(_preview_body)
 	# A detached [CharacterEquipment] applies the same slot and blocking rules as in game
 	var preview_equipment: CharacterEquipment = CharacterEquipment.new()
 	preview_equipment.apply_to(model)

@@ -26,6 +26,17 @@ func get_part(part: int) -> ModularBodyPart:
 
 func has_part(part: int) -> bool: return part >= 0 and part < get_part_keys().size()
 
+## Shows a rolled body (see [method ModelConfigurationRandom.roll]); an entry naming a part this body lacks, or a mesh that is not
+## one of that part's, is skipped, e.g. from a save made when the profile still used another body
+## @param body {part: [int] -> mesh [ResourceId]: [String]}, an empty ID meaning no mesh
+func apply_body(body: Dictionary) -> void:
+	for part: int in body:
+		var mesh: ArrayMesh = ResourceId.find(body[part] as String) as ArrayMesh
+		if not has_part(part) or (mesh and not get_part(part).get_mesh_paths().has(mesh.resource_path)):
+			push_warning("%s does not fit part %d of %s; skipped." % [body[part], part, scene_file_path])
+			continue
+		get_part(part).apply_mesh(mesh)
+
 ## @returns every part some slot owns
 func get_gear_parts() -> Array[int]:
 	var gear_parts: Array[int] = []

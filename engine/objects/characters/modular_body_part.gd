@@ -11,6 +11,9 @@ enum Type {
 ## The number keys use for a part showing no mesh; the asset pack's own [code]00[/code] meshes are bare skin, so it reads the same
 const EMPTY_MESH_NUMBER: String = "00"
 
+## The trailing number of a mesh file name, compiled once as listing and sorting meshes asks for it often
+static var _mesh_number_pattern: RegEx = RegEx.create_from_string("(\\d+)$")
+
 @export var _type: Type = Type.ESSENTIAL
 ## Only mesh files starting with this are listed; the mesh directories hold some leftovers of other names
 ## Declared before [member _index], whose setter lists the meshes when a scene loads
@@ -72,7 +75,7 @@ func get_mesh_paths() -> PackedStringArray: return PackedStringArray(_mesh_list)
 ## @returns the trailing number of a mesh file, e.g. [code]"05"[/code] for [code]..._Male_05.res[/code]
 static func get_mesh_number(mesh_path: String) -> String:
 	var mesh_name: String = mesh_path.get_file().get_basename()
-	var found: RegExMatch = RegEx.create_from_string("(\\d+)$").search(mesh_name)
+	var found: RegExMatch = _mesh_number_pattern.search(mesh_name)
 	return found.get_string(1) if found else mesh_name
 
 ## @returns the numbers of all meshes in this part's directory, in directory order

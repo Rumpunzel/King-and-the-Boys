@@ -17,8 +17,11 @@ var mesh_options: Dictionary[int, PackedStringArray] = {}
 static func of(scene: PackedScene) -> ModularModelParts:
 	if not scene: return null
 	if _cache.has(scene.resource_path): return _cache[scene.resource_path]
-	var model: ModularModel = scene.instantiate() as ModularModel
-	if not model: return null
+	var instance: Node = scene.instantiate()
+	var model: ModularModel = instance as ModularModel
+	if not model:
+		instance.free()
+		return null
 	var model_parts: ModularModelParts = ModularModelParts.new()
 	model_parts.part_keys = model.get_part_keys()
 	for slot: EquipmentLook.Slot in EquipmentLook.Slot.values(): model_parts.slot_parts[slot] = model.get_slot_parts(slot)
