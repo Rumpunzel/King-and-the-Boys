@@ -68,8 +68,9 @@ var level: Level
 var look_target: Vector3 = Vector3.BACK
 ## The [Character] currently haunting (controlling) this one, if any
 var haunted_by: Character
-## [code]true[/code] once the [Character] left the cell it spawned on, on every peer
-var has_stepped: bool = false
+## Steps taken so far, undos included; counted by the host, replicated. Tiles a step reveals carry its number
+## (see [member Structure.status_cause_step]), so peers know which step to show them after.
+var step_count: int = 0
 
 # Grid state: owned by the host, replicated on change by the CharacterSynchronizer.
 # Every peer turns it into a world position and animates the model itself.
@@ -79,7 +80,6 @@ var grid_cell: Vector2i = Vector2i.ZERO:
 		grid_cell = new_grid_cell
 		_queue_grid_visual_update()
 		if previous_grid_cell == grid_cell or not _has_grid_state: return
-		has_stepped = true
 		exited_grid_cell.emit(previous_grid_cell)
 		entered_grid_cell.emit(grid_cell)
 ## Offset from the center of [member grid_cell], see [method Level.get_free_spots]
@@ -180,6 +180,8 @@ func move_into_direction(direction_input: Vector2, delta: float) -> void:
 ## Host only: places the [Character] on the grid; peers follow through replication
 func place_on_grid(new_grid_cell: Vector2i, new_tile_spot: Vector2, new_facing: Level.Direction) -> void:
 	assert(multiplayer.is_server())
+	# Counted before the cell changes: entering the cell reveals tiles, which carry this step's number
+	if new_grid_cell != grid_cell: step_count += 1
 	tile_spot = new_tile_spot
 	facing = new_facing
 	grid_cell = new_grid_cell

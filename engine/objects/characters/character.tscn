@@ -27,6 +27,9 @@ properties/5/replication_mode = 2
 properties/6/path = NodePath(".:undo_steps")
 properties/6/spawn = false
 properties/6/replication_mode = 2
+properties/7/path = NodePath(".:step_count")
+properties/7/spawn = true
+properties/7/replication_mode = 2
 
 [node name="Character" type="CharacterBody3D" unique_id=280801836 node_paths=PackedStringArray("_collision_shape", "_navigation_agent", "_synchronizer") groups=["Characters"]]
 collision_layer = 2

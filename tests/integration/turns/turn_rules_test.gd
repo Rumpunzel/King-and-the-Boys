@@ -362,3 +362,61 @@ func test_undo_steps_go_with_their_character() -> void:
 	hero.queue_free()
 	await await_idle_frame()
 	assert_bool(undo_stacks.has(hero)).is_false()
+
+func _wait_until_shown(tiles: Array[Structure], timeout_millis: int) -> bool:
+	for _guard: int in timeout_millis / 50:
+		if tiles.all(func(tile: Structure) -> bool: return tile.shown_status == tile.status): return true
+		await await_millis(50)
+	return false
+
+func _lagging_tiles() -> Array[Structure]:
+	var lagging: Array[Structure] = []
+	var placed_tiles: Dictionary[Vector2i, Structure] = _level.get("_placed_tiles")
+	for cell: Vector2i in placed_tiles:
+		if placed_tiles[cell].shown_status < placed_tiles[cell].status: lagging.append(placed_tiles[cell])
+	return lagging
+
+func test_reveals_wait_only_for_the_figure_that_caused_them() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	var other: Character = await _spawn_hero(_start_cell())
+	other.movement_points = 100
+	await _walk_until_board_changes(hero)
+	var lagging: Array[Structure] = _lagging_tiles()
+	assert_array(lagging).is_not_empty()
+	# The other figure keeps stepping back and forth the whole time
+	# Lambdas copy local variables, so the flag is shared through an array
+	var keep_stepping: Array[bool] = [true]
+	var step_other: Callable = func() -> void:
+		while keep_stepping[0] and is_instance_valid(other):
+			_turn_manager.request_move(other.get_path(), _open_direction(other.grid_cell) as Level.Direction)
+			await await_millis(150)
+	step_other.call()
+	var shown: bool = await _wait_until_shown(lagging, 8000)
+	keep_stepping[0] = false
+	await await_millis(200)
+	assert_bool(shown).is_true()
+
+func test_tiles_wait_for_the_step_that_raised_them() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	await _walk_until_board_changes(hero)
+	assert_bool(await _wait_until_shown(_lagging_tiles(), 8000)).is_true()
+	# A tile whose step has not reached this peer yet, as a client may see it
+	var tile: Structure = null
+	var placed_tiles: Dictionary[Vector2i, Structure] = _level.get("_placed_tiles")
+	for cell: Vector2i in placed_tiles:
+		if placed_tiles[cell].status == Structure.Status.PLACED and placed_tiles[cell].get_connections().size() > 0:
+			tile = placed_tiles[cell]
+			break
+	assert_object(tile).is_not_null()
+	tile.status_cause = hero.get_path()
+	tile.status_cause_step = hero.step_count + 1
+	tile.reveal()
+	await await_millis(1000)
+	assert_int(tile.shown_status).is_less(Structure.Status.REVEALED)
+	hero.step_count += 1
+	assert_bool(await _wait_until_shown([tile] as Array[Structure], 3000)).is_true()
+
+func test_tiles_no_step_raised_show_at_once() -> void:
+	# Spawning reveals the start: no step caused it
+	await _spawn_hero(_start_cell())
+	assert_array(_lagging_tiles()).is_empty()

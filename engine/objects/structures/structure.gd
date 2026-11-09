@@ -63,6 +63,12 @@ const STATUS: StringName = "status"
 		if not is_node_ready(): shown_status = status
 		status_changed.emit(status)
 
+## The [Character] whose step raised [member status] last, empty if no step did (level build, spawning, loading).
+## Replicated before [member status], so peers know it when the status changes.
+var status_cause: NodePath
+## The cause's [member Character.step_count] at that step; [code]0[/code] if no step raised the status
+var status_cause_step: int = 0
+
 ## What the tile currently looks like on this peer
 var shown_status: Status = Status.NONE:
 	set(new_shown_status):
