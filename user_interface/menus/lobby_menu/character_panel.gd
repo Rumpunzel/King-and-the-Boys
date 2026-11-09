@@ -2,13 +2,13 @@
 class_name CharacterPanel
 extends PanelContainer
 
-var character: CharacterProfile:
-	set = set_character
-
 @export_group("Configuration")
 @export var _placeholder_avatar: Texture2D
 @export var _character_portrait: TextureRect
 @export var _character_name: Label
+
+var character: CharacterProfile:
+	set = set_character
 
 func set_character(new_character: CharacterProfile) -> void:
 	character = new_character

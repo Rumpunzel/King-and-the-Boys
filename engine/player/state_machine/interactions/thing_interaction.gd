@@ -12,6 +12,6 @@ func _init(
 	source = new_source
 	target = new_target
 	action = new_action
- 
+
 func get_target() -> ThingHitBox:
 	return target

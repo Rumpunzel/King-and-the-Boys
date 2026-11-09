@@ -10,10 +10,10 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	Steam.run_callbacks()
 
-func get_player_name(player_id: int) -> String:
+func get_player_name(_player_id: int) -> String:
 	return Steam.getPersonaName()
 
-func get_player_avatar(player_id: int) -> Texture2D:
+func get_player_avatar(_player_id: int) -> Texture2D:
 	Steam.getPlayerAvatar()
 	var avatar_texture: ImageTexture = await avatar_loaded
 	return avatar_texture

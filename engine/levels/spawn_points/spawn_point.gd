@@ -12,11 +12,11 @@ extends Marker3D
 @export var _editor_material: Material = preload("uid://dilpjt8kd3s4d")
 
 func _ready() -> void:
-	var _variation: int = variation if variation >= 0 else get_profile().get_random_variation()
+	var chosen_variation: int = variation if variation >= 0 else get_profile().get_random_variation()
 	if not Engine.is_editor_hint():
-		variation = _variation
+		variation = chosen_variation
 		return
-	var model: Model = get_profile().create_model(_variation)
+	var model: Model = get_profile().create_model(chosen_variation)
 	if _editor_material: model.apply_material_override(_editor_material)
 	add_child(model)
 

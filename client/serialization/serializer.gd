@@ -82,11 +82,11 @@ func collect_data() -> Dictionary[StringName, Dictionary]:
 func restore_state(collected_data: Dictionary[StringName, Dictionary]) -> void:
 	assert(collected_data.has_all([NODES, PROPERTIES]))
 	assert(collected_data.size() == 2)
-	
+
 	var node_data: Dictionary[NodePath, Dictionary] = collected_data[NODES]
 	assert(node_data is Dictionary[NodePath, Dictionary])
 	restore_nodes(node_data)
-	
+
 	var properties_data: Dictionary[int, Dictionary] = collected_data[PROPERTIES]
 	assert(properties_data is Dictionary[int, Dictionary])
 	restore_properties_in_restoration_order(properties_data)
@@ -115,13 +115,13 @@ func _restore_properties(properties_data: Dictionary[NodePath, Dictionary], seri
 	for properties_serializer_path: NodePath in properties_data:
 		var collected_properties: Dictionary[NodePath, Variant] = properties_data[properties_serializer_path]
 		assert(collected_properties is Dictionary[NodePath, Variant])
-		
+
 		var properties_serializer: PropertiesSerializer = get_node_or_null(properties_serializer_path)
 		if properties_serializer:
 			# [PropertiesSerializer] found, restore normally
 			properties_serializer.restore_state(collected_properties)
 			continue
-		
+
 		match serializer_type:
 			PropertiesSerializer.Type.NORMAL:
 				# This is an error and should be looked at if it occurs after development
@@ -146,7 +146,7 @@ func _on_node_added(node: Node) -> void:
 	print_debug("Started restoring intagle data for queued node %s!" % node_path)
 	var collected_properties: Dictionary[NodePath, Variant] = _queued_intangible_data[node_path]
 	assert(collected_properties is Dictionary[NodePath, Variant])
-	
+
 	var properties_serializer: PropertiesSerializer = node
 	properties_serializer.restore_state(collected_properties)
 	_queued_intangible_data.erase(node_path)

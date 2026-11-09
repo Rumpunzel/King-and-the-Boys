@@ -41,7 +41,7 @@ func update(_delta: float) -> void:
 	#if available_action.is_action_just_released():
 		#_haunt_timer.stop()
 
-func physics_update(delta: float) -> void:
+func physics_update(_delta: float) -> void:
 	assert(_haunted)
 	var direction_input: Vector2 = get_direction_input()
 	var character: Character = get_character()
