@@ -787,13 +787,14 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
-[node name="HeadCoverings_Base_Hair" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=496804740]
+[node name="HeadCoverings_Base_Hair" type="MeshInstance3D" parent="GeneralSkeleton" unique_id=496804740 node_paths=PackedStringArray("_related_parts")]
 visible = false
 skin = SubResource("Skin_7gjla")
 skeleton = NodePath("..")
 script = ExtResource("3_scytm")
 _mesh_directory = "res://data/characters/people/meshes/gear/head_coverings_base_hair"
 _type = 1
+_related_parts = [NodePath("../Hair")]
 metadata/_custom_type_script = "uid://bpc78snhxhw1t"
 metadata/extras = {
 "currentUVSet": "map1"

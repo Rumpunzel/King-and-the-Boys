@@ -59,3 +59,11 @@ func test_item_mesh_follows_body_part_gender() -> void:
 	_model.torso.gender = ModularBodyPartGendered.Gender.FEMALE
 	chest.appearance.configure(_model)
 	assert_str(EquipmentFixtures.mesh_path(_model.torso)).is_equal(EquipmentFixtures.TORSO_FEMALE)
+
+func test_every_head_covering_but_masks_hides_the_hair() -> void:
+	for covering: ModularBodyPart in [_model.head_coverings_base_hair, _model.head_coverings_no_hair, _model.head_no_elements]:
+		_model.hair.update_index(0)
+		covering.update_index(0)
+		assert_bool(_model.hair.visible).override_failure_message("%s does not hide the hair" % covering.name).is_false()
+		covering.update_index(-1)
+		assert_bool(_model.hair.visible).override_failure_message("%s keeps the hair hidden" % covering.name).is_true()
