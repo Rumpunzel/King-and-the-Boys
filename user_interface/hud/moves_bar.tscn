@@ -14,6 +14,7 @@ _ticks = NodePath("Ticks")
 metadata/_custom_type_script = "uid://o4wjmoakv43"
 
 [node name="Undoable" type="ProgressBar" parent="." unique_id=774445842]
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 max_value = 4.0
 step = 1.0
@@ -21,6 +22,7 @@ value = 3.0
 show_percentage = false
 
 [node name="Used" type="ProgressBar" parent="." unique_id=528461117]
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxEmpty_moves")
 max_value = 4.0

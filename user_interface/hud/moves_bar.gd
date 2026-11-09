@@ -28,7 +28,7 @@ extends MarginContainer
 		tick_width = new_tick_width
 		if _ticks: _ticks.queue_redraw()
 ## How far ticks reach above and below the bar, so they stay visible on a thin one
-@export_range(0.0, 16.0) var tick_overhang: float = 3.0:
+@export_range(0.0, 16.0) var tick_overhang: float = 2.0:
 	set(new_tick_overhang):
 		tick_overhang = new_tick_overhang
 		if _ticks: _ticks.queue_redraw()
@@ -62,8 +62,10 @@ func _update() -> void:
 func _draw_ticks() -> void:
 	var moves: int = int(_used_bar.max_value)
 	var bar: Rect2 = Rect2(_used_bar.position - _ticks.position, _used_bar.size)
+	# Like the bar's fill: its style's minimum width always shows, the rest of the width is shared out
+	var fill_start: float = _used_bar.get_theme_stylebox(&"fill").get_minimum_size().x
 	for move: int in range(1, moves):
-		var x: float = bar.position.x + bar.size.x * move / moves
+		var x: float = bar.position.x + fill_start + (bar.size.x - fill_start) * move / moves
 		_ticks.draw_line(Vector2(x, bar.position.y - tick_overhang), Vector2(x, bar.end.y + tick_overhang), tick_color, tick_width)
 
 ## Keeps the theme's fill style, only in another colour
