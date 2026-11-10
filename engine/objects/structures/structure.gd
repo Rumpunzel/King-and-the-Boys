@@ -20,6 +20,11 @@ const PROFILE_PATH: StringName = "profile_path"
 const SPAWN_TRANSFORM: StringName = "spawn_transform"
 const CLOCKWISE_TURNS: StringName = "clockwise_turns"
 const STATUS: StringName = "status"
+## Every structure in the tree, e.g. so [LevelDebug] can show or hide their labels
+const GROUP: StringName = &"Structures"
+
+## Whether structures show their debug label (name and grid position), see [LevelDebug]; on this peer only
+static var debug_labels_shown: bool = false
 
 ## Determines the varation of the [Model]
 ## If [code]<0[/code] a random [Model] will be used
@@ -79,7 +84,6 @@ var shown_status: Status = Status.NONE:
 		if new_shown_status == shown_status: return
 		shown_status = new_shown_status
 		_show_model()
-		if shown_status == Status.REVEALED and level: _debug_draw_connections()
 		shown_status_changed.emit(shown_status)
 
 var model: Model:
@@ -112,6 +116,8 @@ func _ready() -> void:
 	else:
 		@warning_ignore("unsafe_property_access")
 		$Label3D.text = ""
+	add_to_group(GROUP)
+	show_debug_label(debug_labels_shown)
 
 static func from_structure_data(structure_data: Dictionary[StringName, Variant]) -> Structure:
 	validate_structure_data(structure_data)
@@ -228,7 +234,15 @@ func _decorate() -> Node3D:
 
 func _get_direction_to_grid_position(grid_position: Vector2i) -> Level.Direction: return Level.get_direction(get_grid_position(), grid_position)
 
-func _debug_draw_connections() -> void:
+## Shows or hides the label with the structure's name and grid position
+func show_debug_label(shown: bool) -> void:
+	var label: Label3D = get_node_or_null(^"Label3D") as Label3D
+	if label: label.visible = shown
+
+## Draws the tile's connection restrictions for [param duration] seconds (one frame if 0), e.g. for [LevelDebug]: green where a
+## neighbour may connect, brown where it may not, blue where the neighbour placed does not fit; with [param connections] also lines
+## to its connections in its room type's colour
+func draw_debug(duration: float = 0.0, connections: bool = false) -> void:
 	assert(level)
 	var restrictions: Dictionary[Level.Direction, ConnectionRestriction] = get_restrictions()
 	for direction: Level.Direction in restrictions.keys():
@@ -240,13 +254,13 @@ func _debug_draw_connections() -> void:
 		var neighbour_structure: Structure = level.get_placed_tile(get_grid_position() + Level.direction_to_vector(direction))
 		if neighbour_structure and not can_connect(direction, neighbour_structure.profile): color = Color.ROYAL_BLUE
 		color.a = 0.5
-		DebugDraw3D.draw_sphere(global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, 0.1, color, INF)
-	if true: return
+		DebugDraw3D.draw_sphere(global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, 0.1, color, duration)
+	if not connections: return
 	for connection: Level.Direction in get_connections():
 		var tile_grid_offset: Vector2i = Level.direction_to_vector(connection)
 		var edge_offset: Vector3 = level.grid_to_world_position(tile_grid_offset) * 0.5
 		var color: Color = profile.room_type.color if profile.room_type else Color.WHEAT
-		DebugDraw3D.draw_line(global_position - Vector3.UP * 0.1, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, color, INF)
+		DebugDraw3D.draw_line(global_position - Vector3.UP * 0.1, global_position + level.grid_to_world_position(tile_grid_offset) - edge_offset + Vector3.UP * 0.05, color, duration)
 
 func _to_string() -> String:
 	return "[%s turned %d times: %s]" % [name, clockwise_turns, get_connections()]
