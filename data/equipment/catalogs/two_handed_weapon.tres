@@ -48,7 +48,14 @@
 [ext_resource type="ArrayMesh" uid="uid://divpulp2ahcfh" path="res://data/equipment/meshes/two_handed/weapon_staff_40.res" id="46_i7qxm"]
 [ext_resource type="ArrayMesh" uid="uid://ln6w6qw5fiid" path="res://data/equipment/meshes/two_handed/weapon_staff_41.res" id="47_wcye1"]
 [ext_resource type="ArrayMesh" uid="uid://82stuwjp6drb" path="res://data/equipment/meshes/two_handed/weapon_staff_42.res" id="48_7twfd"]
+[ext_resource type="ArrayMesh" uid="uid://d2ttbq4n3fd6d" path="res://data/equipment/meshes/two_handed/weapon_hero_axe_43.res" id="49_2iwac"]
 [ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="49_yphio"]
+[ext_resource type="ArrayMesh" uid="uid://dtfiv50pbd7bw" path="res://data/equipment/meshes/two_handed/weapon_hero_sword_large_44.res" id="50_341xx"]
+[ext_resource type="ArrayMesh" uid="uid://cwn80pkdn8pwx" path="res://data/equipment/meshes/two_handed/weapon_hero_staff_45.res" id="51_edsca"]
+[ext_resource type="ArrayMesh" uid="uid://bv5nbcpa34wxy" path="res://data/equipment/meshes/two_handed/weapon_hero_staff_46.res" id="52_oaur2"]
+[ext_resource type="ArrayMesh" uid="uid://bfn8oafegwg01" path="res://data/equipment/meshes/two_handed/weapon_hero_lance_47.res" id="53_23voi"]
+[ext_resource type="ArrayMesh" uid="uid://c40wkfg0rj55v" path="res://data/equipment/meshes/two_handed/weapon_hero_lance_48.res" id="54_o0xdh"]
+[ext_resource type="ArrayMesh" uid="uid://na4vb1vh4go1" path="res://data/equipment/meshes/two_handed/weapon_hero_lance_49.res" id="55_u7bra"]
 
 [sub_resource type="Resource" id="Resource_3wipg"]
 script = ExtResource("4_7ehsl")
@@ -680,7 +687,112 @@ type = ExtResource("7_svuln")
 appearance = SubResource("Resource_f8rsn")
 name = "Two-Handed Weapon 42"
 
+[sub_resource type="Resource" id="Resource_lk88h"]
+script = ExtResource("4_7ehsl")
+part = 29
+male_mesh = ExtResource("49_2iwac")
+
+[sub_resource type="Resource" id="Resource_w5m58"]
+script = ExtResource("6_gyy2c")
+parts = Array[ExtResource("4_7ehsl")]([SubResource("Resource_lk88h")])
+
+[sub_resource type="Resource" id="43"]
+script = ExtResource("1_4pvxu")
+type = ExtResource("7_svuln")
+appearance = SubResource("Resource_w5m58")
+name = "Two-Handed Weapon 43"
+
+[sub_resource type="Resource" id="Resource_6cemn"]
+script = ExtResource("4_7ehsl")
+part = 29
+male_mesh = ExtResource("50_341xx")
+
+[sub_resource type="Resource" id="Resource_praon"]
+script = ExtResource("6_gyy2c")
+parts = Array[ExtResource("4_7ehsl")]([SubResource("Resource_6cemn")])
+
+[sub_resource type="Resource" id="44"]
+script = ExtResource("1_4pvxu")
+type = ExtResource("7_svuln")
+appearance = SubResource("Resource_praon")
+name = "Two-Handed Weapon 44"
+
+[sub_resource type="Resource" id="Resource_wm8tq"]
+script = ExtResource("4_7ehsl")
+part = 29
+male_mesh = ExtResource("51_edsca")
+
+[sub_resource type="Resource" id="Resource_kenon"]
+script = ExtResource("6_gyy2c")
+parts = Array[ExtResource("4_7ehsl")]([SubResource("Resource_wm8tq")])
+
+[sub_resource type="Resource" id="45"]
+script = ExtResource("1_4pvxu")
+type = ExtResource("7_svuln")
+appearance = SubResource("Resource_kenon")
+name = "Two-Handed Weapon 45"
+
+[sub_resource type="Resource" id="Resource_5tk2t"]
+script = ExtResource("4_7ehsl")
+part = 29
+male_mesh = ExtResource("52_oaur2")
+
+[sub_resource type="Resource" id="Resource_qjxdn"]
+script = ExtResource("6_gyy2c")
+parts = Array[ExtResource("4_7ehsl")]([SubResource("Resource_5tk2t")])
+
+[sub_resource type="Resource" id="46"]
+script = ExtResource("1_4pvxu")
+type = ExtResource("7_svuln")
+appearance = SubResource("Resource_qjxdn")
+name = "Two-Handed Weapon 46"
+
+[sub_resource type="Resource" id="Resource_x1d1c"]
+script = ExtResource("4_7ehsl")
+part = 29
+male_mesh = ExtResource("53_23voi")
+
+[sub_resource type="Resource" id="Resource_k6yij"]
+script = ExtResource("6_gyy2c")
+parts = Array[ExtResource("4_7ehsl")]([SubResource("Resource_x1d1c")])
+
+[sub_resource type="Resource" id="47"]
+script = ExtResource("1_4pvxu")
+type = ExtResource("7_svuln")
+appearance = SubResource("Resource_k6yij")
+name = "Two-Handed Weapon 47"
+
+[sub_resource type="Resource" id="Resource_742mv"]
+script = ExtResource("4_7ehsl")
+part = 29
+male_mesh = ExtResource("54_o0xdh")
+
+[sub_resource type="Resource" id="Resource_k7ckr"]
+script = ExtResource("6_gyy2c")
+parts = Array[ExtResource("4_7ehsl")]([SubResource("Resource_742mv")])
+
+[sub_resource type="Resource" id="48"]
+script = ExtResource("1_4pvxu")
+type = ExtResource("7_svuln")
+appearance = SubResource("Resource_k7ckr")
+name = "Two-Handed Weapon 48"
+
+[sub_resource type="Resource" id="Resource_qamxi"]
+script = ExtResource("4_7ehsl")
+part = 29
+male_mesh = ExtResource("55_u7bra")
+
+[sub_resource type="Resource" id="Resource_30dyv"]
+script = ExtResource("6_gyy2c")
+parts = Array[ExtResource("4_7ehsl")]([SubResource("Resource_qamxi")])
+
+[sub_resource type="Resource" id="49"]
+script = ExtResource("1_4pvxu")
+type = ExtResource("7_svuln")
+appearance = SubResource("Resource_30dyv")
+name = "Two-Handed Weapon 49"
+
 [resource]
 script = ExtResource("49_yphio")
 type = ExtResource("7_svuln")
-looks = Array[ExtResource("1_4pvxu")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12"), SubResource("13"), SubResource("14"), SubResource("15"), SubResource("16"), SubResource("17"), SubResource("18"), SubResource("19"), SubResource("20"), SubResource("21"), SubResource("22"), SubResource("23"), SubResource("24"), SubResource("25"), SubResource("26"), SubResource("27"), SubResource("28"), SubResource("29"), SubResource("30"), SubResource("31"), SubResource("32"), SubResource("33"), SubResource("34"), SubResource("35"), SubResource("36"), SubResource("37"), SubResource("38"), SubResource("39"), SubResource("40"), SubResource("41"), SubResource("42")])
+looks = Array[ExtResource("1_4pvxu")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12"), SubResource("13"), SubResource("14"), SubResource("15"), SubResource("16"), SubResource("17"), SubResource("18"), SubResource("19"), SubResource("20"), SubResource("21"), SubResource("22"), SubResource("23"), SubResource("24"), SubResource("25"), SubResource("26"), SubResource("27"), SubResource("28"), SubResource("29"), SubResource("30"), SubResource("31"), SubResource("32"), SubResource("33"), SubResource("34"), SubResource("35"), SubResource("36"), SubResource("37"), SubResource("38"), SubResource("39"), SubResource("40"), SubResource("41"), SubResource("42"), SubResource("43"), SubResource("44"), SubResource("45"), SubResource("46"), SubResource("47"), SubResource("48"), SubResource("49")])

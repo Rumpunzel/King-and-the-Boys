@@ -37,7 +37,26 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={}
+_subresources={
+"materials": {
+"Weapons": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://data/characters/people/fantasy_hero_material.tres",
+"use_external/path": "uid://dlpphkypxlimj"
+}
+},
+"meshes": {
+"SK_Wep_Shield_Long_11": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://data/equipment/meshes/off_hand/weapon_hero_shield_long_40.res",
+"save_to_file/path": "uid://de3uvimghl52f"
+}
+}
+}
 fbx/importer=0
 fbx/allow_geometry_helper_nodes=false
 fbx/embedded_image_handling=1

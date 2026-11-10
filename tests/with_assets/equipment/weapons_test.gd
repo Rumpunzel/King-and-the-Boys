@@ -33,9 +33,9 @@ func test_both_bodies_hold_weapons_in_their_hands() -> void:
 		assert_str((hand_parts[0].get_parent() as BoneAttachment3D).bone_name).is_equal("RightHand")
 		assert_str((hand_parts[1].get_parent() as BoneAttachment3D).bone_name).is_equal("RightHand")
 		assert_str((hand_parts[2].get_parent() as BoneAttachment3D).bone_name).is_equal("LeftHand")
-		assert_int(hand_parts[0].get_mesh_count()).is_equal(31)
-		assert_int(hand_parts[1].get_mesh_count()).is_equal(42)
-		assert_int(hand_parts[2].get_mesh_count()).is_equal(8)
+		assert_int(hand_parts[0].get_mesh_count()).is_equal(38)
+		assert_int(hand_parts[1].get_mesh_count()).is_equal(49)
+		assert_int(hand_parts[2].get_mesh_count()).is_equal(45)
 
 func test_hand_parts_are_gear_not_body() -> void:
 	for model: ModularModel in _models:
