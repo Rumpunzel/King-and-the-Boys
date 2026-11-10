@@ -65,9 +65,36 @@ func test_every_hero_has_a_look_of_their_own() -> void:
 			var options: PackedStringArray = profile.model_configuration.get_pool_options(part, part_key)
 			assert_int(options.size()).override_failure_message("%s: %s names meshes that do not exist" % [hero, part_key]).is_equal(profile.model_configuration.mesh_pools[part_key].size())
 		if profile.model_configuration.mesh_pools.has("FACIAL_HAIR"): facial_hair[hero] = profile.model_configuration.mesh_pools["FACIAL_HAIR"]
-	# Beards with facial hair share none of it, apart from clean-shaven
+	# Beards share none of their styles, apart from clean-shaven
 	for hero: String in facial_hair:
 		for other: String in facial_hair:
 			if hero == other: continue
 			for number: String in facial_hair[hero]:
 				if number != ModularBodyPart.EMPTY_MESH_NUMBER: assert_array(facial_hair[other]).not_contains([number])
+
+func test_switching_meshes_off_and_on_again_drops_the_pool() -> void:
+	var configuration: ModelConfigurationRandom = _pool_config({})
+	var all_numbers: PackedStringArray = PackedStringArray(["00", "01", "02", "03"])
+	assert_bool(configuration.is_in_pool("HAIR", "02")).override_failure_message("Without a pool every mesh is in").is_true()
+	configuration.mesh_pools = configuration.with_pool_number("HAIR", "02", false, all_numbers)
+	assert_array(configuration.mesh_pools["HAIR"]).contains_exactly(["00", "01", "03"])
+	assert_bool(configuration.is_in_pool("HAIR", "02")).is_false()
+	configuration.mesh_pools = configuration.with_pool_number("HAIR", "02", true, all_numbers)
+	assert_bool(configuration.mesh_pools.has("HAIR")).is_false()
+	configuration.mesh_pools = configuration.with_pool("HAIR", PackedStringArray(), all_numbers)
+	assert_array(configuration.mesh_pools["HAIR"]).is_empty()
+	configuration.mesh_pools = configuration.with_pool("HAIR", all_numbers, all_numbers)
+	assert_bool(configuration.mesh_pools.has("HAIR")).is_false()
+
+func test_the_editor_lists_each_body_part_of_the_configured_body() -> void:
+	var bodies: Array[PackedScene] = BodyPoolsProperty.find_bodies()
+	var knight_body: ModelConfigurationRandom = load("res://data/characters/people/knight_body.tres")
+	var human: PackedScene = bodies[BodyPoolsProperty.guess_body(knight_body, bodies)]
+	assert_str(human.resource_path).is_equal(EquipmentFixtures.MODULAR_CHARACTER)
+	var random_dwarf: ModelConfigurationRandom = load("res://data/characters/dwarves/random_dwarf.tres")
+	var dwarf: PackedScene = bodies[BodyPoolsProperty.guess_body(random_dwarf, bodies)]
+	assert_str(dwarf.resource_path).is_equal(EquipmentFixtures.DWARF_CHARACTER)
+	var model_parts: ModularModelParts = ModularModelParts.of(human)
+	var part_keys: Array = model_parts.get_body_parts().map(func(part: int) -> String: return model_parts.get_part_key(part))
+	assert_array(part_keys).contains(["HEAD", "EYEBROW", "FACIAL_HAIR", "HAIR", "EARS"])
+	assert_array(model_parts.get_mesh_numbers(ModularCharacter.Part.FACIAL_HAIR).slice(0, 2)).contains_exactly(["00", "01"])

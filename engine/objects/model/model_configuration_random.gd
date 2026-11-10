@@ -46,6 +46,33 @@ func allows(model: ModularModel, body: Dictionary) -> bool:
 		if not mesh_pools[part_key].has(mesh_number): return false
 	return true
 
+## Whether [param part_key] may roll the mesh numbered [param mesh_number]: every mesh of a part without a pool may
+func is_in_pool(part_key: String, mesh_number: String) -> bool:
+	return not mesh_pools.has(part_key) or mesh_pools[part_key].has(mesh_number)
+
+## [member mesh_pools] with [param mesh_number] let in or left out of [param part_key]'s pool; [param all_numbers] are the part's
+## options, which a part without a pool rolls from. A pool holding all of them again is dropped, so new meshes join it
+func with_pool_number(part_key: String, mesh_number: String, enabled: bool, all_numbers: PackedStringArray) -> Dictionary[String, PackedStringArray]:
+	var pools: Dictionary[String, PackedStringArray] = mesh_pools.duplicate(true)
+	var pool: PackedStringArray = all_numbers.duplicate()
+	if pools.has(part_key): pool = pools[part_key].duplicate()
+	if enabled and not pool.has(mesh_number): pool.append(mesh_number)
+	if not enabled and pool.has(mesh_number): pool.remove_at(pool.find(mesh_number))
+	var sorted: Array = Array(pool)
+	sorted.sort_custom(func(first: String, second: String) -> bool: return first.naturalnocasecmp_to(second) < 0)
+	pool = PackedStringArray(sorted)
+	var complete: bool = Array(all_numbers).all(func(number: String) -> bool: return pool.has(number))
+	if complete: pools.erase(part_key)
+	else: pools[part_key] = pool
+	return pools
+
+## [member mesh_pools] with [param part_key]'s pool set to [param numbers]; all of the part's [param all_numbers] drop the pool
+func with_pool(part_key: String, numbers: PackedStringArray, all_numbers: PackedStringArray) -> Dictionary[String, PackedStringArray]:
+	var pools: Dictionary[String, PackedStringArray] = mesh_pools.duplicate(true)
+	if Array(all_numbers).all(func(number: String) -> bool: return numbers.has(number)): pools.erase(part_key)
+	else: pools[part_key] = numbers.duplicate()
+	return pools
+
 ## The pool's numbers [param body_part] can show: its own meshes, and none where it may show none
 func get_pool_options(body_part: ModularBodyPart, part_key: String) -> PackedStringArray:
 	var options: PackedStringArray = []

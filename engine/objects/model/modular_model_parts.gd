@@ -51,3 +51,19 @@ func get_right_partner(part: int) -> int:
 	var part_key: String = get_part_key(part)
 	if not part_key.ends_with("_LEFT"): return -1
 	return part_keys.find(part_key.trim_suffix("_LEFT") + "_RIGHT")
+
+## @returns the parts no slot owns, such as hair, see [method ModularModel.get_body_parts]
+func get_body_parts() -> Array[int]:
+	var gear_parts: Array[int] = []
+	for parts: Array in slot_parts.values():
+		for part: int in parts: gear_parts.append(part)
+	var body_parts: Array[int] = []
+	for part: int in part_keys.size():
+		if not gear_parts.has(part): body_parts.append(part)
+	return body_parts
+
+## The numbers [param part] can show, in number order, [constant ModularBodyPart.EMPTY_MESH_NUMBER] first where it may show none
+func get_mesh_numbers(part: int) -> PackedStringArray:
+	var numbers: PackedStringArray = []
+	for mesh_path: String in get_mesh_options(part): numbers.append(ModularBodyPart.EMPTY_MESH_NUMBER if mesh_path.is_empty() else ModularBodyPart.get_mesh_number(mesh_path))
+	return numbers
