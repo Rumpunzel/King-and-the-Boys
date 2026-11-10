@@ -6,7 +6,6 @@
 [ext_resource type="Resource" path="res://data/characters/people/random_human.tres" id="4_fogkv"]
 [ext_resource type="Script" path="res://engine/objects/characters/character_profile.gd" id="5_1msby"]
 [ext_resource type="Resource" path="res://data/model_animations/high_bounce_animation.tres" id="6_tt5hc"]
-[ext_resource type="Script" path="res://engine/objects/gear/gear_profile.gd" id="7_7jww4"]
 
 [resource]
 script = ExtResource("5_1msby")
