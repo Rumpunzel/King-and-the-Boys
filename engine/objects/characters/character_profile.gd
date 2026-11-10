@@ -37,6 +37,12 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var vision: float = 1.5
 @export var dark_vision: float = 2.5
 
+@export_category("Abilities")
+@export var abilities: Array[Ability]:
+	set(new_value):
+		abilities = new_value
+		changed.emit()
+
 @export_category("Model")
 @export var model_configuration: ModelConfigurationRandom = preload("uid://c1i0e1p4feqhe"):
 	set(new_value):

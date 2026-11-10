@@ -8,6 +8,7 @@ signal exited_grid_cell(cell: Vector2i)
 signal destination_reached
 signal movement_points_changed(movement_points: int)
 signal undo_steps_changed(undo_steps: int)
+signal ability_uses_changed
 ## Emitted on every peer when the animated figure crosses into [param cell], which lags behind [member grid_cell]
 signal figure_entered_grid_cell(cell: Vector2i)
 ## Emitted on every peer when the figure's move ended
@@ -117,6 +118,13 @@ var undo_steps: int = 0:
 		if new_undo_steps == undo_steps: return
 		undo_steps = new_undo_steps
 		undo_steps_changed.emit(undo_steps)
+## Uses so far of each [Ability] with [member Ability.charges], by its [ResourceId]; replicated and saved.
+## Replaced as a whole on every change, so the synchronizer notices it.
+var ability_uses: Dictionary = {}:
+	set(new_ability_uses):
+		if new_ability_uses == ability_uses: return
+		ability_uses = new_ability_uses
+		ability_uses_changed.emit()
 
 var _has_grid_state: bool = false
 var _grid_visual_update_queued: bool = false
@@ -215,6 +223,34 @@ func give_grid_state_to_host() -> void:
 func reset_movement_points() -> void:
 	assert(multiplayer.is_server())
 	movement_points = profile.speed
+
+func has_ability(ability: Ability) -> bool:
+	return profile != null and profile.abilities.has(ability)
+
+## @returns the uses of [param ability] left this game; [code]<0[/code] if it has no limit
+func get_charges_left(ability: Ability) -> int:
+	if ability.charges < 0: return -1
+	var used: int = ability_uses.get(ResourceId.of(ability), 0)
+	return maxi(ability.charges - used, 0)
+
+## Host only: counts a use of [param ability] against its charges
+func spend_charge(ability: Ability) -> void:
+	_add_ability_uses(ability, 1)
+
+## Host only: takes back a use counted by [method spend_charge], e.g. on undo
+func refund_charge(ability: Ability) -> void:
+	_add_ability_uses(ability, -1)
+
+func _add_ability_uses(ability: Ability, amount: int) -> void:
+	assert(multiplayer.is_server())
+	if ability.charges < 0: return
+	var ability_id: String = ResourceId.of(ability)
+	var new_ability_uses: Dictionary = ability_uses.duplicate()
+	var used: int = new_ability_uses.get(ability_id, 0)
+	used = clampi(used + amount, 0, ability.charges)
+	if used == 0: new_ability_uses.erase(ability_id)
+	else: new_ability_uses[ability_id] = used
+	ability_uses = new_ability_uses
 
 ## Snaps the model back onto its grid state, e.g. after something else moved it locally
 func snap_to_grid() -> void:

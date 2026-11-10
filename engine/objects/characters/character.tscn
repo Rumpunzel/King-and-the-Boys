@@ -31,6 +31,9 @@ properties/6/replication_mode = 2
 properties/7/path = NodePath(".:step_count")
 properties/7/spawn = true
 properties/7/replication_mode = 2
+properties/8/path = NodePath(".:ability_uses")
+properties/8/spawn = true
+properties/8/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_eqp01"]
 properties/0/path = NodePath(".:equipped_ids")

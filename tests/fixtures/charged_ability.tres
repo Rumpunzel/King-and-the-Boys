@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Ability" format=3]
+
+[ext_resource type="Script" path="res://engine/abilities/ability.gd" id="1_ab1ty"]
+
+[resource]
+script = ExtResource("1_ab1ty")
+name = "Charged test ability"
+charges = 3
