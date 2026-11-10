@@ -60,21 +60,36 @@ func _play_body_animations(model_animation: ModelAnimation, continuing: bool) ->
 	if not player or not model_animation.has_body_animations(): return
 	if _body_tween: _body_tween.kill()
 	_body_tween = create_tween()
+	var blend: float = model_animation.body_blend
 	var speed: float = model_animation.body_speed
+	var landing_speed: float = model_animation.body_landing_speed if model_animation.body_landing_speed > 0.0 else speed
+	var follow_up_speed: float = model_animation.body_follow_up_speed if model_animation.body_follow_up_speed > 0.0 else speed
+	# Time since the animation started, so the landing keeps to its time however long the start waits
+	var elapsed: float = 0.0
 	var rest: float = 0.0
 	if not continuing and player.has_animation(model_animation.body_animation):
-		_body_tween.tween_callback(player.play.bind(model_animation.body_animation, BODY_BLEND, speed))
-		rest = player.get_animation(model_animation.body_animation).length / speed
+		var delay: float = model_animation.duration * model_animation.body_delay
+		if delay > 0.0: _body_tween.tween_interval(delay)
+		_body_tween.tween_callback(_play_body.bind(model_animation.body_animation, blend, speed, model_animation.body_start))
+		elapsed = delay
+		rest = maxf(player.get_animation(model_animation.body_animation).length - model_animation.body_start, 0.0) / speed
 	if player.has_animation(model_animation.body_landing):
-		_body_tween.tween_interval(model_animation.duration * model_animation.body_landing_time)
-		_body_tween.tween_callback(player.play.bind(model_animation.body_landing, BODY_BLEND, speed))
-		rest = player.get_animation(model_animation.body_landing).length / speed
+		_body_tween.tween_interval(maxf(model_animation.duration * model_animation.body_landing_time - elapsed, 0.0))
+		_body_tween.tween_callback(_play_body.bind(model_animation.body_landing, blend, landing_speed, 0.0))
+		rest = player.get_animation(model_animation.body_landing).length / landing_speed
 	if player.has_animation(model_animation.body_follow_up):
-		_body_tween.tween_interval(maxf(rest - BODY_BLEND, 0.0))
-		_body_tween.tween_callback(player.play.bind(model_animation.body_follow_up, BODY_BLEND, speed))
-		rest = player.get_animation(model_animation.body_follow_up).length / speed
-	_body_tween.tween_interval(maxf(rest - BODY_BLEND, 0.0))
+		_body_tween.tween_interval(maxf(rest - blend, 0.0))
+		_body_tween.tween_callback(_play_body.bind(model_animation.body_follow_up, blend, follow_up_speed, 0.0))
+		rest = player.get_animation(model_animation.body_follow_up).length / follow_up_speed
+	_body_tween.tween_interval(maxf(rest - blend, 0.0))
 	_body_tween.tween_callback(_play_idle)
+
+## Plays [param animation] from [param start] seconds into it
+func _play_body(animation: StringName, blend: float, speed: float, start: float) -> void:
+	var player: AnimationPlayer = get_animation_player()
+	if not player: return
+	player.play(animation, blend, speed)
+	if start > 0.0: player.seek(start, true)
 
 ## Plays the model's own [param animation] once, then its idle; just the idle if it has no such animation
 func play_body_animation(animation: StringName) -> void:

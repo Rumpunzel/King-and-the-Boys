@@ -87,3 +87,25 @@ func test_every_hero_moves_spawns_and_passes_in_their_own_way() -> void:
 		assert_str(profile.passed_animation).is_not_empty()
 		assert_int(player.get_animation(profile.passed_animation).loop_mode).override_failure_message("%s's passed animation must loop" % hero).is_not_equal(Animation.LOOP_NONE)
 	assert_int(spawns.size()).override_failure_message("Each hero spawns their own way").is_equal(HEROES.size())
+
+func test_a_wind_up_leans_back_on_the_spot_before_lifting_off() -> void:
+	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
+	add_child(model)
+	var rogue_move: ModelAnimation = load("res://data/model_animations/heroes/rogue_move.tres")
+	var wind_up: float = rogue_move.get("_wind_up")
+	assert_float(wind_up).is_greater(0.0)
+	# Loading the meshes may stall the first frames, which would skip past the short wind-up
+	for frame: int in 5: await await_idle_frame()
+	model.play_model_animation(rogue_move)
+	# The deepest lean and the highest lift during the wind-up
+	var lean: float = 0.0
+	var lift: float = 0.0
+	var started: int = Time.get_ticks_msec()
+	while Time.get_ticks_msec() - started < int(rogue_move.duration * wind_up * 700.0):
+		await await_idle_frame()
+		lean = minf(lean, model.rotation.x)
+		lift = maxf(lift, model.position.y)
+	assert_float(lift).override_failure_message("Still on the spot").is_less(0.03)
+	assert_float(lean).override_failure_message("Leaning back").is_less(-0.05)
+	await await_millis(int(rogue_move.duration * 500.0))
+	assert_float(model.position.y).is_greater(0.2)

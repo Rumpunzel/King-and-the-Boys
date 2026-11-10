@@ -20,6 +20,17 @@ extends Resource
 @export var body_follow_up: StringName
 ## How fast the body animations play
 @export var body_speed: float = 1.0
+## How long [member body_animation] waits, as a fraction of [member duration]; the model keeps its pose meanwhile, e.g. so a
+## figure's wind-up shows before it rolls
+@export_range(0.0, 1.0) var body_delay: float = 0.0
+## Where [member body_animation] starts, in seconds into it, e.g. to skip its own wind-up
+@export var body_start: float = 0.0
+## How fast [member body_landing] plays; [member body_speed] if 0
+@export var body_landing_speed: float = 0.0
+## How fast [member body_follow_up] plays; [member body_speed] if 0
+@export var body_follow_up_speed: float = 0.0
+## How long the body animations blend into each other, in seconds
+@export var body_blend: float = 0.15
 
 ## @returns the tween playing the animation, so it can be stopped
 @abstract func animate(model: Model) -> Tween
