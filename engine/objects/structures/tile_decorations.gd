@@ -16,12 +16,14 @@ extends Resource
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
 
 const NODE_NAME: StringName = &"Decorations"
+## How many frames dust waits for the rest of a room arriving tile by tile, see [method _add_room_dust]
+const ROOM_WAIT_FRAMES: int = 120
 ## Meta of a tile's decorations: the grid positions of the neighbours whose shared edge (an opening or a wall) it decided
 const DECIDED_EDGES: StringName = &"decided_edges"
 ## Meta of a prop: the [ModelAnimation] its prop set plays as it drops in, if not [member drop_animation]
 const DROP_ANIMATION: StringName = &"drop_animation"
 ## The corners of a cell, as offsets from its grid position to the corner's index (see [method _add_pillars])
-const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
+const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 
 @export_group("Clutter")
 ## Small props, e.g. rubble, bones, candles
@@ -132,12 +134,14 @@ func _add_room_props(decorations: Node3D, tile: Structure) -> void:
 	_add_room_dust(decorations, tile)
 
 ## Dust over [param tile] if its room is dusty. The room is rolled by its first cell, so it needs all its tiles: rooms are built whole,
-## but loaded and joining peers get their tiles one by one, so the first of them waits for the rest of the frame
-func _add_room_dust(decorations: Node3D, tile: Structure, waited: bool = false) -> void:
-	if not room_dust or not is_instance_valid(decorations) or not tile.level: return
+## but loaded and joining peers get their tiles one by one, possibly over several frames, so the dust waits until the room is
+## complete (at most [constant ROOM_WAIT_FRAMES] frames, then rolls with what is there)
+func _add_room_dust(decorations: Node3D, tile: Structure, frames_left: int = ROOM_WAIT_FRAMES) -> void:
+	if not room_dust or not is_instance_valid(decorations) or not is_instance_valid(tile) or not tile.level: return
 	var cells: Array[Vector2i] = tile.level.get_room_cells(tile.get_grid_position())
-	if not waited and not tile.level.is_room_complete(cells):
-		_add_room_dust.call_deferred(decorations, tile, true)
+	if frames_left > 0 and not tile.level.is_room_complete(cells) and tile.is_inside_tree():
+		# A lambda per tile: one method bound twice counts as one connection
+		tile.get_tree().process_frame.connect(func() -> void: _add_room_dust(decorations, tile, frames_left - 1), CONNECT_ONE_SHOT)
 		return
 	var room_random: RandomNumberGenerator = RandomNumberGenerator.new()
 	room_random.seed = hash(cells.min()) ^ hash(&"dust")
@@ -145,6 +149,8 @@ func _add_room_dust(decorations: Node3D, tile: Structure, waited: bool = false) 
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(tile.get_grid_position()) ^ hash(&"dust")
 	_add_prop(decorations, room_dust, _to_model(tile, _on_floor(Vector2.ZERO)), random)
+	# Late, the other props' drop is under way without it: it drops in on its own
+	if frames_left < ROOM_WAIT_FRAMES and drop_animation: _drop_one(decorations.get_child(decorations.get_child_count() - 1) as Model)
 
 ## Hides the props of [param decorations] and drops them in one after another once [param after] (e.g. the tile's reveal) finished
 func drop(decorations: Node3D, after: Tween = null) -> void:

@@ -22,6 +22,10 @@ const HEIGHT: float = 0.06
 @export_group("Configuration")
 @export var _level: Level
 
+func _ready() -> void:
+	# The labels' state outlives a level (e.g. after leaving a game with the drawings shown)
+	shown = shown
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed(ACTION): return
 	shown = not shown

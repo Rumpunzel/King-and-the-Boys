@@ -48,6 +48,8 @@ var _placed_things: Dictionary[Vector2i, Thing]
 ## Things standing on a grid corner between four cells (e.g. room centrepieces), by the corner's index: corner [code]c[/code] lies
 ## between the cells [code]c - (1, 1)[/code] and [code]c[/code]
 var _corner_things: Dictionary[Vector2i, Thing]
+## Cells of rooms whose centrepiece was decided, see [method _furnish_room]
+var _furnished_cells: Dictionary[Vector2i, bool]
 
 # Visual queues, on every peer: tiles whose shown status lags behind their status, one per character whose step
 # raised it. Each waits for its own character's figure, see _process.
@@ -280,11 +282,22 @@ func get_free_spots(grid_position: Vector2i, except: Character = null) -> Array[
 	if _placed_things.has(grid_position): free_spots.pop_front()
 	# A thing on a corner takes the spot towards it
 	for corner: Vector2i in CELL_CORNERS:
-		if _corner_things.has(grid_position + corner): free_spots.erase((Vector2(corner) * 2.0 - Vector2.ONE) * tile.profile.tile_spot_extents)
+		if _corner_things.has(grid_position + corner): free_spots.erase(get_spot_towards(free_spots, Vector2(corner) * 2.0 - Vector2.ONE))
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
 		if character == except or not character.visible or character.grid_cell != grid_position: continue
 		free_spots.erase(character.tile_spot)
 	return free_spots
+
+## The spot of [param spots] furthest out towards [param direction] (e.g. a corner), or [code]Vector2.INF[/code] if none lies that way
+static func get_spot_towards(spots: Array[Vector2], direction: Vector2) -> Vector2:
+	var best: Vector2 = Vector2.INF
+	var best_reach: float = 0.0
+	for spot: Vector2 in spots:
+		var reach: float = spot.dot(direction.normalized())
+		if reach > best_reach:
+			best = spot
+			best_reach = reach
+	return best
 
 func _build_outer_wall() -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
@@ -355,21 +368,32 @@ func _spread_room_from(origin_grid_position: Vector2i, room_type: RoomType, alre
 ## Host only: now and then a centrepiece in the middle of the room around [param grid_position], which must be built whole. Rooms are
 ## built again on every step, so the roll is seeded by the room, and a corner holding a thing already is left alone
 func _furnish_room(grid_position: Vector2i) -> void:
-	if not _room_centrepieces: return
+	if not _room_centrepieces or _furnished_cells.has(grid_position): return
 	var cells: Array[Vector2i] = get_room_cells(grid_position)
 	var found: Variant = get_centrepiece_corner(cells)
-	if found == null: return
+	if found == null:
+		_remember_furnished(cells)
+		return
 	var corner: Vector2i = found
-	if _corner_things.has(corner): return
+	if _corner_things.has(corner):
+		_remember_furnished(cells)
+		return
+	# A figure on one of the corner's tiles (e.g. in a save from before rooms had centrepieces) may stand where it would go: later
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if CELL_CORNERS.has(corner - character.grid_cell): return
+	_remember_furnished(cells)
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(cells.min()) ^ hash(&"centrepiece")
 	if random.randf() >= _room_centrepiece_chance: return
 	var profile: ThingProfile = _room_centrepieces.get_spawn() as ThingProfile
 	if not profile: return
-	var status: int = Structure.Status.PLACED
-	for offset: Vector2i in CELL_CORNERS: status = maxi(status, _placed_tiles[corner - offset].shown_status)
 	var turn: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4))
-	_thing_spawner.spawn_at(profile, Transform3D(turn, get_corner_world_position(corner)), Thing.structure_status_to_thing_status(status as Structure.Status))
+	# Unrevealed: every peer shows it with its own view of the four tiles, see _on_thing_created
+	_thing_spawner.spawn_at(profile, Transform3D(turn, get_corner_world_position(corner)), Thing.Status.PLACED)
+
+## Rooms are built again on every step; their centrepiece is decided once
+func _remember_furnished(cells: Array[Vector2i]) -> void:
+	for cell: Vector2i in cells: _furnished_cells[cell] = true
 
 func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
 	assert(absi(grid_position.x) <= grid_extents.x)
@@ -533,8 +557,21 @@ func _on_tile_shown_status_changed(shown_status: Structure.Status, tile: Structu
 func _on_thing_created(thing: Thing) -> void:
 	var on_grid: Vector2 = Vector2(thing.global_position.x, thing.global_position.z) / grid_size
 	var on_corner: bool = is_equal_approx(fposmod(on_grid.x, 1.0), 0.5) and is_equal_approx(fposmod(on_grid.y, 1.0), 0.5)
-	if on_corner: _corner_things[Vector2i(roundi(on_grid.x + 0.5), roundi(on_grid.y + 0.5))] = thing
+	if on_corner:
+		var corner: Vector2i = Vector2i(roundi(on_grid.x + 0.5), roundi(on_grid.y + 0.5))
+		_corner_things[corner] = thing
+		for offset: Vector2i in CELL_CORNERS:
+			var tile: Structure = get_placed_tile(corner - offset)
+			var status: Thing.Status = Thing.structure_status_to_thing_status(tile.shown_status) if tile else Thing.Status.PLACED
+			if status > thing.status: thing.status = status
 	else: _placed_things[world_to_grid_position(thing.global_position)] = thing
+	# Removed (e.g. by loading a save), it leaves the registries, so nothing looks for it any more
+	thing.tree_exiting.connect(_forget_thing.bind(thing), CONNECT_ONE_SHOT)
+
+func _forget_thing(thing: Thing) -> void:
+	for registry: Dictionary in [_placed_things, _corner_things]:
+		for key: Variant in registry.keys():
+			if registry[key] == thing: registry.erase(key)
 
 func _on_agent_created(agent: Agent) -> void:
 	_register_character(agent.character)

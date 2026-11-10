@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 
 const LEVEL: String = "res://data/levels/level.tscn"
 const ROOM: String = "res://data/structures/tiles/room/room_crossing.tres"
+const CORRIDOR: String = "res://data/structures/tiles/crossing.tres"
 const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tres"
 const DUST: String = "res://data/structures/props/room_dust.tres"
 const CENTREPIECES: Array[String] = ["res://data/things/centrepieces/sarcophagus.tres", "res://data/things/centrepieces/dwarf_throne.tres"]
@@ -29,6 +30,14 @@ func _spawn_room(status: Structure.Status) -> Array[Vector2i]:
 			cells.append(cell)
 	return cells
 
+## Corridor tiles around the 3x3 room, so every connection of the room leads to a placed tile: the room is complete
+func _surround_room() -> void:
+	var corridor: StructureProfile = load(CORRIDOR)
+	for y: int in range(-2, 3):
+		for x: int in range(-2, 3):
+			if maxi(absi(x), absi(y)) != 2: continue
+			_level._structure_spawner.spawn_at(corridor, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(Vector2i(x, y))), 0, Structure.Status.PLACED)
+
 func _dust_count(cell: Vector2i) -> int:
 	var tile: Structure = _level.get_placed_tile(cell)
 	if not tile.model or not tile.model.has_node(NodePath(TileDecorations.NODE_NAME)): return 0
@@ -46,13 +55,29 @@ func test_room_cells_follow_the_connections_of_one_room() -> void:
 
 func test_a_dusty_room_is_dusty_throughout() -> void:
 	(load(DECORATIONS) as TileDecorations).dusty_room_chance = 1.0
+	_surround_room()
 	var cells: Array[Vector2i] = _spawn_room(Structure.Status.REVEALED)
-	# Tiles arriving one by one wait for the rest of their room
 	await await_idle_frame()
+	for cell: Vector2i in cells: assert_int(_dust_count(cell)).override_failure_message("No dust at %s" % cell).is_equal(1)
+
+func test_dust_waits_for_a_room_arriving_over_several_frames() -> void:
+	(load(DECORATIONS) as TileDecorations).dusty_room_chance = 1.0
+	_surround_room()
+	var room: StructureProfile = load(ROOM)
+	var cells: Array[Vector2i] = []
+	for y: int in range(-1, 2):
+		for x: int in range(-1, 2): cells.append(Vector2i(x, y))
+	# All but the room's first cell, whose position seeds the roll, as a joining peer may get them
+	for cell: Vector2i in cells.slice(1): _level._structure_spawner.spawn_at(room, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell)), 0, Structure.Status.REVEALED)
+	for frame: int in 10: await await_idle_frame()
+	for cell: Vector2i in cells.slice(1): assert_int(_dust_count(cell)).override_failure_message("Rolled before the room was complete").is_equal(0)
+	_level._structure_spawner.spawn_at(room, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cells[0])), 0, Structure.Status.REVEALED)
+	for frame: int in 3: await await_idle_frame()
 	for cell: Vector2i in cells: assert_int(_dust_count(cell)).override_failure_message("No dust at %s" % cell).is_equal(1)
 
 func test_a_clear_room_has_no_dust() -> void:
 	(load(DECORATIONS) as TileDecorations).dusty_room_chance = 0.0
+	_surround_room()
 	var cells: Array[Vector2i] = _spawn_room(Structure.Status.REVEALED)
 	await await_idle_frame()
 	for cell: Vector2i in cells: assert_int(_dust_count(cell)).is_equal(0)
@@ -125,3 +150,48 @@ func test_the_debug_drawings_toggle() -> void:
 	debug.call("_unhandled_input", toggle)
 	assert_bool(debug.shown).is_false()
 	for tile: Structure in _level.get_placed_tiles(): assert_bool((tile.get_node(^"Label3D") as Label3D).visible).override_failure_message("Labels hide with the rest").is_false()
+
+func test_a_removed_centrepiece_leaves_its_corner() -> void:
+	_level.set("_room_centrepiece_chance", 1.0)
+	_spawn_room(Structure.Status.PLACED)
+	_level.call("_furnish_room", Vector2i.ZERO)
+	await await_idle_frame()
+	var corner_things: Dictionary[Vector2i, Thing] = _level.get("_corner_things")
+	var thing: Thing = corner_things[Vector2i(0, 1)]
+	# As loading a save removes the things
+	thing.get_parent().remove_child(thing)
+	thing.free()
+	assert_bool(corner_things.has(Vector2i(0, 1))).is_false()
+	assert_object(_level.get_thing_near(Vector2i(0, 0))).is_null()
+	assert_int(_level.get_free_spots(Vector2i(0, 0)).size()).is_equal(5)
+
+func test_each_peer_reveals_a_centrepiece_with_its_own_tiles() -> void:
+	_level.set("_room_centrepiece_chance", 1.0)
+	_spawn_room(Structure.Status.REVEALED)
+	_level.call("_furnish_room", Vector2i.ZERO)
+	await await_idle_frame()
+	var thing: Thing = (_level.get("_corner_things") as Dictionary)[Vector2i(0, 1)]
+	# Spawned unrevealed, it shows as its tiles show here
+	assert_int(thing.status).is_equal(Thing.Status.REVEALED)
+
+func test_no_centrepiece_lands_on_a_figure() -> void:
+	_level.set("_room_centrepiece_chance", 1.0)
+	_spawn_room(Structure.Status.PLACED)
+	var knight: CharacterProfile = load(EquipmentFixtures.KNIGHT)
+	var figure: Character = auto_free(knight.create(0, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(Vector2i(-1, 0)))))
+	figure.level = _level
+	figure.add_to_group(Character.GROUP)
+	add_child(figure)
+	assert_vector(figure.grid_cell).is_equal(Vector2i(-1, 0))
+	_level.call("_furnish_room", Vector2i.ZERO)
+	await await_idle_frame()
+	assert_bool((_level.get("_corner_things") as Dictionary).is_empty()).is_true()
+	figure.remove_from_group(Character.GROUP)
+	_level.call("_furnish_room", Vector2i.ZERO)
+	await await_idle_frame()
+	assert_bool((_level.get("_corner_things") as Dictionary).has(Vector2i(0, 1))).override_failure_message("Furnished once the figure left").is_true()
+
+func test_corner_spots_are_found_whatever_the_spot_directions() -> void:
+	var spots: Array[Vector2] = [Vector2.ZERO, Vector2(-0.4, -0.4), Vector2(0.4, -0.4), Vector2(0.4, 0.4), Vector2(-0.4, 0.4)]
+	assert_vector(Level.get_spot_towards(spots, Vector2(1, 1))).is_equal(Vector2(0.4, 0.4))
+	assert_vector(Level.get_spot_towards([Vector2.ZERO] as Array[Vector2], Vector2(1, 1))).is_equal(Vector2.INF)
