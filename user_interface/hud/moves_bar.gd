@@ -2,7 +2,8 @@
 class_name MovesBar
 extends HBoxContainer
 ## A character's moves this turn as a row of pills, one per move, in the character's colour: moves used for good in full
-## colour, moves that could still be undone paler, moves left empty. Pills fill up and drain with a short tween.
+## colour, moves that could still be undone paler, moves left empty. Pills fill up and drain with a short tween; when several change
+## at once (e.g. all moves come back with a new turn), one after another: filling from the first, draining from the last.
 
 enum MoveState { LEFT, UNDOABLE, USED }
 
@@ -21,6 +22,8 @@ enum MoveState { LEFT, UNDOABLE, USED }
 @export_range(0.0, 1.0) var undoable_alpha: float = 0.4
 ## How long a pill takes to fill up, drain or change its colour
 @export_range(0.0, 1.0) var fill_duration: float = 0.25
+## Seconds between pills that change at once
+@export_range(0.0, 1.0) var stagger: float = 0.08
 @export var pill_height: float = 10.0:
 	set(new_pill_height):
 		pill_height = new_pill_height
@@ -50,11 +53,19 @@ func _update(animate: bool = true) -> void:
 		animate = false
 	var moves_used: int = speed - maxi(character.movement_points, 0)
 	var moves_kept: int = moves_used - character.undo_steps
+	var states: Array[MoveState] = []
 	for move: int in speed:
 		var state: MoveState = MoveState.LEFT
 		if move < moves_kept: state = MoveState.USED
 		elif move < moves_used: state = MoveState.UNDOABLE
-		_show(move, state, character.profile.color, animate)
+		states.append(state)
+	# Fills go from the first pill on, drains from the last one back
+	var delay: float = 0.0
+	for move: int in speed:
+		if states[move] != MoveState.LEFT and _show(move, states[move], character.profile.color, animate, delay): delay += stagger
+	delay = 0.0
+	for move: int in range(speed - 1, -1, -1):
+		if states[move] == MoveState.LEFT and _show(move, states[move], character.profile.color, animate, delay): delay += stagger
 
 ## One empty pill per move
 func _build(moves: int) -> void:
@@ -80,8 +91,9 @@ func _build(moves: int) -> void:
 		_states.append(MoveState.LEFT)
 		_tweens.append(null)
 
-## Fills or drains a move's pill and gives it the state's colour
-func _show(move: int, state: MoveState, color: Color, animate: bool) -> void:
+## Fills or drains a move's pill and gives it the state's colour, after [param delay] seconds
+## @returns whether the pill changes
+func _show(move: int, state: MoveState, color: Color, animate: bool, delay: float = 0.0) -> bool:
 	var pill: ProgressBar = _pills[move]
 	var fill: StyleBoxFlat = pill.get_theme_stylebox(&"fill") as StyleBoxFlat
 	var target_value: float = 0.0 if state == MoveState.LEFT else 1.0
@@ -89,17 +101,19 @@ func _show(move: int, state: MoveState, color: Color, animate: bool) -> void:
 	var target_color: Color = fill.bg_color
 	if state == MoveState.USED: target_color = color
 	elif state == MoveState.UNDOABLE: target_color = Color(color, color.a * undoable_alpha)
-	if state == _states[move] and is_equal_approx(pill.value, target_value) and fill.bg_color == target_color: return
+	if state == _states[move] and is_equal_approx(pill.value, target_value) and fill.bg_color == target_color: return false
 	_states[move] = state
 	if _tweens[move]: _tweens[move].kill()
 	if not animate or fill_duration <= 0.0:
 		pill.value = target_value
 		fill.bg_color = target_color
-		return
-	var tween: Tween = create_tween().set_parallel().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		return true
+	var tween: Tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	if delay > 0.0: tween.tween_interval(delay)
 	tween.tween_property(pill, ^"value", target_value, fill_duration)
-	tween.tween_property(fill, ^"bg_color", target_color, fill_duration)
+	tween.parallel().tween_property(fill, ^"bg_color", target_color, fill_duration)
 	_tweens[move] = tween
+	return true
 
 func _on_moves_changed(_value: int) -> void:
 	_update()
