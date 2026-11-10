@@ -49,6 +49,11 @@ var _controlled_character: Character:
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	# Every peer shows who has passed
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	if turn_manager:
+		turn_manager.passed_players_changed.connect(_on_passed_players_changed)
+		_on_passed_players_changed()
 	if not is_multiplayer_authority(): return
 	_state_machine.controlled_character_changed.connect(_on_controlled_character_changed)
 	_state_machine.start()
@@ -98,6 +103,9 @@ func get_active_camera_priority() -> int:
 
 func get_default_camera_priority() -> int:
 	return _DEFAULT_CAMERA_PRIORITY if player.is_local_player() else _INACTIVE_CAMERA_PRIORITY
+
+func _on_passed_players_changed() -> void:
+	if player: character.show_passed(has_passed())
 
 ## @returns the [Character] the player currently moves
 func get_controlled_character() -> Character:

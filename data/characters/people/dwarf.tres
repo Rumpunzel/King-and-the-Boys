@@ -3,21 +3,38 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_riycf"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_x2406"]
 [ext_resource type="PackedScene" uid="uid://k2selbak4kwk" path="res://data/characters/dwarves/dwarf_character.tscn" id="3_ki3nk"]
-[ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_34kdi"]
 [ext_resource type="Texture2D" uid="uid://d3kpui0ngdvp8" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_3.png" id="4_xk1ji"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_34kdi"]
+[ext_resource type="Animation" uid="uid://bc8j12qn1ligs" path="res://data/characters/animations/quaternius/Sword_Idle.res" id="5_lk1de"]
 [ext_resource type="Resource" uid="uid://d4l2t2lakts58" path="res://data/characters/dwarves/random_dwarf.tres" id="5_yyphc"]
-[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_65vhf"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_ki3nk"]
+[ext_resource type="Animation" uid="uid://c3yntvceq4y34" path="res://data/characters/animations/quaternius/Sword_Exit.res" id="8_p3175"]
+[ext_resource type="Animation" uid="uid://cgv6it4sjgku" path="res://data/characters/animations/quaternius/Idle_Tired.res" id="9_lk1de"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_iigc1"]
 [ext_resource type="ArrayMesh" uid="uid://cnlxbtocemsv5" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_soldier_08.res" id="11_eyc0a"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="12_csvx1"]
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="13_0usee"]
 [ext_resource type="Resource" uid="uid://cppjifks7xifq" path="res://data/equipment/types/dwarf_headwear.tres" id="14_lk1de"]
+[ext_resource type="ArrayMesh" uid="uid://bht1udj11x7db" path="res://data/equipment/meshes/two_handed/weapon_mace_large_10.res" id="15_mwfbt"]
 [ext_resource type="ArrayMesh" uid="uid://cg877hotdluci" path="res://data/characters/dwarves/meshes/body/dwarf_body_soldier_male_03.res" id="15_p3175"]
+[ext_resource type="Resource" uid="uid://1l7iq2m17qaa" path="res://data/equipment/types/dwarf_two_handed_weapon.tres" id="16_iigc1"]
 [ext_resource type="ArrayMesh" uid="uid://bd2npqjr05qrk" path="res://data/characters/dwarves/meshes/shoulder_left/dwarf_shoulder_left_fancy_01.res" id="16_yyphc"]
 [ext_resource type="ArrayMesh" uid="uid://cr47keevwrcvo" path="res://data/characters/dwarves/meshes/shoulder_right/dwarf_shoulder_right_fancy_01.res" id="17_mwfbt"]
 [ext_resource type="Resource" uid="uid://dvgy2n8emi8k0" path="res://data/equipment/types/dwarf_outfit.tres" id="18_xtw46"]
+[ext_resource type="Animation" uid="uid://y8vxu7fb7shw" path="res://data/characters/animations/quaternius/Sword_Enter.res" id="26_xtw46"]
+[ext_resource type="Resource" uid="uid://cvoowfdc35nc1" path="res://data/model_animations/heroes/dwarf_move.tres" id="90_dwarf_move"]
+[ext_resource type="Resource" uid="uid://c75q711dhxhep" path="res://data/model_animations/heroes/dwarf_spawn.tres" id="90_dwarf_spawn"]
+[ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+
+[sub_resource type="Resource" id="Resource_oam81"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("5_lk1de")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+
+[sub_resource type="Resource" id="Resource_xtw46"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("9_lk1de")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_iigc1"]
 script = ExtResource("10_iigc1")
@@ -33,6 +50,21 @@ script = ExtResource("13_0usee")
 type = ExtResource("14_lk1de")
 appearance = SubResource("Resource_eyc0a")
 name = "Dwarf Headwear 08"
+
+[sub_resource type="Resource" id="Resource_e0wqc"]
+script = ExtResource("10_iigc1")
+part = 9
+male_mesh = ExtResource("15_mwfbt")
+
+[sub_resource type="Resource" id="Resource_mclpp"]
+script = ExtResource("12_csvx1")
+parts = Array[ExtResource("10_iigc1")]([SubResource("Resource_e0wqc")])
+
+[sub_resource type="Resource" id="Resource_8y63l"]
+script = ExtResource("13_0usee")
+type = ExtResource("16_iigc1")
+appearance = SubResource("Resource_mclpp")
+name = "Dwarf Two-Handed Weapon 10"
 
 [sub_resource type="Resource" id="Resource_0usee"]
 script = ExtResource("10_iigc1")
@@ -64,11 +96,22 @@ strength = 4
 agility = 2
 speed = 2
 dark_vision = 16.0
+preview_offset = Vector3(0, 0.35, 0)
+gear_primary_color = Color(0.549, 0.247, 0.102, 1)
+gear_secondary_color = Color(0.788, 0.545, 0.235, 1)
 model_configuration = ExtResource("5_yyphc")
 starting_head = SubResource("Resource_csvx1")
 starting_torso = SubResource("Resource_cmreh")
+starting_main_hand = SubResource("Resource_8y63l")
+spawn_animation = ExtResource("90_dwarf_spawn")
+move_animation = ExtResource("90_dwarf_move")
+fast_move_animation = ExtResource("90_dwarf_move")
+idle_animations = SubResource("Resource_oam81")
+pass_animation = ExtResource("8_p3175")
+passed_animations = SubResource("Resource_xtw46")
+unpass_animation = ExtResource("26_xtw46")
 name = "Dwarf"
 portrait = ExtResource("4_xk1ji")
-color = Color(0.878431, 0.878431, 0.878431, 1)
+color = Color(0.878, 0.541, 0.2, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_ki3nk")])
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

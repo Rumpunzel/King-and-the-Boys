@@ -111,7 +111,7 @@ func _update_preview(player: Player) -> void:
 		model = profile.create_model(0) if profile else null
 		_preview_models[player] = model
 		if model:
-			model.position = model.preview_offset
+			model.position = profile.preview_offset
 			var spot: Node3D = _character_preview
 			if _player_panels.has(player): spot = _panel_spots.get(_player_panels[player], _character_preview)
 			spot.add_child(model)

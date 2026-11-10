@@ -12,6 +12,8 @@ var part_keys: PackedStringArray = []
 var slot_parts: Dictionary[EquipmentLook.Slot, Array] = {}
 ## {part: [int] -> mesh files: [PackedStringArray]}, an empty path first where the part may show none
 var mesh_options: Dictionary[int, PackedStringArray] = {}
+## The parts no slot owns, see [method ModularModel.get_body_parts]
+var body_parts: Array[int] = []
 
 ## @returns the parts of [param scene], or [code]null[/code] if it is no [ModularModel]
 static func of(scene: PackedScene) -> ModularModelParts:
@@ -25,6 +27,7 @@ static func of(scene: PackedScene) -> ModularModelParts:
 	var model_parts: ModularModelParts = ModularModelParts.new()
 	model_parts.part_keys = model.get_part_keys()
 	for slot: EquipmentLook.Slot in EquipmentLook.Slot.values(): model_parts.slot_parts[slot] = model.get_slot_parts(slot)
+	model_parts.body_parts = model.get_body_parts()
 	for part: int in model_parts.part_keys.size():
 		var body_part: ModularBodyPart = model.get_part(part)
 		var options: PackedStringArray = [""] if body_part.allows_none() else []
@@ -51,3 +54,13 @@ func get_right_partner(part: int) -> int:
 	var part_key: String = get_part_key(part)
 	if not part_key.ends_with("_LEFT"): return -1
 	return part_keys.find(part_key.trim_suffix("_LEFT") + "_RIGHT")
+
+## @returns the parts no slot owns, such as hair, as [method ModularModel.get_body_parts] gave them
+func get_body_parts() -> Array[int]:
+	return body_parts.duplicate()
+
+## The numbers [param part] can show, in number order, [constant ModularBodyPart.EMPTY_MESH_NUMBER] first where it may show none
+func get_mesh_numbers(part: int) -> PackedStringArray:
+	var numbers: PackedStringArray = []
+	for mesh_path: String in get_mesh_options(part): numbers.append(ModularBodyPart.EMPTY_MESH_NUMBER if mesh_path.is_empty() else ModularBodyPart.get_mesh_number(mesh_path))
+	return numbers

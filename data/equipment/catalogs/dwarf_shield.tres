@@ -1,0 +1,734 @@
+[gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://dp613o0rimr8q"]
+
+[ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_775fd"]
+[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_6pqyh"]
+[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_5tir5"]
+[ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_oab68"]
+[ext_resource type="ArrayMesh" uid="uid://crwkogb3hfbve" path="res://data/equipment/meshes/off_hand/weapon_shield_01.res" id="5_qobpc"]
+[ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="6_83bgu"]
+[ext_resource type="Resource" uid="uid://coi5m08vmybn1" path="res://data/equipment/types/dwarf_shield.tres" id="7_084hi"]
+[ext_resource type="ArrayMesh" uid="uid://dihm4bhnx4ixk" path="res://data/equipment/meshes/off_hand/weapon_shield_02.res" id="8_iguqf"]
+[ext_resource type="ArrayMesh" uid="uid://u0irnpuu68a0" path="res://data/equipment/meshes/off_hand/weapon_shield_03.res" id="9_0kop3"]
+[ext_resource type="ArrayMesh" uid="uid://bj4ytih5jijqm" path="res://data/equipment/meshes/off_hand/weapon_shield_04.res" id="10_1hhp6"]
+[ext_resource type="ArrayMesh" uid="uid://bb71qibf4gr2r" path="res://data/equipment/meshes/off_hand/weapon_shield_05.res" id="11_lg1m2"]
+[ext_resource type="ArrayMesh" uid="uid://ctjv8nsd12ogc" path="res://data/equipment/meshes/off_hand/weapon_shield_06.res" id="12_ly07i"]
+[ext_resource type="ArrayMesh" uid="uid://cp5juqpdmlrj5" path="res://data/equipment/meshes/off_hand/weapon_shield_07.res" id="13_xnnum"]
+[ext_resource type="ArrayMesh" uid="uid://b0e2sfxc71qpb" path="res://data/equipment/meshes/off_hand/weapon_shield_08.res" id="14_fjj7k"]
+[ext_resource type="Script" uid="uid://cyn02b7axtsfh" path="res://engine/objects/equipment/equipment_catalog.gd" id="15_3xllt"]
+[ext_resource type="ArrayMesh" uid="uid://dbgmytjs3wrjr" path="res://data/equipment/meshes/off_hand/weapon_hero_buckler_09.res" id="15_rbu25"]
+[ext_resource type="ArrayMesh" uid="uid://cmx4k2avp6b2r" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_10.res" id="16_nuwpa"]
+[ext_resource type="ArrayMesh" uid="uid://bygfdjib335fj" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_11.res" id="17_6voou"]
+[ext_resource type="ArrayMesh" uid="uid://dxetfckojkknf" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_12.res" id="18_x7eav"]
+[ext_resource type="ArrayMesh" uid="uid://ejrl4g3i4tw" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_13.res" id="19_0qy8i"]
+[ext_resource type="ArrayMesh" uid="uid://d305xe444vg5j" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_14.res" id="20_nix0g"]
+[ext_resource type="ArrayMesh" uid="uid://bgqj4o8dlith1" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_15.res" id="21_lko3r"]
+[ext_resource type="ArrayMesh" uid="uid://itkdhixs2di2" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_16.res" id="22_y8shd"]
+[ext_resource type="ArrayMesh" uid="uid://68bbtdpat3sa" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_17.res" id="23_xdsbp"]
+[ext_resource type="ArrayMesh" uid="uid://mp41d3bpmpaq" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_18.res" id="24_1lxmo"]
+[ext_resource type="ArrayMesh" uid="uid://c5yqtapvwo65j" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_19.res" id="25_xwjsu"]
+[ext_resource type="ArrayMesh" uid="uid://tx12b8kt3y8s" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_20.res" id="26_wyuwa"]
+[ext_resource type="ArrayMesh" uid="uid://cjimie4xjjgr0" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_21.res" id="27_63ecx"]
+[ext_resource type="ArrayMesh" uid="uid://bq0grks1mloht" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_22.res" id="28_0g7si"]
+[ext_resource type="ArrayMesh" uid="uid://dgse6c0ognnuf" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_23.res" id="29_38v71"]
+[ext_resource type="ArrayMesh" uid="uid://dp7722h1keswc" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_24.res" id="30_knhg1"]
+[ext_resource type="ArrayMesh" uid="uid://ffr4e1haprhy" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_25.res" id="31_ajpvr"]
+[ext_resource type="ArrayMesh" uid="uid://bxn8sjtpausig" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_26.res" id="32_3mw21"]
+[ext_resource type="ArrayMesh" uid="uid://dthli4c2v70gc" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_27.res" id="33_b2jff"]
+[ext_resource type="ArrayMesh" uid="uid://c1kk374sfs5ku" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_28.res" id="34_gveon"]
+[ext_resource type="ArrayMesh" uid="uid://b3yl0xqcxvrp2" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_29.res" id="35_ydkq2"]
+[ext_resource type="ArrayMesh" uid="uid://d32jidxdcpu0b" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_30.res" id="36_t80u3"]
+[ext_resource type="ArrayMesh" uid="uid://bv8fh50qb46k0" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_31.res" id="37_uuifu"]
+[ext_resource type="ArrayMesh" uid="uid://bpp84op82rr5f" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_32.res" id="38_joa4g"]
+[ext_resource type="ArrayMesh" uid="uid://r2gbve67pmkp" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_33.res" id="39_y63um"]
+[ext_resource type="ArrayMesh" uid="uid://dn2uaq2odlhw4" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_34.res" id="40_vh3bd"]
+[ext_resource type="ArrayMesh" uid="uid://dyxdfdshx12uw" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_35.res" id="41_xpoyu"]
+[ext_resource type="ArrayMesh" uid="uid://5taywteh0fgx" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_36.res" id="42_bhhqr"]
+[ext_resource type="ArrayMesh" uid="uid://cr2oyaqktseqo" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_37.res" id="43_euj0y"]
+[ext_resource type="ArrayMesh" uid="uid://dbxa87ds2nhki" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_38.res" id="44_bschu"]
+[ext_resource type="ArrayMesh" uid="uid://bis0qe6a4hkw2" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_39.res" id="45_d2qjm"]
+[ext_resource type="ArrayMesh" uid="uid://de3uvimghl52f" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_40.res" id="46_2vo78"]
+[ext_resource type="ArrayMesh" uid="uid://c5skwybhutist" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_41.res" id="47_s2eii"]
+[ext_resource type="ArrayMesh" uid="uid://v6d3h375a1e7" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_42.res" id="48_d0nw7"]
+[ext_resource type="ArrayMesh" uid="uid://bow7uc23ie21g" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_43.res" id="49_trw7m"]
+[ext_resource type="ArrayMesh" uid="uid://va8k4kpuikvp" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_44.res" id="50_xlsgi"]
+[ext_resource type="ArrayMesh" uid="uid://bdg285j5bwbf5" path="res://data/equipment/meshes/off_hand/weapon_hero_shield_long_45.res" id="51_crhje"]
+
+[sub_resource type="Resource" id="Resource_5gruv"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("5_qobpc")
+
+[sub_resource type="Resource" id="Resource_wgw31"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_5gruv")])
+
+[sub_resource type="Resource" id="01"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_wgw31")
+name = "Dwarf Shield 01"
+
+[sub_resource type="Resource" id="Resource_v3g3b"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("8_iguqf")
+
+[sub_resource type="Resource" id="Resource_ieatb"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_v3g3b")])
+
+[sub_resource type="Resource" id="02"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_ieatb")
+name = "Dwarf Shield 02"
+
+[sub_resource type="Resource" id="Resource_gb2bi"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("9_0kop3")
+
+[sub_resource type="Resource" id="Resource_xr0sh"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_gb2bi")])
+
+[sub_resource type="Resource" id="03"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_xr0sh")
+name = "Dwarf Shield 03"
+
+[sub_resource type="Resource" id="Resource_ecxxd"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("10_1hhp6")
+
+[sub_resource type="Resource" id="Resource_mb0n8"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_ecxxd")])
+
+[sub_resource type="Resource" id="04"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_mb0n8")
+name = "Dwarf Shield 04"
+
+[sub_resource type="Resource" id="Resource_ksw0h"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("11_lg1m2")
+
+[sub_resource type="Resource" id="Resource_gik0c"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_ksw0h")])
+
+[sub_resource type="Resource" id="05"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_gik0c")
+name = "Dwarf Shield 05"
+
+[sub_resource type="Resource" id="Resource_70hnu"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("12_ly07i")
+
+[sub_resource type="Resource" id="Resource_0yxcd"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_70hnu")])
+
+[sub_resource type="Resource" id="06"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_0yxcd")
+name = "Dwarf Shield 06"
+
+[sub_resource type="Resource" id="Resource_uxm1k"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("13_xnnum")
+
+[sub_resource type="Resource" id="Resource_g1ed6"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_uxm1k")])
+
+[sub_resource type="Resource" id="07"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_g1ed6")
+name = "Dwarf Shield 07"
+
+[sub_resource type="Resource" id="Resource_vhvrr"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("14_fjj7k")
+
+[sub_resource type="Resource" id="Resource_etisp"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_vhvrr")])
+
+[sub_resource type="Resource" id="08"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_etisp")
+name = "Dwarf Shield 08"
+
+[sub_resource type="Resource" id="Resource_a36re"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("15_rbu25")
+
+[sub_resource type="Resource" id="Resource_5xnyy"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_a36re")])
+
+[sub_resource type="Resource" id="09"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_5xnyy")
+name = "Dwarf Shield 09"
+
+[sub_resource type="Resource" id="Resource_81wfi"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("16_nuwpa")
+
+[sub_resource type="Resource" id="Resource_onwn0"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_81wfi")])
+
+[sub_resource type="Resource" id="10"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_onwn0")
+name = "Dwarf Shield 10"
+
+[sub_resource type="Resource" id="Resource_iw0p2"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("17_6voou")
+
+[sub_resource type="Resource" id="Resource_2qnrm"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_iw0p2")])
+
+[sub_resource type="Resource" id="11"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_2qnrm")
+name = "Dwarf Shield 11"
+
+[sub_resource type="Resource" id="Resource_x08md"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("18_x7eav")
+
+[sub_resource type="Resource" id="Resource_jyl7q"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_x08md")])
+
+[sub_resource type="Resource" id="12"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_jyl7q")
+name = "Dwarf Shield 12"
+
+[sub_resource type="Resource" id="Resource_10sws"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("19_0qy8i")
+
+[sub_resource type="Resource" id="Resource_6u3ps"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_10sws")])
+
+[sub_resource type="Resource" id="13"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_6u3ps")
+name = "Dwarf Shield 13"
+
+[sub_resource type="Resource" id="Resource_2h0wm"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("20_nix0g")
+
+[sub_resource type="Resource" id="Resource_gp2ix"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_2h0wm")])
+
+[sub_resource type="Resource" id="14"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_gp2ix")
+name = "Dwarf Shield 14"
+
+[sub_resource type="Resource" id="Resource_hidfu"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("21_lko3r")
+
+[sub_resource type="Resource" id="Resource_jlw2a"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_hidfu")])
+
+[sub_resource type="Resource" id="15"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_jlw2a")
+name = "Dwarf Shield 15"
+
+[sub_resource type="Resource" id="Resource_jsnjs"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("22_y8shd")
+
+[sub_resource type="Resource" id="Resource_n1ge2"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_jsnjs")])
+
+[sub_resource type="Resource" id="16"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_n1ge2")
+name = "Dwarf Shield 16"
+
+[sub_resource type="Resource" id="Resource_7ngbk"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("23_xdsbp")
+
+[sub_resource type="Resource" id="Resource_uoh5f"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_7ngbk")])
+
+[sub_resource type="Resource" id="17"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_uoh5f")
+name = "Dwarf Shield 17"
+
+[sub_resource type="Resource" id="Resource_qenfq"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("24_1lxmo")
+
+[sub_resource type="Resource" id="Resource_1b27w"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_qenfq")])
+
+[sub_resource type="Resource" id="18"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_1b27w")
+name = "Dwarf Shield 18"
+
+[sub_resource type="Resource" id="Resource_3b64f"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("25_xwjsu")
+
+[sub_resource type="Resource" id="Resource_qbrlw"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_3b64f")])
+
+[sub_resource type="Resource" id="19"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_qbrlw")
+name = "Dwarf Shield 19"
+
+[sub_resource type="Resource" id="Resource_a7vvo"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("26_wyuwa")
+
+[sub_resource type="Resource" id="Resource_ftxmv"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_a7vvo")])
+
+[sub_resource type="Resource" id="20"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_ftxmv")
+name = "Dwarf Shield 20"
+
+[sub_resource type="Resource" id="Resource_va42j"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("27_63ecx")
+
+[sub_resource type="Resource" id="Resource_qjg2y"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_va42j")])
+
+[sub_resource type="Resource" id="21"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_qjg2y")
+name = "Dwarf Shield 21"
+
+[sub_resource type="Resource" id="Resource_c13jv"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("28_0g7si")
+
+[sub_resource type="Resource" id="Resource_6qn42"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_c13jv")])
+
+[sub_resource type="Resource" id="22"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_6qn42")
+name = "Dwarf Shield 22"
+
+[sub_resource type="Resource" id="Resource_2d15k"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("29_38v71")
+
+[sub_resource type="Resource" id="Resource_s8ufx"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_2d15k")])
+
+[sub_resource type="Resource" id="23"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_s8ufx")
+name = "Dwarf Shield 23"
+
+[sub_resource type="Resource" id="Resource_evteg"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("30_knhg1")
+
+[sub_resource type="Resource" id="Resource_le4su"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_evteg")])
+
+[sub_resource type="Resource" id="24"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_le4su")
+name = "Dwarf Shield 24"
+
+[sub_resource type="Resource" id="Resource_va3s0"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("31_ajpvr")
+
+[sub_resource type="Resource" id="Resource_rd5ve"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_va3s0")])
+
+[sub_resource type="Resource" id="25"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_rd5ve")
+name = "Dwarf Shield 25"
+
+[sub_resource type="Resource" id="Resource_wor0b"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("32_3mw21")
+
+[sub_resource type="Resource" id="Resource_7h6h7"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_wor0b")])
+
+[sub_resource type="Resource" id="26"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_7h6h7")
+name = "Dwarf Shield 26"
+
+[sub_resource type="Resource" id="Resource_pm4aa"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("33_b2jff")
+
+[sub_resource type="Resource" id="Resource_4rulm"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_pm4aa")])
+
+[sub_resource type="Resource" id="27"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_4rulm")
+name = "Dwarf Shield 27"
+
+[sub_resource type="Resource" id="Resource_8rgne"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("34_gveon")
+
+[sub_resource type="Resource" id="Resource_8nndw"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_8rgne")])
+
+[sub_resource type="Resource" id="28"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_8nndw")
+name = "Dwarf Shield 28"
+
+[sub_resource type="Resource" id="Resource_l5wr2"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("35_ydkq2")
+
+[sub_resource type="Resource" id="Resource_k8dlg"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_l5wr2")])
+
+[sub_resource type="Resource" id="29"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_k8dlg")
+name = "Dwarf Shield 29"
+
+[sub_resource type="Resource" id="Resource_e6e2e"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("36_t80u3")
+
+[sub_resource type="Resource" id="Resource_yqp7x"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_e6e2e")])
+
+[sub_resource type="Resource" id="30"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_yqp7x")
+name = "Dwarf Shield 30"
+
+[sub_resource type="Resource" id="Resource_6lgcq"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("37_uuifu")
+
+[sub_resource type="Resource" id="Resource_e6dir"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_6lgcq")])
+
+[sub_resource type="Resource" id="31"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_e6dir")
+name = "Dwarf Shield 31"
+
+[sub_resource type="Resource" id="Resource_nf87h"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("38_joa4g")
+
+[sub_resource type="Resource" id="Resource_x8ww4"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_nf87h")])
+
+[sub_resource type="Resource" id="32"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_x8ww4")
+name = "Dwarf Shield 32"
+
+[sub_resource type="Resource" id="Resource_fp4so"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("39_y63um")
+
+[sub_resource type="Resource" id="Resource_o53sb"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_fp4so")])
+
+[sub_resource type="Resource" id="33"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_o53sb")
+name = "Dwarf Shield 33"
+
+[sub_resource type="Resource" id="Resource_roybx"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("40_vh3bd")
+
+[sub_resource type="Resource" id="Resource_w6emf"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_roybx")])
+
+[sub_resource type="Resource" id="34"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_w6emf")
+name = "Dwarf Shield 34"
+
+[sub_resource type="Resource" id="Resource_sdjy7"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("41_xpoyu")
+
+[sub_resource type="Resource" id="Resource_fs1wt"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_sdjy7")])
+
+[sub_resource type="Resource" id="35"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_fs1wt")
+name = "Dwarf Shield 35"
+
+[sub_resource type="Resource" id="Resource_247av"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("42_bhhqr")
+
+[sub_resource type="Resource" id="Resource_4b0bi"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_247av")])
+
+[sub_resource type="Resource" id="36"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_4b0bi")
+name = "Dwarf Shield 36"
+
+[sub_resource type="Resource" id="Resource_ahni1"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("43_euj0y")
+
+[sub_resource type="Resource" id="Resource_q4kdb"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_ahni1")])
+
+[sub_resource type="Resource" id="37"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_q4kdb")
+name = "Dwarf Shield 37"
+
+[sub_resource type="Resource" id="Resource_2yo3b"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("44_bschu")
+
+[sub_resource type="Resource" id="Resource_ix78p"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_2yo3b")])
+
+[sub_resource type="Resource" id="38"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_ix78p")
+name = "Dwarf Shield 38"
+
+[sub_resource type="Resource" id="Resource_h57n0"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("45_d2qjm")
+
+[sub_resource type="Resource" id="Resource_bj1e6"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_h57n0")])
+
+[sub_resource type="Resource" id="39"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_bj1e6")
+name = "Dwarf Shield 39"
+
+[sub_resource type="Resource" id="Resource_oohvf"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("46_2vo78")
+
+[sub_resource type="Resource" id="Resource_yu785"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_oohvf")])
+
+[sub_resource type="Resource" id="40"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_yu785")
+name = "Dwarf Shield 40"
+
+[sub_resource type="Resource" id="Resource_1u6qd"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("47_s2eii")
+
+[sub_resource type="Resource" id="Resource_qrycq"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_1u6qd")])
+
+[sub_resource type="Resource" id="41"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_qrycq")
+name = "Dwarf Shield 41"
+
+[sub_resource type="Resource" id="Resource_31mpq"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("48_d0nw7")
+
+[sub_resource type="Resource" id="Resource_j2xn5"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_31mpq")])
+
+[sub_resource type="Resource" id="42"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_j2xn5")
+name = "Dwarf Shield 42"
+
+[sub_resource type="Resource" id="Resource_20u4b"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("49_trw7m")
+
+[sub_resource type="Resource" id="Resource_p73dw"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_20u4b")])
+
+[sub_resource type="Resource" id="43"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_p73dw")
+name = "Dwarf Shield 43"
+
+[sub_resource type="Resource" id="Resource_7lfh7"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("50_xlsgi")
+
+[sub_resource type="Resource" id="Resource_mkrmb"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_7lfh7")])
+
+[sub_resource type="Resource" id="44"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_mkrmb")
+name = "Dwarf Shield 44"
+
+[sub_resource type="Resource" id="Resource_3fmcm"]
+script = ExtResource("4_oab68")
+part = 10
+male_mesh = ExtResource("51_crhje")
+
+[sub_resource type="Resource" id="Resource_r860m"]
+script = ExtResource("6_83bgu")
+parts = Array[ExtResource("4_oab68")]([SubResource("Resource_3fmcm")])
+
+[sub_resource type="Resource" id="45"]
+script = ExtResource("1_775fd")
+type = ExtResource("7_084hi")
+appearance = SubResource("Resource_r860m")
+name = "Dwarf Shield 45"
+
+[resource]
+script = ExtResource("15_3xllt")
+type = ExtResource("7_084hi")
+looks = Array[ExtResource("1_775fd")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12"), SubResource("13"), SubResource("14"), SubResource("15"), SubResource("16"), SubResource("17"), SubResource("18"), SubResource("19"), SubResource("20"), SubResource("21"), SubResource("22"), SubResource("23"), SubResource("24"), SubResource("25"), SubResource("26"), SubResource("27"), SubResource("28"), SubResource("29"), SubResource("30"), SubResource("31"), SubResource("32"), SubResource("33"), SubResource("34"), SubResource("35"), SubResource("36"), SubResource("37"), SubResource("38"), SubResource("39"), SubResource("40"), SubResource("41"), SubResource("42"), SubResource("43"), SubResource("44"), SubResource("45")])

@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bi0qcogabe33g"]
+
+[ext_resource type="Shader" uid="uid://cyg5ttdoxrdk2" path="res://engine/objects/model/gear_colors.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" uid="uid://cl52s4iwlb3rf" path="res://assets/polygon_dungeon_realms/SourceFiles/Textures/Dungeons_2_Texture_01_A.png" id="2_albedo"]
+
+[resource]
+resource_name = "Dwarf Gear Material"
+shader = ExtResource("1_shader")
+shader_parameter/albedo_texture = ExtResource("2_albedo")
+shader_parameter/primary_key = Color(0.200, 0.341, 0.439, 1)
+shader_parameter/secondary_key = Color(0.800, 0.639, 0.380, 1)

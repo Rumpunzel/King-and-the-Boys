@@ -4,6 +4,8 @@
 [ext_resource type="ArrayMesh" uid="uid://ncry2ovu6xmb" path="res://data/characters/dwarves/meshes/body/dwarf_body_casual_male_01.res" id="2_w31uy"]
 [ext_resource type="Script" uid="uid://bpc78snhxhw1t" path="res://engine/objects/characters/modular_body_part_simple.gd" id="3_t3h81"]
 [ext_resource type="AnimationLibrary" uid="uid://dcpwsj71hiqk3" path="res://assets/quaternius_animations/AnimationLibrary_Godot.glb" id="4_pla40"]
+[ext_resource type="Material" uid="uid://bfwv8gb2fse5i" path="res://data/characters/gear/hero_gear_material.tres" id="gear_hero_gear_material"]
+[ext_resource type="Material" uid="uid://bi0qcogabe33g" path="res://data/characters/gear/dwarf_gear_material.tres" id="gear_dwarf_gear_material"]
 
 [sub_resource type="Skin" id="Skin_hpesp"]
 resource_name = "Skin"
@@ -156,8 +158,9 @@ bind/48/name = &"Toes_R"
 bind/48/bone = -1
 bind/48/pose = Transform3D(1, 3.4991947e-16, 4.285278e-32, 1.7763653e-15, -1, -1.2246469e-16, 0, 1.2246469e-16, -1, 0.188887, 0.022013, 0.13247)
 
-[node name="DwarfCharacter" type="Node3D" unique_id=1831438715 node_paths=PackedStringArray("body", "hair", "beard", "beard_attachment", "headwear", "face", "shoulder_left", "shoulder_right")]
+[node name="DwarfCharacter" type="Node3D" unique_id=1831438715 node_paths=PackedStringArray("body", "hair", "beard", "beard_attachment", "headwear", "face", "shoulder_left", "shoulder_right", "main_hand", "two_handed", "off_hand")]
 script = ExtResource("1_3stfe")
+_gear_materials = Array[ShaderMaterial]([ExtResource("gear_hero_gear_material"), ExtResource("gear_dwarf_gear_material")])
 body = NodePath("GeneralSkeleton/Body")
 hair = NodePath("GeneralSkeleton/HeadAttachment/Hair")
 beard = NodePath("GeneralSkeleton/HeadAttachment/Beard")
@@ -166,7 +169,9 @@ headwear = NodePath("GeneralSkeleton/HeadAttachment/Headwear")
 face = NodePath("GeneralSkeleton/HeadAttachment/Face")
 shoulder_left = NodePath("GeneralSkeleton/LeftShoulderAttachment/ShoulderLeft")
 shoulder_right = NodePath("GeneralSkeleton/RightShoulderAttachment/ShoulderRight")
-preview_offset = Vector3(0, 0.15, 0)
+main_hand = NodePath("GeneralSkeleton/RightHandAttachment/MainHand")
+two_handed = NodePath("GeneralSkeleton/RightHandAttachment/TwoHanded")
+off_hand = NodePath("GeneralSkeleton/LeftHandAttachment/OffHand")
 
 [node name="GeneralSkeleton" type="Skeleton3D" parent="." unique_id=570224632]
 unique_name_in_owner = true
@@ -531,7 +536,6 @@ bone_name = "Head"
 bone_idx = 6
 
 [node name="Hair" type="MeshInstance3D" parent="GeneralSkeleton/HeadAttachment" unique_id=2009960627]
-visible = false
 script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/characters/dwarves/meshes/hair"
 _type = 1
@@ -591,6 +595,55 @@ script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/characters/dwarves/meshes/shoulder_right"
 _type = 1
 _mesh_prefix = "dwarf_"
+
+[node name="RightHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton" unique_id=67285993]
+transform = Transform3D(0.07860352, -0.1540537, 0.9849307, 0.48294282, -0.85843027, -0.17280948, 0.8721166, 0.4892487, 0.0069236592, -0.47094744, 0.66207814, -0.32313237)
+bone_name = "RightHand"
+bone_idx = 27
+
+[node name="MainHand" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=365781246 node_paths=PackedStringArray("stow")]
+stow = NodePath("../../UpperChestAttachment/MainHandStow")
+transform = Transform3D(1.2980601e-07, 0.9848077, -0.17364822, -1.518081e-08, -0.17364822, -0.9848077, -1, 1.3047008e-07, -7.590405e-09, 0, 0.145, 0.045)
+visible = false
+script = ExtResource("3_t3h81")
+_mesh_directory = "res://data/equipment/meshes/main_hand"
+_type = 1
+_mesh_prefix = "weapon_"
+
+[node name="TwoHanded" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=1843576004 node_paths=PackedStringArray("stow")]
+stow = NodePath("../../UpperChestAttachment/TwoHandedStow")
+transform = Transform3D(1.2980601e-07, 0.9848077, -0.17364822, -1.518081e-08, -0.17364822, -0.9848077, -1, 1.3047008e-07, -7.590405e-09, 0, 0.145, 0.045)
+visible = false
+script = ExtResource("3_t3h81")
+_mesh_directory = "res://data/equipment/meshes/two_handed"
+_type = 1
+_mesh_prefix = "weapon_"
+
+[node name="LeftHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton" unique_id=1413650892]
+transform = Transform3D(0.4830715, 0.028857268, -0.8751054, -0.38825864, -0.8887625, -0.24363235, -0.78479135, 0.457459, -0.41813162, 0.5491562, 0.6300571, -0.022300258)
+bone_name = "LeftHand"
+bone_idx = 12
+
+[node name="OffHand" type="MeshInstance3D" parent="GeneralSkeleton/LeftHandAttachment" unique_id=270445679 node_paths=PackedStringArray("stow")]
+stow = NodePath("../../UpperChestAttachment/OffHandStow")
+transform = Transform3D(6.633807e-08, -0.9999999, 8.444391e-08, -0.9659258, -4.2221956e-08, 0.258819, -0.25881904, -9.87361e-08, -0.9659257, 0.025, 0.15, -0.05)
+visible = false
+script = ExtResource("3_t3h81")
+_mesh_directory = "res://data/equipment/meshes/off_hand"
+_type = 1
+_mesh_prefix = "weapon_"
+
+[node name="UpperChestAttachment" type="BoneAttachment3D" parent="GeneralSkeleton"]
+bone_name = "UpperChest"
+
+[node name="MainHandStow" type="Node3D" parent="GeneralSkeleton/UpperChestAttachment"]
+transform = Transform3D(0, 0, 1, 0.447, -0.894, 0, 0.894, 0.447, 0, -0.15, 0.15, -0.17)
+
+[node name="TwoHandedStow" type="Node3D" parent="GeneralSkeleton/UpperChestAttachment"]
+transform = Transform3D(0, 0, 1, -0.398, 0.917, 0, -0.917, -0.398, 0, 0.15, -0.3, -0.2)
+
+[node name="OffHandStow" type="Node3D" parent="GeneralSkeleton/UpperChestAttachment"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.05, -0.3)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=346435798]
 libraries/AnimationLibrary_Godot = ExtResource("4_pla40")
