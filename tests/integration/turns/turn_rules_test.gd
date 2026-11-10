@@ -400,11 +400,12 @@ func test_tiles_wait_for_the_step_that_raised_them() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	await _walk_until_board_changes(hero)
 	assert_bool(await _wait_until_shown(_lagging_tiles(), 8000)).is_true()
-	# A tile whose step has not reached this peer yet, as a client may see it
+	# A tile whose step has not reached this peer yet, as a client may see it.
+	# The dungeon is random: not every one keeps a tile only placed, but each has one not yet revealed
 	var tile: Structure = null
 	var placed_tiles: Dictionary[Vector2i, Structure] = _level.get("_placed_tiles")
 	for cell: Vector2i in placed_tiles:
-		if placed_tiles[cell].status == Structure.Status.PLACED and placed_tiles[cell].get_connections().size() > 0:
+		if placed_tiles[cell].status < Structure.Status.REVEALED and placed_tiles[cell].get_connections().size() > 0:
 			tile = placed_tiles[cell]
 			break
 	assert_object(tile).is_not_null()
