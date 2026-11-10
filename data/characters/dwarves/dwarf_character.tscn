@@ -599,7 +599,7 @@ _mesh_prefix = "dwarf_"
 bone_name = "RightHand"
 
 [node name="MainHand" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment"]
-transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0, 0, -1, 1, 0, 0, 0, -1, 0, 0, 0.145, 0.045)
 visible = false
 script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/equipment/meshes/main_hand"
@@ -608,7 +608,7 @@ _mesh_prefix = "weapon_"
 _index = -1
 
 [node name="TwoHanded" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment"]
-transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0, 0, -1, 1, 0, 0, 0, -1, 0, 0, 0.145, 0.045)
 visible = false
 script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/equipment/meshes/two_handed"
@@ -620,7 +620,7 @@ _index = -1
 bone_name = "LeftHand"
 
 [node name="OffHand" type="MeshInstance3D" parent="GeneralSkeleton/LeftHandAttachment"]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+transform = Transform3D(0, -1, 0, -1, 0, 0, 0, 0, -1, 0, 0.145, -0.02)
 visible = false
 script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/equipment/meshes/off_hand"
