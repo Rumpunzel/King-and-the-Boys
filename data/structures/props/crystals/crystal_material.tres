@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://bmy61ol43ie6x"]
 
-[ext_resource type="Shader" path="res://engine/objects/structures/occludable.gdshader" id="1_shader"]
+[ext_resource type="Shader" uid="uid://bjskcyrt4rxbv" path="res://engine/objects/structures/occludable.gdshader" id="1_shader"]
 [ext_resource type="Texture2D" uid="uid://cl52s4iwlb3rf" path="res://assets/polygon_dungeon_realms/SourceFiles/Textures/Dungeons_2_Texture_01_A.png" id="2_albedo"]
 
 [resource]

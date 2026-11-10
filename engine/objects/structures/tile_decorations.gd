@@ -235,7 +235,10 @@ func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transfo
 	if not scene: return
 	var mesh: Node3D = scene.instantiate()
 	# Decorations never block clicks or movement
-	for body: Node in mesh.find_children("*", "CollisionObject3D", true, false): body.free()
+	# Taken out at once, so they never collide; nested bodies leave with their parent, which is fine to remove and free again
+	for body: Node in mesh.find_children("*", "CollisionObject3D", true, false):
+		body.get_parent().remove_child(body)
+		body.queue_free()
 	mesh.scale = prop_set.prop_scale
 	if prop_set.material_override:
 		var meshes: Array[MeshInstance3D] = Model.gather_all_geometry_instances_on(mesh)

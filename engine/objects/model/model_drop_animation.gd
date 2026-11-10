@@ -13,6 +13,8 @@ const FADE: StringName = &"fade"
 @export_range(0.0, 1.0) var _fade_in_part: float = 0.6
 
 func animate(model: Model) -> Tween:
+	# At once, not on the tween's first step, so it does not show at rest for a frame
+	model.position.y = _drop_height
 	var tween: Tween = model.create_tween()
 	var fall_duration: float = duration * 0.6
 	tween.tween_property(model, "position:y", 0.0, fall_duration).from(_drop_height).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
