@@ -74,11 +74,11 @@ text = "Randomize"
 icon = ExtResource("2_tb4p3")
 expand_icon = true
 
-[node name="BodyCarousels" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="BodyCarousels" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=93283365]
 visible = false
 layout_mode = 2
 
-[node name="AnimationButtons" type="HFlowContainer" parent="MarginContainer/VBoxContainer"]
+[node name="AnimationButtons" type="HFlowContainer" parent="MarginContainer/VBoxContainer" unique_id=1500476752]
 visible = false
 layout_mode = 2
 

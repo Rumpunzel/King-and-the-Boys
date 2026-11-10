@@ -8,7 +8,7 @@ extends EditorScript
 
 ## Animations to copy, and the names to give the copies; an empty name keeps the original's
 const ANIMATIONS: Dictionary[String, String] = {
-	"Jump_Land": "",
+	"BackFlip": "",
 }
 const SOURCE: String = "res://assets/quaternius_animations/AnimationLibrary_Godot.glb"
 const TARGET: String = "res://data/characters/animations/adjusted_animations.tres"

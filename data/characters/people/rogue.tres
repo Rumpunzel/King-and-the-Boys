@@ -3,11 +3,9 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="3_0y2lj"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="3_7rwy5"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_gg1jf"]
-[ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_gg1jf"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="4_ithgo"]
 [ext_resource type="Resource" uid="uid://dnan3ouabpslh" path="res://data/characters/people/rogue_body.tres" id="5_c4qnl"]
 [ext_resource type="Texture2D" uid="uid://ft6txm2uxjqv" path="res://data/characters/people/portraits/hood.svg" id="5_r37cg"]
-[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_dwbog"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_ked5x"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_co6b3"]
 [ext_resource type="ArrayMesh" uid="uid://bp4g0susfr1bk" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_02.res" id="11_7bx4e"]
@@ -46,8 +44,8 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="41_onj5d"]
 [ext_resource type="ArrayMesh" uid="uid://b1kdqgrdhk27o" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_01.res" id="42_2hj8h"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="43_tmsvl"]
-[ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
 [ext_resource type="Resource" uid="uid://c1io5bgjdq6kr" path="res://data/model_animations/heroes/rogue_move.tres" id="90_rogue_move"]
+[ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
 
 [sub_resource type="Resource" id="Resource_yo61b"]
 script = ExtResource("10_co6b3")
@@ -220,12 +218,6 @@ name = "Belt 01"
 
 [resource]
 script = ExtResource("3_7rwy5")
-spawn_animation = ExtResource("90_rogue_spawn")
-move_animation = ExtResource("90_rogue_move")
-fast_move_animation = ExtResource("90_rogue_move")
-pass_animation = &"AnimationLibrary_Godot/Crouch_Enter"
-passed_animation = &"AnimationLibrary_Godot/Crouch_Idle"
-unpass_animation = &"AnimationLibrary_Godot/Crouch_Exit"
 strength = 2
 speed = 4
 model_configuration = ExtResource("5_c4qnl")
@@ -237,6 +229,12 @@ starting_legs = SubResource("Resource_tpfvq")
 starting_back = SubResource("Resource_sml8c")
 starting_waist = SubResource("Resource_5bnsv")
 starting_main_hand = SubResource("Resource_35uv1")
+spawn_animation = ExtResource("90_rogue_spawn")
+move_animation = ExtResource("90_rogue_move")
+fast_move_animation = ExtResource("90_rogue_move")
+pass_animation = &"adjusted_animations/BackFlipCrouch"
+passed_animation = &"AnimationLibrary_Godot/Crouch_Idle"
+unpass_animation = &"AnimationLibrary_Godot/Crouch_Exit"
 name = "Rogue"
 portrait = ExtResource("5_r37cg")
 color = Color(0.878431, 0.878431, 0.878431, 1)

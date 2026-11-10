@@ -3,11 +3,9 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_riycf"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_x2406"]
 [ext_resource type="PackedScene" uid="uid://k2selbak4kwk" path="res://data/characters/dwarves/dwarf_character.tscn" id="3_ki3nk"]
-[ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_34kdi"]
 [ext_resource type="Texture2D" uid="uid://d3kpui0ngdvp8" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_3.png" id="4_xk1ji"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_34kdi"]
 [ext_resource type="Resource" uid="uid://d4l2t2lakts58" path="res://data/characters/dwarves/random_dwarf.tres" id="5_yyphc"]
-[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_65vhf"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_ki3nk"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_iigc1"]
 [ext_resource type="ArrayMesh" uid="uid://cnlxbtocemsv5" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_soldier_08.res" id="11_eyc0a"]
@@ -20,8 +18,8 @@
 [ext_resource type="ArrayMesh" uid="uid://bd2npqjr05qrk" path="res://data/characters/dwarves/meshes/shoulder_left/dwarf_shoulder_left_fancy_01.res" id="16_yyphc"]
 [ext_resource type="ArrayMesh" uid="uid://cr47keevwrcvo" path="res://data/characters/dwarves/meshes/shoulder_right/dwarf_shoulder_right_fancy_01.res" id="17_mwfbt"]
 [ext_resource type="Resource" uid="uid://dvgy2n8emi8k0" path="res://data/equipment/types/dwarf_outfit.tres" id="18_xtw46"]
-[ext_resource type="Resource" uid="uid://c75q711dhxhep" path="res://data/model_animations/heroes/dwarf_spawn.tres" id="90_dwarf_spawn"]
 [ext_resource type="Resource" uid="uid://cvoowfdc35nc1" path="res://data/model_animations/heroes/dwarf_move.tres" id="90_dwarf_move"]
+[ext_resource type="Resource" uid="uid://c75q711dhxhep" path="res://data/model_animations/heroes/dwarf_spawn.tres" id="90_dwarf_spawn"]
 
 [sub_resource type="Resource" id="Resource_iigc1"]
 script = ExtResource("10_iigc1")
@@ -79,11 +77,6 @@ name = "Dwarf Outfit 03 01"
 
 [resource]
 script = ExtResource("5_34kdi")
-spawn_animation = ExtResource("90_dwarf_spawn")
-move_animation = ExtResource("90_dwarf_move")
-fast_move_animation = ExtResource("90_dwarf_move")
-pass_animation = &"AnimationLibrary_Godot/Drink"
-passed_animation = &"AnimationLibrary_Godot/Idle_Tired"
 strength = 4
 agility = 2
 speed = 2
@@ -92,6 +85,12 @@ model_configuration = ExtResource("5_yyphc")
 starting_head = SubResource("Resource_csvx1")
 starting_torso = SubResource("Resource_cmreh")
 starting_main_hand = SubResource("Resource_e0wqc")
+spawn_animation = ExtResource("90_dwarf_spawn")
+move_animation = ExtResource("90_dwarf_move")
+fast_move_animation = ExtResource("90_dwarf_move")
+pass_animation = &"AnimationLibrary_Godot/GroundSit_Enter"
+passed_animation = &"AnimationLibrary_Godot/GroundSit_Idle"
+unpass_animation = &"AnimationLibrary_Godot/GroundSit_Exit"
 name = "Dwarf"
 portrait = ExtResource("4_xk1ji")
 color = Color(0.878431, 0.878431, 0.878431, 1)

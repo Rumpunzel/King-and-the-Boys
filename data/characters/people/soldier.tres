@@ -7,7 +7,6 @@
 [ext_resource type="Resource" uid="uid://dx6tahhpjkqy4" path="res://data/characters/people/soldier_body.tres" id="5_a0nqf"]
 [ext_resource type="Texture2D" uid="uid://b0o64egjvwnqs" path="res://data/characters/people/portraits/closed-barbute.svg" id="5_ul877"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="6_sgqnm"]
-[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_3myd1"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_mltvv"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_0ouwd"]
 [ext_resource type="ArrayMesh" uid="uid://b57nlxahk1lv6" path="res://data/characters/people/meshes/gear/female/arm_lower_left/modular_character_ArmLowerLeft_Female_03.res" id="11_f8xos"]
@@ -238,9 +237,6 @@ name = "Belt 12"
 
 [resource]
 script = ExtResource("6_sgqnm")
-spawn_animation = ExtResource("90_soldier_spawn")
-pass_animation = &"AnimationLibrary_Godot/Interact"
-passed_animation = &"AnimationLibrary_Godot/Idle_Talking"
 model_configuration = ExtResource("5_a0nqf")
 starting_head = SubResource("Resource_ctc61")
 starting_torso = SubResource("Resource_cospf")
@@ -249,6 +245,8 @@ starting_legs = SubResource("Resource_dgeob")
 starting_waist = SubResource("Resource_nwcet")
 starting_main_hand = SubResource("Resource_2mh5i")
 starting_off_hand = SubResource("Resource_334g4")
+spawn_animation = ExtResource("90_soldier_spawn")
+passed_animation = &"AnimationLibrary_Godot/Idle_LookAround"
 name = "Soldier"
 portrait = ExtResource("5_ul877")
 color = Color(0.878431, 0.878431, 0.878431, 1)

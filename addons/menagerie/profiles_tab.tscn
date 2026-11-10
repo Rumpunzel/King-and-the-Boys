@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://brk2kywqvfl68" path="res://addons/menagerie/profiles_tab.gd" id="1_5qoco"]
 
-[node name="ProfileTab (32)" type="MarginContainer" unique_id=380130184 node_paths=PackedStringArray("_profiles_tree")]
+[node name="ProfileTab (2045)" type="MarginContainer" unique_id=380130184 node_paths=PackedStringArray("_profiles_tree")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -48,7 +48,7 @@ select_mode = 2
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/ProfileFilter" to="." method="_on_profile_filter_text_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/RescanButton" to="." method="_on_rescan_button_pressed"]
-[connection signal="item_activated" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_activated"]
-[connection signal="multi_selected" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_multi_selected"]
-[connection signal="item_mouse_selected" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_mouse_selected"]
 [connection signal="gui_input" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_tree_gui_input"]
+[connection signal="item_activated" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_activated"]
+[connection signal="item_mouse_selected" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_mouse_selected"]
+[connection signal="multi_selected" from="VBoxContainer/VSplitContainer/Tree" to="." method="_on_item_multi_selected"]

@@ -3,11 +3,9 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_ice4o"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_arfpv"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_u6fvh"]
-[ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_u6fvh"]
 [ext_resource type="Resource" uid="uid://5hbsrnqf3fcd" path="res://data/characters/people/knight_body.tres" id="5_0vpuq"]
 [ext_resource type="Texture2D" uid="uid://cc2x8ji73hxc4" path="res://data/characters/people/portraits/frog-mouth-helm.svg" id="5_63j5q"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_ltdy7"]
-[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_ltdy7"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_meawf"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_7tsdp"]
 [ext_resource type="ArrayMesh" uid="uid://d6cc7kxx5c07" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_10.res" id="11_73hd6"]
@@ -51,8 +49,8 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="47_gfjk1"]
 [ext_resource type="ArrayMesh" uid="uid://n5cjrfw3l21g" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_12.res" id="48_hmc0y"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="49_wouu8"]
-[ext_resource type="Resource" uid="uid://chaqmhbq3eugj" path="res://data/model_animations/heroes/knight_spawn.tres" id="90_knight_spawn"]
 [ext_resource type="Resource" uid="uid://bokwo0ngtuf6x" path="res://data/model_animations/heroes/knight_move.tres" id="90_knight_move"]
+[ext_resource type="Resource" uid="uid://chaqmhbq3eugj" path="res://data/model_animations/heroes/knight_spawn.tres" id="90_knight_spawn"]
 
 [sub_resource type="Resource" id="Resource_13etc"]
 script = ExtResource("10_7tsdp")
@@ -241,11 +239,6 @@ name = "Belt 12"
 
 [resource]
 script = ExtResource("5_ltdy7")
-spawn_animation = ExtResource("90_knight_spawn")
-move_animation = ExtResource("90_knight_move")
-fast_move_animation = ExtResource("90_knight_move")
-pass_animation = &"AnimationLibrary_Godot/Sword_Exit"
-passed_animation = &"AnimationLibrary_Godot/Idle_LookAround"
 intelligence = 2
 model_configuration = ExtResource("5_0vpuq")
 starting_head = SubResource("Resource_fgqtr")
@@ -255,6 +248,10 @@ starting_legs = SubResource("Resource_3hb41")
 starting_back = SubResource("Resource_1s4ff")
 starting_waist = SubResource("Resource_ker01")
 starting_main_hand = SubResource("Resource_iiaan")
+spawn_animation = ExtResource("90_knight_spawn")
+move_animation = ExtResource("90_knight_move")
+fast_move_animation = ExtResource("90_knight_move")
+passed_animation = &"AnimationLibrary_Godot/Dance"
 name = "Knight"
 portrait = ExtResource("5_63j5q")
 color = Color(0.878431, 0.878431, 0.878431, 1)
