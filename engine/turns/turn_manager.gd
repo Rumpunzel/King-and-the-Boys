@@ -2,7 +2,7 @@
 class_name TurnManager
 extends Node
 ## Runs simultaneous turns: every player moves their [Character]s up to their movement points,
-## may undo steps, and passes. The turn ends once every connected player has passed.
+## uses their abilities, may undo steps and uses, and passes. The turn ends once every connected player has passed.
 ## The host is the referee; peers send requests and follow the replicated state.
 
 signal turn_started(turn_number: int)
@@ -27,8 +27,17 @@ var passed_player_ids: PackedInt32Array = PackedInt32Array():
 		passed_player_ids = new_passed_player_ids
 		passed_players_changed.emit()
 
-# Host only: steps that can still be undone this turn, newest last
+# Host only: steps and ability uses (GridStep, AbilityStep) that can still be undone this turn, newest last
 var _undo_stacks: Dictionary[Character, Array] = {}
+# Host only: uses of each Ability this turn, by character
+var _ability_uses: Dictionary[Character, Dictionary] = {}
+# Host only: held abilities in use, see Ability.held
+var _held_abilities: Dictionary[Character, HeldAbility] = {}
+# Host only: uses that act once the turn ends, in the order they were made
+var _pending_steps: Array[AbilityStep] = []
+# Host only: an ability that changes the board while it is used can not be undone
+var _using_character: Character
+var _board_changed_during_use: bool = false
 
 class GridStep extends RefCounted:
 	var grid_cell: Vector2i
@@ -37,6 +46,15 @@ class GridStep extends RefCounted:
 	func _init(character: Character) -> void:
 		grid_cell = character.grid_cell
 		tile_spot = character.tile_spot
+
+class HeldAbility extends RefCounted:
+	var ability: Ability
+	var target: Vector2i
+	var argument: int = 0
+
+	func _init(held_ability: Ability, held_target: Vector2i) -> void:
+		ability = held_ability
+		target = held_target
 
 static func get_instance(tree: SceneTree) -> TurnManager:
 	return tree.get_first_node_in_group(GROUP)
@@ -71,16 +89,14 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	var sender_id: int = _get_sender_id()
 	if has_passed(sender_id): return
 	var character: Character = _get_controlled_character(sender_id, character_path)
-	if not character: return
+	if not character or _held_abilities.has(character): return
 	var target_cell: Vector2i = _level.get_step_target(character.grid_cell, direction)
 	var free_spots: Array[Vector2] = _level.get_free_spots(target_cell, character)
 	if target_cell == character.grid_cell or character.movement_points <= 0 or free_spots.is_empty():
 		character.place_on_grid(character.grid_cell, character.tile_spot, direction)
 		return
 	# Record before moving: a move that changes the board clears the stack again
-	if not _undo_stacks.has(character) and not character.tree_exiting.is_connected(_on_character_exiting.bind(character)):
-		# Characters get replaced e.g. when loading a save
-		character.tree_exiting.connect(_on_character_exiting.bind(character), CONNECT_ONE_SHOT)
+	_track(character)
 	var undo_stack: Array = _undo_stacks.get_or_add(character, [])
 	undo_stack.append(GridStep.new(character))
 	character.movement_points -= 1
@@ -95,10 +111,15 @@ func request_undo(character_path: NodePath) -> void:
 	if not multiplayer.is_server(): return
 	var sender_id: int = _get_sender_id()
 	var character: Character = _get_controlled_character(sender_id, character_path)
-	if not character: return
+	if not character or _held_abilities.has(character): return
 	var undo_stack: Array = _undo_stacks.get(character, [])
 	if undo_stack.is_empty(): return
-	var previous_step: GridStep = undo_stack.back()
+	var last_step: RefCounted = undo_stack.back()
+	if last_step is AbilityStep:
+		_undo_ability(last_step as AbilityStep)
+		_set_passed(sender_id, false)
+		return
+	var previous_step: GridStep = last_step
 	# Another piece may have taken the old spot meanwhile
 	var free_spots: Array[Vector2] = _level.get_free_spots(previous_step.grid_cell, character)
 	if free_spots.is_empty(): return
@@ -111,12 +132,70 @@ func request_undo(character_path: NodePath) -> void:
 	_update_undo_steps(character)
 	_set_passed(sender_id, false)
 
-## Passes or takes a pass back; the turn ends once every connected player has passed
+## Uses the [Ability] named [param ability_id] of [param character_path] on [param target_cell] with [param argument]
+## (its choice, e.g. how far to turn), if the profile lists it and its uses, charges and the movement points allow it.
+## For a [member Ability.held] ability in use this confirms it on its target; one that can not be used then is cancelled.
+@rpc("any_peer", "call_local", "reliable")
+func request_ability(character_path: NodePath, ability_id: String, target_cell: Vector2i, argument: int) -> void:
+	if not multiplayer.is_server(): return
+	var character: Character = _get_unpassed_character(character_path)
+	var ability: Ability = character.get_ability(ability_id) if character else null
+	if not ability or ability.is_passive(): return
+	var held: HeldAbility = _held_abilities.get(character)
+	if held and held.ability != ability: return
+	if held: target_cell = held.target
+	# Held abilities checked their limits when they began
+	elif ability.held or not _has_uses_left(character, ability): return
+	var cost: int = ability.get_cost(character, target_cell, argument)
+	if cost > character.movement_points or not ability.can_use(character, target_cell, argument, _level):
+		_cancel_held(character)
+		return
+	_held_abilities.erase(character)
+	character.active_ability_id = ""
+	_use_ability(character, ability, target_cell, argument)
+
+## Starts using the [member Ability.held] ability [param ability_id] of [param character_path] on [param target_cell];
+## the character can neither step, undo nor use another ability until it is confirmed with [method request_ability] or cancelled
+@rpc("any_peer", "call_local", "reliable")
+func request_ability_begin(character_path: NodePath, ability_id: String, target_cell: Vector2i) -> void:
+	if not multiplayer.is_server(): return
+	var character: Character = _get_unpassed_character(character_path)
+	if not character or _held_abilities.has(character): return
+	var ability: Ability = character.get_ability(ability_id)
+	if not ability or not ability.held or not _has_uses_left(character, ability): return
+	if not ability.can_begin(character, target_cell, _level): return
+	_track(character)
+	_held_abilities[character] = HeldAbility.new(ability, target_cell)
+	character.active_ability_id = ability_id
+	ability.begin(character, target_cell, _level)
+
+## Changes the choice of the held ability in use, if the movement points can pay for it
+@rpc("any_peer", "call_local", "reliable")
+func request_ability_adjust(character_path: NodePath, argument: int) -> void:
+	if not multiplayer.is_server(): return
+	var character: Character = _get_controlled_character(_get_sender_id(), character_path)
+	if not character: return
+	var held: HeldAbility = _held_abilities.get(character)
+	if not held or held.ability.get_cost(character, held.target, argument) > character.movement_points: return
+	held.argument = argument
+	held.ability.adjust(character, held.target, argument, _level)
+
+## Stops using the held ability in use; nothing is paid
+@rpc("any_peer", "call_local", "reliable")
+func request_ability_cancel(character_path: NodePath) -> void:
+	if not multiplayer.is_server(): return
+	var character: Character = _get_controlled_character(_get_sender_id(), character_path)
+	if not character: return
+	_cancel_held(character)
+
+## Passes or takes a pass back; the turn ends once every connected player has passed.
+## Passing cancels the held abilities of the sender's characters.
 @rpc("any_peer", "call_local", "reliable")
 func request_pass(passed: bool) -> void:
 	if not multiplayer.is_server(): return
 	var sender_id: int = _get_sender_id()
 	if not Lobby.get_player(sender_id): return
+	if passed: _cancel_held_of(sender_id)
 	_set_passed(sender_id, passed)
 	_end_turn_if_everyone_passed()
 
@@ -142,12 +221,71 @@ func clear_passes() -> void:
 
 func _start_next_turn() -> void:
 	assert(multiplayer.is_server())
+	for character: Character in _held_abilities.keys(): _cancel_held(character)
+	var pending_steps: Array[AbilityStep] = _pending_steps
+	_pending_steps = []
+	for step: AbilityStep in pending_steps: step.resolve_at_turn_end(_level)
 	_undo_stacks.clear()
+	_ability_uses.clear()
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
 		character.reset_movement_points()
 		character.undo_steps = 0
 	clear_passes()
 	turn_number += 1
+
+func _use_ability(character: Character, ability: Ability, target_cell: Vector2i, argument: int) -> void:
+	_track(character)
+	_using_character = character
+	_board_changed_during_use = false
+	var step: AbilityStep = ability.use(character, target_cell, argument, _level)
+	_using_character = null
+	character.movement_points -= step.cost
+	var uses: Dictionary = _ability_uses.get_or_add(character, {})
+	var used: int = uses.get(ability, 0)
+	uses[ability] = used + 1
+	character.spend_charge(ability)
+	if step.acts_at_turn_end(): _pending_steps.append(step)
+	if not _board_changed_during_use:
+		var undo_stack: Array = _undo_stacks.get_or_add(character, [])
+		undo_stack.append(step)
+	_update_undo_steps(character)
+
+func _undo_ability(step: AbilityStep) -> void:
+	var character: Character = step.character
+	var undo_stack: Array = _undo_stacks[character]
+	assert(undo_stack.back() == step)
+	undo_stack.pop_back()
+	step.undo(_level)
+	character.movement_points += step.cost
+	var uses: Dictionary = _ability_uses.get(character, {})
+	var used: int = uses.get(step.ability, 0)
+	uses[step.ability] = maxi(used - 1, 0)
+	character.refund_charge(step.ability)
+	_pending_steps.erase(step)
+	_update_undo_steps(character)
+
+func _has_uses_left(character: Character, ability: Ability) -> bool:
+	if character.get_charges_left(ability) == 0: return false
+	if ability.uses_per_turn <= 0: return true
+	var uses: Dictionary = _ability_uses.get(character, {})
+	var used: int = uses.get(ability, 0)
+	return used < ability.uses_per_turn
+
+func _cancel_held(character: Character) -> void:
+	var held: HeldAbility = _held_abilities.get(character)
+	if not held: return
+	_held_abilities.erase(character)
+	character.active_ability_id = ""
+	held.ability.cancel(character, held.target, _level)
+
+func _cancel_held_of(player_id: int) -> void:
+	for character: Character in _held_abilities.keys():
+		if character.is_controlled_by(player_id): _cancel_held(character)
+
+## Characters get replaced e.g. when loading a save: their host state goes with them
+func _track(character: Character) -> void:
+	if character.tree_exiting.is_connected(_on_character_exiting.bind(character)): return
+	character.tree_exiting.connect(_on_character_exiting.bind(character), CONNECT_ONE_SHOT)
 
 func _update_undo_steps(character: Character) -> void:
 	var undo_stack: Array = _undo_stacks.get(character, [])
@@ -171,14 +309,26 @@ func _get_controlled_character(sender_id: int, character_path: NodePath) -> Char
 	if not character.is_controlled_by(sender_id): return null
 	return character
 
+## @returns the [Character] at [param character_path] if the sender controls it and has not passed
+func _get_unpassed_character(character_path: NodePath) -> Character:
+	var sender_id: int = _get_sender_id()
+	if has_passed(sender_id): return null
+	return _get_controlled_character(sender_id, character_path)
+
 func _on_board_changed(character: Character) -> void:
+	if character == _using_character: _board_changed_during_use = true
 	_undo_stacks.erase(character)
 	_update_undo_steps(character)
 
 func _on_character_exiting(character: Character) -> void:
 	_undo_stacks.erase(character)
+	_ability_uses.erase(character)
+	_held_abilities.erase(character)
+	for step: AbilityStep in _pending_steps.duplicate():
+		if step.character == character: _pending_steps.erase(step)
 
 func _on_player_disconnected(player: Player) -> void:
+	_cancel_held_of(player.player_id)
 	_set_passed(player.player_id, false)
 	_end_turn_if_everyone_passed()
 

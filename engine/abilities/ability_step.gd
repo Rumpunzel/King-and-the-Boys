@@ -15,3 +15,11 @@ func _init(used_ability: Ability, used_by: Character, paid_cost: int) -> void:
 ## Takes back what the use changed on the board; points, uses and charges are refunded by the [TurnManager]
 func undo(_level: Level) -> void:
 	pass
+
+## @returns [code]true[/code] if the use acts once the turn ends, see [method resolve_at_turn_end]
+func acts_at_turn_end() -> bool:
+	return false
+
+## Called by the [TurnManager] when the turn ends, before points are reset; never undone
+func resolve_at_turn_end(_level: Level) -> void:
+	pass

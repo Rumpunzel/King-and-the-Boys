@@ -67,11 +67,28 @@ func get_cost(_character: Character, _target: Vector2i, _argument: int) -> int:
 func can_use(character: Character, target: Vector2i, _argument: int, level: Level) -> bool:
 	return not is_passive() and get_targets(character, level).has(target)
 
-## Host only: applies the ability; called after [method can_use] allowed it
+## Host only: applies the ability; called after [method can_use] allowed it.
+## A [member held] ability ends here: [method begin] and [method adjust] came first.
 ## @returns what it changed, so it can be undone
 func use(character: Character, target: Vector2i, argument: int, _level: Level) -> AbilityStep:
 	assert(not is_passive(), "%s is passive" % name)
 	return AbilityStep.new(self, character, get_cost(character, target, argument))
+
+## Host only, [member held] abilities: whether [param character] may start using the ability on [param target]
+func can_begin(character: Character, target: Vector2i, level: Level) -> bool:
+	return not is_passive() and get_targets(character, level).has(target)
+
+## Host only, [member held] abilities: starts using the ability; costs nothing until [method use]
+func begin(_character: Character, _target: Vector2i, _level: Level) -> void:
+	pass
+
+## Host only, [member held] abilities: the player changed their choice; the [TurnManager] checked they can pay for it
+func adjust(_character: Character, _target: Vector2i, _argument: int, _level: Level) -> void:
+	pass
+
+## Host only, [member held] abilities: takes back [method begin] and [method adjust], e.g. on a pass or the turn's end
+func cancel(_character: Character, _target: Vector2i, _level: Level) -> void:
+	pass
 
 func _to_string() -> String:
 	return "[Ability %s]" % name

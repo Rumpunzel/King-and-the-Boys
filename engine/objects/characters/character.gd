@@ -9,6 +9,7 @@ signal destination_reached
 signal movement_points_changed(movement_points: int)
 signal undo_steps_changed(undo_steps: int)
 signal ability_uses_changed
+signal active_ability_changed
 ## Emitted on every peer when the animated figure crosses into [param cell], which lags behind [member grid_cell]
 signal figure_entered_grid_cell(cell: Vector2i)
 ## Emitted on every peer when the figure's move ended
@@ -125,6 +126,12 @@ var ability_uses: Dictionary = {}:
 		if new_ability_uses == ability_uses: return
 		ability_uses = new_ability_uses
 		ability_uses_changed.emit()
+## The [ResourceId] of the held [Ability] in use (see [member Ability.held]), empty if none; set by the host, replicated
+var active_ability_id: String = "":
+	set(new_active_ability_id):
+		if new_active_ability_id == active_ability_id: return
+		active_ability_id = new_active_ability_id
+		active_ability_changed.emit()
 
 var _has_grid_state: bool = false
 var _grid_visual_update_queued: bool = false
@@ -226,6 +233,17 @@ func reset_movement_points() -> void:
 
 func has_ability(ability: Ability) -> bool:
 	return profile != null and profile.abilities.has(ability)
+
+## @returns the listed [Ability] named by [param ability_id], or [code]null[/code]; loads nothing, so peer-sent ids are safe
+func get_ability(ability_id: String) -> Ability:
+	if not profile or ability_id.is_empty(): return null
+	for ability: Ability in profile.abilities:
+		if ability and ResourceId.of(ability) == ability_id: return ability
+	return null
+
+## @returns the held [Ability] in use, or [code]null[/code]
+func get_active_ability() -> Ability:
+	return get_ability(active_ability_id)
 
 ## @returns the uses of [param ability] left this game; [code]<0[/code] if it has no limit
 func get_charges_left(ability: Ability) -> int:
