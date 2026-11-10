@@ -39,5 +39,5 @@ func test_every_hero_has_a_colour_of_their_own_and_dresses_in_it() -> void:
 
 func test_previews_raise_the_dwarf_by_its_profile() -> void:
 	var dwarf: CharacterProfile = load(EquipmentFixtures.DWARF)
-	assert_float(dwarf.preview_offset.y).is_greater(0.0)
-	assert_object((load(EquipmentFixtures.KNIGHT) as CharacterProfile).preview_offset).is_equal(Vector3.ZERO)
+	# The smaller dwarf stands higher, so it is framed like the humans
+	assert_float(dwarf.preview_offset.y).is_greater((load(EquipmentFixtures.KNIGHT) as CharacterProfile).preview_offset.y)

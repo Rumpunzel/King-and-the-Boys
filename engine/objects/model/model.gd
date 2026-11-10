@@ -124,8 +124,12 @@ func is_playing(animation: Animation) -> bool:
 func _play_body(animation: Animation, blend: float, speed: float, start: float) -> void:
 	var player: AnimationPlayer = get_animation_player()
 	if not player or not animation: return
-	player.play(get_animation_name(animation), blend, speed)
-	if start > 0.0: player.seek(start, true)
+	var animation_name: StringName = get_animation_name(animation)
+	# Playing the animation that plays already carries on to its end (and then stands still) instead of starting over, e.g. when a
+	# rest set lists one animation twice to pick it more often
+	var again: bool = player.current_animation == animation_name
+	player.play(animation_name, blend, speed)
+	if start > 0.0 or again: player.seek(start, true)
 	# The editor calls no method keys (e.g. stowing a sword halfway through sheathing it); Menagerie's preview still shows them
 	if Engine.is_editor_hint(): _call_method_keys(animation, speed, start)
 

@@ -176,3 +176,13 @@ func test_an_animation_that_draws_puts_the_weapons_away_first() -> void:
 	assert_bool(Model.calls_method(knight_spawn.body_follow_up, &"draw_weapons")).is_true()
 	model.play_model_animation(knight_spawn)
 	assert_bool(model.are_weapons_stowed()).override_failure_message("The knight spawns with his sword on his back").is_true()
+
+func test_an_animation_listed_twice_starts_over_instead_of_standing_still() -> void:
+	var model: Model = _models()[0]
+	var player: AnimationPlayer = model.get_animation_player()
+	var jab: BodyAnimations = _set_of(["Punch_Jab", "Punch_Jab"], BodyAnimations.Order.SEQUENCE)
+	var length: float = jab.animations[0].length
+	model.rest_in(jab)
+	await await_millis(int(length * 1000.0) + 150)
+	assert_bool(model.is_playing(jab.animations[0])).is_true()
+	assert_float(player.current_animation_position).override_failure_message("The second jab started over").is_less(length * 0.6)
