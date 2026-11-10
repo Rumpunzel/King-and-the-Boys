@@ -15,6 +15,9 @@ extends Resource
 @export var center_props: bool = false
 ## Given to every mesh of the props, e.g. a pack's texture atlas for FBX imports that carry no texture of their own
 @export var material_override: Material
+## Played on its props as they drop in, instead of the decorations' own (see [member TileDecorations.drop_animation]), e.g. a heavy
+## fall from above for architecture
+@export var drop_animation: ModelAnimation
 
 ## @returns the collection the next prop comes from: this one, or by weight one of [member collections] (and so on)
 func pick_collection(random: RandomNumberGenerator) -> PropSet:

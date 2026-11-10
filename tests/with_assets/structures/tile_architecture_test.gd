@@ -124,3 +124,21 @@ func _is_opening(spot: Vector2) -> bool:
 	var cell: Vector2 = spot / _level.grid_size
 	var first: Structure = _level.get_placed_tile(Vector2i(cell.floor()))
 	return first != null and first.has_connection_to(Vector2i(cell.ceil()))
+
+func test_architecture_drops_in_first_with_its_own_animation() -> void:
+	var drop_animation: ModelAnimation = (load(DOORWAY_ARCHES) as PropSet).drop_animation
+	assert_object(drop_animation).is_not_null()
+	var architecture_count: int = 0
+	for tile: Structure in _tiles_within(2):
+		if not tile.model or not tile.model.has_node(NodePath(TileDecorations.NODE_NAME)): continue
+		var architecture_done: bool = false
+		for prop: Node in tile.model.get_node(NodePath(TileDecorations.NODE_NAME)).get_children():
+			var is_architecture: bool = prop.has_meta(TileDecorations.DROP_ANIMATION)
+			# Architecture comes first, everything after it drops with the decorations' own animation
+			assert_bool(is_architecture and architecture_done).is_false()
+			if not is_architecture:
+				architecture_done = true
+				continue
+			architecture_count += 1
+			assert_object(prop.get_meta(TileDecorations.DROP_ANIMATION)).is_same(drop_animation)
+	assert_int(architecture_count).is_greater(0)

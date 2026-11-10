@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://c6w4rdelrqgrk" path="res://data/structures/props/archways/pillar_arch_ruin_01.tscn" id="3_arch"]
 [ext_resource type="PackedScene" uid="uid://c7nx8t5nhfv04" path="res://data/structures/props/archways/pillar_arch_ruin_02.tscn" id="4_arch"]
 [ext_resource type="PackedScene" uid="uid://d17fp842iynet" path="res://data/structures/props/archways/pillar_arch_ruin_03.tscn" id="5_arch"]
+[ext_resource type="Resource" uid="uid://c5xyd11ftni1a" path="res://data/model_animations/drop_animation.tres" id="9_drop"]
 
 [resource]
 script = ExtResource("1_script")
@@ -15,3 +16,4 @@ ExtResource("5_arch"): 1.0
 })
 prop_scale = Vector3(1, 1, 1)
 material_override = ExtResource("2_material")
+drop_animation = ExtResource("9_drop")

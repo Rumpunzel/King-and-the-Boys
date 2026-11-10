@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d3dai7ve83b17" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_01.fbx" id="3_pillar"]
 [ext_resource type="PackedScene" uid="uid://cmhejj43i8wcj" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_01.fbx" id="4_pillar"]
 [ext_resource type="PackedScene" uid="uid://xlygivlyjkue" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Broken_02.fbx" id="5_pillar"]
+[ext_resource type="Resource" uid="uid://c5xyd11ftni1a" path="res://data/model_animations/drop_animation.tres" id="9_drop"]
 
 [resource]
 script = ExtResource("1_script")
@@ -15,3 +16,4 @@ ExtResource("5_pillar"): 0.2
 })
 prop_scale = Vector3(0.75, 0.75, 0.75)
 material_override = ExtResource("2_material")
+drop_animation = ExtResource("9_drop")

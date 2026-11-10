@@ -17,6 +17,8 @@ extends Resource
 const NODE_NAME: StringName = &"Decorations"
 ## Meta of a tile's decorations: the grid positions of the neighbours whose shared edge (an opening or a wall) it decided
 const DECIDED_EDGES: StringName = &"decided_edges"
+## Meta of a prop: the [ModelAnimation] its prop set plays as it drops in, if not [member drop_animation]
+const DROP_ANIMATION: StringName = &"drop_animation"
 ## The corners of a cell, as offsets from its grid position to the corner's index (see [method _add_pillars])
 const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
 
@@ -60,7 +62,7 @@ const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1)
 @export var walls: PropSet
 @export_range(0.0, 1.0) var wall_chance: float = 0.5
 @export_group("Animation")
-## Played on each prop as it drops in, one after another
+## Played on each prop as it drops in, one after another, unless its prop set has its own [member PropSet.drop_animation]
 @export var drop_animation: ModelAnimation = preload("uid://bf0msgn2okdfo")
 ## Seconds between two props dropping in
 @export var drop_interval: float = 0.08
@@ -68,11 +70,14 @@ const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1)
 ## Builds the props of [param tile], which must be in a [Level] and just revealed
 func create(tile: Structure) -> Node3D:
 	var decorations: Node3D = create_clutter(tile.profile.get_connections(0), tile.get_grid_position(), tile.level.grid_size)
+	var clutter_count: int = decorations.get_child_count()
 	var decided: Array[Vector2i] = []
 	decorations.set_meta(DECIDED_EDGES, decided)
 	_add_arches(decorations, tile, decided)
 	_add_walls(decorations, tile, decided)
 	_add_pillars(decorations, tile)
+	# Architecture drops in first, so it does not land on the clutter
+	for index: int in range(clutter_count, decorations.get_child_count()): decorations.move_child(decorations.get_child(index), index - clutter_count)
 	_add_room_props(decorations, tile)
 	return decorations
 
@@ -234,6 +239,8 @@ func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transfo
 	var prop: Model = Model.new()
 	prop.name = mesh.name
 	prop.transform = prop_transform
+	var animation: ModelAnimation = prop_set.drop_animation if prop_set.drop_animation else collection.drop_animation
+	if animation: prop.set_meta(DROP_ANIMATION, animation)
 	prop.add_child(mesh)
 	decorations.add_child(prop)
 
@@ -266,4 +273,4 @@ func _drop_each(decorations: Node3D) -> void:
 
 func _drop_one(prop: Model) -> void:
 	prop.visible = true
-	prop.play_model_animation(drop_animation)
+	prop.play_model_animation(prop.get_meta(DROP_ANIMATION, drop_animation) as ModelAnimation)
