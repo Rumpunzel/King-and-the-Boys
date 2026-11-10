@@ -23,6 +23,8 @@ signal randomized
 
 var _model: Model
 var _profile: Profile
+## Pressed while the preview shows passing, see [method _show_passed]
+var _pass_button: Button
 
 func _ready() -> void:
 	_show_collision_button.set_pressed_no_signal(_config.get_value_from_config("Preview", "show_collision", true))
@@ -144,6 +146,11 @@ func _show_animations() -> void:
 	var animations: Dictionary[String, ModelAnimation] = {
 		"Spawn": character_profile.spawn_animation, "Move": character_profile.move_animation, "Undo": character_profile.undo_animation,
 	}
+	var idle_button: Button = Button.new()
+	idle_button.text = "Idle"
+	idle_button.tooltip_text = "Rests in the idles from the first (or a random one), as after any other animation"
+	idle_button.pressed.connect(_show_idle)
+	_animation_buttons.add_child(idle_button)
 	for label: String in animations:
 		if not animations[label]: continue
 		var button: Button = Button.new()
@@ -157,6 +164,12 @@ func _show_animations() -> void:
 		pass_button.tooltip_text = "Passing, then passed until released"
 		pass_button.toggled.connect(_show_passed)
 		_animation_buttons.add_child(pass_button)
+		_pass_button = pass_button
+
+## Back to the idles right away, ending a pass shown without getting up
+func _show_idle() -> void:
+	if is_instance_valid(_pass_button): _pass_button.set_pressed_no_signal(false)
+	if is_instance_valid(_model): _model.rest_in(null)
 
 func _play_model_animation(model_animation: ModelAnimation) -> void:
 	if is_instance_valid(_model): _model.play_model_animation(model_animation)
