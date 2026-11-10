@@ -183,6 +183,19 @@ func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> 
 
 func get_placed_tile(grid_position: Vector2i) -> Structure: return _placed_tiles.get(grid_position)
 func get_placed_thing(grid_position: Vector2i) -> Thing: return _placed_things.get(grid_position)
+func get_placed_tiles() -> Array[Structure]: return _placed_tiles.values()
+
+## Every room of placed tiles, each as its cells (see [method get_room_cells]); each room once
+func get_rooms() -> Array[Array]:
+	var rooms: Array[Array] = []
+	var in_room: Dictionary[Vector2i, bool] = {}
+	for grid_position: Vector2i in _placed_tiles:
+		if in_room.has(grid_position): continue
+		var cells: Array[Vector2i] = get_room_cells(grid_position)
+		if cells.is_empty(): continue
+		for cell: Vector2i in cells: in_room[cell] = true
+		rooms.append(cells)
+	return rooms
 
 ## @returns the thing on [param grid_position], or else one on a corner of it
 func get_thing_near(grid_position: Vector2i) -> Thing:

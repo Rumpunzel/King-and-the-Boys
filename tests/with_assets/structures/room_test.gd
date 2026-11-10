@@ -100,3 +100,25 @@ func test_a_centrepiece_shows_with_the_first_of_its_tiles() -> void:
 	assert_int(thing.status).is_equal(Thing.Status.PLACED)
 	_level.get_placed_tile(Vector2i(-1, 1)).shown_status = Structure.Status.REVEALED
 	assert_int(thing.status).is_equal(Thing.Status.REVEALED)
+
+func test_rooms_are_listed_once_each() -> void:
+	var cells: Array[Vector2i] = _spawn_room(Structure.Status.PLACED)
+	var rooms: Array[Array] = _level.get_rooms()
+	assert_int(rooms.size()).is_equal(1)
+	assert_array(rooms[0]).contains_exactly_in_any_order(cells)
+	assert_int(_level.get_placed_tiles().size()).is_equal(cells.size())
+
+func test_the_debug_drawings_toggle() -> void:
+	var debug: LevelDebug = _level.find_child("LevelDebug") as LevelDebug
+	assert_object(debug).is_not_null()
+	assert_bool(debug.shown).override_failure_message("Hidden at first").is_false()
+	var toggle: InputEventAction = InputEventAction.new()
+	toggle.action = LevelDebug.ACTION
+	toggle.pressed = true
+	debug.call("_unhandled_input", toggle)
+	assert_bool(debug.shown).is_true()
+	_spawn_room(Structure.Status.REVEALED)
+	# Drawing a frame of it does not fail
+	await await_idle_frame()
+	debug.call("_unhandled_input", toggle)
+	assert_bool(debug.shown).is_false()
