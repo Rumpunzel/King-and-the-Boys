@@ -8,6 +8,17 @@
 [ext_resource type="Resource" uid="uid://80ut5hvuftsw" path="res://data/model_animations/flip_animation.tres" id="5_6yybe"]
 [ext_resource type="Resource" uid="uid://dam8aq2rlu0sm" path="res://data/structures/tiles/room/room.tres" id="5_uyw6g"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="6_wldt0"]
+[ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_table"]
+[ext_resource type="Resource" uid="uid://8y0bv223d7px" path="res://data/things/centrepiece_spawn_table.tres" id="8_centrepieces"]
+[ext_resource type="Script" uid="uid://ds4gq17440h4n" path="res://engine/objects/nested_spawn_table.gd" id="9_nested"]
+
+[sub_resource type="Resource" id="Resource_centrepieces"]
+script = ExtResource("9_nested")
+_table_distribution = Dictionary[ExtResource("7_table"), float]({
+null: 4.0,
+ExtResource("8_centrepieces"): 1.0
+})
+metadata/_custom_type_script = "uid://ds4gq17440h4n"
 
 [resource]
 script = ExtResource("6_wldt0")
@@ -22,6 +33,7 @@ _restriction_up = ExtResource("3_btghr")
 _restriction_right = ExtResource("3_btghr")
 _restriction_down = ExtResource("3_btghr")
 _restriction_left = ExtResource("3_btghr")
+_spawn_table = SubResource("Resource_centrepieces")
 name = "Room Center"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_e84qc")])

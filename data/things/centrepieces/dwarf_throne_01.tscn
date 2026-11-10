@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cn0u6ris3fxto"]
+
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="1_model"]
+[ext_resource type="PackedScene" uid="uid://c3dmsrn6n0222" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Dwarf_Throne_01.fbx" id="2_throne"]
+
+[node name="DwarfThrone01" type="Node3D"]
+script = ExtResource("1_model")
+metadata/_custom_type_script = "uid://bpkm2ws12sljg"
+
+[node name="Throne" parent="." instance=ExtResource("2_throne")]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0, 0.03, 0)
