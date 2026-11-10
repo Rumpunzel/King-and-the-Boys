@@ -330,20 +330,25 @@ func _start_move(target_position: Vector3, target_rotation: float) -> void:
 	var facing_vector: Vector3 = Vector3(sin(target_rotation), 0.0, cos(target_rotation))
 	_move_backwards = (target_position - global_position).normalized().dot(facing_vector) < -0.5
 	var animation: ModelAnimation = profile.undo_animation if _move_backwards and profile.undo_animation else profile.move_animation
-	# From standing: the hop-in feel, a little back, then forward into the tile
-	_run_move(target_position, animation, Tween.TRANS_BACK, Tween.EASE_IN, false)
+	# From standing, by the animation's travel settings, e.g. the hop's: a little back, then forward into the tile
+	_run_move(target_position, animation, false)
 
 ## Redirects the move under way to [param target_position], from where the figure is: at most one step's time
 ## is left after any step, so quick steps take hardly longer than one, and corners may be cut
 func _extend_move(target_position: Vector3) -> void:
 	_move_backwards = false
-	_run_move(target_position, profile.move_animation, Tween.TRANS_SINE, Tween.EASE_IN_OUT, true)
+	_run_move(target_position, profile.move_animation, true)
 
-func _run_move(target_position: Vector3, animation: ModelAnimation, transition: Tween.TransitionType, easing: Tween.EaseType, continuing: bool) -> void:
+## Travels by [param animation]'s travel settings: as it starts, or redirected ([param continuing]), see [ModelAnimation]
+func _run_move(target_position: Vector3, animation: ModelAnimation, continuing: bool) -> void:
+	var transition: Tween.TransitionType = animation.redirect_transition if continuing else animation.travel_transition
+	var easing: Tween.EaseType = animation.redirect_ease if continuing else animation.travel_ease
+	# A redirected move is under way already
+	var delay: float = 0.0 if continuing else animation.duration * animation.travel_delay
 	_move_target = target_position
 	if _move_tween: _move_tween.kill()
 	_move_tween = create_tween()
-	_move_tween.tween_property(self, "global_position", target_position, animation.duration).set_trans(transition).set_ease(easing)
+	_move_tween.tween_property(self, "global_position", target_position, animation.duration - delay).set_trans(transition).set_ease(easing).set_delay(delay)
 	_move_tween.tween_callback(_on_move_finished)
 	# A redirected move continues the hop: it stays up and lands with the move, without a new lean back
 	if not model: return

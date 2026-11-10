@@ -4,11 +4,14 @@
 
 [resource]
 script = ExtResource("1_script")
-duration = 0.75
 _wind_up = 0.2
 _tilt = -0.45
 _tilt_time = 0.2
 _tilt_release = 0.3
+duration = 0.75
+travel_transition = 1
+travel_ease = 2
+travel_delay = 0.2
 body_animation = &"AnimationLibrary_Godot/Roll"
 body_speed = 1.4
 body_delay = 0.1

@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 
 const MOVE: String = "res://data/model_animations/miniature_move_animation.tres"
 const SPAWN: String = "res://data/model_animations/high_bounce_animation.tres"
+const ROGUE_MOVE: String = "res://data/model_animations/heroes/rogue_move.tres"
 const HEROES: Array[String] = ["knight", "rogue", "mystic", "soldier", "elf", "dwarf"]
 
 func _player_of(model: Model) -> AnimationPlayer:
@@ -91,7 +92,7 @@ func test_every_hero_moves_spawns_and_passes_in_their_own_way() -> void:
 func test_a_wind_up_leans_back_on_the_spot_before_lifting_off() -> void:
 	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
 	add_child(model)
-	var rogue_move: ModelAnimation = load("res://data/model_animations/heroes/rogue_move.tres")
+	var rogue_move: ModelAnimation = load(ROGUE_MOVE)
 	var wind_up: float = rogue_move.get("_wind_up")
 	assert_float(wind_up).is_greater(0.0)
 	# Loading the meshes may stall the first frames, which would skip past the short wind-up
@@ -109,3 +110,13 @@ func test_a_wind_up_leans_back_on_the_spot_before_lifting_off() -> void:
 	assert_float(lean).override_failure_message("Leaning back").is_less(-0.05)
 	await await_millis(int(rogue_move.duration * 500.0))
 	assert_float(model.position.y).is_greater(0.2)
+
+func test_figures_travel_as_their_move_says() -> void:
+	var hop: ModelAnimation = load(MOVE)
+	# The hop pulls back a little before it goes forward; redirected, it travels on smoothly
+	assert_int(hop.travel_transition).is_equal(Tween.TRANS_BACK)
+	assert_int(hop.travel_ease).is_equal(Tween.EASE_IN)
+	assert_int(hop.redirect_transition).is_equal(Tween.TRANS_SINE)
+	var rogue_move: ModelAnimation = load(ROGUE_MOVE)
+	assert_int(rogue_move.travel_transition).override_failure_message("A roll does not pull back").is_not_equal(Tween.TRANS_BACK)
+	assert_float(rogue_move.travel_delay).override_failure_message("The rogue stays put while winding up").is_equal_approx(rogue_move.get("_wind_up") as float, 0.001)
