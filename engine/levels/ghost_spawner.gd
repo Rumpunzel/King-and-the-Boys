@@ -43,7 +43,7 @@ func spawn_player_ghost(player: Player) -> bool:
 	assert(all_player_spawn_points.size() == 1)
 	var player_spawn_point: PlayerSpawnPoint = all_player_spawn_points.front()
 	assert(player_spawn_point)
-	var character_data: Dictionary[StringName, Variant] = player_spawn_point.get_character_data(player.character, 0)
+	var character_data: Dictionary[StringName, Variant] = player_spawn_point.get_character_data(player.character, 0, player.body)
 	var player_ghost_data: Dictionary[StringName, Variant] = {
 		PlayerGhost.PLAYER_ID: player.player_id,
 		PlayerGhost.CHARACTER_DATA: character_data,
@@ -103,6 +103,7 @@ func _on_player_created(player: Player) -> void:
 		return
 	var existing_player_ghost: PlayerGhost = _player_ghosts[player.player_id]
 	player.character = existing_player_ghost.character.profile
+	player.body = existing_player_ghost.character.body
 	existing_player_ghost.player = player
 
 func _on_peer_disconnected(_player_id: int) -> void:

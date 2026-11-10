@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://bebiwa8prxkbm"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="Material" uid="uid://dojugi1n63fxu" path="res://data/structures/props/dungeon_realms_material.tres" id="2_material"]
+[ext_resource type="PackedScene" uid="uid://cgg2vsang5n8x" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Barrel_01.fbx" id="3_prop"]
+[ext_resource type="PackedScene" uid="uid://bm4ritwdpkgme" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Barrel_Small_01.fbx" id="4_prop"]
+[ext_resource type="PackedScene" uid="uid://bfwc6doxsqt5a" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Crate_01.fbx" id="5_prop"]
+[ext_resource type="PackedScene" uid="uid://dhrnqifi5brau" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Crate_Broken_01.fbx" id="6_prop"]
+[ext_resource type="PackedScene" uid="uid://cuw816wd2oxrm" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Dwarf_Weapon_Barrel_01.fbx" id="7_prop"]
+[ext_resource type="PackedScene" uid="uid://gu3bwc0khsx4" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Anvil_01.fbx" id="8_prop"]
+[ext_resource type="PackedScene" uid="uid://bb44dn71j8nf5" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Dwarf_Table_Small_Broken_01.fbx" id="9_prop"]
+[ext_resource type="PackedScene" uid="uid://cxgqdmt8ev78u" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Crystal_Rock_A_01.fbx" id="10_prop"]
+[ext_resource type="PackedScene" uid="uid://q5s26de2gb12" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Crate_Stack_01.fbx" id="11_prop"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("3_prop"): 1.0,
+ExtResource("4_prop"): 1.0,
+ExtResource("5_prop"): 0.8,
+ExtResource("6_prop"): 0.8,
+ExtResource("7_prop"): 0.6,
+ExtResource("8_prop"): 0.3,
+ExtResource("9_prop"): 0.4,
+ExtResource("10_prop"): 0.4,
+ExtResource("11_prop"): 0.3
+})
+prop_scale = Vector3(0.6, 0.6, 0.6)
+center_props = true
+material_override = ExtResource("2_material")

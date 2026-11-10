@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dojugi1n63fxu"]
+
+[ext_resource type="Shader" uid="uid://bjskcyrt4rxbv" path="res://engine/objects/structures/occludable.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" uid="uid://cl52s4iwlb3rf" path="res://assets/polygon_dungeon_realms/SourceFiles/Textures/Dungeons_2_Texture_01_A.png" id="2_albedo"]
+
+[resource]
+resource_name = "Dungeon Realms"
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/albedo_texture = ExtResource("2_albedo")
+shader_parameter/roughness = 0.8
+shader_parameter/saturated_glow = 0.0
+shader_parameter/clear_radius = 0.8
+shader_parameter/fade_width = 1.2

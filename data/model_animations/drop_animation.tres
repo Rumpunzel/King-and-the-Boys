@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ModelDropAnimation" format=3 uid="uid://c5xyd11ftni1a"]
+
+[ext_resource type="Script" uid="uid://dd5xf6medk2y8" path="res://engine/objects/model/model_drop_animation.gd" id="1_drop"]
+
+[resource]
+script = ExtResource("1_drop")
+duration = 0.9
+metadata/_custom_type_script = "uid://dd5xf6medk2y8"

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://oitmmh7nnns2"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://bn5ulw1tmi800" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Rug_01.tscn" id="2_prop"]
+[ext_resource type="PackedScene" uid="uid://c71ouj672gof6" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Rug_01_Alt_01.tscn" id="3_prop"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("2_prop"): 0.1,
+ExtResource("3_prop"): 1.0
+})
+prop_scale = Vector3(1.4, 1.4, 1.4)

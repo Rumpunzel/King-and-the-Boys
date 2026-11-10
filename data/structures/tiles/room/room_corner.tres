@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://b6wth35w4tdk2"]
 
+[ext_resource type="Resource" uid="uid://boyg6u55haqfd" path="res://data/structures/tiles/dungeon_decorations.tres" id="1_decorations"]
 [ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_p7emq"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/tiles/room/room_tile.tscn" id="2_kgp5h"]
 [ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="3_p7emq"]
@@ -23,6 +24,7 @@ metadata/_custom_type_script = "uid://ds4gq17440h4n"
 script = ExtResource("6_ijj4h")
 group = 2
 room_type = ExtResource("5_4n6w1")
+decorations = ExtResource("1_decorations")
 _connection_up = true
 _connection_right = true
 _restriction_down = ExtResource("3_p7emq")

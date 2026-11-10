@@ -105,32 +105,32 @@ type = ExtResource("25_4btib")
 appearance = SubResource("Resource_4ilup")
 name = "Hat 02 00"
 
-[sub_resource type="Resource" id="Resource_76g5d"]
+[sub_resource type="Resource" id="Resource_fggg0"]
 script = ExtResource("10_sy2u4")
 part = 9
 male_mesh = ExtResource("27_n46ve")
 female_mesh = ExtResource("26_jcc6m")
 
-[sub_resource type="Resource" id="Resource_xlv8o"]
+[sub_resource type="Resource" id="Resource_sy2u4"]
 script = ExtResource("10_sy2u4")
 part = 10
 male_mesh = ExtResource("29_hbmqg")
 female_mesh = ExtResource("28_v0rw4")
 
-[sub_resource type="Resource" id="Resource_k62gp"]
+[sub_resource type="Resource" id="Resource_e4agc"]
 script = ExtResource("10_sy2u4")
 part = 11
 male_mesh = ExtResource("31_qg6r2")
 female_mesh = ExtResource("30_0yij0")
 
-[sub_resource type="Resource" id="Resource_my6mf"]
+[sub_resource type="Resource" id="Resource_ncjv4"]
 script = ExtResource("12_ncjv4")
-parts = Array[ExtResource("10_sy2u4")]([SubResource("Resource_76g5d"), SubResource("Resource_xlv8o"), SubResource("Resource_k62gp")])
+parts = Array[ExtResource("10_sy2u4")]([SubResource("Resource_fggg0"), SubResource("Resource_sy2u4"), SubResource("Resource_e4agc")])
 
-[sub_resource type="Resource" id="Resource_e557k"]
+[sub_resource type="Resource" id="Resource_jio5e"]
 script = ExtResource("13_jio5e")
 type = ExtResource("32_yfyrt")
-appearance = SubResource("Resource_my6mf")
+appearance = SubResource("Resource_ncjv4")
 name = "Leg Armor 28-19 00"
 
 [sub_resource type="Resource" id="Resource_hh650"]
@@ -184,7 +184,7 @@ intelligence = 5
 starting_head = SubResource("Resource_cbtai")
 starting_torso = SubResource("Resource_jcqoy")
 starting_hands = SubResource("Resource_1v0ni")
-starting_legs = SubResource("Resource_e557k")
+starting_legs = SubResource("Resource_jio5e")
 starting_back = SubResource("Resource_gdyqi")
 starting_waist = SubResource("Resource_am6ym")
 name = "Mystic"

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="TileDecorations" format=3 uid="uid://boyg6u55haqfd"]
+
+[ext_resource type="Script" uid="uid://b1uid0fmgjyie" path="res://engine/objects/structures/tile_decorations.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="2_8c0y5"]
+[ext_resource type="Resource" uid="uid://bjafnf5vmyki4" path="res://data/structures/props/dungeon_clutter.tres" id="2_clutter"]
+[ext_resource type="Resource" uid="uid://db08p2a1kv7wb" path="res://data/structures/props/dungeon_storage.tres" id="3_storage"]
+[ext_resource type="Resource" uid="uid://cv041ktdn6jph" path="res://data/structures/props/dungeon_doorway_arches.tres" id="4_doorways"]
+[ext_resource type="Resource" uid="uid://d08bvlx052dw3" path="res://data/structures/props/dungeon_ruined_arches.tres" id="5_ruins"]
+[ext_resource type="Resource" uid="uid://bifb83r2doed1" path="res://data/structures/props/dungeon_room_pillars.tres" id="6_pillars"]
+[ext_resource type="Resource" uid="uid://jluba74jliwr" path="res://data/structures/props/dungeon_lights.tres" id="8_lights"]
+[ext_resource type="Resource" uid="uid://oitmmh7nnns2" path="res://data/structures/props/room_rugs.tres" id="9_rugs"]
+[ext_resource type="Resource" uid="uid://tj2yln8n45jb" path="res://data/structures/props/room_ambience.tres" id="10_ambience"]
+
+[resource]
+script = ExtResource("1_script")
+edge_props = ExtResource("2_clutter")
+corner_props = ExtResource("3_storage")
+lights = ExtResource("8_lights")
+room_floors = ExtResource("9_rugs")
+room_floor_chance = 0.05
+room_ambience = ExtResource("10_ambience")
+doorway_arches = ExtResource("4_doorways")
+corridor_arches = ExtResource("5_ruins")
+room_pillars = ExtResource("6_pillars")

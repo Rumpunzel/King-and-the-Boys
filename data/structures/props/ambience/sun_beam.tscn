@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://otak7ejjugm6"]
+
+[ext_resource type="PackedScene" uid="uid://dv3hf3urlj7mf" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Sun_Beam_01.tscn" id="1_piece"]
+
+[node name="SunBeam" type="Node3D"]
+
+[node name="Beam" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0, 1.4, 0)
+
+[node name="Light" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4, 0)
+light_color = Color(1, 0.94, 0.8, 1)
+light_energy = 3.0
+spot_range = 5.0
+spot_angle = 14.0
+spot_angle_attenuation = 0.5
+distance_fade_enabled = true
+distance_fade_begin = 20.0
+distance_fade_length = 5.0

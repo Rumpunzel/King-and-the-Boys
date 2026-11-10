@@ -20,6 +20,8 @@ extends PanelContainer
 @export var _player_info: PlayerInfo
 @export var _ready_button: ToggleButton
 
+func get_character_panel() -> CharacterPanel: return _character_panel
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not _character_panel is CharacterSelection: return
 	if event is InputEventKey and (event as InputEventKey).as_text_key_label() == "R" and (event as InputEventKey).is_pressed():

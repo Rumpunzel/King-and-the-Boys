@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ThingProfile" format=3 uid="uid://c42mc4ie0lctr"]
+
+[ext_resource type="PackedScene" uid="uid://cn0u6ris3fxto" path="res://data/things/centrepieces/dwarf_throne_01.tscn" id="1_model"]
+[ext_resource type="Resource" uid="uid://c5xyd11ftni1a" path="res://data/model_animations/drop_animation.tres" id="2_drop"]
+[ext_resource type="Script" uid="uid://dkumiyoi57n5x" path="res://engine/objects/things/thing_profile.gd" id="3_script"]
+
+[resource]
+script = ExtResource("3_script")
+mass = 1200.0
+spawn_animation = ExtResource("2_drop")
+name = "Dwarven Throne"
+_model_variations = Array[PackedScene]([ExtResource("1_model")])
+metadata/_custom_type_script = "uid://dkumiyoi57n5x"

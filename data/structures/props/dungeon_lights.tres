@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://jluba74jliwr"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://d4nh43eoiavr7" path="res://data/structures/props/lights/standing_torch.tscn" id="2_prop"]
+[ext_resource type="PackedScene" uid="uid://cmawns2y3tdby" path="res://data/structures/props/lights/brazier.tscn" id="3_prop"]
+[ext_resource type="PackedScene" uid="uid://yeru0qwxc1tk" path="res://data/structures/props/lights/candle_stand.tscn" id="4_prop"]
+[ext_resource type="PackedScene" uid="uid://b3rkhykpyeixu" path="res://data/structures/props/lights/floor_candles.tscn" id="5_prop"]
+[ext_resource type="Resource" uid="uid://c7erdy8qpnb1o" path="res://data/structures/props/crystals.tres" id="6_crystals"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("2_prop"): 1.0,
+ExtResource("3_prop"): 0.6,
+ExtResource("4_prop"): 0.5,
+ExtResource("5_prop"): 0.8
+})
+collections = Dictionary[ExtResource("1_script"), float]({
+ExtResource("6_crystals"): 0.8
+})
+prop_scale = Vector3(1, 1, 1)

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ProfileSpawnTable" format=3 uid="uid://8y0bv223d7px"]
+
+[ext_resource type="Script" uid="uid://dknjlw5u5cf63" path="res://engine/objects/profile.gd" id="1_profile"]
+[ext_resource type="Resource" uid="uid://4gxlas34qp2u" path="res://data/things/centrepieces/sarcophagus.tres" id="2_sarcophagus"]
+[ext_resource type="Resource" uid="uid://c42mc4ie0lctr" path="res://data/things/centrepieces/dwarf_throne.tres" id="3_throne"]
+[ext_resource type="Script" uid="uid://cav6n30acofc" path="res://engine/objects/profle_spawn_table.gd" id="4_script"]
+
+[resource]
+script = ExtResource("4_script")
+_profile_distribution = Dictionary[ExtResource("1_profile"), float]({
+ExtResource("2_sarcophagus"): 2.0,
+ExtResource("3_throne"): 1.0
+})
+metadata/_custom_type_script = "uid://cav6n30acofc"

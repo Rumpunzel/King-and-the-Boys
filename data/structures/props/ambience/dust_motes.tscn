@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b0f1fcmop5hlh"]
+
+[ext_resource type="PackedScene" uid="uid://3xw0gm70vi4p" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Dust_01.tscn" id="1_piece"]
+
+[node name="DustMotes" type="Node3D"]
+
+[node name="Dust" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 1, 0)
+local_coords = true

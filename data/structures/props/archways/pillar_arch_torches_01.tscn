@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://crfghvauhhxv0"]
+
+[ext_resource type="PackedScene" uid="uid://d3dai7ve83b17" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_01.fbx" id="1_piece"]
+[ext_resource type="PackedScene" uid="uid://dlfjlgt8fxh34" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Bld_Ruin_Pillar_Arch_01.fbx" id="2_piece"]
+[ext_resource type="PackedScene" uid="uid://cc0wugygjoix7" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Dwarf_Torch_01.fbx" id="3_torch"]
+[ext_resource type="PackedScene" uid="uid://cbh8li7jllmet" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Fire_Small_01.tscn" id="4_fire"]
+[ext_resource type="Script" uid="uid://3ykb13nhls36" path="res://engine/objects/structures/flickering_light.gd" id="9_flicker"]
+
+[node name="PillarArchTorches01" type="Node3D"]
+
+[node name="LeftPillar01" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.9, 0, 0)
+
+[node name="LeftPillar02" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.9, 1.2, 0)
+
+[node name="RightPillar02" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.9, 0, 0)
+
+[node name="RightPillar03" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.9, 1.2, 0)
+
+[node name="Arch" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.975, 2.952, 0)
+
+[node name="LeftTorch" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.45, 0.18)
+
+[node name="Torch" parent="LeftTorch" instance=ExtResource("3_torch")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
+
+[node name="Fire" parent="LeftTorch" instance=ExtResource("4_fire")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0.35, 0.294)
+local_coords = true
+
+[node name="FX_Fire_Embers_01" parent="LeftTorch/Fire" index="0"]
+local_coords = true
+
+[node name="Light" type="OmniLight3D" parent="LeftTorch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0.45)
+light_color = Color(1, 0.62, 0.3, 1)
+light_energy = 0.9
+omni_range = 3.0
+omni_attenuation = 1.5
+distance_fade_enabled = true
+distance_fade_begin = 20.0
+distance_fade_length = 5.0
+script = ExtResource("9_flicker")
+flicker = 0.25
+speed = 8.0
+
+[node name="RightTorch" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.45, 0.18)
+
+[node name="Torch" parent="RightTorch" instance=ExtResource("3_torch")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
+
+[node name="Fire" parent="RightTorch" instance=ExtResource("4_fire")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0.35, 0.294)
+local_coords = true
+
+[node name="FX_Fire_Embers_01" parent="RightTorch/Fire" index="0"]
+local_coords = true
+
+[node name="Light" type="OmniLight3D" parent="RightTorch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0.45)
+light_color = Color(1, 0.62, 0.3, 1)
+light_energy = 0.9
+omni_range = 3.0
+omni_attenuation = 1.5
+distance_fade_enabled = true
+distance_fade_begin = 20.0
+distance_fade_length = 5.0
+script = ExtResource("9_flicker")
+flicker = 0.25
+speed = 8.0

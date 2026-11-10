@@ -34,7 +34,18 @@ const NAME: StringName = "player_name"
 
 @export var character: CharacterProfile:
 	set(new_character):
+		if new_character == character: return
 		character = new_character
+		if Engine.is_editor_hint(): return
+		# The player who picks rolls the look; peers receive it through the synchronizer
+		if is_local_player(): body = character.roll_body(0) if character else {}
+		player_info_changed.emit()
+
+## The look of [member character] this player rolled when picking it: {part: [int] -> mesh [ResourceId]: [String]}, see
+## [method CharacterProfile.roll_body]. Shown in the lobby and used in game if it fits (see [method CharacterProfile.create_character_data])
+var body: Dictionary = {}:
+	set(new_body):
+		body = new_body
 		if Engine.is_editor_hint(): return
 		player_info_changed.emit()
 

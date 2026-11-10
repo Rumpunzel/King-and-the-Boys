@@ -91,7 +91,13 @@ var model: Model:
 		if not model: return
 		add_child(model, true)
 
-var level: Level
+var level: Level:
+	set(new_level):
+		level = new_level
+		# Spawned and loaded tiles may be revealed before they know their level; they are dressed once they do
+		if shown_status != Status.REVEALED or not model: return
+		var decorations: Node3D = _decorate()
+		if decorations: profile.decorations.drop(decorations)
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
@@ -204,10 +210,21 @@ func _show_model() -> void:
 			model.visible = true
 			model.play_model_animation(profile.discover_animation)
 		Status.REVEALED:
+			var decorations: Node3D = _decorate()
 			model.visible = true
 			model.remove_material_override(_hidden_material)
-			model.play_model_animation(profile.reveal_animation)
+			var reveal: Tween = model.play_model_animation(profile.reveal_animation)
+			# The props drop in once the tile has turned over
+			if decorations: profile.decorations.drop(decorations, reveal)
 		_: push_error("Status %s not implemented!" % shown_status)
+
+## Dresses the model with the profile's props the first time it is revealed; they are part of the model, so they turn with it
+## @returns the new props, or [code]null[/code] if the model already has them or the profile none
+func _decorate() -> Node3D:
+	if not profile.decorations or not level or model.has_node(NodePath(TileDecorations.NODE_NAME)): return null
+	var decorations: Node3D = profile.decorations.create(self)
+	model.add_child(decorations)
+	return decorations
 
 func _get_direction_to_grid_position(grid_position: Vector2i) -> Level.Direction: return Level.get_direction(get_grid_position(), grid_position)
 

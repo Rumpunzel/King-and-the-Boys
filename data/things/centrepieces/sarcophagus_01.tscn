@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://tpg0u0gp18hr"]
+
+[ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="1_model"]
+[ext_resource type="PackedScene" uid="uid://bmssrgi0n1qo7" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Sarcophagus_01.fbx" id="2_body"]
+[ext_resource type="PackedScene" uid="uid://bstwp6gy8egws" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Sarcophagus_01_Lid.fbx" id="3_lid"]
+
+[node name="Sarcophagus01" type="Node3D"]
+script = ExtResource("1_model")
+metadata/_custom_type_script = "uid://bpkm2ws12sljg"
+
+[node name="Sarcophagus" parent="." instance=ExtResource("2_body")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0, 0)
+
+[node name="Lid" parent="." instance=ExtResource("3_lid")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0.54, 0)

@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="10_irqko"]
 [ext_resource type="PackedScene" uid="uid://dlla8034gqdsb" path="res://engine/player/haunt_camera.tscn" id="10_jlh3c"]
 [ext_resource type="Script" path="res://engine/turns/tile_highlight.gd" id="12_highlight"]
+[ext_resource type="Script" uid="uid://c00i3uyt5qol5" path="res://engine/player/occlusion_target.gd" id="20_occlusion"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p0vpi"]
 properties/0/path = NodePath("InputReader:direction_input")
@@ -88,6 +89,10 @@ align_position_with_view = Callable()
 align_rotation_with_view = Callable()
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
+[node name="OcclusionTarget" type="Node" parent="." unique_id=1468322091 node_paths=PackedStringArray("_player_ghost")]
+script = ExtResource("20_occlusion")
+_player_ghost = NodePath("..")
+
 [node name="TopDownCamera" type="Camera3D" parent="." unique_id=113072833]
 physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 0.6246951, 0.78086877, 0, -0.78086877, 0.6246951, 0, 20, 16)
@@ -111,11 +116,12 @@ type = 64
 collision_layer = 1048576
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Ghost" unique_id=772574322]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 2, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 4, 1)
 light_color = Color(0.99999994, 0.7550197, 0.57437825, 1)
-light_energy = 4.0
+light_energy = 5.5
+light_size = 0.4
 shadow_enabled = true
-omni_range = 10.0
+omni_range = 12.0
 
 [connection signal="available_interactions_changed" from="StateMachine" to="HUD" method="_on_available_interactions_changed"]
 

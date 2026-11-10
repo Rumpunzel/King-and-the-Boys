@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ThingProfile" format=3 uid="uid://4gxlas34qp2u"]
+
+[ext_resource type="PackedScene" uid="uid://tpg0u0gp18hr" path="res://data/things/centrepieces/sarcophagus_01.tscn" id="1_model"]
+[ext_resource type="Resource" uid="uid://c5xyd11ftni1a" path="res://data/model_animations/drop_animation.tres" id="2_drop"]
+[ext_resource type="Script" uid="uid://dkumiyoi57n5x" path="res://engine/objects/things/thing_profile.gd" id="3_script"]
+
+[resource]
+script = ExtResource("3_script")
+mass = 800.0
+spawn_animation = ExtResource("2_drop")
+name = "Sarcophagus"
+_model_variations = Array[PackedScene]([ExtResource("1_model")])
+metadata/_custom_type_script = "uid://dkumiyoi57n5x"

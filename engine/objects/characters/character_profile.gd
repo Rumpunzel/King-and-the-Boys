@@ -116,10 +116,15 @@ func create(variation: int, spawn_transform: Transform3D) -> Character:
 	return new_character
 
 ## Rolls the variation, the body and [member random_equipment], so only call this where character data is authored, i.e. on the server
-func create_character_data(variation: int, spawn_transform: Transform3D) -> Dictionary[StringName, Variant]:
+## [param chosen_body] (e.g. the one a player picked in the lobby, see [member Player.body]) is used if it is a complete body of the model
+func create_character_data(variation: int, spawn_transform: Transform3D, chosen_body: Dictionary = {}) -> Dictionary[StringName, Variant]:
 	var rolled_variation: int = variation if variation >= 0 else get_random_variation()
 	var model: Model = create_model(rolled_variation)
-	var body: Dictionary = model_configuration.roll(model as ModularModel) if model is ModularModel and model_configuration else {}
+	var body: Dictionary = {}
+	if model is ModularModel:
+		var modular_model: ModularModel = model
+		if modular_model.is_complete_body(chosen_body): body = chosen_body.duplicate()
+		elif model_configuration: body = model_configuration.roll(modular_model)
 	if model: model.free()
 	var equipment_ids: PackedStringArray = []
 	for equipment_look: EquipmentLook in roll_equipment():
@@ -158,6 +163,13 @@ func create_model(variation: int) -> Model:
 	if model is ModularModel and Engine.is_editor_hint(): setup_model(model as ModularModel)
 	return model
 
+## Rolls a body for [param variation]'s model, see [method ModelConfigurationRandom.roll]; empty for models without one
+func roll_body(variation: int) -> Dictionary:
+	var model: Model = create_model(variation)
+	var body: Dictionary = model_configuration.roll(model as ModularModel) if model is ModularModel and model_configuration else {}
+	if model: model.free()
+	return body
+
 ## Rolls the body and [member random_equipment] locally, for previews only; later previews keep that roll, so editing the
 ## profile (e.g. its outfit) does not change the face, until [param reroll] asks for a new one
 func setup_model(model: ModularModel, reroll: bool = false) -> void:
@@ -166,12 +178,17 @@ func setup_model(model: ModularModel, reroll: bool = false) -> void:
 		_preview_model_path = model.scene_file_path
 		_preview_body = model_configuration.roll(model) if model_configuration else {}
 		_preview_random_equipment = _roll_random_equipment()
-	model.apply_body(_preview_body)
+	dress_model(model, _preview_body, _preview_random_equipment)
+
+## Shows [param body] and the starting equipment plus [param extra_equipment] on [param model], e.g. a player's body in the lobby
+func dress_model(model: ModularModel, body: Dictionary, extra_equipment: Array[EquipmentLook] = []) -> void:
+	model.reset_gear()
+	model.apply_body(body)
 	# A detached [CharacterEquipment] applies the same slot and blocking rules as in game
 	var preview_equipment: CharacterEquipment = CharacterEquipment.new()
 	preview_equipment.apply_to(model)
 	var shown_equipment: Array[EquipmentLook] = get_starting_equipment()
-	shown_equipment.append_array(_preview_random_equipment)
+	shown_equipment.append_array(extra_equipment)
 	for equipment_look: EquipmentLook in shown_equipment: preview_equipment.equip(equipment_look)
 	preview_equipment.free()
 

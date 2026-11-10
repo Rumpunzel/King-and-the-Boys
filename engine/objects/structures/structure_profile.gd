@@ -11,6 +11,8 @@ enum Groups {
 
 @export var group: Groups = Groups.BUILDING
 @export var room_type: RoomType
+## Props the tile is dressed with once revealed, see [TileDecorations]
+@export var decorations: TileDecorations
 @export var grid_cell_extents: Vector3i = Vector3i.ONE
 @export_group("Tile Spots", "tile_spot")
 ## Where pieces stand on the tile, in order of preference; things hold the first spot

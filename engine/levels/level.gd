@@ -375,9 +375,10 @@ func _create_connector(tile_position: Vector3, connection: Direction) -> void:
 	add_child(tile_connector)
 
 func _on_structure_created(structure: Structure) -> void:
-	structure.level = self
 	var tile_grid_position: Vector2i = world_to_grid_position(structure.global_position)
+	# Registered first: tiles revealed already (loaded, joined) are dressed as they get their level, and look for themselves
 	_placed_tiles[tile_grid_position] = structure
+	structure.level = self
 	for connection: Direction in structure.get_connections():
 		_create_connection(structure, connection)
 		_create_connector(structure.global_position, connection)
