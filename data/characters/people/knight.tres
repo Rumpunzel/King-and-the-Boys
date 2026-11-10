@@ -254,6 +254,8 @@ name = "Belt 12"
 
 [resource]
 script = ExtResource("5_ltdy7")
+gear_primary_color = Color(0.173, 0.290, 0.549, 1)
+gear_secondary_color = Color(0.851, 0.698, 0.290, 1)
 intelligence = 2
 model_configuration = ExtResource("5_0vpuq")
 starting_head = SubResource("Resource_fgqtr")
@@ -272,7 +274,7 @@ passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("55_t8ti5")
 name = "Knight"
 portrait = ExtResource("5_63j5q")
-color = Color(0.878431, 0.878431, 0.878431, 1)
+color = Color(0.227, 0.400, 0.784, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_u6fvh")])
 heads_up_display_offset = Vector3(0, 2.25, 0)
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

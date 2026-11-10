@@ -213,6 +213,8 @@ name = "Belt 08"
 
 [resource]
 script = ExtResource("5_60tc1")
+gear_primary_color = Color(0.290, 0.173, 0.439, 1)
+gear_secondary_color = Color(0.561, 0.816, 0.878, 1)
 strength = 2
 agility = 2
 intelligence = 5
@@ -233,7 +235,7 @@ passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("50_psbju")
 name = "Mystic"
 portrait = ExtResource("5_e7bq6")
-color = Color(0.878431, 0.878431, 0.878431, 1)
+color = Color(0.604, 0.353, 0.839, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_44wk6")])
 heads_up_display_offset = Vector3(0, 2.25, 0)
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

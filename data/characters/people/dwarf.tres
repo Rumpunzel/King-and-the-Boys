@@ -92,6 +92,9 @@ name = "Dwarf Outfit 03 01"
 
 [resource]
 script = ExtResource("5_34kdi")
+gear_primary_color = Color(0.549, 0.247, 0.102, 1)
+gear_secondary_color = Color(0.788, 0.545, 0.235, 1)
+preview_offset = Vector3(0, 0.15, 0)
 strength = 4
 agility = 2
 speed = 2
@@ -109,6 +112,6 @@ passed_animations = SubResource("Resource_xtw46")
 unpass_animation = ExtResource("26_xtw46")
 name = "Dwarf"
 portrait = ExtResource("4_xk1ji")
-color = Color(0.878431, 0.878431, 0.878431, 1)
+color = Color(0.878, 0.541, 0.200, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_ki3nk")])
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

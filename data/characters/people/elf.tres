@@ -175,6 +175,8 @@ name = "Belt 03"
 
 [resource]
 script = ExtResource("5_4smo8")
+gear_primary_color = Color(0.184, 0.420, 0.384, 1)
+gear_secondary_color = Color(0.902, 0.863, 0.580, 1)
 strength = 2
 agility = 4
 intelligence = 4
@@ -195,7 +197,7 @@ passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("anim_Spell_Simple_Exit")
 name = "Elf"
 portrait = ExtResource("5_1nbx6")
-color = Color(0.878431, 0.878431, 0.878431, 1)
+color = Color(0.369, 0.780, 0.690, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_lr5qy")])
 heads_up_display_offset = Vector3(0, 2.25, 0)
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

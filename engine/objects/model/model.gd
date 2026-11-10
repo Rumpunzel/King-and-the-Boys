@@ -9,8 +9,6 @@ const BODY_BLEND: float = 0.15
 const BODY_LIBRARY: StringName = &"body"
 
 @export var portrait_override: Texture
-## Moves this model in menu previews (e.g. the lobby), so bodies of other sizes stay framed like a human, e.g. raises the smaller dwarf
-@export var preview_offset: Vector3 = Vector3.ZERO
 
 @export_group("Configuration")
 @export var _animation_tree: AnimationTree

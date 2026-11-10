@@ -38,6 +38,13 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var dark_vision: float = 2.5
 
 @export_category("Model")
+## Moves the character's model in menu previews (e.g. the lobby), so characters of other sizes stay framed alike, e.g. raises the
+## smaller dwarf
+@export var preview_offset: Vector3 = Vector3.ZERO
+## Repaints the gear's blue highlights (cloth, banners, shield panels) to fit the character; transparent keeps the atlas' colour
+@export var gear_primary_color: Color = Color.TRANSPARENT
+## Repaints the gear's gold highlights (trims, emblems); transparent keeps the atlas' colour
+@export var gear_secondary_color: Color = Color.TRANSPARENT
 @export var model_configuration: ModelConfigurationRandom = preload("uid://c1i0e1p4feqhe"):
 	set(new_value):
 		_forward_changes([model_configuration], [new_value])
@@ -170,6 +177,7 @@ func _roll_random_equipment() -> Array[EquipmentLook]:
 func create_model(variation: int) -> Model:
 	var model: Model = super.create_model(variation)
 	if model: model.idle_animations = idle_animations
+	if model is ModularModel: (model as ModularModel).set_gear_colors(gear_primary_color, gear_secondary_color)
 	# In game the server rolls the look once and sends it as [constant Character.BODY]
 	if model is ModularModel and Engine.is_editor_hint(): setup_model(model as ModularModel)
 	return model

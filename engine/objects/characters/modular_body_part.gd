@@ -3,6 +3,9 @@
 class_name ModularBodyPart
 extends MeshInstance3D
 
+## Emitted whenever the part shows another mesh or none, e.g. so its model repaints it
+signal appearance_changed
+
 enum Type {
 	ESSENTIAL,
 	DECORATIVE,
@@ -57,6 +60,7 @@ func update_index(index: int) -> int:
 
 func update_visibility(new_visibility: bool, sources: Array[ModularBodyPart] = []) -> void:
 	visible = new_visibility
+	appearance_changed.emit()
 	sources.append(self)
 	for related_body_part: ModularBodyPart in _related_parts:
 		if sources.has(related_body_part): continue

@@ -4,6 +4,8 @@
 [ext_resource type="ArrayMesh" uid="uid://ncry2ovu6xmb" path="res://data/characters/dwarves/meshes/body/dwarf_body_casual_male_01.res" id="2_w31uy"]
 [ext_resource type="Script" uid="uid://bpc78snhxhw1t" path="res://engine/objects/characters/modular_body_part_simple.gd" id="3_t3h81"]
 [ext_resource type="AnimationLibrary" uid="uid://dcpwsj71hiqk3" path="res://assets/quaternius_animations/AnimationLibrary_Godot.glb" id="4_pla40"]
+[ext_resource type="Material" uid="uid://bfwv8gb2fse5i" path="res://data/characters/gear/hero_gear_material.tres" id="gear_hero_gear_material"]
+[ext_resource type="Material" uid="uid://bi0qcogabe33g" path="res://data/characters/gear/dwarf_gear_material.tres" id="gear_dwarf_gear_material"]
 
 [sub_resource type="Skin" id="Skin_hpesp"]
 resource_name = "Skin"
@@ -158,6 +160,7 @@ bind/48/pose = Transform3D(1, 3.4991947e-16, 4.285278e-32, 1.7763653e-15, -1, -1
 
 [node name="DwarfCharacter" type="Node3D" unique_id=1831438715 node_paths=PackedStringArray("body", "hair", "beard", "beard_attachment", "headwear", "face", "shoulder_left", "shoulder_right", "main_hand", "two_handed", "off_hand")]
 script = ExtResource("1_3stfe")
+_gear_materials = Array[ShaderMaterial]([ExtResource("gear_hero_gear_material"), ExtResource("gear_dwarf_gear_material")])
 body = NodePath("GeneralSkeleton/Body")
 hair = NodePath("GeneralSkeleton/HeadAttachment/Hair")
 beard = NodePath("GeneralSkeleton/HeadAttachment/Beard")
@@ -169,7 +172,6 @@ shoulder_right = NodePath("GeneralSkeleton/RightShoulderAttachment/ShoulderRight
 main_hand = NodePath("GeneralSkeleton/RightHandAttachment/MainHand")
 two_handed = NodePath("GeneralSkeleton/RightHandAttachment/TwoHanded")
 off_hand = NodePath("GeneralSkeleton/LeftHandAttachment/OffHand")
-preview_offset = Vector3(0, 0.15, 0)
 
 [node name="GeneralSkeleton" type="Skeleton3D" parent="." unique_id=570224632]
 unique_name_in_owner = true
