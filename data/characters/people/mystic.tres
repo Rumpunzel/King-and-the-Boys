@@ -7,8 +7,12 @@
 [ext_resource type="Texture2D" uid="uid://bp0wdwf7ydvi3" path="res://data/characters/people/portraits/pointy-hat.svg" id="5_e7bq6"]
 [ext_resource type="Resource" uid="uid://bxrtwssk6b5uw" path="res://data/characters/people/mystic_body.tres" id="5_vblr4"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_fggg0"]
+[ext_resource type="Animation" uid="uid://c3yntvceq4y34" path="res://data/characters/animations/quaternius/Sword_Exit.res" id="8_g4hix"]
+[ext_resource type="Animation" uid="uid://blrlb3ql46rfv" path="res://data/characters/animations/quaternius/Idle_Rock.res" id="9_t6chr"]
+[ext_resource type="Animation" uid="uid://bjbldtts8qdur" path="res://data/characters/animations/quaternius/Idle_Paper.res" id="10_ohlt5"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_sy2u4"]
 [ext_resource type="ArrayMesh" uid="uid://drbg5ybd8jarg" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_01.res" id="11_e4agc"]
+[ext_resource type="Animation" uid="uid://be2b250tltv6d" path="res://data/characters/animations/quaternius/Idle_Scissors.res" id="11_f72ij"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="12_ncjv4"]
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="13_jio5e"]
 [ext_resource type="Resource" uid="uid://dnkb4svltrc47" path="res://data/equipment/types/cape.tres" id="14_bs04n"]
@@ -41,10 +45,22 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="39_arfk2"]
 [ext_resource type="ArrayMesh" uid="uid://cr8ggnelir72l" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_08.res" id="40_4fe7g"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="41_qltrm"]
+[ext_resource type="Animation" uid="uid://y8vxu7fb7shw" path="res://data/characters/animations/quaternius/Sword_Enter.res" id="50_psbju"]
 [ext_resource type="Resource" uid="uid://clu0nmk36mbeb" path="res://data/model_animations/heroes/mystic_move.tres" id="90_mystic_move"]
 [ext_resource type="Resource" uid="uid://vtt52ve807ga" path="res://data/model_animations/heroes/mystic_spawn.tres" id="90_mystic_spawn"]
 [ext_resource type="Animation" uid="uid://c3vetph6mrgca" path="res://data/characters/animations/quaternius/Idle_Talking.res" id="anim_Idle_Talking"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+
+[sub_resource type="Resource" id="Resource_hy2kd"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("anim_Idle_Talking")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+
+[sub_resource type="Resource" id="BodyAnimations_passed"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("9_t6chr"), ExtResource("10_ohlt5"), ExtResource("11_f72ij")])
+order = 2
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_qinlv"]
 script = ExtResource("10_sy2u4")
@@ -195,11 +211,6 @@ type = ExtResource("41_qltrm")
 appearance = SubResource("Resource_ibap8")
 name = "Belt 08"
 
-[sub_resource type="Resource" id="BodyAnimations_passed"]
-script = ExtResource("body_animations")
-animations = Array[Animation]([ExtResource("anim_Idle_Talking")])
-metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
-
 [resource]
 script = ExtResource("5_60tc1")
 strength = 2
@@ -216,7 +227,10 @@ starting_main_hand = SubResource("Resource_o7xtx")
 spawn_animation = ExtResource("90_mystic_spawn")
 move_animation = ExtResource("90_mystic_move")
 fast_move_animation = ExtResource("90_mystic_move")
+idle_animations = SubResource("Resource_hy2kd")
+pass_animation = ExtResource("8_g4hix")
 passed_animations = SubResource("BodyAnimations_passed")
+unpass_animation = ExtResource("50_psbju")
 name = "Mystic"
 portrait = ExtResource("5_e7bq6")
 color = Color(0.878431, 0.878431, 0.878431, 1)

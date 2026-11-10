@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="ModelBounceAnimation" format=3 uid="uid://rm08eak7lkva"]
 
 [ext_resource type="Script" uid="uid://b5h27t8ow0ape" path="res://engine/objects/model/model_bounce_animation.gd" id="1_script"]
-[ext_resource type="Animation" uid="uid://btjhiww05ub62" path="res://data/characters/animations/quaternius/Interact.res" id="anim_Interact"]
+[ext_resource type="Animation" uid="uid://63p1bukj4vd6" path="res://data/characters/animations/quaternius/Sword_Attack_Standing.res" id="2_bbp8n"]
 [ext_resource type="Animation" uid="uid://b4rykwf6j833s" path="res://data/characters/animations/quaternius/Jump.res" id="anim_Jump"]
 [ext_resource type="Animation" uid="uid://dna5hjdoxwe3p" path="res://data/characters/animations/quaternius/Jump_Land.res" id="anim_Jump_Land"]
 
@@ -11,5 +11,5 @@ _bounce_height = 2.0
 body_animation = ExtResource("anim_Jump")
 body_landing = ExtResource("anim_Jump_Land")
 body_landing_time = 0.55
-body_follow_up = ExtResource("anim_Interact")
+body_follow_up = ExtResource("2_bbp8n")
 metadata/_custom_type_script = "uid://b5h27t8ow0ape"

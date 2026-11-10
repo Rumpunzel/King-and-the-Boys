@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://ben162rfher0t" path="res://data/characters/people/portraits/elf-helmet.svg" id="5_1nbx6"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_4smo8"]
 [ext_resource type="Resource" uid="uid://c54swx5jwf76" path="res://data/characters/people/elf_body.tres" id="5_26gx7"]
+[ext_resource type="Resource" uid="uid://c5eejei2kdwm2" path="res://data/characters/animations/default_idle.tres" id="5_n73mo"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_ot36u"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_eh6ha"]
 [ext_resource type="ArrayMesh" uid="uid://piwndcl1msah" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_03.res" id="11_bbn58"]
@@ -40,6 +41,11 @@
 [ext_resource type="Animation" uid="uid://dtjpkwf3vv15a" path="res://data/characters/animations/quaternius/Spell_Simple_Exit.res" id="anim_Spell_Simple_Exit"]
 [ext_resource type="Animation" uid="uid://duatnu7n2jwur" path="res://data/characters/animations/quaternius/Spell_Simple_Idle.res" id="anim_Spell_Simple_Idle"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+
+[sub_resource type="Resource" id="BodyAnimations_passed"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("anim_Spell_Simple_Idle")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_upsh0"]
 script = ExtResource("10_eh6ha")
@@ -167,11 +173,6 @@ type = ExtResource("34_vkv3h")
 appearance = SubResource("Resource_pbel4")
 name = "Belt 03"
 
-[sub_resource type="Resource" id="BodyAnimations_passed"]
-script = ExtResource("body_animations")
-animations = Array[Animation]([ExtResource("anim_Spell_Simple_Idle")])
-metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
-
 [resource]
 script = ExtResource("5_4smo8")
 strength = 2
@@ -188,6 +189,7 @@ starting_main_hand = SubResource("Resource_s5kds")
 spawn_animation = ExtResource("90_elf_spawn")
 move_animation = ExtResource("90_elf_move")
 fast_move_animation = ExtResource("90_elf_move")
+idle_animations = ExtResource("5_n73mo")
 pass_animation = ExtResource("anim_Spell_Simple_Enter")
 passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("anim_Spell_Simple_Exit")

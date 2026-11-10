@@ -3,12 +3,15 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_ul877"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_xol3p"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_ul877"]
-[ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_mo1vi"]
 [ext_resource type="Resource" uid="uid://dx6tahhpjkqy4" path="res://data/characters/people/soldier_body.tres" id="5_a0nqf"]
+[ext_resource type="Animation" uid="uid://bc8j12qn1ligs" path="res://data/characters/animations/quaternius/Sword_Idle.res" id="5_s4hbe"]
 [ext_resource type="Texture2D" uid="uid://b0o64egjvwnqs" path="res://data/characters/people/portraits/closed-barbute.svg" id="5_ul877"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="6_sgqnm"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_mltvv"]
+[ext_resource type="Animation" uid="uid://c3yntvceq4y34" path="res://data/characters/animations/quaternius/Sword_Exit.res" id="8_o81pc"]
+[ext_resource type="Animation" uid="uid://crm3sorbncbgy" path="res://data/characters/animations/quaternius/Punch_Jab.res" id="9_o81pc"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_0ouwd"]
+[ext_resource type="Animation" uid="uid://0qyyhlemq8vo" path="res://data/characters/animations/quaternius/Punch_Cross.res" id="10_id555"]
 [ext_resource type="ArrayMesh" uid="uid://b57nlxahk1lv6" path="res://data/characters/people/meshes/gear/female/arm_lower_left/modular_character_ArmLowerLeft_Female_03.res" id="11_f8xos"]
 [ext_resource type="ArrayMesh" uid="uid://du37sone6ei7p" path="res://data/characters/people/meshes/gear/male/arm_lower_left/modular_character_ArmLowerLeft_Male_03.res" id="12_pl6r5"]
 [ext_resource type="ArrayMesh" uid="uid://6s2b6ma4xdla" path="res://data/characters/people/meshes/gear/female/arm_lower_right/modular_character_ArmLowerRight_Female_03.res" id="13_l6usi"]
@@ -49,10 +52,21 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="44_oigp5"]
 [ext_resource type="ArrayMesh" uid="uid://n5cjrfw3l21g" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_12.res" id="45_dtb7d"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="46_dlaeh"]
-[ext_resource type="Resource" uid="uid://rm08eak7lkva" path="res://data/model_animations/heroes/soldier_spawn.tres" id="90_soldier_spawn"]
+[ext_resource type="Animation" uid="uid://y8vxu7fb7shw" path="res://data/characters/animations/quaternius/Sword_Enter.res" id="55_id555"]
 [ext_resource type="Resource" uid="uid://bm3fv320x14lq" path="res://data/model_animations/heroes/soldier_move.tres" id="90_soldier_move"]
-[ext_resource type="Animation" uid="uid://nxe1tqusg6bf" path="res://data/characters/animations/quaternius/Idle_LookAround.res" id="anim_Idle_LookAround"]
+[ext_resource type="Resource" uid="uid://rm08eak7lkva" path="res://data/model_animations/heroes/soldier_spawn.tres" id="90_soldier_spawn"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+
+[sub_resource type="Resource" id="Resource_eb7m2"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("5_s4hbe")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+
+[sub_resource type="Resource" id="Resource_3bgcd"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("9_o81pc"), ExtResource("9_o81pc"), ExtResource("10_id555")])
+order = 2
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_vxo76"]
 script = ExtResource("10_0ouwd")
@@ -238,11 +252,6 @@ type = ExtResource("46_dlaeh")
 appearance = SubResource("Resource_k2lmd")
 name = "Belt 12"
 
-[sub_resource type="Resource" id="BodyAnimations_passed"]
-script = ExtResource("body_animations")
-animations = Array[Animation]([ExtResource("anim_Idle_LookAround")])
-metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
-
 [resource]
 script = ExtResource("6_sgqnm")
 model_configuration = ExtResource("5_a0nqf")
@@ -256,7 +265,10 @@ starting_off_hand = SubResource("Resource_334g4")
 spawn_animation = ExtResource("90_soldier_spawn")
 move_animation = ExtResource("90_soldier_move")
 fast_move_animation = ExtResource("90_soldier_move")
-passed_animations = SubResource("BodyAnimations_passed")
+idle_animations = SubResource("Resource_eb7m2")
+pass_animation = ExtResource("8_o81pc")
+passed_animations = SubResource("Resource_3bgcd")
+unpass_animation = ExtResource("55_id555")
 name = "Soldier"
 portrait = ExtResource("5_ul877")
 color = Color(0.878431, 0.878431, 0.878431, 1)
