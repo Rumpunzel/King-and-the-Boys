@@ -5,5 +5,10 @@
 
 [resource]
 resource_name = "Dungeon Realms"
+render_priority = 0
 shader = ExtResource("1_shader")
 shader_parameter/albedo_texture = ExtResource("2_albedo")
+shader_parameter/roughness = 0.8
+shader_parameter/saturated_glow = 0.0
+shader_parameter/clear_radius = 0.8
+shader_parameter/fade_width = 1.2
