@@ -161,3 +161,22 @@ func test_doorway_arches_face_the_room() -> void:
 			assert_object(room.profile.room_type).is_not_null()
 			checked += 1
 	assert_int(checked).is_greater(0)
+
+## Like loading a save or joining mid-game: tiles arrive revealed already and are dressed as they get their level
+func test_tiles_spawned_revealed_raise_their_pillars() -> void:
+	var loaded: Level = auto_free((load(LEVEL) as PackedScene).instantiate())
+	add_child(loaded)
+	var room: StructureProfile = load("res://data/structures/tiles/room/room_crossing.tres")
+	# Four room tiles around the even corner (0, 0)
+	for cell: Vector2i in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0)]:
+		loaded._structure_spawner.spawn_at(room, Transform3D(Basis.IDENTITY, loaded.grid_to_world_position(cell)), 0, Structure.Status.REVEALED)
+	var scenes: Array = (load(ROOM_PILLARS) as PropSet).props.keys().map(func(scene: PackedScene) -> String: return scene.resource_path)
+	var pillars: Array[Vector2] = []
+	for cell: Vector2i in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0)]:
+		var tile: Structure = loaded.get_placed_tile(cell)
+		assert_object(tile).is_not_null()
+		if not tile or not tile.model or not tile.model.has_node(NodePath(TileDecorations.NODE_NAME)): continue
+		for prop: Node in tile.model.get_node(NodePath(TileDecorations.NODE_NAME)).get_children():
+			if scenes.has((prop.get_child(0) as Node).scene_file_path): pillars.append(Vector2((prop as Node3D).global_position.x, (prop as Node3D).global_position.z))
+	var corner: float = -loaded.grid_size * 0.5
+	assert_int(_count_near(pillars, Vector2(corner, corner))).is_equal(1)
