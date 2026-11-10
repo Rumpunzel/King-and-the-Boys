@@ -117,13 +117,15 @@ func create(variation: int, spawn_transform: Transform3D) -> Character:
 
 ## Rolls the variation, the body and [member random_equipment], so only call this where character data is authored, i.e. on the server
 ## [param chosen_body] (e.g. the one a player picked in the lobby, see [member Player.body]) is used if it is a complete body of the model
+## and keeps to [member model_configuration]'s pools
 func create_character_data(variation: int, spawn_transform: Transform3D, chosen_body: Dictionary = {}) -> Dictionary[StringName, Variant]:
 	var rolled_variation: int = variation if variation >= 0 else get_random_variation()
 	var model: Model = create_model(rolled_variation)
 	var body: Dictionary = {}
 	if model is ModularModel:
 		var modular_model: ModularModel = model
-		if modular_model.is_complete_body(chosen_body): body = chosen_body.duplicate()
+		var allowed: bool = not model_configuration or model_configuration.allows(modular_model, chosen_body)
+		if modular_model.is_complete_body(chosen_body) and allowed: body = chosen_body.duplicate()
 		elif model_configuration: body = model_configuration.roll(modular_model)
 	if model: model.free()
 	var equipment_ids: PackedStringArray = []

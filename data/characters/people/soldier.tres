@@ -4,7 +4,7 @@
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_xol3p"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_ul877"]
 [ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_mo1vi"]
-[ext_resource type="Resource" uid="uid://c1i0e1p4feqhe" path="res://data/characters/people/random_human.tres" id="5_a0nqf"]
+[ext_resource type="Resource" uid="uid://dx6tahhpjkqy4" path="res://data/characters/people/soldier_body.tres" id="5_a0nqf"]
 [ext_resource type="Texture2D" uid="uid://b0o64egjvwnqs" path="res://data/characters/people/portraits/closed-barbute.svg" id="5_ul877"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="6_sgqnm"]
 [ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_3myd1"]
@@ -237,6 +237,7 @@ name = "Belt 12"
 
 [resource]
 script = ExtResource("6_sgqnm")
+model_configuration = ExtResource("5_a0nqf")
 starting_head = SubResource("Resource_ctc61")
 starting_torso = SubResource("Resource_cospf")
 starting_hands = SubResource("Resource_phdcc")

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ModelConfigurationRandom" format=3 uid="uid://dnan3ouabpslh"]
+
+[ext_resource type="Script" uid="uid://cblm5blx0poy3" path="res://engine/objects/model/model_configuration_random.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+randomized_parts = PackedStringArray("HEAD", "EYEBROW", "FACIAL_HAIR", "HAIR")
+mesh_pools = Dictionary[String, PackedStringArray]({
+"FACIAL_HAIR": PackedStringArray("00", "03", "07", "08", "15"),
+"HAIR": PackedStringArray("05", "06", "08", "14", "15", "17", "22", "37")
+})
+metadata/_custom_type_script = "uid://cblm5blx0poy3"
