@@ -78,6 +78,21 @@ func describe_body() -> String:
 		shown.append("%s %s" % [part_keys[part].capitalize(), ModularBodyPart.get_mesh_number(body_part.mesh.resource_path) if showing else "none"])
 	return " · ".join(shown)
 
+## Puts weapons and shields away: every part with a stow goes there (see [member ModularBodyPart.stow]), e.g. called by a method key
+## of a sheathing animation as the hand reaches the back
+func stow_weapons() -> void: _set_stowed(true)
+
+## Takes weapons and shields back into the hands, e.g. called by a method key of a drawing animation
+func draw_weapons() -> void: _set_stowed(false)
+
+func are_weapons_stowed() -> bool:
+	for part: int in get_part_keys().size():
+		if get_part(part).is_stowed(): return true
+	return false
+
+func _set_stowed(stowed: bool) -> void:
+	for part: int in get_part_keys().size(): get_part(part).set_stowed(stowed)
+
 func randomize_body() -> void:
 	for part: int in get_body_parts(): get_part(part).random_mesh()
 

@@ -51,6 +51,8 @@ func play_animation(normalized_velocity: Vector3, _is_on_floor: bool) -> void:
 ## Plays [param model_animation] on this model, with the model's own animations it names
 func play_model_animation(model_animation: ModelAnimation) -> Tween:
 	assert(model_animation)
+	# A figure about to draw its weapons (e.g. spawning, then drawing a sword) has them put away first
+	_stow_before_drawing([model_animation.body_animation, model_animation.body_landing, model_animation.body_follow_up])
 	_play_body_animations(model_animation, false)
 	return model_animation.animate(self)
 
@@ -126,6 +128,38 @@ func _play_body(animation: Animation, blend: float, speed: float, start: float) 
 	if not player or not animation: return
 	player.play(get_animation_name(animation), blend, speed)
 	if start > 0.0: player.seek(start, true)
+	# The editor calls no method keys (e.g. stowing a sword halfway through sheathing it); Menagerie's preview still shows them
+	if Engine.is_editor_hint(): _call_method_keys(animation, speed, start)
+
+## Whether [param animation] has a method key calling [param method], e.g. drawing weapons
+static func calls_method(animation: Animation, method: StringName) -> bool:
+	if not animation: return false
+	for track: int in animation.get_track_count():
+		if animation.track_get_type(track) != Animation.TYPE_METHOD: continue
+		for key: int in animation.track_get_key_count(track):
+			if animation.method_track_get_name(track, key) == method: return true
+	return false
+
+func _stow_before_drawing(animations: Array[Animation]) -> void:
+	if not has_method(&"stow_weapons"): return
+	for animation: Animation in animations:
+		if calls_method(animation, &"draw_weapons"):
+			call(&"stow_weapons")
+			return
+
+func _call_method_keys(animation: Animation, speed: float, start: float) -> void:
+	var player: AnimationPlayer = get_animation_player()
+	var root: Node = player.get_node_or_null(player.root_node)
+	if not root: return
+	for track: int in animation.get_track_count():
+		if animation.track_get_type(track) != Animation.TYPE_METHOD: continue
+		var target: Node = root.get_node_or_null(animation.track_get_path(track))
+		if not target: continue
+		for key: int in animation.track_get_key_count(track):
+			var time: float = animation.track_get_key_time(track, key)
+			if time < start: continue
+			var method: Callable = Callable(target, animation.method_track_get_name(track, key)).bindv(animation.method_track_get_params(track, key))
+			create_tween().tween_callback(method).set_delay((time - start) / speed)
 
 ## Plays [param animation] once, then the model rests again; just rests without one
 func play_body_animation(animation: Animation) -> void:
@@ -134,6 +168,7 @@ func play_body_animation(animation: Animation) -> void:
 	if _body_tween: _body_tween.kill()
 	_body_tween = create_tween()
 	if animation:
+		_stow_before_drawing([animation])
 		_body_tween.tween_callback(_play_body.bind(animation, BODY_BLEND, 1.0, 0.0))
 		_body_tween.tween_interval(maxf(animation.length - BODY_BLEND, 0.0))
 	_body_tween.tween_callback(_rest)

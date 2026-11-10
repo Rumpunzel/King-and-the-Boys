@@ -150,3 +150,29 @@ func test_figures_travel_as_their_move_says() -> void:
 	var rogue_move: ModelAnimation = load(ROGUE_MOVE)
 	assert_int(rogue_move.travel_transition).override_failure_message("A roll does not pull back").is_not_equal(Tween.TRANS_BACK)
 	assert_float(rogue_move.travel_delay).override_failure_message("The rogue stays put while winding up").is_equal_approx(rogue_move.get("_wind_up") as float, 0.001)
+
+func test_drawing_and_sheathing_move_the_weapons() -> void:
+	for model: Model in _models():
+		var body: ModularModel = model as ModularModel
+		var main_hand: ModularBodyPart = body.get("main_hand")
+		var hand: Node = main_hand.get_parent()
+		main_hand.update_index(0)
+		var sheathe: Animation = _animation("Sword_Exit")
+		var draw: Animation = _animation("Sword_Enter")
+		assert_bool(Model.calls_method(sheathe, &"stow_weapons")).is_true()
+		assert_bool(Model.calls_method(draw, &"draw_weapons")).is_true()
+		body.play_body_animation(sheathe)
+		await await_millis(int(sheathe.length * 1000.0) + 100)
+		assert_bool(body.are_weapons_stowed()).is_true()
+		assert_object(main_hand.get_parent()).is_same(main_hand.stow)
+		body.play_body_animation(draw)
+		await await_millis(int(draw.length * 1000.0) + 100)
+		assert_bool(body.are_weapons_stowed()).is_false()
+		assert_object(main_hand.get_parent()).is_same(hand)
+
+func test_an_animation_that_draws_puts_the_weapons_away_first() -> void:
+	var model: ModularModel = _models()[0] as ModularModel
+	var knight_spawn: ModelAnimation = load("res://data/model_animations/heroes/knight_spawn.tres")
+	assert_bool(Model.calls_method(knight_spawn.body_follow_up, &"draw_weapons")).is_true()
+	model.play_model_animation(knight_spawn)
+	assert_bool(model.are_weapons_stowed()).override_failure_message("The knight spawns with his sword on his back").is_true()

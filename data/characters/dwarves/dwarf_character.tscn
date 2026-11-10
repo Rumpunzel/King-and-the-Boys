@@ -599,7 +599,8 @@ transform = Transform3D(0.07860352, -0.1540537, 0.9849307, 0.48294282, -0.858430
 bone_name = "RightHand"
 bone_idx = 27
 
-[node name="MainHand" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=365781246]
+[node name="MainHand" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=365781246 node_paths=PackedStringArray("stow")]
+stow = NodePath("../../UpperChestAttachment/MainHandStow")
 transform = Transform3D(1.2980601e-07, 0.9848077, -0.17364822, -1.518081e-08, -0.17364822, -0.9848077, -1, 1.3047008e-07, -7.590405e-09, 0, 0.145, 0.045)
 visible = false
 script = ExtResource("3_t3h81")
@@ -607,7 +608,8 @@ _mesh_directory = "res://data/equipment/meshes/main_hand"
 _type = 1
 _mesh_prefix = "weapon_"
 
-[node name="TwoHanded" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=1843576004]
+[node name="TwoHanded" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=1843576004 node_paths=PackedStringArray("stow")]
+stow = NodePath("../../UpperChestAttachment/TwoHandedStow")
 transform = Transform3D(1.2980601e-07, 0.9848077, -0.17364822, -1.518081e-08, -0.17364822, -0.9848077, -1, 1.3047008e-07, -7.590405e-09, 0, 0.145, 0.045)
 visible = false
 script = ExtResource("3_t3h81")
@@ -620,13 +622,26 @@ transform = Transform3D(0.4830715, 0.028857268, -0.8751054, -0.38825864, -0.8887
 bone_name = "LeftHand"
 bone_idx = 12
 
-[node name="OffHand" type="MeshInstance3D" parent="GeneralSkeleton/LeftHandAttachment" unique_id=270445679]
+[node name="OffHand" type="MeshInstance3D" parent="GeneralSkeleton/LeftHandAttachment" unique_id=270445679 node_paths=PackedStringArray("stow")]
+stow = NodePath("../../UpperChestAttachment/OffHandStow")
 transform = Transform3D(6.633807e-08, -0.9999999, 8.444391e-08, -0.9659258, -4.2221956e-08, 0.258819, -0.25881904, -9.87361e-08, -0.9659257, 0.025, 0.15, -0.05)
 visible = false
 script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/equipment/meshes/off_hand"
 _type = 1
 _mesh_prefix = "weapon_"
+
+[node name="UpperChestAttachment" type="BoneAttachment3D" parent="GeneralSkeleton"]
+bone_name = "UpperChest"
+
+[node name="MainHandStow" type="Node3D" parent="GeneralSkeleton/UpperChestAttachment"]
+transform = Transform3D(0, 0, 1, 0.447, -0.894, 0, 0.894, 0.447, 0, -0.15, 0.15, -0.17)
+
+[node name="TwoHandedStow" type="Node3D" parent="GeneralSkeleton/UpperChestAttachment"]
+transform = Transform3D(0, 0, 1, -0.398, 0.917, 0, -0.917, -0.398, 0, 0.15, -0.3, -0.2)
+
+[node name="OffHandStow" type="Node3D" parent="GeneralSkeleton/UpperChestAttachment"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.05, -0.3)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=346435798]
 libraries/AnimationLibrary_Godot = ExtResource("4_pla40")
