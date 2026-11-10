@@ -44,7 +44,8 @@ func _ready() -> void:
 	_profiles_tree.set_column_title(Columns.RESOURCE_PATH, "Path")
 	_profiles_tree.set_column_title_alignment(Columns.RESOURCE_PATH, HORIZONTAL_ALIGNMENT_LEFT)
 	if not _profiles_tree.item_edited.is_connected(_on_item_edited): _profiles_tree.item_edited.connect(_on_item_edited)
-	_update_profiles()
+	# Hidden tabs load their profiles once shown (_on_visibility_changed): loading pulls in every asset they use
+	if is_visible_in_tree(): _update_profiles()
 
 ## @returns every profile below [param directory_path], including the looks stored in catalogs
 func _collect_profiles(directory_path: String = _data_path) -> Array[Profile]:
