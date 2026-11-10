@@ -23,8 +23,10 @@
 [ext_resource type="ArrayMesh" uid="uid://qw6ahnhdnwds" path="res://data/characters/people/meshes/gear/female/leg_right/modular_character_LegRight_Female_00.res" id="21_vx505"]
 [ext_resource type="ArrayMesh" uid="uid://dy45rbmiqwq4i" path="res://data/characters/people/meshes/gear/male/leg_right/modular_character_LegRight_Male_00.res" id="22_s5kds"]
 [ext_resource type="Resource" uid="uid://c7ec6d8vlckig" path="res://data/equipment/types/leg_armor.tres" id="23_chxko"]
+[ext_resource type="ArrayMesh" uid="uid://i87rhqft1enk" path="res://data/equipment/meshes/main_hand/weapon_sword_medium_27.res" id="24_4u2hy"]
 [ext_resource type="ArrayMesh" uid="uid://mvluv8nefqkp" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_01.res" id="24_n73mo"]
 [ext_resource type="ArrayMesh" uid="uid://deylmhekr686p" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_01.res" id="25_chxko"]
+[ext_resource type="Resource" uid="uid://bf1hq4jewpk2m" path="res://data/equipment/types/weapon.tres" id="25_kuy0s"]
 [ext_resource type="ArrayMesh" uid="uid://yveqgoh7remg" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_03.res" id="26_ntxgj"]
 [ext_resource type="ArrayMesh" uid="uid://ca57kkm7452tu" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_03.res" id="27_yo1oa"]
 [ext_resource type="ArrayMesh" uid="uid://bs852ogb8cymj" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_03.res" id="28_toe72"]
@@ -93,6 +95,21 @@ type = ExtResource("23_chxko")
 appearance = SubResource("Resource_m8ays")
 name = "Leg Armor 23-00 00"
 
+[sub_resource type="Resource" id="Resource_npy5k"]
+script = ExtResource("10_eh6ha")
+part = 28
+male_mesh = ExtResource("24_4u2hy")
+
+[sub_resource type="Resource" id="Resource_vx505"]
+script = ExtResource("12_thqp2")
+parts = Array[ExtResource("10_eh6ha")]([SubResource("Resource_npy5k")])
+
+[sub_resource type="Resource" id="Resource_s5kds"]
+script = ExtResource("13_14iws")
+type = ExtResource("25_kuy0s")
+appearance = SubResource("Resource_vx505")
+name = "Weapon 27"
+
 [sub_resource type="Resource" id="Resource_7k5vc"]
 script = ExtResource("10_eh6ha")
 part = 12
@@ -158,6 +175,7 @@ starting_torso = SubResource("Resource_1ot23")
 starting_legs = SubResource("Resource_lu7ht")
 starting_back = SubResource("Resource_gn5hf")
 starting_waist = SubResource("Resource_kfnui")
+starting_main_hand = SubResource("Resource_s5kds")
 name = "Elf"
 portrait = ExtResource("5_1nbx6")
 color = Color(0.878431, 0.878431, 0.878431, 1)

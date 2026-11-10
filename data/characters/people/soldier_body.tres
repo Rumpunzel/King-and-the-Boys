@@ -7,7 +7,7 @@ script = ExtResource("1_script")
 randomized_parts = PackedStringArray("HEAD", "EYEBROW", "FACIAL_HAIR", "HAIR")
 mesh_pools = Dictionary[String, PackedStringArray]({
 "EYEBROW": PackedStringArray("01", "03", "04", "10"),
-"FACIAL_HAIR": PackedStringArray("00", "05", "06", "11", "17"),
+"FACIAL_HAIR": PackedStringArray("00", "05", "06", "07", "08", "11", "13", "15", "16"),
 "HAIR": PackedStringArray("01", "02", "13", "16", "19", "20", "36", "38")
 })
 metadata/_custom_type_script = "uid://cblm5blx0poy3"

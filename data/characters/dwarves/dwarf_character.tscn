@@ -534,7 +534,6 @@ bone_name = "Head"
 bone_idx = 6
 
 [node name="Hair" type="MeshInstance3D" parent="GeneralSkeleton/HeadAttachment" unique_id=2009960627]
-visible = false
 script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/characters/dwarves/meshes/hair"
 _type = 1
@@ -595,38 +594,39 @@ _mesh_directory = "res://data/characters/dwarves/meshes/shoulder_right"
 _type = 1
 _mesh_prefix = "dwarf_"
 
-[node name="RightHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton"]
+[node name="RightHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton" unique_id=67285993]
+transform = Transform3D(0.07860352, -0.1540537, 0.9849307, 0.48294282, -0.85843027, -0.17280948, 0.8721166, 0.4892487, 0.0069236592, -0.47094744, 0.66207814, -0.32313237)
 bone_name = "RightHand"
+bone_idx = 27
 
-[node name="MainHand" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment"]
-transform = Transform3D(0, 0, -1, 1, 0, 0, 0, -1, 0, 0, 0.145, 0.045)
+[node name="MainHand" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=365781246]
+transform = Transform3D(1.2980601e-07, 0.9848077, -0.17364822, -1.518081e-08, -0.17364822, -0.9848077, -1, 1.3047008e-07, -7.590405e-09, 0, 0.145, 0.045)
 visible = false
 script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/equipment/meshes/main_hand"
 _type = 1
 _mesh_prefix = "weapon_"
-_index = -1
 
-[node name="TwoHanded" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment"]
-transform = Transform3D(0, 0, -1, 1, 0, 0, 0, -1, 0, 0, 0.145, 0.045)
+[node name="TwoHanded" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=1843576004]
+transform = Transform3D(1.2980601e-07, 0.9848077, -0.17364822, -1.518081e-08, -0.17364822, -0.9848077, -1, 1.3047008e-07, -7.590405e-09, 0, 0.145, 0.045)
 visible = false
 script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/equipment/meshes/two_handed"
 _type = 1
 _mesh_prefix = "weapon_"
-_index = -1
 
-[node name="LeftHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton"]
+[node name="LeftHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton" unique_id=1413650892]
+transform = Transform3D(0.4830715, 0.028857268, -0.8751054, -0.38825864, -0.8887625, -0.24363235, -0.78479135, 0.457459, -0.41813162, 0.5491562, 0.6300571, -0.022300258)
 bone_name = "LeftHand"
+bone_idx = 12
 
-[node name="OffHand" type="MeshInstance3D" parent="GeneralSkeleton/LeftHandAttachment"]
-transform = Transform3D(0, -1, 0, -1, 0, 0, 0, 0, -1, 0, 0.145, -0.02)
+[node name="OffHand" type="MeshInstance3D" parent="GeneralSkeleton/LeftHandAttachment" unique_id=270445679]
+transform = Transform3D(6.633807e-08, -0.9999999, 8.444391e-08, -0.9659258, -4.2221956e-08, 0.258819, -0.25881904, -9.87361e-08, -0.9659257, 0.025, 0.15, -0.05)
 visible = false
 script = ExtResource("3_t3h81")
 _mesh_directory = "res://data/equipment/meshes/off_hand"
 _type = 1
 _mesh_prefix = "weapon_"
-_index = -1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=346435798]
 libraries/AnimationLibrary_Godot = ExtResource("4_pla40")

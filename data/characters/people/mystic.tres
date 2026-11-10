@@ -195,10 +195,10 @@ name = "Belt 08"
 
 [resource]
 script = ExtResource("5_60tc1")
-model_configuration = ExtResource("5_vblr4")
 strength = 2
 agility = 2
 intelligence = 5
+model_configuration = ExtResource("5_vblr4")
 starting_head = SubResource("Resource_cbtai")
 starting_torso = SubResource("Resource_jcqoy")
 starting_hands = SubResource("Resource_1v0ni")
