@@ -15,7 +15,11 @@ signal randomized
 @export var _randomize_variation_button: CheckButton
 @export var _variation_spin_box: SpinBox
 @export var _randomize_button: Button
+## What the previewed body shows, under the button that re-rolls it
+@export var _body_label: Label
 @export var _config: Config
+
+var _model: ModularModel
 
 func _ready() -> void:
 	_show_collision_button.set_pressed_no_signal(_config.get_value_from_config("Preview", "show_collision", true))
@@ -50,6 +54,7 @@ func _on_variation_spin_box_value_changed(new_value: int) -> void:
 
 func _on_randomize_pressed() -> void:
 	randomized.emit()
+	_show_body()
 
 func _on_active_profile_changed(active_profile: Profile) -> void:
 	_variation_spin_box.max_value = active_profile.get_variation_count() - 1
@@ -59,6 +64,16 @@ func _on_active_profile_changed(active_profile: Profile) -> void:
 
 func _on_model_changed(model: Model) -> void:
 	_randomize_button.disabled = not model is ModularModel
+	_model = model as ModularModel
+	_show_body()
 
 func _on_model_removed() -> void:
 	_randomize_button.disabled = true
+	_model = null
+	_show_body()
+
+## Lists what each body part of the previewed body shows, one part per line
+func _show_body() -> void:
+	if not _body_label: return
+	_body_label.visible = _model != null and is_instance_valid(_model)
+	if _body_label.visible: _body_label.text = _model.describe_body().replace(" · ", "\n")

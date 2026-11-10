@@ -3,16 +3,19 @@ class_name BodyPoolsProperty
 extends EditorProperty
 
 ## Edits the pools of a [ModelConfigurationRandom] at a glance: every body part of a body (the parts no slot owns) with whether it
-## is randomized and a thumbnail per mesh, pressed while the mesh is in the part's pool. Parts without a pool roll from all their
+## is randomized and a thumbnail per mesh (shown on the body's head), pressed while the mesh is in the part's pool. Parts without a pool roll from all their
 ## meshes, so they show all pressed. Changes go through the inspector, so they can be undone and are saved with the configuration
 
 const OUT_OF_POOL: Color = Color(1.0, 1.0, 1.0, 0.3)
-const THUMBNAIL_SIZE: Vector2 = Vector2(56, 56)
+const THUMBNAIL_SIZE: Vector2 = Vector2(64, 64)
+const Thumbnails: GDScript = preload("res://addons/menagerie/inspector/body_part_thumbnails.gd")
 
 var _body_option: OptionButton = OptionButton.new()
 var _sections: VBoxContainer = VBoxContainer.new()
 var _bodies: Array[PackedScene] = []
 var _is_rebuild_queued: bool = false
+## Renders each mesh on its body's head, see body_part_thumbnails.gd
+var _thumbnails: Node = Thumbnails.new()
 
 func _init() -> void:
 	_body_option.tooltip_text = "The body whose parts are shown"
@@ -21,6 +24,7 @@ func _init() -> void:
 	add_focusable(_body_option)
 	add_child(_sections)
 	set_bottom_editor(_sections)
+	add_child(_thumbnails)
 
 ## The bodies equipment exists for, i.e. every [ModularModel] scene a type dresses
 static func find_bodies() -> Array[PackedScene]:
@@ -57,9 +61,10 @@ func _rebuild() -> void:
 	if not configuration or _bodies.is_empty(): return
 	var model_parts: ModularModelParts = ModularModelParts.of(_bodies[_body_option.selected])
 	if not model_parts: return
-	for part: int in model_parts.get_body_parts(): _sections.add_child(_make_section(configuration, model_parts, part))
+	for part: int in model_parts.get_body_parts(): _sections.add_child(_make_section(configuration, _bodies[_body_option.selected], part))
 
-func _make_section(configuration: ModelConfigurationRandom, model_parts: ModularModelParts, part: int) -> Control:
+func _make_section(configuration: ModelConfigurationRandom, body: PackedScene, part: int) -> Control:
+	var model_parts: ModularModelParts = ModularModelParts.of(body)
 	var part_key: String = model_parts.get_part_key(part)
 	var numbers: PackedStringArray = model_parts.get_mesh_numbers(part)
 	var options: PackedStringArray = model_parts.get_mesh_options(part)
@@ -98,14 +103,14 @@ func _make_section(configuration: ModelConfigurationRandom, model_parts: Modular
 		button.expand_icon = true
 		button.modulate = Color.WHITE if button.button_pressed else OUT_OF_POOL
 		button.toggled.connect(_set_number.bind(part_key, number, numbers))
-		if not options[index].is_empty(): EditorInterface.get_resource_previewer().queue_resource_preview(options[index], self, &"_on_preview", button)
+		_thumbnails.call(&"request", body, part, options[index], _on_thumbnail.bind(button))
 		flow.add_child(button)
 	section.add_child(flow)
 	section.add_child(HSeparator.new())
 	return section
 
-func _on_preview(_path: String, preview: Texture2D, _thumbnail: Texture2D, button: Variant) -> void:
-	if preview and is_instance_valid(button as Object): (button as Button).icon = preview
+func _on_thumbnail(thumbnail: Texture2D, button: Button) -> void:
+	if is_instance_valid(button): button.icon = thumbnail
 
 func _set_randomized(randomized: bool, part_key: String) -> void:
 	var configuration: ModelConfigurationRandom = get_edited_object() as ModelConfigurationRandom

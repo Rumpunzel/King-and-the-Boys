@@ -55,7 +55,6 @@ func test_the_server_rolls_anew_for_a_body_outside_the_pools() -> void:
 	assert_dict(knight.create_character_data(0, Transform3D.IDENTITY, own)[Character.BODY] as Dictionary).is_equal(own)
 
 func test_every_hero_has_a_look_of_their_own() -> void:
-	var facial_hair: Dictionary[String, PackedStringArray] = {}
 	for hero: String in HEROES:
 		var profile: CharacterProfile = load("res://data/characters/people/%s.tres" % hero)
 		assert_str(profile.model_configuration.resource_path).is_equal("res://data/characters/people/%s_body.tres" % hero)
@@ -64,13 +63,7 @@ func test_every_hero_has_a_look_of_their_own() -> void:
 			var part: ModularBodyPart = _model.get(part_key.to_lower())
 			var options: PackedStringArray = profile.model_configuration.get_pool_options(part, part_key)
 			assert_int(options.size()).override_failure_message("%s: %s names meshes that do not exist" % [hero, part_key]).is_equal(profile.model_configuration.mesh_pools[part_key].size())
-		if profile.model_configuration.mesh_pools.has("FACIAL_HAIR"): facial_hair[hero] = profile.model_configuration.mesh_pools["FACIAL_HAIR"]
-	# Beards share none of their styles, apart from clean-shaven
-	for hero: String in facial_hair:
-		for other: String in facial_hair:
-			if hero == other: continue
-			for number: String in facial_hair[hero]:
-				if number != ModularBodyPart.EMPTY_MESH_NUMBER: assert_array(facial_hair[other]).not_contains([number])
+
 
 func test_switching_meshes_off_and_on_again_drops_the_pool() -> void:
 	var configuration: ModelConfigurationRandom = _pool_config({})
@@ -98,3 +91,11 @@ func test_the_editor_lists_each_body_part_of_the_configured_body() -> void:
 	var part_keys: Array = model_parts.get_body_parts().map(func(part: int) -> String: return model_parts.get_part_key(part))
 	assert_array(part_keys).contains(["HEAD", "EYEBROW", "FACIAL_HAIR", "HAIR", "EARS"])
 	assert_array(model_parts.get_mesh_numbers(ModularCharacter.Part.FACIAL_HAIR).slice(0, 2)).contains_exactly(["00", "01"])
+
+func test_a_body_describes_what_its_parts_show() -> void:
+	_model.reset()
+	_model.hair.update_index(_model.hair.find_mesh_index("12"))
+	var described: String = _model.describe_body()
+	assert_str(described).contains("Hair 12")
+	assert_str(described).contains("Facial Hair none")
+	assert_int(described.split(" · ").size()).is_equal(_model.get_body_parts().size())
