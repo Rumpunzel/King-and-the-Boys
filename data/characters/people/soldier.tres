@@ -50,6 +50,7 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="44_oigp5"]
 [ext_resource type="ArrayMesh" uid="uid://n5cjrfw3l21g" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_12.res" id="45_dtb7d"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="46_dlaeh"]
+[ext_resource type="Resource" uid="uid://rm08eak7lkva" path="res://data/model_animations/heroes/soldier_spawn.tres" id="90_soldier_spawn"]
 
 [sub_resource type="Resource" id="Resource_vxo76"]
 script = ExtResource("10_0ouwd")
@@ -237,6 +238,9 @@ name = "Belt 12"
 
 [resource]
 script = ExtResource("6_sgqnm")
+spawn_animation = ExtResource("90_soldier_spawn")
+pass_animation = &"AnimationLibrary_Godot/Interact"
+passed_animation = &"AnimationLibrary_Godot/Idle_Talking"
 model_configuration = ExtResource("5_a0nqf")
 starting_head = SubResource("Resource_ctc61")
 starting_torso = SubResource("Resource_cospf")

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ModelBounceAnimation" format=3 uid="uid://c75q711dhxhep"]
+
+[ext_resource type="Script" uid="uid://b5h27t8ow0ape" path="res://engine/objects/model/model_bounce_animation.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+_bounce_height = 2.0
+body_animation = &"AnimationLibrary_Godot/Jump"
+body_landing = &"AnimationLibrary_Godot/Jump_Land"
+body_landing_time = 0.55
+body_follow_up = &"AnimationLibrary_Godot/Celebration"
+metadata/_custom_type_script = "uid://b5h27t8ow0ape"

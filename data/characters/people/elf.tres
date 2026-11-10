@@ -36,6 +36,8 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="32_biseb"]
 [ext_resource type="ArrayMesh" uid="uid://uxig1bvjpmeu" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_03.res" id="33_32crj"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="34_vkv3h"]
+[ext_resource type="Resource" uid="uid://84imup832cec" path="res://data/model_animations/heroes/elf_spawn.tres" id="90_elf_spawn"]
+[ext_resource type="Resource" uid="uid://pkwjhs21y2ol" path="res://data/model_animations/heroes/elf_move.tres" id="90_elf_move"]
 
 [sub_resource type="Resource" id="Resource_upsh0"]
 script = ExtResource("10_eh6ha")
@@ -165,6 +167,12 @@ name = "Belt 03"
 
 [resource]
 script = ExtResource("5_4smo8")
+spawn_animation = ExtResource("90_elf_spawn")
+move_animation = ExtResource("90_elf_move")
+fast_move_animation = ExtResource("90_elf_move")
+pass_animation = &"AnimationLibrary_Godot/Spell_Simple_Enter"
+passed_animation = &"AnimationLibrary_Godot/Spell_Simple_Idle"
+unpass_animation = &"AnimationLibrary_Godot/Spell_Simple_Exit"
 strength = 2
 agility = 4
 intelligence = 4

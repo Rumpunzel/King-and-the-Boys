@@ -17,6 +17,8 @@ const BODY_BLEND: float = 0.15
 @export var _animation_player: AnimationPlayer
 
 var _body_tween: Tween
+## Replaces the [AnimationPlayer]'s autoplay as the idle the model goes back to, see [method set_idle_animation]
+var _idle_animation: StringName
 
 static func gather_all_geometry_instances_on(node: Node) -> Array[MeshInstance3D]:
 	var geometry_instances: Array[MeshInstance3D] = [ ]
@@ -67,8 +69,40 @@ func _play_body_animations(model_animation: ModelAnimation, continuing: bool) ->
 		_body_tween.tween_interval(model_animation.duration * model_animation.body_landing_time)
 		_body_tween.tween_callback(player.play.bind(model_animation.body_landing, BODY_BLEND, speed))
 		rest = player.get_animation(model_animation.body_landing).length / speed
+	if player.has_animation(model_animation.body_follow_up):
+		_body_tween.tween_interval(maxf(rest - BODY_BLEND, 0.0))
+		_body_tween.tween_callback(player.play.bind(model_animation.body_follow_up, BODY_BLEND, speed))
+		rest = player.get_animation(model_animation.body_follow_up).length / speed
 	_body_tween.tween_interval(maxf(rest - BODY_BLEND, 0.0))
-	if not player.autoplay.is_empty(): _body_tween.tween_callback(player.play.bind(player.autoplay, BODY_BLEND))
+	_body_tween.tween_callback(_play_idle)
+
+## Plays the model's own [param animation] once, then its idle; just the idle if it has no such animation
+func play_body_animation(animation: StringName) -> void:
+	var player: AnimationPlayer = get_animation_player()
+	if not player: return
+	if _body_tween: _body_tween.kill()
+	_body_tween = create_tween()
+	if player.has_animation(animation):
+		_body_tween.tween_callback(player.play.bind(animation, BODY_BLEND))
+		_body_tween.tween_interval(maxf(player.get_animation(animation).length - BODY_BLEND, 0.0))
+	_body_tween.tween_callback(_play_idle)
+
+## Makes [param idle] (looping, e.g. sitting) the animation the model rests in, after playing [param through] once (e.g. sitting
+## down); an empty [param idle] goes back to the [AnimationPlayer]'s autoplay
+func set_idle_animation(idle: StringName, through: StringName = &"") -> void:
+	_idle_animation = idle
+	play_body_animation(through)
+
+## The animation the model rests in, see [method set_idle_animation]
+func get_idle_animation() -> StringName:
+	var player: AnimationPlayer = get_animation_player()
+	if not player: return &""
+	return _idle_animation if player.has_animation(_idle_animation) else player.autoplay
+
+func _play_idle() -> void:
+	var player: AnimationPlayer = get_animation_player()
+	var idle: StringName = get_idle_animation()
+	if player and player.has_animation(idle): player.play(idle, BODY_BLEND)
 
 func apply_material_override(material: Material) -> void:
 	assert(material)

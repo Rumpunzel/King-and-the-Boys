@@ -43,6 +43,8 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="39_arfk2"]
 [ext_resource type="ArrayMesh" uid="uid://cr8ggnelir72l" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_08.res" id="40_4fe7g"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="41_qltrm"]
+[ext_resource type="Resource" uid="uid://vtt52ve807ga" path="res://data/model_animations/heroes/mystic_spawn.tres" id="90_mystic_spawn"]
+[ext_resource type="Resource" uid="uid://clu0nmk36mbeb" path="res://data/model_animations/heroes/mystic_move.tres" id="90_mystic_move"]
 
 [sub_resource type="Resource" id="Resource_qinlv"]
 script = ExtResource("10_sy2u4")
@@ -195,6 +197,12 @@ name = "Belt 08"
 
 [resource]
 script = ExtResource("5_60tc1")
+spawn_animation = ExtResource("90_mystic_spawn")
+move_animation = ExtResource("90_mystic_move")
+fast_move_animation = ExtResource("90_mystic_move")
+pass_animation = &"AnimationLibrary_Godot/GroundSit_Enter"
+passed_animation = &"AnimationLibrary_Godot/GroundSit_Idle"
+unpass_animation = &"AnimationLibrary_Godot/GroundSit_Exit"
 strength = 2
 agility = 2
 intelligence = 5

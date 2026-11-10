@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 
 const MOVE: String = "res://data/model_animations/miniature_move_animation.tres"
 const SPAWN: String = "res://data/model_animations/high_bounce_animation.tres"
+const HEROES: Array[String] = ["knight", "rogue", "mystic", "soldier", "elf", "dwarf"]
 
 func _player_of(model: Model) -> AnimationPlayer:
 	var player: AnimationPlayer = model.get_animation_player()
@@ -49,3 +50,40 @@ func test_models_without_their_own_animations_only_move() -> void:
 	add_child(model)
 	assert_object(model.get_animation_player()).is_null()
 	assert_object(model.play_model_animation(load(MOVE) as ModelAnimation)).is_not_null()
+
+func test_a_model_rests_in_its_passed_idle_and_back() -> void:
+	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
+	add_child(model)
+	var player: AnimationPlayer = _player_of(model)
+	var through: StringName = &"AnimationLibrary_Godot/Crouch_Enter"
+	var idle: StringName = &"AnimationLibrary_Godot/Crouch_Idle"
+	model.set_idle_animation(idle, through)
+	await await_idle_frame()
+	assert_str(player.current_animation).is_equal(through)
+	assert_str(model.get_idle_animation()).is_equal(idle)
+	await await_millis(int(player.get_animation(through).length * 1000.0) + 100)
+	assert_str(player.current_animation).is_equal(idle)
+	# A hop lands back in the passed idle
+	model.play_model_animation(load(MOVE) as ModelAnimation)
+	await await_millis(3000)
+	assert_str(player.current_animation).is_equal(idle)
+	model.set_idle_animation(&"")
+	await await_idle_frame()
+	assert_str(player.current_animation).is_equal(player.autoplay)
+
+func test_every_hero_moves_spawns_and_passes_in_their_own_way() -> void:
+	var spawns: Dictionary[String, bool] = {}
+	for hero: String in HEROES:
+		var profile: CharacterProfile = load("res://data/characters/people/%s.tres" % hero)
+		var model: Model = auto_free(profile.create_model(0))
+		add_child(model)
+		var player: AnimationPlayer = _player_of(model)
+		for animation: ModelAnimation in [profile.spawn_animation, profile.move_animation]:
+			for body: StringName in [animation.body_animation, animation.body_landing, animation.body_follow_up]:
+				if not body.is_empty(): assert_bool(player.has_animation(body)).override_failure_message("%s lacks %s" % [hero, body]).is_true()
+		spawns[profile.spawn_animation.resource_path] = true
+		for body: StringName in [profile.pass_animation, profile.passed_animation, profile.unpass_animation]:
+			if not body.is_empty(): assert_bool(player.has_animation(body)).override_failure_message("%s lacks %s" % [hero, body]).is_true()
+		assert_str(profile.passed_animation).is_not_empty()
+		assert_int(player.get_animation(profile.passed_animation).loop_mode).override_failure_message("%s's passed animation must loop" % hero).is_not_equal(Animation.LOOP_NONE)
+	assert_int(spawns.size()).override_failure_message("Each hero spawns their own way").is_equal(HEROES.size())

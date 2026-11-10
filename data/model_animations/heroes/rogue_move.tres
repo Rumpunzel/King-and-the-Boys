@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ModelMiniatureMoveAnimation" format=3 uid="uid://c1io5bgjdq6kr"]
+
+[ext_resource type="Script" uid="uid://clsflb34q1if1" path="res://engine/objects/model/model_miniature_move_animation.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+duration = 0.75
+body_animation = &"AnimationLibrary_Godot/Roll"
+body_speed = 2.0
+metadata/_custom_type_script = "uid://clsflb34q1if1"

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ModelBounceAnimation" format=3 uid="uid://vtt52ve807ga"]
+
+[ext_resource type="Script" uid="uid://b5h27t8ow0ape" path="res://engine/objects/model/model_bounce_animation.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+_bounce_height = 2.0
+body_animation = &"AnimationLibrary_Godot/Spell_Double_Idle"
+body_landing = &"AnimationLibrary_Godot/Spell_Double_Exit"
+body_landing_time = 0.6
+metadata/_custom_type_script = "uid://b5h27t8ow0ape"

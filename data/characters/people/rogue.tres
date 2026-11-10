@@ -46,6 +46,8 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="41_onj5d"]
 [ext_resource type="ArrayMesh" uid="uid://b1kdqgrdhk27o" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_01.res" id="42_2hj8h"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="43_tmsvl"]
+[ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
+[ext_resource type="Resource" uid="uid://c1io5bgjdq6kr" path="res://data/model_animations/heroes/rogue_move.tres" id="90_rogue_move"]
 
 [sub_resource type="Resource" id="Resource_yo61b"]
 script = ExtResource("10_co6b3")
@@ -218,6 +220,12 @@ name = "Belt 01"
 
 [resource]
 script = ExtResource("3_7rwy5")
+spawn_animation = ExtResource("90_rogue_spawn")
+move_animation = ExtResource("90_rogue_move")
+fast_move_animation = ExtResource("90_rogue_move")
+pass_animation = &"AnimationLibrary_Godot/Crouch_Enter"
+passed_animation = &"AnimationLibrary_Godot/Crouch_Idle"
+unpass_animation = &"AnimationLibrary_Godot/Crouch_Exit"
 strength = 2
 speed = 4
 model_configuration = ExtResource("5_c4qnl")

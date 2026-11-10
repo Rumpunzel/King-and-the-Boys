@@ -51,6 +51,8 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="47_gfjk1"]
 [ext_resource type="ArrayMesh" uid="uid://n5cjrfw3l21g" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_12.res" id="48_hmc0y"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="49_wouu8"]
+[ext_resource type="Resource" uid="uid://chaqmhbq3eugj" path="res://data/model_animations/heroes/knight_spawn.tres" id="90_knight_spawn"]
+[ext_resource type="Resource" uid="uid://bokwo0ngtuf6x" path="res://data/model_animations/heroes/knight_move.tres" id="90_knight_move"]
 
 [sub_resource type="Resource" id="Resource_13etc"]
 script = ExtResource("10_7tsdp")
@@ -239,6 +241,11 @@ name = "Belt 12"
 
 [resource]
 script = ExtResource("5_ltdy7")
+spawn_animation = ExtResource("90_knight_spawn")
+move_animation = ExtResource("90_knight_move")
+fast_move_animation = ExtResource("90_knight_move")
+pass_animation = &"AnimationLibrary_Godot/Sword_Exit"
+passed_animation = &"AnimationLibrary_Godot/Idle_LookAround"
 intelligence = 2
 model_configuration = ExtResource("5_0vpuq")
 starting_head = SubResource("Resource_fgqtr")

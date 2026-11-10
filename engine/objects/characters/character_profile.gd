@@ -97,6 +97,12 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var fast_move_animation: ModelAnimation = _MOVE_ANIMATION
 ## Played when undo walks a step back; the move animation if empty
 @export var undo_animation: ModelAnimation
+## The model's own animation as the character's player passes, e.g. sitting down; then [member passed_animation]
+@export var pass_animation: StringName
+## The model's own animation looping while the player has passed, in place of its idle, e.g. sitting
+@export var passed_animation: StringName
+## The model's own animation as the pass ends (taken back, or a new turn), e.g. getting up; then the idle
+@export var unpass_animation: StringName
 
 @export_category("")
 @export_group("Configuration")

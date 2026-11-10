@@ -20,6 +20,8 @@
 [ext_resource type="ArrayMesh" uid="uid://bd2npqjr05qrk" path="res://data/characters/dwarves/meshes/shoulder_left/dwarf_shoulder_left_fancy_01.res" id="16_yyphc"]
 [ext_resource type="ArrayMesh" uid="uid://cr47keevwrcvo" path="res://data/characters/dwarves/meshes/shoulder_right/dwarf_shoulder_right_fancy_01.res" id="17_mwfbt"]
 [ext_resource type="Resource" uid="uid://dvgy2n8emi8k0" path="res://data/equipment/types/dwarf_outfit.tres" id="18_xtw46"]
+[ext_resource type="Resource" uid="uid://c75q711dhxhep" path="res://data/model_animations/heroes/dwarf_spawn.tres" id="90_dwarf_spawn"]
+[ext_resource type="Resource" uid="uid://cvoowfdc35nc1" path="res://data/model_animations/heroes/dwarf_move.tres" id="90_dwarf_move"]
 
 [sub_resource type="Resource" id="Resource_iigc1"]
 script = ExtResource("10_iigc1")
@@ -77,6 +79,11 @@ name = "Dwarf Outfit 03 01"
 
 [resource]
 script = ExtResource("5_34kdi")
+spawn_animation = ExtResource("90_dwarf_spawn")
+move_animation = ExtResource("90_dwarf_move")
+fast_move_animation = ExtResource("90_dwarf_move")
+pass_animation = &"AnimationLibrary_Godot/Drink"
+passed_animation = &"AnimationLibrary_Godot/Idle_Tired"
 strength = 4
 agility = 2
 speed = 2

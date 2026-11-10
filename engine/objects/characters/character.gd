@@ -67,6 +67,7 @@ var model: Model:
 		if not model: return
 		add_child(model, true)
 		_apply_body()
+		if shows_passed: model.set_idle_animation(profile.passed_animation)
 		if equipment and model is ModularModel:
 			var modular_model: ModularModel = model
 			equipment.apply_to(modular_model)
@@ -79,6 +80,8 @@ var body: Dictionary = {}:
 		_apply_body()
 
 var level: Level
+## Whether the figure shows that its player has passed (see [method show_passed]); purely visual, on every peer
+var shows_passed: bool = false
 var look_target: Vector3 = Vector3.BACK
 ## The [Character] currently haunting (controlling) this one, if any
 var haunted_by: Character
@@ -352,6 +355,15 @@ func _on_move_finished() -> void:
 	_move_tween = null
 	if not _move_backwards: _look_at_thing_on_tile()
 	figure_arrived.emit()
+
+## Shows that the character's player passed, or no longer has: the profile's pass animation, then its passed one in place of the idle
+## (e.g. sitting down and sitting), or getting up again
+func show_passed(passed: bool) -> void:
+	if passed == shows_passed: return
+	shows_passed = passed
+	if not model: return
+	if passed: model.set_idle_animation(profile.passed_animation, profile.pass_animation)
+	else: model.set_idle_animation(&"", profile.unpass_animation)
 
 ## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
 func _look_at_thing_on_tile() -> void:
