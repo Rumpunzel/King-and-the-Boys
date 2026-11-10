@@ -7,6 +7,10 @@ signal spawn_requested(profile_to_spawn: Profile)
 signal status_changed(status: Status)
 signal shown_status_changed(shown_status: Status)
 signal profile_changed
+## Emitted on every peer when the tile turns after it was ready, see [method Level.rotate_tile]
+signal clockwise_turns_changed(previous_clockwise_turns: int)
+## Emitted on every peer when the tile is lifted, turned while lifted, or set down
+signal lift_changed
 
 enum Status {
 	NONE = -1,
@@ -48,10 +52,13 @@ const STATUS: StringName = "status"
 		profile_changed.emit()
 		add_to_group(profile.get_group_name())
 
+## Quarter turns clockwise, seen from above; replicated, so tiles turned after spawning turn on every peer
 @export var clockwise_turns: int = 0:
-	get: return posmod(-rotation.y / (PI * 0.5), 4)
+	get: return posmod(roundi(-rotation.y / (PI * 0.5)), 4)
 	set(new_clockwise_turns):
+		var previous_clockwise_turns: int = clockwise_turns
 		rotation.y = TAU - new_clockwise_turns * (PI * 0.5)
+		if is_node_ready() and clockwise_turns != previous_clockwise_turns: clockwise_turns_changed.emit(previous_clockwise_turns)
 
 ## What the players know about the tile; set by the host the moment a move reveals it.
 ## [member shown_status] catches up later through the [Level]'s delayed visual queues.
@@ -72,6 +79,21 @@ const STATUS: StringName = "status"
 var status_cause: NodePath
 ## The cause's [member Character.step_count] at that step; [code]0[/code] if no step raised the status
 var status_cause_step: int = 0
+
+## The [Character] that lifted the tile, empty if it lies on the board. A lifted tile has no connections.
+## Set by the host, replicated; not saved, like the held ability that lifts it.
+var lifted_by: NodePath:
+	set(new_lifted_by):
+		if new_lifted_by == lifted_by: return
+		lifted_by = new_lifted_by
+		if lifted_by.is_empty(): lift_turns = 0
+		lift_changed.emit()
+## Quarter turns clockwise the lifted tile shows on top of [member clockwise_turns]; set by the host, replicated
+var lift_turns: int = 0:
+	set(new_lift_turns):
+		if new_lift_turns == lift_turns: return
+		lift_turns = new_lift_turns
+		lift_changed.emit()
 
 ## What the tile currently looks like on this peer
 var shown_status: Status = Status.NONE:
@@ -166,11 +188,15 @@ func can_connect_to(grid_position: Vector2i, other_profile: StructureProfile) ->
 	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
 	return profile.can_connect(direction, clockwise_turns, other_profile)
 
-func has_connection(direction: Level.Direction) -> bool: return profile.has_connection(direction, clockwise_turns)
+func is_lifted() -> bool: return not lifted_by.is_empty()
+
+## @returns [code]true[/code] if the tile opens into [param direction]; a lifted tile opens nowhere, see [method get_connections]
+func has_connection(direction: Level.Direction) -> bool: return not is_lifted() and profile.has_connection(direction, clockwise_turns)
 func has_connection_to(grid_position: Vector2i) -> bool:
 	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
-	return profile.has_connection(direction, clockwise_turns)
+	return has_connection(direction)
 
+## @returns the sides the tile's shape opens into, lifted or not; whether pieces pass is [method has_connection]
 func get_connections() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
 func get_connection_vectors() -> Array[Vector2i]: return profile.get_connection_vectors(clockwise_turns)
 

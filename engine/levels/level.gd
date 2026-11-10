@@ -139,6 +139,19 @@ static func get_direction(first_grid_position: Vector2i, second_grid_position: V
 	assert(false)
 	return Direction.UP
 
+static func get_opposite(direction: Direction) -> Direction:
+	return posmod(direction + Direction.size() / 2, Direction.size()) as Direction
+
+## @returns [param direction] turned by [param clockwise_turns] quarter turns
+static func turn_direction(direction: Direction, clockwise_turns: int) -> Direction:
+	return posmod(direction + clockwise_turns, Direction.size()) as Direction
+
+## @returns [param spot] (an offset from a tile's center, see [method get_spot_position]) turned with its tile
+static func turn_spot(spot: Vector2, clockwise_turns: int) -> Vector2:
+	var turned_spot: Vector2 = spot
+	for _turn: int in posmod(clockwise_turns, Direction.size()): turned_spot = Vector2(-turned_spot.y, turned_spot.x)
+	return turned_spot
+
 func world_to_grid_position(world_position: Vector3) -> Vector2i:
 	return Vector2i(roundi(world_position.x / grid_size), roundi(world_position.z / grid_size))
 
@@ -175,14 +188,17 @@ func get_placed_thing(grid_position: Vector2i) -> Thing: return _placed_things.g
 
 ## @returns the cell reached by stepping from [param grid_position] into [param direction], or [param grid_position] itself if a wall blocks it
 func get_step_target(grid_position: Vector2i, direction: Direction) -> Vector2i:
-	var current_tile: Structure = get_placed_tile(grid_position)
-	assert(current_tile)
-	if not current_tile.has_connection(direction): return grid_position
-	var target_grid_position: Vector2i = grid_position + direction_to_vector(direction)
-	var target_tile: Structure = get_placed_tile(target_grid_position)
-	assert(target_tile, "Stepping %s from %s @ %s into nothing @ %s" % [direction, current_tile, grid_position, target_grid_position])
-	assert(target_tile.has_connection(get_direction(target_grid_position, grid_position)), "Stepping %s from %s @ %s into %s @ %s" % [direction, current_tile, grid_position, target_tile, target_grid_position])
-	return target_grid_position
+	assert(get_placed_tile(grid_position))
+	if not is_passage(grid_position, direction): return grid_position
+	return grid_position + direction_to_vector(direction)
+
+## @returns [code]true[/code] if pieces and sight pass from [param grid_position] into [param direction]: both tiles open
+## to each other and neither is lifted. A turned tile may open into a closed side, which is a dead end.
+func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
+	var tile: Structure = get_placed_tile(grid_position)
+	if not tile or not tile.has_connection(direction): return false
+	var neighbour: Structure = get_placed_tile(grid_position + direction_to_vector(direction))
+	return neighbour != null and neighbour.has_connection(get_opposite(direction))
 
 func get_spot_position(grid_position: Vector2i, spot: Vector2) -> Vector3:
 	return grid_to_world_position(grid_position) + Vector3(spot.x, 0.0, spot.y)
@@ -199,6 +215,41 @@ func get_free_spots(grid_position: Vector2i, except: Character = null) -> Array[
 		if character == except or not character.visible or character.grid_cell != grid_position: continue
 		free_spots.erase(character.tile_spot)
 	return free_spots
+
+## Host only: turns [param tile] by [param clockwise_turns] quarter turns with the pieces on it, then builds and looks
+## along its new passages as a step of [param character] would: the heroes' sight is updated from where they stand.
+## Emits [signal board_changed] for [param character] if that discovered or revealed tiles.
+func rotate_tile(tile: Structure, clockwise_turns: int, character: Character) -> void:
+	assert(multiplayer.is_server())
+	var grid_position: Vector2i = tile.get_grid_position()
+	assert(_placed_tiles.get(grid_position) == tile)
+	var tile_spots: Array[Vector2] = tile.profile.get_tile_spots()
+	for piece: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if not piece.visible or piece.grid_cell != grid_position: continue
+		var turned_spot: Vector2 = _get_nearest_spot(turn_spot(piece.tile_spot, clockwise_turns), tile_spots)
+		piece.place_on_grid(grid_position, turned_spot, turn_direction(piece.facing, clockwise_turns))
+	var thing: Thing = _placed_things.get(grid_position)
+	if thing: thing.rotate_y(-clockwise_turns * PI * 0.5)
+	tile.clockwise_turns = posmod(tile.clockwise_turns + clockwise_turns, Direction.size())
+	var board_change_count_before: int = _board_change_count
+	_stepping_character = character
+	_build_dungeon_from(grid_position)
+	for hero: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if not hero.visible or hero.level != self or hero.profile.group != CharacterProfile.Groups.HEROES: continue
+		_update_player_vision(hero.grid_cell, hero.profile.vision, _reveal_tile.bind(character))
+		_update_player_vision(hero.grid_cell, hero.profile.dark_vision, _discover_tile.bind(character))
+	_stepping_character = null
+	if _board_change_count != board_change_count_before: board_changed.emit(character)
+
+static func _get_nearest_spot(spot: Vector2, tile_spots: Array[Vector2]) -> Vector2:
+	var nearest_spot: Vector2 = spot
+	var nearest_distance: float = INF
+	for tile_spot: Vector2 in tile_spots:
+		var distance: float = tile_spot.distance_squared_to(spot)
+		if distance >= nearest_distance: continue
+		nearest_spot = tile_spot
+		nearest_distance = distance
+	return nearest_spot
 
 func _build_outer_wall() -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
@@ -285,7 +336,7 @@ func _update_player_vision(from_grid_position: Vector2i, vision_radius: float, r
 		for radius: int in range(1, ceili(vision_radius) + 1):
 			# Sight follows passages only, like the corridors built in _build_corridor_from,
 			# so coming back to a cell never reveals tiles that were built later
-			if not tile.has_connection(direction): break
+			if not is_passage(tile.get_grid_position(), direction): break
 			var next_tile_grid_position: Vector2i = from_grid_position + direction_vector * radius
 			if origin_grid_position.distance_squared_to(next_tile_grid_position) > vision_radius ** 2.0: break
 			if not _placed_tiles.has(next_tile_grid_position): break
@@ -367,8 +418,7 @@ func _create_connection(tile: Structure, connection: Direction) -> void:
 	add_child(tile_connection)
 
 func _create_connector(tile_position: Vector3, connection: Direction) -> void:
-	var direction_vector: Vector2i = direction_to_vector(connection)
-	var connector_position: Vector3 = tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
+	var connector_position: Vector3 = _get_connector_position(tile_position, connection)
 	if _tile_connectors.has(connector_position): return
 	var tile_connector: Structure = _tile_set.tile_connector.create(-1, Transform3D(Basis.IDENTITY, connector_position), connection, Structure.Status.PLACED)
 	_tile_connectors[connector_position] = tile_connector
@@ -384,6 +434,7 @@ func _on_structure_created(structure: Structure) -> void:
 		_create_connector(structure.global_position, connection)
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
 	structure.shown_status_changed.connect(_on_tile_shown_status_changed.bind(structure))
+	structure.clockwise_turns_changed.connect(_on_tile_turned.bind(structure).unbind(1))
 	if not multiplayer.is_server(): return
 	structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
 	if _is_next_to_revealed_tile(structure): structure.ready.connect(_discover_tile.bind(structure, _stepping_character), CONNECT_ONE_SHOT)
@@ -405,16 +456,41 @@ func _on_tile_shown_status_changed(shown_status: Structure.Status, tile: Structu
 		thing_on_tile.status = Thing.structure_status_to_thing_status(shown_status)
 	if not shown_status == Structure.Status.REVEALED: return
 	await get_tree().create_timer(0.5).timeout
+	_show_connections(tile)
+
+## Shows the connections of a revealed [param tile], and the connectors it shares with revealed neighbours
+func _show_connections(tile: Structure) -> void:
 	for tile_connection: Structure in _tile_connections.get(tile, []): tile_connection.shown_status = Structure.Status.REVEALED
 	for connection: Direction in tile.get_connections():
 		var direction_vector: Vector2i = direction_to_vector(connection)
-		var neighbour_position: Vector2i = grid_position + direction_vector
-		assert(_placed_tiles.has(neighbour_position))
-		var neighbour: Structure = _placed_tiles[neighbour_position]
-		if not neighbour.shown_status == Structure.Status.REVEALED: continue
-		var connector_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
-		var tile_connector: Structure = _tile_connectors[connector_position]
+		# A turned tile may open into a cell that is not built yet
+		var neighbour: Structure = _placed_tiles.get(tile.get_grid_position() + direction_vector)
+		if not neighbour or not neighbour.shown_status == Structure.Status.REVEALED: continue
+		var tile_connector: Structure = _tile_connectors[_get_connector_position(tile.global_position, connection)]
 		tile_connector.shown_status = Structure.Status.REVEALED
+
+## Every peer: rebuilds the connections of a turned [param tile] and the connectors on its sides
+func _on_tile_turned(tile: Structure) -> void:
+	for tile_connection: Structure in _tile_connections.get(tile, []): tile_connection.queue_free()
+	_tile_connections.erase(tile)
+	var connections: Array[Direction] = tile.get_connections()
+	for connection: Direction in connections: _create_connection(tile, connection)
+	var grid_position: Vector2i = tile.get_grid_position()
+	for direction: Direction in Direction.values():
+		var neighbour: Structure = _placed_tiles.get(grid_position + direction_to_vector(direction))
+		var needed: bool = connections.has(direction) or (neighbour != null and neighbour.get_connections().has(get_opposite(direction)))
+		var connector_position: Vector3 = _get_connector_position(tile.global_position, direction)
+		if needed: _create_connector(tile.global_position, direction)
+		elif _tile_connectors.has(connector_position):
+			_tile_connectors[connector_position].queue_free()
+			_tile_connectors.erase(connector_position)
+	if tile.shown_status == Structure.Status.REVEALED: _show_connections(tile)
+	for neighbour: Structure in _get_surrounding_tiles(grid_position):
+		if neighbour.shown_status == Structure.Status.REVEALED: _show_connections(neighbour)
+
+func _get_connector_position(tile_position: Vector3, connection: Direction) -> Vector3:
+	var direction_vector: Vector2i = direction_to_vector(connection)
+	return tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
 
 func _on_thing_created(thing: Thing) -> void:
 	var thing_grid_position: Vector2i = world_to_grid_position(thing.global_position)
