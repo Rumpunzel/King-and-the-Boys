@@ -121,8 +121,12 @@ var level: Level:
 		var decorations: Node3D = _decorate()
 		if decorations: profile.decorations.drop(decorations)
 
+var _lift: TileLift
+
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	lift_changed.connect(_on_lift_changed)
+	clockwise_turns_changed.connect(_on_turned)
 	if level: name = "%s %s" % [get_grid_position(), profile.name]
 	else: name = "%s %s" % [global_position, profile.name]
 	if status == Status.NONE: status = Status.PLACED
@@ -251,6 +255,26 @@ func _decorate() -> Node3D:
 	var decorations: Node3D = profile.decorations.create(self)
 	model.add_child(decorations)
 	return decorations
+
+## @returns what shows this tile's lift, made the first time it is needed
+func _get_lift() -> TileLift:
+	if not _lift:
+		_lift = TileLift.new(self)
+		add_child(_lift)
+	return _lift
+
+func _on_lift_changed() -> void:
+	_get_lift().update()
+
+## Every peer: the model catches up with the turn, and the arches and walls on its edges are decided again; they drop in once it landed
+func _on_turned(previous_clockwise_turns: int) -> void:
+	var lift: TileLift = _get_lift()
+	lift.on_turned(previous_clockwise_turns)
+	if not profile.decorations or not level: return
+	var props: Array[Model] = profile.decorations.redecide_edges(self)
+	if props.is_empty(): return
+	if lift.is_busy(): lift.landed.connect(profile.decorations.drop_props.bind(props), CONNECT_ONE_SHOT)
+	else: profile.decorations.drop_props(props)
 
 func _get_direction_to_grid_position(grid_position: Vector2i) -> Level.Direction: return Level.get_direction(get_grid_position(), grid_position)
 

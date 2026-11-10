@@ -41,13 +41,13 @@ func _start_cell() -> Vector2i:
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	return _level.world_to_grid_position((spawn_points.front() as Node3D).global_position)
 
-## Puts [param hero] on the revealed tile nearest the start whose shape changes when turned
+## Puts [param hero] on the tile nearest the start whose shape changes when turned; standing there reveals it
 func _stand_on_turnable_tile(hero: Character) -> Structure:
 	var placed_tiles: Dictionary = _level.get("_placed_tiles")
 	var best: Structure = null
 	for cell: Vector2i in placed_tiles:
 		var tile: Structure = placed_tiles[cell]
-		if tile.profile.resource_path == ModelFreeWorld.WALL_TILE or tile.status != Structure.Status.REVEALED: continue
+		if tile.profile.resource_path == ModelFreeWorld.WALL_TILE: continue
 		if RotateTileAbility._get_turned_connections(tile, 1) == RotateTileAbility._get_turned_connections(tile, 0): continue
 		if not best or cell.distance_squared_to(_start_cell()) < best.get_grid_position().distance_squared_to(_start_cell()): best = tile
 	assert_object(best).is_not_null()

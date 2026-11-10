@@ -17,6 +17,8 @@ extends Resource
 const NODE_NAME: StringName = &"Decorations"
 ## Meta of a tile's decorations: the grid positions of the neighbours whose shared edge (an opening or a wall) it decided
 const DECIDED_EDGES: StringName = &"decided_edges"
+## Meta of an arch or wall: the grid position of the neighbour across the edge it stands on, see [method redecide_edges]
+const EDGE: StringName = &"edge"
 ## Meta of a prop: the [ModelAnimation] its prop set plays as it drops in, if not [member drop_animation]
 const DROP_ANIMATION: StringName = &"drop_animation"
 ## The corners of a cell, as offsets from its grid position to the corner's index (see [method _add_pillars])
@@ -133,6 +135,58 @@ func drop(decorations: Node3D, after: Tween = null) -> void:
 	if after and after.is_running(): after.finished.connect(_drop_each.bind(decorations), CONNECT_ONE_SHOT)
 	else: _drop_each(decorations)
 
+## Every peer, after [param tile] turned: takes down the arches and walls on its four edges, whichever side raised them, and lets
+## the turned tile decide those edges again. Its own clutter turns with its model and keeps to its closed sides.
+## @returns the new props, hidden until [method drop_props]
+func redecide_edges(tile: Structure) -> Array[Model]:
+	var grid_position: Vector2i = tile.get_grid_position()
+	for direction: Level.Direction in Level.Direction.values():
+		var neighbour: Structure = tile.level.get_placed_tile(grid_position + Level.DIRECTION_VECTORS[direction])
+		var neighbour_decorations: Node3D = _get_decorations(neighbour) if neighbour else null
+		if neighbour_decorations: _take_down_edges(neighbour_decorations, [grid_position] as Array[Vector2i])
+	var decorations: Node3D = _get_decorations(tile)
+	var new_props: Array[Model] = []
+	if not decorations: return new_props
+	var decided: Array[Vector2i] = decorations.get_meta(DECIDED_EDGES, [] as Array[Vector2i])
+	_take_down_edges(decorations, decided.duplicate())
+	var first_new: int = decorations.get_child_count()
+	_add_arches(decorations, tile, decided)
+	_add_walls(decorations, tile, decided)
+	for index: int in range(first_new, decorations.get_child_count()):
+		var prop: Model = decorations.get_child(index)
+		prop.visible = false
+		new_props.append(prop)
+	return new_props
+
+## Drops in [param props] (e.g. from [method redecide_edges]) one after another
+func drop_props(props: Array[Model]) -> void:
+	var valid_props: Array[Model] = []
+	for prop: Model in props:
+		if is_instance_valid(prop): valid_props.append(prop)
+	if valid_props.is_empty(): return
+	var first_prop: Model = valid_props.front()
+	if not first_prop.is_inside_tree(): return
+	var tween: Tween = first_prop.create_tween()
+	for prop: Model in valid_props:
+		tween.tween_callback(_drop_one.bind(prop))
+		tween.tween_interval(drop_interval)
+
+## Removes the arches and walls of [param decorations] standing on the edges towards [param neighbour_positions], and forgets them
+static func _take_down_edges(decorations: Node3D, neighbour_positions: Array[Vector2i]) -> void:
+	var decided: Array[Vector2i] = decorations.get_meta(DECIDED_EDGES, [] as Array[Vector2i])
+	for neighbour_position: Vector2i in neighbour_positions: decided.erase(neighbour_position)
+	decorations.set_meta(DECIDED_EDGES, decided)
+	for prop: Node in decorations.get_children():
+		if not prop.has_meta(EDGE): continue
+		var edge: Vector2i = prop.get_meta(EDGE)
+		if not neighbour_positions.has(edge): continue
+		decorations.remove_child(prop)
+		prop.queue_free()
+
+static func _get_decorations(tile: Structure) -> Node3D:
+	if not tile.model or not tile.model.has_node(NodePath(NODE_NAME)): return null
+	return tile.model.get_node(NodePath(NODE_NAME)) as Node3D
+
 ## An arch over some openings: whole ones between a room and a corridor, ruins between two corridors. The first of the two tiles to
 ## be revealed decides, as soon as the other one exists (it need not be revealed); otherwise the other one decides once revealed
 func _add_arches(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) -> void:
@@ -151,7 +205,8 @@ func _add_arches(decorations: Node3D, tile: Structure, decided: Array[Vector2i])
 		random.seed = hash(grid_position) ^ hash(neighbour_position)
 		if random.randf() >= (doorway_arch_chance if is_doorway else corridor_arch_chance): continue
 		var arches: PropSet = doorway_arches if is_doorway else corridor_arches
-		_add_prop(decorations, arches, _on_edge(tile, direction, _facing_room(direction, is_room) if is_doorway else Basis.IDENTITY), random)
+		var arch: Model = _add_prop(decorations, arches, _on_edge(tile, direction, _facing_room(direction, is_room) if is_doorway else Basis.IDENTITY), random)
+		if arch: arch.set_meta(EDGE, neighbour_position)
 
 ## A wall on some sides without a connection; a neighbour across, if any, may have decided the edge already
 func _add_walls(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) -> void:
@@ -170,7 +225,8 @@ func _add_walls(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) 
 		if random.randf() >= wall_chance: continue
 		# Either face may look into the tile, so crumbling ends vary
 		var flip: Basis = Basis(Vector3.UP, PI) if random.randf() < 0.5 else Basis.IDENTITY
-		_add_prop(decorations, walls, _on_edge(tile, direction, flip), random)
+		var wall: Model = _add_prop(decorations, walls, _on_edge(tile, direction, flip), random)
+		if wall: wall.set_meta(EDGE, neighbour_position)
 
 ## The middle of the tile's edge in [param direction] (in the level's axes), turned so a piece modelled along x spans the edge
 static func _on_edge(tile: Structure, direction: Level.Direction, turn: Basis) -> Transform3D:
@@ -227,12 +283,13 @@ static func _random_turn(random: RandomNumberGenerator) -> Transform3D:
 	return Transform3D(Basis(Vector3.UP, random.randf() * TAU), Vector3.ZERO)
 
 ## Adds a prop picked from [param prop_set] at [param prop_transform], in the tile model's space
-func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transform3D, random: RandomNumberGenerator) -> void:
-	if not collection: return
+## @returns the prop, or [code]null[/code] if the set gave none
+func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transform3D, random: RandomNumberGenerator) -> Model:
+	if not collection: return null
 	# Scale and material come from the (sub-)collection the prop is taken from
 	var prop_set: PropSet = collection.pick_collection(random)
 	var scene: PackedScene = prop_set.pick(random)
-	if not scene: return
+	if not scene: return null
 	var mesh: Node3D = scene.instantiate()
 	# Decorations never block clicks or movement
 	# Taken out at once, so they never collide; nested bodies leave with their parent, which is fine to remove and free again
@@ -255,6 +312,7 @@ func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transfo
 	if animation: prop.set_meta(DROP_ANIMATION, animation)
 	prop.add_child(mesh)
 	decorations.add_child(prop)
+	return prop
 
 ## The bounds of every mesh in [param node], in its own space; works outside the tree
 static func _get_bounds(node: Node3D) -> AABB:

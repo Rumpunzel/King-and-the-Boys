@@ -13,12 +13,14 @@ var _level: Level
 var _doorway_arch_chance: float
 var _walls: PropSet
 var _wall_chance: float
+var _corridor_arch_chance: float
 
 func before_test() -> void:
 	# Every doorway gets an arch, so the checks do not depend on the rolls
 	var decorations: TileDecorations = load(DECORATIONS)
 	_doorway_arch_chance = decorations.doorway_arch_chance
 	decorations.doorway_arch_chance = 1.0
+	_corridor_arch_chance = decorations.corridor_arch_chance
 	_walls = decorations.walls
 	_wall_chance = decorations.wall_chance
 	decorations.walls = load(WALLS)
@@ -34,6 +36,7 @@ func before_test() -> void:
 func after_test() -> void:
 	var decorations: TileDecorations = load(DECORATIONS)
 	decorations.doorway_arch_chance = _doorway_arch_chance
+	decorations.corridor_arch_chance = _corridor_arch_chance
 	decorations.walls = _walls
 	decorations.wall_chance = _wall_chance
 
@@ -180,3 +183,54 @@ func test_tiles_spawned_revealed_raise_their_pillars() -> void:
 			if scenes.has((prop.get_child(0) as Node).scene_file_path): pillars.append(Vector2((prop as Node3D).global_position.x, (prop as Node3D).global_position.z))
 	var corner: float = -loaded.grid_size * 0.5
 	assert_int(_count_near(pillars, Vector2(corner, corner))).is_equal(1)
+
+## The props on the edge of [param tile] towards [param neighbour_position], whichever side raised them
+func _edge_props(tile: Structure, neighbour_position: Vector2i) -> Array[Model]:
+	var props: Array[Model] = []
+	var sides: Dictionary[Structure, Vector2i] = {tile: neighbour_position}
+	var neighbour: Structure = _level.get_placed_tile(neighbour_position)
+	if neighbour: sides[neighbour] = tile.get_grid_position()
+	for side: Structure in sides:
+		if not side.model or not side.model.has_node(NodePath(TileDecorations.NODE_NAME)): continue
+		for prop: Node in side.model.get_node(NodePath(TileDecorations.NODE_NAME)).get_children():
+			if not prop.has_meta(TileDecorations.EDGE): continue
+			var edge: Vector2i = prop.get_meta(TileDecorations.EDGE)
+			if edge == sides[side]: props.append(prop as Model)
+	return props
+
+func test_a_turned_tile_decides_its_edges_again() -> void:
+	var decorations: TileDecorations = load(DECORATIONS)
+	decorations.corridor_arch_chance = 1.0
+	var turned: Structure = null
+	for tile: Structure in _tiles_within(2):
+		if tile.shown_status != Structure.Status.REVEALED or tile.profile.room_type: continue
+		var connections: Array[Level.Direction] = tile.get_connections()
+		var turned_connections: Array[Level.Direction] = []
+		for connection: Level.Direction in connections: turned_connections.append(Level.turn_direction(connection, 1))
+		connections.sort()
+		turned_connections.sort()
+		if connections != turned_connections:
+			turned = tile
+			break
+	assert_object(turned).override_failure_message("A corridor near the start should change its shape when turned").is_not_null()
+	# Tiles the turn builds decide their edges themselves once they are revealed
+	var existing: Array[Vector2i] = []
+	for direction: Level.Direction in Level.Direction.values():
+		var cell: Vector2i = turned.get_grid_position() + Level.DIRECTION_VECTORS[direction]
+		if _level.get_placed_tile(cell): existing.append(cell)
+	_level.rotate_tile(turned, 1, null)
+	var new_props: Array[Model] = []
+	for direction: Level.Direction in Level.Direction.values():
+		var neighbour_position: Vector2i = turned.get_grid_position() + Level.DIRECTION_VECTORS[direction]
+		var props: Array[Model] = _edge_props(turned, neighbour_position)
+		assert_int(props.size()).override_failure_message("Edge towards %s" % neighbour_position).is_less_equal(1)
+		var neighbour: Structure = _level.get_placed_tile(neighbour_position)
+		if turned.get_connections().has(direction) and existing.has(neighbour_position) and neighbour.model:
+			# Every opening gets an arch now: whole ones into rooms, ruins between corridors
+			assert_int(props.size()).override_failure_message("Opening towards %s" % neighbour_position).is_equal(1)
+		new_props.append_array(props)
+	assert_array(new_props).is_not_empty()
+	# They wait until the tile has turned into place
+	for prop: Model in new_props: assert_bool(prop.visible).is_false()
+	await await_millis(2000)
+	for prop: Model in new_props: assert_bool(prop.visible).is_true()

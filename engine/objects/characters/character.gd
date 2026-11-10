@@ -145,6 +145,10 @@ var _move_backwards: bool = false
 # The cell the animated figure is in; lags behind grid_cell while it moves
 var _figure_grid_cell: Vector2i = Vector2i.ZERO
 
+# What the figure rides on, e.g. a lifted tile's model (see TileLift), and where on it
+var _carrier: Node3D
+var _carried_transform: Transform3D
+
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready() -> void:
@@ -171,6 +175,7 @@ func _physics_process(_delta: float) -> void:
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
+	if is_instance_valid(_carrier): global_transform = _carrier.global_transform * _carried_transform
 	_update_figure_grid_cell()
 	#if model: model.play_animation(_normalized_velocity, _is_on_floor)
 
@@ -270,6 +275,22 @@ func _add_ability_uses(ability: Ability, amount: int) -> void:
 	else: new_ability_uses[ability_id] = used
 	ability_uses = new_ability_uses
 
+## Every peer: the figure rides on [param carrier] as it stands, e.g. on a lifted tile, until [method set_down];
+## grid state changes meanwhile show once it is set down
+func carry_on(carrier: Node3D) -> void:
+	for tween: Tween in [_move_tween, _turn_tween]: if tween: tween.kill()
+	_move_tween = null
+	_carrier = carrier
+	_carried_transform = carrier.global_transform.affine_inverse() * global_transform
+
+## Ends [method carry_on]: the figure snaps onto its grid state
+func set_down() -> void:
+	_carrier = null
+	snap_to_grid()
+
+func is_carried() -> bool:
+	return is_instance_valid(_carrier)
+
 ## Snaps the model back onto its grid state, e.g. after something else moved it locally
 func snap_to_grid() -> void:
 	_grid_visuals_applied = false
@@ -347,14 +368,16 @@ func _queue_grid_visual_update() -> void:
 
 func _apply_grid_visuals() -> void:
 	_grid_visual_update_queued = false
-	if not level or not is_inside_tree(): return
+	# A carried figure shows its grid state once it is set down
+	if not level or not is_inside_tree() or is_carried(): return
 	var target_position: Vector3 = level.get_spot_position(grid_cell, tile_spot)
 	var target_rotation: float = facing_to_rotation(facing)
 	if not _grid_visuals_applied:
 		_grid_visuals_applied = true
 		for tween: Tween in [_move_tween, _turn_tween, _model_tween]: if tween: tween.kill()
 		global_position = target_position
-		rotation.y = target_rotation
+		# Upright again after riding on a tilted carrier
+		rotation = Vector3(0.0, target_rotation, 0.0)
 		_update_figure_grid_cell()
 		return
 	_turn_to(target_rotation)
