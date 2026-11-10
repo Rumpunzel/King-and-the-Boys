@@ -11,26 +11,26 @@
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_ot36u"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_eh6ha"]
 [ext_resource type="ArrayMesh" uid="uid://piwndcl1msah" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_03.res" id="11_bbn58"]
-[ext_resource type="ArrayMesh" uid="uid://3nekmi2q0qgv" path="res://data/characters/people/meshes/gear/head_coverings_base_hair/modular_character_HeadCoverings_Base_Hair_05.res" id="11_tp5eo"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="12_thqp2"]
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="13_14iws"]
 [ext_resource type="Resource" uid="uid://bdokqsryh4q3j" path="res://data/equipment/types/hat.tres" id="14_16sf2"]
 [ext_resource type="Resource" uid="uid://dnkb4svltrc47" path="res://data/equipment/types/cape.tres" id="14_udkfc"]
-[ext_resource type="ArrayMesh" uid="uid://b4c1khcbi6auv" path="res://data/characters/people/meshes/gear/female/hips/modular_character_Hips_Female_21.res" id="17_4u2hy"]
-[ext_resource type="ArrayMesh" uid="uid://b03ctmq23wug5" path="res://data/characters/people/meshes/gear/male/hips/modular_character_Hips_Male_21.res" id="18_kuy0s"]
-[ext_resource type="ArrayMesh" uid="uid://djl5ofve882ch" path="res://data/characters/people/meshes/gear/female/leg_left/modular_character_LegLeft_Female_08.res" id="19_npy5k"]
-[ext_resource type="ArrayMesh" uid="uid://dyk3e38lw8thb" path="res://data/characters/people/meshes/gear/male/leg_left/modular_character_LegLeft_Male_08.res" id="20_vx505"]
-[ext_resource type="ArrayMesh" uid="uid://bkr32tcftxxht" path="res://data/characters/people/meshes/gear/female/leg_right/modular_character_LegRight_Female_08.res" id="21_s5kds"]
-[ext_resource type="ArrayMesh" uid="uid://qoptmxpo0he1" path="res://data/characters/people/meshes/gear/male/leg_right/modular_character_LegRight_Male_08.res" id="22_n73mo"]
+[ext_resource type="ArrayMesh" uid="uid://bpfxqpnjilye3" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_12.res" id="15_bbn58"]
+[ext_resource type="ArrayMesh" uid="uid://dx7vkm0ptsffw" path="res://data/characters/people/meshes/gear/female/hips/modular_character_Hips_Female_23.res" id="17_udkfc"]
+[ext_resource type="ArrayMesh" uid="uid://bw6kau4rkwrea" path="res://data/characters/people/meshes/gear/male/hips/modular_character_Hips_Male_23.res" id="18_4u2hy"]
+[ext_resource type="ArrayMesh" uid="uid://cfdi2i6hahrf5" path="res://data/characters/people/meshes/gear/female/leg_left/modular_character_LegLeft_Female_00.res" id="19_kuy0s"]
+[ext_resource type="ArrayMesh" uid="uid://bumojbo322bwk" path="res://data/characters/people/meshes/gear/male/leg_left/modular_character_LegLeft_Male_00.res" id="20_npy5k"]
+[ext_resource type="ArrayMesh" uid="uid://qw6ahnhdnwds" path="res://data/characters/people/meshes/gear/female/leg_right/modular_character_LegRight_Female_00.res" id="21_vx505"]
+[ext_resource type="ArrayMesh" uid="uid://dy45rbmiqwq4i" path="res://data/characters/people/meshes/gear/male/leg_right/modular_character_LegRight_Male_00.res" id="22_s5kds"]
 [ext_resource type="Resource" uid="uid://c7ec6d8vlckig" path="res://data/equipment/types/leg_armor.tres" id="23_chxko"]
-[ext_resource type="ArrayMesh" uid="uid://ylssmnrm3sw0" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_14.res" id="24_ntxgj"]
-[ext_resource type="ArrayMesh" uid="uid://qkbllwooeov0" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_14.res" id="25_yo1oa"]
-[ext_resource type="ArrayMesh" uid="uid://dyg1ycd5hlkth" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_02.res" id="26_toe72"]
-[ext_resource type="ArrayMesh" uid="uid://c0j4iya3wjski" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_02.res" id="27_sxkxs"]
-[ext_resource type="ArrayMesh" uid="uid://bw7apfswnakkp" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_02.res" id="28_qxi60"]
-[ext_resource type="ArrayMesh" uid="uid://bga53l81u2bj8" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_02.res" id="29_iaa52"]
-[ext_resource type="ArrayMesh" uid="uid://mbeuo2uj4gey" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_16.res" id="30_64hqp"]
-[ext_resource type="ArrayMesh" uid="uid://5xmq5t5amkua" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_16.res" id="31_mktmh"]
+[ext_resource type="ArrayMesh" uid="uid://mvluv8nefqkp" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_01.res" id="24_n73mo"]
+[ext_resource type="ArrayMesh" uid="uid://deylmhekr686p" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_01.res" id="25_chxko"]
+[ext_resource type="ArrayMesh" uid="uid://yveqgoh7remg" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_03.res" id="26_ntxgj"]
+[ext_resource type="ArrayMesh" uid="uid://ca57kkm7452tu" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_03.res" id="27_yo1oa"]
+[ext_resource type="ArrayMesh" uid="uid://bs852ogb8cymj" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_03.res" id="28_toe72"]
+[ext_resource type="ArrayMesh" uid="uid://c2xbvktciru6h" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_03.res" id="29_sxkxs"]
+[ext_resource type="ArrayMesh" uid="uid://bibrv7mxyt1v5" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_09.res" id="30_qxi60"]
+[ext_resource type="ArrayMesh" uid="uid://db38ftykta2pi" path="res://data/characters/people/meshes/gear/shoulder_attachment_right/modular_character_ShoulderAttachRight_09.res" id="31_iaa52"]
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="32_biseb"]
 [ext_resource type="ArrayMesh" uid="uid://uxig1bvjpmeu" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_03.res" id="33_32crj"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="34_vkv3h"]
@@ -50,86 +50,86 @@ type = ExtResource("14_udkfc")
 appearance = SubResource("Resource_hgfkf")
 name = "Cape 03"
 
-[sub_resource type="Resource" id="Resource_8yuoo"]
+[sub_resource type="Resource" id="Resource_64hqp"]
 script = ExtResource("10_eh6ha")
-part = 19
-male_mesh = ExtResource("11_tp5eo")
+part = 22
+male_mesh = ExtResource("15_bbn58")
 
-[sub_resource type="Resource" id="Resource_r3ot4"]
+[sub_resource type="Resource" id="Resource_mktmh"]
 script = ExtResource("12_thqp2")
-parts = Array[ExtResource("10_eh6ha")]([SubResource("Resource_8yuoo")])
+parts = Array[ExtResource("10_eh6ha")]([SubResource("Resource_64hqp")])
 
-[sub_resource type="Resource" id="Resource_txoeb"]
+[sub_resource type="Resource" id="Resource_biseb"]
 script = ExtResource("13_14iws")
 type = ExtResource("14_16sf2")
-appearance = SubResource("Resource_r3ot4")
-name = "Hat 05 00"
+appearance = SubResource("Resource_mktmh")
+name = "Hat 00 12"
+
+[sub_resource type="Resource" id="Resource_32crj"]
+script = ExtResource("10_eh6ha")
+part = 9
+male_mesh = ExtResource("18_4u2hy")
+female_mesh = ExtResource("17_udkfc")
+
+[sub_resource type="Resource" id="Resource_vkv3h"]
+script = ExtResource("10_eh6ha")
+part = 10
+male_mesh = ExtResource("20_npy5k")
+female_mesh = ExtResource("19_kuy0s")
 
 [sub_resource type="Resource" id="Resource_skrii"]
 script = ExtResource("10_eh6ha")
-part = 9
-male_mesh = ExtResource("18_kuy0s")
-female_mesh = ExtResource("17_4u2hy")
+part = 11
+male_mesh = ExtResource("22_s5kds")
+female_mesh = ExtResource("21_vx505")
 
 [sub_resource type="Resource" id="Resource_m8ays"]
-script = ExtResource("10_eh6ha")
-part = 10
-male_mesh = ExtResource("20_vx505")
-female_mesh = ExtResource("19_npy5k")
+script = ExtResource("12_thqp2")
+parts = Array[ExtResource("10_eh6ha")]([SubResource("Resource_32crj"), SubResource("Resource_vkv3h"), SubResource("Resource_skrii")])
 
 [sub_resource type="Resource" id="Resource_lu7ht"]
-script = ExtResource("10_eh6ha")
-part = 11
-male_mesh = ExtResource("22_n73mo")
-female_mesh = ExtResource("21_s5kds")
-
-[sub_resource type="Resource" id="Resource_7k5vc"]
-script = ExtResource("12_thqp2")
-parts = Array[ExtResource("10_eh6ha")]([SubResource("Resource_skrii"), SubResource("Resource_m8ays"), SubResource("Resource_lu7ht")])
-
-[sub_resource type="Resource" id="Resource_8ll1v"]
 script = ExtResource("13_14iws")
 type = ExtResource("23_chxko")
-appearance = SubResource("Resource_7k5vc")
-name = "Leg Armor 21-08 00"
+appearance = SubResource("Resource_m8ays")
+name = "Leg Armor 23-00 00"
+
+[sub_resource type="Resource" id="Resource_7k5vc"]
+script = ExtResource("10_eh6ha")
+part = 12
+male_mesh = ExtResource("25_chxko")
+female_mesh = ExtResource("24_n73mo")
+
+[sub_resource type="Resource" id="Resource_8ll1v"]
+script = ExtResource("10_eh6ha")
+part = 2
+male_mesh = ExtResource("27_yo1oa")
+female_mesh = ExtResource("26_ntxgj")
 
 [sub_resource type="Resource" id="Resource_kd3c6"]
 script = ExtResource("10_eh6ha")
-part = 12
-male_mesh = ExtResource("25_yo1oa")
-female_mesh = ExtResource("24_ntxgj")
+part = 3
+male_mesh = ExtResource("29_sxkxs")
+female_mesh = ExtResource("28_toe72")
 
 [sub_resource type="Resource" id="Resource_1f2pq"]
 script = ExtResource("10_eh6ha")
-part = 2
-male_mesh = ExtResource("27_sxkxs")
-female_mesh = ExtResource("26_toe72")
+part = 26
+male_mesh = ExtResource("30_qxi60")
 
 [sub_resource type="Resource" id="Resource_ojvid"]
 script = ExtResource("10_eh6ha")
-part = 3
-male_mesh = ExtResource("29_iaa52")
-female_mesh = ExtResource("28_qxi60")
+part = 27
+male_mesh = ExtResource("31_iaa52")
 
 [sub_resource type="Resource" id="Resource_drw4k"]
-script = ExtResource("10_eh6ha")
-part = 26
-male_mesh = ExtResource("30_64hqp")
+script = ExtResource("12_thqp2")
+parts = Array[ExtResource("10_eh6ha")]([SubResource("Resource_7k5vc"), SubResource("Resource_8ll1v"), SubResource("Resource_kd3c6"), SubResource("Resource_1f2pq"), SubResource("Resource_ojvid")])
 
 [sub_resource type="Resource" id="Resource_1ot23"]
-script = ExtResource("10_eh6ha")
-part = 27
-male_mesh = ExtResource("31_mktmh")
-
-[sub_resource type="Resource" id="Resource_wly6m"]
-script = ExtResource("12_thqp2")
-parts = Array[ExtResource("10_eh6ha")]([SubResource("Resource_kd3c6"), SubResource("Resource_1f2pq"), SubResource("Resource_ojvid"), SubResource("Resource_drw4k"), SubResource("Resource_1ot23")])
-
-[sub_resource type="Resource" id="Resource_k8qy8"]
 script = ExtResource("13_14iws")
 type = ExtResource("32_biseb")
-appearance = SubResource("Resource_wly6m")
-name = "Chest Armor 14-02 16"
+appearance = SubResource("Resource_drw4k")
+name = "Chest Armor 01-03 09"
 
 [sub_resource type="Resource" id="Resource_60wdo"]
 script = ExtResource("10_eh6ha")
@@ -153,9 +153,9 @@ agility = 4
 intelligence = 4
 speed = 5
 model_configuration = ExtResource("5_26gx7")
-starting_head = SubResource("Resource_txoeb")
-starting_torso = SubResource("Resource_k8qy8")
-starting_legs = SubResource("Resource_8ll1v")
+starting_head = SubResource("Resource_biseb")
+starting_torso = SubResource("Resource_1ot23")
+starting_legs = SubResource("Resource_lu7ht")
 starting_back = SubResource("Resource_gn5hf")
 starting_waist = SubResource("Resource_kfnui")
 name = "Elf"

@@ -29,8 +29,8 @@
 [ext_resource type="ArrayMesh" uid="uid://dx0m3bq0e3op0" path="res://data/characters/people/meshes/body/male/head/modular_character_Head_No_Elements_Male_10.res" id="27_iiaan"]
 [ext_resource type="ArrayMesh" uid="uid://do2kmae0t0vgh" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_05.res" id="28_511xg"]
 [ext_resource type="Resource" uid="uid://cjtvbppxw8vd2" path="res://data/equipment/types/helmet.tres" id="29_wjjus"]
-[ext_resource type="ArrayMesh" uid="uid://dx7vkm0ptsffw" path="res://data/characters/people/meshes/gear/female/hips/modular_character_Hips_Female_23.res" id="30_0tesk"]
-[ext_resource type="ArrayMesh" uid="uid://bw6kau4rkwrea" path="res://data/characters/people/meshes/gear/male/hips/modular_character_Hips_Male_23.res" id="31_epggj"]
+[ext_resource type="ArrayMesh" uid="uid://bdf41labpwfc" path="res://data/characters/people/meshes/gear/female/hips/modular_character_Hips_Female_09.res" id="30_7tsdp"]
+[ext_resource type="ArrayMesh" uid="uid://ibghpwmcp4v1" path="res://data/characters/people/meshes/gear/male/hips/modular_character_Hips_Male_09.res" id="31_73hd6"]
 [ext_resource type="ArrayMesh" uid="uid://48vk3w5m2omo" path="res://data/characters/people/meshes/gear/female/leg_left/modular_character_LegLeft_Female_16.res" id="32_7tsdp"]
 [ext_resource type="ArrayMesh" uid="uid://busuw2gk4vl85" path="res://data/characters/people/meshes/gear/male/leg_left/modular_character_LegLeft_Male_16.res" id="33_73hd6"]
 [ext_resource type="ArrayMesh" uid="uid://bixb7r60jnnwp" path="res://data/characters/people/meshes/gear/female/leg_right/modular_character_LegRight_Female_16.res" id="34_ek7te"]
@@ -132,8 +132,8 @@ name = "Helmet 10 05"
 [sub_resource type="Resource" id="Resource_ilsx3"]
 script = ExtResource("10_7tsdp")
 part = 9
-male_mesh = ExtResource("31_epggj")
-female_mesh = ExtResource("30_0tesk")
+male_mesh = ExtResource("31_73hd6")
+female_mesh = ExtResource("30_7tsdp")
 
 [sub_resource type="Resource" id="Resource_g0w26"]
 script = ExtResource("10_7tsdp")
@@ -165,7 +165,7 @@ parts = Array[ExtResource("10_7tsdp")]([SubResource("Resource_ilsx3"), SubResour
 script = ExtResource("13_bdx47")
 type = ExtResource("38_eas5c")
 appearance = SubResource("Resource_iqwp0")
-name = "Leg Armor 23-16 09"
+name = "Leg Armor 09-16 09"
 
 [sub_resource type="Resource" id="Resource_73hd6"]
 script = ExtResource("10_7tsdp")

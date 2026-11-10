@@ -40,6 +40,7 @@
 [ext_resource type="ArrayMesh" uid="uid://c0j4iya3wjski" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_02.res" id="38_3cfry"]
 [ext_resource type="ArrayMesh" uid="uid://bw7apfswnakkp" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_02.res" id="39_wqua0"]
 [ext_resource type="ArrayMesh" uid="uid://bga53l81u2bj8" path="res://data/characters/people/meshes/gear/male/arm_upper_right/modular_character_ArmUpperRight_Male_02.res" id="40_02olw"]
+[ext_resource type="ArrayMesh" uid="uid://mbeuo2uj4gey" path="res://data/characters/people/meshes/gear/shoulder_attachment_left/modular_character_ShoulderAttachLeft_16.res" id="41_ndv3c"]
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="41_onj5d"]
 [ext_resource type="ArrayMesh" uid="uid://b1kdqgrdhk27o" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_01.res" id="42_2hj8h"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="43_tmsvl"]
@@ -107,19 +108,19 @@ type = ExtResource("25_dvff2")
 appearance = SubResource("Resource_4ebdj")
 name = "Gloves 03-02 00"
 
-[sub_resource type="Resource" id="Resource_lyfvp"]
+[sub_resource type="Resource" id="Resource_6x1fj"]
 script = ExtResource("10_co6b3")
 part = 21
 male_mesh = ExtResource("11_478kw")
 
-[sub_resource type="Resource" id="Resource_ked5x"]
+[sub_resource type="Resource" id="Resource_inufi"]
 script = ExtResource("13_ts7pc")
-parts = Array[ExtResource("10_co6b3")]([SubResource("Resource_lyfvp")])
+parts = Array[ExtResource("10_co6b3")]([SubResource("Resource_6x1fj")])
 
-[sub_resource type="Resource" id="Resource_co6b3"]
+[sub_resource type="Resource" id="Resource_1ubsi"]
 script = ExtResource("14_s4m6m")
 type = ExtResource("15_fi1vr")
-appearance = SubResource("Resource_ked5x")
+appearance = SubResource("Resource_inufi")
 name = "Hood 08 00"
 
 [sub_resource type="Resource" id="Resource_8acot"]
@@ -150,33 +151,38 @@ type = ExtResource("34_c62ds")
 appearance = SubResource("Resource_7qjd0")
 name = "Leg Armor 14-04 00"
 
-[sub_resource type="Resource" id="Resource_v8mxh"]
+[sub_resource type="Resource" id="Resource_vckcp"]
 script = ExtResource("10_co6b3")
 part = 12
 male_mesh = ExtResource("36_lt834")
 female_mesh = ExtResource("35_ygcul")
 
-[sub_resource type="Resource" id="Resource_7upa6"]
+[sub_resource type="Resource" id="Resource_xfds2"]
 script = ExtResource("10_co6b3")
 part = 2
 male_mesh = ExtResource("38_3cfry")
 female_mesh = ExtResource("37_w4g71")
 
-[sub_resource type="Resource" id="Resource_djt5d"]
+[sub_resource type="Resource" id="Resource_vhc3o"]
 script = ExtResource("10_co6b3")
 part = 3
 male_mesh = ExtResource("40_02olw")
 female_mesh = ExtResource("39_wqua0")
 
-[sub_resource type="Resource" id="Resource_gs83x"]
-script = ExtResource("13_ts7pc")
-parts = Array[ExtResource("10_co6b3")]([SubResource("Resource_v8mxh"), SubResource("Resource_7upa6"), SubResource("Resource_djt5d")])
+[sub_resource type="Resource" id="Resource_khl4o"]
+script = ExtResource("10_co6b3")
+part = 26
+male_mesh = ExtResource("41_ndv3c")
 
-[sub_resource type="Resource" id="Resource_msj33"]
+[sub_resource type="Resource" id="Resource_b4a8i"]
+script = ExtResource("13_ts7pc")
+parts = Array[ExtResource("10_co6b3")]([SubResource("Resource_vckcp"), SubResource("Resource_xfds2"), SubResource("Resource_vhc3o"), SubResource("Resource_khl4o")])
+
+[sub_resource type="Resource" id="Resource_dvff2"]
 script = ExtResource("14_s4m6m")
 type = ExtResource("41_onj5d")
-appearance = SubResource("Resource_gs83x")
-name = "Chest Armor 13-02 00"
+appearance = SubResource("Resource_b4a8i")
+name = "Chest Armor 13-02 16-00"
 
 [sub_resource type="Resource" id="Resource_4ut3b"]
 script = ExtResource("10_co6b3")
@@ -197,9 +203,9 @@ name = "Belt 01"
 script = ExtResource("3_7rwy5")
 strength = 2
 speed = 4
-starting_head = SubResource("Resource_co6b3")
+starting_head = SubResource("Resource_1ubsi")
 starting_face = SubResource("Resource_s4m6m")
-starting_torso = SubResource("Resource_msj33")
+starting_torso = SubResource("Resource_dvff2")
 starting_hands = SubResource("Resource_xjxbu")
 starting_legs = SubResource("Resource_tpfvq")
 starting_back = SubResource("Resource_sml8c")

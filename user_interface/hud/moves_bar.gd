@@ -23,7 +23,7 @@ enum MoveState { LEFT, UNDOABLE, USED }
 ## How long a pill takes to fill up, drain or change its colour
 @export_range(0.0, 1.0) var fill_duration: float = 0.25
 ## Seconds between pills that change at once
-@export_range(0.0, 1.0) var stagger: float = 0.08
+@export_range(0.0, 1.0) var stagger: float = 0.25
 @export var pill_height: float = 10.0:
 	set(new_pill_height):
 		pill_height = new_pill_height
