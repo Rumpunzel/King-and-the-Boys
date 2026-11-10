@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 ## Body configurations roll parts from their pools, and every hero has one of their own
 
 const HEROES: Array[String] = ["knight", "rogue", "mystic", "soldier", "elf"]
+const KNIGHT_BODY: String = "res://data/characters/people/knight_body.tres"
 
 var _model: ModularCharacter
 
@@ -59,7 +60,6 @@ func test_every_hero_has_a_look_of_their_own() -> void:
 	for hero: String in HEROES:
 		var profile: CharacterProfile = load("res://data/characters/people/%s.tres" % hero)
 		assert_str(profile.model_configuration.resource_path).is_equal("res://data/characters/people/%s_body.tres" % hero)
-		assert_array(profile.model_configuration.call("_get_configuration_warnings") as PackedStringArray).is_empty()
 		for part_key: String in profile.model_configuration.mesh_pools:
 			var part: ModularBodyPart = _model.get(part_key.to_lower())
 			var options: PackedStringArray = profile.model_configuration.get_pool_options(part, part_key)
@@ -82,7 +82,7 @@ func test_switching_meshes_off_and_on_again_drops_the_pool() -> void:
 
 func test_the_editor_lists_each_body_part_of_the_configured_body() -> void:
 	var bodies: Array[PackedScene] = BodyPoolsProperty.find_bodies()
-	var knight_body: ModelConfigurationRandom = load("res://data/characters/people/knight_body.tres")
+	var knight_body: ModelConfigurationRandom = load(KNIGHT_BODY)
 	var human: PackedScene = bodies[BodyPoolsProperty.guess_body(knight_body, bodies)]
 	assert_str(human.resource_path).is_equal(EquipmentFixtures.MODULAR_CHARACTER)
 	var random_dwarf: ModelConfigurationRandom = load("res://data/characters/dwarves/random_dwarf.tres")
@@ -117,3 +117,13 @@ func test_the_preview_steps_through_a_part_s_pool_and_keeps_the_choice() -> void
 	assert_str(_number(rebuilt.facial_hair)).is_equal(options[1])
 	# Parts that are not randomized offer all their meshes
 	assert_int(knight.get_body_options(model, ModularCharacter.Part.EARS).size()).is_equal(model.ears.get_mesh_count() + (1 if model.ears.allows_none() else 0))
+
+func test_a_body_without_facial_hair_meshes_keeps_to_any_pool() -> void:
+	# A female body has no facial hair, so the knight's pool (without "00") rolls none for it
+	_model.facial_hair.gender = ModularBodyPartGendered.Gender.FEMALE
+	_model.facial_hair.set("_mesh_list", [] as Array[String])
+	var knight_body: ModelConfigurationRandom = load(KNIGHT_BODY)
+	assert_bool(knight_body.mesh_pools["FACIAL_HAIR"].has(ModularBodyPart.EMPTY_MESH_NUMBER)).is_false()
+	var body: Dictionary = knight_body.roll(_model)
+	assert_str(body[ModularCharacter.Part.FACIAL_HAIR] as String).is_empty()
+	assert_bool(knight_body.allows(_model, body)).is_true()

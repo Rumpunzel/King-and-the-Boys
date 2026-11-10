@@ -54,15 +54,21 @@ func request(scene: PackedScene, part: int, mesh_path: String, callback: Callabl
 	_is_rendering = true
 	_render_queue.call_deferred()
 
+## Renders on where it stopped when it left the tree (e.g. as the inspector rebuilt)
+func _enter_tree() -> void:
+	if not _queue.is_empty() and not _is_rendering and _viewport:
+		_is_rendering = true
+		_render_queue.call_deferred()
+
 func _render_queue() -> void:
 	if not is_inside_tree():
-		_is_rendering = false
+		_stop_rendering()
 		return
 	_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	# The viewport draws its first frames before the camera and skeleton settle
 	for warm_up: int in 3: await RenderingServer.frame_post_draw
 	if not is_inside_tree():
-		_is_rendering = false
+		_stop_rendering()
 		return
 	while not _queue.is_empty():
 		var job: Dictionary = _queue.pop_front()
@@ -76,16 +82,25 @@ func _render_queue() -> void:
 			var model: ModularModel = _show(scene, part, mesh_path)
 			# Let bone attachments follow their bones before framing
 			await get_tree().process_frame
-			if not is_inside_tree(): return
+			if not is_inside_tree():
+				_stop_rendering(job)
+				return
 			_frame(model)
 			# The first frames may still show the last thumbnail; a new body takes a few to settle, then is framed again
 			for drawn: int in 6 if is_new_body else 2: await RenderingServer.frame_post_draw
 			if is_new_body:
 				_frame(model)
 				for drawn: int in 2: await RenderingServer.frame_post_draw
-			if not is_inside_tree(): return
+			if not is_inside_tree():
+				_stop_rendering(job)
+				return
 			_cache[key] = ImageTexture.create_from_image(_viewport.get_texture().get_image())
 		if callback.is_valid(): callback.call(_cache[key])
+	_stop_rendering()
+
+## Stops rendering until requested again or back in the tree; [param unfinished] is rendered first then
+func _stop_rendering(unfinished: Dictionary = {}) -> void:
+	if not unfinished.is_empty(): _queue.push_front(unfinished)
 	_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_is_rendering = false
 

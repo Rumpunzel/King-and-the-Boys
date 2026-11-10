@@ -96,7 +96,9 @@ func describe_body() -> String:
 func stow_weapons() -> void: _set_stowed(true)
 
 ## Takes weapons and shields back into the hands, e.g. called by a method key of a drawing animation
-func draw_weapons() -> void: _set_stowed(false)
+func draw_weapons() -> void:
+	_draw_pending = false
+	_set_stowed(false)
 
 func are_weapons_stowed() -> bool:
 	for part: int in get_part_keys().size():
@@ -135,7 +137,15 @@ static func _get_albedo_texture(material: Material) -> Texture2D:
 	if material is ShaderMaterial: return (material as ShaderMaterial).get_shader_parameter(_GEAR_TEXTURE) as Texture2D
 	return null
 
+## Leaves meshes to a material put on the whole model, and paints them again once it goes
+func remove_material_override(material: Material) -> void:
+	super.remove_material_override(material)
+	for part: int in get_gear_parts(): _paint_gear_part(get_part(part))
+
 func _paint_gear_part(body_part: ModularBodyPart) -> void:
+	if applied_material_override:
+		body_part.material_override = applied_material_override
+		return
 	var painted: bool = gear_primary_color.a > 0.0 or gear_secondary_color.a > 0.0
 	var material: ShaderMaterial = get_gear_material(body_part.mesh) if painted else null
 	body_part.material_override = material

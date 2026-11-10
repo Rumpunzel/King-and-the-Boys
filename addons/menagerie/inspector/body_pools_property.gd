@@ -8,7 +8,7 @@ extends EditorProperty
 
 const OUT_OF_POOL: Color = Color(1.0, 1.0, 1.0, 0.3)
 const THUMBNAIL_SIZE: Vector2 = Vector2(64, 64)
-const Thumbnails: GDScript = preload("res://addons/menagerie/inspector/body_part_thumbnails.gd")
+const Thumbnails: GDScript = preload("uid://d16hfhvxd3tl1")
 
 var _body_option: OptionButton = OptionButton.new()
 var _sections: VBoxContainer = VBoxContainer.new()
@@ -117,11 +117,8 @@ func _set_randomized(randomized: bool, part_key: String) -> void:
 	var parts: PackedStringArray = configuration.randomized_parts.duplicate()
 	if randomized and not parts.has(part_key): parts.append(part_key)
 	if not randomized and parts.has(part_key): parts.remove_at(parts.find(part_key))
+	# One change, so one undo; a part's pool stays while it is not randomized, so checking it again brings its choice back
 	emit_changed(&"randomized_parts", parts)
-	if not randomized and configuration.mesh_pools.has(part_key):
-		var pools: Dictionary[String, PackedStringArray] = configuration.mesh_pools.duplicate(true)
-		pools.erase(part_key)
-		emit_changed(get_edited_property(), pools)
 	_queue_rebuild()
 
 func _set_number(enabled: bool, part_key: String, number: String, numbers: PackedStringArray) -> void:

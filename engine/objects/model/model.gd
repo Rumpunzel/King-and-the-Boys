@@ -23,7 +23,14 @@ var idle_animations: BodyAnimations:
 		idle_animations = new_idle_animations
 		if is_inside_tree() and not _is_resting_elsewhere(): _rest()
 
+## The material [method apply_material_override] put on every mesh, e.g. an editor ghost; models painting their meshes leave it be
+var applied_material_override: Material
+
 var _body_tween: Tween
+## The editor's stand-ins for method keys (see [method _call_method_keys]), stopped along with the animations
+var _method_tweens: Array[Tween] = []
+## Weapons were put away for an animation that draws them (see [method _stow_before_drawing]); cleared once it does
+var _draw_pending: bool = false
 ## Rests the model in these instead of its idles, e.g. while its player has passed, see [method rest_in]
 var _resting: BodyAnimations
 ## Which of the rest animations plays
@@ -49,8 +56,6 @@ func play_animation(normalized_velocity: Vector3, _is_on_floor: bool) -> void:
 ## Plays [param model_animation] on this model, with the model's own animations it names
 func play_model_animation(model_animation: ModelAnimation) -> Tween:
 	assert(model_animation)
-	# A figure about to draw its weapons (e.g. spawning, then drawing a sword) has them put away first
-	_stow_before_drawing([model_animation.body_animation, model_animation.body_landing, model_animation.body_follow_up])
 	_play_body_animations(model_animation, false)
 	return model_animation.animate(self)
 
@@ -73,7 +78,11 @@ func _ready() -> void:
 func _play_body_animations(model_animation: ModelAnimation, continuing: bool) -> void:
 	var player: AnimationPlayer = get_animation_player()
 	if not player or not model_animation.has_body_animations(): return
-	if _body_tween: _body_tween.kill()
+	# Redirected with nothing to land in: the animation under way (e.g. a roll) plays on
+	if continuing and not model_animation.body_landing and not model_animation.body_follow_up: return
+	_interrupt_body()
+	# A figure about to draw its weapons (e.g. spawning, then drawing a sword) has them put away first
+	if not continuing: _stow_before_drawing([model_animation.body_animation, model_animation.body_landing, model_animation.body_follow_up])
 	_body_tween = create_tween()
 	var blend: float = model_animation.body_blend
 	var speed: float = model_animation.body_speed
@@ -147,7 +156,18 @@ func _stow_before_drawing(animations: Array[Animation]) -> void:
 	for animation: Animation in animations:
 		if calls_method(animation, &"draw_weapons"):
 			call(&"stow_weapons")
+			_draw_pending = true
 			return
+
+## Stops the body animations under way; weapons put away for a draw that now never comes are drawn at once
+func _interrupt_body() -> void:
+	if _body_tween: _body_tween.kill()
+	for tween: Tween in _method_tweens:
+		if tween.is_valid(): tween.kill()
+	_method_tweens.clear()
+	if _draw_pending:
+		_draw_pending = false
+		call(&"draw_weapons")
 
 func _call_method_keys(animation: Animation, speed: float, start: float) -> void:
 	var player: AnimationPlayer = get_animation_player()
@@ -161,13 +181,15 @@ func _call_method_keys(animation: Animation, speed: float, start: float) -> void
 			var time: float = animation.track_get_key_time(track, key)
 			if time < start: continue
 			var method: Callable = Callable(target, animation.method_track_get_name(track, key)).bindv(animation.method_track_get_params(track, key))
-			create_tween().tween_callback(method).set_delay((time - start) / speed)
+			var tween: Tween = create_tween()
+			tween.tween_callback(method).set_delay((time - start) / speed)
+			_method_tweens.append(tween)
 
 ## Plays [param animation] once, then the model rests again; just rests without one
 func play_body_animation(animation: Animation) -> void:
 	var player: AnimationPlayer = get_animation_player()
 	if not player: return
-	if _body_tween: _body_tween.kill()
+	_interrupt_body()
 	_body_tween = create_tween()
 	if animation:
 		_stow_before_drawing([animation])
@@ -231,11 +253,13 @@ func _play_next_rest(resting: BodyAnimations, next: int) -> void:
 
 func apply_material_override(material: Material) -> void:
 	assert(material)
+	applied_material_override = material
 	for mesh: MeshInstance3D in gather_all_geometry_instances_on(self):
 		mesh.material_override = material
 
 func remove_material_override(material: Material) -> void:
 	assert(material)
+	if applied_material_override == material: applied_material_override = null
 	for mesh: MeshInstance3D in gather_all_geometry_instances_on(self):
 		if mesh.material_override == material: mesh.material_override = null
 

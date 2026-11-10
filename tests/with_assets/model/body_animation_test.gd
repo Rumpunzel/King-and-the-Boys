@@ -6,6 +6,7 @@ const MOVE: String = "res://data/model_animations/miniature_move_animation.tres"
 const SPAWN: String = "res://data/model_animations/high_bounce_animation.tres"
 const KNIGHT_MOVE: String = "res://data/model_animations/heroes/knight_move.tres"
 const ROGUE_MOVE: String = "res://data/model_animations/heroes/rogue_move.tres"
+const KNIGHT_SPAWN: String = "res://data/model_animations/heroes/knight_spawn.tres"
 const ANIMATIONS: String = "res://data/characters/animations/quaternius/%s.res"
 const HEROES: Array[String] = ["knight", "rogue", "mystic", "soldier", "elf", "dwarf"]
 
@@ -172,7 +173,7 @@ func test_drawing_and_sheathing_move_the_weapons() -> void:
 
 func test_an_animation_that_draws_puts_the_weapons_away_first() -> void:
 	var model: ModularModel = _models()[0] as ModularModel
-	var knight_spawn: ModelAnimation = load("res://data/model_animations/heroes/knight_spawn.tres")
+	var knight_spawn: ModelAnimation = load(KNIGHT_SPAWN)
 	assert_bool(Model.calls_method(knight_spawn.body_follow_up, &"draw_weapons")).is_true()
 	model.play_model_animation(knight_spawn)
 	assert_bool(model.are_weapons_stowed()).override_failure_message("The knight spawns with his sword on his back").is_true()
@@ -186,3 +187,23 @@ func test_an_animation_listed_twice_starts_over_instead_of_standing_still() -> v
 	await await_millis(int(length * 1000.0) + 150)
 	assert_bool(model.is_playing(jab.animations[0])).is_true()
 	assert_float(player.current_animation_position).override_failure_message("The second jab started over").is_less(length * 0.6)
+
+func test_a_redirected_roll_rolls_on() -> void:
+	var model: Model = _models()[0]
+	var rogue_move: ModelAnimation = load(ROGUE_MOVE)
+	model.play_model_animation(rogue_move)
+	await await_millis(int(rogue_move.duration * (rogue_move.body_delay + 0.15) * 1000.0))
+	assert_bool(model.is_playing(rogue_move.body_animation)).is_true()
+	# A quick further step: the roll goes on instead of dropping into the idle mid-air
+	model.continue_model_animation(rogue_move)
+	await await_idle_frame()
+	assert_bool(model.is_playing(rogue_move.body_animation)).is_true()
+
+func test_weapons_put_away_for_a_draw_come_back_when_it_is_cut_short() -> void:
+	var model: ModularModel = _models()[0] as ModularModel
+	(model.get("main_hand") as ModularBodyPart).update_index(0)
+	model.play_model_animation(load(KNIGHT_SPAWN) as ModelAnimation)
+	assert_bool(model.are_weapons_stowed()).is_true()
+	# Moving before the follow-up draws the sword
+	model.play_model_animation(load(KNIGHT_MOVE) as ModelAnimation)
+	assert_bool(model.are_weapons_stowed()).override_failure_message("The sword is back in hand").is_false()

@@ -11,7 +11,8 @@ extends ModelConfiguration
 		randomized_parts = new_value
 		changed.emit()
 ## The meshes a randomized part rolls from, by part name: mesh numbers, e.g. [code]{"FACIAL_HAIR": ["00", "03", "07"]}[/code], where
-## [code]"00"[/code] shows none (for parts that may show none). Parts without a pool roll from all their meshes
+## [code]"00"[/code] shows none (for parts that may show none). Parts without a pool roll from all their meshes; pools of parts that are
+## not randomized are kept, but unused
 @export var mesh_pools: Dictionary[String, PackedStringArray] = {}:
 	set(new_value):
 		mesh_pools = new_value
@@ -42,6 +43,8 @@ func allows(model: ModularModel, body: Dictionary) -> bool:
 		var part_key: String = part_keys[part as int]
 		if not randomized_parts.has(part_key) or not mesh_pools.has(part_key): continue
 		var mesh_id: String = body[part]
+		# Parts without meshes (e.g. facial hair on a female body) roll none, whatever their pool
+		if mesh_id.is_empty() and model.get_part(part as int).get_mesh_count() == 0: continue
 		var mesh_number: String = ModularBodyPart.EMPTY_MESH_NUMBER if mesh_id.is_empty() else ModularBodyPart.get_mesh_number(ResourceId.get_file_path(mesh_id))
 		if not mesh_pools[part_key].has(mesh_number): return false
 	return true
@@ -92,9 +95,3 @@ func _roll_from_pool(body_part: ModularBodyPart, part_key: String) -> void:
 		return
 	var mesh_number: String = options[randi() % options.size()]
 	body_part.update_index(-1 if mesh_number == ModularBodyPart.EMPTY_MESH_NUMBER else body_part.find_mesh_index(mesh_number))
-
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings: PackedStringArray = []
-	for part_key: String in mesh_pools:
-		if not randomized_parts.has(part_key): warnings.append("%s has a pool but is not randomized." % part_key)
-	return warnings

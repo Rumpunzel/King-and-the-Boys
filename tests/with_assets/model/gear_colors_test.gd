@@ -41,3 +41,15 @@ func test_previews_raise_the_dwarf_by_its_profile() -> void:
 	var dwarf: CharacterProfile = load(EquipmentFixtures.DWARF)
 	# The smaller dwarf stands higher, so it is framed like the humans
 	assert_float(dwarf.preview_offset.y).is_greater((load(EquipmentFixtures.KNIGHT) as CharacterProfile).preview_offset.y)
+
+func test_a_material_put_on_the_whole_model_stays_on_its_gear() -> void:
+	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
+	add_child(model)
+	model.set_gear_colors(Color.RED, Color.GREEN)
+	var ghost: StandardMaterial3D = StandardMaterial3D.new()
+	model.apply_material_override(ghost)
+	model.main_hand.update_index(0)
+	assert_object(model.main_hand.material_override).override_failure_message("Equipping keeps the ghost").is_same(ghost)
+	model.remove_material_override(ghost)
+	assert_object(model.main_hand.material_override).override_failure_message("Painted again once it goes").is_not_same(ghost)
+	assert_object(model.main_hand.material_override).is_not_null()
