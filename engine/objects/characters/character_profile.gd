@@ -188,6 +188,25 @@ func setup_model(model: ModularModel, reroll: bool = false) -> void:
 		_preview_random_equipment = _roll_random_equipment()
 	dress_model(model, _preview_body, _preview_random_equipment)
 
+## The mesh numbers [param part] of [param model] may show for this profile: its pool, or all its meshes (and none where it may show
+## none) if it has no pool; only its default if it is not randomized
+func get_body_options(model: ModularModel, part: int) -> PackedStringArray:
+	var body_part: ModularBodyPart = model.get_part(part)
+	var part_key: String = model.get_part_keys()[part]
+	var options: PackedStringArray = [ModularBodyPart.EMPTY_MESH_NUMBER] if body_part.allows_none() else []
+	options.append_array(body_part.get_mesh_numbers())
+	if not model_configuration or not model_configuration.randomized_parts.has(part_key): return options
+	if model_configuration.mesh_pools.has(part_key): return model_configuration.get_pool_options(body_part, part_key)
+	return options
+
+## Shows the mesh numbered [param mesh_number] on [param part] of the preview [param model], and keeps it in the preview's body
+## (see [method setup_model]), so rebuilds show it too
+func set_preview_body_part(model: ModularModel, part: int, mesh_number: String) -> void:
+	var body_part: ModularBodyPart = model.get_part(part)
+	body_part.update_index(-1 if mesh_number == ModularBodyPart.EMPTY_MESH_NUMBER else body_part.find_mesh_index(mesh_number))
+	# By mesh, not visibility: gear may hide the part (a helmet the beard)
+	if _preview_model_path == model.scene_file_path: _preview_body[part] = ResourceId.of(body_part.mesh) if body_part.mesh else ""
+
 ## Shows [param body] and the starting equipment plus [param extra_equipment] on [param model], e.g. a player's body in the lobby
 func dress_model(model: ModularModel, body: Dictionary, extra_equipment: Array[EquipmentLook] = []) -> void:
 	model.reset_gear()

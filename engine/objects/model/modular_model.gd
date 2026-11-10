@@ -68,13 +68,13 @@ func get_body_parts() -> Array[int]:
 		if not gear_parts.has(part): body_parts.append(part)
 	return body_parts
 
-## What the body parts show, e.g. "Head 03 · Eyebrow 07 · Hair 12"; parts showing nothing read "none"
+## What the body parts show, e.g. "Head 03 · Eyebrow 07 · Hair 12" (also where gear hides them); parts without a mesh read "none"
 func describe_body() -> String:
 	var shown: PackedStringArray = []
 	var part_keys: PackedStringArray = get_part_keys()
 	for part: int in get_body_parts():
 		var body_part: ModularBodyPart = get_part(part)
-		var showing: bool = body_part.visible and body_part.mesh != null
+		var showing: bool = body_part.mesh != null
 		shown.append("%s %s" % [part_keys[part].capitalize(), ModularBodyPart.get_mesh_number(body_part.mesh.resource_path) if showing else "none"])
 	return " · ".join(shown)
 

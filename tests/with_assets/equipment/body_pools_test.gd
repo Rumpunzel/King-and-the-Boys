@@ -17,7 +17,8 @@ func _pool_config(pools: Dictionary[String, PackedStringArray]) -> ModelConfigur
 	return configuration
 
 func _number(body_part: ModularBodyPart) -> String:
-	return ModularBodyPart.get_mesh_number(body_part.mesh.resource_path) if body_part.visible and body_part.mesh else ModularBodyPart.EMPTY_MESH_NUMBER
+	# By mesh, not visibility: gear may hide a part (a helmet the beard) that still has its mesh
+	return ModularBodyPart.get_mesh_number(body_part.mesh.resource_path) if body_part.mesh else ModularBodyPart.EMPTY_MESH_NUMBER
 
 func test_parts_roll_from_their_pool_only() -> void:
 	var configuration: ModelConfigurationRandom = _pool_config({"FACIAL_HAIR": PackedStringArray(["00", "07"]), "HAIR": PackedStringArray(["03"])})
@@ -99,3 +100,20 @@ func test_a_body_describes_what_its_parts_show() -> void:
 	assert_str(described).contains("Hair 12")
 	assert_str(described).contains("Facial Hair none")
 	assert_int(described.split(" · ").size()).is_equal(_model.get_body_parts().size())
+
+func test_the_preview_steps_through_a_part_s_pool_and_keeps_the_choice() -> void:
+	var knight: CharacterProfile = load(EquipmentFixtures.KNIGHT)
+	var model: ModularCharacter = auto_free(knight.create_model(0) as ModularCharacter)
+	add_child(model)
+	knight.setup_model(model)
+	var options: PackedStringArray = knight.get_body_options(model, ModularCharacter.Part.FACIAL_HAIR)
+	assert_array(options).contains_exactly(knight.model_configuration.mesh_pools["FACIAL_HAIR"])
+	knight.set_preview_body_part(model, ModularCharacter.Part.FACIAL_HAIR, options[1])
+	assert_str(_number(model.facial_hair)).is_equal(options[1])
+	# A rebuilt preview keeps it
+	var rebuilt: ModularCharacter = auto_free(knight.create_model(0) as ModularCharacter)
+	add_child(rebuilt)
+	knight.setup_model(rebuilt)
+	assert_str(_number(rebuilt.facial_hair)).is_equal(options[1])
+	# Parts that are not randomized offer all their meshes
+	assert_int(knight.get_body_options(model, ModularCharacter.Part.EARS).size()).is_equal(model.ears.get_mesh_count() + (1 if model.ears.allows_none() else 0))
