@@ -228,10 +228,10 @@ name = "Belt 01"
 
 [resource]
 script = ExtResource("3_7rwy5")
-gear_primary_color = Color(0.173, 0.290, 0.208, 1)
-gear_secondary_color = Color(0.659, 0.682, 0.706, 1)
 strength = 2
 speed = 4
+gear_primary_color = Color(0.173, 0.29, 0.208, 1)
+gear_secondary_color = Color(0.659, 0.682, 0.706, 1)
 model_configuration = ExtResource("5_c4qnl")
 starting_head = SubResource("Resource_1ubsi")
 starting_face = SubResource("Resource_s4m6m")
@@ -250,7 +250,7 @@ passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("51_5x40w")
 name = "Rogue"
 portrait = ExtResource("5_r37cg")
-color = Color(0.247, 0.620, 0.361, 1)
+color = Color(0.247, 0.62, 0.361, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_gg1jf")])
 heads_up_display_offset = Vector3(0, 2.25, 0)
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

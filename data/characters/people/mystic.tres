@@ -213,11 +213,11 @@ name = "Belt 08"
 
 [resource]
 script = ExtResource("5_60tc1")
-gear_primary_color = Color(0.290, 0.173, 0.439, 1)
-gear_secondary_color = Color(0.561, 0.816, 0.878, 1)
 strength = 2
 agility = 2
 intelligence = 5
+gear_primary_color = Color(0.29, 0.173, 0.439, 1)
+gear_secondary_color = Color(0.561, 0.816, 0.878, 1)
 model_configuration = ExtResource("5_vblr4")
 starting_head = SubResource("Resource_cbtai")
 starting_torso = SubResource("Resource_jcqoy")
