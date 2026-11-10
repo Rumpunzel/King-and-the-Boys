@@ -3,8 +3,10 @@
 class_name Level
 extends Node3D
 
-## Emitted on the host when a [Character] entering a cell discovered or revealed tiles
+## Emitted on the host when a [Character] entering a cell or turning a tile discovered or revealed tiles
 signal board_changed(character: Character)
+## Emitted on the host when [param character] turned [param tile], see [method rotate_tile]
+signal tile_rotated(tile: Structure, character: Character)
 
 enum Direction {
 	UP,
@@ -231,6 +233,7 @@ func rotate_tile(tile: Structure, clockwise_turns: int, character: Character) ->
 	var thing: Thing = _placed_things.get(grid_position)
 	if thing: thing.rotate_y(-clockwise_turns * PI * 0.5)
 	tile.clockwise_turns = posmod(tile.clockwise_turns + clockwise_turns, Direction.size())
+	tile_rotated.emit(tile, character)
 	var board_change_count_before: int = _board_change_count
 	_stepping_character = character
 	_build_dungeon_from(grid_position)

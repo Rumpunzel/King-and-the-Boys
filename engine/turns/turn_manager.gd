@@ -70,6 +70,7 @@ func _ready() -> void:
 		_synchronizer.set_visibility_for(Multiplayer.HOST_ID, true)
 		return
 	_level.board_changed.connect(_on_board_changed)
+	_level.tile_rotated.connect(_on_tile_rotated)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
 
 ## Host only: this node is part of the game scene, not spawned, so peers only get synced
@@ -319,6 +320,19 @@ func _on_board_changed(character: Character) -> void:
 	if character == _using_character: _board_changed_during_use = true
 	_undo_stacks.erase(character)
 	_update_undo_steps(character)
+
+## The way back of other characters whose steps this turn crossed the turned tile may be closed: their steps are forgotten.
+## The turning character's own steps are undone after the turn, which puts the tile back first.
+func _on_tile_rotated(tile: Structure, turning_character: Character) -> void:
+	var grid_position: Vector2i = tile.get_grid_position()
+	for character: Character in _undo_stacks.keys():
+		if character == turning_character: continue
+		var crossed: bool = character.grid_cell == grid_position
+		for step: RefCounted in _undo_stacks[character]:
+			if step is GridStep and (step as GridStep).grid_cell == grid_position: crossed = true
+		if not crossed: continue
+		_undo_stacks.erase(character)
+		_update_undo_steps(character)
 
 func _on_character_exiting(character: Character) -> void:
 	_undo_stacks.erase(character)
