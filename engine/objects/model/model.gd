@@ -3,12 +3,20 @@
 class_name Model
 extends Node3D
 
+## Blends between the model's own animations, in seconds
+const BODY_BLEND: float = 0.15
+
 @export var portrait_override: Texture
 ## Moves this model in menu previews (e.g. the lobby), so bodies of other sizes stay framed like a human, e.g. raises the smaller dwarf
 @export var preview_offset: Vector3 = Vector3.ZERO
 
 @export_group("Configuration")
 @export var _animation_tree: AnimationTree
+## Plays the model's own animations, e.g. a jump while it hops (see [ModelAnimation]); its autoplay animation is the idle it goes
+## back to. Unset, the model uses its child named AnimationPlayer, if any
+@export var _animation_player: AnimationPlayer
+
+var _body_tween: Tween
 
 static func gather_all_geometry_instances_on(node: Node) -> Array[MeshInstance3D]:
 	var geometry_instances: Array[MeshInstance3D] = [ ]
@@ -27,13 +35,40 @@ func play_animation(normalized_velocity: Vector3, _is_on_floor: bool) -> void:
 	else:
 		playback.travel("Idle")
 
+## Plays [param model_animation] on this model, with the model's own animations it names
 func play_model_animation(model_animation: ModelAnimation) -> Tween:
 	assert(model_animation)
+	_play_body_animations(model_animation, false)
 	return model_animation.animate(self)
 
+## Plays on from where the model is, see [method ModelAnimation.continue_animation]; in the air it stays in its pose, and lands anew
 func continue_model_animation(model_animation: ModelAnimation) -> Tween:
 	assert(model_animation)
+	_play_body_animations(model_animation, true)
 	return model_animation.continue_animation(self)
+
+## The [AnimationPlayer] playing the model's own animations, or [code]null[/code] for models without (or driven by an [AnimationTree])
+func get_animation_player() -> AnimationPlayer:
+	if _animation_tree and _animation_tree.active: return null
+	if _animation_player: return _animation_player
+	return get_node_or_null(^"AnimationPlayer") as AnimationPlayer
+
+func _play_body_animations(model_animation: ModelAnimation, continuing: bool) -> void:
+	var player: AnimationPlayer = get_animation_player()
+	if not player or not model_animation.has_body_animations(): return
+	if _body_tween: _body_tween.kill()
+	_body_tween = create_tween()
+	var speed: float = model_animation.body_speed
+	var rest: float = 0.0
+	if not continuing and player.has_animation(model_animation.body_animation):
+		_body_tween.tween_callback(player.play.bind(model_animation.body_animation, BODY_BLEND, speed))
+		rest = player.get_animation(model_animation.body_animation).length / speed
+	if player.has_animation(model_animation.body_landing):
+		_body_tween.tween_interval(model_animation.duration * model_animation.body_landing_time)
+		_body_tween.tween_callback(player.play.bind(model_animation.body_landing, BODY_BLEND, speed))
+		rest = player.get_animation(model_animation.body_landing).length / speed
+	_body_tween.tween_interval(maxf(rest - BODY_BLEND, 0.0))
+	if not player.autoplay.is_empty(): _body_tween.tween_callback(player.play.bind(player.autoplay, BODY_BLEND))
 
 func apply_material_override(material: Material) -> void:
 	assert(material)

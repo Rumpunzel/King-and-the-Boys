@@ -2,7 +2,21 @@
 class_name ModelAnimation
 extends Resource
 
+## Moves a whole [Model] by tweens (a hop, a bounce), and may play the model's own animations along with it (see
+## [method Model.play_model_animation]), e.g. a jump while it hops; models without them only move
+
 @export var duration: float = 1.0
+
+@export_group("Body")
+## The model's own animation as this one starts, by its name in the model's [AnimationPlayer], e.g. a jump
+@export var body_animation: StringName
+## The model's own animation at [member body_landing_time], e.g. landing; then the model goes back to its idle
+@export var body_landing: StringName
+## When [member body_landing] starts, as a fraction of [member duration]; a little before the model touches down, as it lands
+## in a crouch
+@export_range(0.0, 2.0) var body_landing_time: float = 0.8
+## How fast the body animations play
+@export var body_speed: float = 1.0
 
 ## @returns the tween playing the animation, so it can be stopped
 @abstract func animate(model: Model) -> Tween
@@ -11,3 +25,6 @@ extends Resource
 ## Animations without an own continuation play again.
 func continue_animation(model: Model) -> Tween:
 	return animate(model)
+
+func has_body_animations() -> bool:
+	return not body_animation.is_empty() or not body_landing.is_empty()

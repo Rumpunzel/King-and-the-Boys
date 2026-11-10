@@ -5,4 +5,7 @@
 [resource]
 script = ExtResource("1_v5y8p")
 _bounce_height = 2.0
+body_animation = &"AnimationLibrary_Godot/Jump"
+body_landing = &"AnimationLibrary_Godot/Jump_Land"
+body_landing_time = 0.55
 metadata/_custom_type_script = "uid://b5h27t8ow0ape"
