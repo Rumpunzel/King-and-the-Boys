@@ -183,7 +183,7 @@ bind/53/name = &"Hips_Attachment"
 bind/53/bone = -1
 bind/53/pose = Transform3D(3.3287567e-10, 0.99999994, 2.3742699e-07, 1, -4.266892e-09, -1.5564297e-08, 9.257464e-09, 2.3742598e-07, -0.99999994, -0.876276, 3.772359e-09, -4.768325e-08)
 
-[node name="ModularCharacter" type="Node3D" unique_id=1754453103 node_paths=PackedStringArray("arm_lower_left", "arm_lower_right", "arm_upper_left", "arm_upper_right", "ears", "hand_left", "hand_right", "head", "head_no_elements", "hips", "leg_left", "leg_right", "torso", "eyebrow", "facial_hair", "hair", "back_attachment", "elbow_attach_left", "elbow_attach_right", "head_coverings_base_hair", "head_coverings_no_facial_hair", "head_coverings_no_hair", "helmet_attachment", "hips_attachment", "knee_attach_left", "knee_attach_right", "shoulder_attach_left", "shoulder_attach_right")]
+[node name="ModularCharacter" type="Node3D" unique_id=1754453103 node_paths=PackedStringArray("arm_lower_left", "arm_lower_right", "arm_upper_left", "arm_upper_right", "ears", "hand_left", "hand_right", "head", "head_no_elements", "hips", "leg_left", "leg_right", "torso", "eyebrow", "facial_hair", "hair", "back_attachment", "elbow_attach_left", "elbow_attach_right", "head_coverings_base_hair", "head_coverings_no_facial_hair", "head_coverings_no_hair", "helmet_attachment", "hips_attachment", "knee_attach_left", "knee_attach_right", "shoulder_attach_left", "shoulder_attach_right", "main_hand", "two_handed", "off_hand")]
 script = ExtResource("1_jigrv")
 arm_lower_left = NodePath("GeneralSkeleton/ArmLowerLeft")
 arm_lower_right = NodePath("GeneralSkeleton/ArmLowerRight")
@@ -213,6 +213,9 @@ knee_attach_left = NodePath("GeneralSkeleton/KneeAttachLeft")
 knee_attach_right = NodePath("GeneralSkeleton/KneeAttachRight")
 shoulder_attach_left = NodePath("GeneralSkeleton/ShoulderAttachLeft")
 shoulder_attach_right = NodePath("GeneralSkeleton/ShoulderAttachRight")
+main_hand = NodePath("GeneralSkeleton/RightHandAttachment/MainHand")
+two_handed = NodePath("GeneralSkeleton/RightHandAttachment/TwoHanded")
+off_hand = NodePath("GeneralSkeleton/LeftHandAttachment/OffHand")
 metadata/_custom_type_script = "uid://bdais0l7n3ei1"
 
 [node name="GeneralSkeleton" type="Skeleton3D" parent="." unique_id=1559521962]
@@ -947,6 +950,39 @@ metadata/_custom_type_script = "uid://c6nl3p3rcjph7"
 metadata/extras = {
 "currentUVSet": "map1"
 }
+
+[node name="RightHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton"]
+bone_name = "RightHand"
+
+[node name="MainHand" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment"]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+visible = false
+script = ExtResource("3_scytm")
+_mesh_directory = "res://data/equipment/meshes/main_hand"
+_type = 1
+_mesh_prefix = "weapon_"
+_index = -1
+
+[node name="TwoHanded" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment"]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+visible = false
+script = ExtResource("3_scytm")
+_mesh_directory = "res://data/equipment/meshes/two_handed"
+_type = 1
+_mesh_prefix = "weapon_"
+_index = -1
+
+[node name="LeftHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton"]
+bone_name = "LeftHand"
+
+[node name="OffHand" type="MeshInstance3D" parent="GeneralSkeleton/LeftHandAttachment"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+visible = false
+script = ExtResource("3_scytm")
+_mesh_directory = "res://data/equipment/meshes/off_hand"
+_type = 1
+_mesh_prefix = "weapon_"
+_index = -1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1831098486]
 libraries/AnimationLibrary_Godot = ExtResource("16_ar228")
