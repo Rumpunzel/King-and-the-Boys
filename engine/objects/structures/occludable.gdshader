@@ -12,6 +12,8 @@ uniform float saturated_glow = 0.0;
 // Within this distance of the line fragments vanish completely; over the next fade_width they dither back in
 uniform float clear_radius = 0.8;
 uniform float fade_width = 1.2;
+// Per piece: dithers it in as it appears (see ModelDropAnimation); its shadow fades along
+instance uniform float fade : hint_range(0.0, 1.0) = 1.0;
 
 varying vec3 world_position;
 
@@ -29,6 +31,11 @@ void fragment() {
 		EMISSION = ALBEDO * saturated_glow * smoothstep(0.15, 0.4, saturation);
 	}
 	ROUGHNESS = roughness;
+	ivec2 cell = ivec2(FRAGCOORD.xy) % 4;
+	float threshold = (BAYER[cell.y * 4 + cell.x] + 0.5) / 16.0;
+	if (fade < threshold) {
+		discard;
+	}
 	if (!IN_SHADOW_PASS) {
 		vec3 to_target = occlusion_target - CAMERA_POSITION_WORLD;
 		float target_distance = length(to_target);
@@ -38,8 +45,7 @@ void fragment() {
 		if (along > 0.0 && along < target_distance) {
 			float off_line = length(world_position - CAMERA_POSITION_WORLD - direction * along);
 			float visibility = clamp((off_line - clear_radius) / fade_width, 0.0, 1.0);
-			ivec2 cell = ivec2(FRAGCOORD.xy) % 4;
-			if (visibility < (BAYER[cell.y * 4 + cell.x] + 0.5) / 16.0) {
+			if (visibility < threshold) {
 				discard;
 			}
 		}
