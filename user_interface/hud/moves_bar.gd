@@ -34,7 +34,9 @@ enum MoveState { LEFT, UNDOABLE, USED }
 @export var pill_fill: StyleBoxFlat
 
 var _pills: Array[ProgressBar] = []
+## The state and colour each pill shows or is tweening towards
 var _states: Array[MoveState] = []
+var _colors: Array[Color] = []
 var _tweens: Array[Tween] = []
 
 func _ready() -> void:
@@ -69,9 +71,11 @@ func _update(animate: bool = true) -> void:
 
 ## One empty pill per move
 func _build(moves: int) -> void:
+	for tween: Tween in _tweens: if tween: tween.kill()
 	for pill: ProgressBar in _pills: pill.queue_free()
 	_pills.clear()
 	_states.clear()
+	_colors.clear()
 	_tweens.clear()
 	for move: int in moves:
 		var pill: ProgressBar = ProgressBar.new()
@@ -89,6 +93,7 @@ func _build(moves: int) -> void:
 		add_child(pill)
 		_pills.append(pill)
 		_states.append(MoveState.LEFT)
+		_colors.append(Color.TRANSPARENT)
 		_tweens.append(null)
 
 ## Fills or drains a move's pill and gives it the state's colour, after [param delay] seconds
@@ -98,11 +103,13 @@ func _show(move: int, state: MoveState, color: Color, animate: bool, delay: floa
 	var fill: StyleBoxFlat = pill.get_theme_stylebox(&"fill") as StyleBoxFlat
 	var target_value: float = 0.0 if state == MoveState.LEFT else 1.0
 	# A draining pill keeps its colour until it is empty
-	var target_color: Color = fill.bg_color
+	var target_color: Color = _colors[move]
 	if state == MoveState.USED: target_color = color
 	elif state == MoveState.UNDOABLE: target_color = Color(color, color.a * undoable_alpha)
-	if state == _states[move] and is_equal_approx(pill.value, target_value) and fill.bg_color == target_color: return false
+	# Compared with where the pill is heading, so a pill still tweening there carries on undisturbed
+	if state == _states[move] and target_color == _colors[move]: return false
 	_states[move] = state
+	_colors[move] = target_color
 	if _tweens[move]: _tweens[move].kill()
 	if not animate or fill_duration <= 0.0:
 		pill.value = target_value

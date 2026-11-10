@@ -18,6 +18,8 @@ var _player_panels: Dictionary[Player, LobbyPlayerPanel] = {}
 ## Each player's character model and the profile it was built from
 var _preview_models: Dictionary[Player, Model] = {}
 var _preview_profiles: Dictionary[Player, CharacterProfile] = {}
+## The body each player's model was last dressed with
+var _preview_bodies: Dictionary[Player, Dictionary] = {}
 ## Where the model of the player shown by a panel stands
 var _panel_spots: Dictionary[LobbyPlayerPanel, Node3D] = {}
 
@@ -82,6 +84,7 @@ func _remove_player(player: Player) -> void:
 	if model: model.queue_free()
 	_preview_models.erase(player)
 	_preview_profiles.erase(player)
+	_preview_bodies.erase(player)
 
 func _get_player_panels(in_container: Container) -> Array[LobbyPlayerPanel]:
 	var children: Array[Node] = in_container.get_children()
@@ -96,12 +99,14 @@ func _on_leave_pressed() -> void:
 func _on_disconnected_from_multiplayer() -> void:
 	SceneManager.to_main(false)
 
-## Rebuilds a player's model when they chose another profile, as profiles may use other bodies
+## Rebuilds a player's model when they chose another profile, as profiles may use other bodies, and dresses it when its body changed;
+## other player info (name, avatar, ready) leaves it be
 func _update_preview(player: Player) -> void:
 	var profile: CharacterProfile = player.character
 	var model: Model = _preview_models.get(player)
 	if profile != _preview_profiles.get(player):
 		_preview_profiles[player] = profile
+		_preview_bodies.erase(player)
 		if model: model.queue_free()
 		model = profile.create_model(0) if profile else null
 		_preview_models[player] = model
@@ -116,7 +121,10 @@ func _update_preview(player: Player) -> void:
 	# Each player's own look, as they rolled it; it is used in game as well. Character and body reach peers one after the other,
 	# so a body of the previous character waits until the new one arrives
 	var modular_model: ModularModel = model
-	profile.dress_model(modular_model, player.body if modular_model.is_complete_body(player.body) else {})
+	var body: Dictionary = player.body if modular_model.is_complete_body(player.body) else {}
+	if _preview_bodies.has(player) and _preview_bodies[player] == body: return
+	_preview_bodies[player] = body.duplicate()
+	profile.dress_model(modular_model, body)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
