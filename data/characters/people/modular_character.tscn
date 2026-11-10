@@ -17,8 +17,8 @@
 [ext_resource type="ArrayMesh" uid="uid://bumojbo322bwk" path="res://data/characters/people/meshes/gear/male/leg_left/modular_character_LegLeft_Male_00.res" id="27_586hc"]
 [ext_resource type="ArrayMesh" uid="uid://dy45rbmiqwq4i" path="res://data/characters/people/meshes/gear/male/leg_right/modular_character_LegRight_Male_00.res" id="28_mogl8"]
 [ext_resource type="ArrayMesh" uid="uid://biu255eklc1kx" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_00.res" id="31_jetd4"]
-[ext_resource type="Material" uid="uid://bfwv8gb2fse5i" path="res://data/characters/gear/hero_gear_material.tres" id="gear_hero_gear_material"]
 [ext_resource type="Material" uid="uid://bi0qcogabe33g" path="res://data/characters/gear/dwarf_gear_material.tres" id="gear_dwarf_gear_material"]
+[ext_resource type="Material" uid="uid://bfwv8gb2fse5i" path="res://data/characters/gear/hero_gear_material.tres" id="gear_hero_gear_material"]
 
 [sub_resource type="Skin" id="Skin_7gjla"]
 resource_name = "Skin"
@@ -188,7 +188,6 @@ bind/53/pose = Transform3D(3.3287567e-10, 0.99999994, 2.3742699e-07, 1, -4.26689
 
 [node name="ModularCharacter" type="Node3D" unique_id=1754453103 node_paths=PackedStringArray("arm_lower_left", "arm_lower_right", "arm_upper_left", "arm_upper_right", "ears", "hand_left", "hand_right", "head", "head_no_elements", "hips", "leg_left", "leg_right", "torso", "eyebrow", "facial_hair", "hair", "back_attachment", "elbow_attach_left", "elbow_attach_right", "head_coverings_base_hair", "head_coverings_no_facial_hair", "head_coverings_no_hair", "helmet_attachment", "hips_attachment", "knee_attach_left", "knee_attach_right", "shoulder_attach_left", "shoulder_attach_right", "main_hand", "two_handed", "off_hand")]
 script = ExtResource("1_jigrv")
-_gear_materials = Array[ShaderMaterial]([ExtResource("gear_hero_gear_material"), ExtResource("gear_dwarf_gear_material")])
 arm_lower_left = NodePath("GeneralSkeleton/ArmLowerLeft")
 arm_lower_right = NodePath("GeneralSkeleton/ArmLowerRight")
 arm_upper_left = NodePath("GeneralSkeleton/ArmUpperLeft")
@@ -220,6 +219,7 @@ shoulder_attach_right = NodePath("GeneralSkeleton/ShoulderAttachRight")
 main_hand = NodePath("GeneralSkeleton/RightHandAttachment/MainHand")
 two_handed = NodePath("GeneralSkeleton/RightHandAttachment/TwoHanded")
 off_hand = NodePath("GeneralSkeleton/LeftHandAttachment/OffHand")
+_gear_materials = Array[ShaderMaterial]([ExtResource("gear_hero_gear_material"), ExtResource("gear_dwarf_gear_material")])
 metadata/_custom_type_script = "uid://bdais0l7n3ei1"
 
 [node name="GeneralSkeleton" type="Skeleton3D" parent="." unique_id=1559521962]
