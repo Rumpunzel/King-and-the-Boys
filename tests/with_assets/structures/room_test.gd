@@ -120,5 +120,8 @@ func test_the_debug_drawings_toggle() -> void:
 	_spawn_room(Structure.Status.REVEALED)
 	# Drawing a frame of it does not fail
 	await await_idle_frame()
+	# Tiles placed while it shows show their labels
+	assert_bool((_level.get_placed_tile(Vector2i.ZERO).get_node(^"Label3D") as Label3D).visible).is_true()
 	debug.call("_unhandled_input", toggle)
 	assert_bool(debug.shown).is_false()
+	for tile: Structure in _level.get_placed_tiles(): assert_bool((tile.get_node(^"Label3D") as Label3D).visible).override_failure_message("Labels hide with the rest").is_false()

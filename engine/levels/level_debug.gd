@@ -2,7 +2,8 @@ class_name LevelDebug
 extends Node
 
 ## Debug drawings over the level, redrawn every frame while shown: an outline around every room (in its room type's colour, with
-## its size and its centrepiece corner) and each tile's connection restrictions (see [method Structure.draw_debug]).
+## its size and its centrepiece corner), each tile's connection restrictions (see [method Structure.draw_debug]) and the tiles' labels
+## with their name and grid position.
 ## The [constant ACTION] toggles them (F3); only on this peer, nothing is synced
 
 const ACTION: StringName = &"toggle_debug_drawings"
@@ -11,7 +12,12 @@ const OUTLINE_INSET: float = 0.06
 ## How high the drawings float above the floor
 const HEIGHT: float = 0.06
 
-@export var shown: bool = false
+@export var shown: bool = false:
+	set(new_shown):
+		shown = new_shown
+		# The tiles' labels too, so either every debug mark shows or none
+		Structure.debug_labels_shown = shown
+		if is_inside_tree(): get_tree().call_group(Structure.GROUP, &"show_debug_label", shown)
 
 @export_group("Configuration")
 @export var _level: Level
