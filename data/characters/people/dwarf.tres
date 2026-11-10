@@ -14,7 +14,9 @@
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="12_csvx1"]
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="13_0usee"]
 [ext_resource type="Resource" uid="uid://cppjifks7xifq" path="res://data/equipment/types/dwarf_headwear.tres" id="14_lk1de"]
+[ext_resource type="ArrayMesh" uid="uid://bht1udj11x7db" path="res://data/equipment/meshes/two_handed/weapon_mace_large_10.res" id="15_mwfbt"]
 [ext_resource type="ArrayMesh" uid="uid://cg877hotdluci" path="res://data/characters/dwarves/meshes/body/dwarf_body_soldier_male_03.res" id="15_p3175"]
+[ext_resource type="Resource" uid="uid://1l7iq2m17qaa" path="res://data/equipment/types/dwarf_two_handed_weapon.tres" id="16_iigc1"]
 [ext_resource type="ArrayMesh" uid="uid://bd2npqjr05qrk" path="res://data/characters/dwarves/meshes/shoulder_left/dwarf_shoulder_left_fancy_01.res" id="16_yyphc"]
 [ext_resource type="ArrayMesh" uid="uid://cr47keevwrcvo" path="res://data/characters/dwarves/meshes/shoulder_right/dwarf_shoulder_right_fancy_01.res" id="17_mwfbt"]
 [ext_resource type="Resource" uid="uid://dvgy2n8emi8k0" path="res://data/equipment/types/dwarf_outfit.tres" id="18_xtw46"]
@@ -33,6 +35,21 @@ script = ExtResource("13_0usee")
 type = ExtResource("14_lk1de")
 appearance = SubResource("Resource_eyc0a")
 name = "Dwarf Headwear 08"
+
+[sub_resource type="Resource" id="Resource_xtw46"]
+script = ExtResource("10_iigc1")
+part = 9
+male_mesh = ExtResource("15_mwfbt")
+
+[sub_resource type="Resource" id="Resource_oam81"]
+script = ExtResource("12_csvx1")
+parts = Array[ExtResource("10_iigc1")]([SubResource("Resource_xtw46")])
+
+[sub_resource type="Resource" id="Resource_e0wqc"]
+script = ExtResource("13_0usee")
+type = ExtResource("16_iigc1")
+appearance = SubResource("Resource_oam81")
+name = "Dwarf Two-Handed Weapon 10"
 
 [sub_resource type="Resource" id="Resource_0usee"]
 script = ExtResource("10_iigc1")
@@ -67,6 +84,7 @@ dark_vision = 16.0
 model_configuration = ExtResource("5_yyphc")
 starting_head = SubResource("Resource_csvx1")
 starting_torso = SubResource("Resource_cmreh")
+starting_main_hand = SubResource("Resource_e0wqc")
 name = "Dwarf"
 portrait = ExtResource("4_xk1ji")
 color = Color(0.878431, 0.878431, 0.878431, 1)

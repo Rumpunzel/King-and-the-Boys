@@ -32,7 +32,9 @@
 [ext_resource type="ArrayMesh" uid="uid://bujoyh313hjhs" path="res://data/characters/people/meshes/gear/female/leg_right/modular_character_LegRight_Female_19.res" id="30_0yij0"]
 [ext_resource type="ArrayMesh" uid="uid://bjo0s7rfsf1xm" path="res://data/characters/people/meshes/gear/male/leg_right/modular_character_LegRight_Male_19.res" id="31_qg6r2"]
 [ext_resource type="Resource" uid="uid://c7ec6d8vlckig" path="res://data/equipment/types/leg_armor.tres" id="32_yfyrt"]
+[ext_resource type="ArrayMesh" uid="uid://bg6livn247nqa" path="res://data/equipment/meshes/two_handed/weapon_staff_38.res" id="33_e4agc"]
 [ext_resource type="ArrayMesh" uid="uid://ylssmnrm3sw0" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_14.res" id="33_pen4u"]
+[ext_resource type="Resource" uid="uid://be04826kamrkb" path="res://data/equipment/types/two_handed_weapon.tres" id="34_ncjv4"]
 [ext_resource type="ArrayMesh" uid="uid://qkbllwooeov0" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_14.res" id="34_vla3t"]
 [ext_resource type="ArrayMesh" uid="uid://cecx1ax7iolbp" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_01.res" id="35_670hu"]
 [ext_resource type="ArrayMesh" uid="uid://dsxra75u4drl2" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_01.res" id="36_qtkpv"]
@@ -133,6 +135,21 @@ type = ExtResource("32_yfyrt")
 appearance = SubResource("Resource_ncjv4")
 name = "Leg Armor 28-19 00"
 
+[sub_resource type="Resource" id="Resource_bs04n"]
+script = ExtResource("10_sy2u4")
+part = 29
+male_mesh = ExtResource("33_e4agc")
+
+[sub_resource type="Resource" id="Resource_js6v7"]
+script = ExtResource("12_ncjv4")
+parts = Array[ExtResource("10_sy2u4")]([SubResource("Resource_bs04n")])
+
+[sub_resource type="Resource" id="Resource_o7xtx"]
+script = ExtResource("13_jio5e")
+type = ExtResource("34_ncjv4")
+appearance = SubResource("Resource_js6v7")
+name = "Two-Handed Weapon 38"
+
 [sub_resource type="Resource" id="Resource_hh650"]
 script = ExtResource("10_sy2u4")
 part = 12
@@ -187,6 +204,7 @@ starting_hands = SubResource("Resource_1v0ni")
 starting_legs = SubResource("Resource_jio5e")
 starting_back = SubResource("Resource_gdyqi")
 starting_waist = SubResource("Resource_am6ym")
+starting_main_hand = SubResource("Resource_o7xtx")
 name = "Mystic"
 portrait = ExtResource("5_e7bq6")
 color = Color(0.878431, 0.878431, 0.878431, 1)
