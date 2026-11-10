@@ -8,7 +8,7 @@
 [ext_resource type="FontFile" uid="uid://b5koyewmt0kld" path="res://assets/fonts/Fondamento-Regular.ttf" id="6_3j5nk"]
 [ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="8_6d7le"]
 
-[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_title", "_left_player_panels_container", "_local_player_panel", "_right_player_panels_container", "_character_preview")]
+[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_title", "_left_player_panels_container", "_local_player_panel", "_right_player_panels_container", "_character_preview", "_other_character_spots")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -21,6 +21,7 @@ _left_player_panels_container = NodePath("MenusContainer/PlayerPanels/Left/LeftP
 _local_player_panel = NodePath("MenusContainer/PlayerPanels/LocalPlayerPanel")
 _right_player_panels_container = NodePath("MenusContainer/PlayerPanels/Right/RightPlayerPanels")
 _character_preview = NodePath("CharacterPreview")
+_other_character_spots = [NodePath("OtherCharacterSpots/LeftSpot1"), NodePath("OtherCharacterSpots/LeftSpot2"), NodePath("OtherCharacterSpots/RightSpot1"), NodePath("OtherCharacterSpots/RightSpot2")]
 _game_scene_path = "uid://ciy6s8n2reyy2"
 _guest_player_panel_scene = ExtResource("4_bfn47")
 _fade_in_duration = 1.0
@@ -95,5 +96,19 @@ layout_mode = 2
 
 [node name="CharacterPreview" type="Node3D" parent="." unique_id=762207543]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -6.4, -2, 25.75)
+
+[node name="OtherCharacterSpots" type="Node3D" parent="."]
+
+[node name="LeftSpot1" type="Node3D" parent="OtherCharacterSpots"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.81, -2, 25.89)
+
+[node name="LeftSpot2" type="Node3D" parent="OtherCharacterSpots"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -5.37, -2, 26.09)
+
+[node name="RightSpot1" type="Node3D" parent="OtherCharacterSpots"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.08, -2, 26.69)
+
+[node name="RightSpot2" type="Node3D" parent="OtherCharacterSpots"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.64, -2, 26.89)
 
 [connection signal="pressed" from="MenusContainer/PlayerPanels/Leave" to="." method="_on_leave_pressed"]

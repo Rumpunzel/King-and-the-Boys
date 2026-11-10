@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bdphp1uh2nlp0"]
+
+[ext_resource type="PackedScene" uid="uid://cclxn5c3x7dto" path="res://assets/polygon_dungeon/scenes/demo.scn" id="1_demo"]
+[ext_resource type="Script" uid="uid://bhokqye23no1j" path="res://user_interface/menus/drifting_camera.gd" id="2_camera"]
+
+[node name="MenuBackground" instance=ExtResource("1_demo")]
+
+[node name="Camera" parent="."]
+script = ExtResource("2_camera")
+
+[node name="AnimationPlayer" parent="Camera"]
+autoplay = &""
