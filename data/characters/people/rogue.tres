@@ -46,6 +46,9 @@
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="43_tmsvl"]
 [ext_resource type="Resource" uid="uid://c1io5bgjdq6kr" path="res://data/model_animations/heroes/rogue_move.tres" id="90_rogue_move"]
 [ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
+[ext_resource type="Animation" uid="uid://elsr2vfgacds" path="res://data/characters/animations/quaternius/Crouch_Exit.res" id="anim_Crouch_Exit"]
+[ext_resource type="Animation" uid="uid://ctljdjlrt3xxa" path="res://data/characters/animations/quaternius/Crouch_Idle.res" id="anim_Crouch_Idle"]
+[ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
 
 [sub_resource type="Resource" id="Resource_yo61b"]
 script = ExtResource("10_co6b3")
@@ -216,6 +219,11 @@ type = ExtResource("43_tmsvl")
 appearance = SubResource("Resource_p1agj")
 name = "Belt 01"
 
+[sub_resource type="Resource" id="BodyAnimations_passed"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("anim_Crouch_Idle")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+
 [resource]
 script = ExtResource("3_7rwy5")
 strength = 2
@@ -233,8 +241,8 @@ spawn_animation = ExtResource("90_rogue_spawn")
 move_animation = ExtResource("90_rogue_move")
 fast_move_animation = ExtResource("90_rogue_move")
 pass_animation = &"adjusted_animations/BackFlipCrouch"
-passed_animation = &"AnimationLibrary_Godot/Crouch_Idle"
-unpass_animation = &"AnimationLibrary_Godot/Crouch_Exit"
+passed_animations = SubResource("BodyAnimations_passed")
+unpass_animation = ExtResource("anim_Crouch_Exit")
 name = "Rogue"
 portrait = ExtResource("5_r37cg")
 color = Color(0.878431, 0.878431, 0.878431, 1)

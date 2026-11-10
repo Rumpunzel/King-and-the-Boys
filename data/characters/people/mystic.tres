@@ -43,6 +43,8 @@
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="41_qltrm"]
 [ext_resource type="Resource" uid="uid://clu0nmk36mbeb" path="res://data/model_animations/heroes/mystic_move.tres" id="90_mystic_move"]
 [ext_resource type="Resource" uid="uid://vtt52ve807ga" path="res://data/model_animations/heroes/mystic_spawn.tres" id="90_mystic_spawn"]
+[ext_resource type="Animation" uid="uid://c3vetph6mrgca" path="res://data/characters/animations/quaternius/Idle_Talking.res" id="anim_Idle_Talking"]
+[ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
 
 [sub_resource type="Resource" id="Resource_qinlv"]
 script = ExtResource("10_sy2u4")
@@ -193,6 +195,11 @@ type = ExtResource("41_qltrm")
 appearance = SubResource("Resource_ibap8")
 name = "Belt 08"
 
+[sub_resource type="Resource" id="BodyAnimations_passed"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("anim_Idle_Talking")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+
 [resource]
 script = ExtResource("5_60tc1")
 strength = 2
@@ -209,7 +216,7 @@ starting_main_hand = SubResource("Resource_o7xtx")
 spawn_animation = ExtResource("90_mystic_spawn")
 move_animation = ExtResource("90_mystic_move")
 fast_move_animation = ExtResource("90_mystic_move")
-passed_animation = &"AnimationLibrary_Godot/Idle_Talking"
+passed_animations = SubResource("BodyAnimations_passed")
 name = "Mystic"
 portrait = ExtResource("5_e7bq6")
 color = Color(0.878431, 0.878431, 0.878431, 1)

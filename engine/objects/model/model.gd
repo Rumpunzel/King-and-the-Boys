@@ -5,6 +5,8 @@ extends Node3D
 
 ## Blends between the model's own animations, in seconds
 const BODY_BLEND: float = 0.15
+## The library on the [AnimationPlayer] holding the animation files played on this model, each added as it first plays
+const BODY_LIBRARY: StringName = &"body"
 
 @export var portrait_override: Texture
 ## Moves this model in menu previews (e.g. the lobby), so bodies of other sizes stay framed like a human, e.g. raises the smaller dwarf
@@ -16,9 +18,18 @@ const BODY_BLEND: float = 0.15
 ## back to. Unset, the model uses its child named AnimationPlayer, if any
 @export var _animation_player: AnimationPlayer
 
+## What the model rests in when nothing else plays, e.g. a character's idles (see [member CharacterProfile.idle_animations]);
+## without any, its [AnimationPlayer]'s autoplay
+var idle_animations: BodyAnimations:
+	set(new_idle_animations):
+		idle_animations = new_idle_animations
+		if is_inside_tree() and not _is_resting_elsewhere(): _rest()
+
 var _body_tween: Tween
-## Replaces the [AnimationPlayer]'s autoplay as the idle the model goes back to, see [method set_idle_animation]
-var _idle_animation: StringName
+## Rests the model in these instead of its idles, e.g. while its player has passed, see [method rest_in]
+var _resting: BodyAnimations
+## Which of the rest animations plays
+var _rest_index: int = -1
 
 static func gather_all_geometry_instances_on(node: Node) -> Array[MeshInstance3D]:
 	var geometry_instances: Array[MeshInstance3D] = [ ]
@@ -55,6 +66,10 @@ func get_animation_player() -> AnimationPlayer:
 	if _animation_player: return _animation_player
 	return get_node_or_null(^"AnimationPlayer") as AnimationPlayer
 
+func _ready() -> void:
+	# In the editor only models given idles rest (e.g. in Menagerie), so the scene of a bare body keeps its pose
+	if not Engine.is_editor_hint() or (idle_animations and not idle_animations.get_animations().is_empty()): _rest()
+
 func _play_body_animations(model_animation: ModelAnimation, continuing: bool) -> void:
 	var player: AnimationPlayer = get_animation_player()
 	if not player or not model_animation.has_body_animations(): return
@@ -67,57 +82,115 @@ func _play_body_animations(model_animation: ModelAnimation, continuing: bool) ->
 	# Time since the animation started, so the landing keeps to its time however long the start waits
 	var elapsed: float = 0.0
 	var rest: float = 0.0
-	if not continuing and player.has_animation(model_animation.body_animation):
+	if not continuing and model_animation.body_animation:
 		var delay: float = model_animation.duration * model_animation.body_delay
 		if delay > 0.0: _body_tween.tween_interval(delay)
 		_body_tween.tween_callback(_play_body.bind(model_animation.body_animation, blend, speed, model_animation.body_start))
 		elapsed = delay
-		rest = maxf(player.get_animation(model_animation.body_animation).length - model_animation.body_start, 0.0) / speed
-	if player.has_animation(model_animation.body_landing):
+		rest = maxf(model_animation.body_animation.length - model_animation.body_start, 0.0) / speed
+	if model_animation.body_landing:
 		_body_tween.tween_interval(maxf(model_animation.duration * model_animation.body_landing_time - elapsed, 0.0))
 		_body_tween.tween_callback(_play_body.bind(model_animation.body_landing, blend, landing_speed, 0.0))
-		rest = player.get_animation(model_animation.body_landing).length / landing_speed
-	if player.has_animation(model_animation.body_follow_up):
+		rest = model_animation.body_landing.length / landing_speed
+	if model_animation.body_follow_up:
 		_body_tween.tween_interval(maxf(rest - blend, 0.0))
 		_body_tween.tween_callback(_play_body.bind(model_animation.body_follow_up, blend, follow_up_speed, 0.0))
-		rest = player.get_animation(model_animation.body_follow_up).length / follow_up_speed
+		rest = model_animation.body_follow_up.length / follow_up_speed
 	_body_tween.tween_interval(maxf(rest - blend, 0.0))
-	_body_tween.tween_callback(_play_idle)
+	_body_tween.tween_callback(_rest)
+
+## The name [param animation] plays under on the model's [AnimationPlayer]; animation files are added to [constant BODY_LIBRARY]
+## as they are first played, so any file plays on any body sharing the bone names
+func get_animation_name(animation: Animation) -> StringName:
+	var player: AnimationPlayer = get_animation_player()
+	if not player or not animation: return &""
+	if not player.has_animation_library(BODY_LIBRARY): player.add_animation_library(BODY_LIBRARY, AnimationLibrary.new())
+	var library: AnimationLibrary = player.get_animation_library(BODY_LIBRARY)
+	var key: StringName = get_animation_key(animation)
+	if not library.has_animation(key): library.add_animation(key, animation)
+	return StringName("%s/%s" % [BODY_LIBRARY, key])
+
+## A name for [param animation] in [constant BODY_LIBRARY], unique per file: copies of one animation may share a file name
+static func get_animation_key(animation: Animation) -> StringName:
+	if animation.resource_path.is_empty(): return StringName("animation_%d" % animation.get_instance_id())
+	return StringName("%s_%x" % [animation.resource_path.get_file().get_basename().validate_node_name(), hash(animation.resource_path) & 0xffffff])
+
+## Whether the model plays [param animation] right now
+func is_playing(animation: Animation) -> bool:
+	var player: AnimationPlayer = get_animation_player()
+	return player != null and animation != null and player.current_animation == get_animation_name(animation)
 
 ## Plays [param animation] from [param start] seconds into it
-func _play_body(animation: StringName, blend: float, speed: float, start: float) -> void:
+func _play_body(animation: Animation, blend: float, speed: float, start: float) -> void:
 	var player: AnimationPlayer = get_animation_player()
-	if not player: return
-	player.play(animation, blend, speed)
+	if not player or not animation: return
+	player.play(get_animation_name(animation), blend, speed)
 	if start > 0.0: player.seek(start, true)
 
-## Plays the model's own [param animation] once, then its idle; just the idle if it has no such animation
-func play_body_animation(animation: StringName) -> void:
+## Plays [param animation] once, then the model rests again; just rests without one
+func play_body_animation(animation: Animation) -> void:
 	var player: AnimationPlayer = get_animation_player()
 	if not player: return
 	if _body_tween: _body_tween.kill()
 	_body_tween = create_tween()
-	if player.has_animation(animation):
-		_body_tween.tween_callback(player.play.bind(animation, BODY_BLEND))
-		_body_tween.tween_interval(maxf(player.get_animation(animation).length - BODY_BLEND, 0.0))
-	_body_tween.tween_callback(_play_idle)
+	if animation:
+		_body_tween.tween_callback(_play_body.bind(animation, BODY_BLEND, 1.0, 0.0))
+		_body_tween.tween_interval(maxf(animation.length - BODY_BLEND, 0.0))
+	_body_tween.tween_callback(_rest)
 
-## Makes [param idle] (looping, e.g. sitting) the animation the model rests in, after playing [param through] once (e.g. sitting
-## down); an empty [param idle] goes back to the [AnimationPlayer]'s autoplay
-func set_idle_animation(idle: StringName, through: StringName = &"") -> void:
-	_idle_animation = idle
+## Rests the model in [param resting] (e.g. sitting, while its player has passed) after playing [param through] once (e.g. sitting
+## down); [code]null[/code] rests it in its idles again
+func rest_in(resting: BodyAnimations, through: Animation = null) -> void:
+	_resting = resting
 	play_body_animation(through)
 
-## The animation the model rests in, see [method set_idle_animation]
-func get_idle_animation() -> StringName:
-	var player: AnimationPlayer = get_animation_player()
-	if not player: return &""
-	return _idle_animation if player.has_animation(_idle_animation) else player.autoplay
+## What the model rests in: what [method rest_in] chose, else its idles; [code]null[/code] for its autoplay
+func get_rest_animations() -> BodyAnimations:
+	if _is_resting_elsewhere(): return _resting
+	if idle_animations and not idle_animations.get_animations().is_empty(): return idle_animations
+	return null
 
-func _play_idle() -> void:
+## The animation the model rests in right now, or [code]null[/code] while it rests in its autoplay
+func get_rest_animation() -> Animation:
+	var resting: BodyAnimations = get_rest_animations()
+	if not resting: return null
+	var animations: Array[Animation] = resting.get_animations()
+	return animations[_rest_index] if _rest_index >= 0 and _rest_index < animations.size() else null
+
+func _is_resting_elsewhere() -> bool:
+	return _resting != null and not _resting.get_animations().is_empty()
+
+## Comes to rest: the first of the rest animations, which play on cycle by cycle in their order
+func _rest() -> void:
 	var player: AnimationPlayer = get_animation_player()
-	var idle: StringName = get_idle_animation()
-	if player and player.has_animation(idle): player.play(idle, BODY_BLEND)
+	if not player: return
+	var resting: BodyAnimations = get_rest_animations()
+	if not resting:
+		_rest_index = -1
+		if player.has_animation(player.autoplay): player.play(player.autoplay, BODY_BLEND)
+		return
+	_rest_index = resting.get_first(resting.get_animations().size())
+	_play_rest(resting)
+
+func _play_rest(resting: BodyAnimations) -> void:
+	var animations: Array[Animation] = resting.get_animations()
+	var animation: Animation = animations[_rest_index]
+	_play_body(animation, BODY_BLEND, 1.0, 0.0)
+	var next: int = resting.get_next(_rest_index, animations.size())
+	# One to keep: a looping animation loops by itself, any other plays again each cycle
+	if next < 0:
+		if animation.loop_mode != Animation.LOOP_NONE: return
+		next = _rest_index
+	if _body_tween: _body_tween.kill()
+	_body_tween = create_tween()
+	_body_tween.tween_interval(maxf(animation.length - BODY_BLEND, 0.05))
+	_body_tween.tween_callback(_play_next_rest.bind(resting, next))
+
+func _play_next_rest(resting: BodyAnimations, next: int) -> void:
+	# Something else came to rest in the meantime
+	if resting != get_rest_animations(): return
+	_rest_index = next
+	_play_rest(resting)
 
 func apply_material_override(material: Material) -> void:
 	assert(material)

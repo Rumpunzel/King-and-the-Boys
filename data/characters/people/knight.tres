@@ -51,6 +51,8 @@
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="49_wouu8"]
 [ext_resource type="Resource" uid="uid://bokwo0ngtuf6x" path="res://data/model_animations/heroes/knight_move.tres" id="90_knight_move"]
 [ext_resource type="Resource" uid="uid://chaqmhbq3eugj" path="res://data/model_animations/heroes/knight_spawn.tres" id="90_knight_spawn"]
+[ext_resource type="Animation" uid="uid://bhjnwxdo022v7" path="res://data/characters/animations/quaternius/Dance.res" id="anim_Dance"]
+[ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
 
 [sub_resource type="Resource" id="Resource_13etc"]
 script = ExtResource("10_7tsdp")
@@ -237,6 +239,11 @@ type = ExtResource("49_wouu8")
 appearance = SubResource("Resource_dbi2r")
 name = "Belt 12"
 
+[sub_resource type="Resource" id="BodyAnimations_passed"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("anim_Dance")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+
 [resource]
 script = ExtResource("5_ltdy7")
 intelligence = 2
@@ -251,7 +258,7 @@ starting_main_hand = SubResource("Resource_iiaan")
 spawn_animation = ExtResource("90_knight_spawn")
 move_animation = ExtResource("90_knight_move")
 fast_move_animation = ExtResource("90_knight_move")
-passed_animation = &"AnimationLibrary_Godot/Dance"
+passed_animations = SubResource("BodyAnimations_passed")
 name = "Knight"
 portrait = ExtResource("5_63j5q")
 color = Color(0.878431, 0.878431, 0.878431, 1)

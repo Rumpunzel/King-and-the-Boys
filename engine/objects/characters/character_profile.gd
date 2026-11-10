@@ -97,12 +97,14 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var fast_move_animation: ModelAnimation = _MOVE_ANIMATION
 ## Played when undo walks a step back; the move animation if empty
 @export var undo_animation: ModelAnimation
-## The model's own animation as the character's player passes, e.g. sitting down; then [member passed_animation]
-@export var pass_animation: StringName
-## The model's own animation looping while the player has passed, in place of its idle, e.g. sitting
-@export var passed_animation: StringName
-## The model's own animation as the pass ends (taken back, or a new turn), e.g. getting up; then the idle
-@export var unpass_animation: StringName
+## What the character's model rests in when nothing else plays, e.g. a few idles in turn; its body's own idle if empty
+@export var idle_animations: BodyAnimations
+## Played as the character's player passes, e.g. sitting down; then [member passed_animations]
+@export var pass_animation: Animation
+## What the model rests in while its player has passed, in place of its idles, e.g. sitting
+@export var passed_animations: BodyAnimations
+## Played as the pass ends (taken back, or a new turn), e.g. getting up; then the idles
+@export var unpass_animation: Animation
 
 @export_category("")
 @export_group("Configuration")
@@ -167,6 +169,7 @@ func _roll_random_equipment() -> Array[EquipmentLook]:
 
 func create_model(variation: int) -> Model:
 	var model: Model = super.create_model(variation)
+	if model: model.idle_animations = idle_animations
 	# In game the server rolls the look once and sends it as [constant Character.BODY]
 	if model is ModularModel and Engine.is_editor_hint(): setup_model(model as ModularModel)
 	return model

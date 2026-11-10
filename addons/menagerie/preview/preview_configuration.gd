@@ -150,7 +150,7 @@ func _show_animations() -> void:
 		button.text = label
 		button.pressed.connect(_play_model_animation.bind(animations[label]))
 		_animation_buttons.add_child(button)
-	if not character_profile.passed_animation.is_empty():
+	if character_profile.passed_animations or character_profile.pass_animation:
 		var pass_button: Button = Button.new()
 		pass_button.text = "Pass"
 		pass_button.toggle_mode = true
@@ -164,5 +164,5 @@ func _play_model_animation(model_animation: ModelAnimation) -> void:
 func _show_passed(passed: bool) -> void:
 	var character_profile: CharacterProfile = _profile as CharacterProfile
 	if not is_instance_valid(_model) or not character_profile: return
-	if passed: _model.set_idle_animation(character_profile.passed_animation, character_profile.pass_animation)
-	else: _model.set_idle_animation(&"", character_profile.unpass_animation)
+	if passed: _model.rest_in(character_profile.passed_animations, character_profile.pass_animation)
+	else: _model.rest_in(null, character_profile.unpass_animation)

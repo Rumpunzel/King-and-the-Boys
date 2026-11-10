@@ -50,6 +50,9 @@
 [ext_resource type="ArrayMesh" uid="uid://n5cjrfw3l21g" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_12.res" id="45_dtb7d"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="46_dlaeh"]
 [ext_resource type="Resource" uid="uid://rm08eak7lkva" path="res://data/model_animations/heroes/soldier_spawn.tres" id="90_soldier_spawn"]
+[ext_resource type="Resource" uid="uid://bm3fv320x14lq" path="res://data/model_animations/heroes/soldier_move.tres" id="90_soldier_move"]
+[ext_resource type="Animation" uid="uid://nxe1tqusg6bf" path="res://data/characters/animations/quaternius/Idle_LookAround.res" id="anim_Idle_LookAround"]
+[ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
 
 [sub_resource type="Resource" id="Resource_vxo76"]
 script = ExtResource("10_0ouwd")
@@ -235,6 +238,11 @@ type = ExtResource("46_dlaeh")
 appearance = SubResource("Resource_k2lmd")
 name = "Belt 12"
 
+[sub_resource type="Resource" id="BodyAnimations_passed"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("anim_Idle_LookAround")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+
 [resource]
 script = ExtResource("6_sgqnm")
 model_configuration = ExtResource("5_a0nqf")
@@ -246,7 +254,9 @@ starting_waist = SubResource("Resource_nwcet")
 starting_main_hand = SubResource("Resource_2mh5i")
 starting_off_hand = SubResource("Resource_334g4")
 spawn_animation = ExtResource("90_soldier_spawn")
-passed_animation = &"AnimationLibrary_Godot/Idle_LookAround"
+move_animation = ExtResource("90_soldier_move")
+fast_move_animation = ExtResource("90_soldier_move")
+passed_animations = SubResource("BodyAnimations_passed")
 name = "Soldier"
 portrait = ExtResource("5_ul877")
 color = Color(0.878431, 0.878431, 0.878431, 1)

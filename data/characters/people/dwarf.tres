@@ -20,6 +20,10 @@
 [ext_resource type="Resource" uid="uid://dvgy2n8emi8k0" path="res://data/equipment/types/dwarf_outfit.tres" id="18_xtw46"]
 [ext_resource type="Resource" uid="uid://cvoowfdc35nc1" path="res://data/model_animations/heroes/dwarf_move.tres" id="90_dwarf_move"]
 [ext_resource type="Resource" uid="uid://c75q711dhxhep" path="res://data/model_animations/heroes/dwarf_spawn.tres" id="90_dwarf_spawn"]
+[ext_resource type="Animation" uid="uid://bm3q42enelbip" path="res://data/characters/animations/quaternius/GroundSit_Enter.res" id="anim_GroundSit_Enter"]
+[ext_resource type="Animation" uid="uid://dgq3ap333chbt" path="res://data/characters/animations/quaternius/GroundSit_Exit.res" id="anim_GroundSit_Exit"]
+[ext_resource type="Animation" uid="uid://dwvgmly4dt6ns" path="res://data/characters/animations/quaternius/GroundSit_Idle.res" id="anim_GroundSit_Idle"]
+[ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
 
 [sub_resource type="Resource" id="Resource_iigc1"]
 script = ExtResource("10_iigc1")
@@ -75,6 +79,11 @@ type = ExtResource("18_xtw46")
 appearance = SubResource("Resource_c5b3e")
 name = "Dwarf Outfit 03 01"
 
+[sub_resource type="Resource" id="BodyAnimations_passed"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("anim_GroundSit_Idle")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+
 [resource]
 script = ExtResource("5_34kdi")
 strength = 4
@@ -88,9 +97,9 @@ starting_main_hand = SubResource("Resource_e0wqc")
 spawn_animation = ExtResource("90_dwarf_spawn")
 move_animation = ExtResource("90_dwarf_move")
 fast_move_animation = ExtResource("90_dwarf_move")
-pass_animation = &"AnimationLibrary_Godot/GroundSit_Enter"
-passed_animation = &"AnimationLibrary_Godot/GroundSit_Idle"
-unpass_animation = &"AnimationLibrary_Godot/GroundSit_Exit"
+pass_animation = ExtResource("anim_GroundSit_Enter")
+passed_animations = SubResource("BodyAnimations_passed")
+unpass_animation = ExtResource("anim_GroundSit_Exit")
 name = "Dwarf"
 portrait = ExtResource("4_xk1ji")
 color = Color(0.878431, 0.878431, 0.878431, 1)

@@ -5,8 +5,4 @@
 [resource]
 script = ExtResource("1_xkbg2")
 duration = 0.75
-body_animation = &"AnimationLibrary_Godot/Jump_Start"
-body_landing = &"AnimationLibrary_Godot/Jump_Land"
-body_landing_time = 0.8
-body_speed = 1.2
 metadata/_custom_type_script = "uid://clsflb34q1if1"

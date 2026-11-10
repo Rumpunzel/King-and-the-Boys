@@ -20,15 +20,15 @@ extends Resource
 @export_range(0.0, 0.9) var travel_delay: float = 0.0
 
 @export_group("Body")
-## The model's own animation as this one starts, by its name in the model's [AnimationPlayer], e.g. a jump
-@export var body_animation: StringName
+## The model's own animation as this one starts, e.g. a jump; any animation file of the bodies' rig
+@export var body_animation: Animation
 ## The model's own animation at [member body_landing_time], e.g. landing; then the model goes back to its idle
-@export var body_landing: StringName
+@export var body_landing: Animation
 ## When [member body_landing] starts, as a fraction of [member duration]; a little before the model touches down, as it lands
 ## in a crouch
 @export_range(0.0, 2.0) var body_landing_time: float = 0.8
 ## The model's own animation once it landed, e.g. drawing a sword after spawning; then the model goes back to its idle
-@export var body_follow_up: StringName
+@export var body_follow_up: Animation
 ## How fast the body animations play
 @export var body_speed: float = 1.0
 ## How long [member body_animation] waits, as a fraction of [member duration]; the model keeps its pose meanwhile, e.g. so a
@@ -52,4 +52,4 @@ func continue_animation(model: Model) -> Tween:
 	return animate(model)
 
 func has_body_animations() -> bool:
-	return not body_animation.is_empty() or not body_landing.is_empty() or not body_follow_up.is_empty()
+	return body_animation != null or body_landing != null or body_follow_up != null

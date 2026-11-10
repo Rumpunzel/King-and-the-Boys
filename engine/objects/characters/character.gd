@@ -67,7 +67,7 @@ var model: Model:
 		if not model: return
 		add_child(model, true)
 		_apply_body()
-		if shows_passed: model.set_idle_animation(profile.passed_animation)
+		if shows_passed: model.rest_in(profile.passed_animations)
 		if equipment and model is ModularModel:
 			var modular_model: ModularModel = model
 			equipment.apply_to(modular_model)
@@ -361,14 +361,14 @@ func _on_move_finished() -> void:
 	if not _move_backwards: _look_at_thing_on_tile()
 	figure_arrived.emit()
 
-## Shows that the character's player passed, or no longer has: the profile's pass animation, then its passed one in place of the idle
+## Shows that the character's player passed, or no longer has: the profile's pass animation, then its passed animations in place of the idles
 ## (e.g. sitting down and sitting), or getting up again
 func show_passed(passed: bool) -> void:
 	if passed == shows_passed: return
 	shows_passed = passed
 	if not model: return
-	if passed: model.set_idle_animation(profile.passed_animation, profile.pass_animation)
-	else: model.set_idle_animation(&"", profile.unpass_animation)
+	if passed: model.rest_in(profile.passed_animations, profile.pass_animation)
+	else: model.rest_in(null, profile.unpass_animation)
 
 ## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
 func _look_at_thing_on_tile() -> void:
