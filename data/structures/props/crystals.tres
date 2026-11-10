@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://c7erdy8qpnb1o"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="Material" uid="uid://bmy61ol43ie6x" path="res://data/structures/props/crystals/crystal_material.tres" id="2_material"]
+[ext_resource type="PackedScene" uid="uid://c4k5fy3hu4ruw" path="res://data/structures/props/crystals/crystal_rock_a.tscn" id="3_prop"]
+[ext_resource type="PackedScene" uid="uid://ccw7y6tch0niv" path="res://data/structures/props/crystals/crystal_rock_b.tscn" id="4_prop"]
+[ext_resource type="PackedScene" uid="uid://c25bh10m8qkkw" path="res://data/structures/props/crystals/crystal_rock_e.tscn" id="5_prop"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("3_prop"): 1.0,
+ExtResource("4_prop"): 1.0,
+ExtResource("5_prop"): 1.0
+})
+material_override = ExtResource("2_material")

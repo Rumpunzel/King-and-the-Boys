@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://ccw7y6tch0niv"]
+
+[ext_resource type="PackedScene" uid="uid://dwgis8pc8hdh0" path="res://assets/polygon_dungeon_realms/SourceFiles/FBX/SM_Prop_Crystal_Rock_B_01.fbx" id="1_piece"]
+[ext_resource type="Script" uid="uid://3ykb13nhls36" path="res://engine/objects/structures/flickering_light.gd" id="9_flicker"]
+
+[node name="CrystalRockB" type="Node3D"]
+
+[node name="Crystal" parent="." instance=ExtResource("1_piece")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.09, 0)
+
+[node name="Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+light_color = Color(0.62, 0.35, 1, 1)
+light_energy = 1.2
+omni_range = 3.0
+omni_attenuation = 1.5
+distance_fade_enabled = true
+distance_fade_begin = 20.0
+distance_fade_length = 5.0
+script = ExtResource("9_flicker")
+flicker = 0.35
+speed = 0.6

@@ -7,6 +7,8 @@ global uniform vec3 occlusion_target;
 
 uniform sampler2D albedo_texture : source_color, filter_linear_mipmap, repeat_enable;
 uniform float roughness : hint_range(0.0, 1.0) = 0.8;
+// Lets strongly coloured parts glow (e.g. crystals in grey rock): emission by the albedo's saturation
+uniform float saturated_glow = 0.0;
 // Within this distance of the line fragments vanish completely; over the next fade_width they dither back in
 uniform float clear_radius = 0.8;
 uniform float fade_width = 1.2;
@@ -22,6 +24,10 @@ void vertex() {
 
 void fragment() {
 	ALBEDO = texture(albedo_texture, UV).rgb;
+	if (saturated_glow > 0.0) {
+		float saturation = max(ALBEDO.r, max(ALBEDO.g, ALBEDO.b)) - min(ALBEDO.r, min(ALBEDO.g, ALBEDO.b));
+		EMISSION = ALBEDO * saturated_glow * smoothstep(0.15, 0.4, saturation);
+	}
 	ROUGHNESS = roughness;
 	if (!IN_SHADOW_PASS) {
 		vec3 to_target = occlusion_target - CAMERA_POSITION_WORLD;

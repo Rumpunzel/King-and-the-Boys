@@ -7,11 +7,13 @@
 [ext_resource type="PackedScene" uid="uid://c7nx8t5nhfv04" path="res://data/structures/props/archways/pillar_arch_ruin_02.tscn" id="5_ruin"]
 [ext_resource type="PackedScene" uid="uid://d17fp842iynet" path="res://data/structures/props/archways/pillar_arch_ruin_03.tscn" id="6_ruin"]
 [ext_resource type="Resource" uid="uid://c5xyd11ftni1a" path="res://data/model_animations/drop_animation.tres" id="9_drop"]
+[ext_resource type="PackedScene" uid="uid://crfghvauhhxv0" path="res://data/structures/props/archways/pillar_arch_torches_01.tscn" id="7_torches"]
 
 [resource]
 script = ExtResource("1_script")
 props = Dictionary[PackedScene, float]({
 ExtResource("3_arch"): 0.2,
+ExtResource("7_torches"): 0.2,
 ExtResource("4_ruin"): 0.17,
 ExtResource("5_ruin"): 0.17,
 ExtResource("6_ruin"): 0.17

@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dvn4drvw3s3bh" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_TorchStick_01.tscn" id="1_piece"]
 [ext_resource type="PackedScene" uid="uid://cbh8li7jllmet" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Fire_Small_01.tscn" id="2_piece"]
+[ext_resource type="Script" uid="uid://3ykb13nhls36" path="res://engine/objects/structures/flickering_light.gd" id="9_flicker"]
 
 [node name="StandingTorch" type="Node3D"]
 
@@ -24,3 +25,6 @@ omni_attenuation = 1.5
 distance_fade_enabled = true
 distance_fade_begin = 20.0
 distance_fade_length = 5.0
+script = ExtResource("9_flicker")
+flicker = 0.25
+speed = 8.0

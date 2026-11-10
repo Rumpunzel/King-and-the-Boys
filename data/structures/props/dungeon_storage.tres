@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://jc0w5tcdt1k3" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Crate_Metal_01.tscn" id="8_prop"]
 [ext_resource type="PackedScene" uid="uid://jsmwi4x01sc0" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Crate_Rocks_01.tscn" id="9_prop"]
 [ext_resource type="PackedScene" uid="uid://bobrm6esvxnko" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Vase_Group_01.tscn" id="10_prop"]
-[ext_resource type="PackedScene" uid="uid://ck6t01ij164c3" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Candle_Stand_01.tscn" id="11_prop"]
 [ext_resource type="PackedScene" uid="uid://beschixy66ip5" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Chest_Wood_01.tscn" id="12_prop"]
 [ext_resource type="PackedScene" uid="uid://bet65vsbjjd3p" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Stool_01.tscn" id="13_prop"]
 [ext_resource type="PackedScene" uid="uid://b8ij0836bqeal" path="res://assets/polygon_dark_fantasy/Prefabs/Props/SM_Prop_Barrel_01.tscn" id="1_more"]
@@ -33,7 +32,6 @@ ExtResource("7_prop"): 1.0,
 ExtResource("8_prop"): 1.0,
 ExtResource("9_prop"): 1.0,
 ExtResource("10_prop"): 1.0,
-ExtResource("11_prop"): 0.6,
 ExtResource("12_prop"): 0.4,
 ExtResource("13_prop"): 1.0,
 ExtResource("1_more"): 0.8,

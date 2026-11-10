@@ -2,14 +2,33 @@
 
 [ext_resource type="PackedScene" uid="uid://5x5ggdp2gll" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Candles_03.tscn" id="1_piece"]
 [ext_resource type="PackedScene" uid="uid://dqsd1teh3jxjx" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Candle_Flame_01.tscn" id="2_piece"]
+[ext_resource type="Script" uid="uid://3ykb13nhls36" path="res://engine/objects/structures/flickering_light.gd" id="9_flicker"]
 
 [node name="FloorCandles" type="Node3D"]
 
 [node name="Candles" parent="." instance=ExtResource("1_piece")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
 
-[node name="Flame" parent="." instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
+
+[node name="Flame1" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0.032, 0.19, 0.04)
+local_coords = true
+
+[node name="Flame2" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -0.016, 0.245, -0.032)
+local_coords = true
+
+[node name="Flame3" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0.04, 0.24, -0.04)
+local_coords = true
+
+[node name="Flame4" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -0.024, 0.215, 0.008)
+local_coords = true
+
+[node name="Flame5" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0.08, 0.183, 0.032)
+local_coords = true
 
 [node name="Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
@@ -20,3 +39,6 @@ omni_attenuation = 1.5
 distance_fade_enabled = true
 distance_fade_begin = 20.0
 distance_fade_length = 5.0
+script = ExtResource("9_flicker")
+flicker = 0.2
+speed = 10.0

@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://vvi31kdvqho0"]
+
+[ext_resource type="PackedScene" uid="uid://cgbhojpbbfqqa" path="res://assets/polygon_dungeon/Prefabs/Props/SM_Prop_Candle_01.tscn" id="1_piece"]
+[ext_resource type="PackedScene" uid="uid://dqsd1teh3jxjx" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Candle_Flame_01.tscn" id="2_piece"]
+[ext_resource type="Script" uid="uid://3ykb13nhls36" path="res://engine/objects/structures/flickering_light.gd" id="9_flicker"]
+
+[node name="LitCandle01" type="Node3D"]
+
+[node name="Candles" parent="." instance=ExtResource("1_piece")]
+
+[node name="Flame1" parent="." instance=ExtResource("2_piece")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -0.01, 0.34, 0.01)
+local_coords = true
+
+[node name="Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+light_color = Color(1, 0.62, 0.3, 1)
+light_energy = 0.5
+omni_range = 1.6
+omni_attenuation = 1.5
+distance_fade_enabled = true
+distance_fade_begin = 20.0
+distance_fade_length = 5.0
+script = ExtResource("9_flicker")
+flicker = 0.2
+speed = 10.0

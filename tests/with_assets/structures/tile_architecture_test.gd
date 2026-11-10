@@ -142,3 +142,22 @@ func test_architecture_drops_in_first_with_its_own_animation() -> void:
 			architecture_count += 1
 			assert_object(prop.get_meta(TileDecorations.DROP_ANIMATION)).is_same(drop_animation)
 	assert_int(architecture_count).is_greater(0)
+
+func test_doorway_arches_face_the_room() -> void:
+	# The ruins stand in for walls too, which face either way
+	var walls: Array = (load(WALLS) as PropSet).props.keys()
+	var scenes: Array = (load(DOORWAY_ARCHES) as PropSet).props.keys().filter(func(scene: PackedScene) -> bool: return not walls.has(scene)).map(
+			func(scene: PackedScene) -> String: return scene.resource_path)
+	var checked: int = 0
+	for tile: Structure in _tiles_within(2):
+		if not tile.model or not tile.model.has_node(NodePath(TileDecorations.NODE_NAME)): continue
+		for prop: Node in tile.model.get_node(NodePath(TileDecorations.NODE_NAME)).get_children():
+			if not scenes.has((prop.get_child(0) as Node).scene_file_path): continue
+			var arch: Node3D = prop
+			var front: Vector3 = arch.global_basis.z.normalized()
+			var room: Structure = _level.get_placed_tile(_level.world_to_grid_position(arch.global_position + front * 0.5))
+			assert_object(room).override_failure_message("No tile in front of the arch at %s" % arch.global_position).is_not_null()
+			if not room: continue
+			assert_object(room.profile.room_type).is_not_null()
+			checked += 1
+	assert_int(checked).is_greater(0)

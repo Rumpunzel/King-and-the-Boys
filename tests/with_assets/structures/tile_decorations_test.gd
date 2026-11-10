@@ -56,10 +56,18 @@ func test_a_light_stands_in_the_middle_of_a_closed_side() -> void:
 	var light_chance: float = decorations_resource.light_chance
 	decorations_resource.light_chance = 1.0
 	var hallway: Array[Level.Direction] = [Level.Direction.UP, Level.Direction.DOWN]
+	var light_scenes: Array[String] = _scenes_of(decorations_resource.lights)
 	for x: int in 10:
-		var lights: Array[Node3D] = _props(hallway, Vector2i(x, 3)).filter(func(prop: Node3D) -> bool: return prop.get_child(0).scene_file_path.contains("/lights/"))
+		var lights: Array[Node3D] = _props(hallway, Vector2i(x, 3)).filter(func(prop: Node3D) -> bool: return light_scenes.has(prop.get_child(0).scene_file_path))
 		assert_int(lights.size()).is_equal(1)
 		# Up and down are open, so the light stands left or right, in the middle
 		assert_float(absf(lights[0].position.x)).is_equal_approx(decorations_resource.edge_distance * TILE_SIZE * 0.5, 0.01)
 		assert_float(lights[0].position.z).is_equal_approx(0.0, 0.01)
 	decorations_resource.light_chance = light_chance
+
+## The paths of every prop scene in [param prop_set] and its collections
+static func _scenes_of(prop_set: PropSet) -> Array[String]:
+	var scenes: Array[String] = []
+	for scene: PackedScene in prop_set.props: scenes.append(scene.resource_path)
+	for collection: PropSet in prop_set.collections: scenes.append_array(_scenes_of(collection))
+	return scenes

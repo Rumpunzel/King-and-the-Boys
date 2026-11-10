@@ -5,7 +5,7 @@ extends Resource
 ## Props a revealed tile is dressed with:
 ## - clutter: some from [member edge_props] along its closed sides (no connection), some from [member corner_props] in corners
 ##   between two closed sides, chosen from the tile's grid position
-## - architecture: arches over openings (whole ones where a corridor enters a room, ruins between corridor tiles), raised by the first
+## - architecture: arches over openings (whole ones where a corridor enters a room, facing it, ruins between corridor tiles), raised by the first
 ##   of the two tiles to be revealed once the other one exists, and pillars on every other grid corner inside rooms, raised by the last of its four
 ##   room tiles to be revealed
 ## - lights: now and then a torch, brazier or candles in the middle of a closed side, which then gets no other clutter
@@ -151,7 +151,7 @@ func _add_arches(decorations: Node3D, tile: Structure, decided: Array[Vector2i])
 		random.seed = hash(grid_position) ^ hash(neighbour_position)
 		if random.randf() >= (doorway_arch_chance if is_doorway else corridor_arch_chance): continue
 		var arches: PropSet = doorway_arches if is_doorway else corridor_arches
-		_add_prop(decorations, arches, _on_edge(tile, direction, Basis.IDENTITY), random)
+		_add_prop(decorations, arches, _on_edge(tile, direction, _facing_room(direction, is_room) if is_doorway else Basis.IDENTITY), random)
 
 ## A wall on some sides without a connection; a neighbour across, if any, may have decided the edge already
 func _add_walls(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) -> void:
@@ -177,6 +177,15 @@ static func _on_edge(tile: Structure, direction: Level.Direction, turn: Basis) -
 	var outward: Vector2 = Vector2(Level.DIRECTION_VECTORS[direction])
 	var across: Basis = Basis(Vector3.UP, PI * 0.5) if outward.x != 0.0 else Basis.IDENTITY
 	return _to_model(tile, _on_floor(outward * tile.level.grid_size * 0.5), across * turn)
+
+## Turns a doorway arch so its front (+z, e.g. where torches hang) faces the room: the tile itself if [param is_room], else the neighbour
+## in [param direction]
+static func _facing_room(direction: Level.Direction, is_room: bool) -> Basis:
+	var outward: Vector3 = Vector3(Level.DIRECTION_VECTORS[direction].x, 0.0, Level.DIRECTION_VECTORS[direction].y)
+	# Before turning, [method _on_edge] lays the front along the edge's axis, pointing to the positive side
+	var front: Vector3 = outward.abs()
+	var towards_room: Vector3 = -outward if is_room else outward
+	return Basis(Vector3.UP, PI) if front.dot(towards_room) < 0.0 else Basis.IDENTITY
 
 ## Whether [param tile] already decided its edge towards [param neighbour_position]
 static func _has_decided(tile: Structure, neighbour_position: Vector2i) -> bool:
