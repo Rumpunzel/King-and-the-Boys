@@ -386,7 +386,8 @@ func _on_type_selected(_index: int) -> void:
 func _on_gear_tab_visibility_changed() -> void:
 	# Without a Gear tab (e.g. in tests) the panel is always shown
 	visible = _gear_tab.visible if _gear_tab else true
-	if not visible: return
+	# Also while Menagerie itself is hidden, e.g. at every editor start: types pull in the bodies they dress
+	if not is_visible_in_tree(): return
 	# Types may have been added or edited since the tab was last open
 	_load_types()
 	if _equipment_look: _show_look(_equipment_look)
