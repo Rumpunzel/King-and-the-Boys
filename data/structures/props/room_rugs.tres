@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("1_script")
 props = Dictionary[PackedScene, float]({
-ExtResource("2_prop"): 1.0,
+ExtResource("2_prop"): 0.1,
 ExtResource("3_prop"): 1.0
 })
 prop_scale = Vector3(1.4, 1.4, 1.4)

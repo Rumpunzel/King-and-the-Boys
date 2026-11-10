@@ -10,7 +10,7 @@
 [resource]
 script = ExtResource("1_script")
 props = Dictionary[PackedScene, float]({
-ExtResource("3_arch"): 1.0,
+ExtResource("3_arch"): 0.2,
 ExtResource("4_ruin"): 0.17,
 ExtResource("5_ruin"): 0.17,
 ExtResource("6_ruin"): 0.17

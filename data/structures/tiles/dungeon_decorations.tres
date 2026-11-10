@@ -15,9 +15,10 @@
 script = ExtResource("1_script")
 edge_props = ExtResource("2_clutter")
 corner_props = ExtResource("3_storage")
+lights = ExtResource("8_lights")
+room_floors = ExtResource("9_rugs")
+room_floor_chance = 0.05
+room_ambience = ExtResource("10_ambience")
 doorway_arches = ExtResource("4_doorways")
 corridor_arches = ExtResource("5_ruins")
 room_pillars = ExtResource("6_pillars")
-lights = ExtResource("8_lights")
-room_floors = ExtResource("9_rugs")
-room_ambience = ExtResource("10_ambience")
