@@ -355,7 +355,7 @@ func _on_move_finished() -> void:
 
 ## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
 func _look_at_thing_on_tile() -> void:
-	var thing: Thing = level.get_placed_thing(grid_cell)
+	var thing: Thing = level.get_thing_near(grid_cell)
 	if not thing or not thing.visible: return
 	var to_thing: Vector3 = thing.global_position - global_position
 	to_thing.y = 0.0

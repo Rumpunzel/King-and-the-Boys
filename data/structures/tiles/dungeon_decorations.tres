@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://jluba74jliwr" path="res://data/structures/props/dungeon_lights.tres" id="8_lights"]
 [ext_resource type="Resource" uid="uid://oitmmh7nnns2" path="res://data/structures/props/room_rugs.tres" id="9_rugs"]
 [ext_resource type="Resource" uid="uid://tj2yln8n45jb" path="res://data/structures/props/room_ambience.tres" id="10_ambience"]
+[ext_resource type="Resource" uid="uid://b5cplg8jqeufa" path="res://data/structures/props/room_dust.tres" id="11_dust"]
 
 [resource]
 script = ExtResource("1_script")
@@ -19,6 +20,8 @@ lights = ExtResource("8_lights")
 room_floors = ExtResource("9_rugs")
 room_floor_chance = 0.05
 room_ambience = ExtResource("10_ambience")
+room_ambience_chance = 0.08
+room_dust = ExtResource("11_dust")
 doorway_arches = ExtResource("4_doorways")
 corridor_arches = ExtResource("5_ruins")
 room_pillars = ExtResource("6_pillars")

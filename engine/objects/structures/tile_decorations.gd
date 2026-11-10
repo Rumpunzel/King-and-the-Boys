@@ -9,7 +9,8 @@ extends Resource
 ##   of the two tiles to be revealed once the other one exists, and pillars on every other grid corner inside rooms, raised by the last of its four
 ##   room tiles to be revealed
 ## - lights: now and then a torch, brazier or candles in the middle of a closed side, which then gets no other clutter
-## - rooms: rugs under the middle of some room tiles (flat, so pieces stand on them) and ambience such as dust
+## - rooms: rugs under the middle of some room tiles (flat, so pieces stand on them), ambience such as sun beams, and dust over every
+##   tile of some rooms (rolled per room, see [method Level.get_room_cells])
 ## - walls: mostly crumbling, along some closed sides; an edge is shared too, so the first of its tiles to be revealed decides it
 ## Purely visual: every peer reveals the same tiles and picks alike, so nothing is synced. Props keep clear of the tile spots
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
@@ -45,9 +46,13 @@ const CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1)
 ## Lie under the middle of room tiles, e.g. rugs; turned in quarter turns to the grid
 @export var room_floors: PropSet
 @export_range(0.0, 1.0) var room_floor_chance: float = 0.3
-## Over the middle of room tiles, e.g. drifting dust
+## Over the middle of some room tiles, e.g. sun beams
 @export var room_ambience: PropSet
 @export_range(0.0, 1.0) var room_ambience_chance: float = 0.2
+## Over the middle of every tile of a dusty room, so the room reads as one
+@export var room_dust: PropSet
+## Chance of a room being dusty
+@export_range(0.0, 1.0) var dusty_room_chance: float = 0.4
 @export_group("Architecture")
 ## Span openings where a corridor enters a room, by [member doorway_arch_chance]
 @export var doorway_arches: PropSet
@@ -124,6 +129,22 @@ func _add_room_props(decorations: Node3D, tile: Structure) -> void:
 		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), quarter_turn), random)
 	if room_ambience and random.randf() < room_ambience_chance:
 		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO)), random)
+	_add_room_dust(decorations, tile)
+
+## Dust over [param tile] if its room is dusty. The room is rolled by its first cell, so it needs all its tiles: rooms are built whole,
+## but loaded and joining peers get their tiles one by one, so the first of them waits for the rest of the frame
+func _add_room_dust(decorations: Node3D, tile: Structure, waited: bool = false) -> void:
+	if not room_dust or not is_instance_valid(decorations) or not tile.level: return
+	var cells: Array[Vector2i] = tile.level.get_room_cells(tile.get_grid_position())
+	if not waited and not tile.level.is_room_complete(cells):
+		_add_room_dust.call_deferred(decorations, tile, true)
+		return
+	var room_random: RandomNumberGenerator = RandomNumberGenerator.new()
+	room_random.seed = hash(cells.min()) ^ hash(&"dust")
+	if room_random.randf() >= dusty_room_chance: return
+	var random: RandomNumberGenerator = RandomNumberGenerator.new()
+	random.seed = hash(tile.get_grid_position()) ^ hash(&"dust")
+	_add_prop(decorations, room_dust, _to_model(tile, _on_floor(Vector2.ZERO)), random)
 
 ## Hides the props of [param decorations] and drops them in one after another once [param after] (e.g. the tile's reveal) finished
 func drop(decorations: Node3D, after: Tween = null) -> void:

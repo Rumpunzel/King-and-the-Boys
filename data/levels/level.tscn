@@ -4,6 +4,7 @@
 [ext_resource type="Resource" uid="uid://sed2rxcgl038" path="res://data/structures/tiles/room/starting_tile.tres" id="2_c445m"]
 [ext_resource type="Resource" uid="uid://b50fre8sdxsyo" path="res://data/structures/tiles/default_tile_set.tres" id="3_c445m"]
 [ext_resource type="Resource" uid="uid://d3cc5nj7ogal8" path="res://data/structures/tiles/wall.tres" id="3_wall"]
+[ext_resource type="Resource" uid="uid://8y0bv223d7px" path="res://data/things/centrepiece_spawn_table.tres" id="4_centrepieces"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 [ext_resource type="Texture2D" uid="uid://bwn2kfo8trdse" path="res://protoype_assets/sky_boxes/material_0_baseColor.png" id="19_mkmcm"]
 
@@ -26,6 +27,7 @@ size = Vector2(64, 64)
 _starting_tile = ExtResource("2_c445m")
 _wall_tile = ExtResource("3_wall")
 _tile_set = ExtResource("3_c445m")
+_room_centrepieces = ExtResource("4_centrepieces")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1391764827]
 environment = SubResource("Environment_jwwwr")
