@@ -1,9 +1,10 @@
 @tool
 class_name MovesBar
-extends MarginContainer
-## A character's moves this turn as one bar in the character's colour, filling up as moves are used: moves used for
-## good in full colour, moves that could still be undone paler, moves left empty. Full once every move is used.
-## Two stacked progress bars, the upper one without background, and ticks on top dividing the bar into one segment per move.
+extends HBoxContainer
+## A character's moves this turn as a row of pills, one per move, in the character's colour: moves used for good in full
+## colour, moves that could still be undone paler, moves left empty. Pills fill up and drain with a short tween.
+
+enum MoveState { LEFT, UNDOABLE, USED }
 
 @export var character: Character:
 	set(new_character):
@@ -14,73 +15,91 @@ extends MarginContainer
 		if not character or Engine.is_editor_hint(): return
 		character.movement_points_changed.connect(_on_moves_changed)
 		character.undo_steps_changed.connect(_on_moves_changed)
-		_update()
+		_update(false)
 
 ## Opacity of moves that could still be undone
 @export_range(0.0, 1.0) var undoable_alpha: float = 0.4
-## The ticks between two moves
-@export var tick_color: Color = Color(0.0, 0.0, 0.0, 0.6):
-	set(new_tick_color):
-		tick_color = new_tick_color
-		if _ticks: _ticks.queue_redraw()
-@export_range(0.0, 8.0) var tick_width: float = 2.0:
-	set(new_tick_width):
-		tick_width = new_tick_width
-		if _ticks: _ticks.queue_redraw()
-## How far ticks reach above and below the bar, so they stay visible on a thin one
-@export_range(0.0, 16.0) var tick_overhang: float = 2.0:
-	set(new_tick_overhang):
-		tick_overhang = new_tick_overhang
-		if _ticks: _ticks.queue_redraw()
+## How long a pill takes to fill up, drain or change its colour
+@export_range(0.0, 1.0) var fill_duration: float = 0.25
+@export var pill_height: float = 10.0:
+	set(new_pill_height):
+		pill_height = new_pill_height
+		for pill: ProgressBar in _pills: pill.custom_minimum_size.y = pill_height
+## The empty pill
+@export var pill_background: StyleBox
+## The filling, recoloured per pill
+@export var pill_fill: StyleBoxFlat
 
-@export_group("Configuration")
-@export var _used_bar: ProgressBar
-@export var _undoable_bar: ProgressBar
-## Drawn on by [method _draw_ticks]
-@export var _ticks: Control
-
-var _color: Color = Color.TRANSPARENT
+var _pills: Array[ProgressBar] = []
+var _states: Array[MoveState] = []
+var _tweens: Array[Tween] = []
 
 func _ready() -> void:
-	if _ticks: _ticks.draw.connect(_draw_ticks)
-	if character: _update()
+	if Engine.is_editor_hint():
+		# A preview: two moves used, one undoable, one left
+		_build(4)
+		for move: int in 4: _show(move, [MoveState.USED, MoveState.USED, MoveState.UNDOABLE, MoveState.LEFT][move] as MoveState, Color.CORNFLOWER_BLUE, false)
+		return
+	if character: _update(false)
 
-func _update() -> void:
+func _update(animate: bool = true) -> void:
 	if not is_node_ready() or not is_instance_valid(character): return
 	var speed: int = character.profile.speed
+	if _pills.size() != speed:
+		_build(speed)
+		animate = false
 	var moves_used: int = speed - maxi(character.movement_points, 0)
-	for bar: ProgressBar in [_used_bar, _undoable_bar]: bar.max_value = speed
-	_used_bar.value = moves_used - character.undo_steps
-	_undoable_bar.value = moves_used
-	_ticks.queue_redraw()
-	if character.profile.color != _color:
-		_color = character.profile.color
-		_set_fill_color(_used_bar, _color)
-		_set_fill_color(_undoable_bar, Color(_color, _color.a * undoable_alpha))
+	var moves_kept: int = moves_used - character.undo_steps
+	for move: int in speed:
+		var state: MoveState = MoveState.LEFT
+		if move < moves_kept: state = MoveState.USED
+		elif move < moves_used: state = MoveState.UNDOABLE
+		_show(move, state, character.profile.color, animate)
 
-## A line between every two moves, across the bar and a little beyond
-func _draw_ticks() -> void:
-	var moves: int = int(_used_bar.max_value)
-	var bar: Rect2 = Rect2(_used_bar.position - _ticks.position, _used_bar.size)
-	# Like the bar's fill: its style's minimum width always shows, the rest of the width is shared out
-	var fill_start: float = _used_bar.get_theme_stylebox(&"fill").get_minimum_size().x
-	for move: int in range(1, moves):
-		var x: float = bar.position.x + fill_start + (bar.size.x - fill_start) * move / moves
-		_ticks.draw_line(Vector2(x, bar.position.y - tick_overhang), Vector2(x, bar.end.y + tick_overhang), tick_color, tick_width)
+## One empty pill per move
+func _build(moves: int) -> void:
+	for pill: ProgressBar in _pills: pill.queue_free()
+	_pills.clear()
+	_states.clear()
+	_tweens.clear()
+	for move: int in moves:
+		var pill: ProgressBar = ProgressBar.new()
+		pill.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		pill.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		pill.custom_minimum_size.y = pill_height
+		pill.max_value = 1.0
+		pill.step = 0.0
+		pill.show_percentage = false
+		pill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if pill_background: pill.add_theme_stylebox_override(&"background", pill_background)
+		var fill: StyleBoxFlat = pill_fill.duplicate() if pill_fill else StyleBoxFlat.new()
+		fill.bg_color = Color.TRANSPARENT
+		pill.add_theme_stylebox_override(&"fill", fill)
+		add_child(pill)
+		_pills.append(pill)
+		_states.append(MoveState.LEFT)
+		_tweens.append(null)
 
-## Keeps the theme's fill style, only in another colour
-static func _set_fill_color(bar: ProgressBar, color: Color) -> void:
-	var fill: StyleBox = bar.get_theme_stylebox(&"fill")
-	var colored_fill: StyleBoxFlat = fill.duplicate() if fill is StyleBoxFlat else StyleBoxFlat.new()
-	colored_fill.bg_color = color
-	bar.add_theme_stylebox_override(&"fill", colored_fill)
+## Fills or drains a move's pill and gives it the state's colour
+func _show(move: int, state: MoveState, color: Color, animate: bool) -> void:
+	var pill: ProgressBar = _pills[move]
+	var fill: StyleBoxFlat = pill.get_theme_stylebox(&"fill") as StyleBoxFlat
+	var target_value: float = 0.0 if state == MoveState.LEFT else 1.0
+	# A draining pill keeps its colour until it is empty
+	var target_color: Color = fill.bg_color
+	if state == MoveState.USED: target_color = color
+	elif state == MoveState.UNDOABLE: target_color = Color(color, color.a * undoable_alpha)
+	if state == _states[move] and is_equal_approx(pill.value, target_value) and fill.bg_color == target_color: return
+	_states[move] = state
+	if _tweens[move]: _tweens[move].kill()
+	if not animate or fill_duration <= 0.0:
+		pill.value = target_value
+		fill.bg_color = target_color
+		return
+	var tween: Tween = create_tween().set_parallel().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(pill, ^"value", target_value, fill_duration)
+	tween.tween_property(fill, ^"bg_color", target_color, fill_duration)
+	_tweens[move] = tween
 
 func _on_moves_changed(_value: int) -> void:
 	_update()
-
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings: PackedStringArray = []
-	if not _used_bar: warnings.append("Missing used moves ProgressBar reference.")
-	if not _undoable_bar: warnings.append("Missing undoable ProgressBar reference.")
-	if not _ticks: warnings.append("Missing ticks Control reference.")
-	return warnings

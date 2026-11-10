@@ -2,34 +2,24 @@
 
 [ext_resource type="Script" uid="uid://o4wjmoakv43" path="res://user_interface/hud/moves_bar.gd" id="1_moves"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_moves"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_background"]
+bg_color = Color(0.08, 0.08, 0.1, 0.6)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
-[node name="MovesBar" type="MarginContainer" unique_id=1679096801 node_paths=PackedStringArray("_used_bar", "_undoable_bar", "_ticks")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fill"]
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="MovesBar" type="HBoxContainer" unique_id=1679096801]
 offset_right = 173.0
-offset_bottom = 32.0
+offset_bottom = 10.0
+theme_override_constants/separation = 4
 script = ExtResource("1_moves")
-_used_bar = NodePath("Used")
-_undoable_bar = NodePath("Undoable")
-_ticks = NodePath("Ticks")
+pill_background = SubResource("StyleBoxFlat_background")
+pill_fill = SubResource("StyleBoxFlat_fill")
 metadata/_custom_type_script = "uid://o4wjmoakv43"
-
-[node name="Undoable" type="ProgressBar" parent="." unique_id=774445842]
-custom_minimum_size = Vector2(0, 10)
-layout_mode = 2
-max_value = 4.0
-step = 1.0
-value = 3.0
-show_percentage = false
-
-[node name="Used" type="ProgressBar" parent="." unique_id=528461117]
-custom_minimum_size = Vector2(0, 10)
-layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxEmpty_moves")
-max_value = 4.0
-step = 1.0
-value = 2.0
-show_percentage = false
-
-[node name="Ticks" type="Control" parent="." unique_id=1310574622]
-layout_mode = 2
-mouse_filter = 2
