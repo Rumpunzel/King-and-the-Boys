@@ -26,7 +26,8 @@ func _ready() -> void:
 		# Players joining the running game wait for their part of it too, see _report_ready
 		SceneManager.joiners_keep_loading_screen = true
 		return
-	_player_controller_spawner.player_controller_created.connect(_on_part_arrived)
+	# Deferred: the controller enters the tree before its character does
+	_player_controller_spawner.player_controller_created.connect(_on_part_arrived, CONNECT_DEFERRED)
 	_level.tile_placed.connect(_on_part_arrived)
 	_on_part_arrived(null)
 
@@ -91,7 +92,7 @@ func _is_everyone_ready() -> bool:
 func _has_own_part_arrived() -> bool:
 	for child: Node in _player_controller_spawner.get_children():
 		var player_controller: PlayerController = child as PlayerController
-		if not player_controller or not player_controller.player.is_local_player(): continue
+		if not player_controller or not player_controller.player.is_local_player() or not player_controller.character.is_inside_tree(): continue
 		var cell: Vector2i = _level.world_to_grid_position(player_controller.character.global_position)
 		return _level.get_placed_tile(cell) != null
 	return false

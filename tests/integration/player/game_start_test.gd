@@ -59,3 +59,15 @@ func test_a_peer_that_is_not_awaited_changes_nothing_when_it_leaves() -> void:
 	_game.peer_readiness_changed.connect(func() -> void: changes.append(true))
 	_game.call("_on_peer_disconnected", OTHER_PEER_ID)
 	assert_int(changes.size()).is_equal(0)
+
+func test_a_client_checks_its_character_only_once_it_is_in_the_tree() -> void:
+	_level.build_level()
+	# As a client sees it: the controller enters the tree before its character does
+	var checks: Array[bool] = []
+	var check: Callable = func(_player_controller: PlayerController) -> void: checks.append(_game.call("_has_own_part_arrived"))
+	_spawner.player_controller_created.connect(check)
+	_spawner.start_synching_players()
+	_spawner.player_controller_created.disconnect(check)
+	await await_idle_frame()
+	assert_array(checks).contains_exactly([false])
+	assert_bool(_game.call("_has_own_part_arrived")).is_true()
