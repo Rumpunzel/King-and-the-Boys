@@ -78,8 +78,8 @@ func apply_body(body: Dictionary) -> void:
 ## body a peer rolled in the lobby
 func is_complete_body(body: Dictionary) -> bool:
 	var colors: int = 0
-	for key: String in [BODY_SKIN_COLOR, BODY_HAIR_COLOR]:
-		if not body.has(key): continue
+	for key: Variant in body:
+		if not is_body_color_key(key): continue
 		if not body[key] is Color: return false
 		colors += 1
 	if body.size() - colors != get_body_parts().size(): return false
@@ -142,8 +142,8 @@ func _ready() -> void:
 	super._ready()
 	for part: int in get_part_keys().size():
 		var body_part: ModularBodyPart = get_part(part)
-		if not body_part.appearance_changed.is_connected(_paint_part): body_part.appearance_changed.connect(_paint_part.bind(body_part))
-		_paint_part(body_part)
+		if not body_part.appearance_changed.is_connected(_paint_part): body_part.appearance_changed.connect(_paint_part.bind(part))
+		_paint_part(part)
 
 ## Repaints the gear's highlights (the packs' blue and gold) in [param primary] and [param secondary], e.g. a character's colours;
 ## transparent keeps the atlas' own. Gear shown later is painted too
@@ -181,9 +181,10 @@ func remove_material_override(material: Material) -> void:
 	_paint_parts()
 
 func _paint_parts() -> void:
-	for part: int in get_part_keys().size(): _paint_part(get_part(part))
+	for part: int in get_part_keys().size(): _paint_part(part)
 
-func _paint_part(body_part: ModularBodyPart) -> void:
+func _paint_part(part: int) -> void:
+	var body_part: ModularBodyPart = get_part(part)
 	if applied_material_override:
 		body_part.material_override = applied_material_override
 		return
@@ -194,8 +195,7 @@ func _paint_part(body_part: ModularBodyPart) -> void:
 	body_part.set_instance_shader_parameter(_PRIMARY_COLOR, gear_primary_color)
 	body_part.set_instance_shader_parameter(_SECONDARY_COLOR, gear_secondary_color)
 	body_part.set_instance_shader_parameter(_SKIN_COLOR, skin_color)
-	var hairy: bool = get_hair_parts().any(func(part: int) -> bool: return get_part(part) == body_part)
-	body_part.set_instance_shader_parameter(_HAIR_COLOR, hair_color if hairy else Color.TRANSPARENT)
+	body_part.set_instance_shader_parameter(_HAIR_COLOR, hair_color if get_hair_parts().has(part) else Color.TRANSPARENT)
 
 func randomize_body() -> void:
 	for part: int in get_body_parts(): get_part(part).random_mesh()

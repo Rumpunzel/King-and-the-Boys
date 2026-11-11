@@ -81,3 +81,21 @@ func test_dwarves_are_painted_by_their_atlas_colours() -> void:
 	assert_object(_painted(dwarf.beard, &"hair_color")).is_equal(body[ModularModel.BODY_HAIR_COLOR])
 	# Their outfits share the hair's dark brown, so only hair parts take the hair colour
 	assert_object(_painted(dwarf.body, &"hair_color")).is_equal(Color.TRANSPARENT)
+
+func test_a_preview_rolls_anew_once_its_colours_leave_the_configuration() -> void:
+	var knight: CharacterProfile = load("res://data/characters/people/knight.tres")
+	var own: ModelConfigurationRandom = knight.model_configuration
+	var edited: ModelConfigurationRandom = own.duplicate()
+	knight.model_configuration = edited
+	var model: ModularCharacter = auto_free(knight.create_model(0))
+	add_child(model)
+	knight.setup_model(model)
+	# E.g. a colour taken out of the list in the inspector
+	var shown: Color = knight._preview_body[ModularModel.BODY_SKIN_COLOR]
+	var left: PackedColorArray = own.skin_colors.duplicate()
+	left.remove_at(left.find(shown))
+	edited.skin_colors = left
+	knight.setup_model(model)
+	assert_bool(left.has(knight._preview_body[ModularModel.BODY_SKIN_COLOR] as Color)).is_true()
+	knight.model_configuration = own
+	knight._preview_body = {}
