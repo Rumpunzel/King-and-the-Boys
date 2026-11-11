@@ -1,6 +1,6 @@
 @tool
 @icon("uid://nl71yast8tsi")
-class_name PlayerGhost
+class_name PlayerController
 extends Node
 
 ## Emitted on the local player's peer when the character they move changes, e.g. when haunting one
@@ -22,7 +22,6 @@ const _INACTIVE_CAMERA_PRIORITY: int = 0
 		character.give_grid_state_to_host()
 		name = player.name
 		_camera.current = player.is_local_player()
-		player.player_info_changed.connect(_on_player_info_changed)
 
 @export_group("Configuration")
 @export var character: Character
@@ -74,29 +73,29 @@ func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
 	_state_machine.handle_input(event)
 
-static func create(for_player: Player, character_data: Dictionary[StringName, Variant]) -> PlayerGhost:
+static func create(for_player: Player, character_data: Dictionary[StringName, Variant]) -> PlayerController:
 	assert(for_player)
 	var scene: PackedScene = load("uid://ckcrpkujohkql")
-	var new_player_ghost: PlayerGhost = scene.instantiate()
-	new_player_ghost.player = for_player
-	assert(new_player_ghost.character)
-	new_player_ghost.character.apply_character_data(character_data)
-	return new_player_ghost
+	var new_player_controller: PlayerController = scene.instantiate()
+	new_player_controller.player = for_player
+	assert(new_player_controller.character)
+	new_player_controller.character.apply_character_data(character_data)
+	return new_player_controller
 
-static func validate_player_ghost_data(player_ghost_data: Dictionary[StringName, Variant]) -> void:
-	assert(player_ghost_data.has_all([PLAYER_ID, CHARACTER_DATA]))
-	assert(player_ghost_data.size() == 2)
+static func validate_player_controller_data(player_controller_data: Dictionary[StringName, Variant]) -> void:
+	assert(player_controller_data.has_all([PLAYER_ID, CHARACTER_DATA]))
+	assert(player_controller_data.size() == 2)
 
-func to_player_ghost_data() -> Dictionary[StringName, Variant]:
+func to_player_controller_data() -> Dictionary[StringName, Variant]:
 	assert(player)
 	assert(character)
 	var character_data: Dictionary[StringName, Variant] = character.to_character_data()
-	var player_ghost_data: Dictionary[StringName, Variant] = {
+	var player_controller_data: Dictionary[StringName, Variant] = {
 		PLAYER_ID: player.player_id,
 		CHARACTER_DATA: character_data,
 	}
-	validate_player_ghost_data(player_ghost_data)
-	return player_ghost_data
+	validate_player_controller_data(player_controller_data)
+	return player_controller_data
 
 func get_active_camera_priority() -> int:
 	return _ACTIVE_CAMERA_PRIORITY if player.is_local_player() else _INACTIVE_CAMERA_PRIORITY
@@ -157,9 +156,6 @@ func _on_controlled_character_changed(controlled_character: Character) -> void:
 func _on_turn_state_changed(_value: int) -> void:
 	# Deferred: on the host the points change just before the step that starts the figure moving
 	_auto_pass_if_out_of_moves.call_deferred()
-
-func _on_player_info_changed() -> void:
-	pass#character.variation = player.ghost_sprite_frame
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

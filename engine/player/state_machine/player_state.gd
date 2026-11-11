@@ -17,7 +17,7 @@ func handle_interactable(current_interactable: HitBox) -> Interaction:
 
 func get_state_machine() -> PlayerStateMachine: return _state_machine
 
-func get_player_ghost() ->  PlayerGhost: return get_state_machine().player_ghost
+func get_player_controller() ->  PlayerController: return get_state_machine().player_controller
 func get_input_reader() ->  InputReader: return get_state_machine().input_reader
 func get_character() ->  Character: return get_state_machine().character
 ## The [Character] the player moves in this state; their own one unless they control another
@@ -27,8 +27,8 @@ func get_interaction_area() ->  InteractionArea: return get_state_machine().inte
 func get_available_interaction() -> Interaction: return get_state_machine().available_interaction
 func get_default_phantom_camera() ->  PhantomCamera3D: return get_state_machine().default_phantom_camera
 
-func get_active_camera_priority() -> int: return get_state_machine().player_ghost.get_active_camera_priority()
-func get_default_camera_priority() -> int: return get_state_machine().player_ghost.get_default_camera_priority()
+func get_active_camera_priority() -> int: return get_state_machine().player_controller.get_active_camera_priority()
+func get_default_camera_priority() -> int: return get_state_machine().player_controller.get_default_camera_priority()
 
 func get_direction_input() -> Vector2: return get_state_machine().input_reader.get_camera_adjusted_direction_input()
 func get_interaction_input() -> StringName: return get_state_machine().input_reader.interaction_input

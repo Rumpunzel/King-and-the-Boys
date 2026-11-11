@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ckcrpkujohkql"]
 
-[ext_resource type="Script" uid="uid://blq77gvr6c2qt" path="res://engine/player/player_ghost.gd" id="1_rp0et"]
+[ext_resource type="Script" uid="uid://blq77gvr6c2qt" path="res://engine/player/player_controller.gd" id="1_rp0et"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_d7fgu"]
 [ext_resource type="Script" uid="uid://dqdyomt3y3nx8" path="res://engine/player/input_reader.gd" id="3_d7fgu"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_jlh3c"]
@@ -29,9 +29,9 @@ properties/2/replication_mode = 2
 [sub_resource type="Resource" id="Resource_shdhw"]
 script = ExtResource("7_r3pxx")
 
-[node name="PlayerGhost" type="Node" unique_id=830050244 node_paths=PackedStringArray("character", "_state_machine", "_camera")]
+[node name="PlayerController" type="Node" unique_id=830050244 node_paths=PackedStringArray("character", "_state_machine", "_camera")]
 script = ExtResource("1_rp0et")
-character = NodePath("Ghost")
+character = NodePath("Character")
 _state_machine = NodePath("StateMachine")
 _camera = NodePath("TopDownCamera")
 metadata/_custom_type_script = "uid://blq77gvr6c2qt"
@@ -52,12 +52,12 @@ script = ExtResource("3_d7fgu")
 _camera = NodePath("../TopDownCamera")
 metadata/_custom_type_script = "uid://dqdyomt3y3nx8"
 
-[node name="StateMachine" type="Node" parent="." unique_id=1534177582 node_paths=PackedStringArray("player_ghost", "input_reader", "character", "hit_box", "default_phantom_camera")]
+[node name="StateMachine" type="Node" parent="." unique_id=1534177582 node_paths=PackedStringArray("player_controller", "input_reader", "character", "hit_box", "default_phantom_camera")]
 script = ExtResource("3_kwn24")
-player_ghost = NodePath("..")
+player_controller = NodePath("..")
 input_reader = NodePath("../InputReader")
-character = NodePath("../Ghost")
-hit_box = NodePath("../Ghost/CharacterHitBox")
+character = NodePath("../Character")
+hit_box = NodePath("../Character/CharacterHitBox")
 default_phantom_camera = NodePath("../DefaultCamera")
 haunt_phantom_camera_scene = ExtResource("10_jlh3c")
 _initial_state = ExtResource("4_irqko")
@@ -78,9 +78,9 @@ transform = Transform3D(1.0000002, 0, 0, 0, 0.6246951, 0.78086865, 0, -0.7808687
 top_level = true
 script = ExtResource("6_jlh3c")
 follow_mode = 2
-follow_target = NodePath("../Ghost")
+follow_target = NodePath("../Character")
 look_at_mode = 2
-look_at_target = NodePath("../Ghost")
+look_at_target = NodePath("../Character")
 tween_resource = SubResource("Resource_shdhw")
 tween_on_load = false
 follow_offset = Vector3(0, 20, 16)
@@ -89,9 +89,9 @@ align_position_with_view = Callable()
 align_rotation_with_view = Callable()
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
-[node name="OcclusionTarget" type="Node" parent="." unique_id=1468322091 node_paths=PackedStringArray("_player_ghost")]
+[node name="OcclusionTarget" type="Node" parent="." unique_id=1468322091 node_paths=PackedStringArray("_player_controller")]
 script = ExtResource("20_occlusion")
-_player_ghost = NodePath("..")
+_player_controller = NodePath("..")
 
 [node name="TopDownCamera" type="Camera3D" parent="." unique_id=113072833]
 physics_interpolation_mode = 1
@@ -105,17 +105,17 @@ process_priority = 300
 process_physics_priority = 300
 script = ExtResource("8_mvbif")
 
-[node name="Ghost" parent="." unique_id=1983351460 instance=ExtResource("10_irqko")]
+[node name="Character" parent="." unique_id=1983351460 instance=ExtResource("10_irqko")]
 collision_layer = 65536
 collision_mask = 1
 
-[node name="SynchronizerSerializer" parent="Ghost/CharacterSynchronizer" parent_id_path=PackedInt32Array(1983351460, 1181153482) index="0" unique_id=510585076]
+[node name="SynchronizerSerializer" parent="Character/CharacterSynchronizer" parent_id_path=PackedInt32Array(1983351460, 1181153482) index="0" unique_id=510585076]
 type = 64
 
-[node name="CharacterHitBox" parent="Ghost" index="3" unique_id=1431592383]
+[node name="CharacterHitBox" parent="Character" index="3" unique_id=1431592383]
 collision_layer = 1048576
 
-[node name="OmniLight3D" type="OmniLight3D" parent="Ghost" unique_id=772574322]
+[node name="OmniLight3D" type="OmniLight3D" parent="Character" unique_id=772574322]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 4, 1)
 light_color = Color(0.99999994, 0.7550197, 0.57437825, 1)
 light_energy = 5.5
@@ -125,4 +125,4 @@ omni_range = 12.0
 
 [connection signal="available_interactions_changed" from="StateMachine" to="HUD" method="_on_available_interactions_changed"]
 
-[editable path="Ghost"]
+[editable path="Character"]

@@ -6,7 +6,7 @@ signal available_interactions_changed(available_interactions: Array[Interaction]
 signal controlled_character_changed(controlled_character: Character)
 
 @export_group("Configuration")
-@export var player_ghost: PlayerGhost
+@export var player_controller: PlayerController
 @export var input_reader: InputReader
 @export var character: Character
 @export var hit_box: CharacterHitBox
@@ -54,7 +54,7 @@ func _on_current_interactable_changed(current_interactable: HitBox) -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not player_ghost: warnings.append("Missing PlayerGhost reference.")
+	if not player_controller: warnings.append("Missing PlayerController reference.")
 	if not input_reader: warnings.append("Missing InputReader reference.")
 	if not interaction_area: warnings.append("Missing InteractionArea reference.")
 	if not default_phantom_camera: warnings.append("Missing default PhantomCamera3D reference.")

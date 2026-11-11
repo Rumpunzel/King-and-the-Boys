@@ -1,4 +1,4 @@
-@icon("uid://bacbwgwwmvm5i")
+@icon("uid://i34bmpyalsdq")
 class_name PlayerStateHauntingThing
 extends PlayerState
 

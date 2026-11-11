@@ -174,8 +174,8 @@ toggle_debug_drawings={
 3d_physics/layer_5="WorldAreas"
 3d_physics/layer_6="HitBoxes"
 3d_physics/layer_7="HurtBoxes"
-3d_physics/layer_17="Ghosts"
-3d_physics/layer_21="GhostHitBoxes"
+3d_physics/layer_17="Players"
+3d_physics/layer_21="PlayerHitBoxes"
 
 [physics]
 
