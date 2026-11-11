@@ -5,6 +5,7 @@ extends GdUnitTestSuite
 const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
 const SPAWNER_SCENE: String = "res://engine/player/player_controller_spawner.tscn"
 const OTHER_PLAYER_ID: int = 2
+const THIRD_PLAYER_ID: int = 3
 
 var _level: Level
 var _spawner: PlayerControllerSpawner
@@ -26,6 +27,7 @@ func after_test() -> void:
 	_spawner.stop_synching_players()
 	var players: Dictionary = Lobby.get("_players")
 	players.erase(OTHER_PLAYER_ID)
+	players.erase(THIRD_PLAYER_ID)
 	_local_player.character = _local_character
 	await await_idle_frame()
 
@@ -186,3 +188,22 @@ func test_refused_requests_change_nothing() -> void:
 	assert_object(hit_box.controller).is_null()
 	assert_object(other_character.controlled_by).is_null()
 	assert_bool(other_character.is_controlled_by(Multiplayer.HOST_ID)).is_false()
+
+func test_players_spawn_on_their_own_spots() -> void:
+	await _add_level()
+	_add_other_player()
+	var third: Player = auto_free(Player.create(THIRD_PLAYER_ID, "Third"))
+	third.character = ModelFreeWorld.load_hero_profile()
+	var players: Dictionary = Lobby.get("_players")
+	players[THIRD_PLAYER_ID] = third
+	_spawner.start_synching_players()
+	await await_idle_frame()
+	var spots: Array[Vector2] = []
+	for controller: PlayerController in _controllers():
+		var character: Character = controller.character
+		# Created where it stands: the figure has nowhere to move to
+		assert_vector(character.global_position).is_equal_approx(_level.get_spot_position(character.grid_cell, character.tile_spot), Vector3.ONE * 0.001)
+		assert_bool(character.is_figure_moving()).is_false()
+		assert_bool(spots.has(character.tile_spot)).is_false()
+		spots.append(character.tile_spot)
+	assert_int(spots.size()).is_equal(3)
