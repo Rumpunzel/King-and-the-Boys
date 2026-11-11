@@ -443,11 +443,14 @@ func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vect
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position)
 	_structure_spawner.spawn_at(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status)
 
-## Calls [param reveal_function] with every tile in sight within [param vision_radius]
+## Calls [param reveal_function] with every tile in sight within [param vision_radius], always with the tile at
+## [param from_grid_position] (a character sees the tile it stands on, even without vision)
 func _update_player_vision(from_grid_position: Vector2i, vision_radius: float, reveal_function: Callable, origin_grid_position: Vector2i = from_grid_position) -> void:
 	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
 	var from_tile: Structure = _placed_tiles[from_grid_position]
 	assert(from_tile)
+	# The passages below only reach the tiles they lead to (rooms reveal this one again, harmlessly)
+	reveal_function.call(from_tile)
 	var origin_room: Structure = _placed_tiles[origin_grid_position]
 	assert(origin_room)
 	var origin_tile_room_type: RoomType = origin_room.profile.room_type
