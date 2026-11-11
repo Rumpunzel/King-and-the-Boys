@@ -21,7 +21,7 @@ func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 	assert(_controlled)
 	var controlled_thing: Thing = _controlled.thing
 	assert(controlled_thing)
-	_controlled.take_control.rpc(character.get_path())
+	_controlled.request_control.rpc_id(Multiplayer.HOST_ID, character.get_path())
 	var input_force: Vector3 = character.get_heads_up_anchor() - controlled_thing.position
 	character.hide_character.rpc(true)
 	character.position = controlled_thing.position
@@ -58,7 +58,7 @@ func exit() -> void:
 	assert(controlled_thing)
 	character.unhide_character.rpc()
 	character.snap_to_grid()
-	_controlled.release_control.rpc()
+	_controlled.request_release.rpc_id(Multiplayer.HOST_ID)
 	get_interaction_area().remove_hit_box_to_ignore(_controlled)
 	_control_camera.queue_free()
 

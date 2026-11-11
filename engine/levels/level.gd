@@ -5,6 +5,8 @@ extends Node3D
 
 ## Emitted on the host when a [Character] entering a cell discovered or revealed tiles
 signal board_changed(character: Character)
+## Host only: [method build_level] placed the starting tiles
+signal built
 
 enum Direction {
 	UP,
@@ -164,6 +166,7 @@ func build_level() -> void:
 	_build_outer_wall()
 	var starting_grid_position: Vector2i = _place_starting_tile()
 	_build_dungeon_from(starting_grid_position)
+	built.emit()
 	#_structure_spawner.spawn_all_from_spawn_spoints()
 	#_thing_spawner.spawn_all_from_spawn_spoints()
 	#_agent_spawner.spawn_all_from_spawn_spoints()

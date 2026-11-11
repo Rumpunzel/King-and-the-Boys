@@ -52,6 +52,10 @@ func configure_collision_shape(_character_profile: CharacterProfile) -> void:
 	#character_profile.configure_interaction_area_shape(_collision_shape)
 	current_interactable = nearest_hit_box_in_area()
 
+## Whether [param hit_box] is within this area
+func reaches(hit_box: HitBox) -> bool:
+	return _hit_boxes_in_area.has(hit_box)
+
 func _is_ignored(hit_box: HitBox) -> bool:
 	return _hit_boxes_to_ignore.has(hit_box)
 

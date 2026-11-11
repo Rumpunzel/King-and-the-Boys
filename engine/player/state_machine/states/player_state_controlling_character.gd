@@ -23,7 +23,7 @@ func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 	assert(controlled_character)
 	var interaction_area: InteractionArea = get_interaction_area()
 	character.hide_character.rpc()
-	_controlled.take_control.rpc(character.get_path())
+	_controlled.request_control.rpc_id(Multiplayer.HOST_ID, character.get_path())
 	interaction_area.add_hit_box_to_ignore(_controlled)
 	interaction_area.configure_collision_shape(controlled_character.profile)
 	_control_camera = _create_control_camera()
@@ -66,7 +66,7 @@ func exit() -> void:
 	character.velocity = controlled_character.velocity
 	character.unhide_character.rpc()
 	character.snap_to_grid()
-	_controlled.release_control.rpc()
+	_controlled.request_release.rpc_id(Multiplayer.HOST_ID)
 	interaction_area.remove_hit_box_to_ignore(_controlled)
 	interaction_area.configure_collision_shape(character.profile)
 	_control_camera.queue_free()

@@ -60,6 +60,11 @@ func _create_thing_interaction(current_interactable: ThingHitBox) -> ThingIntera
 func _take_control() -> void:
 	var available_interaction: Interaction = get_available_interaction()
 	assert(available_interaction)
+	# The host checks the same; asking for what it would refuse leaves this player in a state nobody follows
+	var target: HitBox = null
+	if available_interaction is CharacterInteraction: target = (available_interaction as CharacterInteraction).target
+	elif available_interaction is ThingInteraction: target = (available_interaction as ThingInteraction).target
+	if not target or not target.may_be_controlled_by(get_character(), get_state_machine().multiplayer.get_unique_id()): return
 	if available_interaction is CharacterInteraction: _take_control_of_character(available_interaction as CharacterInteraction)
 	elif available_interaction is ThingInteraction: _take_control_of_thing(available_interaction as ThingInteraction)
 
