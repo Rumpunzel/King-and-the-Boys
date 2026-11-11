@@ -45,6 +45,12 @@ const CELL_CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(
 
 ## Host only: whether [method build_level] ran, see [signal built]
 var is_built: bool = false
+## Host only: the dice the dungeon is generated with. Seeded, it builds the same dungeon again for the same order of
+## exploration (e.g. in tests); its state is not saved yet, so a loaded game grows on differently.
+var generation_random: RandomNumberGenerator = RandomNumberGenerator.new()
+## Host only: cells where no tile kept every neighbour's connection restrictions, so the one keeping the most was
+## placed (e.g. a treasure dead end wanting empty space where the dungeon grew later); for tests and debugging
+var restriction_fallbacks: Dictionary[Vector2i, bool] = {}
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
 # {Structure -> Array[Structure]}
@@ -185,9 +191,10 @@ func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Stat
 		assert(placed_tile)
 		if status >= placed_tile.status: placed_tile.status = status
 		return
-	var fitting_blueprint: DungeonTileSet.TileBlueprint = _tile_set.get_tile_blueprint_for(grid_position, _get_surrounding_tiles(grid_position))
-	assert(fitting_blueprint)
-	_spawn_at(fitting_blueprint, grid_position, status)
+	var pick: DungeonTileSet.Pick = _tile_set.pick_tile(grid_position, _get_surrounding_tiles(grid_position), generation_random)
+	assert(pick.blueprint)
+	if not pick.suits_all: restriction_fallbacks[grid_position] = true
+	_spawn_at(pick.blueprint, grid_position, status)
 
 func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> void:
 	for grid_position: Vector2i in grid_positions: spawn_at(grid_position, status)
@@ -621,6 +628,7 @@ func _forget_tile(tile: Structure) -> void:
 	var grid_position: Vector2i = world_to_grid_position(tile.global_position)
 	if _placed_tiles.get(grid_position) == tile: _placed_tiles.erase(grid_position)
 	_furnished_cells.erase(grid_position)
+	restriction_fallbacks.erase(grid_position)
 	# Until it is freed it may still change: nothing here follows it any more
 	for handler: Array in [[tile.status_changed, _on_tile_status_changed], [tile.shown_status_changed, _on_tile_shown_status_changed], [tile.spawn_requested, _on_spawn_requested]]:
 		var tile_signal: Signal = handler[0]
