@@ -15,13 +15,13 @@ enum SetupMode {
 	POST_CHANGE,
 }
 
+## Scenes in this group keep the loading screen of players joining them past the scene change, until the scene
+## removes it (e.g. [Game], once their part of the game arrived)
+const KEEPS_JOINERS_LOADING: StringName = &"KeepsJoinersLoading"
 const VALID_SCENE_FORMATS: Array[StringName] = ["tscn", "scn"]
 
 @export var _loading_screen_scene: PackedScene = preload("uid://dmweuj7kxaxov")
 
-## Host only: peers joining now keep their loading screen past the scene change, until someone ends it
-## (e.g. [Game], once their part of the game arrived)
-var joiners_keep_loading_screen: bool = false
 
 # Host only: the transition everyone takes, the peers sent to it (this one included) and those that confirmed
 var _transition_scene_path: String = ""
@@ -167,6 +167,8 @@ func _transition_new_peer_to_scene_remotely(scene_path: String, keep_loading_scr
 	# Local execution as this is only called from the server, but a local loading screen
 	_exection = Execution.LOCAL
 	_keep_loading_screen = keep_loading_screen
+	# Kept past the change: shown even when the scene is loaded already
+	if keep_loading_screen: show_loading_screen("Joining Game")
 	preload_scene(scene_path)
 	var scene_loaded: bool = ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED
 	set_process(not scene_loaded)
@@ -220,7 +222,7 @@ func _on_peer_connected(peer_id: int) -> void:
 		lobby_menu_scene_path:
 			var lobby_guest_menu_scene_path: String = ResourceUID.ensure_path("uid://d3blbqb654ekr")
 			scene_path = lobby_guest_menu_scene_path
-	_transition_new_peer_to_scene_remotely.rpc_id(peer_id, scene_path, joiners_keep_loading_screen)
+	_transition_new_peer_to_scene_remotely.rpc_id(peer_id, scene_path, get_tree().current_scene.is_in_group(KEEPS_JOINERS_LOADING))
 
 func _on_peer_disconnected(peer_id: int) -> void:
 	if not multiplayer.is_server() or not _expected_peers.erase(peer_id): return

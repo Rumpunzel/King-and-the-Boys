@@ -47,11 +47,10 @@ func test_a_client_is_ready_once_its_character_and_tile_arrived() -> void:
 func test_the_host_does_not_wait_for_a_peer_that_left() -> void:
 	var awaited_peers: Dictionary = _game.get("_awaited_peers")
 	awaited_peers[OTHER_PEER_ID] = true
-	assert_bool(_game.call("_is_everyone_ready")).is_false()
 	var changes: Array[bool] = []
 	_game.peer_readiness_changed.connect(func() -> void: changes.append(true))
 	_game.call("_on_peer_disconnected", OTHER_PEER_ID)
-	assert_bool(_game.call("_is_everyone_ready")).is_true()
+	assert_bool(awaited_peers.is_empty()).is_true()
 	assert_int(changes.size()).is_equal(1)
 
 func test_a_peer_that_is_not_awaited_changes_nothing_when_it_leaves() -> void:

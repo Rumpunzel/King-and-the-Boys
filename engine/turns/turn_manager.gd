@@ -12,7 +12,7 @@ const GROUP: StringName = "TurnManager"
 
 @export_group("Configuration")
 @export var _level: Level
-## Hidden from peers until their [TurnManager] exists, see [method start_syncing_peers]
+## Hidden from peers until their [TurnManager] exists, see [method start_syncing_peer]
 @export var _synchronizer: MultiplayerSynchronizer
 
 # Replicated from the host
@@ -54,13 +54,8 @@ func _ready() -> void:
 	_level.board_changed.connect(_on_board_changed)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
 
-## Host only: this node is part of the game scene, not spawned, so peers only get synced
-## once they have loaded it; call when every peer has, e.g. from [method Game.setup_game]
-func start_syncing_peers() -> void:
-	assert(multiplayer.is_server())
-	for peer_id: int in multiplayer.get_peers(): start_syncing_peer(peer_id)
-
-## Host only: syncs the turn state to [param peer_id], e.g. a player who joined a running game once they loaded it
+## Host only: this node is part of the game scene, not spawned, so a peer only gets synced once it has loaded it;
+## [Game] calls this when the peer reports its part of the game arrived
 func start_syncing_peer(peer_id: int) -> void:
 	assert(multiplayer.is_server())
 	_synchronizer.set_visibility_for(peer_id, true)
