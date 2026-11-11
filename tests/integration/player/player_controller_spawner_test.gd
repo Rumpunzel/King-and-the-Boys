@@ -6,6 +6,9 @@ const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
 const SPAWNER_SCENE: String = "res://engine/player/player_controller_spawner.tscn"
 const OTHER_PLAYER_ID: int = 2
 const THIRD_PLAYER_ID: int = 3
+## Players with ids from 10 on fill the start tile beyond its five spots
+const CROWD_FIRST_ID: int = 10
+const CROWD_SIZE: int = 6
 
 var _level: Level
 var _spawner: PlayerControllerSpawner
@@ -28,6 +31,7 @@ func after_test() -> void:
 	var players: Dictionary = Lobby.get("_players")
 	players.erase(OTHER_PLAYER_ID)
 	players.erase(THIRD_PLAYER_ID)
+	for crowd_id: int in range(CROWD_FIRST_ID, CROWD_FIRST_ID + CROWD_SIZE): players.erase(crowd_id)
 	_local_player.character = _local_character
 	await await_idle_frame()
 
@@ -207,3 +211,26 @@ func test_players_spawn_on_their_own_spots() -> void:
 		assert_bool(spots.has(character.tile_spot)).is_false()
 		spots.append(character.tile_spot)
 	assert_int(spots.size()).is_equal(3)
+
+func test_a_full_start_tile_sends_players_to_the_nearest_tile_with_room() -> void:
+	await _add_level()
+	var players: Dictionary = Lobby.get("_players")
+	for crowd_id: int in range(CROWD_FIRST_ID, CROWD_FIRST_ID + CROWD_SIZE):
+		var crowd_player: Player = auto_free(Player.create(crowd_id, "Crowd %d" % crowd_id))
+		crowd_player.character = ModelFreeWorld.load_hero_profile()
+		players[crowd_id] = crowd_player
+	_spawner.start_synching_players()
+	await await_idle_frame()
+	var start_cell: Vector2i = _level.world_to_grid_position((get_tree().get_first_node_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS) as Node3D).global_position)
+	var places: Array[String] = []
+	var off_start: int = 0
+	for controller: PlayerController in _controllers():
+		var character: Character = controller.character
+		var place: String = "%s %s" % [character.grid_cell, character.tile_spot]
+		assert_bool(places.has(place)).override_failure_message("Two players on %s" % place).is_false()
+		places.append(place)
+		assert_vector(character.global_position).is_equal_approx(_level.get_spot_position(character.grid_cell, character.tile_spot), Vector3.ONE * 0.001)
+		if character.grid_cell != start_cell: off_start += 1
+	assert_int(places.size()).is_equal(CROWD_SIZE + 1)
+	# Five spots on the start tile: the other two go next door
+	assert_int(off_start).is_equal(CROWD_SIZE + 1 - 5)
