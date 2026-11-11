@@ -1,3 +1,4 @@
+@icon("uid://clji5px21jyvw")
 class_name AgentStateDefault
 extends AgentState
 
@@ -22,7 +23,7 @@ func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 			_patrol_index = patrol_index
 			distance_to_nearest = distance_to_point
 	if _patrol_index >= 0: character.move_to_position(_patrol_route[_patrol_index])
-	get_hit_box().haunted.connect(_on_haunted)
+	get_hit_box().controlled.connect(_on_controlled)
 
 func update(_delta: float) -> void:
 	pass
@@ -35,12 +36,12 @@ func handle_input(_event: InputEvent) -> void:
 
 func exit() -> void:
 	super.exit()
-	get_hit_box().haunted.disconnect(_on_haunted)
+	get_hit_box().controlled.disconnect(_on_controlled)
 
 func _on_character_destination_reached() -> void:
 	if _patrol_index < 0: return
 	_patrol_index = (_patrol_index + 1) % _patrol_route.size()
 	get_character().move_to_position(_patrol_route[_patrol_index])
 
-func _on_haunted(haunting: Character) -> void:
-	finished.emit(AgentStateHaunted.new(haunting.get_path()))
+func _on_controlled(controller: Character) -> void:
+	finished.emit(AgentStateControlled.new(controller.get_path()))

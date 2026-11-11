@@ -3,16 +3,18 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="3_0y2lj"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="3_7rwy5"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_gg1jf"]
-[ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_gg1jf"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="4_ithgo"]
-[ext_resource type="Resource" uid="uid://c1i0e1p4feqhe" path="res://data/characters/people/random_human.tres" id="5_c4qnl"]
+[ext_resource type="Resource" uid="uid://dnan3ouabpslh" path="res://data/characters/people/rogue_body.tres" id="5_c4qnl"]
+[ext_resource type="Resource" uid="uid://c5eejei2kdwm2" path="res://data/characters/animations/default_idle.tres" id="5_khl4o"]
 [ext_resource type="Texture2D" uid="uid://ft6txm2uxjqv" path="res://data/characters/people/portraits/hood.svg" id="5_r37cg"]
-[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_dwbog"]
+[ext_resource type="Animation" uid="uid://bm3q42enelbip" path="res://data/characters/animations/quaternius/GroundSit_Enter.res" id="7_b4a8i"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_ked5x"]
+[ext_resource type="Animation" uid="uid://dwvgmly4dt6ns" path="res://data/characters/animations/quaternius/GroundSit_Idle.res" id="8_dvff2"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_co6b3"]
 [ext_resource type="ArrayMesh" uid="uid://bp4g0susfr1bk" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_02.res" id="11_7bx4e"]
 [ext_resource type="ArrayMesh" uid="uid://b4bv1ejt7jy15" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_08.res" id="11_478kw"]
 [ext_resource type="ArrayMesh" uid="uid://dtetnj4qssc42" path="res://data/characters/people/meshes/gear/head_coverings_no_facial_hair/modular_character_HeadCoverings_No_FacialHair_03.res" id="11_co6b3"]
+[ext_resource type="Animation" uid="uid://lsv53y4gdduh" path="res://data/characters/animations/quaternius_2/KipUp.res" id="13_b4a8i"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="13_ts7pc"]
 [ext_resource type="Resource" uid="uid://0bh53bwaurow" path="res://data/equipment/types/mask.tres" id="14_478kw"]
 [ext_resource type="Resource" uid="uid://dnkb4svltrc47" path="res://data/equipment/types/cape.tres" id="14_ndv3c"]
@@ -34,7 +36,9 @@
 [ext_resource type="ArrayMesh" uid="uid://rjyqm88ow5mg" path="res://data/characters/people/meshes/gear/female/leg_right/modular_character_LegRight_Female_04.res" id="32_qc6sy"]
 [ext_resource type="ArrayMesh" uid="uid://rs8evbaummfx" path="res://data/characters/people/meshes/gear/male/leg_right/modular_character_LegRight_Male_04.res" id="33_8tsa6"]
 [ext_resource type="Resource" uid="uid://c7ec6d8vlckig" path="res://data/equipment/types/leg_armor.tres" id="34_c62ds"]
+[ext_resource type="ArrayMesh" uid="uid://c57tejnckv57h" path="res://data/equipment/meshes/main_hand/weapon_hero_dagger_32.res" id="35_inufi"]
 [ext_resource type="ArrayMesh" uid="uid://ht584txsltch" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_13.res" id="35_ygcul"]
+[ext_resource type="Resource" uid="uid://bf1hq4jewpk2m" path="res://data/equipment/types/weapon.tres" id="36_1ubsi"]
 [ext_resource type="ArrayMesh" uid="uid://dar3qqk3hfpmf" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_13.res" id="36_lt834"]
 [ext_resource type="ArrayMesh" uid="uid://dyg1ycd5hlkth" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_02.res" id="37_w4g71"]
 [ext_resource type="ArrayMesh" uid="uid://c0j4iya3wjski" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_02.res" id="38_3cfry"]
@@ -44,6 +48,15 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="41_onj5d"]
 [ext_resource type="ArrayMesh" uid="uid://b1kdqgrdhk27o" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_01.res" id="42_2hj8h"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="43_tmsvl"]
+[ext_resource type="Animation" uid="uid://dgq3ap333chbt" path="res://data/characters/animations/quaternius/GroundSit_Exit.res" id="51_5x40w"]
+[ext_resource type="Resource" uid="uid://c1io5bgjdq6kr" path="res://data/model_animations/heroes/rogue_move.tres" id="90_rogue_move"]
+[ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
+[ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+
+[sub_resource type="Resource" id="BodyAnimations_passed"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("8_dvff2")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_yo61b"]
 script = ExtResource("10_co6b3")
@@ -151,6 +164,21 @@ type = ExtResource("34_c62ds")
 appearance = SubResource("Resource_7qjd0")
 name = "Leg Armor 14-04 00"
 
+[sub_resource type="Resource" id="Resource_5x40w"]
+script = ExtResource("10_co6b3")
+part = 28
+male_mesh = ExtResource("35_inufi")
+
+[sub_resource type="Resource" id="Resource_sbdiv"]
+script = ExtResource("13_ts7pc")
+parts = Array[ExtResource("10_co6b3")]([SubResource("Resource_5x40w")])
+
+[sub_resource type="Resource" id="Resource_35uv1"]
+script = ExtResource("14_s4m6m")
+type = ExtResource("36_1ubsi")
+appearance = SubResource("Resource_sbdiv")
+name = "Weapon 32"
+
 [sub_resource type="Resource" id="Resource_vckcp"]
 script = ExtResource("10_co6b3")
 part = 12
@@ -203,6 +231,9 @@ name = "Belt 01"
 script = ExtResource("3_7rwy5")
 strength = 2
 speed = 4
+gear_primary_color = Color(0.173, 0.29, 0.208, 1)
+gear_secondary_color = Color(0.659, 0.682, 0.706, 1)
+model_configuration = ExtResource("5_c4qnl")
 starting_head = SubResource("Resource_1ubsi")
 starting_face = SubResource("Resource_s4m6m")
 starting_torso = SubResource("Resource_dvff2")
@@ -210,9 +241,18 @@ starting_hands = SubResource("Resource_xjxbu")
 starting_legs = SubResource("Resource_tpfvq")
 starting_back = SubResource("Resource_sml8c")
 starting_waist = SubResource("Resource_5bnsv")
+starting_main_hand = SubResource("Resource_35uv1")
+spawn_animation = ExtResource("90_rogue_spawn")
+move_animation = ExtResource("90_rogue_move")
+fast_move_animation = ExtResource("90_rogue_move")
+idle_animations = ExtResource("5_khl4o")
+pass_animation = ExtResource("7_b4a8i")
+passed_animations = SubResource("BodyAnimations_passed")
+unpass_animation = ExtResource("51_5x40w")
+selected_animation = ExtResource("13_b4a8i")
 name = "Rogue"
 portrait = ExtResource("5_r37cg")
-color = Color(0.878431, 0.878431, 0.878431, 1)
+color = Color(0.247, 0.62, 0.361, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_gg1jf")])
 heads_up_display_offset = Vector3(0, 2.25, 0)
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

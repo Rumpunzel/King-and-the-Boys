@@ -1,4 +1,5 @@
 @tool
+@icon("uid://c73t2rg8wrdt3")
 class_name PlayerStateMachine
 extends StateMachine
 
@@ -6,14 +7,14 @@ signal available_interactions_changed(available_interactions: Array[Interaction]
 signal controlled_character_changed(controlled_character: Character)
 
 @export_group("Configuration")
-@export var player_ghost: PlayerGhost
+@export var player_controller: PlayerController
 @export var input_reader: InputReader
 @export var character: Character
 @export var hit_box: CharacterHitBox
 @export var interaction_area: InteractionArea
 @export var default_phantom_camera: PhantomCamera3D
 
-@export var haunt_phantom_camera_scene: PackedScene
+@export var control_phantom_camera_scene: PackedScene
 
 var available_interaction: Interaction:
 	set(new_available_interaction):
@@ -54,9 +55,9 @@ func _on_current_interactable_changed(current_interactable: HitBox) -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not player_ghost: warnings.append("Missing PlayerGhost reference.")
+	if not player_controller: warnings.append("Missing PlayerController reference.")
 	if not input_reader: warnings.append("Missing InputReader reference.")
 	if not interaction_area: warnings.append("Missing InteractionArea reference.")
 	if not default_phantom_camera: warnings.append("Missing default PhantomCamera3D reference.")
-	if not haunt_phantom_camera_scene: warnings.append("Missing haunt phantom camera scene.")
+	if not control_phantom_camera_scene: warnings.append("Missing control phantom camera scene.")
 	return warnings + super._get_configuration_warnings()

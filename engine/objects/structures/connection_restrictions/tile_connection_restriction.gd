@@ -1,3 +1,4 @@
+@icon("uid://rxwp3v3g0kla")
 class_name TileConnectionRestriction
 extends ConnectionRestriction
 

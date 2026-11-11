@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ModelMiniatureMoveAnimation" format=3 uid="uid://bm3fv320x14lq"]
+
+[ext_resource type="Animation" uid="uid://dtg7jikclvl61" path="res://data/characters/animations/quaternius_2/Shield_Dash.res" id="1_5fsjn"]
+[ext_resource type="Script" uid="uid://clsflb34q1if1" path="res://engine/objects/model/model_miniature_move_animation.gd" id="1_xkbg2"]
+[ext_resource type="Animation" uid="uid://cy6wi2eitonh4" path="res://data/characters/animations/quaternius_2/Sword_Dash.res" id="2_5fsjn"]
+
+[resource]
+script = ExtResource("1_xkbg2")
+duration = 0.75
+body_animation = ExtResource("1_5fsjn")
+body_landing = ExtResource("2_5fsjn")
+body_speed = 1.2
+metadata/_custom_type_script = "uid://clsflb34q1if1"

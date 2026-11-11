@@ -39,8 +39,8 @@ func _collect_input() -> void:
 	direction_input = read_movement_input()
 	interaction_input = ""
 	if Input.is_action_pressed("interact"): interaction_input = "interact"
-	elif Input.is_action_pressed("haunt"): interaction_input = "haunt"
-	elif Input.is_action_pressed("unhaunt"): interaction_input = "unhaunt"
+	elif Input.is_action_pressed("take_control"): interaction_input = "take_control"
+	elif Input.is_action_pressed("release_control"): interaction_input = "release_control"
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

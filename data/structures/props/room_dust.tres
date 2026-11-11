@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://b5cplg8jqeufa"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://b0f1fcmop5hlh" path="res://data/structures/props/ambience/dust_motes.tscn" id="2_prop"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("2_prop"): 1.0
+})

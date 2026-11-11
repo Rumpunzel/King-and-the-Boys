@@ -12,6 +12,8 @@ signal tilted_less
 @export var _config: Config
 
 func _ready() -> void:
+	# Opened on its own in the editor: only the preview hands it a config
+	if not _config: return
 	var tilt_from_config: float = _config.get_value_from_config("Camera", "tilt", 0.25)
 	_tilt_slider.set_value_no_signal(tilt_from_config)
 	tilt_changed.emit(tilt_from_config)

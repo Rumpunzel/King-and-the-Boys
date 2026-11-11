@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ModelBounceAnimation" format=3 uid="uid://daq4wq3kkucrt"]
+
+[ext_resource type="Script" uid="uid://b5h27t8ow0ape" path="res://engine/objects/model/model_bounce_animation.gd" id="1_script"]
+[ext_resource type="Animation" uid="uid://b4rykwf6j833s" path="res://data/characters/animations/quaternius/Jump.res" id="anim_Jump"]
+[ext_resource type="Animation" uid="uid://cwf48dntauagh" path="res://data/characters/animations/quaternius/Roll.res" id="anim_Roll"]
+
+[resource]
+script = ExtResource("1_script")
+_bounce_height = 2.0
+body_animation = ExtResource("anim_Jump")
+body_landing = ExtResource("anim_Roll")
+body_landing_time = 0.55
+body_speed = 1.5
+metadata/_custom_type_script = "uid://b5h27t8ow0ape"

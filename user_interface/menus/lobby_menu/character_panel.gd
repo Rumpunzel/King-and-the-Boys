@@ -1,4 +1,5 @@
 @tool
+@icon("uid://cmkguhmw7vdp1")
 class_name CharacterPanel
 extends PanelContainer
 

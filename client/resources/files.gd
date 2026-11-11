@@ -1,3 +1,4 @@
+@icon("uid://dppclq1ett8bx")
 class_name Files
 
 ## The resource at [param path] (a path or a UID); none if it is empty or gone, without the errors [method ResourceLoader.exists] reports for unknown UIDs

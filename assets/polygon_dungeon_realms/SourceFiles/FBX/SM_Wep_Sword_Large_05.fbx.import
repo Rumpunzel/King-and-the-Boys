@@ -37,7 +37,26 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={}
+_subresources={
+"materials": {
+"Dungeon2SHD151": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://data/characters/dwarves/dwarf_material.tres",
+"use_external/path": "uid://k1703w41hngf"
+}
+},
+"meshes": {
+"SM_Wep_Sword_Large_05": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://data/equipment/meshes/two_handed/weapon_sword_large_17.res",
+"save_to_file/path": "uid://djrinhlc1rmn2"
+}
+}
+}
 fbx/importer=0
 fbx/allow_geometry_helper_nodes=false
 fbx/embedded_image_handling=1

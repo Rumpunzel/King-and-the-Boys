@@ -1,3 +1,4 @@
+@icon("uid://05jkst40sb8y")
 class_name ConnectionRestrictionUnion
 extends ConnectionRestriction
 

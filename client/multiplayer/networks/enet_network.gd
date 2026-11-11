@@ -1,3 +1,4 @@
+@icon("uid://cohl42g8r015c")
 class_name ENetNetwork
 extends Network
 

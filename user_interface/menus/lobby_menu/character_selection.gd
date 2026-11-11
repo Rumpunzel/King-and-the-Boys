@@ -1,4 +1,5 @@
 @tool
+@icon("uid://dflrk3do2ph2u")
 class_name CharacterSelection
 extends CharacterPanel
 
@@ -11,8 +12,10 @@ signal character_selected(character: CharacterProfile)
 func _ready() -> void:
 	randomize_character()
 
+## Picks another character at random (R), so the pick always shows, see [member CharacterProfile.selected_animation]
 func randomize_character() -> void:
-	character = _available_characters.pick_random()
+	var others: Array[CharacterProfile] = _available_characters.filter(func(other: CharacterProfile) -> bool: return other != character)
+	character = (others if not others.is_empty() else _available_characters).pick_random()
 
 func set_character(new_character: CharacterProfile) -> void:
 	super.set_character(new_character)

@@ -12,6 +12,8 @@ signal zoomed_in
 @export var _config: Config
 
 func _ready() -> void:
+	# Opened on its own in the editor: only the preview hands it a config
+	if not _config: return
 	var zoom_from_config: float = _config.get_value_from_config("Camera", "zoom", 0.5)
 	_zoom_slider.set_value_no_signal(zoom_from_config)
 	zoom_changed.emit(zoom_from_config)

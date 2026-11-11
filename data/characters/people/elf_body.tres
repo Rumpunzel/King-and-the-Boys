@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ModelConfigurationRandom" format=3 uid="uid://c54swx5jwf76"]
+
+[ext_resource type="Script" uid="uid://cblm5blx0poy3" path="res://engine/objects/model/model_configuration_random.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+randomized_parts = PackedStringArray("EARS", "HEAD", "EYEBROW", "HAIR")
+mesh_pools = Dictionary[String, PackedStringArray]({
+"EARS": PackedStringArray("01", "02", "03"),
+"EYEBROW": PackedStringArray("05", "06", "07"),
+"HAIR": PackedStringArray("02", "21", "24", "25", "26", "28", "30", "32", "34", "35")
+})
+gender = 0
+skin_colors = PackedColorArray(1, 0.89, 0.816, 1, 0.965, 0.824, 0.737, 1, 0.91, 0.753, 0.643, 1)
+hair_colors = PackedColorArray(0.91, 0.863, 0.753, 1, 0.851, 0.761, 0.478, 1, 0.769, 0.784, 0.8, 1, 0.478, 0.184, 0.114, 1)
+metadata/_custom_type_script = "uid://cblm5blx0poy3"

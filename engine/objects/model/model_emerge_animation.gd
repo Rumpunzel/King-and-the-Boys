@@ -1,3 +1,5 @@
+@tool
+@icon("uid://ghm3v1c6cin3")
 class_name ModelEmergeAnimation
 extends ModelAnimation
 

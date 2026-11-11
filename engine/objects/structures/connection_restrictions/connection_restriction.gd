@@ -1,4 +1,5 @@
 @abstract
+@icon("uid://b10gpo5swbnn7")
 class_name ConnectionRestriction
 extends Resource
 

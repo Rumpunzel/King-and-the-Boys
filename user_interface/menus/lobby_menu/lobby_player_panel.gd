@@ -1,4 +1,5 @@
 @tool
+@icon("uid://bs3bnvm5r50sd")
 class_name LobbyPlayerPanel
 extends PanelContainer
 

@@ -11,11 +11,15 @@
 [ext_resource type="Script" uid="uid://c6nl3p3rcjph7" path="res://engine/objects/characters/modular_body_part_gendered.gd" id="13_scytm"]
 [ext_resource type="ArrayMesh" uid="uid://dx01d5veg0wrs" path="res://data/characters/people/meshes/gear/male/hand_left/modular_character_HandLeft_Male_00.res" id="15_t1e5b"]
 [ext_resource type="ArrayMesh" uid="uid://dh0uj78brilnl" path="res://data/characters/people/meshes/gear/male/hand_right/modular_character_HandRight_Male_00.res" id="16_6xm60"]
-[ext_resource type="AnimationLibrary" uid="uid://dcpwsj71hiqk3" path="res://assets/quaternius_animations/AnimationLibrary_Godot.glb" id="16_ar228"]
+[ext_resource type="AnimationLibrary" uid="uid://dcpwsj71hiqk3" path="res://assets/quaternius_animations/UAL1.glb" id="16_ar228"]
+[ext_resource type="AnimationLibrary" uid="uid://k0dracwnfojp" path="res://data/characters/animations/adjusted_animations.tres" id="17_3vpe8"]
+[ext_resource type="AnimationLibrary" uid="uid://dlreaewsxc7va" path="res://assets/quaternius_animations/UAL2.glb" id="19_rtsjr"]
 [ext_resource type="ArrayMesh" uid="uid://bgqyivu0dlm07" path="res://data/characters/people/meshes/gear/male/hips/modular_character_Hips_Male_00.res" id="23_3fxuq"]
 [ext_resource type="ArrayMesh" uid="uid://bumojbo322bwk" path="res://data/characters/people/meshes/gear/male/leg_left/modular_character_LegLeft_Male_00.res" id="27_586hc"]
 [ext_resource type="ArrayMesh" uid="uid://dy45rbmiqwq4i" path="res://data/characters/people/meshes/gear/male/leg_right/modular_character_LegRight_Male_00.res" id="28_mogl8"]
 [ext_resource type="ArrayMesh" uid="uid://biu255eklc1kx" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_00.res" id="31_jetd4"]
+[ext_resource type="Material" uid="uid://bi0qcogabe33g" path="res://data/characters/gear/dwarf_gear_material.tres" id="gear_dwarf_gear_material"]
+[ext_resource type="Material" uid="uid://bfwv8gb2fse5i" path="res://data/characters/gear/hero_gear_material.tres" id="gear_hero_gear_material"]
 
 [sub_resource type="Skin" id="Skin_7gjla"]
 resource_name = "Skin"
@@ -183,7 +187,7 @@ bind/53/name = &"Hips_Attachment"
 bind/53/bone = -1
 bind/53/pose = Transform3D(3.3287567e-10, 0.99999994, 2.3742699e-07, 1, -4.266892e-09, -1.5564297e-08, 9.257464e-09, 2.3742598e-07, -0.99999994, -0.876276, 3.772359e-09, -4.768325e-08)
 
-[node name="ModularCharacter" type="Node3D" unique_id=1754453103 node_paths=PackedStringArray("arm_lower_left", "arm_lower_right", "arm_upper_left", "arm_upper_right", "ears", "hand_left", "hand_right", "head", "head_no_elements", "hips", "leg_left", "leg_right", "torso", "eyebrow", "facial_hair", "hair", "back_attachment", "elbow_attach_left", "elbow_attach_right", "head_coverings_base_hair", "head_coverings_no_facial_hair", "head_coverings_no_hair", "helmet_attachment", "hips_attachment", "knee_attach_left", "knee_attach_right", "shoulder_attach_left", "shoulder_attach_right")]
+[node name="ModularCharacter" type="Node3D" unique_id=1754453103 node_paths=PackedStringArray("arm_lower_left", "arm_lower_right", "arm_upper_left", "arm_upper_right", "ears", "hand_left", "hand_right", "head", "head_no_elements", "hips", "leg_left", "leg_right", "torso", "eyebrow", "facial_hair", "hair", "back_attachment", "elbow_attach_left", "elbow_attach_right", "head_coverings_base_hair", "head_coverings_no_facial_hair", "head_coverings_no_hair", "helmet_attachment", "hips_attachment", "knee_attach_left", "knee_attach_right", "shoulder_attach_left", "shoulder_attach_right", "main_hand", "two_handed", "off_hand")]
 script = ExtResource("1_jigrv")
 arm_lower_left = NodePath("GeneralSkeleton/ArmLowerLeft")
 arm_lower_right = NodePath("GeneralSkeleton/ArmLowerRight")
@@ -213,6 +217,10 @@ knee_attach_left = NodePath("GeneralSkeleton/KneeAttachLeft")
 knee_attach_right = NodePath("GeneralSkeleton/KneeAttachRight")
 shoulder_attach_left = NodePath("GeneralSkeleton/ShoulderAttachLeft")
 shoulder_attach_right = NodePath("GeneralSkeleton/ShoulderAttachRight")
+main_hand = NodePath("GeneralSkeleton/RightHandAttachment/MainHand")
+two_handed = NodePath("GeneralSkeleton/RightHandAttachment/TwoHanded")
+off_hand = NodePath("GeneralSkeleton/LeftHandAttachment/OffHand")
+_gear_materials = Array[ShaderMaterial]([ExtResource("gear_hero_gear_material"), ExtResource("gear_dwarf_gear_material")])
 metadata/_custom_type_script = "uid://bdais0l7n3ei1"
 
 [node name="GeneralSkeleton" type="Skeleton3D" parent="." unique_id=1559521962]
@@ -244,21 +252,21 @@ bones/3/parent = 2
 bones/3/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0096645e-08, 0.18128684, 0.009020556)
 bones/3/enabled = true
 bones/3/position = Vector3(-1.0096645e-08, 0.18128684, 0.009020556)
-bones/3/rotation = Quaternion(0.046351045, 0.0001086035, 0.00013027458, 0.99892527)
+bones/3/rotation = Quaternion(0.09260246, 0.000112654714, 0.00025388045, 0.99570316)
 bones/3/scale = Vector3(1, 1, 1)
 bones/4/name = "UpperChest"
 bones/4/parent = 3
 bones/4/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.76422e-09, 0.17711666, -0.026153931)
 bones/4/enabled = true
 bones/4/position = Vector3(-6.76422e-09, 0.17711666, -0.026153931)
-bones/4/rotation = Quaternion(0.13865471, 0.00032485503, 0.00038959694, 0.9903407)
+bones/4/rotation = Quaternion(0.092602395, 0.00032065847, 0.00024720546, 0.9957031)
 bones/4/scale = Vector3(1, 1, 1)
 bones/5/name = "Neck"
 bones/5/parent = 4
 bones/5/rest = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4750254e-09, 0.11156598, 0.008499915)
 bones/5/enabled = true
 bones/5/position = Vector3(-6.4750254e-09, 0.11156598, 0.008499915)
-bones/5/rotation = Quaternion(-0.09260249, -0.00021697998, -0.00026025015, 0.9957031)
+bones/5/rotation = Quaternion(-0.09260248, -0.00021697924, -0.0002602538, 0.9957031)
 bones/5/scale = Vector3(1, 1, 1)
 bones/6/name = "Head"
 bones/6/parent = 5
@@ -293,14 +301,14 @@ bones/10/parent = 4
 bones/10/rest = Transform3D(0, 1, 0, 0, 0, 1, 1, 0, 0, 0.07447158, 0.054659996, 0.04620011)
 bones/10/enabled = true
 bones/10/position = Vector3(0.07447158, 0.054659996, 0.04620011)
-bones/10/rotation = Quaternion(0.487481, 0.5266153, 0.52638155, -0.4560274)
+bones/10/rotation = Quaternion(0.48748106, 0.52661544, 0.52638143, -0.4560275)
 bones/10/scale = Vector3(1, 1, 1)
 bones/11/name = "LeftUpperArm"
 bones/11/parent = 10
 bones/11/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.061960228, 0.11651753, -0.0017128419)
 bones/11/enabled = true
 bones/11/position = Vector3(-0.061960228, 0.11651753, -0.0017128419)
-bones/11/rotation = Quaternion(-0.06222135, 0.81768024, -0.5722164, 0.009801064)
+bones/11/rotation = Quaternion(-0.06222128, 0.8176802, -0.5722163, 0.00980104)
 bones/11/scale = Vector3(1, 1, 1)
 bones/12/name = "LeftLowerArm"
 bones/12/parent = 11
@@ -538,14 +546,14 @@ bones/45/parent = 44
 bones/45/rest = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, -0.0028017536, 0.3767562, 0.016404852)
 bones/45/enabled = true
 bones/45/position = Vector3(-0.0028017536, 0.3767562, 0.016404852)
-bones/45/rotation = Quaternion(0.17156827, 0.6469511, -0.7429744, -0.0027946457)
+bones/45/rotation = Quaternion(0.17156829, 0.646951, -0.74297434, -0.0027946231)
 bones/45/scale = Vector3(1, 1, 1)
 bones/46/name = "RightToes"
 bones/46/parent = 45
 bones/46/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -1.2091432e-08, 0.096386276, -0.05867396)
 bones/46/enabled = true
 bones/46/position = Vector3(-1.2091432e-08, 0.096386276, -0.05867396)
-bones/46/rotation = Quaternion(-8.1927055e-08, 1, 2.9802322e-08, -8.602239e-09)
+bones/46/rotation = Quaternion(-6.703263e-08, 1, 8.940697e-08, 2.1454163e-09)
 bones/46/scale = Vector3(1, 1, 1)
 bones/47/name = "Knee_Attachment_R"
 bones/47/parent = 44
@@ -580,7 +588,7 @@ bones/51/parent = 50
 bones/51/rest = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -1.5407517e-08, 0.0963863, -0.058673967)
 bones/51/enabled = true
 bones/51/position = Vector3(-1.5407517e-08, 0.0963863, -0.058673967)
-bones/51/rotation = Quaternion(4.2923723e-08, 1, 5.9604645e-08, 2.568838e-08)
+bones/51/rotation = Quaternion(4.664862e-08, 1, 5.9604645e-08, 2.7766912e-08)
 bones/51/scale = Vector3(1, 1, 1)
 bones/52/name = "Knee_Attachment_L"
 bones/52/parent = 49
@@ -948,6 +956,59 @@ metadata/extras = {
 "currentUVSet": "map1"
 }
 
+[node name="RightHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton" unique_id=1542608433]
+transform = Transform3D(0.07860352, -0.1540537, 0.9849307, 0.48294276, -0.85843015, -0.17280945, 0.87211657, 0.48924863, 0.006923602, -0.27616602, 0.80273104, -0.23978141)
+bone_name = "RightHand"
+bone_idx = 27
+
+[node name="MainHand" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=1917137402 node_paths=PackedStringArray("stow")]
+transform = Transform3D(0.1736481, 0.96984625, 0.1710101, 1.518081e-08, -0.17364822, 0.9848077, 0.9848077, -0.17100999, -0.030153701, -8.940697e-08, 0.09499997, 0.030000001)
+visible = false
+script = ExtResource("3_scytm")
+_mesh_directory = "res://data/equipment/meshes/main_hand"
+_type = 1
+_mesh_prefix = "weapon_"
+stow = NodePath("../../UpperChestAttachment/MainHandStow")
+
+[node name="TwoHanded" type="MeshInstance3D" parent="GeneralSkeleton/RightHandAttachment" unique_id=796248076 node_paths=PackedStringArray("stow")]
+transform = Transform3D(0.17364828, 0.96984625, 0.1710101, -1.518081e-08, -0.17364822, 0.9848077, 0.9848077, -0.17101017, -0.030153701, 0, 0.095, 0.03)
+visible = false
+script = ExtResource("3_scytm")
+_mesh_directory = "res://data/equipment/meshes/two_handed"
+_type = 1
+_mesh_prefix = "weapon_"
+stow = NodePath("../../UpperChestAttachment/TwoHandedStow")
+
+[node name="LeftHandAttachment" type="BoneAttachment3D" parent="GeneralSkeleton" unique_id=180384905]
+transform = Transform3D(0.4830716, 0.028857589, -0.87510526, -0.38825858, -0.8887621, -0.24363287, -0.78479123, 0.4574592, -0.4181316, 0.3448049, 0.78135955, -0.056974113)
+bone_name = "LeftHand"
+bone_idx = 13
+
+[node name="OffHand" type="MeshInstance3D" parent="GeneralSkeleton/LeftHandAttachment" unique_id=1117428883 node_paths=PackedStringArray("stow")]
+transform = Transform3D(-0.15313458, -0.972998, 0.17269705, -0.97941226, 0.17269695, 0.10452848, -0.13153018, -0.15313475, -0.979413, 0.025, -0.075, -0.05)
+visible = false
+script = ExtResource("3_scytm")
+_mesh_directory = "res://data/equipment/meshes/off_hand"
+_type = 1
+_mesh_prefix = "weapon_"
+stow = NodePath("../../UpperChestAttachment/OffHandStow")
+
+[node name="UpperChestAttachment" type="BoneAttachment3D" parent="GeneralSkeleton" unique_id=1764026339]
+transform = Transform3D(0.97325665, -0.06402001, -0.2206192, 0.0011115796, 0.96168315, -0.27416065, 0.22971752, 0.26658347, 0.93603575, 0.01482109, 1.2994783, -0.12420301)
+bone_name = "UpperChest"
+bone_idx = 4
+
+[node name="MainHandStow" type="Node3D" parent="GeneralSkeleton/UpperChestAttachment" unique_id=2136275083]
+transform = Transform3D(0, 0, 1, 0.447, -0.894, 0, 0.894, 0.447, 0, -0.15, 0.15, -0.17)
+
+[node name="TwoHandedStow" type="Node3D" parent="GeneralSkeleton/UpperChestAttachment" unique_id=1234895554]
+transform = Transform3D(0, 0, 1, -0.398, 0.917, 0, -0.917, -0.398, 0, 0.15, -0.3, -0.2)
+
+[node name="OffHandStow" type="Node3D" parent="GeneralSkeleton/UpperChestAttachment" unique_id=1678581467]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.05, -0.3)
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1831098486]
-libraries/AnimationLibrary_Godot = ExtResource("16_ar228")
-autoplay = &"AnimationLibrary_Godot/Idle"
+libraries/UAL1 = ExtResource("16_ar228")
+libraries/UAL2 = ExtResource("19_rtsjr")
+libraries/adjusted_animations = ExtResource("17_3vpe8")
+autoplay = &"UAL1/Idle"

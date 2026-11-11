@@ -1,7 +1,11 @@
 @tool
 @abstract
+@icon("uid://s7oh36muqnkf")
 class_name ModularBodyPart
 extends MeshInstance3D
+
+## Emitted whenever the part shows another mesh or none, e.g. so its model repaints it
+signal appearance_changed
 
 enum Type {
 	ESSENTIAL,
@@ -22,6 +26,12 @@ static var _mesh_number_pattern: RegEx = RegEx.create_from_string("(\\d+)$")
 	set = update_index
 
 @export var _related_parts: Array[ModularBodyPart]
+## Where the part goes while stowed, e.g. a weapon on the back (see [method ModularModel.stow_weapons]); parts without one stay put
+@export var stow: Node3D
+
+## What held the part before it was stowed, and how; [code]null[/code] while it is not stowed
+var _held_by: Node3D
+var _held_transform: Transform3D
 
 var _mesh_list: Array[String] = []:
 	get:
@@ -51,10 +61,26 @@ func update_index(index: int) -> int:
 
 func update_visibility(new_visibility: bool, sources: Array[ModularBodyPart] = []) -> void:
 	visible = new_visibility
+	appearance_changed.emit()
 	sources.append(self)
 	for related_body_part: ModularBodyPart in _related_parts:
 		if sources.has(related_body_part): continue
 		related_body_part.update_visibility(not new_visibility, sources)
+
+func is_stowed() -> bool: return _held_by != null
+
+## Moves the part to its [member stow], or back where it was; nothing for parts without a stow
+func set_stowed(stowed: bool) -> void:
+	if not stow or stowed == is_stowed(): return
+	if stowed:
+		_held_by = get_parent() as Node3D
+		_held_transform = transform
+		reparent(stow, false)
+		transform = Transform3D.IDENTITY
+	else:
+		reparent(_held_by, false)
+		transform = _held_transform
+		_held_by = null
 
 ## Sets an exact mesh, bypassing the index into the mesh directory
 ## A [code]null[/code] mesh hides this part and shows its related parts
@@ -99,7 +125,8 @@ func _load_meshes() -> void: _mesh_list = _get_mesh_filenames()
 func _get_mesh_filenames() -> Array[String]:
 	var filenames: Array[String] = []
 	var mesh_directory_path: String = _get_mesh_directory()
-	if mesh_directory_path.is_empty(): return filenames
+	# "NONE": the part has no meshes, e.g. facial hair on a female body
+	if mesh_directory_path.is_empty() or mesh_directory_path == "NONE": return filenames
 	var dir: DirAccess = DirAccess.open(mesh_directory_path)
 	if not dir:
 		push_error("Meshes subdirectory @ <%s> not found." % mesh_directory_path)

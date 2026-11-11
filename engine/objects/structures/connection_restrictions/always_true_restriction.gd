@@ -1,3 +1,4 @@
+@icon("uid://c0635dcx22d3o")
 class_name AlwaysTrueRestriction
 extends ConnectionRestriction
 

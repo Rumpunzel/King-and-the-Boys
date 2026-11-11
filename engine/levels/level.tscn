@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://da4c4gcyqk2rb" path="res://engine/objects/characters/player_spawn_point.gd" id="5_0p5hx"]
 [ext_resource type="PackedScene" uid="uid://beahmsvyce16w" path="res://engine/objects/things/thing_spawner.tscn" id="5_ek2od"]
 [ext_resource type="PackedScene" uid="uid://c46ivy3ilmclp" path="res://engine/agents/agent_spawner.tscn" id="6_8rrhp"]
+[ext_resource type="Script" uid="uid://0iex843kcwbx" path="res://engine/levels/level_debug.gd" id="7_debug"]
 
 [node name="Level" type="Node3D" unique_id=2100419132 node_paths=PackedStringArray("_structure_spawner", "_thing_spawner", "_agent_spawner")]
 process_mode = 1
@@ -20,6 +21,10 @@ metadata/_custom_type_script = "uid://dktxo1t8ahw30"
 [node name="ThingSpawner" parent="." unique_id=1954249393 instance=ExtResource("5_ek2od")]
 
 [node name="AgentSpawner" parent="." unique_id=1877340054 instance=ExtResource("6_8rrhp")]
+
+[node name="LevelDebug" type="Node" parent="." node_paths=PackedStringArray("_level")]
+script = ExtResource("7_debug")
+_level = NodePath("..")
 
 [node name="SpawnPoints" type="Node3D" parent="." unique_id=1610595994]
 

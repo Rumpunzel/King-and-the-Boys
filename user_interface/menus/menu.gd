@@ -1,3 +1,4 @@
+@icon("uid://r4re5w2nnw4h")
 class_name Menu
 extends PanelContainer
 

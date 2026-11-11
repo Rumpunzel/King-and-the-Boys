@@ -8,10 +8,10 @@ var _equipment_inspector_plugin: EditorInspectorPlugin = preload("res://addons/m
 
 func _enter_tree() -> void:
 	_menagerie_panel = MENAGERIE_PANEL_SCENE.instantiate()
+	# Hidden before it enters the tree: shown there, its tabs would load every profile (and the assets they use) at each editor start
+	_make_visible(false)
 	# Add the main panel to the editor's main viewport.
 	EditorInterface.get_editor_main_screen().add_child(_menagerie_panel)
-	# Hide the main panel. Very much required.
-	_make_visible(false)
 	add_inspector_plugin(_equipment_inspector_plugin)
 
 func _exit_tree() -> void:

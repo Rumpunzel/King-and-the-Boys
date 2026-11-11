@@ -3,16 +3,16 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_xkb2u"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_giiki"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_lr5qy"]
-[ext_resource type="Resource" uid="uid://bwiaycc13h0eo" path="res://data/model_animations/miniature_move_animation.tres" id="4_lr5qy"]
 [ext_resource type="Texture2D" uid="uid://ben162rfher0t" path="res://data/characters/people/portraits/elf-helmet.svg" id="5_1nbx6"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_4smo8"]
-[ext_resource type="Resource" uid="uid://updblht1hc8k" path="res://data/characters/people/random_elf.tres" id="5_26gx7"]
-[ext_resource type="Resource" uid="uid://djq27fwrmrv2" path="res://data/model_animations/high_bounce_animation.tres" id="7_4smo8"]
+[ext_resource type="Resource" uid="uid://c54swx5jwf76" path="res://data/characters/people/elf_body.tres" id="5_26gx7"]
+[ext_resource type="Resource" uid="uid://c5eejei2kdwm2" path="res://data/characters/animations/default_idle.tres" id="5_n73mo"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_ot36u"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_eh6ha"]
 [ext_resource type="ArrayMesh" uid="uid://piwndcl1msah" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_03.res" id="11_bbn58"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="12_thqp2"]
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="13_14iws"]
+[ext_resource type="Animation" uid="uid://c2jy2tglgf0w2" path="res://data/characters/animations/quaternius/BackFlip.res" id="13_chxko"]
 [ext_resource type="Resource" uid="uid://bdokqsryh4q3j" path="res://data/equipment/types/hat.tres" id="14_16sf2"]
 [ext_resource type="Resource" uid="uid://dnkb4svltrc47" path="res://data/equipment/types/cape.tres" id="14_udkfc"]
 [ext_resource type="ArrayMesh" uid="uid://bpfxqpnjilye3" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_12.res" id="15_bbn58"]
@@ -23,8 +23,10 @@
 [ext_resource type="ArrayMesh" uid="uid://qw6ahnhdnwds" path="res://data/characters/people/meshes/gear/female/leg_right/modular_character_LegRight_Female_00.res" id="21_vx505"]
 [ext_resource type="ArrayMesh" uid="uid://dy45rbmiqwq4i" path="res://data/characters/people/meshes/gear/male/leg_right/modular_character_LegRight_Male_00.res" id="22_s5kds"]
 [ext_resource type="Resource" uid="uid://c7ec6d8vlckig" path="res://data/equipment/types/leg_armor.tres" id="23_chxko"]
+[ext_resource type="ArrayMesh" uid="uid://i87rhqft1enk" path="res://data/equipment/meshes/main_hand/weapon_sword_medium_27.res" id="24_4u2hy"]
 [ext_resource type="ArrayMesh" uid="uid://mvluv8nefqkp" path="res://data/characters/people/meshes/gear/female/torso/modular_character_Torso_Female_01.res" id="24_n73mo"]
 [ext_resource type="ArrayMesh" uid="uid://deylmhekr686p" path="res://data/characters/people/meshes/gear/male/torso/modular_character_Torso_Male_01.res" id="25_chxko"]
+[ext_resource type="Resource" uid="uid://bf1hq4jewpk2m" path="res://data/equipment/types/weapon.tres" id="25_kuy0s"]
 [ext_resource type="ArrayMesh" uid="uid://yveqgoh7remg" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_03.res" id="26_ntxgj"]
 [ext_resource type="ArrayMesh" uid="uid://ca57kkm7452tu" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_03.res" id="27_yo1oa"]
 [ext_resource type="ArrayMesh" uid="uid://bs852ogb8cymj" path="res://data/characters/people/meshes/gear/female/arm_upper_right/modular_character_ArmUpperRight_Female_03.res" id="28_toe72"]
@@ -34,6 +36,17 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="32_biseb"]
 [ext_resource type="ArrayMesh" uid="uid://uxig1bvjpmeu" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_03.res" id="33_32crj"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="34_vkv3h"]
+[ext_resource type="Resource" uid="uid://pkwjhs21y2ol" path="res://data/model_animations/heroes/elf_move.tres" id="90_elf_move"]
+[ext_resource type="Resource" uid="uid://84imup832cec" path="res://data/model_animations/heroes/elf_spawn.tres" id="90_elf_spawn"]
+[ext_resource type="Animation" uid="uid://cfeewivnqmoba" path="res://data/characters/animations/quaternius/Spell_Simple_Enter.res" id="anim_Spell_Simple_Enter"]
+[ext_resource type="Animation" uid="uid://dtjpkwf3vv15a" path="res://data/characters/animations/quaternius/Spell_Simple_Exit.res" id="anim_Spell_Simple_Exit"]
+[ext_resource type="Animation" uid="uid://duatnu7n2jwur" path="res://data/characters/animations/quaternius/Spell_Simple_Idle.res" id="anim_Spell_Simple_Idle"]
+[ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+
+[sub_resource type="Resource" id="BodyAnimations_passed"]
+script = ExtResource("body_animations")
+animations = Array[Animation]([ExtResource("anim_Spell_Simple_Idle")])
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_upsh0"]
 script = ExtResource("10_eh6ha")
@@ -92,6 +105,21 @@ script = ExtResource("13_14iws")
 type = ExtResource("23_chxko")
 appearance = SubResource("Resource_m8ays")
 name = "Leg Armor 23-00 00"
+
+[sub_resource type="Resource" id="Resource_npy5k"]
+script = ExtResource("10_eh6ha")
+part = 28
+male_mesh = ExtResource("24_4u2hy")
+
+[sub_resource type="Resource" id="Resource_vx505"]
+script = ExtResource("12_thqp2")
+parts = Array[ExtResource("10_eh6ha")]([SubResource("Resource_npy5k")])
+
+[sub_resource type="Resource" id="Resource_s5kds"]
+script = ExtResource("13_14iws")
+type = ExtResource("25_kuy0s")
+appearance = SubResource("Resource_vx505")
+name = "Weapon 27"
 
 [sub_resource type="Resource" id="Resource_7k5vc"]
 script = ExtResource("10_eh6ha")
@@ -152,15 +180,26 @@ strength = 2
 agility = 4
 intelligence = 4
 speed = 5
+gear_primary_color = Color(0.184, 0.42, 0.384, 1)
+gear_secondary_color = Color(0.902, 0.863, 0.58, 1)
 model_configuration = ExtResource("5_26gx7")
 starting_head = SubResource("Resource_biseb")
 starting_torso = SubResource("Resource_1ot23")
 starting_legs = SubResource("Resource_lu7ht")
 starting_back = SubResource("Resource_gn5hf")
 starting_waist = SubResource("Resource_kfnui")
+starting_main_hand = SubResource("Resource_s5kds")
+spawn_animation = ExtResource("90_elf_spawn")
+move_animation = ExtResource("90_elf_move")
+fast_move_animation = ExtResource("90_elf_move")
+idle_animations = ExtResource("5_n73mo")
+pass_animation = ExtResource("anim_Spell_Simple_Enter")
+passed_animations = SubResource("BodyAnimations_passed")
+unpass_animation = ExtResource("anim_Spell_Simple_Exit")
+selected_animation = ExtResource("13_chxko")
 name = "Elf"
 portrait = ExtResource("5_1nbx6")
-color = Color(0.878431, 0.878431, 0.878431, 1)
+color = Color(0.369, 0.78, 0.69, 1)
 _model_variations = Array[PackedScene]([ExtResource("3_lr5qy")])
 heads_up_display_offset = Vector3(0, 2.25, 0)
 metadata/_custom_type_script = "uid://ddefcwtx6jfym"

@@ -1,4 +1,5 @@
 @tool
+@icon("uid://dctnuxdlwxtca")
 class_name ModularCharacter
 extends ModularModel
 
@@ -33,9 +34,12 @@ enum Part {
 	KNEE_ATTACH_RIGHT,
 	SHOULDER_ATTACH_LEFT,
 	SHOULDER_ATTACH_RIGHT,
+	MAIN_HAND,
+	TWO_HANDED,
+	OFF_HAND,
 }
 
-## The parts each slot owns; weapons attach to bone sockets, not body parts
+## The parts each slot owns; weapons and shields are attachments on the hands, from the shared meshes in [code]data/equipment/meshes/[/code]
 const SLOT_PARTS: Dictionary[EquipmentLook.Slot, Array] = {
 	EquipmentLook.Slot.HEAD: [Part.HEAD_COVERINGS_BASE_HAIR, Part.HEAD_COVERINGS_NO_HAIR, Part.HEAD_NO_ELEMENTS, Part.HELMET_ATTACHMENT],
 	EquipmentLook.Slot.FACE: [Part.HEAD_COVERINGS_NO_FACIAL_HAIR],
@@ -44,6 +48,9 @@ const SLOT_PARTS: Dictionary[EquipmentLook.Slot, Array] = {
 	EquipmentLook.Slot.LEGS: [Part.HIPS, Part.LEG_LEFT, Part.LEG_RIGHT, Part.KNEE_ATTACH_LEFT, Part.KNEE_ATTACH_RIGHT],
 	EquipmentLook.Slot.WAIST: [Part.HIPS_ATTACHMENT],
 	EquipmentLook.Slot.BACK: [Part.BACK_ATTACHMENT],
+	# One weapon in the right hand: one-handed, or two-handed (whose type blocks the off hand)
+	EquipmentLook.Slot.MAIN_HAND: [Part.MAIN_HAND, Part.TWO_HANDED],
+	EquipmentLook.Slot.OFF_HAND: [Part.OFF_HAND],
 }
 
 @export_group("Body Parts")
@@ -77,8 +84,14 @@ const SLOT_PARTS: Dictionary[EquipmentLook.Slot, Array] = {
 @export var knee_attach_right: ModularBodyPart
 @export var shoulder_attach_left: ModularBodyPart
 @export var shoulder_attach_right: ModularBodyPart
+@export_group("Hands")
+@export var main_hand: ModularBodyPart
+@export var two_handed: ModularBodyPart
+@export var off_hand: ModularBodyPart
 
 func get_part_keys() -> PackedStringArray: return PackedStringArray(Part.keys())
+
+func get_hair_parts() -> Array[int]: return [Part.HAIR, Part.EYEBROW, Part.FACIAL_HAIR]
 
 func get_slot_parts(slot: EquipmentLook.Slot) -> Array[int]:
 	var parts: Array[int] = []

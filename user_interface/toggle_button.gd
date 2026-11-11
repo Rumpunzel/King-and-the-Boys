@@ -1,4 +1,5 @@
 @tool
+@icon("uid://bhoccowpmltwh")
 class_name ToggleButton
 extends Button
 

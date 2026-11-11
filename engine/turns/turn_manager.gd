@@ -1,4 +1,5 @@
 @tool
+@icon("uid://3xn0cgn4onrw")
 class_name TurnManager
 extends Node
 ## Runs simultaneous turns: every player moves their [Character]s up to their movement points,
@@ -12,7 +13,7 @@ const GROUP: StringName = "TurnManager"
 
 @export_group("Configuration")
 @export var _level: Level
-## Hidden from peers until their [TurnManager] exists, see [method start_syncing_peers]
+## Hidden from peers until their [TurnManager] exists, see [method start_syncing_peer]
 @export var _synchronizer: MultiplayerSynchronizer
 
 # Replicated from the host
@@ -73,11 +74,11 @@ func _ready() -> void:
 	_level.tile_rotated.connect(_on_tile_rotated)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
 
-## Host only: this node is part of the game scene, not spawned, so peers only get synced
-## once they have loaded it; call when every peer has, e.g. from [method Game.setup_game]
-func start_syncing_peers() -> void:
+## Host only: this node is part of the game scene, not spawned, so a peer only gets synced once it has loaded it;
+## [Game] calls this when the peer reports its part of the game arrived
+func start_syncing_peer(peer_id: int) -> void:
 	assert(multiplayer.is_server())
-	for peer_id: int in multiplayer.get_peers(): _synchronizer.set_visibility_for(peer_id, true)
+	_synchronizer.set_visibility_for(peer_id, true)
 
 func has_passed(player_id: int) -> bool:
 	return passed_player_ids.has(player_id)

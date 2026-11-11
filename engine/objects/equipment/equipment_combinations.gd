@@ -1,3 +1,4 @@
+@icon("uid://bj4xugg8qrok1")
 class_name EquipmentCombinations
 extends RefCounted
 

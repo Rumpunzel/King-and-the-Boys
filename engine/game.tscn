@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b6cfn5qwbi4xf" path="res://engine/game.gd" id="1_ybrgk"]
 [ext_resource type="Script" uid="uid://d12oj323k2wmw" path="res://client/serialization/serializer.gd" id="2_3bptx"]
-[ext_resource type="PackedScene" uid="uid://bvj0ntif5bqqq" path="res://engine/player/player_ghost_spawner.tscn" id="7_fxd01"]
+[ext_resource type="PackedScene" uid="uid://bvj0ntif5bqqq" path="res://engine/player/player_controller_spawner.tscn" id="7_fxd01"]
 [ext_resource type="PackedScene" uid="uid://rmev082m4bw0" path="res://user_interface/user_interface.tscn" id="8_aqpue"]
 [ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://data/levels/level.tscn" id="9_eadau"]
 [ext_resource type="PackedScene" uid="uid://5sd2jgms4uso" path="res://user_interface/menus/pause_menu/pause_menu.tscn" id="13_vkpvb"]
@@ -18,11 +18,11 @@ properties/1/path = NodePath(".:passed_player_ids")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="Game" type="Node" unique_id=808135939 node_paths=PackedStringArray("_serializer", "_level", "_player_ghost_spawner")]
+[node name="Game" type="Node" unique_id=808135939 node_paths=PackedStringArray("_serializer", "_level", "_player_controller_spawner")]
 script = ExtResource("1_ybrgk")
 _serializer = NodePath("Serializer")
 _level = NodePath("Level")
-_player_ghost_spawner = NodePath("PlayerGhostSpawner")
+_player_controller_spawner = NodePath("PlayerControllerSpawner")
 metadata/_custom_type_script = "uid://b6cfn5qwbi4xf"
 
 [node name="Serializer" type="Node" parent="." unique_id=1060350392]
@@ -31,7 +31,8 @@ metadata/_custom_type_script = "uid://d12oj323k2wmw"
 
 [node name="Level" parent="." unique_id=2100419132 instance=ExtResource("9_eadau")]
 
-[node name="PlayerGhostSpawner" parent="." unique_id=225359458 instance=ExtResource("7_fxd01")]
+[node name="PlayerControllerSpawner" parent="." unique_id=225359458 node_paths=PackedStringArray("_level") instance=ExtResource("7_fxd01")]
+_level = NodePath("../Level")
 
 [node name="TurnManager" type="Node" parent="." unique_id=825868920 node_paths=PackedStringArray("_level", "_synchronizer")]
 script = ExtResource("14_turns")
@@ -52,13 +53,13 @@ metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
 [node name="UserInterface" parent="." unique_id=30514551 instance=ExtResource("8_aqpue")]
 
-[node name="TurnStatus" parent="UserInterface/MarginContainer" parent_id_path=PackedInt32Array(30514551, 1277819004) index="0" unique_id=1584571151 node_paths=PackedStringArray("_player_ghost_spawner", "_turn_manager")]
-_player_ghost_spawner = NodePath("../../../PlayerGhostSpawner")
+[node name="TurnStatus" parent="UserInterface/MarginContainer" parent_id_path=PackedInt32Array(30514551, 1277819004) index="0" unique_id=1584571151 node_paths=PackedStringArray("_player_controller_spawner", "_turn_manager")]
+_player_controller_spawner = NodePath("../../../PlayerControllerSpawner")
 _turn_manager = NodePath("../../../TurnManager")
 
 [node name="PauseMenu" parent="UserInterface" unique_id=1241718021 instance=ExtResource("13_vkpvb")]
 
-[connection signal="player_ghost_created" from="PlayerGhostSpawner" to="Level" method="_on_player_ghost_created"]
+[connection signal="player_controller_created" from="PlayerControllerSpawner" to="Level" method="_on_player_controller_created"]
 [connection signal="load_requested" from="UserInterface/PauseMenu" to="." method="_on_load_requested"]
 [connection signal="save_requested" from="UserInterface/PauseMenu" to="." method="_on_save_requested"]
 

@@ -32,11 +32,12 @@ func get_local_player() -> Player:
 	var local_player_id: int = Multiplayer.HOST_ID
 	if Multiplayer.is_online(): local_player_id = multiplayer.get_unique_id()
 	var local_player: Player = get_player(local_player_id)
-	if not local_player:
-		for player: Player in get_connected_players():
-			if player.is_local_player(): return local_player
-	assert(local_player)
-	return local_player
+	if local_player: return local_player
+	for player: Player in get_connected_players():
+		if player.is_local_player(): return player
+	# E.g. a client asking before its own player reached it
+	push_error("No local player in the lobby yet (looked up as %d)" % local_player_id)
+	return null
 
 func get_all_node_data() -> Array[Variant]:
 	var player_data: Array[Variant] = []

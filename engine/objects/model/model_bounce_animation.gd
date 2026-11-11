@@ -1,3 +1,5 @@
+@tool
+@icon("uid://otkya7uo0lf")
 class_name ModelBounceAnimation
 extends ModelAnimation
 

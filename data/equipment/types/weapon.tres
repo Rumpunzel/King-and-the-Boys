@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EquipmentType" format=3 uid="uid://bf1hq4jewpk2m"]
+
+[ext_resource type="Script" uid="uid://du4jsk247kff3" path="res://engine/objects/equipment/equipment_type.gd" id="1_type"]
+[ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="1_model"]
+
+[resource]
+script = ExtResource("1_type")
+name = "Weapon"
+model = ExtResource("1_model")
+slot = 6
+parts = Array[int]([28])

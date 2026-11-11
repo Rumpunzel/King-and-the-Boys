@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EquipmentType" format=3 uid="uid://coi5m08vmybn1"]
+
+[ext_resource type="Script" uid="uid://du4jsk247kff3" path="res://engine/objects/equipment/equipment_type.gd" id="1_type"]
+[ext_resource type="PackedScene" uid="uid://k2selbak4kwk" path="res://data/characters/dwarves/dwarf_character.tscn" id="1_model"]
+
+[resource]
+script = ExtResource("1_type")
+name = "Dwarf Shield"
+model = ExtResource("1_model")
+slot = 7
+parts = Array[int]([10])

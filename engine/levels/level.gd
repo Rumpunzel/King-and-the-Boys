@@ -7,6 +7,10 @@ extends Node3D
 signal board_changed(character: Character)
 ## Emitted on the host when [param character] turned [param tile], see [method rotate_tile]
 signal tile_rotated(tile: Structure, character: Character)
+## Host only: [method build_level] placed the starting tiles, see [member is_built]
+signal built
+## Every peer: a tile was placed (spawned, loaded or replicated)
+signal tile_placed(tile: Structure)
 
 enum Direction {
 	UP,
@@ -16,6 +20,8 @@ enum Direction {
 }
 
 const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
+## The corners of a cell, as offsets from its grid position to the corner's index (see [member _corner_things])
+const CELL_CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
 
 @export var grid_size: float = 2.0
 @export var grid_extents: Vector2i = Vector2i(13, 13)
@@ -25,6 +31,12 @@ const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2
 @export var _wall_tile: StructureProfile
 @export var _tile_set: DungeonTileSet
 
+## What may stand in the middle of a room (e.g. a sarcophagus), on the grid corner nearest its centre; set in the scene, like
+## [member _wall_tile]
+@export var _room_centrepieces: SpawnTable
+## Chance of a room big enough (2x2 cells) to get a centrepiece
+@export_range(0.0, 1.0) var _room_centrepiece_chance: float = 0.5
+
 @export var _reveals_per_second: float = 16.0
 @export var _discovers_per_second: float = 2.0
 
@@ -33,12 +45,26 @@ const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2
 @export var _thing_spawner: ThingSpawner
 @export var _agent_spawner: AgentSpawner
 
+## Host only: whether [method build_level] ran, see [signal built]
+var is_built: bool = false
+## Host only: the dice the dungeon is generated with. Seeded, it builds the same dungeon again for the same order of
+## exploration (e.g. in tests); its state is not saved yet, so a loaded game grows on differently.
+var generation_random: RandomNumberGenerator = RandomNumberGenerator.new()
+## Host only: cells where no tile kept every neighbour's connection restrictions, so the one keeping the most was
+## placed (e.g. a treasure dead end wanting empty space where the dungeon grew later); for tests and debugging
+var restriction_fallbacks: Dictionary[Vector2i, bool] = {}
+
 var _placed_tiles: Dictionary[Vector2i, Structure]
 # {Structure -> Array[Structure]}
 var _tile_connections: Dictionary[Structure, Array]
 var _tile_connectors: Dictionary[Vector3, Structure]
 
 var _placed_things: Dictionary[Vector2i, Thing]
+## Things standing on a grid corner between four cells (e.g. room centrepieces), by the corner's index: corner [code]c[/code] lies
+## between the cells [code]c - (1, 1)[/code] and [code]c[/code]
+var _corner_things: Dictionary[Vector2i, Thing]
+## Cells of rooms whose centrepiece was decided, see [method _furnish_room]
+var _furnished_cells: Dictionary[Vector2i, bool]
 
 # Visual queues, on every peer: tiles whose shown status lags behind their status, one per character whose step
 # raised it. Each waits for its own character's figure, see _process.
@@ -166,6 +192,8 @@ func build_level() -> void:
 	_build_outer_wall()
 	var starting_grid_position: Vector2i = _place_starting_tile()
 	_build_dungeon_from(starting_grid_position)
+	is_built = true
+	built.emit()
 	#_structure_spawner.spawn_all_from_spawn_spoints()
 	#_thing_spawner.spawn_all_from_spawn_spoints()
 	#_agent_spawner.spawn_all_from_spawn_spoints()
@@ -178,15 +206,88 @@ func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Stat
 		assert(placed_tile)
 		if status >= placed_tile.status: placed_tile.status = status
 		return
-	var fitting_blueprint: DungeonTileSet.TileBlueprint = _tile_set.get_tile_blueprint_for(grid_position, _get_surrounding_tiles(grid_position))
-	assert(fitting_blueprint)
-	_spawn_at(fitting_blueprint, grid_position, status)
+	var pick: DungeonTileSet.Pick = _tile_set.pick_tile(grid_position, _get_surrounding_tiles(grid_position), generation_random)
+	assert(pick.blueprint)
+	if not pick.suits_all: restriction_fallbacks[grid_position] = true
+	_spawn_at(pick.blueprint, grid_position, status)
 
 func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> void:
 	for grid_position: Vector2i in grid_positions: spawn_at(grid_position, status)
 
 func get_placed_tile(grid_position: Vector2i) -> Structure: return _placed_tiles.get(grid_position)
 func get_placed_thing(grid_position: Vector2i) -> Thing: return _placed_things.get(grid_position)
+func get_placed_tiles() -> Array[Structure]: return _placed_tiles.values()
+
+## Every room of placed tiles, each as its cells (see [method get_room_cells]); each room once
+func get_rooms() -> Array[Array]:
+	var rooms: Array[Array] = []
+	var in_room: Dictionary[Vector2i, bool] = {}
+	for grid_position: Vector2i in _placed_tiles:
+		if in_room.has(grid_position): continue
+		var cells: Array[Vector2i] = get_room_cells(grid_position)
+		if cells.is_empty(): continue
+		for cell: Vector2i in cells: in_room[cell] = true
+		rooms.append(cells)
+	return rooms
+
+## @returns the thing on [param grid_position], or else one on a corner of it
+func get_thing_near(grid_position: Vector2i) -> Thing:
+	if _placed_things.has(grid_position): return _placed_things[grid_position]
+	for corner: Vector2i in CELL_CORNERS:
+		if _corner_things.has(grid_position + corner): return _corner_things[grid_position + corner]
+	return null
+
+## The cells of the room [param grid_position] belongs to: the placed tiles of its room type reached through connections; empty
+## outside rooms
+func get_room_cells(grid_position: Vector2i) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	var tile: Structure = get_placed_tile(grid_position)
+	if not tile or not tile.profile.room_type: return cells
+	var room_type: RoomType = tile.profile.room_type
+	var open: Array[Vector2i] = [grid_position]
+	cells.append(grid_position)
+	while not open.is_empty():
+		var cell: Vector2i = open.pop_back()
+		for connection: Direction in _placed_tiles[cell].get_connections():
+			var neighbour_position: Vector2i = cell + direction_to_vector(connection)
+			var neighbour: Structure = get_placed_tile(neighbour_position)
+			if not neighbour or neighbour.profile.room_type != room_type or cells.has(neighbour_position): continue
+			cells.append(neighbour_position)
+			open.append(neighbour_position)
+	return cells
+
+## Whether every connection of the room's [param cells] leads to a placed tile. Rooms are built whole, so a room is only incomplete
+## while its tiles still arrive (loading, joining)
+func is_room_complete(cells: Array[Vector2i]) -> bool:
+	for cell: Vector2i in cells:
+		for connection: Direction in _placed_tiles[cell].get_connections():
+			if not _placed_tiles.has(cell + direction_to_vector(connection)): return false
+	return true
+
+## The grid corner where a room's centrepiece stands: the one nearest the room's centre among those with all four cells in the room
+## and no pillar (corners with even indices, see [TileDecorations]); [code]null[/code] if there is none, e.g. in rooms narrower than 2 cells
+static func get_centrepiece_corner(cells: Array[Vector2i]) -> Variant:
+	if cells.is_empty(): return null
+	var centre: Vector2 = Vector2.ZERO
+	for cell: Vector2i in cells: centre += Vector2(cell)
+	centre /= cells.size()
+	var best: Vector2i = Vector2i.ZERO
+	var best_distance: float = INF
+	for cell: Vector2i in cells:
+		var corner: Vector2i = cell + Vector2i.ONE
+		if posmod(corner.x, 2) == 0 and posmod(corner.y, 2) == 0: continue
+		if not CELL_CORNERS.all(func(offset: Vector2i) -> bool: return cells.has(corner - offset)): continue
+		var distance: float = (Vector2(corner) - Vector2.ONE * 0.5).distance_squared_to(centre)
+		# Ties go to the smallest corner, so every peer picks alike
+		if distance < best_distance - 0.0001 or (is_equal_approx(distance, best_distance) and corner < best):
+			best = corner
+			best_distance = distance
+	if best_distance == INF: return null
+	return best
+
+## Where the grid corner [param corner] lies (see [member _corner_things])
+func get_corner_world_position(corner: Vector2i) -> Vector3:
+	return grid_to_world_position(corner) - Vector3(1.0, 0.0, 1.0) * grid_size * 0.5
 
 ## @returns the cell reached by stepping from [param grid_position] into [param direction], or [param grid_position] itself if a wall blocks it
 func get_step_target(grid_position: Vector2i, direction: Direction) -> Vector2i:
@@ -205,6 +306,31 @@ func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
 func get_spot_position(grid_position: Vector2i, spot: Vector2) -> Vector3:
 	return grid_to_world_position(grid_position) + Vector3(spot.x, 0.0, spot.y)
 
+## The first free spot on [param grid_position], else on the nearest revealed tile along passages (tiles the
+## party has seen; unexplored ones would build dungeon away from it), as a world position, ignoring [param except]:
+## where a character goes once its tile is full. [code]Vector3.INF[/code] if no tile reached has room.
+func get_nearest_free_spot_position(grid_position: Vector2i, except: Character = null) -> Vector3:
+	var cells: Array[Vector2i] = [grid_position]
+	var reached: Dictionary[Vector2i, bool] = {grid_position: true}
+	var next: int = 0
+	while next < cells.size():
+		var cell: Vector2i = cells[next]
+		next += 1
+		var free_spots: Array[Vector2] = get_free_spots(cell, except)
+		if not free_spots.is_empty():
+			var spot: Vector2 = free_spots.front()
+			return get_spot_position(cell, spot)
+		var tile: Structure = get_placed_tile(cell)
+		for direction: Direction in tile.get_connections():
+			var neighbour: Vector2i = cell + direction_to_vector(direction)
+			var neighbour_tile: Structure = get_placed_tile(neighbour)
+			# Passages only (the edge of what is built may lead nowhere yet), into revealed tiles
+			if reached.has(neighbour) or not neighbour_tile or neighbour_tile.status < Structure.Status.REVEALED: continue
+			if not neighbour_tile.has_connection_to(cell): continue
+			reached[neighbour] = true
+			cells.append(neighbour)
+	return Vector3.INF
+
 ## Spots follow the tile's order of preference: the center first, then the corners.
 ## Things (e.g. chests) hold the first spot; pieces keep their spot when others leave.
 ## @returns the free spots on [param grid_position], ignoring [param except]; empty if the tile is full
@@ -213,6 +339,9 @@ func get_free_spots(grid_position: Vector2i, except: Character = null) -> Array[
 	assert(tile)
 	var free_spots: Array[Vector2] = tile.profile.get_tile_spots()
 	if _placed_things.has(grid_position): free_spots.pop_front()
+	# A thing on a corner takes the spot towards it
+	for corner: Vector2i in CELL_CORNERS:
+		if _corner_things.has(grid_position + corner): free_spots.erase(get_spot_towards(free_spots, Vector2(corner) * 2.0 - Vector2.ONE))
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
 		if character == except or not character.visible or character.grid_cell != grid_position: continue
 		free_spots.erase(character.tile_spot)
@@ -253,6 +382,17 @@ static func _get_nearest_spot(spot: Vector2, tile_spots: Array[Vector2]) -> Vect
 		nearest_spot = tile_spot
 		nearest_distance = distance
 	return nearest_spot
+
+## The spot of [param spots] furthest out towards [param direction] (e.g. a corner), or [code]Vector2.INF[/code] if none lies that way
+static func get_spot_towards(spots: Array[Vector2], direction: Vector2) -> Vector2:
+	var best: Vector2 = Vector2.INF
+	var best_reach: float = 0.0
+	for spot: Vector2 in spots:
+		var reach: float = spot.dot(direction.normalized())
+		if reach > best_reach:
+			best = spot
+			best_reach = reach
+	return best
 
 func _build_outer_wall() -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
@@ -304,6 +444,10 @@ func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction, 
 		index += 1
 
 func _build_room_from(origin_grid_position: Vector2i, room_type: RoomType, already_visited: Array[Vector2i]) -> void:
+	_spread_room_from(origin_grid_position, room_type, already_visited)
+	_furnish_room(origin_grid_position)
+
+func _spread_room_from(origin_grid_position: Vector2i, room_type: RoomType, already_visited: Array[Vector2i]) -> void:
 	assert(room_type)
 	var tile: Structure = _placed_tiles[origin_grid_position]
 	assert(tile)
@@ -314,7 +458,37 @@ func _build_room_from(origin_grid_position: Vector2i, room_type: RoomType, alrea
 		if already_visited.has(grid_position): continue
 		already_visited.append(grid_position)
 		spawn_at(grid_position)
-		_build_room_from(grid_position, room_type, already_visited)
+		_spread_room_from(grid_position, room_type, already_visited)
+
+## Host only: now and then a centrepiece in the middle of the room around [param grid_position], which must be built whole. Rooms are
+## built again on every step, so the roll is seeded by the room, and a corner holding a thing already is left alone
+func _furnish_room(grid_position: Vector2i) -> void:
+	if not _room_centrepieces or _furnished_cells.has(grid_position): return
+	var cells: Array[Vector2i] = get_room_cells(grid_position)
+	var found: Variant = get_centrepiece_corner(cells)
+	if found == null:
+		_remember_furnished(cells)
+		return
+	var corner: Vector2i = found
+	if _corner_things.has(corner):
+		_remember_furnished(cells)
+		return
+	# A figure on one of the corner's tiles (e.g. in a save from before rooms had centrepieces) may stand where it would go: later
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if CELL_CORNERS.has(corner - character.grid_cell): return
+	_remember_furnished(cells)
+	var random: RandomNumberGenerator = RandomNumberGenerator.new()
+	random.seed = hash(cells.min()) ^ hash(&"centrepiece")
+	if random.randf() >= _room_centrepiece_chance: return
+	var profile: ThingProfile = _room_centrepieces.get_spawn() as ThingProfile
+	if not profile: return
+	var turn: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4))
+	# Unrevealed: every peer shows it with its own view of the four tiles, see _on_thing_created
+	_thing_spawner.spawn_at(profile, Transform3D(turn, get_corner_world_position(corner)), Thing.Status.PLACED)
+
+## Rooms are built again on every step; their centrepiece is decided once
+func _remember_furnished(cells: Array[Vector2i]) -> void:
+	for cell: Vector2i in cells: _furnished_cells[cell] = true
 
 func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
 	assert(absi(grid_position.x) <= grid_extents.x)
@@ -323,11 +497,14 @@ func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vect
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position)
 	_structure_spawner.spawn_at(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status)
 
-## Calls [param reveal_function] with every tile in sight within [param vision_radius]
+## Calls [param reveal_function] with every tile in sight within [param vision_radius], always with the tile at
+## [param from_grid_position] (a character sees the tile it stands on, even without vision)
 func _update_player_vision(from_grid_position: Vector2i, vision_radius: float, reveal_function: Callable, origin_grid_position: Vector2i = from_grid_position) -> void:
 	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
 	var from_tile: Structure = _placed_tiles[from_grid_position]
 	assert(from_tile)
+	# The passages below only reach the tiles they lead to (rooms reveal this one again, harmlessly)
+	reveal_function.call(from_tile)
 	var origin_room: Structure = _placed_tiles[origin_grid_position]
 	assert(origin_room)
 	var origin_tile_room_type: RoomType = origin_room.profile.room_type
@@ -410,15 +587,20 @@ func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
 
 func _create_connection(tile: Structure, connection: Direction) -> void:
 	assert(tile)
-	var direction_vector: Vector2i = direction_to_vector(connection)
 	# Tiles without a model (e.g. in tests) count as unscaled
 	var mesh_scale: float = tile.model.get_max_mesh_scale() if tile.model else 1.0
-	var connection_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * mesh_scale
+	var connection_position: Vector3 = _get_connector_position(tile.global_position, connection, mesh_scale)
 	var tile_connection: Structure = _tile_set.tile_connection.create(-1, Transform3D(Basis.IDENTITY, connection_position), connection, Structure.Status.PLACED)
 	var tile_connections: Array[Structure] = _tile_connections.get_or_add(tile, [] as Array[Structure])
 	assert(not tile_connections.has(tile))
 	tile_connections.append(tile_connection)
 	add_child(tile_connection)
+
+## The middle of a tile's side towards [param connection], where connectors stand; [param mesh_scale] moves it out
+## with the tile's model (its connections)
+func _get_connector_position(tile_position: Vector3, connection: Direction, mesh_scale: float = 1.0) -> Vector3:
+	var direction_vector: Vector2i = direction_to_vector(connection)
+	return tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * mesh_scale
 
 func _create_connector(tile_position: Vector3, connection: Direction) -> void:
 	var connector_position: Vector3 = _get_connector_position(tile_position, connection)
@@ -438,6 +620,9 @@ func _on_structure_created(structure: Structure) -> void:
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
 	structure.shown_status_changed.connect(_on_tile_shown_status_changed.bind(structure))
 	structure.clockwise_turns_changed.connect(_on_tile_turned.bind(structure).unbind(1))
+	# Removed (e.g. by loading a save), it leaves the registries with its connections, like things do
+	structure.tree_exiting.connect(_forget_tile.bind(structure), CONNECT_ONE_SHOT)
+	tile_placed.emit(structure)
 	if not multiplayer.is_server(): return
 	structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
 	if _is_next_to_revealed_tile(structure): structure.ready.connect(_discover_tile.bind(structure, _stepping_character), CONNECT_ONE_SHOT)
@@ -457,23 +642,34 @@ func _on_tile_shown_status_changed(shown_status: Structure.Status, tile: Structu
 	if _placed_things.has(grid_position):
 		var thing_on_tile: Thing = _placed_things[grid_position]
 		thing_on_tile.status = Thing.structure_status_to_thing_status(shown_status)
+	# A thing on a corner shows as soon as one of its four cells does
+	var thing_status: Thing.Status = Thing.structure_status_to_thing_status(shown_status)
+	for corner: Vector2i in CELL_CORNERS:
+		var corner_thing: Thing = _corner_things.get(grid_position + corner)
+		if corner_thing and thing_status > corner_thing.status: corner_thing.status = thing_status
 	if not shown_status == Structure.Status.REVEALED: return
-	await get_tree().create_timer(0.5).timeout
-	_show_connections(tile)
+	# A tween bound to the level, not a timer awaited: it goes with the level (e.g. leaving the game, a test ending)
+	# instead of resuming on a freed one, which crashed Godot at exit. It pauses with the game, so the board does
+	# not change while paused. Bound to the cell, not the tile: the tile may be gone by then (e.g. a save loaded).
+	create_tween().tween_callback(_show_connections_at.bind(grid_position)).set_delay(0.5)
 
-## Shows the connections of a revealed [param tile], and the connectors it shares with revealed neighbours
-func _show_connections(tile: Structure) -> void:
+## Shows the connections and connectors of the revealed tile on [param grid_position] to its revealed neighbours,
+## as far as they are still placed
+func _show_connections_at(grid_position: Vector2i) -> void:
+	var tile: Structure = _placed_tiles.get(grid_position)
+	if not tile or tile.shown_status != Structure.Status.REVEALED: return
 	for tile_connection: Structure in _tile_connections.get(tile, []): tile_connection.shown_status = Structure.Status.REVEALED
 	for connection: Direction in tile.get_connections():
 		var direction_vector: Vector2i = direction_to_vector(connection)
-		# A turned tile may open into a cell that is not built yet
-		var neighbour: Structure = _placed_tiles.get(tile.get_grid_position() + direction_vector)
-		if not neighbour or not neighbour.shown_status == Structure.Status.REVEALED: continue
-		var tile_connector: Structure = _tile_connectors[_get_connector_position(tile.global_position, connection)]
-		tile_connector.shown_status = Structure.Status.REVEALED
+		var neighbour: Structure = _placed_tiles.get(grid_position + direction_vector)
+		if not neighbour or neighbour.shown_status != Structure.Status.REVEALED: continue
+		var tile_connector: Structure = _tile_connectors.get(_get_connector_position(tile.global_position, connection))
+		if tile_connector: tile_connector.shown_status = Structure.Status.REVEALED
 
 ## Every peer: rebuilds the connections of a turned [param tile] and the connectors on its sides
 func _on_tile_turned(tile: Structure) -> void:
+	# A tile leaving the level (see [method _forget_tile]) is no longer followed
+	if _placed_tiles.get(tile.get_grid_position()) != tile: return
 	for tile_connection: Structure in _tile_connections.get(tile, []): tile_connection.queue_free()
 	_tile_connections.erase(tile)
 	var connections: Array[Direction] = tile.get_connections()
@@ -487,23 +683,62 @@ func _on_tile_turned(tile: Structure) -> void:
 		elif _tile_connectors.has(connector_position):
 			_tile_connectors[connector_position].queue_free()
 			_tile_connectors.erase(connector_position)
-	if tile.shown_status == Structure.Status.REVEALED: _show_connections(tile)
-	for neighbour: Structure in _get_surrounding_tiles(grid_position):
-		if neighbour.shown_status == Structure.Status.REVEALED: _show_connections(neighbour)
-
-func _get_connector_position(tile_position: Vector3, connection: Direction) -> Vector3:
-	var direction_vector: Vector2i = direction_to_vector(connection)
-	return tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
+	_show_connections_at(grid_position)
+	for neighbour: Structure in _get_surrounding_tiles(grid_position): _show_connections_at(neighbour.get_grid_position())
 
 func _on_thing_created(thing: Thing) -> void:
-	var thing_grid_position: Vector2i = world_to_grid_position(thing.global_position)
-	_placed_things[thing_grid_position] = thing
+	var on_grid: Vector2 = Vector2(thing.global_position.x, thing.global_position.z) / grid_size
+	var on_corner: bool = is_equal_approx(fposmod(on_grid.x, 1.0), 0.5) and is_equal_approx(fposmod(on_grid.y, 1.0), 0.5)
+	if on_corner:
+		var corner: Vector2i = Vector2i(roundi(on_grid.x + 0.5), roundi(on_grid.y + 0.5))
+		_corner_things[corner] = thing
+		for offset: Vector2i in CELL_CORNERS:
+			var tile: Structure = get_placed_tile(corner - offset)
+			var status: Thing.Status = Thing.structure_status_to_thing_status(tile.shown_status) if tile else Thing.Status.PLACED
+			if status > thing.status: thing.status = status
+	else: _placed_things[world_to_grid_position(thing.global_position)] = thing
+	# Removed (e.g. by loading a save), it leaves the registries, so nothing looks for it any more
+	thing.tree_exiting.connect(_forget_thing.bind(thing), CONNECT_ONE_SHOT)
+
+## Drops a tile leaving the level from its registries, with its connections, and the connectors on its sides no
+## neighbour still reaches
+func _forget_tile(tile: Structure) -> void:
+	var grid_position: Vector2i = world_to_grid_position(tile.global_position)
+	if _placed_tiles.get(grid_position) == tile: _placed_tiles.erase(grid_position)
+	_furnished_cells.erase(grid_position)
+	restriction_fallbacks.erase(grid_position)
+	# Until it is freed it may still change: nothing here follows it any more
+	for handler: Array in [[tile.status_changed, _on_tile_status_changed], [tile.shown_status_changed, _on_tile_shown_status_changed], [tile.spawn_requested, _on_spawn_requested]]:
+		var tile_signal: Signal = handler[0]
+		var bound_handler: Callable = (handler[1] as Callable).bind(tile)
+		if tile_signal.is_connected(bound_handler): tile_signal.disconnect(bound_handler)
+	for queues: Dictionary in [_reveal_queues, _discover_queues]:
+		for queue: Array in queues.values(): queue.erase(tile)
+	var tile_connections: Array = _tile_connections.get(tile, [])
+	_tile_connections.erase(tile)
+	for tile_connection: Structure in tile_connections:
+		if is_instance_valid(tile_connection): tile_connection.queue_free()
+	for connection: Direction in tile.get_connections():
+		var neighbour: Structure = _placed_tiles.get(grid_position + direction_to_vector(connection))
+		var connector_position: Vector3 = _get_connector_position(tile.global_position, connection)
+		var tile_connector: Structure = _tile_connectors.get(connector_position)
+		if neighbour and neighbour.has_connection_to(grid_position):
+			# Kept for the neighbour, but leading into an empty cell now, like one towards a cell not built yet
+			if is_instance_valid(tile_connector): tile_connector.shown_status = Structure.Status.PLACED
+			continue
+		_tile_connectors.erase(connector_position)
+		if is_instance_valid(tile_connector): tile_connector.queue_free()
+
+func _forget_thing(thing: Thing) -> void:
+	for registry: Dictionary in [_placed_things, _corner_things]:
+		for key: Variant in registry.keys():
+			if registry[key] == thing: registry.erase(key)
 
 func _on_agent_created(agent: Agent) -> void:
 	_register_character(agent.character)
 
-func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
-	var character: Character = player_ghost.character
+func _on_player_controller_created(player_controller: PlayerController) -> void:
+	var character: Character = player_controller.character
 	_register_character(character)
 	if not multiplayer.is_server(): return
 	character.entered_grid_cell.connect(_on_player_moved.bind(character))

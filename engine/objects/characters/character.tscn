@@ -87,5 +87,5 @@ character = NodePath("..")
 [connection signal="profile_changed" from="." to="CharacterHitBox" method="_on_character_profile_changed"]
 [connection signal="navigation_finished" from="NavigationAgent3D" to="." method="_on_navigation_agent_navigation_finished"]
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_velocity_computed"]
-[connection signal="haunted" from="CharacterHitBox" to="." method="_on_haunted"]
-[connection signal="unhaunted" from="CharacterHitBox" to="." method="_on_unhaunted"]
+[connection signal="controlled" from="CharacterHitBox" to="." method="_on_controlled"]
+[connection signal="released" from="CharacterHitBox" to="." method="_on_released"]

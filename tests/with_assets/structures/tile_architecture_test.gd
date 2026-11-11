@@ -27,6 +27,8 @@ func before_test() -> void:
 	decorations.wall_chance = 0.5
 	seed(4321)
 	_level = auto_free((load(LEVEL) as PackedScene).instantiate())
+	# The dungeon draws from its own dice, not the global ones
+	_level.generation_random.seed = 4321
 	add_child(_level)
 	_level.build_level()
 	# Reveal the start's surroundings in rings, like exploring would; tiles further out stay placed, but hidden

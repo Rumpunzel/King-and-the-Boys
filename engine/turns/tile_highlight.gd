@@ -1,4 +1,5 @@
 @tool
+@icon("uid://bbd6uslekkp8l")
 class_name TileHighlight
 extends MeshInstance3D
 ## Marks the tile the local player's controlled [Character] stands on in the game logic.
@@ -24,8 +25,8 @@ var _character: Character:
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	top_level = true
-	# Every ghost carries one; only the local player sees theirs
-	if not _state_machine.player_ghost.is_multiplayer_authority():
+	# Every player controller carries one; only the local player sees theirs
+	if not _state_machine.player_controller.is_multiplayer_authority():
 		hide()
 		return
 	var material: ShaderMaterial = ShaderMaterial.new()

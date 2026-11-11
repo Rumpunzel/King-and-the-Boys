@@ -69,6 +69,7 @@ var model: Model:
 		if not model: return
 		add_child(model, true)
 		_apply_body()
+		if shows_passed: model.rest_in(profile.passed_animations)
 		if equipment and model is ModularModel:
 			var modular_model: ModularModel = model
 			equipment.apply_to(modular_model)
@@ -81,9 +82,13 @@ var body: Dictionary = {}:
 		_apply_body()
 
 var level: Level
+## Whether the figure shows that its player has passed (see [method show_passed]); purely visual, on every peer
+var shows_passed: bool = false
 var look_target: Vector3 = Vector3.BACK
-## The [Character] currently haunting (controlling) this one, if any
-var haunted_by: Character
+## The [Character] currently controlling this one, if any
+var controlled_by: Character
+## The piece this [Character] currently controls, if any; set with [member HitBox.controller]
+var controlling: HitBox
 ## Steps taken so far, undos included; counted by the host, replicated. Tiles a step reveals carry its number
 ## (see [member Structure.status_cause_step]), so peers know which step to show them after.
 var step_count: int = 0
@@ -155,15 +160,32 @@ func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	if model: model.play_model_animation(profile.spawn_animation)
 	if multiplayer.is_server():
-		# Initial grid state comes from the spawn transform
+		# Initial grid state comes from the spawn transform: the spot it stands on if that is free, else the first free one
 		grid_cell = level.world_to_grid_position(global_position)
 		facing = rotation_to_facing(rotation.y)
 		var free_spots: Array[Vector2] = level.get_free_spots(grid_cell, self)
-		if not free_spots.is_empty(): tile_spot = free_spots.front()
+		var offset: Vector3 = global_position - level.grid_to_world_position(grid_cell)
+		var standing_spot: Vector2 = Vector2(offset.x, offset.z)
+		# A fixed tolerance: float error grows with the distance from the origin (e.g. loaded far out)
+		var spot_index: int = free_spots.find_custom(func(free_spot: Vector2) -> bool: return free_spot.distance_to(standing_spot) < 0.01)
+		if spot_index >= 0: tile_spot = free_spots[spot_index]
+		elif not free_spots.is_empty(): tile_spot = free_spots.front()
+		else: _take_nearest_free_spot()
 		reset_movement_points()
 	_has_grid_state = true
 	_queue_grid_visual_update()
 	entered_grid_cell.emit(grid_cell)
+
+## Host only, while spawning onto a full tile: the nearest tile with room instead, see
+## [method Level.get_nearest_free_spot_position]
+func _take_nearest_free_spot() -> void:
+	var spot_position: Vector3 = level.get_nearest_free_spot_position(grid_cell, self)
+	if spot_position == Vector3.INF:
+		push_warning("No free spot for %s near %s: it shares a spot" % [self, grid_cell])
+		return
+	grid_cell = level.world_to_grid_position(spot_position)
+	var offset: Vector3 = spot_position - level.grid_to_world_position(grid_cell)
+	tile_spot = Vector2(offset.x, offset.z)
 
 func _physics_process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
@@ -404,20 +426,25 @@ func _start_move(target_position: Vector3, target_rotation: float) -> void:
 	var facing_vector: Vector3 = Vector3(sin(target_rotation), 0.0, cos(target_rotation))
 	_move_backwards = (target_position - global_position).normalized().dot(facing_vector) < -0.5
 	var animation: ModelAnimation = profile.undo_animation if _move_backwards and profile.undo_animation else profile.move_animation
-	# From standing: the hop-in feel, a little back, then forward into the tile
-	_run_move(target_position, animation, Tween.TRANS_BACK, Tween.EASE_IN, false)
+	# From standing, by the animation's travel settings, e.g. the hop's: a little back, then forward into the tile
+	_run_move(target_position, animation, false)
 
 ## Redirects the move under way to [param target_position], from where the figure is: at most one step's time
 ## is left after any step, so quick steps take hardly longer than one, and corners may be cut
 func _extend_move(target_position: Vector3) -> void:
 	_move_backwards = false
-	_run_move(target_position, profile.move_animation, Tween.TRANS_SINE, Tween.EASE_IN_OUT, true)
+	_run_move(target_position, profile.move_animation, true)
 
-func _run_move(target_position: Vector3, animation: ModelAnimation, transition: Tween.TransitionType, easing: Tween.EaseType, continuing: bool) -> void:
+## Travels by [param animation]'s travel settings: as it starts, or redirected ([param continuing]), see [ModelAnimation]
+func _run_move(target_position: Vector3, animation: ModelAnimation, continuing: bool) -> void:
+	var transition: Tween.TransitionType = animation.redirect_transition if continuing else animation.travel_transition
+	var easing: Tween.EaseType = animation.redirect_ease if continuing else animation.travel_ease
+	# A redirected move is under way already
+	var delay: float = 0.0 if continuing else animation.duration * animation.travel_delay
 	_move_target = target_position
 	if _move_tween: _move_tween.kill()
 	_move_tween = create_tween()
-	_move_tween.tween_property(self, "global_position", target_position, animation.duration).set_trans(transition).set_ease(easing)
+	_move_tween.tween_property(self, "global_position", target_position, animation.duration - delay).set_trans(transition).set_ease(easing).set_delay(delay)
 	_move_tween.tween_callback(_on_move_finished)
 	# A redirected move continues the hop: it stays up and lands with the move, without a new lean back
 	if not model: return
@@ -430,9 +457,18 @@ func _on_move_finished() -> void:
 	if not _move_backwards: _look_at_thing_on_tile()
 	figure_arrived.emit()
 
+## Shows that the character's player passed, or no longer has: the profile's pass animation, then its passed animations in place of the idles
+## (e.g. sitting down and sitting), or getting up again
+func show_passed(passed: bool) -> void:
+	if passed == shows_passed: return
+	shows_passed = passed
+	if not model: return
+	if passed: model.rest_in(profile.passed_animations, profile.pass_animation)
+	else: model.rest_in(null, profile.unpass_animation)
+
 ## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
 func _look_at_thing_on_tile() -> void:
-	var thing: Thing = level.get_placed_thing(grid_cell)
+	var thing: Thing = level.get_thing_near(grid_cell)
 	if not thing or not thing.visible: return
 	var to_thing: Vector3 = thing.global_position - global_position
 	to_thing.y = 0.0
@@ -470,14 +506,14 @@ func _disable_physics() -> void:
 
 ## @returns [code]true[/code] if the peer [param peer_id] may move this [Character]
 func is_controlled_by(peer_id: int) -> bool:
-	if haunted_by: return haunted_by.get_multiplayer_authority() == peer_id
+	if controlled_by: return controlled_by.get_multiplayer_authority() == peer_id
 	return get_multiplayer_authority() == peer_id
 
-func _on_haunted(haunting: Character) -> void:
-	haunted_by = haunting
+func _on_controlled(controller: Character) -> void:
+	controlled_by = controller
 
-func _on_unhaunted() -> void:
-	haunted_by = null
+func _on_released() -> void:
+	controlled_by = null
 
 func _on_navigation_agent_velocity_computed(safe_velocity: Vector3) -> void:
 	if _navigation_agent.is_navigation_finished(): return

@@ -20,10 +20,6 @@ func _enter_tree() -> void:
 	#if _editor_material: model.apply_material_override(_editor_material)
 	#add_child(model)
 
-## [param chosen_body] is the look the player picked in the lobby, used if it fits
-func get_character_data(character_profile: CharacterProfile, variation: int, chosen_body: Dictionary = {}) -> Dictionary[StringName, Variant]:
-	return character_profile.create_character_data(variation, transform, chosen_body)
-
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	return warnings

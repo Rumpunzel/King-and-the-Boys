@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ModelMiniatureMoveAnimation" format=3 uid="uid://cvoowfdc35nc1"]
+
+[ext_resource type="Script" uid="uid://clsflb34q1if1" path="res://engine/objects/model/model_miniature_move_animation.gd" id="1_script"]
+[ext_resource type="Animation" uid="uid://dna5hjdoxwe3p" path="res://data/characters/animations/quaternius/Jump_Land.res" id="anim_Jump_Land"]
+[ext_resource type="Animation" uid="uid://1s1sb5siq0bq" path="res://data/characters/animations/quaternius/Jump_Start.res" id="anim_Jump_Start"]
+
+[resource]
+script = ExtResource("1_script")
+duration = 0.75
+_move_height = 0.8
+body_animation = ExtResource("anim_Jump_Start")
+body_landing = ExtResource("anim_Jump_Land")
+body_landing_time = 0.8
+metadata/_custom_type_script = "uid://clsflb34q1if1"

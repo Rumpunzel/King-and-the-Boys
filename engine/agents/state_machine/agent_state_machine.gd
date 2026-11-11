@@ -1,4 +1,5 @@
 @tool
+@icon("uid://ne8n58y4wim8")
 class_name AgentStateMachine
 extends StateMachine
 

@@ -44,6 +44,13 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 		changed.emit()
 
 @export_category("Model")
+## Moves the character's model in menu previews (e.g. the lobby), so characters of other sizes stay framed alike, e.g. raises the
+## smaller dwarf
+@export var preview_offset: Vector3 = Vector3.ZERO
+## Repaints the gear's blue highlights (cloth, banners, shield panels) to fit the character; transparent keeps the atlas' colour
+@export var gear_primary_color: Color = Color.TRANSPARENT
+## Repaints the gear's gold highlights (trims, emblems); transparent keeps the atlas' colour
+@export var gear_secondary_color: Color = Color.TRANSPARENT
 @export var model_configuration: ModelConfigurationRandom = preload("uid://c1i0e1p4feqhe"):
 	set(new_value):
 		_forward_changes([model_configuration], [new_value])
@@ -103,6 +110,16 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var fast_move_animation: ModelAnimation = _MOVE_ANIMATION
 ## Played when undo walks a step back; the move animation if empty
 @export var undo_animation: ModelAnimation
+## What the character's model rests in when nothing else plays, e.g. a few idles in turn; its body's own idle if empty
+@export var idle_animations: BodyAnimations
+## Played as the character's player passes, e.g. sitting down; then [member passed_animations]
+@export var pass_animation: Animation
+## What the model rests in while its player has passed, in place of its idles, e.g. sitting
+@export var passed_animations: BodyAnimations
+## Played as the pass ends (taken back, or a new turn), e.g. getting up; then the idles
+@export var unpass_animation: Animation
+## Played once as a player picks the character in the lobby, e.g. drawing a sword; then the idles
+@export var selected_animation: Animation
 
 @export_category("")
 @export_group("Configuration")
@@ -123,13 +140,15 @@ func create(variation: int, spawn_transform: Transform3D) -> Character:
 
 ## Rolls the variation, the body and [member random_equipment], so only call this where character data is authored, i.e. on the server
 ## [param chosen_body] (e.g. the one a player picked in the lobby, see [member Player.body]) is used if it is a complete body of the model
+## and keeps to [member model_configuration]'s pools
 func create_character_data(variation: int, spawn_transform: Transform3D, chosen_body: Dictionary = {}) -> Dictionary[StringName, Variant]:
 	var rolled_variation: int = variation if variation >= 0 else get_random_variation()
 	var model: Model = create_model(rolled_variation)
 	var body: Dictionary = {}
 	if model is ModularModel:
 		var modular_model: ModularModel = model
-		if modular_model.is_complete_body(chosen_body): body = chosen_body.duplicate()
+		var allowed: bool = not model_configuration or model_configuration.allows(modular_model, chosen_body)
+		if modular_model.is_complete_body(chosen_body) and allowed: body = chosen_body.duplicate()
 		elif model_configuration: body = model_configuration.roll(modular_model)
 	if model: model.free()
 	var equipment_ids: PackedStringArray = []
@@ -165,6 +184,12 @@ func _roll_random_equipment() -> Array[EquipmentLook]:
 
 func create_model(variation: int) -> Model:
 	var model: Model = super.create_model(variation)
+	if model: model.idle_animations = idle_animations
+	if model is ModularModel:
+		var modular_model: ModularModel = model
+		modular_model.set_gear_colors(gear_primary_color, gear_secondary_color)
+		# Before any body is rolled or applied: they name meshes of the body's gender
+		if model_configuration: modular_model.set_gender(model_configuration.gender)
 	# In game the server rolls the look once and sends it as [constant Character.BODY]
 	if model is ModularModel and Engine.is_editor_hint(): setup_model(model as ModularModel)
 	return model
@@ -180,11 +205,32 @@ func roll_body(variation: int) -> Dictionary:
 ## profile (e.g. its outfit) does not change the face, until [param reroll] asks for a new one
 func setup_model(model: ModularModel, reroll: bool = false) -> void:
 	model.reset_gear()
-	if reroll or _preview_body.is_empty() or _preview_model_path != model.scene_file_path:
+	# A body that no longer fits (another scene, the configuration's gender, pools or colours changed) rolls anew
+	var allowed: bool = not model_configuration or model_configuration.allows(model, _preview_body)
+	if reroll or _preview_body.is_empty() or _preview_model_path != model.scene_file_path or not model.is_complete_body(_preview_body) or not allowed:
 		_preview_model_path = model.scene_file_path
 		_preview_body = model_configuration.roll(model) if model_configuration else {}
 		_preview_random_equipment = _roll_random_equipment()
 	dress_model(model, _preview_body, _preview_random_equipment)
+
+## The mesh numbers [param part] of [param model] may show for this profile: its pool, or all its meshes (and none where it may show
+## none) if it has no pool; only its default if it is not randomized
+func get_body_options(model: ModularModel, part: int) -> PackedStringArray:
+	var body_part: ModularBodyPart = model.get_part(part)
+	var part_key: String = model.get_part_keys()[part]
+	var options: PackedStringArray = [ModularBodyPart.EMPTY_MESH_NUMBER] if body_part.allows_none() else []
+	options.append_array(body_part.get_mesh_numbers())
+	if not model_configuration or not model_configuration.randomized_parts.has(part_key): return options
+	if model_configuration.mesh_pools.has(part_key): return model_configuration.get_pool_options(body_part, part_key)
+	return options
+
+## Shows the mesh numbered [param mesh_number] on [param part] of the preview [param model], and keeps it in the preview's body
+## (see [method setup_model]), so rebuilds show it too
+func set_preview_body_part(model: ModularModel, part: int, mesh_number: String) -> void:
+	var body_part: ModularBodyPart = model.get_part(part)
+	body_part.update_index(-1 if mesh_number == ModularBodyPart.EMPTY_MESH_NUMBER else body_part.find_mesh_index(mesh_number))
+	# By mesh, not visibility: gear may hide the part (a helmet the beard)
+	if _preview_model_path == model.scene_file_path: _preview_body[part] = ResourceId.of(body_part.mesh) if body_part.mesh else ""
 
 ## Shows [param body] and the starting equipment plus [param extra_equipment] on [param model], e.g. a player's body in the lobby
 func dress_model(model: ModularModel, body: Dictionary, extra_equipment: Array[EquipmentLook] = []) -> void:
