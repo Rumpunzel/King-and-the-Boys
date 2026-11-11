@@ -51,6 +51,7 @@
 [ext_resource type="Resource" uid="uid://c1io5bgjdq6kr" path="res://data/model_animations/heroes/rogue_move.tres" id="90_rogue_move"]
 [ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+[ext_resource type="Animation" uid="uid://c2jy2tglgf0w2" path="res://data/characters/animations/quaternius/BackFlip.res" id="anim_selected"]
 
 [sub_resource type="Resource" id="BodyAnimations_passed"]
 script = ExtResource("body_animations")
@@ -248,6 +249,7 @@ idle_animations = ExtResource("5_khl4o")
 pass_animation = ExtResource("7_b4a8i")
 passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("51_5x40w")
+selected_animation = ExtResource("anim_selected")
 name = "Rogue"
 portrait = ExtResource("5_r37cg")
 color = Color(0.247, 0.62, 0.361, 1)

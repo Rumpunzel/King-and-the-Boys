@@ -50,6 +50,7 @@
 [ext_resource type="Resource" uid="uid://vtt52ve807ga" path="res://data/model_animations/heroes/mystic_spawn.tres" id="90_mystic_spawn"]
 [ext_resource type="Animation" uid="uid://c3vetph6mrgca" path="res://data/characters/animations/quaternius/Idle_Talking.res" id="anim_Idle_Talking"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+[ext_resource type="Animation" uid="uid://d2n1mm85cjte2" path="res://data/characters/animations/quaternius/Spell_Simple_Shoot.res" id="anim_selected"]
 
 [sub_resource type="Resource" id="Resource_hy2kd"]
 script = ExtResource("body_animations")
@@ -233,6 +234,7 @@ idle_animations = SubResource("Resource_hy2kd")
 pass_animation = ExtResource("8_g4hix")
 passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("50_psbju")
+selected_animation = ExtResource("anim_selected")
 name = "Mystic"
 portrait = ExtResource("5_e7bq6")
 color = Color(0.604, 0.353, 0.839, 1)

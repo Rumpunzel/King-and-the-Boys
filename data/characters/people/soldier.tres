@@ -273,6 +273,7 @@ idle_animations = SubResource("Resource_eb7m2")
 pass_animation = ExtResource("8_o81pc")
 passed_animations = SubResource("Resource_3bgcd")
 unpass_animation = ExtResource("55_id555")
+selected_animation = ExtResource("10_id555")
 name = "Soldier"
 portrait = ExtResource("5_ul877")
 color = Color(0.8, 0.227, 0.2, 1)

@@ -112,6 +112,8 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var passed_animations: BodyAnimations
 ## Played as the pass ends (taken back, or a new turn), e.g. getting up; then the idles
 @export var unpass_animation: Animation
+## Played once as a player picks the character in the lobby, e.g. drawing a sword; then the idles
+@export var selected_animation: Animation
 
 @export_category("")
 @export_group("Configuration")
