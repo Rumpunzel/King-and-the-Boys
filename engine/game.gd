@@ -15,20 +15,31 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 
-## Host only, once its game scene is shown: waits until every peer shows it too, then sets the game up
-## and ends the loading screens
+## Host only, once its game scene is shown: waits until every connected peer shows it too (peers that
+## disconnect meanwhile are not waited for), then sets the game up and ends the loading screens
 func start_hosted_game() -> Error:
 	assert(multiplayer.is_server())
-	if Lobby.get_connected_players().size() > 1:
-		var lobby_size: int = Lobby.get_connected_players().size()
-		while SceneManager.confirmed_transitions < lobby_size:
-			SceneManager.update_loading_screen.rpc("Waiting for other Players [%d / %d]" % [SceneManager.confirmed_transitions, lobby_size])
-			await get_tree().process_frame
+	SceneManager.confirm_transition()
+	var shown_message: String = ""
+	while true:
+		var peer_ids: Array[int] = get_connected_peer_ids()
+		var ready_count: int = peer_ids.filter(SceneManager.has_confirmed).size()
+		if ready_count == peer_ids.size(): break
+		var message: String = "Waiting for players [%d / %d]" % [ready_count, peer_ids.size()]
+		if message != shown_message:
+			shown_message = message
+			SceneManager.update_loading_screen.rpc(message)
+		await get_tree().process_frame
 	SceneManager.update_loading_screen.rpc("Generating")
 	setup_game()
-	SceneManager.reset_confirmed_transition.rpc()
 	SceneManager.remove_loading_screen.rpc()
 	return Error.OK
+
+## @returns the ids of every connected peer, this one included
+func get_connected_peer_ids() -> Array[int]:
+	var peer_ids: Array[int] = [multiplayer.get_unique_id()]
+	peer_ids.append_array(multiplayer.get_peers())
+	return peer_ids
 
 func setup_game() -> void:
 	if not multiplayer.is_server(): return
