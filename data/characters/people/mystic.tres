@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="13_jio5e"]
 [ext_resource type="Resource" uid="uid://dnkb4svltrc47" path="res://data/equipment/types/cape.tres" id="14_bs04n"]
 [ext_resource type="ArrayMesh" uid="uid://c7k5nru40dr03" path="res://data/characters/people/meshes/gear/female/arm_lower_left/modular_character_ArmLowerLeft_Female_14.res" id="15_js6v7"]
+[ext_resource type="Animation" uid="uid://bnycnfylpv8w1" path="res://data/characters/animations/quaternius_2/Surprise.res" id="15_t6chr"]
 [ext_resource type="ArrayMesh" uid="uid://bxj62kvfa6s3v" path="res://data/characters/people/meshes/gear/male/arm_lower_left/modular_character_ArmLowerLeft_Male_14.res" id="16_o7xtx"]
 [ext_resource type="ArrayMesh" uid="uid://c03t20033qy4f" path="res://data/characters/people/meshes/gear/female/arm_lower_right/modular_character_ArmLowerRight_Female_14.res" id="17_6h221"]
 [ext_resource type="ArrayMesh" uid="uid://d0mjqu47rs4jr" path="res://data/characters/people/meshes/gear/male/arm_lower_right/modular_character_ArmLowerRight_Male_14.res" id="18_g4hix"]
@@ -50,11 +51,10 @@
 [ext_resource type="Resource" uid="uid://vtt52ve807ga" path="res://data/model_animations/heroes/mystic_spawn.tres" id="90_mystic_spawn"]
 [ext_resource type="Animation" uid="uid://c3vetph6mrgca" path="res://data/characters/animations/quaternius/Idle_Talking.res" id="anim_Idle_Talking"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
-[ext_resource type="Animation" uid="uid://d2n1mm85cjte2" path="res://data/characters/animations/quaternius/Spell_Simple_Shoot.res" id="anim_selected"]
 
 [sub_resource type="Resource" id="Resource_hy2kd"]
 script = ExtResource("body_animations")
-animations = Array[Animation]([ExtResource("anim_Idle_Talking")])
+animations = Array[Animation]([ExtResource("anim_Idle_Talking"), ExtResource("anim_Idle_Talking"), ExtResource("anim_Idle_Talking"), ExtResource("15_t6chr")])
 metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="BodyAnimations_passed"]
@@ -234,7 +234,7 @@ idle_animations = SubResource("Resource_hy2kd")
 pass_animation = ExtResource("8_g4hix")
 passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("50_psbju")
-selected_animation = ExtResource("anim_selected")
+selected_animation = ExtResource("15_t6chr")
 name = "Mystic"
 portrait = ExtResource("5_e7bq6")
 color = Color(0.604, 0.353, 0.839, 1)

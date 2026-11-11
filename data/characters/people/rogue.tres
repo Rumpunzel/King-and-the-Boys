@@ -14,6 +14,7 @@
 [ext_resource type="ArrayMesh" uid="uid://bp4g0susfr1bk" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_02.res" id="11_7bx4e"]
 [ext_resource type="ArrayMesh" uid="uid://b4bv1ejt7jy15" path="res://data/characters/people/meshes/gear/head_coverings_no_hair/modular_character_HeadCoverings_No_Hair_08.res" id="11_478kw"]
 [ext_resource type="ArrayMesh" uid="uid://dtetnj4qssc42" path="res://data/characters/people/meshes/gear/head_coverings_no_facial_hair/modular_character_HeadCoverings_No_FacialHair_03.res" id="11_co6b3"]
+[ext_resource type="Animation" uid="uid://lsv53y4gdduh" path="res://data/characters/animations/quaternius_2/KipUp.res" id="13_b4a8i"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="13_ts7pc"]
 [ext_resource type="Resource" uid="uid://0bh53bwaurow" path="res://data/equipment/types/mask.tres" id="14_478kw"]
 [ext_resource type="Resource" uid="uid://dnkb4svltrc47" path="res://data/equipment/types/cape.tres" id="14_ndv3c"]
@@ -51,7 +52,6 @@
 [ext_resource type="Resource" uid="uid://c1io5bgjdq6kr" path="res://data/model_animations/heroes/rogue_move.tres" id="90_rogue_move"]
 [ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
-[ext_resource type="Animation" uid="uid://c2jy2tglgf0w2" path="res://data/characters/animations/quaternius/BackFlip.res" id="anim_selected"]
 
 [sub_resource type="Resource" id="BodyAnimations_passed"]
 script = ExtResource("body_animations")
@@ -249,7 +249,7 @@ idle_animations = ExtResource("5_khl4o")
 pass_animation = ExtResource("7_b4a8i")
 passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("51_5x40w")
-selected_animation = ExtResource("anim_selected")
+selected_animation = ExtResource("13_b4a8i")
 name = "Rogue"
 portrait = ExtResource("5_r37cg")
 color = Color(0.247, 0.62, 0.361, 1)

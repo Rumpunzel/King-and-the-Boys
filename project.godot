@@ -14,6 +14,8 @@ config/name="King and the Boys"
 config/version="Development"
 run/main_scene="uid://cd2h44n70ffkn"
 config/features=PackedStringArray("4.6", "Forward Plus")
+boot_splash/stretch_mode=4
+boot_splash/image="uid://dxsmqwnikt6sl"
 config/icon="uid://b0vg3flbqcfqk"
 
 [autoload]

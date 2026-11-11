@@ -1,15 +1,15 @@
 [gd_resource type="Resource" script_class="ModelMiniatureMoveAnimation" format=3 uid="uid://clu0nmk36mbeb"]
 
+[ext_resource type="Animation" uid="uid://3egl2mj72ptv" path="res://data/characters/animations/quaternius_2/LiftAir_Idle.res" id="1_4nwcm"]
 [ext_resource type="Script" uid="uid://clsflb34q1if1" path="res://engine/objects/model/model_miniature_move_animation.gd" id="1_script"]
-[ext_resource type="Animation" uid="uid://dbhfx2cppv3hy" path="res://data/characters/animations/quaternius/Spell_Double_Exit.res" id="anim_Spell_Double_Exit"]
-[ext_resource type="Animation" uid="uid://chih14t85pd8t" path="res://data/characters/animations/quaternius/Spell_Double_Idle.res" id="anim_Spell_Double_Idle"]
+[ext_resource type="Animation" uid="uid://dna5hjdoxwe3p" path="res://data/characters/animations/quaternius/Jump_Land.res" id="2_4nwcm"]
 
 [resource]
 script = ExtResource("1_script")
-duration = 0.75
 _move_height = 1.5
 _tilt = -0.1
-body_animation = ExtResource("anim_Spell_Double_Idle")
-body_landing = ExtResource("anim_Spell_Double_Exit")
+duration = 0.75
+body_animation = ExtResource("1_4nwcm")
+body_landing = ExtResource("2_4nwcm")
 body_landing_time = 0.85
 metadata/_custom_type_script = "uid://clsflb34q1if1"

@@ -10,6 +10,6 @@ mesh_pools = Dictionary[String, PackedStringArray]({
 "FACIAL_HAIR": PackedStringArray("00", "03", "07", "08", "15"),
 "HAIR": PackedStringArray("05", "06", "08", "14", "15", "17", "22", "37")
 })
-skin_colors = PackedColorArray(1.000, 0.843, 0.749, 1, 0.949, 0.769, 0.627, 1, 0.878, 0.655, 0.498, 1, 0.776, 0.541, 0.369, 1, 0.612, 0.400, 0.267, 1, 0.435, 0.275, 0.188, 1)
+skin_colors = PackedColorArray(1, 0.843, 0.749, 1, 0.949, 0.769, 0.627, 1, 0.878, 0.655, 0.498, 1, 0.776, 0.541, 0.369, 1)
 hair_colors = PackedColorArray(0.169, 0.141, 0.125, 1, 0.271, 0.212, 0.141, 1, 0.541, 0.231, 0.133, 1)
 metadata/_custom_type_script = "uid://cblm5blx0poy3"

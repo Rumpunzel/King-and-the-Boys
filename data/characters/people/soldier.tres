@@ -17,6 +17,7 @@
 [ext_resource type="ArrayMesh" uid="uid://du37sone6ei7p" path="res://data/characters/people/meshes/gear/male/arm_lower_left/modular_character_ArmLowerLeft_Male_03.res" id="12_pl6r5"]
 [ext_resource type="ArrayMesh" uid="uid://6s2b6ma4xdla" path="res://data/characters/people/meshes/gear/female/arm_lower_right/modular_character_ArmLowerRight_Female_03.res" id="13_l6usi"]
 [ext_resource type="ArrayMesh" uid="uid://deflw6jhbquu8" path="res://data/characters/people/meshes/gear/male/arm_lower_right/modular_character_ArmLowerRight_Male_03.res" id="14_ctc61"]
+[ext_resource type="Animation" uid="uid://cy6wi2eitonh4" path="res://data/characters/animations/quaternius_2/Sword_Dash.res" id="15_cospf"]
 [ext_resource type="ArrayMesh" uid="uid://bnw46sfc7jkw" path="res://data/characters/people/meshes/gear/female/hand_left/modular_character_HandLeft_Female_03.res" id="15_vugpk"]
 [ext_resource type="ArrayMesh" uid="uid://cnryqeu3tkdc" path="res://data/characters/people/meshes/gear/male/hand_left/modular_character_HandLeft_Male_03.res" id="16_xdtjv"]
 [ext_resource type="ArrayMesh" uid="uid://vrkjmodjnoq0" path="res://data/characters/people/meshes/gear/female/hand_right/modular_character_HandRight_Female_03.res" id="17_hnwus"]
@@ -273,7 +274,7 @@ idle_animations = SubResource("Resource_eb7m2")
 pass_animation = ExtResource("8_o81pc")
 passed_animations = SubResource("Resource_3bgcd")
 unpass_animation = ExtResource("55_id555")
-selected_animation = ExtResource("10_id555")
+selected_animation = ExtResource("15_cospf")
 name = "Soldier"
 portrait = ExtResource("5_ul877")
 color = Color(0.8, 0.227, 0.2, 1)

@@ -6,10 +6,9 @@
 
 [resource]
 script = ExtResource("1_script")
-duration = 0.75
 _move_height = 1.5
+duration = 0.75
 body_animation = ExtResource("anim_NinjaJump_Start")
 body_landing = ExtResource("anim_NinjaJump_Land")
-body_landing_time = 0.8
 body_speed = 1.25
 metadata/_custom_type_script = "uid://clsflb34q1if1"
