@@ -9,7 +9,7 @@
 [ext_resource type="Resource" uid="uid://d4l2t2lakts58" path="res://data/characters/dwarves/random_dwarf.tres" id="5_yyphc"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_ki3nk"]
 [ext_resource type="Animation" uid="uid://c3yntvceq4y34" path="res://data/characters/animations/quaternius/Sword_Exit.res" id="8_p3175"]
-[ext_resource type="Animation" uid="uid://cgv6it4sjgku" path="res://data/characters/animations/quaternius/Idle_Tired.res" id="9_lk1de"]
+[ext_resource type="Animation" uid="uid://bfeclkngg57uo" path="res://data/characters/animations/quaternius_2/Idle_FoldArms.res" id="9_lk1de"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_iigc1"]
 [ext_resource type="ArrayMesh" uid="uid://cnlxbtocemsv5" path="res://data/characters/dwarves/meshes/headwear/dwarf_headwear_helmet_soldier_08.res" id="11_eyc0a"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="12_csvx1"]
