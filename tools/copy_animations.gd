@@ -10,7 +10,7 @@ extends EditorScript
 const ANIMATIONS: Dictionary[String, String] = {
 	"BackFlip": "",
 }
-const SOURCE: String = "res://assets/quaternius_animations/AnimationLibrary_Godot.glb"
+const SOURCE: String = "res://assets/quaternius_animations/UAL1.glb"
 const TARGET: String = "res://data/characters/animations/adjusted_animations.tres"
 
 func _run() -> void:

@@ -11,7 +11,7 @@
 [ext_resource type="Script" uid="uid://c6nl3p3rcjph7" path="res://engine/objects/characters/modular_body_part_gendered.gd" id="13_scytm"]
 [ext_resource type="ArrayMesh" uid="uid://dx01d5veg0wrs" path="res://data/characters/people/meshes/gear/male/hand_left/modular_character_HandLeft_Male_00.res" id="15_t1e5b"]
 [ext_resource type="ArrayMesh" uid="uid://dh0uj78brilnl" path="res://data/characters/people/meshes/gear/male/hand_right/modular_character_HandRight_Male_00.res" id="16_6xm60"]
-[ext_resource type="AnimationLibrary" uid="uid://dcpwsj71hiqk3" path="res://assets/quaternius_animations/AnimationLibrary_Godot.glb" id="16_ar228"]
+[ext_resource type="AnimationLibrary" uid="uid://dcpwsj71hiqk3" path="res://assets/quaternius_animations/UAL1.glb" id="16_ar228"]
 [ext_resource type="AnimationLibrary" uid="uid://k0dracwnfojp" path="res://data/characters/animations/adjusted_animations.tres" id="17_3vpe8"]
 [ext_resource type="ArrayMesh" uid="uid://bgqyivu0dlm07" path="res://data/characters/people/meshes/gear/male/hips/modular_character_Hips_Male_00.res" id="23_3fxuq"]
 [ext_resource type="ArrayMesh" uid="uid://bumojbo322bwk" path="res://data/characters/people/meshes/gear/male/leg_left/modular_character_LegLeft_Male_00.res" id="27_586hc"]
@@ -1007,6 +1007,6 @@ transform = Transform3D(0, 0, 1, -0.398, 0.917, 0, -0.917, -0.398, 0, 0.15, -0.3
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.05, -0.3)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1831098486]
-libraries/AnimationLibrary_Godot = ExtResource("16_ar228")
+libraries/UAL1 = ExtResource("16_ar228")
 libraries/adjusted_animations = ExtResource("17_3vpe8")
-autoplay = &"AnimationLibrary_Godot/Idle"
+autoplay = &"UAL1/Idle"
