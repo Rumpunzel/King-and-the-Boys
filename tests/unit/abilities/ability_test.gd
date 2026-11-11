@@ -34,12 +34,12 @@ func test_a_use_records_its_cost() -> void:
 
 func test_charges_left_follow_the_uses() -> void:
 	var character: Character = _character_at(Vector2i.ZERO)
-	assert_int(character.get_charges_left(CHARGED_ABILITY)).is_equal(3)
+	assert_int(CHARGED_ABILITY.get_charges_left(character)).is_equal(3)
 	character.ability_uses = {ResourceId.of(CHARGED_ABILITY): 2}
-	assert_int(character.get_charges_left(CHARGED_ABILITY)).is_equal(1)
+	assert_int(CHARGED_ABILITY.get_charges_left(character)).is_equal(1)
 	character.ability_uses = {ResourceId.of(CHARGED_ABILITY): 5}
-	assert_int(character.get_charges_left(CHARGED_ABILITY)).is_equal(0)
+	assert_int(CHARGED_ABILITY.get_charges_left(character)).is_equal(0)
 
 func test_unlimited_abilities_have_no_charges() -> void:
 	var character: Character = _character_at(Vector2i.ZERO)
-	assert_int(character.get_charges_left(Ability.new())).is_negative()
+	assert_int(Ability.new().get_charges_left(character)).is_negative()

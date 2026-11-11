@@ -103,16 +103,16 @@ func test_charges_last_the_game_and_undo_refunds_them() -> void:
 		_use(CHARGED_ABILITY)
 		_use(CHARGED_ABILITY)
 		_turn_manager._start_next_turn()
-	assert_int(_hero.get_charges_left(CHARGED_ABILITY)).is_equal(0)
+	assert_int(CHARGED_ABILITY.get_charges_left(_hero)).is_equal(0)
 	_hero.movement_points = 8
 	_use(TEST_ABILITY)
 	_use(CHARGED_ABILITY)
 	assert_int(_hero.undo_steps).is_equal(1)
 	_hero.ability_uses = {ResourceId.of(CHARGED_ABILITY): 2}
 	_use(CHARGED_ABILITY)
-	assert_int(_hero.get_charges_left(CHARGED_ABILITY)).is_equal(0)
+	assert_int(CHARGED_ABILITY.get_charges_left(_hero)).is_equal(0)
 	_turn_manager.request_undo(_hero.get_path())
-	assert_int(_hero.get_charges_left(CHARGED_ABILITY)).is_equal(1)
+	assert_int(CHARGED_ABILITY.get_charges_left(_hero)).is_equal(1)
 
 func test_passed_players_use_no_abilities() -> void:
 	_turn_manager._set_passed(multiplayer.get_unique_id(), true)
@@ -146,7 +146,7 @@ func test_a_held_ability_is_begun_adjusted_and_confirmed() -> void:
 	assert_int(_effects()).is_equal(0)
 	_begin()
 	assert_bool(_hero.get_meta(TestAbility.BEGUN, false) as bool).is_true()
-	assert_object(_hero.get_active_ability()).is_same(HELD_ABILITY)
+	assert_object(_hero.get_ability(_hero.active_ability_id)).is_same(HELD_ABILITY)
 	_turn_manager.request_ability_adjust(_hero.get_path(), 3)
 	assert_int(_hero.get_meta(TestAbility.ARGUMENT, 0) as int).is_equal(3)
 	assert_int(_hero.movement_points).is_equal(points)

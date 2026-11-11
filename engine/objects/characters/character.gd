@@ -258,35 +258,17 @@ func reset_movement_points() -> void:
 	assert(multiplayer.is_server())
 	movement_points = profile.speed
 
-func has_ability(ability: Ability) -> bool:
-	return profile != null and profile.abilities.has(ability)
-
-## @returns the listed [Ability] named by [param ability_id], or [code]null[/code]; loads nothing, so peer-sent ids are safe
+## @returns the listed [Ability] named by [param ability_id], or [code]null[/code]; loads nothing, so peer-sent ids are safe.
+## The held ability in use is [code]get_ability(active_ability_id)[/code].
 func get_ability(ability_id: String) -> Ability:
 	if not profile or ability_id.is_empty(): return null
 	for ability: Ability in profile.abilities:
 		if ability and ResourceId.of(ability) == ability_id: return ability
 	return null
 
-## @returns the held [Ability] in use, or [code]null[/code]
-func get_active_ability() -> Ability:
-	return get_ability(active_ability_id)
-
-## @returns the uses of [param ability] left this game; [code]<0[/code] if it has no limit
-func get_charges_left(ability: Ability) -> int:
-	if ability.charges < 0: return -1
-	var used: int = ability_uses.get(ResourceId.of(ability), 0)
-	return maxi(ability.charges - used, 0)
-
-## Host only: counts a use of [param ability] against its charges
-func spend_charge(ability: Ability) -> void:
-	_add_ability_uses(ability, 1)
-
-## Host only: takes back a use counted by [method spend_charge], e.g. on undo
-func refund_charge(ability: Ability) -> void:
-	_add_ability_uses(ability, -1)
-
-func _add_ability_uses(ability: Ability, amount: int) -> void:
+## Host only: counts [param amount] uses of [param ability] against its charges; a negative amount takes them back,
+## e.g. on undo. See [method Ability.get_charges_left].
+func count_charges(ability: Ability, amount: int) -> void:
 	assert(multiplayer.is_server())
 	if ability.charges < 0: return
 	var ability_id: String = ResourceId.of(ability)
@@ -297,18 +279,16 @@ func _add_ability_uses(ability: Ability, amount: int) -> void:
 	else: new_ability_uses[ability_id] = used
 	ability_uses = new_ability_uses
 
-## Every peer: the figure rides on [param carrier] as it stands, e.g. on a lifted tile, until [method set_down];
-## grid state changes meanwhile show once it is set down
+## Every peer: the figure rides on [param carrier] as it stands, e.g. on a lifted tile; [code]null[/code] sets it
+## down, snapping it onto its grid state. Grid state changes meanwhile show once it is set down.
 func carry_on(carrier: Node3D) -> void:
+	_carrier = carrier
+	if not carrier:
+		snap_to_grid()
+		return
 	for tween: Tween in [_move_tween, _turn_tween]: if tween: tween.kill()
 	_move_tween = null
-	_carrier = carrier
 	_carried_transform = carrier.global_transform.affine_inverse() * global_transform
-
-## Ends [method carry_on]: the figure snaps onto its grid state
-func set_down() -> void:
-	_carrier = null
-	snap_to_grid()
 
 func is_carried() -> bool:
 	return is_instance_valid(_carrier)

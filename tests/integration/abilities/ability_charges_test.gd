@@ -35,25 +35,25 @@ func _spawn_hero() -> Character:
 
 func test_the_profile_lists_its_abilities() -> void:
 	var hero: Character = await _spawn_hero()
-	assert_bool(hero.has_ability(CHARGED_ABILITY)).is_true()
-	assert_bool(hero.has_ability(Ability.new())).is_false()
+	assert_object(hero.get_ability(ResourceId.of(CHARGED_ABILITY))).is_same(CHARGED_ABILITY)
+	assert_object(hero.get_ability(ResourceId.of(Ability.new()))).is_null()
 
 func test_charges_are_spent_and_refunded() -> void:
 	var hero: Character = await _spawn_hero()
-	hero.spend_charge(CHARGED_ABILITY)
-	hero.spend_charge(CHARGED_ABILITY)
-	assert_int(hero.get_charges_left(CHARGED_ABILITY)).is_equal(1)
-	hero.refund_charge(CHARGED_ABILITY)
-	assert_int(hero.get_charges_left(CHARGED_ABILITY)).is_equal(2)
-	hero.refund_charge(CHARGED_ABILITY)
-	hero.refund_charge(CHARGED_ABILITY)
-	assert_int(hero.get_charges_left(CHARGED_ABILITY)).is_equal(3)
+	hero.count_charges(CHARGED_ABILITY, 1)
+	hero.count_charges(CHARGED_ABILITY, 1)
+	assert_int(CHARGED_ABILITY.get_charges_left(hero)).is_equal(1)
+	hero.count_charges(CHARGED_ABILITY, -1)
+	assert_int(CHARGED_ABILITY.get_charges_left(hero)).is_equal(2)
+	hero.count_charges(CHARGED_ABILITY, -1)
+	hero.count_charges(CHARGED_ABILITY, -1)
+	assert_int(CHARGED_ABILITY.get_charges_left(hero)).is_equal(3)
 	assert_dict(hero.ability_uses).is_empty()
 
 func test_charges_never_go_below_zero() -> void:
 	var hero: Character = await _spawn_hero()
-	for _use: int in 5: hero.spend_charge(CHARGED_ABILITY)
-	assert_int(hero.get_charges_left(CHARGED_ABILITY)).is_equal(0)
+	for _use: int in 5: hero.count_charges(CHARGED_ABILITY, 1)
+	assert_int(CHARGED_ABILITY.get_charges_left(hero)).is_equal(0)
 
 ## The synchronizer notices only a new dictionary, not one changed in place
 func test_each_change_replaces_the_uses() -> void:
@@ -61,14 +61,14 @@ func test_each_change_replaces_the_uses() -> void:
 	var before_use: Dictionary = hero.ability_uses
 	var changes: Array[int] = [0]
 	hero.ability_uses_changed.connect(func() -> void: changes[0] += 1)
-	hero.spend_charge(CHARGED_ABILITY)
+	hero.count_charges(CHARGED_ABILITY, 1)
 	assert_object(hero.ability_uses).is_not_same(before_use)
 	assert_dict(before_use).is_empty()
 	assert_int(changes[0]).is_equal(1)
 
 func test_uses_are_saved() -> void:
 	var hero: Character = await _spawn_hero()
-	hero.spend_charge(CHARGED_ABILITY)
+	hero.count_charges(CHARGED_ABILITY, 1)
 	var serializer: SynchronizerSerializer = hero.get_node(^"CharacterSynchronizer/SynchronizerSerializer")
 	var saved: Dictionary[StringName, Variant] = {}
 	var collected: Dictionary[NodePath, Variant] = serializer.collect_properties()

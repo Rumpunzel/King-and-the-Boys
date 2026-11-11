@@ -108,6 +108,6 @@ func _land() -> void:
 	if model:
 		model.position.y = 0.0
 		model.rotation = Vector3.ZERO
-	for character: Character in _carried: if is_instance_valid(character): character.set_down()
+	for character: Character in _carried: if is_instance_valid(character): character.carry_on(null)
 	_carried.clear()
 	landed.emit()

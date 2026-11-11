@@ -245,7 +245,7 @@ func _use_ability(character: Character, ability: Ability, target_cell: Vector2i,
 	var uses: Dictionary = _ability_uses.get_or_add(character, {})
 	var used: int = uses.get(ability, 0)
 	uses[ability] = used + 1
-	character.spend_charge(ability)
+	character.count_charges(ability, 1)
 	if step.acts_at_turn_end(): _pending_steps.append(step)
 	if not _board_changed_during_use:
 		var undo_stack: Array = _undo_stacks.get_or_add(character, [])
@@ -262,12 +262,12 @@ func _undo_ability(step: AbilityStep) -> void:
 	var uses: Dictionary = _ability_uses.get(character, {})
 	var used: int = uses.get(step.ability, 0)
 	uses[step.ability] = maxi(used - 1, 0)
-	character.refund_charge(step.ability)
+	character.count_charges(step.ability, -1)
 	_pending_steps.erase(step)
 	_update_undo_steps(character)
 
 func _has_uses_left(character: Character, ability: Ability) -> bool:
-	if character.get_charges_left(ability) == 0: return false
+	if ability.get_charges_left(character) == 0: return false
 	if ability.uses_per_turn <= 0: return true
 	var uses: Dictionary = _ability_uses.get(character, {})
 	var used: int = uses.get(ability, 0)

@@ -40,7 +40,7 @@ enum Targeting {
 	set(new_value):
 		uses_per_turn = new_value
 		changed.emit()
-## Uses per game; [code]<0[/code] for no limit, see [method Character.get_charges_left]
+## Uses per game; [code]<0[/code] for no limit, see [method get_charges_left]
 @export var charges: int = -1:
 	set(new_value):
 		charges = new_value
@@ -52,6 +52,12 @@ enum Targeting {
 		changed.emit()
 
 func is_passive() -> bool: return targeting == Targeting.NONE
+
+## @returns the uses left to [param character] this game; [code]<0[/code] if it has no limit
+func get_charges_left(character: Character) -> int:
+	if charges < 0: return -1
+	var used: int = character.ability_uses.get(ResourceId.of(self), 0)
+	return maxi(charges - used, 0)
 
 ## Host only; @returns the cells [param character] could target now
 func get_targets(character: Character, _level: Level) -> Array[Vector2i]:
