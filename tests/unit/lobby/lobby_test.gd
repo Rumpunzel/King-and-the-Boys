@@ -3,13 +3,24 @@ extends GdUnitTestSuite
 ## announced, and the local player is found
 
 const JOINING_ID: int = 5
+## Where the host's own player is filed by mistake, so it is not found under its id
+const WRONG_KEY: int = 9
+const PORT: int = 47124
 
 var _connected: Array[Player] = []
 var _disconnected: Array[Player] = []
 var _created: Array[Player] = []
+## The local player this suite created, removed again in after()
+var _own_local_player: Player
 
 func before() -> void:
-	if Lobby.get_connected_players().is_empty(): Lobby.call("_create_local_player")
+	if not Lobby.get_player(Multiplayer.HOST_ID):
+		Lobby.call("_create_local_player")
+		_own_local_player = Lobby.get_player(Multiplayer.HOST_ID)
+
+func after() -> void:
+	if is_instance_valid(_own_local_player) and Lobby.get_player(Multiplayer.HOST_ID) == _own_local_player: Lobby.call("_remove_player", _own_local_player)
+	await await_idle_frame()
 
 func before_test() -> void:
 	_connected.clear()
@@ -50,13 +61,25 @@ func test_a_leaving_player_is_removed_and_announced() -> void:
 	Lobby.call("_on_peer_disconnected", JOINING_ID)
 	assert_object(Lobby.get_player(JOINING_ID)).is_null()
 	assert_array(_disconnected).contains_exactly([joined])
+	# Gone from the tree too, not only from the registry
+	assert_bool(joined.is_queued_for_deletion() or not joined.is_inside_tree()).is_true()
 
-func test_the_local_player_is_found_under_another_id() -> void:
-	# E.g. a client whose own player is not under the id it looks it up by; offline every player counts as local
-	var players: Dictionary = Lobby.get("_players")
-	var host: Player = players[Multiplayer.HOST_ID]
+func test_the_local_player_is_found_under_another_key_and_others_are_skipped() -> void:
+	# Online, so only the player of this peer counts as local (offline every player does)
+	var server: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+	assert_int(server.create_server(PORT)).is_equal(OK)
+	var offline: MultiplayerPeer = Lobby.multiplayer.multiplayer_peer
+	Lobby.multiplayer.multiplayer_peer = server
 	var joined: Player = await _join()
+	var players: Dictionary = Lobby.get("_players")
+	var host: Player = players.get(Multiplayer.HOST_ID)
+	assert_object(host).is_not_null()
 	players.erase(Multiplayer.HOST_ID)
+	players[WRONG_KEY] = host
 	var found: Player = Lobby.get_local_player()
+	players.erase(WRONG_KEY)
 	players[Multiplayer.HOST_ID] = host
-	assert_object(found).is_same(joined)
+	Lobby.multiplayer.multiplayer_peer = offline
+	server.close()
+	assert_object(found).is_same(host)
+	assert_object(found).is_not_same(joined)
