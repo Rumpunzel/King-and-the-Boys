@@ -31,7 +31,8 @@ metadata/_custom_type_script = "uid://d12oj323k2wmw"
 
 [node name="Level" parent="." unique_id=2100419132 instance=ExtResource("9_eadau")]
 
-[node name="PlayerControllerSpawner" parent="." unique_id=225359458 instance=ExtResource("7_fxd01")]
+[node name="PlayerControllerSpawner" parent="." unique_id=225359458 node_paths=PackedStringArray("_level") instance=ExtResource("7_fxd01")]
+_level = NodePath("../Level")
 
 [node name="TurnManager" type="Node" parent="." unique_id=825868920 node_paths=PackedStringArray("_level", "_synchronizer")]
 script = ExtResource("14_turns")

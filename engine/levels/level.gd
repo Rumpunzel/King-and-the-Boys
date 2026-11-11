@@ -5,6 +5,8 @@ extends Node3D
 
 ## Emitted on the host when a [Character] entering a cell discovered or revealed tiles
 signal board_changed(character: Character)
+## Host only: [method build_level] placed the starting tiles, see [member is_built]
+signal built
 
 enum Direction {
 	UP,
@@ -38,6 +40,9 @@ const CELL_CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(
 @export var _structure_spawner: StructureSpawner
 @export var _thing_spawner: ThingSpawner
 @export var _agent_spawner: AgentSpawner
+
+## Host only: whether [method build_level] ran, see [signal built]
+var is_built: bool = false
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
 # {Structure -> Array[Structure]}
@@ -164,6 +169,8 @@ func build_level() -> void:
 	_build_outer_wall()
 	var starting_grid_position: Vector2i = _place_starting_tile()
 	_build_dungeon_from(starting_grid_position)
+	is_built = true
+	built.emit()
 	#_structure_spawner.spawn_all_from_spawn_spoints()
 	#_thing_spawner.spawn_all_from_spawn_spoints()
 	#_agent_spawner.spawn_all_from_spawn_spoints()

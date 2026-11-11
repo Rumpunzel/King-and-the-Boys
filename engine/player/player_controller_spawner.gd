@@ -6,6 +6,8 @@ extends Spawner
 signal player_controller_created(player_controller: PlayerController)
 
 @export_group("Configuration")
+## Spawning waits for it to be built
+@export var _level: Level
 
 # {player_id: int -> PlayerController}
 var _player_controllers: Dictionary[int, PlayerController] = {}
@@ -14,34 +16,29 @@ func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
 	spawn_function = _spawn_player_controller
 
-func _ready() -> void:
-	super._ready()
-
+## Host only: spawns a [PlayerController] for every connected player who has none yet (at once, or once the
+## level is built) and for players who join later. Safe to call again, e.g. after loading.
 func start_synching_players() -> void:
 	assert(multiplayer.is_server())
-	var connected_players: Array[Player] = Lobby.get_connected_players()
-	for connected_player: Player in connected_players:
-		var spawning_queued: bool = spawn_player_controller(connected_player)
-		if spawning_queued: return
-	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	Lobby.player_created.connect(_on_player_created)
+	assert(_level)
+	if not Lobby.player_created.is_connected(_on_player_created): Lobby.player_created.connect(_on_player_created)
+	if _level.is_built: _spawn_missing_players()
+	elif not _level.built.is_connected(_spawn_missing_players): _level.built.connect(_spawn_missing_players, CONNECT_ONE_SHOT)
 
+## Host only: undoes [method start_synching_players] and removes every [PlayerController]
 func stop_synching_players() -> void:
 	assert(multiplayer.is_server())
-	_remove_all_player_controllers()
 	if Lobby.player_created.is_connected(_on_player_created): Lobby.player_created.disconnect(_on_player_created)
+	if _level and _level.built.is_connected(_spawn_missing_players): _level.built.disconnect(_spawn_missing_players)
+	remove_all_spawned_nodes()
 
-## @returns [code]true[/code] if spawning is queued for later
-func spawn_player_controller(player: Player) -> bool:
+## Host only; needs the level built
+func spawn_player_controller(player: Player) -> void:
 	assert(multiplayer.is_server())
 	assert(player)
-	var all_player_spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
-	## Level not yet loaded, queue spawning for later
-	if all_player_spawn_points.is_empty():
-		get_tree().node_added.connect(_on_node_added)
-		return true
-	assert(all_player_spawn_points.size() == 1)
-	var player_spawn_point: PlayerSpawnPoint = all_player_spawn_points.front()
+	assert(not _player_controllers.has(player.player_id))
+	assert(_level.is_built)
+	var player_spawn_point: PlayerSpawnPoint = _get_player_spawn_point()
 	assert(player_spawn_point)
 	var character_data: Dictionary[StringName, Variant] = player_spawn_point.get_character_data(player.character, 0, player.body)
 	var player_controller_data: Dictionary[StringName, Variant] = {
@@ -50,7 +47,6 @@ func spawn_player_controller(player: Player) -> bool:
 	}
 	PlayerController.validate_player_controller_data(player_controller_data)
 	spawn(player_controller_data)
-	return false
 
 func get_all_node_data() -> Array[Variant]:
 	var player_controllers_data: Array[Variant] = []
@@ -77,9 +73,6 @@ func _spawn_player_controller(player_controller_data: Dictionary[StringName, Var
 	_player_controllers[player_id] = player_controller
 	return player_controller
 
-func _remove_all_player_controllers() -> void:
-	remove_all_spawned_nodes()
-
 func _remove_player_controller(player_id: int) -> void:
 	var player_controller_weakref: WeakRef = weakref(_player_controllers.get(player_id))
 	var player_controller: PlayerController = player_controller_weakref.get_ref()
@@ -88,10 +81,16 @@ func _remove_player_controller(player_id: int) -> void:
 	remove_child(player_controller)
 	player_controller.queue_free()
 
-func _on_node_added(node: Node) -> void:
-	if not node.is_in_group("PlayerSpawnPoints"): return
-	get_tree().node_added.disconnect(_on_node_added)
-	#start_synching_players()
+func _get_player_spawn_point() -> PlayerSpawnPoint:
+	var player_spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
+	assert(player_spawn_points.size() <= 1)
+	if player_spawn_points.is_empty(): return null
+	var player_spawn_point: PlayerSpawnPoint = player_spawn_points.front()
+	return player_spawn_point
+
+func _spawn_missing_players() -> void:
+	for player: Player in Lobby.get_connected_players():
+		if not _player_controllers.has(player.player_id): spawn_player_controller(player)
 
 func _on_child_entered_tree(node: Node) -> void:
 	if not node is PlayerController: return
@@ -99,16 +98,15 @@ func _on_child_entered_tree(node: Node) -> void:
 
 func _on_player_created(player: Player) -> void:
 	if not _player_controllers.has(player.player_id):
-		spawn_player_controller(player)
+		# Before the level is built, its built signal spawns every missing player
+		if _level.is_built: spawn_player_controller(player)
 		return
 	var existing_player_controller: PlayerController = _player_controllers[player.player_id]
 	player.character = existing_player_controller.character.profile
 	player.body = existing_player_controller.character.body
 	existing_player_controller.player = player
 
-func _on_peer_disconnected(_player_id: int) -> void:
-	return
-
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if not _level: warnings.append("Missing Level reference.")
 	return warnings

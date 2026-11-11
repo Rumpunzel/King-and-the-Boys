@@ -57,21 +57,23 @@ func _create_charcter_interaction(current_interactable: CharacterHitBox) -> Char
 func _create_thing_interaction(current_interactable: ThingHitBox) -> ThingInteraction:
 	return ThingInteraction.new(get_state_machine().character, current_interactable, _take_control_action)
 
+## Asks the host to take control of the available interaction's piece; this player follows once the host agrees
 func _take_control() -> void:
 	var available_interaction: Interaction = get_available_interaction()
 	assert(available_interaction)
-	if available_interaction is CharacterInteraction: _take_control_of_character(available_interaction as CharacterInteraction)
-	elif available_interaction is ThingInteraction: _take_control_of_thing(available_interaction as ThingInteraction)
+	var target: HitBox = null
+	if available_interaction is CharacterInteraction: target = (available_interaction as CharacterInteraction).target
+	elif available_interaction is ThingInteraction: target = (available_interaction as ThingInteraction).target
+	if not target: return
+	var on_controlled: Callable = _on_target_controlled.bind(target)
+	if not target.controlled.is_connected(on_controlled): target.controlled.connect(on_controlled, CONNECT_ONE_SHOT)
+	target.request_control.rpc_id(Multiplayer.HOST_ID, get_character().get_path())
 
-func _take_control_of_character(interaction: CharacterInteraction) -> void:
-	assert(interaction)
-	assert(interaction is CharacterInteraction)
-	finished.emit(PlayerStateControllingCharacter.new(interaction.target.get_path()))
-
-func _take_control_of_thing(interaction: ThingInteraction) -> void:
-	assert(interaction)
-	assert(interaction is ThingInteraction)
-	finished.emit(PlayerStateControllingThing.new(interaction.target.get_path()))
+func _on_target_controlled(controller: Character, target: HitBox) -> void:
+	# Someone else's grant, or this state was left meanwhile
+	if controller != get_character() or get_state_machine().get_state() != self: return
+	if target is CharacterHitBox: finished.emit(PlayerStateControllingCharacter.new(target.get_path()))
+	elif target is ThingHitBox: finished.emit(PlayerStateControllingThing.new(target.get_path()))
 
 func _create_control_camera() -> PhantomCamera3D:
 	var state_machine: PlayerStateMachine = get_state_machine()

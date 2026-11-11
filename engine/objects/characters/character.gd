@@ -85,6 +85,8 @@ var shows_passed: bool = false
 var look_target: Vector3 = Vector3.BACK
 ## The [Character] currently controlling this one, if any
 var controlled_by: Character
+## The piece this [Character] currently controls, if any; set with [member HitBox.controller]
+var controlling: HitBox
 ## Steps taken so far, undos included; counted by the host, replicated. Tiles a step reveals carry its number
 ## (see [member Structure.status_cause_step]), so peers know which step to show them after.
 var step_count: int = 0

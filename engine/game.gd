@@ -15,6 +15,21 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 
+## Host only, once its game scene is shown: waits until every peer shows it too, then sets the game up
+## and ends the loading screens
+func start_hosted_game() -> Error:
+	assert(multiplayer.is_server())
+	if Lobby.get_connected_players().size() > 1:
+		var lobby_size: int = Lobby.get_connected_players().size()
+		while SceneManager.confirmed_transitions < lobby_size:
+			SceneManager.update_loading_screen.rpc("Waiting for other Players [%d / %d]" % [SceneManager.confirmed_transitions, lobby_size])
+			await get_tree().process_frame
+	SceneManager.update_loading_screen.rpc("Generating")
+	setup_game()
+	SceneManager.reset_confirmed_transition.rpc()
+	SceneManager.remove_loading_screen.rpc()
+	return Error.OK
+
 func setup_game() -> void:
 	if not multiplayer.is_server(): return
 	_level.build_level()

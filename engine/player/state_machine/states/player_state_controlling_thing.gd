@@ -21,7 +21,6 @@ func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 	assert(_controlled)
 	var controlled_thing: Thing = _controlled.thing
 	assert(controlled_thing)
-	_controlled.take_control.rpc(character.get_path())
 	var input_force: Vector3 = character.get_heads_up_anchor() - controlled_thing.position
 	character.hide_character.rpc(true)
 	character.position = controlled_thing.position
@@ -30,16 +29,8 @@ func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 
 func update(_delta: float) -> void:
 	var interaction_input: StringName = get_interaction_input()
-	if interaction_input == "release_control":
-		finished.emit(PlayerStateDefault.new())
-		return
-	var available_interaction: Interaction = get_available_interaction()
-	if not available_interaction: return
-	if available_interaction.is_action_just_pressed():
-		_on_take_control_timer_timeout()
-		#_take_control_timer.start(available_action.type.charge_time)
-	#if available_action.is_action_just_released():
-		#_take_control_timer.stop()
+	# Taking control of another piece means releasing this one first
+	if interaction_input == "release_control": finished.emit(PlayerStateDefault.new())
 
 func physics_update(_delta: float) -> void:
 	assert(_controlled)
@@ -58,7 +49,7 @@ func exit() -> void:
 	assert(controlled_thing)
 	character.unhide_character.rpc()
 	character.snap_to_grid()
-	_controlled.release_control.rpc()
+	_controlled.request_release.rpc_id(Multiplayer.HOST_ID)
 	get_interaction_area().remove_hit_box_to_ignore(_controlled)
 	_control_camera.queue_free()
 
@@ -71,6 +62,3 @@ func deserialize(serialized_state: Dictionary[StringName, Variant]) -> PlayerSta
 	super.deserialize(serialized_state)
 	_controlled_path = serialized_state[CONTROLLED]
 	return self
-
-func _on_take_control_timer_timeout() -> void:
-	_take_control()
