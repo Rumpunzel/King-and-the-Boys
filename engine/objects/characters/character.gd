@@ -147,7 +147,8 @@ func _ready() -> void:
 		var free_spots: Array[Vector2] = level.get_free_spots(grid_cell, self)
 		var offset: Vector3 = global_position - level.grid_to_world_position(grid_cell)
 		var standing_spot: Vector2 = Vector2(offset.x, offset.z)
-		var spot_index: int = free_spots.find_custom(func(free_spot: Vector2) -> bool: return free_spot.is_equal_approx(standing_spot))
+		# A fixed tolerance: float error grows with the distance from the origin (e.g. loaded far out)
+		var spot_index: int = free_spots.find_custom(func(free_spot: Vector2) -> bool: return free_spot.distance_to(standing_spot) < 0.01)
 		if spot_index >= 0: tile_spot = free_spots[spot_index]
 		elif not free_spots.is_empty(): tile_spot = free_spots.front()
 		reset_movement_points()

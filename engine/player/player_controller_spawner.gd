@@ -45,7 +45,11 @@ func spawn_player_controller(player: Player) -> void:
 	var cell: Vector2i = _level.world_to_grid_position(player_spawn_point.global_position)
 	var free_spots: Array[Vector2] = _level.get_free_spots(cell)
 	var spot: Vector2 = free_spots.front() if not free_spots.is_empty() else Vector2.ZERO
-	var spawn_transform: Transform3D = Transform3D(player_spawn_point.global_basis, _level.get_spot_position(cell, spot))
+	# At the spawn point's height (e.g. a raised start). World values: the controller and the spawner are no
+	# Node3Ds, so the character's transform is its world transform
+	var spot_position: Vector3 = _level.get_spot_position(cell, spot)
+	spot_position.y = player_spawn_point.global_position.y
+	var spawn_transform: Transform3D = Transform3D(player_spawn_point.global_basis, spot_position)
 	var character_data: Dictionary[StringName, Variant] = player.character.create_character_data(0, spawn_transform, player.body)
 	var player_controller_data: Dictionary[StringName, Variant] = {
 		PlayerController.PLAYER_ID: player.player_id,
