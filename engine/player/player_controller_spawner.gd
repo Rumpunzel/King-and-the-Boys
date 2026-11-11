@@ -48,9 +48,9 @@ func spawn_player_controller(player: Player) -> void:
 	if spot_position == Vector3.INF:
 		push_warning("No free spot for %s near %s: placed on the start tile's centre" % [player, cell])
 		spot_position = _level.grid_to_world_position(cell)
-	# At the spawn point's height (e.g. a raised start). World values: the controller and the spawner are no
-	# Node3Ds, so the character's transform is its world transform
-	spot_position.y = player_spawn_point.global_position.y
+	# On the start tile at the spawn point's height (e.g. a raised start). World values: the controller and the
+	# spawner are no Node3Ds, so the character's transform is its world transform
+	if _level.world_to_grid_position(spot_position) == cell: spot_position.y = player_spawn_point.global_position.y
 	var spawn_transform: Transform3D = Transform3D(player_spawn_point.global_basis, spot_position)
 	var character_data: Dictionary[StringName, Variant] = player.character.create_character_data(0, spawn_transform, player.body)
 	var player_controller_data: Dictionary[StringName, Variant] = {

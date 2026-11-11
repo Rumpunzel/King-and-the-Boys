@@ -281,14 +281,17 @@ func get_step_target(grid_position: Vector2i, direction: Direction) -> Vector2i:
 func get_spot_position(grid_position: Vector2i, spot: Vector2) -> Vector3:
 	return grid_to_world_position(grid_position) + Vector3(spot.x, 0.0, spot.y)
 
-## The first free spot on [param grid_position], else on the nearest tile along passages, as a world position
-## (e.g. where to place a player once the start tile is full); [code]Vector3.INF[/code] if no tile reached has one
-func get_nearest_free_spot_position(grid_position: Vector2i) -> Vector3:
+## The first free spot on [param grid_position], else on the nearest revealed tile along passages (tiles the
+## party has seen; unexplored ones would build dungeon away from it), as a world position, ignoring [param except]:
+## where a character goes once its tile is full. [code]Vector3.INF[/code] if no tile reached has room.
+func get_nearest_free_spot_position(grid_position: Vector2i, except: Character = null) -> Vector3:
 	var cells: Array[Vector2i] = [grid_position]
 	var reached: Dictionary[Vector2i, bool] = {grid_position: true}
-	while not cells.is_empty():
-		var cell: Vector2i = cells.pop_front()
-		var free_spots: Array[Vector2] = get_free_spots(cell)
+	var next: int = 0
+	while next < cells.size():
+		var cell: Vector2i = cells[next]
+		next += 1
+		var free_spots: Array[Vector2] = get_free_spots(cell, except)
 		if not free_spots.is_empty():
 			var spot: Vector2 = free_spots.front()
 			return get_spot_position(cell, spot)
@@ -296,8 +299,9 @@ func get_nearest_free_spot_position(grid_position: Vector2i) -> Vector3:
 		for direction: Direction in tile.get_connections():
 			var neighbour: Vector2i = cell + direction_to_vector(direction)
 			var neighbour_tile: Structure = get_placed_tile(neighbour)
-			# Passages only: the edge of what is built may lead nowhere yet
-			if reached.has(neighbour) or not neighbour_tile or not neighbour_tile.has_connection(get_direction(neighbour, cell)): continue
+			# Passages only (the edge of what is built may lead nowhere yet), into revealed tiles
+			if reached.has(neighbour) or not neighbour_tile or neighbour_tile.status < Structure.Status.REVEALED: continue
+			if not neighbour_tile.has_connection_to(cell): continue
 			reached[neighbour] = true
 			cells.append(neighbour)
 	return Vector3.INF
