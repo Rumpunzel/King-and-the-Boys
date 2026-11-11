@@ -40,7 +40,13 @@ func spawn_player_controller(player: Player) -> void:
 	assert(_level.is_built)
 	var player_spawn_point: PlayerSpawnPoint = _get_player_spawn_point()
 	assert(player_spawn_point)
-	var character_data: Dictionary[StringName, Variant] = player_spawn_point.get_character_data(player.character, 0, player.body)
+	# Created on its own spot, so the figure shows there at once on every peer instead of moving there from the
+	# center; characters spawned before (also in this loop) are in the tree already and hold theirs
+	var cell: Vector2i = _level.world_to_grid_position(player_spawn_point.global_position)
+	var free_spots: Array[Vector2] = _level.get_free_spots(cell)
+	var spot: Vector2 = free_spots.front() if not free_spots.is_empty() else Vector2.ZERO
+	var spawn_transform: Transform3D = Transform3D(player_spawn_point.global_basis, _level.get_spot_position(cell, spot))
+	var character_data: Dictionary[StringName, Variant] = player.character.create_character_data(0, spawn_transform, player.body)
 	var player_controller_data: Dictionary[StringName, Variant] = {
 		PlayerController.PLAYER_ID: player.player_id,
 		PlayerController.CHARACTER_DATA: character_data,

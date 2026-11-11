@@ -186,3 +186,22 @@ func test_refused_requests_change_nothing() -> void:
 	assert_object(hit_box.controller).is_null()
 	assert_object(other_character.controlled_by).is_null()
 	assert_bool(other_character.is_controlled_by(Multiplayer.HOST_ID)).is_false()
+
+func test_players_spawn_on_their_own_spots() -> void:
+	await _add_level()
+	_add_other_player()
+	var third: Player = auto_free(Player.create(OTHER_PLAYER_ID + 1, "Third"))
+	third.character = ModelFreeWorld.load_hero_profile()
+	var players: Dictionary = Lobby.get("_players")
+	players[OTHER_PLAYER_ID + 1] = third
+	_spawner.start_synching_players()
+	await await_idle_frame()
+	var spots: Array[Vector2] = []
+	for controller: PlayerController in _controllers():
+		var character: Character = controller.character
+		# Created where it stands: the figure has nowhere to move to
+		assert_vector(character.global_position).is_equal_approx(_level.get_spot_position(character.grid_cell, character.tile_spot), Vector3.ONE * 0.001)
+		assert_bool(spots.has(character.tile_spot)).is_false()
+		spots.append(character.tile_spot)
+	assert_int(spots.size()).is_equal(3)
+	players.erase(OTHER_PLAYER_ID + 1)
