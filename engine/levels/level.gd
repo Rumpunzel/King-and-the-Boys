@@ -552,7 +552,14 @@ func _on_tile_shown_status_changed(shown_status: Structure.Status, tile: Structu
 		var corner_thing: Thing = _corner_things.get(grid_position + corner)
 		if corner_thing and thing_status > corner_thing.status: corner_thing.status = thing_status
 	if not shown_status == Structure.Status.REVEALED: return
-	await get_tree().create_timer(0.5).timeout
+	# A tween bound to the level, not a timer awaited: it goes with the level (e.g. leaving the game, a test ending)
+	# instead of resuming on a freed one, which crashed Godot at exit
+	create_tween().tween_callback(_show_connections_of.bind(tile)).set_delay(0.5)
+
+## Shows the connections and connectors of a revealed [param tile] to its revealed neighbours
+func _show_connections_of(tile: Structure) -> void:
+	if not is_instance_valid(tile): return
+	var grid_position: Vector2i = tile.get_grid_position()
 	for tile_connection: Structure in _tile_connections.get(tile, []): tile_connection.shown_status = Structure.Status.REVEALED
 	for connection: Direction in tile.get_connections():
 		var direction_vector: Vector2i = direction_to_vector(connection)
