@@ -11,10 +11,9 @@ var _background_scene_path: String:
 			return
 		SceneManager.verify_scene_path(new_background_scene_path)
 		_background_scene_path = new_background_scene_path
-		if ResourceLoader.load_threaded_get_status(_background_scene_path) == ResourceLoader.THREAD_LOAD_LOADED:
-			set_process(false)
-			return
-		ResourceLoader.load_threaded_request(_background_scene_path)
+		# Requested once: a load under way or done already is fetched by _process all the same
+		if ResourceLoader.load_threaded_get_status(_background_scene_path) == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+			ResourceLoader.load_threaded_request(_background_scene_path)
 		set_process(true)
 
 var _tween: Tween
@@ -25,13 +24,6 @@ func _ready() -> void:
 	_background_placeholder.color = Color.BLACK
 	_background_placeholder.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(_background_placeholder)
-	if not _background_scene_path.is_empty(): ResourceLoader.load_threaded_request(_background_scene_path)
-
-func _exit_tree() -> void:
-	# Quitting while the backdrop still loads on its thread left the load to fail ("Failed loading resource"):
-	# waiting for it ends it cleanly
-	if not _background_scene_path.is_empty() and ResourceLoader.load_threaded_get_status(_background_scene_path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		ResourceLoader.load_threaded_get(_background_scene_path)
 
 func _process(_delta: float) -> void:
 	if not _background_scene_path.is_empty() and not _background_scene: _load_background_scene_when_ready()
@@ -49,6 +41,8 @@ func set_background(background_scene_path: String) -> void:
 
 @rpc("call_local", "reliable")
 func clear_background(fade_out: bool = false) -> void:
+	# A backdrop still loading is not shown once it arrives (e.g. behind the lobby or the game)
+	_background_scene_path = ""
 	if _tween: _tween.kill()
 	if fade_out:
 		_tween = create_tween()
@@ -56,6 +50,7 @@ func clear_background(fade_out: bool = false) -> void:
 		await _tween.finished
 	else:
 		_background_placeholder.visible = false
+	if not _background_scene: return
 	remove_child(_background_scene)
 	_background_scene.queue_free()
 	_background_scene = null

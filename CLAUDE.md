@@ -12,7 +12,7 @@ Use Godot 4.6 (`<godot>` below). Where it is installed on this machine is in `CL
 
 - Run game: `<godot> --path .`
 - Open editor: `<godot> -e --path .`
-- Smoke check (loads autoloads + main scene, prints script errors): `<godot> --headless --path . --quit-after 300`. `--check-only --script` skips autoloads and reports false errors. Don't start a second `--editor` while the user's editor is open.
+- Smoke check (loads autoloads + main scene, prints script errors): `<godot> --headless --path . --quit-after 300`. Quitting while the menu backdrop (`Panorama`) still loads on its thread prints "Failed loading resource" for it and one of its Polygon Dungeon prefabs; harmless (Godot cannot cancel a threaded load), and likelier right after heavy runs. `--check-only --script` skips autoloads and reports false errors. Don't start a second `--editor` while the user's editor is open.
 - Script check: `<godot> --headless --path . res://tests/script_check.tscn` loads every script of ours (not the vendored addons) so each one compiles; the editor scan and the tests only compile what they load.
 - New `class_name`s only resolve after an editor rescan (`<godot> --headless --path . --import`, only while the user's editor is closed).
 - Headless runs don't print GDScript warnings; the editor does when it reloads scripts.
