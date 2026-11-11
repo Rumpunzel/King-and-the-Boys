@@ -7,6 +7,8 @@ extends Node3D
 signal board_changed(character: Character)
 ## Host only: [method build_level] placed the starting tiles, see [member is_built]
 signal built
+## Every peer: a tile was placed (spawned, loaded or replicated)
+signal tile_placed(tile: Structure)
 
 enum Direction {
 	UP,
@@ -524,6 +526,7 @@ func _on_structure_created(structure: Structure) -> void:
 		_create_connector(structure.global_position, connection)
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
 	structure.shown_status_changed.connect(_on_tile_shown_status_changed.bind(structure))
+	tile_placed.emit(structure)
 	if not multiplayer.is_server(): return
 	structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
 	if _is_next_to_revealed_tile(structure): structure.ready.connect(_discover_tile.bind(structure, _stepping_character), CONNECT_ONE_SHOT)
