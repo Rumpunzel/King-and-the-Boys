@@ -23,6 +23,8 @@ const ROOM_WAIT_FRAMES: int = 120
 const DECIDED_EDGES: StringName = &"decided_edges"
 ## Meta of an arch or wall: the grid position of the neighbour across the edge it stands on, see [method redecide_edges]
 const EDGE: StringName = &"edge"
+## Meta of an arch: whether it was raised as a doorway (between a room and a corridor)
+const DOORWAY: StringName = &"doorway"
 ## Meta of a prop: the [ModelAnimation] its prop set plays as it drops in, if not [member drop_animation]
 const DROP_ANIMATION: StringName = &"drop_animation"
 ## The corners of a cell, as offsets from its grid position to the corner's index (see [method _add_pillars])
@@ -163,20 +165,28 @@ func drop(decorations: Node3D, after: Tween = null) -> void:
 	if after and after.is_running(): after.finished.connect(_drop_each.bind(decorations), CONNECT_ONE_SHOT)
 	else: _drop_each(decorations)
 
-## Every peer, after [param tile] turned: takes down the arches and walls on its four edges, whichever side raised them, and lets
-## the turned tile decide those edges again. Its own clutter turns with its model and keeps to its closed sides.
+## Every peer, after [param tile] turned by [param clockwise_turns]: the arches and walls it carries turned with its model and
+## stay, now facing other neighbours, unless that edge holds a prop of the neighbour already or an arch no longer fits (a doorway
+## arch between two corridors, or the other way round). Edges left open are decided again; neighbours keep their props.
 ## @returns the new props, hidden until [method drop_props]
-func redecide_edges(tile: Structure) -> Array[Model]:
-	var grid_position: Vector2i = tile.get_grid_position()
-	for direction: Level.Direction in Level.Direction.values():
-		var neighbour: Structure = tile.level.get_placed_tile(grid_position + Level.DIRECTION_VECTORS[direction])
-		var neighbour_decorations: Node3D = _get_decorations(neighbour) if neighbour else null
-		if neighbour_decorations: _take_down_edges(neighbour_decorations, [grid_position] as Array[Vector2i])
-	var decorations: Node3D = _get_decorations(tile)
+func redecide_edges(tile: Structure, clockwise_turns: int) -> Array[Model]:
 	var new_props: Array[Model] = []
+	var decorations: Node3D = _get_decorations(tile)
 	if not decorations: return new_props
-	var decided: Array[Vector2i] = decorations.get_meta(DECIDED_EDGES, [] as Array[Vector2i])
-	_take_down_edges(decorations, decided.duplicate())
+	var grid_position: Vector2i = tile.get_grid_position()
+	var decided_before: Array[Vector2i] = decorations.get_meta(DECIDED_EDGES, [] as Array[Vector2i])
+	var decided: Array[Vector2i] = []
+	for edge: Vector2i in decided_before: decided.append(_turn_edge(grid_position, edge, clockwise_turns))
+	decorations.set_meta(DECIDED_EDGES, decided)
+	for prop: Node in decorations.get_children():
+		if not prop.has_meta(EDGE): continue
+		var edge_before: Vector2i = prop.get_meta(EDGE)
+		var edge: Vector2i = _turn_edge(grid_position, edge_before, clockwise_turns)
+		prop.set_meta(EDGE, edge)
+		if _still_fits(tile, prop, edge): continue
+		decided.erase(edge)
+		decorations.remove_child(prop)
+		prop.queue_free()
 	var first_new: int = decorations.get_child_count()
 	_add_arches(decorations, tile, decided)
 	_add_walls(decorations, tile, decided)
@@ -185,6 +195,22 @@ func redecide_edges(tile: Structure) -> Array[Model]:
 		prop.visible = false
 		new_props.append(prop)
 	return new_props
+
+## The neighbour position [param edge] of the tile on [param grid_position] faces after it turned by [param clockwise_turns]
+static func _turn_edge(grid_position: Vector2i, edge: Vector2i, clockwise_turns: int) -> Vector2i:
+	return grid_position + Vector2i(Level.turn_spot(Vector2(edge - grid_position), clockwise_turns).round())
+
+## Whether the edge prop [param prop] of [param tile], turned to face [param edge], may stay there
+static func _still_fits(tile: Structure, prop: Node, edge: Vector2i) -> bool:
+	var neighbour: Structure = tile.level.get_placed_tile(edge)
+	if not neighbour: return true
+	var neighbour_decorations: Node3D = _get_decorations(neighbour)
+	if neighbour_decorations:
+		for neighbour_prop: Node in neighbour_decorations.get_children():
+			if neighbour_prop.has_meta(EDGE) and neighbour_prop.get_meta(EDGE) == tile.get_grid_position(): return false
+	if not prop.has_meta(DOORWAY): return true
+	var is_doorway: bool = (tile.profile.room_type != null) != (neighbour.profile.room_type != null)
+	return prop.get_meta(DOORWAY) == is_doorway
 
 ## Drops in [param props] (e.g. from [method redecide_edges]) one after another
 func drop_props(props: Array[Model]) -> void:
@@ -199,18 +225,6 @@ func drop_props(props: Array[Model]) -> void:
 		tween.tween_callback(_drop_one.bind(prop))
 		tween.tween_interval(drop_interval)
 
-## Removes the arches and walls of [param decorations] standing on the edges towards [param neighbour_positions], and forgets them
-static func _take_down_edges(decorations: Node3D, neighbour_positions: Array[Vector2i]) -> void:
-	var decided: Array[Vector2i] = decorations.get_meta(DECIDED_EDGES, [] as Array[Vector2i])
-	for neighbour_position: Vector2i in neighbour_positions: decided.erase(neighbour_position)
-	decorations.set_meta(DECIDED_EDGES, decided)
-	for prop: Node in decorations.get_children():
-		if not prop.has_meta(EDGE): continue
-		var edge: Vector2i = prop.get_meta(EDGE)
-		if not neighbour_positions.has(edge): continue
-		decorations.remove_child(prop)
-		prop.queue_free()
-
 static func _get_decorations(tile: Structure) -> Node3D:
 	if not tile.model or not tile.model.has_node(NodePath(NODE_NAME)): return null
 	return tile.model.get_node(NodePath(NODE_NAME)) as Node3D
@@ -223,7 +237,7 @@ func _add_arches(decorations: Node3D, tile: Structure, decided: Array[Vector2i])
 		var neighbour_position: Vector2i = grid_position + Level.DIRECTION_VECTORS[direction]
 		var neighbour: Structure = tile.level.get_placed_tile(neighbour_position)
 		# Whether it is a doorway depends on the neighbour, so it is decided once the neighbour exists
-		if not neighbour or _has_decided(neighbour, grid_position): continue
+		if not neighbour or decided.has(neighbour_position) or _has_decided(neighbour, grid_position): continue
 		decided.append(neighbour_position)
 		var is_room: bool = tile.profile.room_type != null
 		var is_doorway: bool = is_room != (neighbour.profile.room_type != null)
@@ -234,7 +248,9 @@ func _add_arches(decorations: Node3D, tile: Structure, decided: Array[Vector2i])
 		if random.randf() >= (doorway_arch_chance if is_doorway else corridor_arch_chance): continue
 		var arches: PropSet = doorway_arches if is_doorway else corridor_arches
 		var arch: Model = _add_prop(decorations, arches, _on_edge(tile, direction, _facing_room(direction, is_room) if is_doorway else Basis.IDENTITY), random)
-		if arch: arch.set_meta(EDGE, neighbour_position)
+		if not arch: continue
+		arch.set_meta(EDGE, neighbour_position)
+		arch.set_meta(DOORWAY, is_doorway)
 
 ## A wall on some sides without a connection; a neighbour across, if any, may have decided the edge already
 func _add_walls(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) -> void:
@@ -245,7 +261,7 @@ func _add_walls(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) 
 		if connections.has(direction): continue
 		var neighbour_position: Vector2i = grid_position + Level.DIRECTION_VECTORS[direction]
 		var neighbour: Structure = tile.level.get_placed_tile(neighbour_position)
-		if neighbour and _has_decided(neighbour, grid_position): continue
+		if decided.has(neighbour_position) or (neighbour and _has_decided(neighbour, grid_position)): continue
 		decided.append(neighbour_position)
 		# Seeded by the edge, so it does not matter which side decides
 		var random: RandomNumberGenerator = RandomNumberGenerator.new()

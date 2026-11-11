@@ -85,3 +85,37 @@ func test_a_turn_without_lift_spins_the_model_into_place() -> void:
 	await await_millis(800)
 	assert_bool(landed[0]).is_true()
 	assert_vector(_tile.model.rotation).is_equal(Vector3.ZERO)
+
+func _connectors_around(tile: Structure) -> int:
+	var connectors: Dictionary = _level.get("_tile_connectors")
+	var count: int = 0
+	for direction: Level.Direction in Level.Direction.values():
+		if connectors.has(_level._get_connector_position(tile.global_position, direction)): count += 1
+	return count
+
+func _connections_of(tile: Structure) -> Array:
+	var connections: Dictionary = _level.get("_tile_connections")
+	return connections.get(tile, [])
+
+func test_connections_go_while_lifted_and_return_once_landed() -> void:
+	var connection_count: int = _connections_of(_tile).size()
+	var connector_count: int = _connectors_around(_tile)
+	assert_int(connection_count).is_greater(0)
+	_tile.lifted_by = _hero.get_path()
+	assert_array(_connections_of(_tile)).is_empty()
+	assert_int(_connectors_around(_tile)).is_equal(0)
+	await await_millis(600)
+	var landed: Array[bool] = _landed()
+	_tile.lifted_by = NodePath()
+	# Still in the air
+	assert_array(_connections_of(_tile)).is_empty()
+	await await_millis(2000)
+	assert_bool(landed[0]).is_true()
+	assert_int(_connections_of(_tile).size()).is_equal(connection_count)
+	assert_int(_connectors_around(_tile)).is_equal(connector_count)
+
+func test_connections_are_local_to_each_peer() -> void:
+	var connectors: Dictionary = _level.get("_tile_connectors")
+	var pieces: Array = _connections_of(_tile) + connectors.values()
+	assert_array(pieces).is_not_empty()
+	for piece: Structure in pieces: assert_object(piece.get_node_or_null(^"Synchronizer")).is_null()

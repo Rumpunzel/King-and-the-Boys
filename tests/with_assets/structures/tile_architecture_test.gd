@@ -200,7 +200,7 @@ func _edge_props(tile: Structure, neighbour_position: Vector2i) -> Array[Model]:
 			if edge == sides[side]: props.append(prop as Model)
 	return props
 
-func test_a_turned_tile_decides_its_edges_again() -> void:
+func test_a_turned_tile_keeps_its_edge_props_and_decides_open_edges() -> void:
 	var decorations: TileDecorations = load(DECORATIONS)
 	decorations.corridor_arch_chance = 1.0
 	var turned: Structure = null
@@ -220,19 +220,31 @@ func test_a_turned_tile_decides_its_edges_again() -> void:
 	for direction: Level.Direction in Level.Direction.values():
 		var cell: Vector2i = turned.get_grid_position() + Level.DIRECTION_VECTORS[direction]
 		if _level.get_placed_tile(cell): existing.append(cell)
+	var before: Array[Node] = _own_edge_props(turned)
 	_level.rotate_tile(turned, 1, null)
 	var new_props: Array[Model] = []
+	for prop: Node in _own_edge_props(turned):
+		if not before.has(prop): new_props.append(prop as Model)
 	for direction: Level.Direction in Level.Direction.values():
 		var neighbour_position: Vector2i = turned.get_grid_position() + Level.DIRECTION_VECTORS[direction]
-		var props: Array[Model] = _edge_props(turned, neighbour_position)
-		assert_int(props.size()).override_failure_message("Edge towards %s" % neighbour_position).is_less_equal(1)
-		var neighbour: Structure = _level.get_placed_tile(neighbour_position)
-		if turned.get_connections().has(direction) and existing.has(neighbour_position) and neighbour.model:
-			# Every opening gets an arch now: whole ones into rooms, ruins between corridors
-			assert_int(props.size()).override_failure_message("Opening towards %s" % neighbour_position).is_equal(1)
-		new_props.append_array(props)
-	assert_array(new_props).is_not_empty()
-	# They wait until the tile has turned into place
+		assert_int(_edge_props(turned, neighbour_position).size()).override_failure_message("Edge towards %s" % neighbour_position).is_less_equal(1)
+	# The new props wait until the tile has turned into place; the kept ones turn with it
 	for prop: Model in new_props: assert_bool(prop.visible).is_false()
 	await await_millis(2000)
 	for prop: Model in new_props: assert_bool(prop.visible).is_true()
+	for prop: Node in _own_edge_props(turned):
+		var edge: Vector2i = prop.get_meta(TileDecorations.EDGE)
+		var edge_middle: Vector3 = (_level.grid_to_world_position(turned.get_grid_position()) + _level.grid_to_world_position(edge)) * 0.5
+		var prop_position: Vector3 = (prop as Node3D).global_position
+		assert_float(Vector2(prop_position.x, prop_position.z).distance_to(Vector2(edge_middle.x, edge_middle.z))).override_failure_message("Prop towards %s" % edge).is_less(0.5)
+	var kept: int = 0
+	for prop: Node in before: if is_instance_valid(prop) and prop.is_inside_tree(): kept += 1
+	assert_int(kept + new_props.size()).is_greater(0)
+
+## The arches and walls [param tile] raised itself
+func _own_edge_props(tile: Structure) -> Array[Node]:
+	var props: Array[Node] = []
+	if not tile.model or not tile.model.has_node(NodePath(TileDecorations.NODE_NAME)): return props
+	for prop: Node in tile.model.get_node(NodePath(TileDecorations.NODE_NAME)).get_children():
+		if prop.has_meta(TileDecorations.EDGE): props.append(prop)
+	return props

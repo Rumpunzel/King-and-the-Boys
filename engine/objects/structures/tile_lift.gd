@@ -8,7 +8,7 @@ extends Node
 ## Emitted when the model is back on the board, at rest
 signal landed
 
-const _HEIGHT: float = 0.6
+const _HEIGHT: float = 1.6
 const _RISE_DURATION: float = 0.4
 const _SPIN_DURATION: float = 0.35
 const _DROP_DURATION: float = 0.5
@@ -40,6 +40,7 @@ func is_busy() -> bool:
 
 ## Follows the structure's lift: rises and carries the figures on it, spins to the lifted turns, or drops when set down
 func update() -> void:
+	if _has_nothing_to_show(): return
 	set_process(true)
 	if _structure.is_lifted() and _carried.is_empty() and not _is_rising(): _rise()
 	elif not _structure.is_lifted() and _height > 0.0: _drop()
@@ -47,6 +48,7 @@ func update() -> void:
 
 ## The structure turned at once: the model keeps its look and catches up
 func on_turned(previous_clockwise_turns: int) -> void:
+	if _has_nothing_to_show(): return
 	set_process(true)
 	_turns -= posmod(_structure.clockwise_turns - previous_clockwise_turns, Level.Direction.size())
 	_spin_to(_structure.lift_turns if _structure.is_lifted() else 0)
@@ -59,6 +61,12 @@ func _process(delta: float) -> void:
 	model.position.y = _height
 	model.rotation = Vector3(tip * sin(_time * _WOBBLE_SPEED), -_turns * PI * 0.5, tip * sin(_time * _WOBBLE_SPEED * 1.37 + 1.0))
 	if _is_at_rest(): _land()
+
+## Without a model (e.g. in tests) nothing moves: the tile lands at once whenever it lies on the board
+func _has_nothing_to_show() -> bool:
+	if _structure.model: return false
+	if not _structure.is_lifted(): _land()
+	return true
 
 func _rise() -> void:
 	_carry_figures()

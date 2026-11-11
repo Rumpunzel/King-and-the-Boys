@@ -11,6 +11,8 @@ signal profile_changed
 signal clockwise_turns_changed(previous_clockwise_turns: int)
 ## Emitted on every peer when the tile is lifted, turned while lifted, or set down
 signal lift_changed
+## Emitted on every peer when the tile's model came to rest on the board again after a lift or a turn
+signal landed
 
 enum Status {
 	NONE = -1,
@@ -199,6 +201,8 @@ func can_connect_to(grid_position: Vector2i, other_profile: StructureProfile) ->
 	return profile.can_connect(direction, clockwise_turns, other_profile)
 
 func is_lifted() -> bool: return not lifted_by.is_empty()
+## @returns [code]true[/code] if the tile lies on the board and its model rests there, see [signal landed]
+func is_settled() -> bool: return not is_lifted() and (not _lift or not _lift.is_busy())
 
 ## @returns [code]true[/code] if the tile opens into [param direction]; a lifted tile opens nowhere, see [method get_connections]
 func has_connection(direction: Level.Direction) -> bool: return not is_lifted() and profile.has_connection(direction, clockwise_turns)
@@ -266,18 +270,20 @@ func _decorate() -> Node3D:
 func _get_lift() -> TileLift:
 	if not _lift:
 		_lift = TileLift.new(self)
+		_lift.landed.connect(landed.emit)
 		add_child(_lift)
 	return _lift
 
 func _on_lift_changed() -> void:
 	_get_lift().update()
 
-## Every peer: the model catches up with the turn, and the arches and walls on its edges are decided again; they drop in once it landed
+## Every peer: the model catches up with the turn; the arches and walls it carries turn along and stay where they still fit,
+## edges left open are decided again and their props drop in once it landed
 func _on_turned(previous_clockwise_turns: int) -> void:
 	var lift: TileLift = _get_lift()
 	lift.on_turned(previous_clockwise_turns)
 	if not profile.decorations or not level: return
-	var props: Array[Model] = profile.decorations.redecide_edges(self)
+	var props: Array[Model] = profile.decorations.redecide_edges(self, clockwise_turns - previous_clockwise_turns)
 	if props.is_empty(): return
 	if lift.is_busy(): lift.landed.connect(profile.decorations.drop_props.bind(props), CONNECT_ONE_SHOT)
 	else: profile.decorations.drop_props(props)
