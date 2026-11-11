@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="StructureProfile" format=3]
+
+[ext_resource type="Script" path="res://engine/objects/structures/structure_profile.gd" id="1_picky"]
+[ext_resource type="Script" path="res://engine/objects/structures/connection_restrictions/tile_connection_restriction.gd" id="2_picky"]
+[ext_resource type="Resource" path="res://tests/fixtures/tiles/straight.tres" id="3_picky"]
+
+[sub_resource type="Resource" id="Resource_only_straight"]
+script = ExtResource("2_picky")
+_tile_profiles = Array[ExtResource("1_picky")]([ExtResource("3_picky")])
+_include_self = false
+
+[resource]
+script = ExtResource("1_picky")
+group = 2
+_connection_up = true
+_restriction_up = SubResource("Resource_only_straight")
+name = "Picky Dead End"
