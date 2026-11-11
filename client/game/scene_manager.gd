@@ -1,5 +1,8 @@
 extends Node
 
+## Loading [param scene_path] failed: the transition is dropped. In a multiplayer game this peer leaves it (the
+## host stops hosting) and returns to the main menu, so nobody waits for it.
+signal scene_load_failed(scene_path: String)
 ## Host only: of the peers [method transition_everyone_to] waits for, [param ready_count] show the scene now
 signal transition_progressed(ready_count: int, expected_count: int)
 ## Host only: every peer [method transition_everyone_to] waits for shows the scene, or left
@@ -60,6 +63,8 @@ func _process(_delta: float) -> void:
 	assert(_progress_array.size() == 1)
 	if _loading_screen: _loading_screen.set_loading_progress(_progress_array[0])
 	if loading_status == ResourceLoader.THREAD_LOAD_LOADED: _transition_to_scene(_scene_path_to_load)
+	elif loading_status == ResourceLoader.THREAD_LOAD_FAILED or loading_status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+		_fail_transition(_scene_path_to_load)
 
 ## Only loads the scene into memory without transitioning
 func preload_scene(scene_path: String) -> void:
@@ -203,6 +208,21 @@ func _transition_to_packed_scene(packed_scene: PackedScene) -> void:
 		await scene_tree.scene_changed
 		remove_loading_screen()
 	_keep_loading_screen = false
+
+func _fail_transition(scene_path: String) -> void:
+	push_error("Failed to load scene %s" % scene_path)
+	_scene_path_to_load = ""
+	_scene_setup = Callable()
+	_keep_loading_screen = false
+	remove_loading_screen()
+	scene_load_failed.emit(scene_path)
+	if not Multiplayer.is_online(): return
+	if multiplayer.is_server(): Multiplayer.stop_hosting_game()
+	else: Multiplayer.leave_game()
+	var main_scene_setting: String = ProjectSettings.get_setting("application/run/main_scene")
+	var main_scene_path: String = ResourceUID.ensure_path(main_scene_setting)
+	var current_scene: Node = get_tree().current_scene
+	if ResourceUID.ensure_path(scene_path) != main_scene_path and (not current_scene or current_scene.scene_file_path != main_scene_path): to_main()
 
 ## Shows the loading screen with [param message], or the message on the one shown
 func show_loading_screen(message: String = "Loading") -> void:
