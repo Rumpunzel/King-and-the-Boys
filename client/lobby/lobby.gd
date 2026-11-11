@@ -34,7 +34,7 @@ func get_local_player() -> Player:
 	var local_player: Player = get_player(local_player_id)
 	if not local_player:
 		for player: Player in get_connected_players():
-			if player.is_local_player(): return local_player
+			if player.is_local_player(): return player
 	assert(local_player)
 	return local_player
 
