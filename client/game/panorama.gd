@@ -27,6 +27,12 @@ func _ready() -> void:
 	add_child(_background_placeholder)
 	if not _background_scene_path.is_empty(): ResourceLoader.load_threaded_request(_background_scene_path)
 
+func _exit_tree() -> void:
+	# Quitting while the backdrop still loads on its thread left the load to fail ("Failed loading resource"):
+	# waiting for it ends it cleanly
+	if not _background_scene_path.is_empty() and ResourceLoader.load_threaded_get_status(_background_scene_path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		ResourceLoader.load_threaded_get(_background_scene_path)
+
 func _process(_delta: float) -> void:
 	if not _background_scene_path.is_empty() and not _background_scene: _load_background_scene_when_ready()
 
