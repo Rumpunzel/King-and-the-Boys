@@ -1,5 +1,9 @@
 extends Node
 
+## Loading [param scene_path] failed: the transition is dropped. In a multiplayer game this peer leaves it (the
+## host stops hosting), so nobody waits for it, and returns to the main menu; so does a player on the main scene,
+## whose menu may have closed itself before the transition.
+signal scene_load_failed(scene_path: String)
 ## Host only: of the peers [method transition_everyone_to] waits for, [param ready_count] show the scene now
 signal transition_progressed(ready_count: int, expected_count: int)
 ## Host only: every peer [method transition_everyone_to] waits for shows the scene, or left
@@ -42,6 +46,8 @@ var _scene_path_to_load: String:
 		ResourceLoader.load_threaded_request(_scene_path_to_load)
 
 var _scene_setup: Callable
+# Counts transitions asked for, to tell whether someone (e.g. a disconnect handler) asked for one meanwhile
+var _transitions_requested: int = 0
 var _exection: Execution
 var _setup_mode: SetupMode
 
@@ -60,6 +66,9 @@ func _process(_delta: float) -> void:
 	assert(_progress_array.size() == 1)
 	if _loading_screen: _loading_screen.set_loading_progress(_progress_array[0])
 	if loading_status == ResourceLoader.THREAD_LOAD_LOADED: _transition_to_scene(_scene_path_to_load)
+	elif loading_status == ResourceLoader.THREAD_LOAD_FAILED: _fail_transition(_scene_path_to_load)
+	# Not requested, or its result taken already: a slip in the bookkeeping, not a broken scene
+	elif loading_status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE: ResourceLoader.load_threaded_request(_scene_path_to_load)
 
 ## Only loads the scene into memory without transitioning
 func preload_scene(scene_path: String) -> void:
@@ -67,6 +76,7 @@ func preload_scene(scene_path: String) -> void:
 
 ## Loads the scene and transitions to it when it's ready
 func transition_to_scene(scene_path: String, show_loading_screen: bool = true) -> void:
+	_transitions_requested += 1
 	_exection = Execution.LOCAL
 	preload_scene(scene_path)
 	if ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED:
@@ -84,9 +94,14 @@ func transition_to_scene_with_setup(scene_path: String, scene_setup: Callable, s
 
 func to_main(show_loading_screen: bool = true) -> void:
 	_exection = Execution.LOCAL
-	var main_scene_path: String = ProjectSettings.get_setting("application/run/main_scene")
+	var main_scene_path: String = get_main_scene_path()
 	assert(not get_tree().current_scene or get_tree().current_scene.scene_file_path != main_scene_path)
 	transition_to_scene(main_scene_path, show_loading_screen)
+
+## @returns the main scene's file path (the project setting holds its uid://)
+func get_main_scene_path() -> String:
+	var main_scene_setting: String = ProjectSettings.get_setting("application/run/main_scene")
+	return ResourceUID.ensure_path(main_scene_setting)
 
 func verify_scene_path(scene_path: String) -> void:
 	var path: String = ResourceUID.ensure_path(scene_path)
@@ -125,9 +140,7 @@ func end_transition() -> void:
 	assert(multiplayer.is_server())
 	for peer_id: int in _expected_peers:
 		if peer_id != multiplayer.get_unique_id(): remove_loading_screen.rpc_id(peer_id)
-	_transition_scene_path = ""
-	_expected_peers.clear()
-	_confirmed_peers.clear()
+	_forget_transition()
 
 @rpc("call_remote", "reliable")
 func transition_to_scene_remotely(scene_path: String) -> void:
@@ -203,6 +216,34 @@ func _transition_to_packed_scene(packed_scene: PackedScene) -> void:
 		await scene_tree.scene_changed
 		remove_loading_screen()
 	_keep_loading_screen = false
+
+func _forget_transition() -> void:
+	_transition_scene_path = ""
+	_expected_peers.clear()
+	_confirmed_peers.clear()
+
+func _fail_transition(scene_path: String) -> void:
+	push_error("Failed to load scene %s" % scene_path)
+	# Taken to free the failed load: a later request of the path would be handed the failure again
+	ResourceLoader.load_threaded_get(scene_path)
+	_scene_path_to_load = ""
+	_scene_setup = Callable()
+	_keep_loading_screen = false
+	remove_loading_screen()
+	_forget_transition()
+	scene_load_failed.emit(scene_path)
+	var was_online: bool = Multiplayer.is_online()
+	var transitions_before: int = _transitions_requested
+	# Leaving sends most scenes (lobby, game) to the main menu through their own disconnect handlers
+	if was_online and multiplayer.is_server(): Multiplayer.stop_hosting_game()
+	elif was_online: Multiplayer.leave_game()
+	var main_scene_path: String = get_main_scene_path()
+	if _transitions_requested != transitions_before or ResourceUID.ensure_path(scene_path) == main_scene_path: return
+	# Nobody took the player there (e.g. the host's lobby), or the main menu closed itself before the transition
+	var current_scene: Node = get_tree().current_scene
+	if was_online or (current_scene and current_scene.scene_file_path == main_scene_path):
+		_exection = Execution.LOCAL
+		transition_to_scene(main_scene_path, false)
 
 ## Shows the loading screen with [param message], or the message on the one shown
 func show_loading_screen(message: String = "Loading") -> void:
