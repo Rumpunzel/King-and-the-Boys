@@ -14,7 +14,8 @@ var _blueprints_bitflag: Dictionary[int, Array]:
 		assert(not _blueprints_bitflag.is_empty())
 		return _blueprints_bitflag
 
-func get_tile_blueprint_for(tile_position: Vector2i, surrounding_tiles: Array[Structure]) -> TileBlueprint:
+## A blueprint fitting [param surrounding_tiles], picked by weight with [param random]
+func get_tile_blueprint_for(tile_position: Vector2i, surrounding_tiles: Array[Structure], random: RandomNumberGenerator) -> TileBlueprint:
 	# Build bitflags based on surrounding tiles' connections
 	var surrounding_connection_bitflag: int = 0
 	var surrounding_wall_bitflag: int = 0
@@ -47,20 +48,15 @@ func get_tile_blueprint_for(tile_position: Vector2i, surrounding_tiles: Array[St
 					assert(surrounding_tile_has_connection == blueprint_has_connection)
 			fitting_blueprints.append_array(blueprints_with_fitting_connections)
 	assert(not fitting_blueprints.is_empty())
-	# Filter by restrictions
-	var legal_neighbours: Array[TileBlueprint] = []
-	for surrounding_tile: Structure in surrounding_tiles:
-		for blueprint: TileBlueprint in fitting_blueprints:
-			var surrounding_tile_has_connection: bool = surrounding_tile.has_connection_to(tile_position)
-			var blueprint_has_connection: bool = blueprint.has_connection(tile_position, surrounding_tile)
-			assert(surrounding_tile_has_connection == blueprint_has_connection)
-			if blueprint.is_legal_neighbour(tile_position, surrounding_tile): legal_neighbours.append(blueprint)
+	# Filter by restrictions: legal next to every surrounding tile, each blueprint once (it used to be enough to suit
+	# one of them, and a blueprint suiting several was drawn as often)
+	var legal_neighbours: Array[TileBlueprint] = fitting_blueprints.filter(func(blueprint: TileBlueprint) -> bool: return suits_restrictions(blueprint, tile_position, surrounding_tiles))
 	if legal_neighbours.is_empty():
 		legal_neighbours = fitting_blueprints
 		print_debug("No fitting neighbour found; continueing without restrictions.")
 	# Make weighted random selection
 	var total_weight: float = legal_neighbours.reduce(func(sum: float, blueprint: TileBlueprint) -> float: return sum + _dungeon_tiles[blueprint.profile], 0.0)
-	var random_selection: float = randf() * total_weight
+	var random_selection: float = random.randf() * total_weight
 	for blueprint: TileBlueprint in legal_neighbours:
 		for surrounding_tile: Structure in surrounding_tiles: assert(blueprint.has_connection(tile_position, surrounding_tile) == surrounding_tile.has_connection_to(tile_position))
 		var weight: float = _dungeon_tiles[blueprint.profile]
@@ -68,6 +64,11 @@ func get_tile_blueprint_for(tile_position: Vector2i, surrounding_tiles: Array[St
 		random_selection -= weight
 	assert(false)
 	return null
+
+## Whether [param blueprint] on [param tile_position] keeps the connection restrictions of every one of
+## [param surrounding_tiles], and they keep its own
+static func suits_restrictions(blueprint: TileBlueprint, tile_position: Vector2i, surrounding_tiles: Array[Structure]) -> bool:
+	return surrounding_tiles.all(func(surrounding_tile: Structure) -> bool: return blueprint.is_legal_neighbour(tile_position, surrounding_tile))
 
 func _generate_blueprints_bitflag() -> void:
 	var blueprints_bitflag: Dictionary[int, Array] = {}

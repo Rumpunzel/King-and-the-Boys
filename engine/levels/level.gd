@@ -45,6 +45,11 @@ const CELL_CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(
 
 ## Host only: whether [method build_level] ran, see [signal built]
 var is_built: bool = false
+## Host only: the dice the dungeon is generated with; seeded, the same seed builds the same dungeon (e.g. in tests)
+var generation_random: RandomNumberGenerator = RandomNumberGenerator.new()
+## Host only: cells where no tile suited every neighbour's connection restrictions, so one was placed ignoring them
+## (e.g. a treasure dead end wanting empty space where the dungeon grew later); for tests and debugging
+var restriction_fallbacks: Array[Vector2i] = []
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
 # {Structure -> Array[Structure]}
@@ -185,7 +190,9 @@ func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Stat
 		assert(placed_tile)
 		if status >= placed_tile.status: placed_tile.status = status
 		return
-	var fitting_blueprint: DungeonTileSet.TileBlueprint = _tile_set.get_tile_blueprint_for(grid_position, _get_surrounding_tiles(grid_position))
+	var surrounding_tiles: Array[Structure] = _get_surrounding_tiles(grid_position)
+	var fitting_blueprint: DungeonTileSet.TileBlueprint = _tile_set.get_tile_blueprint_for(grid_position, surrounding_tiles, generation_random)
+	if not DungeonTileSet.suits_restrictions(fitting_blueprint, grid_position, surrounding_tiles): restriction_fallbacks.append(grid_position)
 	assert(fitting_blueprint)
 	_spawn_at(fitting_blueprint, grid_position, status)
 
