@@ -15,31 +15,19 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 
-## Host only, once its game scene is shown: waits until every connected peer shows it too (peers that
-## disconnect meanwhile are not waited for), then sets the game up and ends the loading screens
+## Host only, once its game scene is shown: waits until every peer sent here shows it too (see
+## [method SceneManager.transition_everyone_to]), then sets the game up and ends the loading screens
 func start_hosted_game() -> Error:
 	assert(multiplayer.is_server())
-	SceneManager.confirm_transition()
-	var shown_message: String = ""
-	while true:
-		var peer_ids: Array[int] = get_connected_peer_ids()
-		var ready_count: int = peer_ids.filter(SceneManager.has_confirmed).size()
-		if ready_count == peer_ids.size(): break
-		var message: String = "Waiting for players [%d / %d]" % [ready_count, peer_ids.size()]
-		if message != shown_message:
-			shown_message = message
-			SceneManager.update_loading_screen.rpc(message)
-		await get_tree().process_frame
-	SceneManager.update_loading_screen.rpc("Generating")
+	SceneManager.show_loading_screen()
+	SceneManager.transition_progressed.connect(_on_transition_progressed)
+	SceneManager.confirm_transition(scene_file_path)
+	if not SceneManager.is_transition_complete(): await SceneManager.transition_completed
+	SceneManager.transition_progressed.disconnect(_on_transition_progressed)
+	SceneManager.tell_transitioning_peers("Generating")
 	setup_game()
-	SceneManager.remove_loading_screen.rpc()
+	SceneManager.end_transition()
 	return Error.OK
-
-## @returns the ids of every connected peer, this one included
-func get_connected_peer_ids() -> Array[int]:
-	var peer_ids: Array[int] = [multiplayer.get_unique_id()]
-	peer_ids.append_array(multiplayer.get_peers())
-	return peer_ids
 
 func setup_game() -> void:
 	if not multiplayer.is_server(): return
@@ -68,6 +56,9 @@ func stop_game() -> void:
 	print_debug("Stopping running game...")
 	_player_controller_spawner.stop_synching_players()
 	SceneManager.to_main()
+
+func _on_transition_progressed(ready_count: int, expected_count: int) -> void:
+	if ready_count < expected_count: SceneManager.tell_transitioning_peers("Waiting for players [%d / %d]" % [ready_count, expected_count])
 
 func _on_save_requested() -> void:
 	pass # Replace with function body.

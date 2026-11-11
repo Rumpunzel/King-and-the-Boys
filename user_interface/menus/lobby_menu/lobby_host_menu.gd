@@ -12,9 +12,8 @@ func _on_start_pressed() -> void:
 	print_debug("Confirming Lobby for : %s" % [_player_panels.keys()])
 	await fully_closed
 	Panorama.clear_background.rpc()
-	SceneManager.begin_confirmations()
+	SceneManager.transition_everyone_to(_game_scene_path)
 	SceneManager.transition_to_scene_with_setup(_game_scene_path, _setup_level, SceneManager.SetupMode.POST_CHANGE)
-	SceneManager.transition_to_scene_remotely.rpc(_game_scene_path)
 
 static func _setup_level(game: Game) -> Error:
 	return await game.start_hosted_game()

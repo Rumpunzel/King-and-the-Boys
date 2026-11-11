@@ -1,7 +1,9 @@
 extends Node
 
-## Host only: a peer confirmed it shows the scene the host sent everyone to, see [method confirm_transition]
-signal transition_confirmed(peer_id: int)
+## Host only: of the peers [method transition_everyone_to] waits for, [param ready_count] show the scene now
+signal transition_progressed(ready_count: int, expected_count: int)
+## Host only: every peer [method transition_everyone_to] waits for shows the scene, or left
+signal transition_completed
 
 enum Execution {
 	LOCAL,
@@ -17,7 +19,9 @@ const VALID_SCENE_FORMATS: Array[StringName] = ["tscn", "scn"]
 
 @export var _loading_screen_scene: PackedScene = preload("uid://dmweuj7kxaxov")
 
-# Host only: the peers that confirmed the current transition
+# Host only: the transition everyone takes, the peers sent to it (this one included) and those that confirmed
+var _transition_scene_path: String = ""
+var _expected_peers: Dictionary[int, bool] = {}
 var _confirmed_peers: Dictionary[int, bool] = {}
 
 var _scene_path_to_load: String:
@@ -40,6 +44,7 @@ var _progress_array: Array[float]
 
 func _enter_tree() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 func _ready() -> void:
 	set_process(false)
@@ -63,7 +68,7 @@ func transition_to_scene(scene_path: String, show_loading_screen: bool = true) -
 		_transition_to_scene(scene_path)
 		return
 	set_process(true)
-	if show_loading_screen: _show_loading_screen()
+	if show_loading_screen: show_loading_screen()
 
 func transition_to_scene_with_setup(scene_path: String, scene_setup: Callable, setup_mode: SetupMode) -> void:
 	_scene_setup = scene_setup
@@ -82,41 +87,63 @@ func verify_scene_path(scene_path: String) -> void:
 	assert(FileAccess.file_exists(path))
 	assert(VALID_SCENE_FORMATS.has(path.get_extension()))
 
-## Host only: starts counting confirmations for a transition everyone takes, see [method has_confirmed]
-func begin_confirmations() -> void:
+## Host only: sends every connected peer to [param scene_path] and waits for them (and for this peer, which
+## changes its own scene and confirms it, see [method confirm_transition]); peers joining meanwhile are not
+## waited for, peers leaving drop out. See [signal transition_progressed], [signal transition_completed].
+func transition_everyone_to(scene_path: String) -> void:
 	assert(multiplayer.is_server())
+	_transition_scene_path = ResourceUID.ensure_path(scene_path)
 	_confirmed_peers.clear()
+	_expected_peers.clear()
+	_expected_peers[multiplayer.get_unique_id()] = true
+	for peer_id: int in multiplayer.get_peers(): _expected_peers[peer_id] = true
+	transition_to_scene_remotely.rpc(scene_path)
 
-## Host only: whether [param peer_id] shows the scene of the transition since [method begin_confirmations]
-func has_confirmed(peer_id: int) -> bool:
-	return _confirmed_peers.has(peer_id)
+## Host only: whether every peer [method transition_everyone_to] waits for shows the scene, or left
+func is_transition_complete() -> bool:
+	return _confirmed_peers.size() == _expected_peers.size()
+
+## Host only: shows [param message] on the loading screens of the peers [method transition_everyone_to] waited for
+func tell_transitioning_peers(message: String) -> void:
+	assert(multiplayer.is_server())
+	for peer_id: int in _expected_peers:
+		if peer_id == multiplayer.get_unique_id(): update_loading_screen(message)
+		else: update_loading_screen.rpc_id(peer_id, message)
+
+## Host only: removes the loading screens of the peers [method transition_everyone_to] waited for and ends it
+func end_transition() -> void:
+	assert(multiplayer.is_server())
+	for peer_id: int in _expected_peers:
+		if peer_id != multiplayer.get_unique_id(): remove_loading_screen.rpc_id(peer_id)
+	_transition_scene_path = ""
+	_expected_peers.clear()
+	_confirmed_peers.clear()
 
 @rpc("call_remote", "reliable")
 func transition_to_scene_remotely(scene_path: String) -> void:
 	_exection = Execution.REMOTE
 	# Shown before the change: a scene loaded already changes at once and confirms on the way
-	_show_loading_screen()
+	show_loading_screen()
 	preload_scene(scene_path)
 	var scene_loaded: bool = ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED
 	set_process(not scene_loaded)
 	if scene_loaded: _transition_to_scene(scene_path)
 
-## Tells the host the sender shows the scene now; the host calls it for itself
+## Tells the host the sender shows [param scene_path] now; the host calls it for itself. Only counts for the
+## transition everyone takes and for peers sent to it.
 @rpc("any_peer", "call_local", "reliable")
-func confirm_transition() -> void:
-	if not multiplayer.is_server(): return
+func confirm_transition(scene_path: String) -> void:
+	if not multiplayer.is_server() or ResourceUID.ensure_path(scene_path) != _transition_scene_path: return
 	var sender_id: int = multiplayer.get_remote_sender_id()
 	if sender_id == 0: sender_id = multiplayer.get_unique_id()
+	if not _expected_peers.has(sender_id) or _confirmed_peers.has(sender_id): return
 	_confirmed_peers[sender_id] = true
-	transition_confirmed.emit(sender_id)
+	_report_transition_progress()
 
-## Shows [param message] on the loading screen, which is shown if it is not yet
+## Shows [param message] on the loading screen, if one is shown
 @rpc("call_local", "reliable")
 func update_loading_screen(message: String) -> void:
-	if not _loading_screen:
-		_show_loading_screen(message)
-		return
-	_loading_screen.set_loading_message(message)
+	if _loading_screen: _loading_screen.set_loading_message(message)
 
 @rpc("call_remote", "reliable")
 func remove_loading_screen() -> void:
@@ -133,7 +160,7 @@ func _transition_new_peer_to_scene_remotely(scene_path: String) -> void:
 	var scene_loaded: bool = ResourceLoader.load_threaded_get_status(_scene_path_to_load) == ResourceLoader.THREAD_LOAD_LOADED
 	set_process(not scene_loaded)
 	if scene_loaded: _transition_to_scene(scene_path)
-	else: _show_loading_screen("Joining Game")
+	else: show_loading_screen("Joining Game")
 
 func _transition_to_scene(scene_path: String) -> void:
 	var packed_scene: PackedScene = ResourceLoader.load_threaded_get(scene_path)
@@ -157,13 +184,14 @@ func _transition_to_packed_scene(packed_scene: PackedScene) -> void:
 	scene_tree.change_scene_to_packed(packed_scene)
 	if _exection == Execution.REMOTE:
 		await scene_tree.scene_changed
-		confirm_transition.rpc_id(Multiplayer.HOST_ID)
+		confirm_transition.rpc_id(Multiplayer.HOST_ID, scene_tree.current_scene.scene_file_path)
 		return
 	if _loading_screen:
 		await scene_tree.scene_changed
 		remove_loading_screen()
 
-func _show_loading_screen(message: String = "Loading") -> void:
+## Shows the loading screen with [param message], or the message on the one shown
+func show_loading_screen(message: String = "Loading") -> void:
 	assert(_loading_screen_scene)
 	if not _loading_screen:
 		_loading_screen = _loading_screen_scene.instantiate()
@@ -181,3 +209,12 @@ func _on_peer_connected(peer_id: int) -> void:
 			var lobby_guest_menu_scene_path: String = ResourceUID.ensure_path("uid://d3blbqb654ekr")
 			scene_path = lobby_guest_menu_scene_path
 	_transition_new_peer_to_scene_remotely.rpc_id(peer_id, scene_path)
+
+func _on_peer_disconnected(peer_id: int) -> void:
+	if not multiplayer.is_server() or not _expected_peers.erase(peer_id): return
+	_confirmed_peers.erase(peer_id)
+	_report_transition_progress()
+
+func _report_transition_progress() -> void:
+	transition_progressed.emit(_confirmed_peers.size(), _expected_peers.size())
+	if is_transition_complete(): transition_completed.emit()
