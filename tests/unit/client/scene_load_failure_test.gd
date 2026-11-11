@@ -25,3 +25,20 @@ func test_a_failed_load_stops_and_tells() -> void:
 	assert_bool(SceneManager.is_processing()).is_false()
 	# Offline it stays where it was
 	assert_object(get_tree().current_scene).is_same(scene_before)
+
+func test_online_the_host_stops_hosting_forgets_the_transition_and_heads_for_the_main_menu() -> void:
+	var server: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+	assert_int(server.create_server(47123)).is_equal(OK)
+	SceneManager.multiplayer.multiplayer_peer = server
+	assert_bool(Multiplayer.is_online()).is_true()
+	SceneManager.transition_everyone_to(BROKEN_SCENE)
+	SceneManager.transition_to_scene(BROKEN_SCENE, false)
+	for _frame: int in 60:
+		if not Multiplayer.is_online(): break
+		await await_idle_frame()
+	# Nobody else took the host to the main menu here: SceneManager heads there itself; stopped before it gets there
+	var heading_for: String = SceneManager.get("_scene_path_to_load")
+	SceneManager.set("_scene_path_to_load", "")
+	assert_bool(Multiplayer.is_online()).is_false()
+	assert_array(SceneManager.get_transitioning_peers()).is_empty()
+	assert_str(heading_for).is_equal(SceneManager.get_main_scene_path())
