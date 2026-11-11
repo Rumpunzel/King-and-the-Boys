@@ -3,7 +3,7 @@
 class_name PlayerController
 extends Node
 
-## Emitted on the local player's peer when the character they move changes, e.g. when haunting one
+## Emitted on the local player's peer when the character they move changes, e.g. when taking control of one
 signal controlled_character_changed(controlled_character: Character)
 
 const PLAYER_ID: StringName = "player_id"

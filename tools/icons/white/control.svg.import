@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cyxw8it04sxg5"
-path="res://.godot/imported/haunting.svg-817151a6e6b9345b74ea5186e9cc2fc3.ctex"
+path="res://.godot/imported/control.svg-fb04eaee586ce0d942384526805dada9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tools/icons/white/haunting.svg"
-dest_files=["res://.godot/imported/haunting.svg-817151a6e6b9345b74ea5186e9cc2fc3.ctex"]
+source_file="res://tools/icons/white/control.svg"
+dest_files=["res://.godot/imported/control.svg-fb04eaee586ce0d942384526805dada9.ctex"]
 
 [params]
 

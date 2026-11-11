@@ -11,7 +11,7 @@
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="7_r3pxx"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_mvbif"]
 [ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="10_irqko"]
-[ext_resource type="PackedScene" uid="uid://dlla8034gqdsb" path="res://engine/player/haunt_camera.tscn" id="10_jlh3c"]
+[ext_resource type="PackedScene" uid="uid://dlla8034gqdsb" path="res://engine/player/control_camera.tscn" id="10_jlh3c"]
 [ext_resource type="Script" path="res://engine/turns/tile_highlight.gd" id="12_highlight"]
 [ext_resource type="Script" uid="uid://c00i3uyt5qol5" path="res://engine/player/occlusion_target.gd" id="20_occlusion"]
 
@@ -59,7 +59,7 @@ input_reader = NodePath("../InputReader")
 character = NodePath("../Character")
 hit_box = NodePath("../Character/CharacterHitBox")
 default_phantom_camera = NodePath("../DefaultCamera")
-haunt_phantom_camera_scene = ExtResource("10_jlh3c")
+control_phantom_camera_scene = ExtResource("10_jlh3c")
 _initial_state = ExtResource("4_irqko")
 metadata/_custom_type_script = "uid://hcr7qut3ys1y"
 

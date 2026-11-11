@@ -9,7 +9,7 @@ duration = 0.5
 transition = 10
 ease = 0
 
-[node name="HauntCamera" type="Node3D" unique_id=821991462]
+[node name="ControlCamera" type="Node3D" unique_id=821991462]
 process_mode = 3
 transform = Transform3D(0.707105, -0.514496, 0.485071, 2.98022e-08, 0.685994, 0.727607, -0.707105, -0.514496, 0.485071, 0, 0, 0)
 top_level = true

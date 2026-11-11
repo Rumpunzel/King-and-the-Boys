@@ -33,7 +33,7 @@ func unpause_game() -> void:
 func quit_game() -> void: get_tree().quit()
 
 func get_player_name(player_id: int) -> String:
-	var user_name: String = "Haunt"
+	var user_name: String = "One of the Boys"
 	var environment_user_name: String = _game_environment.get_player_name(player_id)
 	if not environment_user_name.is_empty(): user_name = environment_user_name
 	return user_name

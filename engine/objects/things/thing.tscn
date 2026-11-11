@@ -36,5 +36,5 @@ metadata/_custom_type_script = "uid://047sfnl1r5sv"
 thing = NodePath("..")
 
 [connection signal="profile_changed" from="." to="ThingHitBox" method="_on_profile_changed"]
-[connection signal="haunted" from="ThingHitBox" to="." method="_on_haunted"]
-[connection signal="unhaunted" from="ThingHitBox" to="." method="_on_unhaunted"]
+[connection signal="controlled" from="ThingHitBox" to="." method="_on_controlled"]
+[connection signal="released" from="ThingHitBox" to="." method="_on_released"]
