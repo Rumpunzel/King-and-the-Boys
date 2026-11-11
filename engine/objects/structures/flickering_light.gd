@@ -1,3 +1,4 @@
+@icon("uid://7ku6kr8m1or8")
 class_name FlickeringLight
 extends OmniLight3D
 

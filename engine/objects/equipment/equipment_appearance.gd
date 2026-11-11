@@ -1,4 +1,5 @@
 @tool
+@icon("uid://cpbv0myc0qfxb")
 class_name EquipmentAppearance
 extends ModelConfiguration
 

@@ -1,4 +1,5 @@
 @abstract
+@icon("uid://bwyi7g5ulk8w0")
 class_name Network
 extends RefCounted
 

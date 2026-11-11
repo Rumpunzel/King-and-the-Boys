@@ -1,3 +1,4 @@
+@icon("uid://cbipfklbu3aei")
 class_name ProfileSpawnTable
 extends SpawnTable
 

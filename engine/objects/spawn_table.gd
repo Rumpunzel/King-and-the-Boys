@@ -1,4 +1,5 @@
 @abstract
+@icon("uid://cbipfklbu3aei")
 class_name SpawnTable
 extends Resource
 

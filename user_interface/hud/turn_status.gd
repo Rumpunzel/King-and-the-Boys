@@ -1,4 +1,5 @@
 @tool
+@icon("uid://rmyph82gbbgi")
 class_name TurnStatus
 extends PanelContainer
 ## The local player's turn: the other players' turns, auto-pass, undo and pass buttons and the moves of the character

@@ -1,4 +1,5 @@
 @tool
+@icon("uid://ns2eub1ndhlh")
 class_name CharacterSelection
 extends CharacterPanel
 

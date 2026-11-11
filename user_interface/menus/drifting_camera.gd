@@ -1,3 +1,4 @@
+@icon("uid://cl8p01b5kagvw")
 class_name DriftingCamera
 extends Camera3D
 

@@ -1,4 +1,5 @@
 @tool
+@icon("uid://cime7w536lpdm")
 class_name BetterLineEdit
 extends LineEdit
 

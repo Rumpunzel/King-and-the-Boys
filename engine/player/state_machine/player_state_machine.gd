@@ -1,4 +1,5 @@
 @tool
+@icon("uid://c73t2rg8wrdt3")
 class_name PlayerStateMachine
 extends StateMachine
 

@@ -1,4 +1,5 @@
 @tool
+@icon("uid://cmkguhmw7vdp1")
 class_name BodyPoolsProperty
 extends EditorProperty
 

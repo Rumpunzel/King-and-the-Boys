@@ -1,4 +1,5 @@
 @tool
+@icon("uid://w2a0cs5jil05")
 class_name CatalogSaver
 extends RefCounted
 

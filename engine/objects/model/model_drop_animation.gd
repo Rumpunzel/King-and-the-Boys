@@ -1,4 +1,5 @@
 @tool
+@icon("uid://cp2op0cpeyc18")
 class_name ModelDropAnimation
 extends ModelAnimation
 

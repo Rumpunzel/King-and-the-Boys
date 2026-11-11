@@ -1,4 +1,5 @@
 @tool
+@icon("uid://br0wwafeqokfw")
 class_name ClipboardButton
 extends Button
 

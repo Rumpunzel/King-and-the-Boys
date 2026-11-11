@@ -1,5 +1,6 @@
 @tool
 @abstract
+@icon("uid://c2tcsa8jm0gsr")
 class_name Spawner
 extends MultiplayerSpawner
 

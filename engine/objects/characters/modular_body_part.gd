@@ -1,5 +1,6 @@
 @tool
 @abstract
+@icon("uid://bnaoddhf8gssj")
 class_name ModularBodyPart
 extends MeshInstance3D
 

@@ -1,4 +1,5 @@
 @tool
+@icon("uid://cyrqlm5mdw05a")
 class_name EquipmentCatalog
 extends Resource
 

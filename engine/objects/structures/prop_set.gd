@@ -1,4 +1,5 @@
 @tool
+@icon("uid://dsi6g62c3spch")
 class_name PropSet
 extends Resource
 

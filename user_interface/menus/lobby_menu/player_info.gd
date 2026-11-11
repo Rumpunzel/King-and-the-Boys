@@ -1,4 +1,5 @@
 @tool
+@icon("uid://uhpjpmmyeper")
 class_name PlayerInfo
 extends PanelContainer
 

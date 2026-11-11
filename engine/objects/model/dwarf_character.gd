@@ -1,4 +1,5 @@
 @tool
+@icon("uid://bdsk0cjpq6pr4")
 class_name DwarfCharacter
 extends ModularModel
 
