@@ -1,4 +1,5 @@
 @tool
+@icon("uid://dvfug1sf7ptpb")
 class_name PlayerName
 extends Label
 ## Shows a player's name and follows changes

@@ -1,3 +1,4 @@
+@icon("uid://ylmhvbkw4lm5")
 class_name ModularModelParts
 extends RefCounted
 

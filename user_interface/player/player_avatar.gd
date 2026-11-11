@@ -1,4 +1,5 @@
 @tool
+@icon("uid://bp7e2rbo3fad7")
 class_name PlayerAvatar
 extends TextureRect
 ## Shows a player's avatar (e.g. from Steam) and follows changes; keeps its placeholder texture until there is one

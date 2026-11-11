@@ -1,3 +1,4 @@
+@icon("uid://uv0pyd2kqpnv")
 class_name OcclusionTarget
 extends Node
 

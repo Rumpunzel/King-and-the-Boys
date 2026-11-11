@@ -1,4 +1,5 @@
 @tool
+@icon("uid://biri51a4ejiad")
 class_name EquipmentSlotProperty
 extends EditorProperty
 

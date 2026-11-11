@@ -1,4 +1,5 @@
 @tool
+@icon("uid://byxko8uo3tfng")
 class_name EquipmentType
 extends Resource
 

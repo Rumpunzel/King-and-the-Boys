@@ -1,4 +1,5 @@
 @tool
+@icon("uid://bpf3ceyvd8tev")
 class_name LobbyHostMenu
 extends LobbyMenu
 

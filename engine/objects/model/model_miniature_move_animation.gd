@@ -1,4 +1,5 @@
 @tool
+@icon("uid://ba48wfee2hq2x")
 class_name ModelMiniatureMoveAnimation
 extends ModelAnimation
 

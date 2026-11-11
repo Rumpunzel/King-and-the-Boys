@@ -1,3 +1,4 @@
+@icon("uid://crwhluv6u76v")
 class_name SteamNetwork
 extends Network
 

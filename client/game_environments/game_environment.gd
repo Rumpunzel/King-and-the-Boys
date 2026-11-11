@@ -1,4 +1,5 @@
 @abstract
+@icon("uid://duh6my7ym4igl")
 class_name GameEnvironment
 extends Node
 

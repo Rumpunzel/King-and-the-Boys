@@ -58,6 +58,8 @@ runs:
       run: |
         printf '\n[filesystem]\n\nimport/blender/enabled=false\n' >> project.godot
         if [ "${{ inputs.assets }}" != "true" ]; then touch assets/.gdignore protoype_assets/.gdignore; fi
+        # The full icon set (thousands of SVGs) is only a source for tools/icons/
+        touch tools/game_icons/.gdignore
 
     # Godot reimports only what changed since the cached import, so an older cache still helps
     - name: Cache import

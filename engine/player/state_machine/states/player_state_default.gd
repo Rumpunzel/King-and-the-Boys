@@ -1,3 +1,4 @@
+@icon("uid://bkxn2uupbbt34")
 class_name PlayerStateDefault
 extends PlayerState
 

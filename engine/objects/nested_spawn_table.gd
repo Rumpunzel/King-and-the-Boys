@@ -1,3 +1,4 @@
+@icon("uid://bvf85brj7cby2")
 class_name NestedSpawnTable
 extends SpawnTable
 

@@ -1,3 +1,4 @@
+@icon("uid://blrejsngag72k")
 class_name Debug
 
 static func print_debug_info(message: String) -> void:

@@ -1,4 +1,5 @@
 @tool
+@icon("uid://b7lkf7v36ct57")
 class_name TileDecorations
 extends Resource
 

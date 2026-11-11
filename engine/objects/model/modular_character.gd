@@ -1,4 +1,5 @@
 @tool
+@icon("uid://dctnuxdlwxtca")
 class_name ModularCharacter
 extends ModularModel
 

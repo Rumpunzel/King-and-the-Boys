@@ -1,4 +1,5 @@
 @tool
+@icon("uid://b621surynaq68")
 class_name LoadingScreen
 extends CanvasLayer
 

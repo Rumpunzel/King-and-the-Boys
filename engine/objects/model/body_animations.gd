@@ -1,4 +1,5 @@
 @tool
+@icon("uid://bk111xvhpbvwt")
 class_name BodyAnimations
 extends Resource
 
