@@ -28,7 +28,7 @@ var _pass_button: Button
 
 func _ready() -> void:
 	# Opened on its own in the editor: only the preview hands it a config
-	if is_part_of_edited_scene(): return
+	if not _config: return
 	_show_collision_button.set_pressed_no_signal(_config.get_value_from_config("Preview", "show_collision", true))
 	show_collision_changed.emit(_show_collision_button.button_pressed)
 	_show_hit_box_button.set_pressed_no_signal(_config.get_value_from_config("Preview", "show_hit_box", true))
