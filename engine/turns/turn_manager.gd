@@ -58,7 +58,12 @@ func _ready() -> void:
 ## once they have loaded it; call when every peer has, e.g. from [method Game.setup_game]
 func start_syncing_peers() -> void:
 	assert(multiplayer.is_server())
-	for peer_id: int in multiplayer.get_peers(): _synchronizer.set_visibility_for(peer_id, true)
+	for peer_id: int in multiplayer.get_peers(): start_syncing_peer(peer_id)
+
+## Host only: syncs the turn state to [param peer_id], e.g. a player who joined a running game once they loaded it
+func start_syncing_peer(peer_id: int) -> void:
+	assert(multiplayer.is_server())
+	_synchronizer.set_visibility_for(peer_id, true)
 
 func has_passed(player_id: int) -> bool:
 	return passed_player_ids.has(player_id)

@@ -3,20 +3,40 @@
 class_name Game
 extends Node
 
+## Host only: a peer the start waits for reported its part of the game arrived, or left
+signal peer_readiness_changed
+
 @export_group("Configuration")
 @export var _serializer: Serializer
 @export var _level: Level
 @export var _player_controller_spawner: PlayerControllerSpawner
 
+# Host only: the peers sent here at the start, and the peers whose part of the game arrived (see _report_ready)
+var _awaited_peers: Dictionary[int, bool] = {}
+var _ready_peers: Dictionary[int, bool] = {}
+
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
 	Multiplayer.disconnected_from_multiplayer.connect(_on_disconnected_from_multiplayer)
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	if multiplayer.is_server():
+		# Players joining the running game wait for their part of it too, see _report_ready
+		SceneManager.joiners_keep_loading_screen = true
+		return
+	_player_controller_spawner.player_controller_created.connect(_on_part_arrived)
+	_level.tile_placed.connect(_on_part_arrived)
+	_on_part_arrived(null)
+
+func _exit_tree() -> void:
+	if Engine.is_editor_hint(): return
+	if multiplayer.is_server(): SceneManager.joiners_keep_loading_screen = false
 
 ## Host only, once its game scene is shown: waits until every peer sent here shows it too (see
-## [method SceneManager.transition_everyone_to]), then sets the game up and ends the loading screens
+## [method SceneManager.transition_everyone_to]), sets the game up, then waits until each of them has its
+## character and the tile under it, and ends every loading screen at once. Peers that leave are not waited for.
 func start_hosted_game() -> Error:
 	assert(multiplayer.is_server())
 	SceneManager.show_loading_screen()
@@ -24,8 +44,15 @@ func start_hosted_game() -> Error:
 	SceneManager.confirm_transition(scene_file_path)
 	if not SceneManager.is_transition_complete(): await SceneManager.transition_completed
 	SceneManager.transition_progressed.disconnect(_on_transition_progressed)
+	_awaited_peers.clear()
+	_ready_peers.clear()
+	for peer_id: int in SceneManager.get_transitioning_peers():
+		if peer_id != multiplayer.get_unique_id(): _awaited_peers[peer_id] = true
 	SceneManager.tell_transitioning_peers("Generating")
 	setup_game()
+	while not _is_everyone_ready():
+		SceneManager.tell_transitioning_peers("Placing players [%d / %d]" % [_ready_peers.size() + 1, _awaited_peers.size() + 1])
+		await peer_readiness_changed
 	SceneManager.end_transition()
 	return Error.OK
 
@@ -56,6 +83,42 @@ func stop_game() -> void:
 	print_debug("Stopping running game...")
 	_player_controller_spawner.stop_synching_players()
 	SceneManager.to_main()
+
+func _is_everyone_ready() -> bool:
+	return _awaited_peers.keys().all(func(peer_id: int) -> bool: return _ready_peers.has(peer_id))
+
+## Client: its own character and the tile under it arrived, so the host may lift its loading screen
+func _has_own_part_arrived() -> bool:
+	for child: Node in _player_controller_spawner.get_children():
+		var player_controller: PlayerController = child as PlayerController
+		if not player_controller or not player_controller.player.is_local_player(): continue
+		var cell: Vector2i = _level.world_to_grid_position(player_controller.character.global_position)
+		return _level.get_placed_tile(cell) != null
+	return false
+
+func _on_part_arrived(_part: Node) -> void:
+	if not _has_own_part_arrived(): return
+	_player_controller_spawner.player_controller_created.disconnect(_on_part_arrived)
+	_level.tile_placed.disconnect(_on_part_arrived)
+	_report_ready.rpc_id(Multiplayer.HOST_ID)
+
+## Sent by a client once its own character and the tile under it arrived
+@rpc("any_peer", "reliable")
+func _report_ready() -> void:
+	if not multiplayer.is_server(): return
+	var peer_id: int = multiplayer.get_remote_sender_id()
+	if _ready_peers.has(peer_id): return
+	_ready_peers[peer_id] = true
+	if _awaited_peers.has(peer_id):
+		peer_readiness_changed.emit()
+		return
+	# Joined the running game: in at once
+	TurnManager.get_instance(get_tree()).start_syncing_peer(peer_id)
+	SceneManager.remove_loading_screen.rpc_id(peer_id)
+
+func _on_peer_disconnected(peer_id: int) -> void:
+	_ready_peers.erase(peer_id)
+	if _awaited_peers.erase(peer_id): peer_readiness_changed.emit()
 
 func _on_transition_progressed(ready_count: int, expected_count: int) -> void:
 	if ready_count < expected_count: SceneManager.tell_transitioning_peers("Waiting for players [%d / %d]" % [ready_count, expected_count])
