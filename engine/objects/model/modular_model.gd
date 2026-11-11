@@ -163,5 +163,11 @@ func randomize_gear() -> void:
 func reset() -> void:
 	for part: int in get_part_keys().size(): get_part(part).reset_mesh()
 
+## Turns every gendered part to [param gender], e.g. a female hero; bodies without gendered parts (dwarves) stay as they are
+func set_gender(gender: ModularBodyPartGendered.Gender) -> void:
+	for part: int in get_part_keys().size():
+		var body_part: ModularBodyPartGendered = get_part(part) as ModularBodyPartGendered
+		if body_part: body_part.gender = gender
+
 func reset_gear() -> void:
 	for part: int in get_gear_parts(): get_part(part).reset_mesh()

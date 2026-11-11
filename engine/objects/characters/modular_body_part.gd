@@ -125,7 +125,8 @@ func _load_meshes() -> void: _mesh_list = _get_mesh_filenames()
 func _get_mesh_filenames() -> Array[String]:
 	var filenames: Array[String] = []
 	var mesh_directory_path: String = _get_mesh_directory()
-	if mesh_directory_path.is_empty(): return filenames
+	# "NONE": the part has no meshes, e.g. facial hair on a female body
+	if mesh_directory_path.is_empty() or mesh_directory_path == "NONE": return filenames
 	var dir: DirAccess = DirAccess.open(mesh_directory_path)
 	if not dir:
 		push_error("Meshes subdirectory @ <%s> not found." % mesh_directory_path)

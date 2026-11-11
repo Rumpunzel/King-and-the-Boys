@@ -179,7 +179,11 @@ func _roll_random_equipment() -> Array[EquipmentLook]:
 func create_model(variation: int) -> Model:
 	var model: Model = super.create_model(variation)
 	if model: model.idle_animations = idle_animations
-	if model is ModularModel: (model as ModularModel).set_gear_colors(gear_primary_color, gear_secondary_color)
+	if model is ModularModel:
+		var modular_model: ModularModel = model
+		modular_model.set_gear_colors(gear_primary_color, gear_secondary_color)
+		# Before any body is rolled or applied: they name meshes of the body's gender
+		if model_configuration: modular_model.set_gender(model_configuration.gender)
 	# In game the server rolls the look once and sends it as [constant Character.BODY]
 	if model is ModularModel and Engine.is_editor_hint(): setup_model(model as ModularModel)
 	return model

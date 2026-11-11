@@ -60,12 +60,12 @@ func _rebuild() -> void:
 	for child: Node in _sections.get_children(): child.queue_free()
 	var configuration: ModelConfigurationRandom = get_edited_object() as ModelConfigurationRandom
 	if not configuration or _bodies.is_empty(): return
-	var model_parts: ModularModelParts = ModularModelParts.of(_bodies[_body_option.selected])
+	var model_parts: ModularModelParts = ModularModelParts.of(_bodies[_body_option.selected], configuration.gender)
 	if not model_parts: return
 	for part: int in model_parts.get_body_parts(): _sections.add_child(_make_section(configuration, _bodies[_body_option.selected], part))
 
 func _make_section(configuration: ModelConfigurationRandom, body: PackedScene, part: int) -> Control:
-	var model_parts: ModularModelParts = ModularModelParts.of(body)
+	var model_parts: ModularModelParts = ModularModelParts.of(body, configuration.gender)
 	var part_key: String = model_parts.get_part_key(part)
 	var numbers: PackedStringArray = model_parts.get_mesh_numbers(part)
 	var options: PackedStringArray = model_parts.get_mesh_options(part)
@@ -104,7 +104,7 @@ func _make_section(configuration: ModelConfigurationRandom, body: PackedScene, p
 		button.expand_icon = true
 		button.modulate = Color.WHITE if button.button_pressed else OUT_OF_POOL
 		button.toggled.connect(_set_number.bind(part_key, number, numbers))
-		_thumbnails.call(&"request", body, part, options[index], _on_thumbnail.bind(button))
+		_thumbnails.call(&"request", body, configuration.gender, part, options[index], _on_thumbnail.bind(button))
 		flow.add_child(button)
 	section.add_child(flow)
 	section.add_child(HSeparator.new())

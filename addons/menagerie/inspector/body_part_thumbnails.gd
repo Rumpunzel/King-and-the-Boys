@@ -2,7 +2,7 @@
 extends Node
 
 ## Renders thumbnails of a body part's meshes as they look on a plain body of their scene, framed on its head, from the front and a
-## little to the side. One per frame; cached by scene, part and mesh
+## little to the side. One per frame; cached by scene, gender, part and mesh
 
 const SIZE: Vector2i = Vector2i(112, 112)
 ## How much the view shows, in metres: the head with some hair around it
@@ -39,16 +39,17 @@ func _ready() -> void:
 	_camera.current = true
 	_viewport.add_child(_camera)
 
-static func get_key(scene: PackedScene, part: int, mesh_path: String) -> String:
-	return "%s|%d|%s" % [scene.resource_path, part, mesh_path]
+static func get_key(scene: PackedScene, gender: ModularBodyPartGendered.Gender, part: int, mesh_path: String) -> String:
+	return "%s|%d|%d|%s" % [scene.resource_path, gender, part, mesh_path]
 
-## Calls [param callback] with the thumbnail of [param part] showing [param mesh_path] (none if empty) on [param scene]'s body
-func request(scene: PackedScene, part: int, mesh_path: String, callback: Callable) -> void:
-	var key: String = get_key(scene, part, mesh_path)
+## Calls [param callback] with the thumbnail of [param part] showing [param mesh_path] (none if empty) on [param scene]'s body of
+## [param gender] (see [method ModularModel.set_gender])
+func request(scene: PackedScene, gender: ModularBodyPartGendered.Gender, part: int, mesh_path: String, callback: Callable) -> void:
+	var key: String = get_key(scene, gender, part, mesh_path)
 	if _cache.has(key):
 		callback.call(_cache[key])
 		return
-	_queue.append({"scene": scene, "part": part, "mesh_path": mesh_path, "callback": callback})
+	_queue.append({"scene": scene, "gender": gender, "part": part, "mesh_path": mesh_path, "callback": callback})
 	# One queue at a time: renders share the one viewport
 	if _is_rendering: return
 	_is_rendering = true
@@ -73,13 +74,14 @@ func _render_queue() -> void:
 	while not _queue.is_empty():
 		var job: Dictionary = _queue.pop_front()
 		var scene: PackedScene = job["scene"]
+		var gender: ModularBodyPartGendered.Gender = job["gender"]
 		var part: int = job["part"]
 		var mesh_path: String = job["mesh_path"]
 		var callback: Callable = job["callback"]
-		var key: String = get_key(scene, part, mesh_path)
+		var key: String = get_key(scene, gender, part, mesh_path)
 		if not _cache.has(key):
-			var is_new_body: bool = not _models.has(scene.resource_path)
-			var model: ModularModel = _show(scene, part, mesh_path)
+			var is_new_body: bool = not _models.has(_get_body_key(scene, gender))
+			var model: ModularModel = _show(scene, gender, part, mesh_path)
 			# Let bone attachments follow their bones before framing
 			await get_tree().process_frame
 			if not is_inside_tree():
@@ -104,16 +106,21 @@ func _stop_rendering(unfinished: Dictionary = {}) -> void:
 	_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	_is_rendering = false
 
-## Shows [param scene]'s body plain, with [param part] showing [param mesh_path]; other bodies are hidden
-func _show(scene: PackedScene, part: int, mesh_path: String) -> ModularModel:
-	if not _models.has(scene.resource_path):
+static func _get_body_key(scene: PackedScene, gender: ModularBodyPartGendered.Gender) -> String:
+	return "%s|%d" % [scene.resource_path, gender]
+
+## Shows [param scene]'s body of [param gender] plain, with [param part] showing [param mesh_path]; other bodies are hidden
+func _show(scene: PackedScene, gender: ModularBodyPartGendered.Gender, part: int, mesh_path: String) -> ModularModel:
+	var body_key: String = _get_body_key(scene, gender)
+	if not _models.has(body_key):
 		var instance: ModularModel = scene.instantiate() as ModularModel
+		instance.set_gender(gender)
 		_viewport.add_child(instance)
 		# Skinned meshes keep their bounds in their own space: close up, the view would cull them although they are in sight
 		for mesh_instance: MeshInstance3D in Model.gather_all_geometry_instances_on(instance): mesh_instance.extra_cull_margin = 16384.0
-		_models[scene.resource_path] = instance
-	for path: String in _models: _models[path].visible = path == scene.resource_path
-	var model: ModularModel = _models[scene.resource_path]
+		_models[body_key] = instance
+	for shown_key: String in _models: _models[shown_key].visible = shown_key == body_key
+	var model: ModularModel = _models[body_key]
 	model.reset()
 	model.get_part(part).apply_mesh(load(mesh_path) as ArrayMesh if not mesh_path.is_empty() else null)
 	return model
