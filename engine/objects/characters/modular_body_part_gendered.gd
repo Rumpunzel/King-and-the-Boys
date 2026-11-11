@@ -1,5 +1,5 @@
 @tool
-@icon("uid://bnaoddhf8gssj")
+@icon("uid://s7oh36muqnkf")
 class_name ModularBodyPartGendered
 extends ModularBodyPart
 

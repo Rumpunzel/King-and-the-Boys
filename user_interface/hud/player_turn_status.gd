@@ -1,5 +1,5 @@
 @tool
-@icon("uid://bs3bnvm5r50sd")
+@icon("uid://dopairwuunnb0")
 class_name PlayerTurnStatus
 extends HBoxContainer
 ## Another player's turn: avatar, name and their character's moves; dimmed once they passed

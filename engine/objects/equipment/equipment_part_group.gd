@@ -1,5 +1,5 @@
 @tool
-@icon("uid://b2gskja6u1rym")
+@icon("uid://bv7ifdkwghrqd")
 class_name EquipmentPartGroup
 extends Resource
 

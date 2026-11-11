@@ -1,6 +1,6 @@
 @tool
 @abstract
-@icon("uid://cpbv0myc0qfxb")
+@icon("uid://7m8ixk6xfmej")
 class_name ModularModel
 extends Model
 

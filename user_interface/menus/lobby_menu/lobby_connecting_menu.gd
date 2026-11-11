@@ -1,5 +1,5 @@
 @tool
-@icon("uid://r4re5w2nnw4h")
+@icon("uid://g6ignvrpnl86")
 class_name LobbyConnectingMenu
 extends Menu
 

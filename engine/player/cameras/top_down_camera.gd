@@ -1,5 +1,5 @@
 @tool
-@icon("uid://cgn6uveleadh0")
+@icon("uid://b741m3eqorm2m")
 class_name TopDownCamera
 extends Camera3D
 

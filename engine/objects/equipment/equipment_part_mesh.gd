@@ -1,5 +1,5 @@
 @tool
-@icon("uid://jok8iqrh75qd")
+@icon("uid://dr822xlk56pof")
 class_name EquipmentPartMesh
 extends Resource
 

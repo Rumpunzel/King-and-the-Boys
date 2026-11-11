@@ -1,5 +1,5 @@
 @tool
-@icon("uid://ccxguitlreon6")
+@icon("uid://c6plgd1mnaykm")
 class_name MovesBar
 extends HBoxContainer
 ## A character's moves this turn as a row of pills, one per move, in the character's colour: moves used for good in full

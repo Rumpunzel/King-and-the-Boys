@@ -1,5 +1,5 @@
 @abstract
-@icon("uid://bwyi7g5ulk8w0")
+@icon("uid://d0iprit7fywj1")
 class_name Network
 extends RefCounted
 

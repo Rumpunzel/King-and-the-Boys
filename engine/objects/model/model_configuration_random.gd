@@ -1,5 +1,5 @@
 @tool
-@icon("uid://dpmwlpo7a7q1r")
+@icon("uid://dvhm0wfa1qty8")
 class_name ModelConfigurationRandom
 extends ModelConfiguration
 

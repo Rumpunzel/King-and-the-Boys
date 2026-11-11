@@ -1,6 +1,6 @@
 @tool
 @abstract
-@icon("uid://dmhvrx416awa")
+@icon("uid://ba48wfee2hq2x")
 class_name ModelAnimation
 extends Resource
 

@@ -1,5 +1,5 @@
 @tool
-@icon("uid://3sboj8aq6hv3")
+@icon("uid://c0i50ehj2vfdr")
 class_name LoadingBar
 extends PanelContainer
 

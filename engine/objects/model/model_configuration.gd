@@ -1,6 +1,6 @@
 @abstract
 @tool
-@icon("uid://cjsf451kgesnr")
+@icon("uid://b3v64qi4imn7c")
 class_name ModelConfiguration
 extends Resource
 

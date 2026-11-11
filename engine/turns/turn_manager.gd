@@ -1,5 +1,5 @@
 @tool
-@icon("uid://djt2wao4iktsc")
+@icon("uid://3xn0cgn4onrw")
 class_name TurnManager
 extends Node
 ## Runs simultaneous turns: every player moves their [Character]s up to their movement points,

@@ -1,5 +1,5 @@
 @tool
-@icon("uid://dmhvrx416awa")
+@icon("uid://c055gfagtaj1l")
 class_name ModelFlipAnimation
 extends ModelAnimation
 

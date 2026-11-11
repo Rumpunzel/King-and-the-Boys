@@ -1,5 +1,5 @@
 @tool
-@icon("uid://dmhvrx416awa")
+@icon("uid://bngd6vd74rb48")
 class_name ModelSlideAnimation
 extends ModelAnimation
 

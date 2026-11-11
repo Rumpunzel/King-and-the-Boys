@@ -1,4 +1,4 @@
-@icon("uid://ckgyvk04a2ahd")
+@icon("uid://5w8hyoyx7uqy")
 class_name RoomTypeConnectionRestriction
 extends ConnectionRestriction
 

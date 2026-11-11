@@ -1,5 +1,5 @@
 @tool
-@icon("uid://cifpff841ra6r")
+@icon("uid://bbe7ero5i4hgu")
 class_name CharacterEquipment
 extends Node
 

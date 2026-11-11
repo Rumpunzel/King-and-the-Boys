@@ -1,5 +1,5 @@
 @tool
-@icon("uid://s20h3sl7y1ve")
+@icon("uid://rlx5flqs6hx5")
 class_name DungeonTileSet
 extends Resource
 

@@ -1,4 +1,4 @@
-@icon("uid://cyxw8it04sxg5")
+@icon("uid://clji5px21jyvw")
 class_name AgentStateDefault
 extends AgentState
 

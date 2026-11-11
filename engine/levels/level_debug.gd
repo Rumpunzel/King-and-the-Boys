@@ -1,4 +1,4 @@
-@icon("uid://tflsh0on02bx")
+@icon("uid://ojcxbpp8xolq")
 class_name LevelDebug
 extends Node
 

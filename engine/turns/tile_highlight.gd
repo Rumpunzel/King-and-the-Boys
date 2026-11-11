@@ -1,5 +1,5 @@
 @tool
-@icon("uid://duyge1d76pols")
+@icon("uid://bbd6uslekkp8l")
 class_name TileHighlight
 extends MeshInstance3D
 ## Marks the tile the local player's controlled [Character] stands on in the game logic.

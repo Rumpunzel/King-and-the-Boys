@@ -1,4 +1,4 @@
-@icon("uid://dlbt322f6sl6k")
+@icon("uid://co8ia6frhyts5")
 class_name Synchronizer
 extends MultiplayerSynchronizer
 

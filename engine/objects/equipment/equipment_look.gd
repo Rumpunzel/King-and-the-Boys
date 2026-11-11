@@ -1,5 +1,5 @@
 @tool
-@icon("uid://bbqobur2kwwup")
+@icon("uid://co5vu4p43le70")
 class_name EquipmentLook
 extends Profile
 
