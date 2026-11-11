@@ -498,19 +498,20 @@ func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
 
 func _create_connection(tile: Structure, connection: Direction) -> void:
 	assert(tile)
-	var direction_vector: Vector2i = direction_to_vector(connection)
 	# Tiles without a model (e.g. in tests) count as unscaled
 	var mesh_scale: float = tile.model.get_max_mesh_scale() if tile.model else 1.0
-	var connection_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * mesh_scale
+	var connection_position: Vector3 = _get_connector_position(tile.global_position, connection, mesh_scale)
 	var tile_connection: Structure = _tile_set.tile_connection.create(-1, Transform3D(Basis.IDENTITY, connection_position), connection, Structure.Status.PLACED)
 	var tile_connections: Array[Structure] = _tile_connections.get_or_add(tile, [] as Array[Structure])
 	assert(not tile_connections.has(tile))
 	tile_connections.append(tile_connection)
 	add_child(tile_connection)
 
-func _get_connector_position(tile_position: Vector3, connection: Direction) -> Vector3:
+## The middle of a tile's side towards [param connection], where connectors stand; [param mesh_scale] moves it out
+## with the tile's model (its connections)
+func _get_connector_position(tile_position: Vector3, connection: Direction, mesh_scale: float = 1.0) -> Vector3:
 	var direction_vector: Vector2i = direction_to_vector(connection)
-	return tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
+	return tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * mesh_scale
 
 func _create_connector(tile_position: Vector3, connection: Direction) -> void:
 	var connector_position: Vector3 = _get_connector_position(tile_position, connection)
@@ -594,15 +595,26 @@ func _on_thing_created(thing: Thing) -> void:
 func _forget_tile(tile: Structure) -> void:
 	var grid_position: Vector2i = world_to_grid_position(tile.global_position)
 	if _placed_tiles.get(grid_position) == tile: _placed_tiles.erase(grid_position)
+	_furnished_cells.erase(grid_position)
+	# Until it is freed it may still change: nothing here follows it any more
+	for handler: Array in [[tile.status_changed, _on_tile_status_changed], [tile.shown_status_changed, _on_tile_shown_status_changed], [tile.spawn_requested, _on_spawn_requested]]:
+		var tile_signal: Signal = handler[0]
+		var bound_handler: Callable = (handler[1] as Callable).bind(tile)
+		if tile_signal.is_connected(bound_handler): tile_signal.disconnect(bound_handler)
+	for queues: Dictionary in [_reveal_queues, _discover_queues]:
+		for queue: Array in queues.values(): queue.erase(tile)
 	var tile_connections: Array = _tile_connections.get(tile, [])
 	_tile_connections.erase(tile)
 	for tile_connection: Structure in tile_connections:
 		if is_instance_valid(tile_connection): tile_connection.queue_free()
 	for connection: Direction in tile.get_connections():
 		var neighbour: Structure = _placed_tiles.get(grid_position + direction_to_vector(connection))
-		if neighbour and neighbour.has_connection_to(grid_position): continue
 		var connector_position: Vector3 = _get_connector_position(tile.global_position, connection)
 		var tile_connector: Structure = _tile_connectors.get(connector_position)
+		if neighbour and neighbour.has_connection_to(grid_position):
+			# Kept for the neighbour, but leading into an empty cell now, like one towards a cell not built yet
+			if is_instance_valid(tile_connector): tile_connector.shown_status = Structure.Status.PLACED
+			continue
 		_tile_connectors.erase(connector_position)
 		if is_instance_valid(tile_connector): tile_connector.queue_free()
 
