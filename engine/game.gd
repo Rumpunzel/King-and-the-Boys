@@ -15,19 +15,18 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 
-## Host only, once its game scene is shown: waits until every peer shows it too, then sets the game up
-## and ends the loading screens
+## Host only, once its game scene is shown: waits until every peer sent here shows it too (see
+## [method SceneManager.transition_everyone_to]), then sets the game up and ends the loading screens
 func start_hosted_game() -> Error:
 	assert(multiplayer.is_server())
-	if Lobby.get_connected_players().size() > 1:
-		var lobby_size: int = Lobby.get_connected_players().size()
-		while SceneManager.confirmed_transitions < lobby_size:
-			SceneManager.update_loading_screen.rpc("Waiting for other Players [%d / %d]" % [SceneManager.confirmed_transitions, lobby_size])
-			await get_tree().process_frame
-	SceneManager.update_loading_screen.rpc("Generating")
+	SceneManager.show_loading_screen()
+	SceneManager.transition_progressed.connect(_on_transition_progressed)
+	SceneManager.confirm_transition(scene_file_path)
+	if not SceneManager.is_transition_complete(): await SceneManager.transition_completed
+	SceneManager.transition_progressed.disconnect(_on_transition_progressed)
+	SceneManager.tell_transitioning_peers("Generating")
 	setup_game()
-	SceneManager.reset_confirmed_transition.rpc()
-	SceneManager.remove_loading_screen.rpc()
+	SceneManager.end_transition()
 	return Error.OK
 
 func setup_game() -> void:
@@ -57,6 +56,9 @@ func stop_game() -> void:
 	print_debug("Stopping running game...")
 	_player_controller_spawner.stop_synching_players()
 	SceneManager.to_main()
+
+func _on_transition_progressed(ready_count: int, expected_count: int) -> void:
+	if ready_count < expected_count: SceneManager.tell_transitioning_peers("Waiting for players [%d / %d]" % [ready_count, expected_count])
 
 func _on_save_requested() -> void:
 	pass # Replace with function body.
