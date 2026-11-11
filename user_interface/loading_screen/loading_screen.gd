@@ -7,7 +7,8 @@ extends CanvasLayer
 @export var _loading_bar: LoadingBar
 
 func _ready() -> void:
-	if not _background: return
+	# In the editor (e.g. while importing) Panorama is a placeholder that can not be asked
+	if Engine.is_editor_hint() or not _background: return
 	_background.visible = not Panorama.is_showing_panorama()
 
 func set_loading_message(message: String) -> void:

@@ -15,6 +15,7 @@ func _ready() -> void:
 		sky_box_pressed.emit(sky_box)
 
 func _on_toggled(toggled_on: bool) -> void:
-	if not toggled_on: return
+	# Set from the scene file while it is built, before _config is: the saved choice, not a new one
+	if not toggled_on or not is_node_ready(): return
 	sky_box_pressed.emit(sky_box)
 	_config.update_value_in_config(name, "SkyBox", "selected_sky_box")
