@@ -151,10 +151,22 @@ func _ready() -> void:
 		var spot_index: int = free_spots.find_custom(func(free_spot: Vector2) -> bool: return free_spot.distance_to(standing_spot) < 0.01)
 		if spot_index >= 0: tile_spot = free_spots[spot_index]
 		elif not free_spots.is_empty(): tile_spot = free_spots.front()
+		else: _take_nearest_free_spot()
 		reset_movement_points()
 	_has_grid_state = true
 	_queue_grid_visual_update()
 	entered_grid_cell.emit(grid_cell)
+
+## Host only, while spawning onto a full tile: the nearest tile with room instead, see
+## [method Level.get_nearest_free_spot_position]
+func _take_nearest_free_spot() -> void:
+	var spot_position: Vector3 = level.get_nearest_free_spot_position(grid_cell, self)
+	if spot_position == Vector3.INF:
+		push_warning("No free spot for %s near %s: it shares a spot" % [self, grid_cell])
+		return
+	grid_cell = level.world_to_grid_position(spot_position)
+	var offset: Vector3 = spot_position - level.grid_to_world_position(grid_cell)
+	tile_spot = Vector2(offset.x, offset.z)
 
 func _physics_process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return

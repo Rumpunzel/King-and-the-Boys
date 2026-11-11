@@ -6,6 +6,9 @@ const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
 const SPAWNER_SCENE: String = "res://engine/player/player_controller_spawner.tscn"
 const OTHER_PLAYER_ID: int = 2
 const THIRD_PLAYER_ID: int = 3
+## Players with ids from 10 on fill the start tile beyond its five spots
+const CROWD_FIRST_ID: int = 10
+const CROWD_SIZE: int = 6
 
 var _level: Level
 var _spawner: PlayerControllerSpawner
@@ -28,6 +31,7 @@ func after_test() -> void:
 	var players: Dictionary = Lobby.get("_players")
 	players.erase(OTHER_PLAYER_ID)
 	players.erase(THIRD_PLAYER_ID)
+	for crowd_id: int in range(CROWD_FIRST_ID, CROWD_FIRST_ID + CROWD_SIZE): players.erase(crowd_id)
 	_local_player.character = _local_character
 	await await_idle_frame()
 
@@ -207,3 +211,49 @@ func test_players_spawn_on_their_own_spots() -> void:
 		assert_bool(spots.has(character.tile_spot)).is_false()
 		spots.append(character.tile_spot)
 	assert_int(spots.size()).is_equal(3)
+
+func test_a_full_start_tile_sends_players_to_the_nearest_tile_with_room() -> void:
+	await _add_level()
+	var players: Dictionary = Lobby.get("_players")
+	for crowd_id: int in range(CROWD_FIRST_ID, CROWD_FIRST_ID + CROWD_SIZE):
+		var crowd_player: Player = auto_free(Player.create(crowd_id, "Crowd %d" % crowd_id))
+		crowd_player.character = ModelFreeWorld.load_hero_profile()
+		players[crowd_id] = crowd_player
+	_spawner.start_synching_players()
+	await await_idle_frame()
+	var start_cell: Vector2i = _level.world_to_grid_position((get_tree().get_first_node_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS) as Node3D).global_position)
+	var places: Array[String] = []
+	var off_start: int = 0
+	for controller: PlayerController in _controllers():
+		var character: Character = controller.character
+		var place: String = "%s %s" % [character.grid_cell, character.tile_spot]
+		assert_bool(places.has(place)).override_failure_message("Two players on %s" % place).is_false()
+		places.append(place)
+		assert_vector(character.global_position).is_equal_approx(_level.get_spot_position(character.grid_cell, character.tile_spot), Vector3.ONE * 0.001)
+		if character.grid_cell == start_cell: continue
+		off_start += 1
+		# Next door, through a passage
+		assert_int(absi(character.grid_cell.x - start_cell.x) + absi(character.grid_cell.y - start_cell.y)).is_equal(1)
+		assert_bool(_level.get_placed_tile(start_cell).has_connection_to(character.grid_cell)).is_true()
+	assert_int(places.size()).is_equal(CROWD_SIZE + 1)
+	# Five spots on the start tile: the other two go next door
+	assert_int(off_start).is_equal(CROWD_SIZE + 1 - 5)
+
+func test_any_character_spawned_onto_a_full_tile_goes_next_door() -> void:
+	await _add_level()
+	var players: Dictionary = Lobby.get("_players")
+	# The host and four more fill the start tile's five spots
+	for crowd_id: int in range(CROWD_FIRST_ID, CROWD_FIRST_ID + 4):
+		var crowd_player: Player = auto_free(Player.create(crowd_id, "Crowd %d" % crowd_id))
+		crowd_player.character = ModelFreeWorld.load_hero_profile()
+		players[crowd_id] = crowd_player
+	_spawner.start_synching_players()
+	await await_idle_frame()
+	var start_cell: Vector2i = _controller_of(Multiplayer.HOST_ID).character.grid_cell
+	# E.g. an agent, created on the start tile's centre like characters used to be
+	var piece: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(start_cell))))
+	piece.level = _level
+	add_child(piece)
+	await await_idle_frame()
+	assert_that(piece.grid_cell).is_not_equal(start_cell)
+	assert_bool(_level.get_placed_tile(start_cell).has_connection_to(piece.grid_cell)).is_true()
