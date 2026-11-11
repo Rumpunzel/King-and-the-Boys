@@ -112,6 +112,8 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var passed_animations: BodyAnimations
 ## Played as the pass ends (taken back, or a new turn), e.g. getting up; then the idles
 @export var unpass_animation: Animation
+## Played once as a player picks the character in the lobby, e.g. drawing a sword; then the idles
+@export var selected_animation: Animation
 
 @export_category("")
 @export_group("Configuration")
@@ -177,7 +179,11 @@ func _roll_random_equipment() -> Array[EquipmentLook]:
 func create_model(variation: int) -> Model:
 	var model: Model = super.create_model(variation)
 	if model: model.idle_animations = idle_animations
-	if model is ModularModel: (model as ModularModel).set_gear_colors(gear_primary_color, gear_secondary_color)
+	if model is ModularModel:
+		var modular_model: ModularModel = model
+		modular_model.set_gear_colors(gear_primary_color, gear_secondary_color)
+		# Before any body is rolled or applied: they name meshes of the body's gender
+		if model_configuration: modular_model.set_gender(model_configuration.gender)
 	# In game the server rolls the look once and sends it as [constant Character.BODY]
 	if model is ModularModel and Engine.is_editor_hint(): setup_model(model as ModularModel)
 	return model
@@ -193,7 +199,8 @@ func roll_body(variation: int) -> Dictionary:
 ## profile (e.g. its outfit) does not change the face, until [param reroll] asks for a new one
 func setup_model(model: ModularModel, reroll: bool = false) -> void:
 	model.reset_gear()
-	if reroll or _preview_body.is_empty() or _preview_model_path != model.scene_file_path:
+	# A body that no longer fits (another scene, or the configuration's gender changed) rolls anew
+	if reroll or _preview_body.is_empty() or _preview_model_path != model.scene_file_path or not model.is_complete_body(_preview_body):
 		_preview_model_path = model.scene_file_path
 		_preview_body = model_configuration.roll(model) if model_configuration else {}
 		_preview_random_equipment = _roll_random_equipment()

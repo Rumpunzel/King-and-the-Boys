@@ -255,6 +255,8 @@ name = "Belt 12"
 [resource]
 script = ExtResource("5_ltdy7")
 intelligence = 2
+vision = 0.0
+dark_vision = 1.5
 preview_offset = Vector3(0, 0.1, 0)
 gear_primary_color = Color(0.173, 0.29, 0.549, 1)
 gear_secondary_color = Color(0.851, 0.698, 0.29, 1)
@@ -273,6 +275,7 @@ idle_animations = SubResource("Resource_511xg")
 pass_animation = ExtResource("6_5a45u")
 passed_animations = SubResource("BodyAnimations_passed")
 unpass_animation = ExtResource("55_t8ti5")
+selected_animation = ExtResource("55_t8ti5")
 name = "Knight"
 portrait = ExtResource("5_63j5q")
 color = Color(0.227, 0.4, 0.784, 1)

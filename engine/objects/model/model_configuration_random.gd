@@ -19,7 +19,15 @@ extends ModelConfiguration
 		mesh_pools = new_value
 		changed.emit()
 
+## The body's gender, e.g. a female hero; bodies without gendered parts (dwarves) ignore it. Fixed, not rolled, so every peer builds
+## the same body before the rolled meshes arrive (see [method CharacterProfile.create_model]), and the pools are of this gender's meshes
+@export var gender: ModularBodyPartGendered.Gender = ModularBodyPartGendered.Gender.MALE:
+	set(new_value):
+		gender = new_value
+		changed.emit()
+
 func configure(model: ModularModel) -> void:
+	model.set_gender(gender)
 	var part_keys: PackedStringArray = model.get_part_keys()
 	for part: int in model.get_body_parts():
 		var body_part: ModularBodyPart = model.get_part(part)

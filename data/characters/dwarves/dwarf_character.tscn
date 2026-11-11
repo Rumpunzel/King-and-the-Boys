@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://r1m5k3gbak8r" path="res://engine/objects/model/dwarf_character.gd" id="1_3stfe"]
 [ext_resource type="ArrayMesh" uid="uid://ncry2ovu6xmb" path="res://data/characters/dwarves/meshes/body/dwarf_body_casual_male_01.res" id="2_w31uy"]
 [ext_resource type="Script" uid="uid://bpc78snhxhw1t" path="res://engine/objects/characters/modular_body_part_simple.gd" id="3_t3h81"]
-[ext_resource type="AnimationLibrary" uid="uid://dcpwsj71hiqk3" path="res://assets/quaternius_animations/AnimationLibrary_Godot.glb" id="4_pla40"]
+[ext_resource type="AnimationLibrary" uid="uid://dcpwsj71hiqk3" path="res://assets/quaternius_animations/UAL1.glb" id="4_pla40"]
 [ext_resource type="Material" uid="uid://bfwv8gb2fse5i" path="res://data/characters/gear/hero_gear_material.tres" id="gear_hero_gear_material"]
 [ext_resource type="Material" uid="uid://bi0qcogabe33g" path="res://data/characters/gear/dwarf_gear_material.tres" id="gear_dwarf_gear_material"]
 
@@ -646,5 +646,5 @@ transform = Transform3D(0, 0, 1, -0.398, 0.917, 0, -0.917, -0.398, 0, 0.15, -0.3
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.05, -0.3)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=346435798]
-libraries/AnimationLibrary_Godot = ExtResource("4_pla40")
-autoplay = &"AnimationLibrary_Godot/Idle"
+libraries/UAL1 = ExtResource("4_pla40")
+autoplay = &"UAL1/Idle"

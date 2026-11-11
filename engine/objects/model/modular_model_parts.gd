@@ -5,7 +5,7 @@ extends RefCounted
 ## What a [ModularModel] scene offers equipment, read once from a plain instance: its part names, the parts each slot owns
 ## and the meshes each part can show. Types, catalogs and the inspector ask this instead of building a model each time
 
-## {scene path: [String] -> [ModularModelParts]}
+## {scene path and gender: [String] -> [ModularModelParts]}
 static var _cache: Dictionary[String, ModularModelParts] = {}
 
 var part_keys: PackedStringArray = []
@@ -16,15 +16,18 @@ var mesh_options: Dictionary[int, PackedStringArray] = {}
 ## The parts no slot owns, see [method ModularModel.get_body_parts]
 var body_parts: Array[int] = []
 
-## @returns the parts of [param scene], or [code]null[/code] if it is no [ModularModel]
-static func of(scene: PackedScene) -> ModularModelParts:
+## @returns the parts of [param scene], with the meshes of [param gender] for gendered parts (equipment keeps to the male ones, see
+## [method EquipmentType.get_mesh_options]), or [code]null[/code] if it is no [ModularModel]
+static func of(scene: PackedScene, gender: ModularBodyPartGendered.Gender = ModularBodyPartGendered.Gender.MALE) -> ModularModelParts:
 	if not scene: return null
-	if _cache.has(scene.resource_path): return _cache[scene.resource_path]
+	var key: String = "%s|%d" % [scene.resource_path, gender]
+	if _cache.has(key): return _cache[key]
 	var instance: Node = scene.instantiate()
 	var model: ModularModel = instance as ModularModel
 	if not model:
 		instance.free()
 		return null
+	model.set_gender(gender)
 	var model_parts: ModularModelParts = ModularModelParts.new()
 	model_parts.part_keys = model.get_part_keys()
 	for slot: EquipmentLook.Slot in EquipmentLook.Slot.values(): model_parts.slot_parts[slot] = model.get_slot_parts(slot)
@@ -35,7 +38,7 @@ static func of(scene: PackedScene) -> ModularModelParts:
 		options.append_array(body_part.get_mesh_paths())
 		model_parts.mesh_options[part] = options
 	model.free()
-	if not scene.resource_path.is_empty(): _cache[scene.resource_path] = model_parts
+	if not scene.resource_path.is_empty(): _cache[key] = model_parts
 	return model_parts
 
 ## e.g. "SHOULDER_ATTACH_LEFT", or the number for a part this model lacks

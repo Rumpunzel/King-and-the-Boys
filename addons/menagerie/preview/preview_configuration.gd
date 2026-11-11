@@ -137,7 +137,7 @@ static func _get_mesh_number(body_part: ModularBodyPart) -> String:
 	if not body_part.mesh: return ModularBodyPart.EMPTY_MESH_NUMBER
 	return ModularBodyPart.get_mesh_number(body_part.mesh.resource_path)
 
-## Buttons playing the previewed character's own animations, to look them over: spawning, moving, undoing, and passing (pressed while
+## Buttons playing the previewed character's own animations, to look them over: being picked in the lobby, spawning, moving, undoing, and passing (pressed while
 ## passed, released to get up again)
 func _show_animations() -> void:
 	if not _animation_buttons: return
@@ -153,6 +153,12 @@ func _show_animations() -> void:
 	idle_button.tooltip_text = "Rests in the idles from the first (or a random one), as after any other animation"
 	idle_button.pressed.connect(_show_idle)
 	_animation_buttons.add_child(idle_button)
+	if character_profile.selected_animation:
+		var select_button: Button = Button.new()
+		select_button.text = "Select"
+		select_button.tooltip_text = "Shows off as a player picks the character in the lobby"
+		select_button.pressed.connect(_play_body_animation.bind(character_profile.selected_animation))
+		_animation_buttons.add_child(select_button)
 	for label: String in animations:
 		if not animations[label]: continue
 		var button: Button = Button.new()
@@ -175,6 +181,11 @@ func _show_idle() -> void:
 
 func _play_model_animation(model_animation: ModelAnimation) -> void:
 	if is_instance_valid(_model): _model.play_model_animation(model_animation)
+
+## Plays [param animation] once, ending a pass shown without getting up
+func _play_body_animation(animation: Animation) -> void:
+	if is_instance_valid(_pass_button): _pass_button.set_pressed_no_signal(false)
+	if is_instance_valid(_model): _model.rest_in(null, animation)
 
 func _show_passed(passed: bool) -> void:
 	var character_profile: CharacterProfile = _profile as CharacterProfile

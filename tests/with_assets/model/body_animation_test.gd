@@ -110,10 +110,13 @@ func test_a_model_rests_in_what_it_is_told_and_back() -> void:
 	await await_idle_frame()
 	assert_str(player.current_animation).is_equal(player.autoplay)
 
-func test_every_hero_moves_spawns_and_passes_in_their_own_way() -> void:
+func test_every_hero_is_picked_moves_spawns_and_passes_in_their_own_way() -> void:
 	var spawns: Dictionary[String, bool] = {}
 	for hero: String in HEROES:
 		var profile: CharacterProfile = load("res://data/characters/people/%s.tres" % hero)
+		assert_object(profile.selected_animation).override_failure_message("%s shows nothing as they are picked" % hero).is_not_null()
+		if profile.idle_animations:
+			assert_array(profile.idle_animations.get_animations()).override_failure_message("%s is picked with an idle" % hero).not_contains([profile.selected_animation])
 		assert_bool(profile.move_animation.has_body_animations()).override_failure_message("%s hops without a body animation" % hero).is_true()
 		assert_bool(profile.spawn_animation.has_body_animations()).override_failure_message("%s spawns without a body animation" % hero).is_true()
 		spawns[profile.spawn_animation.resource_path] = true

@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 
 const HEROES: Array[String] = ["knight", "rogue", "mystic", "soldier", "elf"]
 const KNIGHT_BODY: String = "res://data/characters/people/knight_body.tres"
+const ELF: String = "res://data/characters/people/elf.tres"
 
 var _model: ModularCharacter
 
@@ -60,6 +61,8 @@ func test_every_hero_has_a_look_of_their_own() -> void:
 	for hero: String in HEROES:
 		var profile: CharacterProfile = load("res://data/characters/people/%s.tres" % hero)
 		assert_str(profile.model_configuration.resource_path).is_equal("res://data/characters/people/%s_body.tres" % hero)
+		# Pools are of the meshes of the hero's gender
+		_model.set_gender(profile.model_configuration.gender)
 		for part_key: String in profile.model_configuration.mesh_pools:
 			var part: ModularBodyPart = _model.get(part_key.to_lower())
 			var options: PackedStringArray = profile.model_configuration.get_pool_options(part, part_key)
@@ -120,10 +123,66 @@ func test_the_preview_steps_through_a_part_s_pool_and_keeps_the_choice() -> void
 
 func test_a_body_without_facial_hair_meshes_keeps_to_any_pool() -> void:
 	# A female body has no facial hair, so the knight's pool (without "00") rolls none for it
-	_model.facial_hair.gender = ModularBodyPartGendered.Gender.FEMALE
-	_model.facial_hair.set("_mesh_list", [] as Array[String])
-	var knight_body: ModelConfigurationRandom = load(KNIGHT_BODY)
+	var knight_body: ModelConfigurationRandom = (load(KNIGHT_BODY) as ModelConfigurationRandom).duplicate()
+	knight_body.gender = ModularBodyPartGendered.Gender.FEMALE
 	assert_bool(knight_body.mesh_pools["FACIAL_HAIR"].has(ModularBodyPart.EMPTY_MESH_NUMBER)).is_false()
 	var body: Dictionary = knight_body.roll(_model)
 	assert_str(body[ModularCharacter.Part.FACIAL_HAIR] as String).is_empty()
 	assert_bool(knight_body.allows(_model, body)).is_true()
+
+func test_a_body_turns_female_and_back_keeping_its_mesh_numbers() -> void:
+	_model.eyebrow.update_index(_model.eyebrow.find_mesh_index("05"))
+	_model.facial_hair.update_index(_model.facial_hair.find_mesh_index("03"))
+	_model.set_gender(ModularBodyPartGendered.Gender.FEMALE)
+	assert_str(_model.torso.mesh.resource_path).contains("/female/")
+	assert_str(_model.eyebrow.mesh.resource_path).contains("/female/")
+	assert_str(_number(_model.eyebrow)).is_equal("05")
+	assert_object(_model.facial_hair.mesh).override_failure_message("Female bodies have no facial hair").is_null()
+	# A number the other gender lacks falls back to the first mesh
+	_model.set_gender(ModularBodyPartGendered.Gender.MALE)
+	_model.eyebrow.update_index(_model.eyebrow.find_mesh_index("09"))
+	_model.set_gender(ModularBodyPartGendered.Gender.FEMALE)
+	assert_str(_number(_model.eyebrow)).is_equal("01")
+	_model.set_gender(ModularBodyPartGendered.Gender.MALE)
+	assert_str(_model.torso.mesh.resource_path).contains("/male/")
+	assert_str(_model.torso.mesh.resource_path).not_contains("/female/")
+
+func test_a_body_turning_female_keeps_what_its_helmet_hides_hidden() -> void:
+	_model.head_no_elements.update_index(0)
+	assert_bool(_model.eyebrow.visible).is_false()
+	_model.set_gender(ModularBodyPartGendered.Gender.FEMALE)
+	assert_str(_model.eyebrow.mesh.resource_path).contains("/female/")
+	assert_bool(_model.eyebrow.visible).is_false()
+	assert_bool(_model.head.visible).is_false()
+	assert_bool(_model.head_no_elements.visible).is_true()
+	_model.set_gender(ModularBodyPartGendered.Gender.MALE)
+
+func test_a_preview_rolls_anew_once_its_body_no_longer_fits() -> void:
+	var elf: CharacterProfile = load(ELF)
+	var model: ModularCharacter = auto_free(elf.create_model(0))
+	add_child(model)
+	elf.setup_model(model)
+	# E.g. the gender changed in Menagerie: the next model is male, the cached body female
+	model.set_gender(ModularBodyPartGendered.Gender.MALE)
+	assert_bool(model.is_complete_body(elf._preview_body)).is_false()
+	elf.setup_model(model)
+	assert_bool(model.is_complete_body(elf._preview_body)).is_true()
+	elf._preview_body = {}
+
+func test_the_elf_is_female_wherever_her_body_is_built() -> void:
+	var elf: CharacterProfile = load(ELF)
+	assert_int(elf.model_configuration.gender).is_equal(ModularBodyPartGendered.Gender.FEMALE)
+	var model: ModularCharacter = auto_free(elf.create_model(0))
+	add_child(model)
+	assert_int(model.torso.gender).is_equal(ModularBodyPartGendered.Gender.FEMALE)
+	# The body a player rolls in the lobby names female meshes, and the server takes it
+	var body: Dictionary = elf.roll_body(0)
+	assert_str(ResourceId.get_file_path(body[ModularCharacter.Part.EYEBROW] as String)).contains("/female/")
+	assert_dict(elf.create_character_data(0, Transform3D.IDENTITY, body)[Character.BODY] as Dictionary).is_equal(body)
+	# Dressed, her gear shows its female meshes
+	elf.dress_model(model, body)
+	assert_str(model.torso.mesh.resource_path).contains("/female/")
+	# The pools' editor lists the female meshes
+	var scene: PackedScene = load("res://data/characters/people/modular_character.tscn")
+	assert_array(ModularModelParts.of(scene, ModularBodyPartGendered.Gender.FEMALE).get_mesh_numbers(ModularCharacter.Part.EYEBROW)).has_size(7)
+	assert_array(ModularModelParts.of(scene).get_mesh_numbers(ModularCharacter.Part.EYEBROW)).has_size(10)
