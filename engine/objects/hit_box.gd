@@ -25,13 +25,15 @@ func request_control(controller_path: NodePath) -> void:
 @rpc("any_peer", "call_local", "reliable")
 func request_release() -> void:
 	if not multiplayer.is_server(): return
-	if not controller or controller.get_multiplayer_authority() != _get_sender_id(): return
+	if not is_instance_valid(controller) or controller.get_multiplayer_authority() != _get_sender_id(): return
 	_set_controller.rpc(NodePath())
 
 ## Whether the player on [param peer_id] may take control of this piece with [param new_controller]: their own
-## character, reaching this piece, which no one controls yet and which is no player's own character
+## character, controlling nothing yet (release first), reaching this piece, which no one controls yet and which is
+## no player's own character
 func may_be_controlled_by(new_controller: Character, peer_id: int) -> bool:
-	if controller or not new_controller or new_controller.get_multiplayer_authority() != peer_id: return false
+	if is_instance_valid(controller) or not new_controller or new_controller.controlling: return false
+	if new_controller.get_multiplayer_authority() != peer_id: return false
 	var body: Node3D = get_body()
 	if body == new_controller or body.get_parent() is PlayerController: return false
 	var player_controller: PlayerController = new_controller.get_parent() as PlayerController
@@ -41,13 +43,22 @@ func may_be_controlled_by(new_controller: Character, peer_id: int) -> bool:
 @rpc("any_peer", "call_local", "reliable")
 func _set_controller(controller_path: NodePath) -> void:
 	if _get_sender_id() != Multiplayer.HOST_ID: return
+	if is_instance_valid(controller):
+		if controller.tree_exiting.is_connected(_on_controller_tree_exiting): controller.tree_exiting.disconnect(_on_controller_tree_exiting)
+		controller.controlling = null
 	if controller_path.is_empty():
 		controller = null
 		released.emit()
 		return
 	controller = get_node(controller_path)
 	assert(controller)
+	controller.controlling = self
+	# A controller that leaves (disconnect, stop, load) gives its piece back
+	if multiplayer.is_server(): controller.tree_exiting.connect(_on_controller_tree_exiting, CONNECT_ONE_SHOT)
 	controlled.emit(controller)
+
+func _on_controller_tree_exiting() -> void:
+	_set_controller.rpc(NodePath())
 
 func _get_sender_id() -> int:
 	var sender_id: int = multiplayer.get_remote_sender_id()

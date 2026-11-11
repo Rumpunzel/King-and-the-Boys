@@ -20,17 +20,6 @@ func _enter_tree() -> void:
 	#if _editor_material: model.apply_material_override(_editor_material)
 	#add_child(model)
 
-## @returns the [Level] this spawn point belongs to, if any
-func get_level() -> Level:
-	var ancestor: Node = get_parent()
-	while ancestor and not ancestor is Level: ancestor = ancestor.get_parent()
-	return ancestor as Level
-
-## Whether a character can spawn here: the level has a tile on this point's cell
-func is_ready() -> bool:
-	var level: Level = get_level()
-	return level != null and level.get_placed_tile(level.world_to_grid_position(global_position)) != null
-
 ## [param chosen_body] is the look the player picked in the lobby, used if it fits
 func get_character_data(character_profile: CharacterProfile, variation: int, chosen_body: Dictionary = {}) -> Dictionary[StringName, Variant]:
 	return character_profile.create_character_data(variation, transform, chosen_body)

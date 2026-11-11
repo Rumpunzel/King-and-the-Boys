@@ -5,6 +5,10 @@ extends Spawner
 
 signal player_controller_created(player_controller: PlayerController)
 
+@export_group("Configuration")
+## Spawning waits for it to be built
+@export var _level: Level
+
 # {player_id: int -> PlayerController}
 var _player_controllers: Dictionary[int, PlayerController] = {}
 
@@ -16,25 +20,26 @@ func _enter_tree() -> void:
 ## level is built) and for players who join later. Safe to call again, e.g. after loading.
 func start_synching_players() -> void:
 	assert(multiplayer.is_server())
+	assert(_level)
 	if not Lobby.player_created.is_connected(_on_player_created): Lobby.player_created.connect(_on_player_created)
-	_spawn_missing_players_once_ready()
+	if _level.is_built: _spawn_missing_players()
+	elif not _level.built.is_connected(_spawn_missing_players): _level.built.connect(_spawn_missing_players, CONNECT_ONE_SHOT)
 
 ## Host only: undoes [method start_synching_players] and removes every [PlayerController]
 func stop_synching_players() -> void:
 	assert(multiplayer.is_server())
 	if Lobby.player_created.is_connected(_on_player_created): Lobby.player_created.disconnect(_on_player_created)
-	if get_tree().node_added.is_connected(_on_node_added): get_tree().node_added.disconnect(_on_node_added)
-	var level: Level = _get_level()
-	if level and level.built.is_connected(_spawn_missing_players_once_ready): level.built.disconnect(_spawn_missing_players_once_ready)
+	if _level and _level.built.is_connected(_spawn_missing_players): _level.built.disconnect(_spawn_missing_players)
 	remove_all_spawned_nodes()
 
-## Host only; needs the level's [PlayerSpawnPoint]
+## Host only; needs the level built
 func spawn_player_controller(player: Player) -> void:
 	assert(multiplayer.is_server())
 	assert(player)
 	assert(not _player_controllers.has(player.player_id))
+	assert(_level.is_built)
 	var player_spawn_point: PlayerSpawnPoint = _get_player_spawn_point()
-	assert(player_spawn_point and player_spawn_point.is_ready())
+	assert(player_spawn_point)
 	var character_data: Dictionary[StringName, Variant] = player_spawn_point.get_character_data(player.character, 0, player.body)
 	var player_controller_data: Dictionary[StringName, Variant] = {
 		PlayerController.PLAYER_ID: player.player_id,
@@ -83,29 +88,9 @@ func _get_player_spawn_point() -> PlayerSpawnPoint:
 	var player_spawn_point: PlayerSpawnPoint = player_spawn_points.front()
 	return player_spawn_point
 
-func _get_level() -> Level:
-	var player_spawn_point: PlayerSpawnPoint = _get_player_spawn_point()
-	return player_spawn_point.get_level() if player_spawn_point else null
-
-func _is_ready_to_spawn() -> bool:
-	var player_spawn_point: PlayerSpawnPoint = _get_player_spawn_point()
-	return player_spawn_point != null and player_spawn_point.is_ready()
-
-## Spawning waits for the level: once it is in the tree, until it is built
-func _spawn_missing_players_once_ready() -> void:
-	if _is_ready_to_spawn():
-		for player: Player in Lobby.get_connected_players():
-			if not _player_controllers.has(player.player_id): spawn_player_controller(player)
-		return
-	var level: Level = _get_level()
-	if level:
-		if not level.built.is_connected(_spawn_missing_players_once_ready): level.built.connect(_spawn_missing_players_once_ready, CONNECT_ONE_SHOT)
-	elif not get_tree().node_added.is_connected(_on_node_added): get_tree().node_added.connect(_on_node_added)
-
-func _on_node_added(node: Node) -> void:
-	if not node.is_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS): return
-	get_tree().node_added.disconnect(_on_node_added)
-	_spawn_missing_players_once_ready()
+func _spawn_missing_players() -> void:
+	for player: Player in Lobby.get_connected_players():
+		if not _player_controllers.has(player.player_id): spawn_player_controller(player)
 
 func _on_child_entered_tree(node: Node) -> void:
 	if not node is PlayerController: return
@@ -113,10 +98,15 @@ func _on_child_entered_tree(node: Node) -> void:
 
 func _on_player_created(player: Player) -> void:
 	if not _player_controllers.has(player.player_id):
-		# Before the level is built, spawning waits for it and then spawns every missing player
-		if _is_ready_to_spawn(): spawn_player_controller(player)
+		# Before the level is built, its built signal spawns every missing player
+		if _level.is_built: spawn_player_controller(player)
 		return
 	var existing_player_controller: PlayerController = _player_controllers[player.player_id]
 	player.character = existing_player_controller.character.profile
 	player.body = existing_player_controller.character.body
 	existing_player_controller.player = player
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var warnings: PackedStringArray = []
+	if not _level: warnings.append("Missing Level reference.")
+	return warnings

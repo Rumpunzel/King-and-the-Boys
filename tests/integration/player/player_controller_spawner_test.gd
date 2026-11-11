@@ -29,12 +29,32 @@ func after_test() -> void:
 	_local_player.character = _local_character
 	await await_idle_frame()
 
-func _add_level() -> void:
+func _add_level(build: bool = true) -> void:
 	_level = auto_free(ModelFreeWorld.create_level())
+	_spawner.set("_level", _level)
 	_spawner.player_controller_created.connect(_level._on_player_controller_created)
 	add_child(_level)
-	_level.build_level()
+	if build: _level.build_level()
 	await await_idle_frame()
+
+## Gives [param controller] the interaction area its scene lacks while taking control is tabled
+func _give_interaction_area(controller: PlayerController) -> void:
+	var area: InteractionArea = (load("res://engine/player/interaction_area.tscn") as PackedScene).instantiate()
+	controller.character.add_child(area)
+	var state_machine: PlayerStateMachine = controller.get("_state_machine")
+	state_machine.interaction_area = area
+
+## A character no player owns, within [param controller]'s reach. The tabled interaction area has no shape and
+## does not look at character hit boxes yet, so the piece is put in its list instead of overlapping in physics.
+func _add_piece_near(controller: Character) -> Character:
+	var piece: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, controller.global_position)))
+	piece.level = _level
+	add_child(piece)
+	await await_idle_frame()
+	var state_machine: PlayerStateMachine = (controller.get_parent() as PlayerController).get("_state_machine")
+	var hit_boxes_in_area: Array[HitBox] = state_machine.interaction_area.get("_hit_boxes_in_area")
+	hit_boxes_in_area.append(_hit_box_of(piece))
+	return piece
 
 func _add_other_player() -> Player:
 	var other: Player = auto_free(Player.create(OTHER_PLAYER_ID, "Other"))
@@ -69,11 +89,13 @@ func test_spawns_one_controller_per_player_and_may_start_again() -> void:
 	await await_idle_frame()
 	assert_int(_controllers().size()).is_equal(1)
 
-func test_waits_for_the_level() -> void:
+func test_waits_for_the_level_to_be_built() -> void:
+	await _add_level(false)
 	_spawner.start_synching_players()
 	await await_idle_frame()
 	assert_int(_controllers().size()).is_equal(0)
-	await _add_level()
+	_level.build_level()
+	await await_idle_frame()
 	assert_int(_controllers().size()).is_equal(1)
 
 func test_players_joining_later_get_a_controller() -> void:
@@ -110,10 +132,47 @@ func test_only_the_owner_asks_with_a_character() -> void:
 	_add_other_player()
 	_spawner.start_synching_players()
 	await await_idle_frame()
-	var other_character: Character = _controller_of(OTHER_PLAYER_ID).character
-	var hit_box: HitBox = _hit_box_of(_controller_of(Multiplayer.HOST_ID).character)
-	# The host may not ask with the other player's character
-	assert_bool(hit_box.may_be_controlled_by(other_character, Multiplayer.HOST_ID)).is_false()
+	var local_character: Character = _controller_of(Multiplayer.HOST_ID).character
+	_give_interaction_area(_controller_of(Multiplayer.HOST_ID))
+	var piece: Character = await _add_piece_near(local_character)
+	var hit_box: HitBox = _hit_box_of(piece)
+	assert_bool(hit_box.may_be_controlled_by(local_character, Multiplayer.HOST_ID)).is_true()
+	# The other player may not ask with the host's character
+	assert_bool(hit_box.may_be_controlled_by(local_character, OTHER_PLAYER_ID)).is_false()
+
+func test_granted_control_reaches_both_sides_and_ends_with_the_controller() -> void:
+	await _add_level()
+	_spawner.start_synching_players()
+	await await_idle_frame()
+	var local_character: Character = _controller_of(Multiplayer.HOST_ID).character
+	_give_interaction_area(_controller_of(Multiplayer.HOST_ID))
+	var piece: Character = await _add_piece_near(local_character)
+	var hit_box: HitBox = _hit_box_of(piece)
+	hit_box.request_control(local_character.get_path())
+	assert_object(hit_box.controller).is_same(local_character)
+	assert_object(local_character.controlling).is_same(hit_box)
+	assert_object(piece.controlled_by).is_same(local_character)
+	# A piece is controlled by one at a time, and a controller controls one at a time
+	var other_piece: Character = await _add_piece_near(local_character)
+	assert_bool(_hit_box_of(other_piece).may_be_controlled_by(local_character, Multiplayer.HOST_ID)).is_false()
+	# The controller leaving gives the piece back
+	_spawner.stop_synching_players()
+	await await_idle_frame()
+	assert_object(hit_box.controller).is_null()
+	assert_object(piece.controlled_by).is_null()
+
+func test_the_controller_releases() -> void:
+	await _add_level()
+	_spawner.start_synching_players()
+	await await_idle_frame()
+	var local_character: Character = _controller_of(Multiplayer.HOST_ID).character
+	_give_interaction_area(_controller_of(Multiplayer.HOST_ID))
+	var piece: Character = await _add_piece_near(local_character)
+	var hit_box: HitBox = _hit_box_of(piece)
+	hit_box.request_control(local_character.get_path())
+	hit_box.request_release()
+	assert_object(hit_box.controller).is_null()
+	assert_object(local_character.controlling).is_null()
 
 func test_refused_requests_change_nothing() -> void:
 	await _add_level()
