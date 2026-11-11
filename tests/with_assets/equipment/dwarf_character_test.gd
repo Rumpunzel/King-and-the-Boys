@@ -22,7 +22,11 @@ func test_every_part_has_meshes_in_number_order() -> void:
 func test_only_hair_and_beard_are_rolled_per_character() -> void:
 	assert_array(_dwarf.get_body_parts()).contains_exactly([DwarfCharacter.Part.HAIR, DwarfCharacter.Part.BEARD, DwarfCharacter.Part.BEARD_ATTACHMENT])
 	var body: Dictionary = (load("res://data/characters/dwarves/random_dwarf.tres") as ModelConfigurationRandom).roll(_dwarf)
-	assert_array(body.keys()).contains_exactly(_dwarf.get_body_parts())
+	# Plus their colours
+	var keys: Array = []
+	keys.append_array(_dwarf.get_body_parts())
+	keys.append_array([ModularModel.BODY_SKIN_COLOR, ModularModel.BODY_HAIR_COLOR])
+	assert_array(body.keys()).contains_exactly(keys)
 
 func test_a_human_body_configuration_skips_parts_dwarves_lack() -> void:
 	var body: Dictionary = (load("res://data/characters/people/random_human.tres") as ModelConfigurationRandom).roll(_dwarf)
@@ -78,7 +82,8 @@ func test_the_dwarf_profile_spawns_a_dressed_dwarf() -> void:
 	var model: DwarfCharacter = character.model
 	assert_str(EquipmentFixtures.mesh_path(model.body)).ends_with("dwarf_body_soldier_male_03.res")
 	assert_str(EquipmentFixtures.mesh_path(model.headwear)).ends_with("dwarf_headwear_helmet_soldier_08.res")
-	assert_array((data[Character.BODY] as Dictionary).keys()).contains_exactly(model.get_body_parts())
+	var body: Dictionary = data[Character.BODY]
+	assert_bool(model.is_complete_body(body)).is_true()
 
 func test_a_body_rolled_for_another_model_is_skipped() -> void:
 	# Saves made before the dwarf had its own body hold human part numbers, e.g. EARS (4), which is HEADWEAR on a dwarf

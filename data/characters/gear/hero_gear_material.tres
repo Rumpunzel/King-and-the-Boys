@@ -3,12 +3,18 @@
 [ext_resource type="Shader" uid="uid://cyg5ttdoxrdk2" path="res://engine/objects/model/gear_colors.gdshader" id="1_shader"]
 [ext_resource type="Texture2D" uid="uid://do5poqac4bs67" path="res://assets/polygon_modular_fantasy_heroes/FBX/Textures/PolygonFantasyHero_Texture_01.png" id="2_albedo"]
 [ext_resource type="Texture2D" uid="uid://dh315qhl858qh" path="res://assets/polygon_modular_fantasy_heroes/FBX/Textures/PolygonFantasyHero_Texture_Mask_01.png" id="3_mask"]
+[ext_resource type="Texture2D" uid="uid://d00cdypwonrtm" path="res://assets/polygon_modular_fantasy_heroes/FBX/Textures/PolygonFantasyHero_Texture_Mask_03.png" id="4_skin"]
+[ext_resource type="Texture2D" uid="uid://lwtnkhg75qk8" path="res://assets/polygon_modular_fantasy_heroes/FBX/Textures/PolygonFantasyHero_Texture_Mask_04.png" id="5_hair"]
 
 [resource]
 resource_name = "Hero Gear Material"
 shader = ExtResource("1_shader")
 shader_parameter/albedo_texture = ExtResource("2_albedo")
 shader_parameter/mask_texture = ExtResource("3_mask")
+shader_parameter/skin_mask_texture = ExtResource("4_skin")
+shader_parameter/hair_mask_texture = ExtResource("5_hair")
 shader_parameter/use_mask = true
 shader_parameter/primary_key = Color(0.290, 0.404, 0.494, 1)
 shader_parameter/secondary_key = Color(0.753, 0.608, 0.322, 1)
+shader_parameter/skin_key = Color(1.000, 0.800, 0.686, 1)
+shader_parameter/hair_key = Color(0.271, 0.212, 0.141, 1)

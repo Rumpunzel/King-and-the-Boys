@@ -29,17 +29,26 @@ func _body_mesh_paths(character: Character) -> PackedStringArray:
 	for part: int in model.get_body_parts(): paths.append(EquipmentFixtures.mesh_path(model.get_part(part)))
 	return paths
 
+## The parts of [param body], leaving out its colours
+func _parts(body: Dictionary) -> Array[int]:
+	var parts: Array[int] = []
+	for key: Variant in body: if key is int: parts.append(key as int)
+	return parts
+
 func test_character_data_has_all_keys() -> void:
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(-1, Transform3D())
 	Character.validate_character_data(data)
 	assert_int(data[Character.VARIATION] as int).is_greater_equal(0)
 	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
-	assert_array((data[Character.BODY] as Dictionary).keys()).contains_exactly(model.get_body_parts())
+	var keys: Array = []
+	keys.append_array(model.get_body_parts())
+	keys.append_array([ModularModel.BODY_SKIN_COLOR, ModularModel.BODY_HAIR_COLOR])
+	assert_array((data[Character.BODY] as Dictionary).keys()).contains_exactly(keys)
 	assert_array(data[Character.EQUIPMENT] as PackedStringArray).is_empty()
 
 func test_body_is_sent_as_mesh_uids() -> void:
 	var body: Dictionary = _knight.create_character_data(0, Transform3D())[Character.BODY]
-	for part: int in body:
+	for part: int in _parts(body):
 		var mesh_id: String = body[part]
 		if mesh_id.is_empty(): continue
 		assert_str(mesh_id).starts_with("uid://")
@@ -50,7 +59,7 @@ func test_peers_show_the_body_the_server_rolled() -> void:
 	var peer: Character = _peer_from(data)
 	var body: Dictionary = data[Character.BODY]
 	var rolled: PackedStringArray = []
-	for part: int in body:
+	for part: int in _parts(body):
 		var mesh: Resource = ResourceId.find(body[part] as String)
 		rolled.append(mesh.resource_path if mesh else "")
 	assert_array(_body_mesh_paths(host)).is_equal(rolled)
@@ -109,7 +118,7 @@ func test_the_body_chosen_in_the_lobby_carries_into_the_game() -> void:
 	assert_dict(data[Character.BODY] as Dictionary).is_equal(chosen)
 	var character: Character = auto_free(Character.from_character_data(data))
 	var shown: PackedStringArray = []
-	for part: int in chosen: shown.append(ResourceId.get_file_path(chosen[part] as String))
+	for part: int in _parts(chosen): shown.append(ResourceId.get_file_path(chosen[part] as String))
 	assert_array(_body_mesh_paths(character)).is_equal(shown)
 
 func test_a_body_that_does_not_fit_is_rolled_anew() -> void:
