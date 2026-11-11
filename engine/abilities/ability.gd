@@ -59,7 +59,7 @@ func get_charges_left(character: Character) -> int:
 	var used: int = character.ability_uses.get(ResourceId.of(self), 0)
 	return maxi(charges - used, 0)
 
-## Host only; @returns the cells [param character] could target now
+## @returns the cells [param character] could target now; from replicated state, so clients ask it too
 func get_targets(character: Character, _level: Level) -> Array[Vector2i]:
 	match targeting:
 		Targeting.OWN_TILE: return [character.grid_cell]
@@ -69,7 +69,13 @@ func get_targets(character: Character, _level: Level) -> Array[Vector2i]:
 func get_cost(_character: Character, _target: Vector2i, _argument: int) -> int:
 	return cost
 
-## Host only; the ability's own rules, the turn's limits are checked by the [TurnManager]
+## @returns the choice one [param step] on from [param argument] (e.g. a quarter turn further), or [param argument] if
+## [param character] can not pay for it; the UI steps a held ability's choice with it before asking the host
+func get_next_argument(character: Character, target: Vector2i, argument: int, step: int) -> int:
+	var next_argument: int = argument + step
+	return next_argument if get_cost(character, target, next_argument) <= character.movement_points else argument
+
+## The ability's own rules, the turn's limits are checked by the [TurnManager]
 func can_use(character: Character, target: Vector2i, _argument: int, level: Level) -> bool:
 	return not is_passive() and get_targets(character, level).has(target)
 
@@ -80,7 +86,8 @@ func use(character: Character, target: Vector2i, argument: int, _level: Level) -
 	assert(not is_passive(), "%s is passive" % name)
 	return AbilityStep.new(self, character, get_cost(character, target, argument))
 
-## Host only, [member held] abilities: whether [param character] may start using the ability on [param target]
+## [member held] abilities: whether [param character] may start using the ability on [param target]; from replicated state,
+## so clients ask it too
 func can_begin(character: Character, target: Vector2i, level: Level) -> bool:
 	return not is_passive() and get_targets(character, level).has(target)
 

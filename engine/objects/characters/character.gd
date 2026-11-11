@@ -10,6 +10,7 @@ signal movement_points_changed(movement_points: int)
 signal undo_steps_changed(undo_steps: int)
 signal ability_uses_changed
 signal active_ability_changed
+signal held_cost_changed(held_cost: int)
 ## Emitted on every peer when the animated figure crosses into [param cell], which lags behind [member grid_cell]
 signal figure_entered_grid_cell(cell: Vector2i)
 ## Emitted on every peer when the figure's move ended
@@ -137,6 +138,12 @@ var active_ability_id: String = "":
 		if new_active_ability_id == active_ability_id: return
 		active_ability_id = new_active_ability_id
 		active_ability_changed.emit()
+## The movement points the held ability in use would cost as it is now, [code]0[/code] if none; set by the host, replicated
+var held_cost: int = 0:
+	set(new_held_cost):
+		if new_held_cost == held_cost: return
+		held_cost = new_held_cost
+		held_cost_changed.emit(held_cost)
 
 var _has_grid_state: bool = false
 var _grid_visual_update_queued: bool = false

@@ -37,6 +37,9 @@ properties/8/replication_mode = 2
 properties/9/path = NodePath(".:active_ability_id")
 properties/9/spawn = false
 properties/9/replication_mode = 2
+properties/10/path = NodePath(".:held_cost")
+properties/10/spawn = false
+properties/10/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_eqp01"]
 properties/0/path = NodePath(".:equipped_ids")

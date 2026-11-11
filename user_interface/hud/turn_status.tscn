@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="4_ogig8"]
 [ext_resource type="Texture2D" uid="uid://dijf8incgp7wf" path="res://tools/icons/editor_icons/hero_icons/check-circle.svg" id="5_xdo1c"]
 [ext_resource type="PackedScene" uid="uid://b8ix8nx66t01e" path="res://user_interface/hud/moves_bar.tscn" id="6_moves"]
+[ext_resource type="PackedScene" uid="uid://bt7kaqcsutt1r" path="res://user_interface/hud/ability_bar.tscn" id="7_abilities"]
 
 [sub_resource type="InputEventAction" id="InputEventAction_undo"]
 action = &"undo_move"
@@ -20,7 +21,7 @@ action = &"end_turn"
 [sub_resource type="Shortcut" id="Shortcut_pass"]
 events = [SubResource("InputEventAction_pass")]
 
-[node name="TurnStatus" type="PanelContainer" unique_id=1584571151 node_paths=PackedStringArray("_label", "_other_players", "_auto_pass_toggle", "_undo_button", "_pass_button", "_moves_bar")]
+[node name="TurnStatus" type="PanelContainer" unique_id=1584571151 node_paths=PackedStringArray("_label", "_other_players", "_auto_pass_toggle", "_undo_button", "_pass_button", "_moves_bar", "_ability_bar")]
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 273.0
@@ -33,6 +34,7 @@ _auto_pass_toggle = NodePath("MarginContainer/VBoxContainer/HBoxContainer/AutoPa
 _undo_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/Undo")
 _pass_button = NodePath("MarginContainer/VBoxContainer/PassTurn")
 _moves_bar = NodePath("MarginContainer/VBoxContainer/MovesBar")
+_ability_bar = NodePath("MarginContainer/VBoxContainer/AbilityBar")
 _player_turn_status_scene = ExtResource("2_ogig8")
 metadata/_custom_type_script = "uid://d1njaboc5v742"
 
@@ -86,4 +88,7 @@ toggled_icon = ExtResource("5_xdo1c")
 metadata/_custom_type_script = "uid://cpyey1rgiu5s0"
 
 [node name="MovesBar" parent="MarginContainer/VBoxContainer" unique_id=1379815243 instance=ExtResource("6_moves")]
+layout_mode = 2
+
+[node name="AbilityBar" parent="MarginContainer/VBoxContainer" instance=ExtResource("7_abilities")]
 layout_mode = 2

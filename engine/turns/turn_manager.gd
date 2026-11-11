@@ -154,6 +154,7 @@ func request_ability(character_path: NodePath, ability_id: String, target_cell: 
 		return
 	_held_abilities.erase(character)
 	character.active_ability_id = ""
+	character.held_cost = 0
 	_use_ability(character, ability, target_cell, argument)
 
 ## Starts using the [member Ability.held] ability [param ability_id] of [param character_path] on [param target_cell];
@@ -169,6 +170,7 @@ func request_ability_begin(character_path: NodePath, ability_id: String, target_
 	_track(character)
 	_held_abilities[character] = HeldAbility.new(ability, target_cell)
 	character.active_ability_id = ability_id
+	character.held_cost = ability.get_cost(character, target_cell, 0)
 	ability.begin(character, target_cell, _level)
 
 ## Changes the choice of the held ability in use, if the movement points can pay for it
@@ -180,6 +182,7 @@ func request_ability_adjust(character_path: NodePath, argument: int) -> void:
 	var held: HeldAbility = _held_abilities.get(character)
 	if not held or held.ability.get_cost(character, held.target, argument) > character.movement_points: return
 	held.argument = argument
+	character.held_cost = held.ability.get_cost(character, held.target, argument)
 	held.ability.adjust(character, held.target, argument, _level)
 
 ## Stops using the held ability in use; nothing is paid
@@ -278,6 +281,7 @@ func _cancel_held(character: Character) -> void:
 	if not held: return
 	_held_abilities.erase(character)
 	character.active_ability_id = ""
+	character.held_cost = 0
 	held.ability.cancel(character, held.target, _level)
 
 func _cancel_held_of(player_id: int) -> void:
