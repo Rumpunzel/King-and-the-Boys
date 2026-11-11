@@ -508,9 +508,12 @@ func _create_connection(tile: Structure, connection: Direction) -> void:
 	tile_connections.append(tile_connection)
 	add_child(tile_connection)
 
-func _create_connector(tile_position: Vector3, connection: Direction) -> void:
+func _get_connector_position(tile_position: Vector3, connection: Direction) -> Vector3:
 	var direction_vector: Vector2i = direction_to_vector(connection)
-	var connector_position: Vector3 = tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
+	return tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
+
+func _create_connector(tile_position: Vector3, connection: Direction) -> void:
+	var connector_position: Vector3 = _get_connector_position(tile_position, connection)
 	if _tile_connectors.has(connector_position): return
 	var tile_connector: Structure = _tile_set.tile_connector.create(-1, Transform3D(Basis.IDENTITY, connector_position), connection, Structure.Status.PLACED)
 	_tile_connectors[connector_position] = tile_connector
@@ -526,6 +529,8 @@ func _on_structure_created(structure: Structure) -> void:
 		_create_connector(structure.global_position, connection)
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
 	structure.shown_status_changed.connect(_on_tile_shown_status_changed.bind(structure))
+	# Removed (e.g. by loading a save), it leaves the registries with its connections, like things do
+	structure.tree_exiting.connect(_forget_tile.bind(structure), CONNECT_ONE_SHOT)
 	tile_placed.emit(structure)
 	if not multiplayer.is_server(): return
 	structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
@@ -553,23 +558,22 @@ func _on_tile_shown_status_changed(shown_status: Structure.Status, tile: Structu
 		if corner_thing and thing_status > corner_thing.status: corner_thing.status = thing_status
 	if not shown_status == Structure.Status.REVEALED: return
 	# A tween bound to the level, not a timer awaited: it goes with the level (e.g. leaving the game, a test ending)
-	# instead of resuming on a freed one, which crashed Godot at exit
-	create_tween().tween_callback(_show_connections_of.bind(tile)).set_delay(0.5)
+	# instead of resuming on a freed one, which crashed Godot at exit. It pauses with the game, so the board does
+	# not change while paused. Bound to the cell, not the tile: the tile may be gone by then (e.g. a save loaded).
+	create_tween().tween_callback(_show_connections_at.bind(grid_position)).set_delay(0.5)
 
-## Shows the connections and connectors of a revealed [param tile] to its revealed neighbours
-func _show_connections_of(tile: Structure) -> void:
-	if not is_instance_valid(tile): return
-	var grid_position: Vector2i = tile.get_grid_position()
+## Shows the connections and connectors of the revealed tile on [param grid_position] to its revealed neighbours,
+## as far as they are still placed
+func _show_connections_at(grid_position: Vector2i) -> void:
+	var tile: Structure = _placed_tiles.get(grid_position)
+	if not tile or tile.shown_status != Structure.Status.REVEALED: return
 	for tile_connection: Structure in _tile_connections.get(tile, []): tile_connection.shown_status = Structure.Status.REVEALED
 	for connection: Direction in tile.get_connections():
 		var direction_vector: Vector2i = direction_to_vector(connection)
-		var neighbour_position: Vector2i = grid_position + direction_vector
-		assert(_placed_tiles.has(neighbour_position))
-		var neighbour: Structure = _placed_tiles[neighbour_position]
-		if not neighbour.shown_status == Structure.Status.REVEALED: continue
-		var connector_position: Vector3 = tile.global_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
-		var tile_connector: Structure = _tile_connectors[connector_position]
-		tile_connector.shown_status = Structure.Status.REVEALED
+		var neighbour: Structure = _placed_tiles.get(grid_position + direction_vector)
+		if not neighbour or neighbour.shown_status != Structure.Status.REVEALED: continue
+		var tile_connector: Structure = _tile_connectors.get(_get_connector_position(tile.global_position, connection))
+		if tile_connector: tile_connector.shown_status = Structure.Status.REVEALED
 
 func _on_thing_created(thing: Thing) -> void:
 	var on_grid: Vector2 = Vector2(thing.global_position.x, thing.global_position.z) / grid_size
@@ -584,6 +588,23 @@ func _on_thing_created(thing: Thing) -> void:
 	else: _placed_things[world_to_grid_position(thing.global_position)] = thing
 	# Removed (e.g. by loading a save), it leaves the registries, so nothing looks for it any more
 	thing.tree_exiting.connect(_forget_thing.bind(thing), CONNECT_ONE_SHOT)
+
+## Drops a tile leaving the level from its registries, with its connections, and the connectors on its sides no
+## neighbour still reaches
+func _forget_tile(tile: Structure) -> void:
+	var grid_position: Vector2i = world_to_grid_position(tile.global_position)
+	if _placed_tiles.get(grid_position) == tile: _placed_tiles.erase(grid_position)
+	var tile_connections: Array = _tile_connections.get(tile, [])
+	_tile_connections.erase(tile)
+	for tile_connection: Structure in tile_connections:
+		if is_instance_valid(tile_connection): tile_connection.queue_free()
+	for connection: Direction in tile.get_connections():
+		var neighbour: Structure = _placed_tiles.get(grid_position + direction_to_vector(connection))
+		if neighbour and neighbour.has_connection_to(grid_position): continue
+		var connector_position: Vector3 = _get_connector_position(tile.global_position, connection)
+		var tile_connector: Structure = _tile_connectors.get(connector_position)
+		_tile_connectors.erase(connector_position)
+		if is_instance_valid(tile_connector): tile_connector.queue_free()
 
 func _forget_thing(thing: Thing) -> void:
 	for registry: Dictionary in [_placed_things, _corner_things]:
