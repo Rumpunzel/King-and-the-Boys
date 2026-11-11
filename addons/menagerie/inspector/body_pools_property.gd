@@ -44,6 +44,8 @@ static func guess_body(configuration: ModelConfigurationRandom, bodies: Array[Pa
 func _update_property() -> void:
 	var configuration: ModelConfigurationRandom = get_edited_object() as ModelConfigurationRandom
 	if not configuration: return
+	# E.g. its gender, which decides the meshes listed; the inspector only updates the edited property
+	if not configuration.changed.is_connected(_queue_rebuild): configuration.changed.connect(_queue_rebuild)
 	if _bodies.is_empty():
 		_bodies = find_bodies()
 		for body: PackedScene in _bodies: _body_option.add_item(body.resource_path.get_file().get_basename().capitalize())

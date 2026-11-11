@@ -199,7 +199,8 @@ func roll_body(variation: int) -> Dictionary:
 ## profile (e.g. its outfit) does not change the face, until [param reroll] asks for a new one
 func setup_model(model: ModularModel, reroll: bool = false) -> void:
 	model.reset_gear()
-	if reroll or _preview_body.is_empty() or _preview_model_path != model.scene_file_path:
+	# A body that no longer fits (another scene, or the configuration's gender changed) rolls anew
+	if reroll or _preview_body.is_empty() or _preview_model_path != model.scene_file_path or not model.is_complete_body(_preview_body):
 		_preview_model_path = model.scene_file_path
 		_preview_body = model_configuration.roll(model) if model_configuration else {}
 		_preview_random_equipment = _roll_random_equipment()

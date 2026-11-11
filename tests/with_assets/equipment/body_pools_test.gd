@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 
 const HEROES: Array[String] = ["knight", "rogue", "mystic", "soldier", "elf"]
 const KNIGHT_BODY: String = "res://data/characters/people/knight_body.tres"
+const ELF: String = "res://data/characters/people/elf.tres"
 
 var _model: ModularCharacter
 
@@ -146,8 +147,30 @@ func test_a_body_turns_female_and_back_keeping_its_mesh_numbers() -> void:
 	assert_str(_model.torso.mesh.resource_path).contains("/male/")
 	assert_str(_model.torso.mesh.resource_path).not_contains("/female/")
 
+func test_a_body_turning_female_keeps_what_its_helmet_hides_hidden() -> void:
+	_model.head_no_elements.update_index(0)
+	assert_bool(_model.eyebrow.visible).is_false()
+	_model.set_gender(ModularBodyPartGendered.Gender.FEMALE)
+	assert_str(_model.eyebrow.mesh.resource_path).contains("/female/")
+	assert_bool(_model.eyebrow.visible).is_false()
+	assert_bool(_model.head.visible).is_false()
+	assert_bool(_model.head_no_elements.visible).is_true()
+	_model.set_gender(ModularBodyPartGendered.Gender.MALE)
+
+func test_a_preview_rolls_anew_once_its_body_no_longer_fits() -> void:
+	var elf: CharacterProfile = load(ELF)
+	var model: ModularCharacter = auto_free(elf.create_model(0))
+	add_child(model)
+	elf.setup_model(model)
+	# E.g. the gender changed in Menagerie: the next model is male, the cached body female
+	model.set_gender(ModularBodyPartGendered.Gender.MALE)
+	assert_bool(model.is_complete_body(elf._preview_body)).is_false()
+	elf.setup_model(model)
+	assert_bool(model.is_complete_body(elf._preview_body)).is_true()
+	elf._preview_body = {}
+
 func test_the_elf_is_female_wherever_her_body_is_built() -> void:
-	var elf: CharacterProfile = load("res://data/characters/people/elf.tres")
+	var elf: CharacterProfile = load(ELF)
 	assert_int(elf.model_configuration.gender).is_equal(ModularBodyPartGendered.Gender.FEMALE)
 	var model: ModularCharacter = auto_free(elf.create_model(0))
 	add_child(model)
