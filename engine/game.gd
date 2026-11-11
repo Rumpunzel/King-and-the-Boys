@@ -6,7 +6,7 @@ extends Node
 @export_group("Configuration")
 @export var _serializer: Serializer
 @export var _level: Level
-@export var _player_ghost_spawner: PlayerGhostSpawner
+@export var _player_controller_spawner: PlayerControllerSpawner
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
@@ -19,7 +19,7 @@ func setup_game() -> void:
 	if not multiplayer.is_server(): return
 	_level.build_level()
 	TurnManager.get_instance(get_tree()).start_syncing_peers()
-	_player_ghost_spawner.start_synching_players()
+	_player_controller_spawner.start_synching_players()
 
 func save_game() -> Error:
 	assert(multiplayer.is_server())
@@ -35,12 +35,12 @@ func load_game() -> Error:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	turn_manager.clear_passes()
 	turn_manager.start_syncing_peers()
-	_player_ghost_spawner.start_synching_players()
+	_player_controller_spawner.start_synching_players()
 	return error
 
 func stop_game() -> void:
 	print_debug("Stopping running game...")
-	_player_ghost_spawner.stop_synching_players()
+	_player_controller_spawner.stop_synching_players()
 	SceneManager.to_main()
 
 func _on_save_requested() -> void:
@@ -56,5 +56,5 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not _serializer: warnings.append("Missing Serializer reference.")
 	if not _level: warnings.append("Missing Level reference.")
-	if not _player_ghost_spawner: warnings.append("Missing PlayerGhostSpawner reference.")
+	if not _player_controller_spawner: warnings.append("Missing PlayerControllerSpawner reference.")
 	return warnings

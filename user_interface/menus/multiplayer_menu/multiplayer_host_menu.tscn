@@ -15,7 +15,7 @@ metadata/_custom_type_script = "uid://bwmombd8bkx7p"
 [node name="PlayerName" type="LineEdit" parent="." unique_id=1461261219]
 visible = false
 layout_mode = 2
-placeholder_text = "Haunt"
+placeholder_text = "One of the Boys"
 alignment = 1
 editable = false
 script = ExtResource("2_4wvyy")

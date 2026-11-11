@@ -87,7 +87,7 @@ func test_plain_paths_from_older_saves_still_equip() -> void:
 	assert_object(_equipment.get_equipped(EquipmentLook.Slot.HEAD)).is_same(saved_helmet)
 
 func test_equipment_stays_server_authoritative_inside_a_client_subtree() -> void:
-	# A PlayerGhost hands its subtree to its player before the character enters the tree
+	# A PlayerController hands its subtree to its player before the character enters the tree
 	var knight: CharacterProfile = load(EquipmentFixtures.KNIGHT)
 	var client_character: Character = auto_free(knight.create(0, _character.transform))
 	client_character.set_multiplayer_authority(5)

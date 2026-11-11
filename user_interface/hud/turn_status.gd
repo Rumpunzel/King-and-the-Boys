@@ -2,9 +2,9 @@
 class_name TurnStatus
 extends PanelContainer
 ## The local player's turn: the other players' turns, auto-pass, undo and pass buttons and the moves of the character
-## the local player controls. The buttons only ask the local [PlayerGhost]; the rules live there and in [TurnManager].
+## the local player controls. The buttons only ask the local [PlayerController]; the rules live there and in [TurnManager].
 
-@export var _player_ghost_spawner: PlayerGhostSpawner
+@export var _player_controller_spawner: PlayerControllerSpawner
 @export var _turn_manager: TurnManager
 
 @export_group("Configuration")
@@ -16,7 +16,7 @@ extends PanelContainer
 @export var _moves_bar: MovesBar
 @export var _player_turn_status_scene: PackedScene
 
-var _player_ghost: PlayerGhost
+var _player_controller: PlayerController
 # Player id -> row of another player
 var _player_rows: Dictionary[int, PlayerTurnStatus] = {}
 
@@ -34,9 +34,9 @@ var _character: Character:
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	# Shown once the local player's ghost exists
+	# Shown once the local player's controller exists
 	hide()
-	assert(_player_ghost_spawner)
+	assert(_player_controller_spawner)
 	assert(_turn_manager)
 	# The buttons show the keys of their actions
 	_undo_button.text = _with_key_hint(_undo_button.text, &"undo_move")
@@ -44,18 +44,18 @@ func _ready() -> void:
 	_turn_manager.turn_started.connect(_update.unbind(1))
 	_turn_manager.passed_players_changed.connect(_update)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
-	_player_ghost_spawner.player_ghost_created.connect(_on_player_ghost_created)
+	_player_controller_spawner.player_controller_created.connect(_on_player_controller_created)
 	_auto_pass_toggle.toggled.connect(_on_auto_pass_toggled)
 	_undo_button.pressed.connect(_on_undo_pressed)
 	_pass_button.toggled.connect(_on_pass_toggled)
 
 func _update() -> void:
-	if not is_instance_valid(_player_ghost) or not is_instance_valid(_character): return
+	if not is_instance_valid(_player_controller) or not is_instance_valid(_character): return
 	_label.text = "Turn %d" % _turn_manager.turn_number
-	_undo_button.disabled = not _player_ghost.can_undo()
+	_undo_button.disabled = not _player_controller.can_undo()
 	# Nothing left to do: the player passes either way, and can not take it back
-	var must_pass: bool = _player_ghost.must_pass()
-	_pass_button.set_pressed_no_signal(must_pass or _player_ghost.has_passed())
+	var must_pass: bool = _player_controller.must_pass()
+	_pass_button.set_pressed_no_signal(must_pass or _player_controller.has_passed())
 	_pass_button.update_button()
 	_pass_button.disabled = must_pass
 	for player_id: int in _player_rows: _player_rows[player_id].show_passed(_turn_manager.has_passed(player_id))
@@ -74,13 +74,13 @@ static func _get_action_key(action: StringName) -> String:
 	if DisplayServer.get_name() == "headless": return OS.get_keycode_string(key_event.physical_keycode)
 	return OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(key_event.physical_keycode))
 
-func _add_player_row(player_ghost: PlayerGhost) -> void:
+func _add_player_row(player_controller: PlayerController) -> void:
 	var row: PlayerTurnStatus = _player_turn_status_scene.instantiate()
-	row.player = player_ghost.player
-	row.character = player_ghost.character
+	row.player = player_controller.player
+	row.character = player_controller.character
 	_other_players.add_child(row)
-	_player_rows[player_ghost.player.player_id] = row
-	player_ghost.tree_exiting.connect(_remove_player_row.bind(player_ghost.player.player_id))
+	_player_rows[player_controller.player.player_id] = row
+	player_controller.tree_exiting.connect(_remove_player_row.bind(player_controller.player.player_id))
 	_update()
 
 func _remove_player_row(player_id: int) -> void:
@@ -88,14 +88,14 @@ func _remove_player_row(player_id: int) -> void:
 	_player_rows[player_id].queue_free()
 	_player_rows.erase(player_id)
 
-func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
-	if not player_ghost.player.is_local_player():
-		_add_player_row(player_ghost)
+func _on_player_controller_created(player_controller: PlayerController) -> void:
+	if not player_controller.player.is_local_player():
+		_add_player_row(player_controller)
 		return
-	_player_ghost = player_ghost
-	_player_ghost.controlled_character_changed.connect(_on_controlled_character_changed)
-	_player_ghost.auto_pass = _auto_pass_toggle.button_pressed
-	_character = _player_ghost.get_controlled_character()
+	_player_controller = player_controller
+	_player_controller.controlled_character_changed.connect(_on_controlled_character_changed)
+	_player_controller.auto_pass = _auto_pass_toggle.button_pressed
+	_character = _player_controller.get_controlled_character()
 	show()
 
 func _on_player_disconnected(player: Player) -> void:
@@ -109,18 +109,18 @@ func _on_character_turn_changed(_value: int) -> void:
 	_update()
 
 func _on_auto_pass_toggled(toggled_on: bool) -> void:
-	if is_instance_valid(_player_ghost): _player_ghost.auto_pass = toggled_on
+	if is_instance_valid(_player_controller): _player_controller.auto_pass = toggled_on
 
 func _on_undo_pressed() -> void:
-	if is_instance_valid(_player_ghost): _player_ghost.request_undo()
+	if is_instance_valid(_player_controller): _player_controller.request_undo()
 
 func _on_pass_toggled(toggled_on: bool) -> void:
 	# The button shows the pass at once; the host's answer updates it (see _update)
-	if is_instance_valid(_player_ghost): _player_ghost.request_pass(toggled_on)
+	if is_instance_valid(_player_controller): _player_controller.request_pass(toggled_on)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _player_ghost_spawner: warnings.append("Missing PlayerGhostSpawner reference.")
+	if not _player_controller_spawner: warnings.append("Missing PlayerControllerSpawner reference.")
 	if not _turn_manager: warnings.append("Missing TurnManager reference.")
 	if not _label: warnings.append("Missing Label reference.")
 	if not _other_players: warnings.append("Missing other players Container reference.")

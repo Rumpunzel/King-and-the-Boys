@@ -10,11 +10,11 @@ const PARAMETER: StringName = &"occlusion_target"
 @export var height: float = 1.0
 
 @export_group("Configuration")
-@export var _player_ghost: PlayerGhost
+@export var _player_controller: PlayerController
 
 func _process(_delta: float) -> void:
-	if not _player_ghost.player or not _player_ghost.player.is_local_player(): return
-	var character: Character = _player_ghost.character
+	if not _player_controller.player or not _player_controller.player.is_local_player(): return
+	var character: Character = _player_controller.character
 	if not character: return
 	# The model is the figure, which moves ahead of or behind the character's grid cell
 	var figure: Node3D = character

@@ -576,8 +576,8 @@ func _forget_thing(thing: Thing) -> void:
 func _on_agent_created(agent: Agent) -> void:
 	_register_character(agent.character)
 
-func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
-	var character: Character = player_ghost.character
+func _on_player_controller_created(player_controller: PlayerController) -> void:
+	var character: Character = player_controller.character
 	_register_character(character)
 	if not multiplayer.is_server(): return
 	character.entered_grid_cell.connect(_on_player_moved.bind(character))

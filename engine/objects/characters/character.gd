@@ -83,8 +83,8 @@ var level: Level
 ## Whether the figure shows that its player has passed (see [method show_passed]); purely visual, on every peer
 var shows_passed: bool = false
 var look_target: Vector3 = Vector3.BACK
-## The [Character] currently haunting (controlling) this one, if any
-var haunted_by: Character
+## The [Character] currently controlling this one, if any
+var controlled_by: Character
 ## Steps taken so far, undos included; counted by the host, replicated. Tiles a step reveals carry its number
 ## (see [member Structure.status_cause_step]), so peers know which step to show them after.
 var step_count: int = 0
@@ -410,14 +410,14 @@ func _disable_physics() -> void:
 
 ## @returns [code]true[/code] if the peer [param peer_id] may move this [Character]
 func is_controlled_by(peer_id: int) -> bool:
-	if haunted_by: return haunted_by.get_multiplayer_authority() == peer_id
+	if controlled_by: return controlled_by.get_multiplayer_authority() == peer_id
 	return get_multiplayer_authority() == peer_id
 
-func _on_haunted(haunting: Character) -> void:
-	haunted_by = haunting
+func _on_controlled(controller: Character) -> void:
+	controlled_by = controller
 
-func _on_unhaunted() -> void:
-	haunted_by = null
+func _on_released() -> void:
+	controlled_by = null
 
 func _on_navigation_agent_velocity_computed(safe_velocity: Vector3) -> void:
 	if _navigation_agent.is_navigation_finished(): return

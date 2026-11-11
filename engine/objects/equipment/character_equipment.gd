@@ -15,7 +15,7 @@ var _model: ModularModel
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
-	# A [PlayerGhost] hands its whole subtree to its player, but equipment stays server authoritative
+	# A [PlayerController] hands its whole subtree to its player, but equipment stays server authoritative
 	set_multiplayer_authority(MultiplayerPeer.TARGET_PEER_SERVER)
 
 ## Asks the server to equip; the result reaches every peer through [member equipped_ids]

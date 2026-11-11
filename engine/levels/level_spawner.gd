@@ -74,9 +74,9 @@ func _on_agent_created(_agent: Agent) -> void:
 	assert(_level)
 	#agent.character.entered_grid_cell.connect(_level._on_character_entered_grid_cell)
 
-func _on_player_ghost_created(player_ghost: PlayerGhost) -> void:
+func _on_player_controller_created(player_controller: PlayerController) -> void:
 	assert(_level)
-	_level._on_player_ghost_created(player_ghost)
+	_level._on_player_controller_created(player_controller)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

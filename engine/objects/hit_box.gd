@@ -3,21 +3,21 @@
 class_name HitBox
 extends Area3D
 
-signal haunted(haunting: Character)
-signal unhaunted
+signal controlled(controller: Character)
+signal released
 
 @export_group("Configuration")
 @export var _collision_shape: CollisionShape3D
 
 @rpc("any_peer", "call_local", "reliable")
-func haunt(haunting_path: NodePath) -> void:
-	var haunting: Character = get_node(haunting_path)
-	assert(haunting)
-	haunted.emit(haunting)
+func take_control(controller_path: NodePath) -> void:
+	var controller: Character = get_node(controller_path)
+	assert(controller)
+	controlled.emit(controller)
 
 @rpc("any_peer", "call_local", "reliable")
-func unhaunt() -> void:
-	unhaunted.emit()
+func release_control() -> void:
+	released.emit()
 
 func get_body() -> Node3D:
 	assert(false, "HitBox.get_body is 'virtual' and needs to be overriden!")
