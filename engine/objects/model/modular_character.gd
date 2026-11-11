@@ -91,6 +91,8 @@ const SLOT_PARTS: Dictionary[EquipmentLook.Slot, Array] = {
 
 func get_part_keys() -> PackedStringArray: return PackedStringArray(Part.keys())
 
+func get_hair_parts() -> Array[int]: return [Part.HAIR, Part.EYEBROW, Part.FACIAL_HAIR]
+
 func get_slot_parts(slot: EquipmentLook.Slot) -> Array[int]:
 	var parts: Array[int] = []
 	parts.assign(SLOT_PARTS.get(slot, []) as Array)
