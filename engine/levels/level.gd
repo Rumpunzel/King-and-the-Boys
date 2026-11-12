@@ -22,6 +22,8 @@ enum Direction {
 const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 ## The corners of a cell, as offsets from its grid position to the corner's index (see [member _corner_things])
 const CELL_CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
+## Meta of a bridge that is shown or dropping in
+const _SHOWN: StringName = &"shown"
 
 @export var grid_size: float = 2.0
 @export var grid_extents: Vector2i = Vector2i(13, 13)
@@ -58,6 +60,8 @@ var _placed_tiles: Dictionary[Vector2i, Structure]
 # {Structure -> Array[Structure]}
 var _tile_connections: Dictionary[Structure, Array]
 var _tile_connectors: Dictionary[Vector3, Structure]
+## Bridges over the gaps between tiles opening to each other, by their connector's position; local like connectors
+var _bridges: Dictionary[Vector3, Model]
 ## Tiles lifted off the board on this peer, until they have landed; they and their sides show no connections
 var _lifted_tiles: Array[Structure] = []
 
@@ -678,8 +682,14 @@ func _show_connections_at(grid_position: Vector2i) -> void:
 		var direction_vector: Vector2i = direction_to_vector(connection)
 		var neighbour: Structure = _placed_tiles.get(grid_position + direction_vector)
 		if not neighbour or neighbour.shown_status != Structure.Status.REVEALED: continue
-		var tile_connector: Structure = _tile_connectors.get(_get_connector_position(tile.global_position, connection))
+		var connector_position: Vector3 = _get_connector_position(tile.global_position, connection)
+		var tile_connector: Structure = _tile_connectors.get(connector_position)
 		if tile_connector: tile_connector.shown_status = Structure.Status.REVEALED
+		var bridge: Model = _bridges.get(connector_position)
+		# Both sides show it, often in one go: it drops in once
+		if not bridge or bridge.has_meta(_SHOWN): continue
+		bridge.set_meta(_SHOWN, true)
+		tile.profile.decorations.drop_props([bridge] as Array[Model])
 
 ## Every peer: a turned [param tile] gets new connections, once it rests on the board again (see [method _on_tile_landed])
 func _on_tile_turned(tile: Structure) -> void:
@@ -712,6 +722,9 @@ func _clear_connections(tile: Structure) -> void:
 	_tile_connections.erase(tile)
 	for direction: Direction in Direction.values():
 		var connector_position: Vector3 = _get_connector_position(tile.global_position, direction)
+		if _bridges.has(connector_position):
+			_bridges[connector_position].free()
+			_bridges.erase(connector_position)
 		if not _tile_connectors.has(connector_position): continue
 		_remove_local_structure(_tile_connectors[connector_position])
 		_tile_connectors.erase(connector_position)
@@ -727,7 +740,21 @@ func _build_connections(tile: Structure) -> void:
 		if neighbour and not neighbour.is_settled(): continue
 		var opens: bool = connections.has(direction)
 		if opens: _create_connection(tile, direction)
-		if opens or (neighbour and neighbour.get_connections().has(get_opposite(direction))): _create_connector(tile.global_position, direction)
+		var neighbour_opens: bool = neighbour != null and neighbour.get_connections().has(get_opposite(direction))
+		if opens or neighbour_opens: _create_connector(tile.global_position, direction)
+		if opens and neighbour_opens: _create_bridge(tile, direction)
+
+## A bridge (see [member TileDecorations.bridges]) over the gap between [param tile] and its neighbour in [param direction],
+## hidden until both are revealed
+func _create_bridge(tile: Structure, direction: Direction) -> void:
+	var bridge_position: Vector3 = _get_connector_position(tile.global_position, direction)
+	if _bridges.has(bridge_position) or not tile.profile.decorations: return
+	var bridge: Model = tile.profile.decorations.create_bridge(tile.get_grid_position(), direction)
+	if not bridge: return
+	bridge.position = bridge_position
+	bridge.visible = false
+	_bridges[bridge_position] = bridge
+	add_child(bridge)
 
 func _on_thing_created(thing: Thing) -> void:
 	var on_grid: Vector2 = Vector2(thing.global_position.x, thing.global_position.z) / grid_size
@@ -766,6 +793,10 @@ func _forget_tile(tile: Structure) -> void:
 		var neighbour: Structure = _placed_tiles.get(grid_position + direction_to_vector(connection))
 		var connector_position: Vector3 = _get_connector_position(tile.global_position, connection)
 		var tile_connector: Structure = _tile_connectors.get(connector_position)
+		# A bridge needs both sides
+		var bridge: Model = _bridges.get(connector_position)
+		_bridges.erase(connector_position)
+		if is_instance_valid(bridge): bridge.queue_free()
 		if neighbour and neighbour.has_connection_to(grid_position):
 			# Kept for the neighbour, but leading into an empty cell now, like one towards a cell not built yet
 			if is_instance_valid(tile_connector): tile_connector.shown_status = Structure.Status.PLACED

@@ -11,6 +11,8 @@
 [ext_resource type="Resource" uid="uid://oitmmh7nnns2" path="res://data/structures/props/room_rugs.tres" id="9_rugs"]
 [ext_resource type="Resource" uid="uid://tj2yln8n45jb" path="res://data/structures/props/room_ambience.tres" id="10_ambience"]
 [ext_resource type="Resource" uid="uid://b5cplg8jqeufa" path="res://data/structures/props/room_dust.tres" id="11_dust"]
+[ext_resource type="Texture2D" uid="uid://b48n1p7yzgr6w" path="res://data/structures/props/paths/worn_path.tres" id="20_path"]
+[ext_resource type="Resource" uid="uid://beqwrjh9b81q6" path="res://data/structures/props/bridges.tres" id="21_bridges"]
 
 [resource]
 script = ExtResource("1_script")
@@ -25,3 +27,5 @@ room_dust = ExtResource("11_dust")
 doorway_arches = ExtResource("4_doorways")
 corridor_arches = ExtResource("5_ruins")
 room_pillars = ExtResource("6_pillars")
+path_texture = ExtResource("20_path")
+bridges = ExtResource("21_bridges")

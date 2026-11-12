@@ -17,6 +17,8 @@ extends Resource
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
 
 const NODE_NAME: StringName = &"Decorations"
+## Name of the node holding a tile's paths, see [method create_paths]
+const PATHS_NODE_NAME: StringName = &"Paths"
 ## How many frames dust waits for the rest of a room arriving tile by tile, see [method _add_room_dust]
 const ROOM_WAIT_FRAMES: int = 120
 ## Meta of a tile's decorations: the grid positions of the neighbours whose shared edge (an opening or a wall) it decided
@@ -73,6 +75,15 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 ## Stand on some sides without a connection, by [member wall_chance]; modelled spanning along x
 @export var walls: PropSet
 @export_range(0.0, 1.0) var wall_chance: float = 0.5
+@export_group("Connections")
+## A worn path on the floor from the tile's middle to each of its openings, as a decal; its alpha gives the path its shape
+@export var path_texture: Texture2D
+## Tints [member path_texture]
+@export var path_color: Color = Color(0.3, 0.22, 0.14, 0.6)
+## Width of a path, in metres
+@export_range(0.1, 2.0) var path_width: float = 0.7
+## A plank or slab over the gap where two tiles open to each other; laid with its long side across the gap
+@export var bridges: PropSet
 @export_group("Animation")
 ## Played on each prop as it drops in, one after another, unless its prop set has its own [member PropSet.drop_animation]
 @export var drop_animation: ModelAnimation = preload("uid://bf0msgn2okdfo")
@@ -212,6 +223,43 @@ static func _still_fits(tile: Structure, prop: Node, edge: Vector2i) -> bool:
 	var is_doorway: bool = (tile.profile.room_type != null) != (neighbour.profile.room_type != null)
 	return prop.get_meta(DOORWAY) == is_doorway
 
+## A path decal from the middle of [param tile] to each opening of its shape, as its model sees it (unrotated); a child of
+## the model, so it lifts and turns with the tile and shows its shape even while lifted
+func create_paths(tile: Structure) -> Node3D:
+	var paths: Node3D = Node3D.new()
+	paths.name = PATHS_NODE_NAME
+	if not path_texture: return paths
+	var half_tile: float = tile.level.grid_size * 0.5
+	for direction: Level.Direction in tile.profile.get_connections(0):
+		var outward: Vector3 = Vector3(Level.DIRECTION_VECTORS[direction].x, 0.0, Level.DIRECTION_VECTORS[direction].y)
+		var decal: Decal = Decal.new()
+		decal.name = "Path %s" % Level.Direction.keys()[direction]
+		decal.texture_albedo = path_texture
+		decal.modulate = path_color
+		# Thin, so it marks the floor and little of what stands on it
+		decal.size = Vector3(path_width, 0.4, half_tile)
+		decal.transform = Transform3D(Basis(Vector3.UP, atan2(outward.x, outward.z)), outward * half_tile * 0.5)
+		paths.add_child(decal)
+	return paths
+
+## A bridge over the gap between the tile on [param grid_position] and its neighbour in [param direction], turned so its long
+## side spans the gap; place it on the gap. Seeded by the two cells, so either side builds the same one on every peer.
+## @returns [code]null[/code] without [member bridges]
+func create_bridge(grid_position: Vector2i, direction: Level.Direction) -> Model:
+	if not bridges: return null
+	var random: RandomNumberGenerator = RandomNumberGenerator.new()
+	random.seed = hash(grid_position) ^ hash(grid_position + Level.DIRECTION_VECTORS[direction]) ^ hash(&"bridge")
+	var holder: Node3D = Node3D.new()
+	var bridge: Model = _add_prop(holder, bridges, Transform3D.IDENTITY, random)
+	if bridge: holder.remove_child(bridge)
+	holder.free()
+	if not bridge: return null
+	var bounds: AABB = _get_bounds(bridge.get_child(0) as Node3D)
+	var across_x: bool = Level.DIRECTION_VECTORS[direction].x != 0
+	var long_x: bool = bounds.size.x >= bounds.size.z
+	if across_x != long_x: bridge.basis = Basis(Vector3.UP, PI * 0.5)
+	return bridge
+
 ## Drops in [param props] (e.g. from [method redecide_edges]) one after another
 func drop_props(props: Array[Model]) -> void:
 	var valid_props: Array[Model] = []
@@ -336,10 +384,11 @@ func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transfo
 	if not scene: return null
 	var mesh: Node3D = scene.instantiate()
 	# Decorations never block clicks or movement
-	# Taken out at once, so they never collide; nested bodies leave with their parent, which is fine to remove and free again
+	# Freed at once, so they never collide nor linger outside the tree; nested bodies go with their parent
 	for body: Node in mesh.find_children("*", "CollisionObject3D", true, false):
+		if not is_instance_valid(body): continue
 		body.get_parent().remove_child(body)
-		body.queue_free()
+		body.free()
 	mesh.scale = prop_set.prop_scale
 	if prop_set.material_override:
 		var meshes: Array[MeshInstance3D] = Model.gather_all_geometry_instances_on(mesh)
