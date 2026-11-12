@@ -122,9 +122,11 @@ func _is_waiting_to_show(tile: Structure, target_status: Structure.Status) -> bo
 	# Loading a game frees the tiles still queued
 	return is_instance_valid(tile) and tile.shown_status < target_status
 
-## @returns [code]true[/code] once this peer has the steps that raised [param tiles] and the figure entered its cell
+## @returns [code]true[/code] once this peer has the steps that raised [param tiles] and the figure entered its cell, and stands
+## on the board again (not riding a lifted tile)
 func _has_figure_caught_up(character: Character, tiles: Array) -> bool:
 	if not character.visible or not character.level: return true
+	if character.is_carried(): return false
 	for tile: Structure in tiles:
 		if character.step_count < tile.status_cause_step: return false
 	return character.get_figure_grid_cell() == character.grid_cell
@@ -671,6 +673,12 @@ func _on_tile_lift_changed(tile: Structure) -> void:
 func _on_tile_landed(tile: Structure) -> void:
 	_lifted_tiles.erase(tile)
 	_update_gaps_of(tile)
+	# What a turn brought into sight shows a moment after the tile and its figures came down
+	var delay: float = TileLiftAnimation.of(self).reveal_delay
+	for character: Character in _reveal_queues:
+		if character.grid_cell != tile.get_grid_position(): continue
+		_remaining_tile_reveal_delays[character] = maxf(_remaining_tile_reveal_delays[character], delay)
+		_remaining_tile_discover_delays[character] = maxf(_remaining_tile_discover_delays[character], delay)
 
 ## Lays or takes up the bridges on the four sides of [param tile] as they are needed now; bridges that stay are left alone,
 ## so they do not drop in again, and those between other tiles are not touched

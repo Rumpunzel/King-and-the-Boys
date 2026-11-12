@@ -8,8 +8,6 @@ extends Node
 ## Emitted when the model is back on the board, at rest
 signal landed
 
-## Used where the level has none
-static var _default_animation: TileLiftAnimation = TileLiftAnimation.new()
 
 var _structure: Structure
 # Model offsets: height, turn in quarter turns clockwise on top of the structure's, wobble strength (0 to 1)
@@ -72,8 +70,7 @@ func _has_nothing_to_show() -> bool:
 	return true
 
 func _get_animation() -> TileLiftAnimation:
-	var level: Level = _structure.level
-	return level.tile_lift_animation if level and level.tile_lift_animation else _default_animation
+	return TileLiftAnimation.of(_structure.level)
 
 func _rise() -> void:
 	var animation: TileLiftAnimation = _get_animation()

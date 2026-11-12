@@ -121,6 +121,17 @@ func test_sparkles_hang_under_the_tile_while_it_is_lifted() -> void:
 	assert_array(_tile.model.find_children("*", "GPUParticles3D", false, false)).is_empty()
 	_level.tile_lift_animation = null
 
+func test_what_a_turn_reveals_waits_until_the_tile_landed() -> void:
+	_tile.lifted_by = _hero.get_path()
+	await await_millis(600)
+	# Riding the hanging tile, the figure has not caught up with what its turn brought into sight
+	assert_bool(_level._has_figure_caught_up(_hero, [])).is_false()
+	var landed: Array[bool] = _landed()
+	_tile.lifted_by = NodePath()
+	await await_millis(1500)
+	assert_bool(landed[0]).is_true()
+	assert_bool(_level._has_figure_caught_up(_hero, [])).is_true()
+
 func test_a_cancelled_lift_spins_back_and_lands() -> void:
 	var turns: int = _tile.clockwise_turns
 	_tile.lifted_by = _hero.get_path()
