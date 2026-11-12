@@ -17,6 +17,8 @@ signal figure_entered_grid_cell(cell: Vector2i)
 signal figure_arrived
 
 signal profile_changed
+## Emitted once a new model is shown, dressed in the character's body and equipment, or the model is gone
+signal model_changed
 
 const GROUP: StringName = "Characters"
 
@@ -67,7 +69,9 @@ var model: Model:
 			remove_child(model)
 			model.queue_free()
 		model = new_model
-		if not model: return
+		if not model:
+			model_changed.emit()
+			return
 		add_child(model, true)
 		_apply_body()
 		var rest: BodyAnimations = _get_rest()
@@ -75,6 +79,7 @@ var model: Model:
 		if equipment and model is ModularModel:
 			var modular_model: ModularModel = model
 			equipment.apply_to(modular_model)
+		model_changed.emit()
 
 ## Rolled once by the server, see [method ModelConfigurationRandom.roll]
 ## {part: [int] of the model's [code]Part[/code] enum -> mesh [ResourceId]: [String]}, an empty ID meaning no mesh

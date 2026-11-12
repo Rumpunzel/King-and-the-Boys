@@ -5,17 +5,22 @@
 [ext_resource type="Resource" uid="uid://b50fre8sdxsyo" path="res://data/structures/tiles/default_tile_set.tres" id="3_c445m"]
 [ext_resource type="Resource" uid="uid://d3cc5nj7ogal8" path="res://data/structures/tiles/wall.tres" id="3_wall"]
 [ext_resource type="Resource" uid="uid://8y0bv223d7px" path="res://data/things/centrepiece_spawn_table.tres" id="4_centrepieces"]
-[ext_resource type="Resource" uid="uid://1uajovqss038" path="res://data/model_animations/tile_lift_animation.tres" id="5_lift"]
 [ext_resource type="Environment" uid="uid://cgsk6aky1yr8a" path="res://data/levels/dungeon_environment.tres" id="5_environment"]
-[ext_resource type="Shader" path="res://engine/levels/tilt_shift.gdshader" id="6_tilt"]
+[ext_resource type="Resource" uid="uid://1uajovqss038" path="res://data/model_animations/tile_lift_animation.tres" id="5_lift"]
 [ext_resource type="PackedScene" uid="uid://bka6r1jummabd" path="res://data/levels/dust_motes.tscn" id="7_motes"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tilt"]
-shader = ExtResource("6_tilt")
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
 size = Vector2(64, 64)
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_tilt"]
+dof_blur_far_enabled = true
+dof_blur_far_distance = 28.0
+dof_blur_far_transition = 8.0
+dof_blur_near_enabled = true
+dof_blur_near_distance = 21.5
+dof_blur_near_transition = 2.5
+dof_blur_amount = 0.12
 
 [node name="Level" unique_id=2057570779 instance=ExtResource("1_level")]
 _starting_tile = ExtResource("2_c445m")
@@ -26,6 +31,7 @@ tile_lift_animation = ExtResource("5_lift")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." index="5" unique_id=1391764827]
 environment = ExtResource("5_environment")
+camera_attributes = SubResource("CameraAttributesPractical_tilt")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." index="6" unique_id=1372172077]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
@@ -33,16 +39,4 @@ mesh = SubResource("PlaneMesh_bkb5w")
 skeleton = NodePath("..")
 surface_material_override/0 = ExtResource("16_jwwwr")
 
-[node name="DustMotes" parent="." unique_id=1288405713 instance=ExtResource("7_motes")]
-
-[node name="TiltShift" type="CanvasLayer" parent="." unique_id=1730254811]
-layer = -1
-
-[node name="Blur" type="ColorRect" parent="TiltShift" unique_id=425907196]
-material = SubResource("ShaderMaterial_tilt")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+[node name="DustMotes" parent="." index="7" unique_id=1288405713 instance=ExtResource("7_motes")]

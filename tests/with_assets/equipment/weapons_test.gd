@@ -105,14 +105,22 @@ func test_a_torch_burns_while_held_only() -> void:
 	var equipment: CharacterEquipment = _equipment_on(model)
 	var torch: EquipmentLook = (load("res://data/characters/people/rogue.tres") as CharacterProfile).starting_off_hand
 	assert_object(_fire(model)).is_null()
+	var changes: Array[int] = [0]
+	model.carried_light_changed.connect(func() -> void: changes[0] += 1)
 	assert_bool(equipment.equip(torch)).is_true()
 	assert_object(_fire(model)).is_not_null()
 	assert_bool(_fire(model).visible).is_true()
+	assert_bool(model.carries_light()).is_true()
 	# On the back it does not burn
 	model.stow_weapons()
 	assert_bool(_fire(model).visible).is_false()
+	assert_bool(model.carries_light()).is_false()
 	model.draw_weapons()
 	assert_bool(_fire(model).visible).is_true()
+	assert_bool(model.carries_light()).is_true()
 	# A shield brings no fire along
 	assert_bool(equipment.equip(_look(model, "shield"))).is_true()
 	assert_object(_fire(model)).is_null()
+	assert_bool(model.carries_light()).is_false()
+	# Lit, stowed, drawn, put away: the character's own light follows each change
+	assert_int(changes[0]).is_equal(4)

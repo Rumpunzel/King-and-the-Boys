@@ -87,7 +87,13 @@ func set_stowed(stowed: bool) -> void:
 		reparent(_held_by, false)
 		transform = _held_transform
 		_held_by = null
-	if _attachment: _attachment.visible = not stowed
+	if _attachment:
+		_attachment.visible = not stowed
+		appearance_changed.emit()
+
+## Whether the part shows a light it brought along, e.g. a burning torch in hand (not one stowed on the back)
+func carries_light() -> bool:
+	return _attachment != null and _attachment.visible and not _attachment.find_children("*", "Light3D", true, false).is_empty()
 
 func _update_attachment() -> void:
 	var scene: PackedScene = null
