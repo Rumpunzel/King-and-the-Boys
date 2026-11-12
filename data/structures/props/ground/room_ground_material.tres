@@ -8,10 +8,16 @@
 [resource]
 render_priority = -1
 shader = ExtResource("1_shader")
+shader_parameter/footprint = 1.0
 shader_parameter/albedo_texture = ExtResource("2_albedo")
 shader_parameter/normal_texture = ExtResource("3_normal")
 shader_parameter/roughness_texture = ExtResource("4_roughness")
 shader_parameter/tint = Color(0.7, 0.62, 0.55, 1)
 shader_parameter/texture_size = 2.0
 shader_parameter/opacity = 0.95
-shader_parameter/taper = 0.0
+shader_parameter/closed_reach = 0.15
+shader_parameter/taper = 0.6
+shader_parameter/fray = 0.5
+shader_parameter/patch_density = 1.2
+shader_parameter/contact_shadow = 0.55
+shader_parameter/contact_width = 0.35

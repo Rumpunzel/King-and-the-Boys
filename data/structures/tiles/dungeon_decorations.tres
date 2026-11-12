@@ -12,7 +12,7 @@
 [ext_resource type="Resource" uid="uid://tj2yln8n45jb" path="res://data/structures/props/room_ambience.tres" id="10_ambience"]
 [ext_resource type="Resource" uid="uid://b5cplg8jqeufa" path="res://data/structures/props/room_dust.tres" id="11_dust"]
 [ext_resource type="Material" uid="uid://c6rwlqph5weyh" path="res://data/structures/props/paths/sand_path_material.tres" id="20_path"]
-[ext_resource type="Resource" uid="uid://beqwrjh9b81q6" path="res://data/structures/props/bridges.tres" id="21_bridges"]
+[ext_resource type="Resource" uid="uid://beqwrjiab81q6" path="res://data/structures/props/bridges.tres" id="21_bridges"]
 [ext_resource type="Resource" uid="uid://c7erdy8qpnb1o" path="res://data/structures/props/crystals.tres" id="22_crystals"]
 [ext_resource type="Material" uid="uid://cvx5vrbtfb2xm" path="res://data/structures/props/paths/room_path_material.tres" id="23_room_path"]
 [ext_resource type="Material" uid="uid://dohdirh77hity" path="res://data/structures/props/ground/ground_material.tres" id="24_ground"]
@@ -34,7 +34,7 @@ corridor_arches = ExtResource("5_ruins")
 room_pillars = ExtResource("6_pillars")
 path_material = ExtResource("20_path")
 room_path_material = ExtResource("23_room_path")
-ground_material = ExtResource("24_ground")
-room_ground_material = ExtResource("25_room_ground")
 path_width = 1.4
 bridges = ExtResource("21_bridges")
+ground_material = ExtResource("24_ground")
+room_ground_material = ExtResource("25_room_ground")

@@ -12,6 +12,12 @@
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 
 [sub_resource type="CompositorEffect" id="CompositorEffect_focus"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
 script = ExtResource("8_focus")
 
 [sub_resource type="Compositor" id="Compositor_focus"]
