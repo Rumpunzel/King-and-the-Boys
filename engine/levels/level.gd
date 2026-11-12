@@ -777,12 +777,20 @@ func _on_agent_created(agent: Agent) -> void:
 func _on_player_controller_created(player_controller: PlayerController) -> void:
 	var character: Character = player_controller.character
 	_register_character(character)
-	if not multiplayer.is_server(): return
-	character.entered_grid_cell.connect(_on_player_moved.bind(character))
+	if multiplayer.is_server(): follow_sight_of(character)
 
 func _register_character(character: Character) -> void:
 	character.level = self
 	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
+
+## Host only: what the hero [param character] sees comes into sight as it steps and as the lights it carries change (a torch
+## equipped, a lantern lit; see [method Character.get_vision])
+func follow_sight_of(character: Character) -> void:
+	character.entered_grid_cell.connect(_on_player_moved.bind(character))
+	character.light_sources_changed.connect(_on_player_lights_changed.bind(character))
+
+func _on_player_lights_changed(character: Character) -> void:
+	if character.is_node_ready() and _placed_tiles.has(character.grid_cell): update_sight(character, character.grid_cell)
 
 func _on_player_moved(character_grid_position: Vector2i, character: Character) -> void:
 	assert(_placed_tiles[character_grid_position])

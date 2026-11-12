@@ -176,9 +176,13 @@ var _carried_transform: Transform3D
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+func _enter_tree() -> void:
+	# Before the children are ready, so the character's light sees equipment shown from the start
+	if equipment and not equipment.equipment_changed.is_connected(light_sources_changed.emit):
+		equipment.equipment_changed.connect(light_sources_changed.emit)
+
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	if equipment: equipment.equipment_changed.connect(light_sources_changed.emit)
 	if model: model.play_model_animation(profile.spawn_animation)
 	if multiplayer.is_server():
 		# Initial grid state comes from the spawn transform: the spot it stands on if that is free, else the first free one
@@ -197,16 +201,18 @@ func _ready() -> void:
 	_queue_grid_visual_update()
 	entered_grid_cell.emit(grid_cell)
 
-## @returns the lights the character carries: its equipment's (a torch) and its abilities' (a lit lantern)
+## @returns the lights the character carries: its equipment's (a torch) and its abilities' (a lit lantern), each once
 func get_light_sources() -> Array[LightSource]:
 	var light_sources: Array[LightSource] = []
 	if equipment:
 		for look: EquipmentLook in equipment.get_all_equipped(): light_sources.append_array(look.get_light_sources())
 	if profile:
-		for ability: Ability in profile.abilities:
-			var light_source: LightSource = ability.get_light_source(self) if ability else null
-			if light_source: light_sources.append(light_source)
-	return light_sources
+		for ability: Ability in profile.abilities: light_sources.append(ability.get_light_source(self) if ability else null)
+	# A light counts once, e.g. a torch in each hand
+	var distinct: Array[LightSource] = []
+	for light_source: LightSource in light_sources:
+		if light_source and not distinct.has(light_source): distinct.append(light_source)
+	return distinct
 
 ## @returns how far the character sees ([member CharacterProfile.vision]), changed by the lights it carries
 func get_vision() -> float:

@@ -35,7 +35,7 @@ func _spawn_hero(dark: bool = false) -> Character:
 	var hero: Character = auto_free(_hero_profile.create(-1, (spawn_points.front() as Node3D).global_transform))
 	hero.level = _level
 	if dark: hero.toggled_ability_ids = [ResourceId.of(LANTERN)]
-	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
+	_level.follow_sight_of(hero)
 	add_child(hero)
 	await await_idle_frame()
 	hero.movement_points = 3
@@ -77,3 +77,9 @@ func test_lighting_it_shows_what_it_brings_into_sight() -> void:
 	assert_int(_revealed_count()).is_greater(revealed_in_the_dark)
 	# What it showed stays shown: lighting it can not be undone
 	assert_int(hero.undo_steps).is_equal(0)
+
+func test_a_light_carried_twice_counts_once() -> void:
+	_hero_profile.abilities = [LANTERN, LANTERN]
+	var hero: Character = await _spawn_hero()
+	assert_array(hero.get_light_sources()).contains_exactly([LANTERN.light_source])
+	assert_float(hero.get_vision()).is_equal(_hero_profile.vision + 3.0)

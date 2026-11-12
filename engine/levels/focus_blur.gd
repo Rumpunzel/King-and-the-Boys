@@ -4,8 +4,8 @@ extends CompositorEffect
 ## floor, under the player's figure) and keeps what stands near it sharp at any height, unlike depth of field, which measures from
 ## the camera. A compute shader ([code]focus_blur.glsl[/code]) after the transparent pass, before glow and tone mapping
 
-const _SHADER: RDShaderFile = preload("res://engine/levels/focus_blur.glsl")
-const _COPY_SHADER: RDShaderFile = preload("res://engine/levels/focus_copy.glsl")
+const _SHADER: RDShaderFile = preload("uid://c8hkh7epogoxv") # focus_blur.glsl
+const _COPY_SHADER: RDShaderFile = preload("uid://c1mbx5oqgbddd") # focus_copy.glsl
 
 ## Metres across the floor from the focal point that stay sharp
 @export var focus_radius: float = 5.0
@@ -22,6 +22,8 @@ var _copy_pipeline: RID
 var _sampler: RID
 var _copy: RID
 var _copy_size: Vector2i
+# The inverse projection and the camera transform, kept between frames and updated in place
+var _matrices: RID
 
 func _init() -> void:
 	effect_callback_type = EFFECT_CALLBACK_TYPE_POST_TRANSPARENT
@@ -31,7 +33,7 @@ func _init() -> void:
 
 func _notification(what: int) -> void:
 	if what != NOTIFICATION_PREDELETE or not _device: return
-	for rid: RID in [_copy, _sampler, _pipeline, _shader, _copy_pipeline, _copy_shader]:
+	for rid: RID in [_matrices, _copy, _sampler, _pipeline, _shader, _copy_pipeline, _copy_shader]:
 		if rid.is_valid(): _device.free_rid(rid)
 
 func _initialize() -> void:
@@ -48,6 +50,7 @@ func _initialize() -> void:
 	sampler_state.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE
 	sampler_state.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE
 	_sampler = _device.sampler_create(sampler_state)
+	_matrices = _device.uniform_buffer_create(128)
 
 func _render_callback(callback_type: int, render_data: RenderData) -> void:
 	if not _device or not _pipeline.is_valid() or callback_type != EFFECT_CALLBACK_TYPE_POST_TRANSPARENT: return
@@ -61,22 +64,21 @@ func _render_callback(callback_type: int, render_data: RenderData) -> void:
 		var color: RID = buffers.get_color_layer(view)
 		var depth: RID = buffers.get_depth_layer(view)
 		_prepare_copy(size)
-		var copy_set: RID = _device.uniform_set_create([
+		# Uniform sets come from Godot's cache, which keeps them while their textures live
+		var copy_set: RID = UniformSetCacheRD.get_cache(_copy_shader, 0, [
 			_uniform(RenderingDevice.UNIFORM_TYPE_IMAGE, 0, [color]),
 			_uniform(RenderingDevice.UNIFORM_TYPE_IMAGE, 1, [_copy]),
-		], _copy_shader, 0)
+		])
 		_dispatch(_copy_pipeline, copy_set, push_constants.slice(0, 4), size)
-		_device.free_rid(copy_set)
-		var matrices: RID = _device.uniform_buffer_create(128, _matrices(scene_data, view).to_byte_array())
-		var uniform_set: RID = _device.uniform_set_create([
+		var matrices: PackedByteArray = _get_matrices(scene_data, view).to_byte_array()
+		_device.buffer_update(_matrices, 0, matrices.size(), matrices)
+		var uniform_set: RID = UniformSetCacheRD.get_cache(_shader, 0, [
 			_uniform(RenderingDevice.UNIFORM_TYPE_IMAGE, 0, [color]),
 			_uniform(RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 1, [_sampler, _copy]),
 			_uniform(RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 2, [_sampler, depth]),
-			_uniform(RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER, 3, [matrices]),
-		], _shader, 0)
+			_uniform(RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER, 3, [_matrices]),
+		])
 		_dispatch(_pipeline, uniform_set, push_constants, size)
-		_device.free_rid(uniform_set)
-		_device.free_rid(matrices)
 
 func _dispatch(pipeline: RID, uniform_set: RID, push_constants: PackedFloat32Array, size: Vector2i) -> void:
 	var compute_list: int = _device.compute_list_begin()
@@ -100,7 +102,7 @@ func _prepare_copy(size: Vector2i) -> void:
 	_copy_size = size
 
 ## The inverse projection and the camera's transform, column by column, as the shader's std140 block wants them
-func _matrices(scene_data: RenderSceneDataRD, view: int) -> PackedFloat32Array:
+func _get_matrices(scene_data: RenderSceneDataRD, view: int) -> PackedFloat32Array:
 	var inverse_projection: Projection = scene_data.get_view_projection(view).inverse()
 	var camera: Projection = Projection(scene_data.get_cam_transform())
 	var values: PackedFloat32Array = []
