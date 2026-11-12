@@ -12,7 +12,7 @@ metadata/_custom_type_script = "uid://bpkm2ws12sljg"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.085, 0)
 
 [node name="Tile" parent="BigTile" index="0" unique_id=1263924155]
-transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 0, 0, 0)
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 0, 0)
 surface_material_override/0 = ExtResource("3_kuotf")
 
 [editable path="BigTile"]
