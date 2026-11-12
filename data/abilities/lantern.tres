@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ToggleLightAbility" format=3 uid="uid://ce7d0kwrxd7xj"]
+
+[ext_resource type="Script" uid="uid://bbdblw1ca5aug" path="res://engine/abilities/toggle_light_ability.gd" id="1_ability"]
+[ext_resource type="Resource" uid="uid://be5xknm7qowng" path="res://data/equipment/light_sources/lantern.tres" id="2_light"]
+[ext_resource type="PackedScene" uid="uid://fftobr7tx7fw" path="res://data/characters/props/belt_lantern.tscn" id="3_prop"]
+[ext_resource type="Texture2D" uid="uid://i3mtlnr3d658" path="res://tools/game_icons/lorc/lantern-flame.svg" id="4_icon"]
+
+[resource]
+script = ExtResource("1_ability")
+name = "Lantern"
+description = "Light or put out the lantern on your belt. Lit, it lights your way and lets you see further. Costs nothing."
+icon = ExtResource("4_icon")
+cost = 0
+light_source = ExtResource("2_light")
+prop = ExtResource("3_prop")
+prop_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0, 0.05)

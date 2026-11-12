@@ -99,37 +99,32 @@ func _fire(model: ModularModel, hand: String = "off_hand_weapon") -> Node3D:
 		if not child.is_queued_for_deletion() and child.scene_file_path.ends_with("torch_fire.tscn"): return child as Node3D
 	return null
 
-func test_heroes_with_a_free_hand_carry_a_torch() -> void:
-	for hero: String in ["rogue", "elf"]:
-		var profile: CharacterProfile = load("res://data/characters/people/%s.tres" % hero)
-		var off_hand: EquipmentLook = profile.starting_off_hand
-		assert_str(off_hand.type.name if off_hand else "").override_failure_message("%s holds nothing in the off hand" % hero).is_equal("Off-Hand Weapon")
-		assert_str(off_hand.get_part_mesh(off_hand.type.parts[0]).resource_path).override_failure_message("%s has no torch" % hero).contains("torch")
+func test_the_elf_carries_a_torch_and_the_rogue_a_lantern() -> void:
+	var elf: CharacterProfile = load("res://data/characters/people/elf.tres")
+	var off_hand: EquipmentLook = elf.starting_off_hand
+	assert_str(off_hand.type.name if off_hand else "").is_equal("Off-Hand Weapon")
+	assert_str(off_hand.get_part_mesh(off_hand.type.parts[0]).resource_path).contains("torch")
+	var rogue: CharacterProfile = load("res://data/characters/people/rogue.tres")
+	assert_object(rogue.starting_off_hand).is_null()
+	assert_bool(rogue.abilities.any(func(ability: Ability) -> bool: return ability is ToggleLightAbility)).is_true()
 
 func test_a_torch_burns_while_held_only() -> void:
 	var model: ModularModel = _models[0]
 	var equipment: CharacterEquipment = _equipment_on(model)
-	var torch: EquipmentLook = (load("res://data/characters/people/rogue.tres") as CharacterProfile).starting_off_hand
+	var torch: EquipmentLook = (load("res://data/characters/people/elf.tres") as CharacterProfile).starting_off_hand
 	assert_object(_fire(model)).is_null()
-	var changes: Array[int] = [0]
-	model.carried_light_changed.connect(func() -> void: changes[0] += 1)
+	assert_array(torch.get_light_sources()).override_failure_message("The torch is a light").is_not_empty()
 	assert_bool(equipment.equip(torch)).is_true()
 	assert_object(_fire(model)).is_not_null()
 	assert_bool(_fire(model).visible).is_true()
-	assert_bool(model.carries_light()).is_true()
 	# On the back it does not burn
 	model.stow_weapons()
 	assert_bool(_fire(model).visible).is_false()
-	assert_bool(model.carries_light()).is_false()
 	model.draw_weapons()
 	assert_bool(_fire(model).visible).is_true()
-	assert_bool(model.carries_light()).is_true()
 	# A shield brings no fire along
 	assert_bool(equipment.equip(_look(model, "shield"))).is_true()
 	assert_object(_fire(model)).is_null()
-	assert_bool(model.carries_light()).is_false()
-	# Lit, stowed, drawn, put away: the character's own light follows each change
-	assert_int(changes[0]).is_equal(4)
 
 func test_a_second_weapon_goes_in_the_off_hand() -> void:
 	for model: ModularModel in _models:
@@ -153,7 +148,6 @@ func test_a_torch_burns_in_either_hand() -> void:
 		var equipment: CharacterEquipment = _equipment_on(model)
 		assert_bool(equipment.equip(_look(model, "weapon", "39"))).is_true()
 		assert_object(_fire(model, "main_hand")).is_not_null()
-		assert_bool(model.carries_light()).is_true()
 		assert_bool(equipment.equip(_look(model, "off_hand_weapon", "39"))).is_true()
 		assert_object(_fire(model)).is_not_null()
 		# Burning upwards, however the hand holds it

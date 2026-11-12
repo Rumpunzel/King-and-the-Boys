@@ -387,8 +387,8 @@ func rotate_tile(tile: Structure, clockwise_turns: int, character: Character) ->
 	_build_dungeon_from(grid_position)
 	for hero: Character in get_tree().get_nodes_in_group(Character.GROUP):
 		if not hero.visible or hero.level != self or hero.profile.group != CharacterProfile.Groups.HEROES: continue
-		_update_player_vision(hero.grid_cell, hero.profile.vision, _reveal_tile.bind(character))
-		_update_player_vision(hero.grid_cell, hero.profile.dark_vision, _discover_tile.bind(character))
+		_update_player_vision(hero.grid_cell, hero.get_vision(), _reveal_tile.bind(character))
+		_update_player_vision(hero.grid_cell, hero.get_dark_vision(), _discover_tile.bind(character))
 	_stepping_character = null
 	if _board_change_count != board_change_count_before: board_changed.emit(character)
 
@@ -785,14 +785,18 @@ func _register_character(character: Character) -> void:
 	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
 
 func _on_player_moved(character_grid_position: Vector2i, character: Character) -> void:
-	var entered_tile: Structure = _placed_tiles[character_grid_position]
-	assert(entered_tile)
+	assert(_placed_tiles[character_grid_position])
+	update_sight(character, character_grid_position)
+
+## Host only: what [param character] sees from [param from_cell] comes into sight, the dungeon growing
+## there first, e.g. after a step or as a light it carries is lit (see [method Character.get_vision])
+func update_sight(character: Character, from_cell: Vector2i) -> void:
 	var board_change_count_before: int = _board_change_count
 	# Tiles placed while building are discovered with this step too, see _on_structure_created
 	_stepping_character = character
-	_build_dungeon_from(character_grid_position)
-	_update_player_vision(character_grid_position, character.profile.vision, _reveal_tile.bind(character))
-	_update_player_vision(character_grid_position, character.profile.dark_vision, _discover_tile.bind(character))
+	_build_dungeon_from(from_cell)
+	_update_player_vision(from_cell, character.get_vision(), _reveal_tile.bind(character))
+	_update_player_vision(from_cell, character.get_dark_vision(), _discover_tile.bind(character))
 	_stepping_character = null
 	if _board_change_count != board_change_count_before: board_changed.emit(character)
 

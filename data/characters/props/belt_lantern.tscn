@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://fftobr7tx7fw"]
+
+[ext_resource type="Script" uid="uid://l55m64gmo7aq" path="res://engine/objects/model/lantern_prop.gd" id="1_lantern"]
+[ext_resource type="ArrayMesh" uid="uid://c3yb75dnum6s3" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Lantern_02.res" id="2_body"]
+[ext_resource type="ArrayMesh" uid="uid://dyfyg764vrspj" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Lantern_02_Glow_01.res" id="3_glass"]
+[ext_resource type="ArrayMesh" uid="uid://cb5ddh7o0ugee" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Prop_Lantern_02_Handle_01.res" id="4_handle"]
+[ext_resource type="Material" uid="uid://dmgr6oke0mvkm" path="res://assets/polygon_dark_fantasy/Materials/Alts/PolygonDarkFantasy_01_A_mat.tres" id="5_material"]
+[ext_resource type="PackedScene" uid="uid://dqsd1teh3jxjx" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Candle_Flame_01.tscn" id="6_flame"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lit"]
+albedo_color = Color(1, 0.78, 0.45, 1)
+emission_enabled = true
+emission = Color(1, 0.7, 0.35, 1)
+emission_energy_multiplier = 3.0
+
+[node name="BeltLantern" type="Node3D" node_paths=PackedStringArray("_glass", "_flame")]
+script = ExtResource("1_lantern")
+_glass = NodePath("Lantern/Glass")
+_lit_glass = SubResource("StandardMaterial3D_lit")
+_flame = NodePath("Lantern/Flame")
+
+[node name="Lantern" type="Node3D" parent="."]
+transform = Transform3D(0.45, 0, 0, 0, 0.45, 0, 0, 0, 0.45, 0, -0.28, 0)
+
+[node name="Body" type="MeshInstance3D" parent="Lantern"]
+mesh = ExtResource("2_body")
+surface_material_override/0 = ExtResource("5_material")
+
+[node name="Glass" type="MeshInstance3D" parent="Lantern"]
+mesh = ExtResource("3_glass")
+surface_material_override/0 = ExtResource("5_material")
+
+[node name="Handle" type="MeshInstance3D" parent="Lantern"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.503, 0)
+mesh = ExtResource("4_handle")
+surface_material_override/0 = ExtResource("5_material")
+
+[node name="Flame" parent="Lantern" instance=ExtResource("6_flame")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.17, 0)
+local_coords = true

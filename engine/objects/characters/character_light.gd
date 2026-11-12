@@ -1,32 +1,33 @@
 extends OmniLight3D
-## The light a character shines in, so its figure shows in the dark without carrying a light; dims while the character carries a
-## light of its own (e.g. a torch in hand, see [method ModularModel.carries_light]), so that one's colour leads
+## The light a character shines in from above, so its figure shows in the dark: its own colour without a light, or the colour of
+## the light it carries (see [method Character.get_light_sources]), e.g. a torch's warm glow, so the torch lights the ground
+## around the figure as one from above would
 
-## The energy while the character carries a light; the light's own energy otherwise
-@export var carried_energy: float = 0.8
-## How long the light takes to dim or brighten, in seconds
+## How long the light takes to change, in seconds
 @export var fade_time: float = 0.4
 
 @export_group("Configuration")
 @export var _character: Character
 
-var _energy: float
-var _model: ModularModel
+var _own_color: Color
+var _own_energy: float
+var _own_range: float
 var _tween: Tween
 
 func _ready() -> void:
-	_energy = light_energy
-	_character.model_changed.connect(_on_model_changed)
-	_on_model_changed()
-
-func _on_model_changed() -> void:
-	if _model and _model.carried_light_changed.is_connected(_fade): _model.carried_light_changed.disconnect(_fade)
-	_model = _character.model as ModularModel
-	if _model: _model.carried_light_changed.connect(_fade)
+	_own_color = light_color
+	_own_energy = light_energy
+	_own_range = omni_range
+	_character.light_sources_changed.connect(_fade)
 	_fade()
 
 func _fade() -> void:
-	var target: float = carried_energy if _model and _model.carries_light() else _energy
+	var light_sources: Array[LightSource] = _character.get_light_sources()
+	# The brightest light carried leads
+	light_sources.sort_custom(func(first: LightSource, second: LightSource) -> bool: return first.energy > second.energy)
+	var carried: LightSource = light_sources.front() if not light_sources.is_empty() else null
 	if _tween: _tween.kill()
-	_tween = create_tween()
-	_tween.tween_property(self, "light_energy", target, fade_time)
+	_tween = create_tween().set_parallel()
+	_tween.tween_property(self, "light_color", carried.color if carried else _own_color, fade_time)
+	_tween.tween_property(self, "light_energy", carried.energy if carried else _own_energy, fade_time)
+	_tween.tween_property(self, "omni_range", carried.light_range if carried else _own_range, fade_time)

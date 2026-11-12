@@ -8,9 +8,6 @@ extends Model
 ## [DwarfCharacter]) names its parts in its own [code]Part[/code] enum and decides which of them each [enum EquipmentLook.Slot] owns
 ## Parts no slot owns make up the body (hair, faces), rolled per character instead of equipped
 
-## Emitted when the model starts or stops carrying a light of its own, see [method carries_light]
-signal carried_light_changed
-
 const _GEAR_TEXTURE: StringName = &"albedo_texture"
 const _PRIMARY_COLOR: StringName = &"primary_color"
 const _SECONDARY_COLOR: StringName = &"secondary_color"
@@ -37,7 +34,6 @@ var gear_secondary_color: Color = Color.TRANSPARENT
 ## The colours the skin (with stubble and lips) and the hair (with eyebrows and beards) are repainted in; transparent keeps the atlas'
 var skin_color: Color = Color.TRANSPARENT
 var hair_color: Color = Color.TRANSPARENT
-var _carried_light: bool
 
 ## The names of this body's parts, i.e. the keys of its [code]Part[/code] enum; part numbers index into them
 @abstract func get_part_keys() -> PackedStringArray
@@ -147,21 +143,7 @@ func _ready() -> void:
 	for part: int in get_part_keys().size():
 		var body_part: ModularBodyPart = get_part(part)
 		if not body_part.appearance_changed.is_connected(_paint_part): body_part.appearance_changed.connect(_paint_part.bind(part))
-		if not body_part.appearance_changed.is_connected(_check_carried_light): body_part.appearance_changed.connect(_check_carried_light)
 		_paint_part(part)
-	_carried_light = carries_light()
-
-## Whether a part shows a light it brought along, e.g. a torch in hand (see [method ModularBodyPart.carries_light])
-func carries_light() -> bool:
-	for part: int in get_part_keys().size():
-		if get_part(part).carries_light(): return true
-	return false
-
-func _check_carried_light() -> void:
-	var carried: bool = carries_light()
-	if carried == _carried_light: return
-	_carried_light = carried
-	carried_light_changed.emit()
 
 ## Repaints the gear's highlights (the packs' blue and gold) in [param primary] and [param secondary], e.g. a character's colours;
 ## transparent keeps the atlas' own. Gear shown later is painted too
