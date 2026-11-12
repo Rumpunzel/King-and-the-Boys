@@ -1,5 +1,5 @@
 extends GdUnitTestSuite
-## Weapons and shields: meshes held in the hands of both bodies, a one-handed or a two-handed weapon in the main hand, and two-handed
+## Weapons, shields and torches: meshes held in the hands of both bodies, a one-handed or a two-handed weapon in the main hand, and two-handed
 ## weapons leave no hand for a shield
 
 var _models: Array[ModularModel]
@@ -35,7 +35,7 @@ func test_both_bodies_hold_weapons_in_their_hands() -> void:
 		assert_str((hand_parts[2].get_parent() as BoneAttachment3D).bone_name).is_equal("LeftHand")
 		assert_int(hand_parts[0].get_mesh_count()).is_equal(38)
 		assert_int(hand_parts[1].get_mesh_count()).is_equal(49)
-		assert_int(hand_parts[2].get_mesh_count()).is_equal(45)
+		assert_int(hand_parts[2].get_mesh_count()).is_equal(46)
 
 func test_hand_parts_are_gear_not_body() -> void:
 	for model: ModularModel in _models:
@@ -84,6 +84,35 @@ func test_weapons_fit_their_own_body_only() -> void:
 	assert_bool(_equipment_on(dwarf).equip(_look(human, "shield"))).is_false()
 
 func test_weapon_types_are_valid() -> void:
-	for type_name: String in ["weapon", "two_handed_weapon", "shield", "dwarf_weapon", "dwarf_two_handed_weapon", "dwarf_shield"]:
+	for type_name: String in ["weapon", "two_handed_weapon", "shield", "torch", "dwarf_weapon", "dwarf_two_handed_weapon", "dwarf_shield"]:
 		var equipment_type: EquipmentType = EquipmentFixtures.load_type(type_name)
 		assert_array(equipment_type.call("_get_configuration_warnings") as PackedStringArray).override_failure_message("%s: %s" % [type_name, equipment_type.call("_get_configuration_warnings")]).is_empty()
+
+## The torch's fire, shown on the off hand while it holds the torch
+func _fire(model: ModularModel) -> Node3D:
+	var off_hand: ModularBodyPart = model.get("off_hand")
+	for child: Node in off_hand.get_children():
+		if not child.is_queued_for_deletion() and child.scene_file_path.ends_with("torch_fire.tscn"): return child as Node3D
+	return null
+
+func test_heroes_with_a_free_hand_carry_a_torch() -> void:
+	for hero: String in ["rogue", "elf"]:
+		var profile: CharacterProfile = load("res://data/characters/people/%s.tres" % hero)
+		assert_str(profile.starting_off_hand.type.name if profile.starting_off_hand else "").override_failure_message("%s has no torch" % hero).is_equal("Torch")
+
+func test_a_torch_burns_while_held_only() -> void:
+	var model: ModularModel = _models[0]
+	var equipment: CharacterEquipment = _equipment_on(model)
+	var torch: EquipmentLook = (load("res://data/characters/people/rogue.tres") as CharacterProfile).starting_off_hand
+	assert_object(_fire(model)).is_null()
+	assert_bool(equipment.equip(torch)).is_true()
+	assert_object(_fire(model)).is_not_null()
+	assert_bool(_fire(model).visible).is_true()
+	# On the back it does not burn
+	model.stow_weapons()
+	assert_bool(_fire(model).visible).is_false()
+	model.draw_weapons()
+	assert_bool(_fire(model).visible).is_true()
+	# A shield brings no fire along
+	assert_bool(equipment.equip(_look(model, "shield"))).is_true()
+	assert_object(_fire(model)).is_null()

@@ -53,6 +53,8 @@
 [ext_resource type="Resource" uid="uid://c1io5bgjdq6kr" path="res://data/model_animations/heroes/rogue_move.tres" id="90_rogue_move"]
 [ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+[ext_resource type="Resource" uid="uid://caud4yu7xpe0u" path="res://data/equipment/types/torch.tres" id="90_torch_type"]
+[ext_resource type="ArrayMesh" uid="uid://blum2uqyaw1vm" path="res://data/equipment/meshes/off_hand/weapon_torch_46.res" id="91_torch_mesh"]
 
 [sub_resource type="Resource" id="BodyAnimations_passed"]
 script = ExtResource("body_animations")
@@ -230,6 +232,21 @@ type = ExtResource("43_tmsvl")
 appearance = SubResource("Resource_p1agj")
 name = "Belt 01"
 
+[sub_resource type="Resource" id="Resource_torch_part"]
+script = ExtResource("10_co6b3")
+part = 30
+male_mesh = ExtResource("91_torch_mesh")
+
+[sub_resource type="Resource" id="Resource_torch_appearance"]
+script = ExtResource("13_ts7pc")
+parts = Array[ExtResource("10_co6b3")]([SubResource("Resource_torch_part")])
+
+[sub_resource type="Resource" id="Resource_torch"]
+script = ExtResource("14_s4m6m")
+type = ExtResource("90_torch_type")
+appearance = SubResource("Resource_torch_appearance")
+name = "Torch"
+
 [resource]
 script = ExtResource("3_7rwy5")
 strength = 2
@@ -245,6 +262,7 @@ starting_legs = SubResource("Resource_tpfvq")
 starting_back = SubResource("Resource_sml8c")
 starting_waist = SubResource("Resource_5bnsv")
 starting_main_hand = SubResource("Resource_35uv1")
+starting_off_hand = SubResource("Resource_torch")
 spawn_animation = ExtResource("90_rogue_spawn")
 move_animation = ExtResource("90_rogue_move")
 fast_move_animation = ExtResource("90_rogue_move")

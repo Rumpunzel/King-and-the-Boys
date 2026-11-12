@@ -43,6 +43,8 @@
 [ext_resource type="Animation" uid="uid://dtjpkwf3vv15a" path="res://data/characters/animations/quaternius/Spell_Simple_Exit.res" id="anim_Spell_Simple_Exit"]
 [ext_resource type="Animation" uid="uid://duatnu7n2jwur" path="res://data/characters/animations/quaternius/Spell_Simple_Idle.res" id="anim_Spell_Simple_Idle"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+[ext_resource type="Resource" uid="uid://caud4yu7xpe0u" path="res://data/equipment/types/torch.tres" id="90_torch_type"]
+[ext_resource type="ArrayMesh" uid="uid://blum2uqyaw1vm" path="res://data/equipment/meshes/off_hand/weapon_torch_46.res" id="91_torch_mesh"]
 
 [sub_resource type="Resource" id="BodyAnimations_passed"]
 script = ExtResource("body_animations")
@@ -177,6 +179,21 @@ type = ExtResource("34_vkv3h")
 appearance = SubResource("Resource_pbel4")
 name = "Belt 03"
 
+[sub_resource type="Resource" id="Resource_torch_part"]
+script = ExtResource("10_eh6ha")
+part = 30
+male_mesh = ExtResource("91_torch_mesh")
+
+[sub_resource type="Resource" id="Resource_torch_appearance"]
+script = ExtResource("12_thqp2")
+parts = Array[ExtResource("10_eh6ha")]([SubResource("Resource_torch_part")])
+
+[sub_resource type="Resource" id="Resource_torch"]
+script = ExtResource("13_14iws")
+type = ExtResource("90_torch_type")
+appearance = SubResource("Resource_torch_appearance")
+name = "Torch"
+
 [resource]
 script = ExtResource("5_4smo8")
 strength = 2
@@ -192,6 +209,7 @@ starting_legs = SubResource("Resource_lu7ht")
 starting_back = SubResource("Resource_gn5hf")
 starting_waist = SubResource("Resource_kfnui")
 starting_main_hand = SubResource("Resource_s5kds")
+starting_off_hand = SubResource("Resource_torch")
 spawn_animation = ExtResource("90_elf_spawn")
 move_animation = ExtResource("90_elf_move")
 fast_move_animation = ExtResource("90_elf_move")

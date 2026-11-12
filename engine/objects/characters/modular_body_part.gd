@@ -15,6 +15,9 @@ enum Type {
 ## The number keys use for a part showing no mesh; the asset pack's own [code]00[/code] meshes are bare skin, so it reads the same
 const EMPTY_MESH_NUMBER: String = "00"
 
+## Meta of a mesh naming a [PackedScene] the part shows on itself while it shows the mesh, e.g. a torch's fire and light
+const ATTACHMENT_META: StringName = &"attachment"
+
 ## The trailing number of a mesh file name, compiled once as listing and sorting meshes asks for it often
 static var _mesh_number_pattern: RegEx = RegEx.create_from_string("(\\d+)$")
 
@@ -32,6 +35,8 @@ static var _mesh_number_pattern: RegEx = RegEx.create_from_string("(\\d+)$")
 ## What held the part before it was stowed, and how; [code]null[/code] while it is not stowed
 var _held_by: Node3D
 var _held_transform: Transform3D
+## What the shown mesh brings along (see [constant ATTACHMENT_META]), hidden while stowed
+var _attachment: Node3D
 
 var _mesh_list: Array[String] = []:
 	get:
@@ -61,6 +66,7 @@ func update_index(index: int) -> int:
 
 func update_visibility(new_visibility: bool, sources: Array[ModularBodyPart] = []) -> void:
 	visible = new_visibility
+	_update_attachment()
 	appearance_changed.emit()
 	sources.append(self)
 	for related_body_part: ModularBodyPart in _related_parts:
@@ -81,6 +87,19 @@ func set_stowed(stowed: bool) -> void:
 		reparent(_held_by, false)
 		transform = _held_transform
 		_held_by = null
+	if _attachment: _attachment.visible = not stowed
+
+func _update_attachment() -> void:
+	var scene: PackedScene = null
+	if visible and mesh and mesh.has_meta(ATTACHMENT_META): scene = mesh.get_meta(ATTACHMENT_META) as PackedScene
+	if _attachment and scene and _attachment.scene_file_path == scene.resource_path: return
+	if _attachment:
+		_attachment.queue_free()
+		_attachment = null
+	if not scene: return
+	_attachment = scene.instantiate() as Node3D
+	_attachment.visible = not is_stowed()
+	add_child(_attachment)
 
 ## Sets an exact mesh, bypassing the index into the mesh directory
 ## A [code]null[/code] mesh hides this part and shows its related parts

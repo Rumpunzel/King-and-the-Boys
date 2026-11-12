@@ -23,7 +23,7 @@ func _type_names(slot: EquipmentLook.Slot, profile: CharacterProfile) -> Array:
 func test_slots_offer_only_their_types() -> void:
 	assert_array(_type_names(EquipmentLook.Slot.HEAD, _knight)).contains_exactly_in_any_order(["Helmet", "Hood", "Hat"])
 	assert_array(_type_names(EquipmentLook.Slot.MAIN_HAND, _knight)).contains_exactly_in_any_order(["Weapon", "Two-Handed Weapon"])
-	assert_array(_type_names(EquipmentLook.Slot.OFF_HAND, _knight)).contains_exactly(["Shield"])
+	assert_array(_type_names(EquipmentLook.Slot.OFF_HAND, _knight)).contains_exactly_in_any_order(["Shield", "Torch"])
 
 func test_dwarves_are_offered_dwarf_gear_only() -> void:
 	var dwarf: CharacterProfile = load(EquipmentFixtures.DWARF)
