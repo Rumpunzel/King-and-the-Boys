@@ -158,23 +158,30 @@ func test_new_openings_build_and_reveal() -> void:
 	fail("No revealed tile opens into an empty cell when turned")
 
 func test_building_stops_at_a_closed_side_a_turned_tile_faces() -> void:
-	var hero: Character = await _spawn_hero(_start_cell())
-	for tile: Structure in _inner_tiles():
-		for clockwise_turns: int in [1, 2, 3]:
-			var found: int = _new_opening(tile, clockwise_turns, "closed")
-			if found < 0: continue
-			var direction: Level.Direction = found as Level.Direction
-			var neighbour: Structure = _level.get_placed_tile(tile.get_grid_position() + Level.direction_to_vector(direction))
-			# Cells the closed neighbour leads into, away from the turned tile, not built yet: nothing may be built through it
-			var beyond: Array[Vector2i] = []
-			for onward: Level.Direction in neighbour.get_connections():
-				var cell: Vector2i = neighbour.get_grid_position() + Level.direction_to_vector(onward)
-				if onward != Level.get_opposite(direction) and not _level.get_placed_tile(cell): beyond.append(cell)
-			if beyond.is_empty(): continue
-			_level.rotate_tile(tile, clockwise_turns, hero)
-			for cell: Vector2i in beyond: assert_object(_level.get_placed_tile(cell)).override_failure_message("Built through a closed side at %s" % cell).is_null()
-			return
-	fail("No turn opens into a closed tile that leads on into unbuilt cells")
+	# In an unbuilt corner, laid out by hand rather than found in the random dungeon: a dead end (as a turned tile) opening only
+	# right, into a straight corridor running up and down, closed towards it
+	var cell: Vector2i = Vector2i(-_level.grid_extents.x + 3, -_level.grid_extents.y + 3)
+	var closed_neighbour: Vector2i = cell + Vector2i.RIGHT
+	for nearby: Vector2i in [cell, closed_neighbour, closed_neighbour + Vector2i.UP, closed_neighbour + Vector2i.DOWN]:
+		assert_object(_level.get_placed_tile(nearby)).is_null()
+	var dead_end: Structure = _spawn_tile("res://tests/fixtures/tiles/dead_end.tres", cell, 0)
+	var only_right: Array[Level.Direction] = [Level.Direction.RIGHT]
+	for _turn: int in 3:
+		if dead_end.get_connections() == only_right: break
+		dead_end.clockwise_turns = posmod(dead_end.clockwise_turns + 1, 4)
+	assert_array(dead_end.get_connections()).contains_exactly([Level.Direction.RIGHT])
+	var straight: Structure = _spawn_tile("res://tests/fixtures/tiles/straight.tres", closed_neighbour, 0)
+	if straight.get_connections().has(Level.Direction.LEFT): straight.clockwise_turns = 1
+	assert_bool(straight.get_connections().has(Level.Direction.LEFT)).is_false()
+	assert_bool(straight.get_connections().has(Level.Direction.UP)).is_true()
+	_level._build_dungeon_from(cell)
+	# Nothing is built through the straight's closed side, into the cells it leads to
+	for beyond: Vector2i in [closed_neighbour + Vector2i.UP, closed_neighbour + Vector2i.DOWN]:
+		assert_object(_level.get_placed_tile(beyond)).override_failure_message("Built through a closed side at %s" % beyond).is_null()
+
+func _spawn_tile(profile_path: String, cell: Vector2i, clockwise_turns: int) -> Structure:
+	_level._structure_spawner.spawn_at(load(profile_path) as StructureProfile, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell)), clockwise_turns, Structure.Status.PLACED)
+	return _level.get_placed_tile(cell)
 
 func test_a_cell_of_the_outer_wall_is_left_as_it_is() -> void:
 	var wall_cell: Vector2i = Vector2i(_level.grid_extents.x, 0)
@@ -190,10 +197,8 @@ func test_a_revealed_tile_discovers_nothing_through_a_closed_side() -> void:
 	var beside: Vector2i = cell + Vector2i.RIGHT
 	assert_object(_level.get_placed_tile(cell)).is_null()
 	assert_object(_level.get_placed_tile(beside)).is_null()
-	for spawn: Array in [[ModelFreeWorld.STARTING_TILE, cell], ["res://tests/fixtures/tiles/solid.tres", beside]]:
-		var spawned_cell: Vector2i = spawn[1]
-		_level._structure_spawner.spawn_at(load(spawn[0] as String) as StructureProfile, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(spawned_cell)), 0, Structure.Status.PLACED)
-	var crossing: Structure = _level.get_placed_tile(cell)
+	var crossing: Structure = _spawn_tile(ModelFreeWorld.STARTING_TILE, cell, 0)
+	_spawn_tile("res://tests/fixtures/tiles/solid.tres", beside, 0)
 	assert_bool(crossing.get_connections().has(Level.Direction.RIGHT)).is_true()
 	_level._reveal_tile(crossing)
 	assert_int(_level.get_placed_tile(beside).status).is_less(Structure.Status.DISCOVERED)
