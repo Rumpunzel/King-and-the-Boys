@@ -60,7 +60,7 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 @export var corner_lights: PropSet
 @export_range(0.0, 1.0) var corner_light_chance: float = 0.05
 @export_group("Rooms")
-## Lie under the middle of room tiles, e.g. rugs; turned diagonally to the grid, in one of its four diagonals
+## Lie under the middle of room tiles, e.g. rugs; turned at random (a rug that fits the tile turned diagonally fits at any angle)
 @export var room_floors: PropSet
 @export_range(0.0, 1.0) var room_floor_chance: float = 0.3
 ## Over the middle of some room tiles, e.g. sun beams
@@ -171,11 +171,10 @@ func _add_room_props(decorations: Node3D, tile: Structure) -> void:
 	if not tile.profile.room_type: return
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(tile.get_grid_position()) ^ hash(&"room")
-	var diagonal: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4) + PI * 0.25)
 	if room_floors and random.randf() < room_floor_chance:
-		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), diagonal), random)
+		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), _random_turn(random).basis), random)
 	if room_ambience and random.randf() < room_ambience_chance:
-		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO)), random)
+		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO), _random_turn(random).basis), random)
 	_add_room_dust(decorations, tile)
 
 ## Dust over [param tile] if its room is dusty. The room is rolled by its first cell, so it needs all its tiles: rooms are built whole,
@@ -193,7 +192,7 @@ func _add_room_dust(decorations: Node3D, tile: Structure, frames_left: int = ROO
 	if room_random.randf() >= dusty_room_chance: return
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(tile.get_grid_position()) ^ hash(&"dust")
-	_add_prop(decorations, room_dust, _to_model(tile, _on_floor(Vector2.ZERO)), random)
+	_add_prop(decorations, room_dust, _to_model(tile, _on_floor(Vector2.ZERO), _random_turn(random).basis), random)
 	# Late, the other props' drop is under way without it: it drops in on its own
 	if frames_left < ROOM_WAIT_FRAMES and drop_animation: _drop_one(decorations.get_child(decorations.get_child_count() - 1) as Model)
 
@@ -283,7 +282,8 @@ func create_paths(tile: Structure) -> Node3D:
 		paths.add_child(path)
 	return paths
 
-## The ground under [param tile], room or corridor; it belongs under the tile, not its model, so it stays when the tile lifts.
+## The ground under [param tile], room or corridor, reaching through its openings; it belongs under the tile, not its model, so
+## it stays when the tile lifts.
 ## @returns [code]null[/code] without a material for the tile's kind
 func create_ground(tile: Structure) -> MeshInstance3D:
 	var material: Material = room_ground_material if tile.profile.room_type else ground_material
@@ -297,6 +297,15 @@ func create_ground(tile: Structure) -> MeshInstance3D:
 	ground.mesh = patch
 	ground.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	ground.set_instance_shader_parameter(&"half_size", half_size)
+	# The structure's own space is the profile's unturned one, see create_paths
+	var open_sides: Vector4 = Vector4.ZERO
+	for direction: Level.Direction in tile.profile.get_connections(0):
+		var outward: Vector2i = Level.DIRECTION_VECTORS[direction]
+		if outward.x > 0: open_sides.x = 1.0
+		elif outward.x < 0: open_sides.y = 1.0
+		elif outward.y > 0: open_sides.z = 1.0
+		else: open_sides.w = 1.0
+	ground.set_instance_shader_parameter(&"open_sides", open_sides)
 	ground.position = Vector3.UP * ground_height
 	return ground
 

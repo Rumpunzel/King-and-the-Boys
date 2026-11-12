@@ -1,11 +1,14 @@
 shader_type spatial;
-// The ground under a tile (see TileDecorations.create_ground): a patch reaching past the tile's footprint that frays into the table,
-// so neighbouring tiles share one ground and do not sit flat on the cloth. Its texture lies in world space, so overlapping patches
-// of neighbours line up, and a soft contact shadow runs along the tile's edge.
+// The ground under a tile (see TileDecorations.create_ground): it reaches past the tile's footprint through its openings only,
+// towards the neighbours it connects to, and frays into the table, so connected tiles share one ground; closed sides and corners
+// keep it close. Its texture lies in world space, so overlapping patches of neighbours line up, and a soft contact shadow runs
+// along the tile's edge.
 render_mode blend_mix, depth_draw_never, cull_back;
 
-// Half the patch's size, set per tile, in metres
+// Half the patch's size, set per tile, in metres: how far the ground reaches through an opening from the tile's middle
 instance uniform float half_size = 1.4;
+// Which sides open to a neighbour, set per tile in the patch's space: +x, -x, +z, -z, 1 for open
+instance uniform vec4 open_sides = vec4(1.0);
 // Half the tile's footprint, in metres: the ground is fully there inside it
 uniform float footprint = 1.0;
 uniform sampler2D albedo_texture : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
@@ -15,6 +18,10 @@ uniform vec4 tint : source_color = vec4(1.0);
 // Metres the textures cover once
 uniform float texture_size = 2.0;
 uniform float opacity : hint_range(0.0, 1.0) = 0.9;
+// How far the ground reaches past closed sides, in metres
+uniform float closed_reach = 0.15;
+// How much the ground through an opening narrows away from the opening's middle: 0 spans the whole side (rooms), 1 a tongue
+uniform float taper : hint_range(0.0, 1.0) = 0.6;
 // How unevenly the patch frays into the table, as a share of the reach beyond the footprint
 uniform float fray : hint_range(0.0, 1.0) = 0.5;
 // Frayed patches per metre
@@ -49,9 +56,15 @@ void vertex() {
 
 void fragment() {
 	vec2 from_middle = abs(local_spot);
-	float from_footprint = length(max(from_middle - vec2(footprint), vec2(0.0)));
 	float reach = max(half_size - footprint, 0.001);
-	float frayed = from_footprint / reach + (patches(world_spot * patch_density) - 0.5) * fray;
+	// Through an opening the ground reaches its full length near the opening's middle; elsewhere it stays close
+	float open_x = local_spot.x >= 0.0 ? open_sides.x : open_sides.y;
+	float open_z = local_spot.y >= 0.0 ? open_sides.z : open_sides.w;
+	float across_x = 1.0 - taper * smoothstep(footprint * 0.25, footprint, from_middle.y);
+	float across_z = 1.0 - taper * smoothstep(footprint * 0.25, footprint, from_middle.x);
+	vec2 side_reach = max(vec2(closed_reach), vec2(reach * open_x * across_x, reach * open_z * across_z));
+	vec2 beyond = max(from_middle - vec2(footprint), vec2(0.0)) / side_reach;
+	float frayed = length(beyond) + (patches(world_spot * patch_density) - 0.5) * fray;
 	float ground = 1.0 - smoothstep(0.15, 1.0, frayed);
 	float edge_distance = abs(max(from_middle.x, from_middle.y) - footprint);
 	float shadow = contact_shadow * (1.0 - smoothstep(0.0, contact_width, edge_distance));
