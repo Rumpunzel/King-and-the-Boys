@@ -64,6 +64,43 @@ func test_setting_down_turned_lands_where_the_tile_now_faces() -> void:
 	assert_vector(_hero.global_position).is_equal_approx(_level.get_spot_position(_hero.grid_cell, _hero.tile_spot), Vector3.ONE * 0.01)
 	assert_float(_hero.rotation.x).is_equal(0.0)
 
+func test_setting_down_three_quarters_turned_does_not_spin_again() -> void:
+	_tile.lifted_by = _hero.get_path()
+	_tile.lift_turns = 3
+	await await_millis(600)
+	# As the ability confirms: the lift ends, then the tile turns
+	_tile.lifted_by = NodePath()
+	_level.rotate_tile(_tile, 3, _hero)
+	var widest: float = 0.0
+	for _frame: int in 30:
+		await await_idle_frame()
+		widest = maxf(widest, absf(angle_difference(0.0, _tile.model.rotation.y)))
+	assert_float(widest).override_failure_message("The model spun by %.2f rad while it was set down" % widest).is_less(0.2)
+
+func _puffs_on(tile: Structure) -> int:
+	return tile.find_children("*", "GPUParticles3D", false, false).size()
+
+func test_the_tile_puffs_as_it_rises_and_as_it_lands() -> void:
+	var puff: GPUParticles3D = GPUParticles3D.new()
+	puff.one_shot = true
+	puff.lifetime = 0.2
+	var scene: PackedScene = PackedScene.new()
+	scene.pack(puff)
+	puff.free()
+	var animation: TileLiftAnimation = TileLiftAnimation.new()
+	animation.rise_particles = scene
+	animation.landing_particles = scene
+	_level.tile_lift_animation = animation
+	_tile.lifted_by = _hero.get_path()
+	assert_int(_puffs_on(_tile)).is_equal(1)
+	await await_millis(1000)
+	# Gone once played
+	assert_int(_puffs_on(_tile)).is_equal(0)
+	_tile.lifted_by = NodePath()
+	await await_millis(int((animation.spin_duration * 0.5 + animation.drop_duration * animation.landing_time) * 1000.0) + 100)
+	assert_int(_puffs_on(_tile)).is_equal(1)
+	_level.tile_lift_animation = null
+
 func test_a_cancelled_lift_spins_back_and_lands() -> void:
 	var turns: int = _tile.clockwise_turns
 	_tile.lifted_by = _hero.get_path()

@@ -1,6 +1,10 @@
 [gd_resource type="Resource" script_class="TileLiftAnimation" format=3 uid="uid://1uajovqss038"]
 
 [ext_resource type="Script" uid="uid://bxt5rf5ehxarw" path="res://engine/objects/structures/tile_lift_animation.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://13ancmv6bgqq" path="res://data/structures/props/lift/lift_dust.tscn" id="2_rise"]
+[ext_resource type="PackedScene" uid="uid://cmm7sr53x73mx" path="res://data/structures/props/lift/landing_dust.tscn" id="3_landing"]
 
 [resource]
 script = ExtResource("1_script")
+rise_particles = ExtResource("2_rise")
+landing_particles = ExtResource("3_landing")

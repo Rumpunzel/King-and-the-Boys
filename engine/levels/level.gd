@@ -39,8 +39,9 @@ const _SHOWN: StringName = &"shown"
 ## Chance of a room big enough (2x2 cells) to get a centrepiece
 @export_range(0.0, 1.0) var _room_centrepiece_chance: float = 0.5
 
-## How tiles move while lifted, e.g. by the Mystic turning one
-@export var tile_lift_animation: TileLiftAnimation = preload("uid://1uajovqss038")
+## How tiles move while lifted, e.g. by the Mystic turning one; set in the scene, as its particles are assets. Without one, tiles
+## lift with [TileLiftAnimation]'s defaults and no particles
+@export var tile_lift_animation: TileLiftAnimation
 
 @export var _reveals_per_second: float = 16.0
 @export var _discovers_per_second: float = 2.0
