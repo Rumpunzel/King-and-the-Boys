@@ -2,9 +2,11 @@
 
 [ext_resource type="PackedScene" uid="uid://cbh8li7jllmet" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Fire_Small_01.tscn" id="1_fire"]
 [ext_resource type="Script" uid="uid://3ykb13nhls36" path="res://engine/objects/structures/flickering_light.gd" id="2_flicker"]
+[ext_resource type="Script" uid="uid://doncsrtlob2g8" path="res://engine/objects/model/upright.gd" id="3_upright"]
 
 [node name="TorchFire" type="Node3D"]
-transform = Transform3D(0.128753, -0.991569, 0.014587, 0.991569, 0.128509, -0.016601, 0.014587, 0.016601, 0.999756, 0.431053, 0.540135, 0.11157)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+script = ExtResource("3_upright")
 
 [node name="Fire" parent="." instance=ExtResource("1_fire")]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
@@ -16,9 +18,11 @@ local_coords = true
 [node name="Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 light_color = Color(1, 0.62, 0.3, 1)
-light_energy = 3.2
-omni_range = 7.0
-omni_attenuation = 1.0
+light_energy = 4.0
+light_size = 0.2
+shadow_enabled = true
+omni_range = 10.0
+omni_attenuation = 0.6
 distance_fade_enabled = true
 distance_fade_begin = 20.0
 distance_fade_length = 5.0

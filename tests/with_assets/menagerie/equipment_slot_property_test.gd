@@ -23,7 +23,7 @@ func _type_names(slot: EquipmentLook.Slot, profile: CharacterProfile) -> Array:
 func test_slots_offer_only_their_types() -> void:
 	assert_array(_type_names(EquipmentLook.Slot.HEAD, _knight)).contains_exactly_in_any_order(["Helmet", "Hood", "Hat"])
 	assert_array(_type_names(EquipmentLook.Slot.MAIN_HAND, _knight)).contains_exactly_in_any_order(["Weapon", "Two-Handed Weapon"])
-	assert_array(_type_names(EquipmentLook.Slot.OFF_HAND, _knight)).contains_exactly_in_any_order(["Shield", "Torch"])
+	assert_array(_type_names(EquipmentLook.Slot.OFF_HAND, _knight)).contains_exactly_in_any_order(["Shield", "Off-Hand Weapon"])
 
 func test_dwarves_are_offered_dwarf_gear_only() -> void:
 	var dwarf: CharacterProfile = load(EquipmentFixtures.DWARF)
@@ -31,6 +31,7 @@ func test_dwarves_are_offered_dwarf_gear_only() -> void:
 	assert_array(_type_names(EquipmentLook.Slot.TORSO, dwarf)).contains_exactly(["Dwarf Outfit"])
 	assert_array(_type_names(EquipmentLook.Slot.LEGS, dwarf)).is_empty()
 	assert_array(_type_names(EquipmentLook.Slot.MAIN_HAND, dwarf)).contains_exactly_in_any_order(["Dwarf Weapon", "Dwarf Two-Handed Weapon"])
+	assert_array(_type_names(EquipmentLook.Slot.OFF_HAND, dwarf)).contains_exactly_in_any_order(["Dwarf Shield", "Dwarf Off-Hand Weapon"])
 
 func test_choosing_a_type_starts_from_a_copy_of_its_first_look() -> void:
 	var catalog: EquipmentCatalog = EquipmentCatalog.find_for(EquipmentFixtures.load_type("chest_armor"))
