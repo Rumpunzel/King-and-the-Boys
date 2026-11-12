@@ -145,7 +145,10 @@ func request_ability(character_path: NodePath, ability_id: String, target_cell: 
 	if not ability or ability.is_passive(): return
 	var held: HeldAbility = _held_abilities.get(character)
 	if held and held.ability != ability: return
-	if held: target_cell = held.target
+	# Held abilities are used as the host accepted and showed them (e.g. the lifted tile's turns), whatever the client sent
+	if held:
+		target_cell = held.target
+		argument = held.argument
 	# Held abilities checked their limits when they began
 	elif ability.held or not _has_uses_left(character, ability): return
 	var cost: int = ability.get_cost(character, target_cell, argument)
@@ -342,7 +345,8 @@ func _on_tile_rotated(tile: Structure, turning_character: Character) -> void:
 func _on_character_exiting(character: Character) -> void:
 	_undo_stacks.erase(character)
 	_ability_uses.erase(character)
-	_held_abilities.erase(character)
+	# Its lifted tile is set down again, so it does not hang on for good
+	_cancel_held(character)
 	for step: AbilityStep in _pending_steps.duplicate():
 		if step.character == character: _pending_steps.erase(step)
 

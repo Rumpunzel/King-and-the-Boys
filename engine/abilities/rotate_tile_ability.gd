@@ -1,4 +1,5 @@
 @tool
+@icon("uid://bfyuiyaua5vyl")
 class_name RotateTileAbility
 extends Ability
 ## Lifts the tile the character stands on, themselves with it, turns it and sets it down (the Mystic).
@@ -68,12 +69,3 @@ func use(character: Character, target: Vector2i, argument: int, level: Level) ->
 	tile.lifted_by = NodePath()
 	level.rotate_tile(tile, net_turns, character)
 	return RotateTileStep.new(self, character, get_cost(character, target, argument), tile, net_turns)
-
-## The sides [param tile] would connect to, turned by [param clockwise_turns]: its exits turn, its room sides stay
-static func _get_turned_connections(tile: Structure, clockwise_turns: int) -> Array[Level.Direction]:
-	var connections_turned: Array[Level.Direction] = tile.get_room_sides()
-	for opening: Level.Direction in tile.get_openings():
-		var turned: Level.Direction = Level.turn_direction(opening, clockwise_turns)
-		if not connections_turned.has(turned): connections_turned.append(turned)
-	connections_turned.sort()
-	return connections_turned

@@ -62,7 +62,7 @@ func _stand_on_turnable_tile(hero: Character) -> Structure:
 	for cell: Vector2i in placed_tiles:
 		var tile: Structure = placed_tiles[cell]
 		if tile.profile.resource_path == ModelFreeWorld.WALL_TILE: continue
-		if RotateTileAbility._get_turned_connections(tile, 1) == RotateTileAbility._get_turned_connections(tile, 0): continue
+		if ModelFreeWorld.turned_connections(tile, 1) == ModelFreeWorld.turned_connections(tile, 0): continue
 		if not best or cell.distance_squared_to(start) < best.get_grid_position().distance_squared_to(start): best = tile
 	assert_object(best).is_not_null()
 	hero.place_on_grid(best.get_grid_position(), Vector2.ZERO, hero.facing)

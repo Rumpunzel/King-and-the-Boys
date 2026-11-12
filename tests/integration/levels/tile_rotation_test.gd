@@ -82,6 +82,24 @@ func test_pieces_on_the_tile_turn_along() -> void:
 	assert_vector(second.grid_cell).is_equal(_start_cell())
 	assert_vector(first.tile_spot).is_not_equal(second.tile_spot)
 
+func test_a_turned_piece_keeps_off_the_spot_a_corner_thing_holds() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	var tile: Structure = _level.get_placed_tile(_start_cell())
+	for spot: Vector2 in tile.profile.get_tile_spots():
+		if spot.x != 0.0 and spot.y != 0.0: hero.place_on_grid(_start_cell(), spot, hero.facing)
+	# A centrepiece on the corner a half turn carries the hero towards; it stays there as the tile turns
+	var carried_to: Vector2 = Level.turn_spot(hero.tile_spot, 2)
+	var corner: Vector2i = Vector2i(int(carried_to.x > 0.0), int(carried_to.y > 0.0))
+	var corner_things: Dictionary = _level.get("_corner_things")
+	var centrepiece: Thing = auto_free(Thing.new())
+	corner_things[_start_cell() + corner] = centrepiece
+	var held: Vector2 = Level.get_spot_towards(tile.profile.get_tile_spots(), Vector2(corner) * 2.0 - Vector2.ONE)
+	assert_vector(held).is_equal(carried_to)
+	_level.rotate_tile(tile, 2, hero)
+	corner_things.erase(_start_cell() + corner)
+	assert_vector(hero.tile_spot).is_not_equal(held)
+	assert_bool(tile.profile.get_tile_spots().has(hero.tile_spot)).is_true()
+
 func test_one_sided_openings_are_dead_ends() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	for tile: Structure in _inner_tiles():
@@ -138,3 +156,30 @@ func test_new_openings_build_and_reveal() -> void:
 				assert_int(new_tile.status).is_equal(Structure.Status.REVEALED)
 			return
 	fail("No revealed tile opens into an empty cell when turned")
+
+func test_building_stops_at_a_closed_side_a_turned_tile_faces() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	for tile: Structure in _inner_tiles():
+		for clockwise_turns: int in [1, 2, 3]:
+			var found: int = _new_opening(tile, clockwise_turns, "closed")
+			if found < 0: continue
+			var direction: Level.Direction = found as Level.Direction
+			var neighbour: Structure = _level.get_placed_tile(tile.get_grid_position() + Level.direction_to_vector(direction))
+			# Cells the closed neighbour leads into, away from the turned tile, not built yet: nothing may be built through it
+			var beyond: Array[Vector2i] = []
+			for onward: Level.Direction in neighbour.get_connections():
+				var cell: Vector2i = neighbour.get_grid_position() + Level.direction_to_vector(onward)
+				if onward != Level.get_opposite(direction) and not _level.get_placed_tile(cell): beyond.append(cell)
+			if beyond.is_empty(): continue
+			_level.rotate_tile(tile, clockwise_turns, hero)
+			for cell: Vector2i in beyond: assert_object(_level.get_placed_tile(cell)).override_failure_message("Built through a closed side at %s" % cell).is_null()
+			return
+	fail("No turn opens into a closed tile that leads on into unbuilt cells")
+
+func test_a_cell_of_the_outer_wall_is_left_as_it_is() -> void:
+	var wall_cell: Vector2i = Vector2i(_level.grid_extents.x, 0)
+	var wall: Structure = _level.get_placed_tile(wall_cell)
+	assert_object(wall).is_not_null()
+	# As when a turned tile next to the wall opens towards it
+	_level.spawn_at(wall_cell)
+	assert_object(_level.get_placed_tile(wall_cell)).is_same(wall)

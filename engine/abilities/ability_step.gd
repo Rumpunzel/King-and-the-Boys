@@ -1,3 +1,4 @@
+@icon("uid://bfyuiyaua5vyl")
 class_name AbilityStep
 extends RefCounted
 ## Host only: one use of an [Ability], kept on the turn's undo stack. Subclasses record what the use changed.

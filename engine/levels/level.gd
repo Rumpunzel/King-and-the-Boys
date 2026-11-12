@@ -212,13 +212,14 @@ func build_level() -> void:
 	#_agent_spawner.spawn_all_from_spawn_spoints()
 
 func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Status.PLACED) -> void:
-	assert(absi(grid_position.x) < grid_extents.x)
-	assert(absi(grid_position.y) < grid_extents.y)
+	# Placed already, e.g. the outer wall a turned tile now opens towards
 	if _placed_tiles.has(grid_position):
 		var placed_tile: Structure = _placed_tiles[grid_position]
 		assert(placed_tile)
 		if status >= placed_tile.status: placed_tile.status = status
 		return
+	assert(absi(grid_position.x) < grid_extents.x)
+	assert(absi(grid_position.y) < grid_extents.y)
 	var pick: DungeonTileSet.Pick = _tile_set.pick_tile(grid_position, _get_surrounding_tiles(grid_position), generation_random)
 	assert(pick.blueprint)
 	if not pick.suits_all: restriction_fallbacks[grid_position] = true
@@ -367,10 +368,16 @@ func rotate_tile(tile: Structure, clockwise_turns: int, character: Character) ->
 	assert(multiplayer.is_server())
 	var grid_position: Vector2i = tile.get_grid_position()
 	assert(_placed_tiles.get(grid_position) == tile)
-	var tile_spots: Array[Vector2] = tile.profile.get_tile_spots()
+	# Each piece takes the free spot nearest to where the turn carries it: none on a spot a thing holds (e.g. a centrepiece on a
+	# corner, which does not turn with the tile), nor two on one
+	var pieces: Array[Character] = []
 	for piece: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if not piece.visible or piece.grid_cell != grid_position: continue
-		var turned_spot: Vector2 = _get_nearest_spot(turn_spot(piece.tile_spot, clockwise_turns), tile_spots)
+		if piece.visible and piece.grid_cell == grid_position: pieces.append(piece)
+	var open_spots: Array[Vector2] = get_free_spots(grid_position)
+	for piece: Character in pieces: open_spots.append(piece.tile_spot)
+	for piece: Character in pieces:
+		var turned_spot: Vector2 = _get_nearest_spot(turn_spot(piece.tile_spot, clockwise_turns), open_spots)
+		open_spots.erase(turned_spot)
 		piece.place_on_grid(grid_position, turned_spot, turn_direction(piece.facing, clockwise_turns))
 	var thing: Thing = _placed_things.get(grid_position)
 	if thing: thing.rotate_y(-clockwise_turns * PI * 0.5)
@@ -454,6 +461,9 @@ func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction, 
 			var neighbour_direction: Vector2i = direction_to_vector(connection)
 			var neighbour_position: Vector2i = grid_position + neighbour_direction
 			spawn_at(neighbour_position)
+		# On only where the next tile opens back: a turned tile may face a closed side (or the outer wall)
+		var next_tile: Structure = _placed_tiles.get(grid_position + relative_direction)
+		if next_tile and not next_tile.has_connection(get_opposite(direction)): break
 		index += 1
 
 func _build_room_from(origin_grid_position: Vector2i, room_type: RoomType, already_visited: Array[Vector2i]) -> void:

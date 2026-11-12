@@ -1,3 +1,4 @@
+@icon("uid://btm20iemr2nfr")
 class_name TileLift
 extends Node
 ## Every peer: shows a [Structure]'s replicated lift (see [member Structure.lifted_by]) on its model. The model rises with
@@ -18,6 +19,8 @@ var _time: float = 0.0
 var _height_tween: Tween
 var _spin_tween: Tween
 var _carried: Array[Character] = []
+# Whether the model is rising or hanging, rather than dropping or at rest; lifted again while it drops, it rises again
+var _raised: bool = false
 var _hover: Node3D
 
 func _init(structure: Structure) -> void:
@@ -35,8 +38,8 @@ func is_busy() -> bool:
 func update() -> void:
 	if _has_nothing_to_show(): return
 	set_process(true)
-	if _structure.is_lifted() and _carried.is_empty() and not _is_rising(): _rise()
-	elif not _structure.is_lifted() and _height > 0.0: _drop()
+	if _structure.is_lifted() and not _raised: _rise()
+	elif not _structure.is_lifted() and _raised: _drop()
 	_spin_to(_structure.lift_turns if _structure.is_lifted() else 0)
 
 ## The structure turned at once: the model keeps its look and catches up
@@ -74,6 +77,7 @@ func _get_animation() -> TileLiftAnimation:
 
 func _rise() -> void:
 	var animation: TileLiftAnimation = _get_animation()
+	_raised = true
 	_carry_figures()
 	_puff(animation.rise_particles)
 	_start_hover(animation.hover_particles)
@@ -84,6 +88,7 @@ func _rise() -> void:
 
 func _drop() -> void:
 	var animation: TileLiftAnimation = _get_animation()
+	_raised = false
 	_stop_hover()
 	if _height_tween: _height_tween.kill()
 	_height_tween = create_tween().set_parallel()
@@ -144,12 +149,9 @@ func _carry_figures() -> void:
 	if not model: return
 	var grid_position: Vector2i = _structure.get_grid_position()
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if not character.visible or character.grid_cell != grid_position: continue
+		if not character.visible or character.grid_cell != grid_position or _carried.has(character): continue
 		character.carry_on(model)
 		_carried.append(character)
-
-func _is_rising() -> bool:
-	return _height_tween != null and _height_tween.is_running() and _structure.is_lifted()
 
 func _is_at_rest() -> bool:
 	if _structure.is_lifted(): return false

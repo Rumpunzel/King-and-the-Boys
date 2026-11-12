@@ -1,4 +1,5 @@
 @tool
+@icon("uid://bfyuiyaua5vyl")
 class_name Ability
 extends Resource
 ## Something a [Character] can do besides stepping, listed by its [member CharacterProfile.abilities].

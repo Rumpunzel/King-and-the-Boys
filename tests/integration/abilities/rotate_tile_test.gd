@@ -48,7 +48,7 @@ func _stand_on_turnable_tile(hero: Character) -> Structure:
 	for cell: Vector2i in placed_tiles:
 		var tile: Structure = placed_tiles[cell]
 		if tile.profile.resource_path == ModelFreeWorld.WALL_TILE: continue
-		if RotateTileAbility._get_turned_connections(tile, 1) == RotateTileAbility._get_turned_connections(tile, 0): continue
+		if ModelFreeWorld.turned_connections(tile, 1) == ModelFreeWorld.turned_connections(tile, 0): continue
 		if not best or cell.distance_squared_to(_start_cell()) < best.get_grid_position().distance_squared_to(_start_cell()): best = tile
 	assert_object(best).is_not_null()
 	hero.place_on_grid(best.get_grid_position(), Vector2.ZERO, hero.facing)
@@ -87,8 +87,8 @@ func test_the_mystic_lifts_turns_and_sets_down_their_tile() -> void:
 	var tile: Structure = _stand_on_turnable_tile(hero)
 	var turns: int = tile.clockwise_turns
 	# A straight corridor keeps its shape when turned halfway: then three quarter turns
-	var argument: int = 2 if RotateTileAbility._get_turned_connections(tile, 2) != RotateTileAbility._get_turned_connections(tile, 0) else 3
-	var expected: Array[Level.Direction] = RotateTileAbility._get_turned_connections(tile, argument)
+	var argument: int = 2 if ModelFreeWorld.turned_connections(tile, 2) != ModelFreeWorld.turned_connections(tile, 0) else 3
+	var expected: Array[Level.Direction] = ModelFreeWorld.turned_connections(tile, argument)
 	_begin(hero, hero.grid_cell)
 	assert_bool(tile.lifted_by == hero.get_path()).is_true()
 	assert_bool(_level.is_passage(hero.grid_cell, tile.get_connections().front() as Level.Direction)).is_false()
@@ -100,7 +100,7 @@ func test_the_mystic_lifts_turns_and_sets_down_their_tile() -> void:
 	_set_down(hero, argument)
 	assert_bool(tile.is_lifted()).is_false()
 	assert_int(tile.clockwise_turns).is_equal(posmod(turns + argument, 4))
-	assert_array(RotateTileAbility._get_turned_connections(tile, 0)).is_equal(expected)
+	assert_array(ModelFreeWorld.turned_connections(tile, 0)).is_equal(expected)
 	assert_int(hero.movement_points).is_equal(8 - TURN_TILE.get_cost(hero, hero.grid_cell, argument))
 	assert_str(hero.active_ability_id).is_empty()
 
@@ -187,7 +187,7 @@ func _stand_where_a_turn_opens_into_nothing(hero: Character) -> int:
 		if tile.profile.resource_path == ModelFreeWorld.WALL_TILE or tile.status != Structure.Status.REVEALED: continue
 		hero.place_on_grid(cell, Vector2.ZERO, hero.facing)
 		for turns: int in range(1, 4):
-			for direction: Level.Direction in RotateTileAbility._get_turned_connections(tile, turns):
+			for direction: Level.Direction in ModelFreeWorld.turned_connections(tile, turns):
 				if not _level.get_placed_tile(cell + Level.direction_to_vector(direction)): return turns
 	return 0
 
@@ -206,3 +206,23 @@ func test_others_who_crossed_the_tile_forget_their_steps() -> void:
 	_level.rotate_tile(_level.get_placed_tile(_start_cell()), 1, mystic)
 	assert_int(other.undo_steps).is_equal(0)
 	assert_int(mystic.undo_steps).is_equal(mystic_steps)
+
+func test_the_tile_is_set_down_as_the_host_shows_it_not_as_asked() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	var tile: Structure = _stand_on_turnable_tile(hero)
+	var turns: int = tile.clockwise_turns
+	_begin(hero, hero.grid_cell)
+	_adjust(hero, 1)
+	# A client whose choice drifted asks for three quarter turns: the quarter turn every peer saw is what happens
+	_set_down(hero, 3)
+	assert_int(tile.clockwise_turns).is_equal(posmod(turns + 1, 4))
+	assert_int(hero.movement_points).is_equal(8 - TURN_TILE.get_cost(hero, hero.grid_cell, 1))
+
+func test_a_character_leaving_sets_its_lifted_tile_down() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	var tile: Structure = _stand_on_turnable_tile(hero)
+	_begin(hero, hero.grid_cell)
+	assert_bool(tile.is_lifted()).is_true()
+	remove_child(hero)
+	assert_bool(tile.is_lifted()).is_false()
+	add_child(hero)

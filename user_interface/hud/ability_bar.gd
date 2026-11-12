@@ -39,7 +39,9 @@ func update() -> void:
 	for index: int in _abilities.size():
 		var ability: Ability = _abilities[index]
 		var button: Button = _buttons.get_child(index) as Button
-		button.text = _get_label(ability, index)
+		# Asked every frame: only what changed is set
+		var label: String = _get_label(ability, index)
+		if button.text != label: button.text = label
 		button.expand_icon = true
 		button.disabled = not player_controller.can_arm(ability)
 		button.set_pressed_no_signal(character.active_ability_id == ResourceId.of(ability))

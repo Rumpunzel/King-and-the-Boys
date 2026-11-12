@@ -235,8 +235,9 @@ func test_a_room_tile_fits_beside_its_room_whatever_its_shape() -> void:
 	# Turned twice, a corner opens down and left: towards the placed tile, which does not open back
 	var room_corner: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(load(ROOM_CORNER) as StructureProfile, 2)
 	var corridor_corner: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(load(CORRIDOR_CORNER) as StructureProfile, 2)
-	assert_bool(room_corner.fits(Vector2i.RIGHT, placed)).is_true()
-	assert_bool(corridor_corner.fits(Vector2i.RIGHT, placed)).is_false()
+	var opening_towards: Dictionary[Structure, bool] = DungeonTileSet.get_openings_towards(Vector2i.RIGHT, placed)
+	assert_bool(room_corner.fits(Vector2i.RIGHT, opening_towards)).is_true()
+	assert_bool(corridor_corner.fits(Vector2i.RIGHT, opening_towards)).is_false()
 
 func test_a_turned_room_tile_leaves_its_pillars_on_their_corners() -> void:
 	_surround_room()
@@ -253,6 +254,8 @@ func test_a_turned_room_tile_leaves_its_pillars_on_their_corners() -> void:
 				pillar = prop as Node3D
 	assert_object(pillar).override_failure_message("The room should have a pillar").is_not_null()
 	var standing: Vector2 = Vector2(pillar.global_position.x, pillar.global_position.z)
+	# The turn builds the dungeon on along its new passages, which the outer wall bounds, as in a game
+	_level.call("_build_outer_wall")
 	_level.rotate_tile(holder, 1, null)
 	await await_millis(2000)
 	assert_float(Vector2(pillar.global_position.x, pillar.global_position.z).distance_to(standing)).is_less(0.01)

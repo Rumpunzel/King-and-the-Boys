@@ -134,6 +134,24 @@ func test_what_a_turn_reveals_waits_a_moment_after_the_tile_is_set_down() -> voi
 	assert_bool(landed[0]).override_failure_message("Still dropping").is_false()
 	assert_bool(_level._has_figure_caught_up(_hero, [])).is_true()
 
+func test_lifted_again_while_dropping_it_rises_again() -> void:
+	_tile.lifted_by = _hero.get_path()
+	await await_millis(600)
+	_tile.lifted_by = NodePath()
+	await await_millis(300)
+	# Not landed yet: the figure still rides it
+	assert_bool(_hero.is_carried()).is_true()
+	_tile.lifted_by = _hero.get_path()
+	await await_millis(900)
+	assert_float(_tile.model.position.y).is_greater(TileLiftAnimation.of(_level).height * 0.8)
+	assert_bool(_hero.is_carried()).is_true()
+	var landed: Array[bool] = _landed()
+	_tile.lifted_by = NodePath()
+	await await_millis(1500)
+	assert_bool(landed[0]).is_true()
+	assert_bool(_hero.is_carried()).is_false()
+	assert_float(_tile.model.position.y).is_equal(0.0)
+
 func test_a_cancelled_lift_spins_back_and_lands() -> void:
 	var turns: int = _tile.clockwise_turns
 	_tile.lifted_by = _hero.get_path()

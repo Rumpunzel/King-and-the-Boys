@@ -178,7 +178,9 @@ func test_adjusting_needs_the_points_the_choice_costs() -> void:
 
 func test_a_held_ability_that_can_not_be_used_is_cancelled() -> void:
 	_begin()
-	_use(HELD_ABILITY, -1)
+	# The host's own choice, adjusted to one the ability refuses; what the confirm asks for counts for nothing
+	_turn_manager.request_ability_adjust(_hero.get_path(), -1)
+	_use(HELD_ABILITY, 0)
 	assert_int(_hero.get_meta(TestAbility.CANCELLED, 0) as int).is_equal(1)
 	assert_str(_hero.active_ability_id).is_empty()
 	assert_int(_effects()).is_equal(0)
