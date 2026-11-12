@@ -17,10 +17,18 @@ extends Resource
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
 
 const NODE_NAME: StringName = &"Decorations"
+## Name of the node holding a tile's paths, see [method create_paths]
+const PATHS_NODE_NAME: StringName = &"Paths"
 ## How many frames dust waits for the rest of a room arriving tile by tile, see [method _add_room_dust]
 const ROOM_WAIT_FRAMES: int = 120
 ## Meta of a tile's decorations: the grid positions of the neighbours whose shared edge (an opening or a wall) it decided
 const DECIDED_EDGES: StringName = &"decided_edges"
+## Meta of an arch or wall: the grid position of the neighbour across the edge it stands on, see [method redecide_edges]
+const EDGE: StringName = &"edge"
+## Meta of a room pillar: the index of the grid corner it stands on, see [method _add_pillars]
+const CORNER: StringName = &"corner"
+## Meta of an arch: whether it was raised as a doorway (between a room and a corridor)
+const DOORWAY: StringName = &"doorway"
 ## Meta of a prop: the [ModelAnimation] its prop set plays as it drops in, if not [member drop_animation]
 const DROP_ANIMATION: StringName = &"drop_animation"
 ## The corners of a cell, as offsets from its grid position to the corner's index (see [method _add_pillars])
@@ -45,8 +53,12 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 ## Light sources: torches, braziers, candles; at most one per tile, in the middle of a closed side
 @export var lights: PropSet
 @export_range(0.0, 1.0) var light_chance: float = 0.2
+## Rare glowing things in corners between two closed sides (e.g. crystals), in place of a corner prop; scattered pieces spread
+## across the corner
+@export var corner_lights: PropSet
+@export_range(0.0, 1.0) var corner_light_chance: float = 0.05
 @export_group("Rooms")
-## Lie under the middle of room tiles, e.g. rugs; turned in quarter turns to the grid
+## Lie under the middle of room tiles, e.g. rugs; turned diagonally to the grid, in one of its four diagonals
 @export var room_floors: PropSet
 @export_range(0.0, 1.0) var room_floor_chance: float = 0.3
 ## Over the middle of some room tiles, e.g. sun beams
@@ -69,6 +81,18 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 ## Stand on some sides without a connection, by [member wall_chance]; modelled spanning along x
 @export var walls: PropSet
 @export_range(0.0, 1.0) var wall_chance: float = 0.5
+@export_group("Connections")
+## A worn path on the floor from the tile's middle to each of its openings: a strip drawn with this material, e.g. sand
+## ([code]worn_path.gdshader[/code], which takes the path's [code]half_width[/code] as an instance uniform)
+@export var path_material: Material
+## Paths on room tiles, which are shaped by their walls more than their openings; none leaves room tiles without paths
+@export var room_path_material: Material
+## Width of a path, in metres
+@export_range(0.1, 2.0) var path_width: float = 0.7
+## How high above the tile's floor (its model's origin) paths lie, in metres
+@export_range(0.0, 0.2) var path_height: float = 0.01
+## A plank or slab over the gap where two tiles open to each other; laid with its long side across the gap
+@export var bridges: PropSet
 @export_group("Animation")
 ## Played on each prop as it drops in, one after another, unless its prop set has its own [member PropSet.drop_animation]
 @export var drop_animation: ModelAnimation = preload("uid://bf0msgn2okdfo")
@@ -103,11 +127,16 @@ func create_clutter(connections: Array[Level.Direction], grid_position: Vector2i
 		for edge_prop: int in props_per_edge:
 			var along: Vector2 = Vector2(-outward.y, outward.x) * random.randf_range(-edge_spread, edge_spread)
 			if not connections.has(direction) and direction != lit_side and random.randf() < edge_chance:
-				_add_prop(decorations, edge_props, _on_floor((outward * edge_distance + along) * half_tile) * _random_turn(random), random)
+				var spot: Transform3D = _on_floor((outward * edge_distance + along) * half_tile) * _random_turn(random)
+				_add_prop(decorations, edge_props, spot, random, _along_edge(direction))
 		var corner_roll: float = random.randf()
-		if not connections.has(direction) and not connections.has(next_direction) and corner_roll < corner_chance:
-			var corner: Vector2 = outward + Vector2(Level.DIRECTION_VECTORS[next_direction])
-			_add_prop(decorations, corner_props, _on_floor(corner * edge_distance * half_tile) * _random_turn(random), random)
+		var corner_light_roll: float = random.randf()
+		if connections.has(direction) or connections.has(next_direction): continue
+		var corner: Vector2 = outward + Vector2(Level.DIRECTION_VECTORS[next_direction])
+		var corner_spot: Transform3D = _on_floor(corner * edge_distance * half_tile) * _random_turn(random)
+		if corner_lights and corner_light_roll < corner_light_chance:
+			_add_prop(decorations, corner_lights, corner_spot, random, Vector3(-corner.y, 0.0, corner.x).normalized())
+		elif corner_roll < corner_chance: _add_prop(decorations, corner_props, corner_spot, random)
 	return decorations
 
 ## Now and then a light source in the middle of a closed side
@@ -119,7 +148,8 @@ func _add_light(decorations: Node3D, connections: Array[Level.Direction], half_t
 	var roll: float = random.randf()
 	if not lights or closed.is_empty() or roll >= light_chance: return -1
 	var side: Level.Direction = closed[random.randi() % closed.size()]
-	_add_prop(decorations, lights, _on_floor(Vector2(Level.DIRECTION_VECTORS[side]) * edge_distance * half_tile) * _random_turn(random), random)
+	var spot: Transform3D = _on_floor(Vector2(Level.DIRECTION_VECTORS[side]) * edge_distance * half_tile) * _random_turn(random)
+	_add_prop(decorations, lights, spot, random, _along_edge(side))
 	return side
 
 ## A rug under the middle of some room tiles, and some ambience above it
@@ -127,9 +157,9 @@ func _add_room_props(decorations: Node3D, tile: Structure) -> void:
 	if not tile.profile.room_type: return
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(tile.get_grid_position()) ^ hash(&"room")
-	var quarter_turn: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4))
+	var diagonal: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4) + PI * 0.25)
 	if room_floors and random.randf() < room_floor_chance:
-		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), quarter_turn), random)
+		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), diagonal), random)
 	if room_ambience and random.randf() < room_ambience_chance:
 		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO)), random)
 	_add_room_dust(decorations, tile)
@@ -161,6 +191,119 @@ func drop(decorations: Node3D, after: Tween = null) -> void:
 	if after and after.is_running(): after.finished.connect(_drop_each.bind(decorations), CONNECT_ONE_SHOT)
 	else: _drop_each(decorations)
 
+## Every peer, after [param tile] turned by [param clockwise_turns]: its room pillars keep to their corners; the arches and
+## walls it carries turned with its model and
+## stay, now facing other neighbours, unless that edge holds a prop of the neighbour already or an arch no longer fits (a doorway
+## arch between two corridors, or the other way round). Edges left open are decided again; neighbours keep their props.
+## @returns the new props, hidden until [method drop_props]
+func redecide_edges(tile: Structure, clockwise_turns: int) -> Array[Model]:
+	var new_props: Array[Model] = []
+	var decorations: Node3D = _get_decorations(tile)
+	if not decorations: return new_props
+	var grid_position: Vector2i = tile.get_grid_position()
+	var decided_before: Array[Vector2i] = decorations.get_meta(DECIDED_EDGES, [] as Array[Vector2i])
+	var decided: Array[Vector2i] = []
+	for edge: Vector2i in decided_before: decided.append(_turn_edge(grid_position, edge, clockwise_turns))
+	decorations.set_meta(DECIDED_EDGES, decided)
+	for prop: Node in decorations.get_children():
+		# Pillars belong to their grid corner, which stays a corner of the room: they stay where they stand
+		if prop.has_meta(CORNER): (prop as Node3D).transform = Transform3D(Basis(Vector3.UP, clockwise_turns * PI * 0.5)) * (prop as Node3D).transform
+		if not prop.has_meta(EDGE): continue
+		var edge_before: Vector2i = prop.get_meta(EDGE)
+		var edge: Vector2i = _turn_edge(grid_position, edge_before, clockwise_turns)
+		prop.set_meta(EDGE, edge)
+		if _still_fits(tile, prop, edge): continue
+		decided.erase(edge)
+		decorations.remove_child(prop)
+		prop.queue_free()
+	var first_new: int = decorations.get_child_count()
+	_add_arches(decorations, tile, decided)
+	_add_walls(decorations, tile, decided)
+	for index: int in range(first_new, decorations.get_child_count()):
+		var prop: Model = decorations.get_child(index)
+		prop.visible = false
+		new_props.append(prop)
+	return new_props
+
+## The neighbour position [param edge] of the tile on [param grid_position] faces after it turned by [param clockwise_turns]
+static func _turn_edge(grid_position: Vector2i, edge: Vector2i, clockwise_turns: int) -> Vector2i:
+	return grid_position + Vector2i(Level.turn_spot(Vector2(edge - grid_position), clockwise_turns).round())
+
+## Whether the edge prop [param prop] of [param tile], turned to face [param edge], may stay there
+static func _still_fits(tile: Structure, prop: Node, edge: Vector2i) -> bool:
+	var neighbour: Structure = tile.level.get_placed_tile(edge)
+	if not neighbour: return true
+	var neighbour_decorations: Node3D = _get_decorations(neighbour)
+	if neighbour_decorations:
+		for neighbour_prop: Node in neighbour_decorations.get_children():
+			if neighbour_prop.has_meta(EDGE) and neighbour_prop.get_meta(EDGE) == tile.get_grid_position(): return false
+	if not prop.has_meta(DOORWAY): return true
+	var is_doorway: bool = (tile.profile.room_type != null) != (neighbour.profile.room_type != null)
+	return prop.get_meta(DOORWAY) == is_doorway
+
+## A path from the middle of [param tile] to each opening of its shape, as its model sees it (unrotated), ending where its
+## floor ends; a child of the model, so it lifts and turns with the tile and shows its shape even while lifted. Made before the
+## model holds any props, so it measures the floor alone
+func create_paths(tile: Structure) -> Node3D:
+	var paths: Node3D = Node3D.new()
+	paths.name = PATHS_NODE_NAME
+	var material: Material = room_path_material if tile.profile.room_type else path_material
+	if not material: return paths
+	var floor_bounds: AABB = _get_bounds(tile.model)
+	for direction: Level.Direction in tile.profile.get_connections(0):
+		var outward: Vector2 = Vector2(Level.DIRECTION_VECTORS[direction])
+		var reach: float = tile.level.grid_size * 0.5
+		if floor_bounds.size != Vector3.ZERO:
+			reach = maxf(floor_bounds.end.x * outward.x, floor_bounds.position.x * outward.x) if outward.x != 0.0 else maxf(floor_bounds.end.z * outward.y, floor_bounds.position.z * outward.y)
+		# From just behind the middle, where the paths of a tile round off into each other, to the edge
+		var strip: PlaneMesh = PlaneMesh.new()
+		strip.size = Vector2(path_width, reach + path_width * 0.5)
+		strip.center_offset = Vector3(0.0, 0.0, (reach - path_width * 0.5) * 0.5)
+		strip.material = material
+		var path: MeshInstance3D = MeshInstance3D.new()
+		path.name = "Path %s" % Level.Direction.keys()[direction]
+		path.mesh = strip
+		path.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		path.set_instance_shader_parameter(&"half_width", path_width * 0.5)
+		path.transform = Transform3D(Basis(Vector3.UP, atan2(outward.x, outward.y)), Vector3.UP * path_height)
+		paths.add_child(path)
+	return paths
+
+## A bridge over the gap between the tile on [param grid_position] and its neighbour in [param direction], turned so its long
+## side spans the gap; place it on the gap. Seeded by the two cells, so either side builds the same one on every peer.
+## @returns [code]null[/code] without [member bridges]
+func create_bridge(grid_position: Vector2i, direction: Level.Direction) -> Model:
+	if not bridges: return null
+	var random: RandomNumberGenerator = RandomNumberGenerator.new()
+	random.seed = hash(grid_position) ^ hash(grid_position + Level.DIRECTION_VECTORS[direction]) ^ hash(&"bridge")
+	var holder: Node3D = Node3D.new()
+	var bridge: Model = _add_prop(holder, bridges, Transform3D.IDENTITY, random)
+	if bridge: holder.remove_child(bridge)
+	holder.free()
+	if not bridge: return null
+	var bounds: AABB = _get_bounds(bridge.get_child(0) as Node3D)
+	var across_x: bool = Level.DIRECTION_VECTORS[direction].x != 0
+	var long_x: bool = bounds.size.x >= bounds.size.z
+	if across_x != long_x: bridge.basis = Basis(Vector3.UP, PI * 0.5)
+	return bridge
+
+## Drops in [param props] (e.g. from [method redecide_edges]) one after another
+func drop_props(props: Array[Model]) -> void:
+	var valid_props: Array[Model] = []
+	for prop: Model in props:
+		if is_instance_valid(prop): valid_props.append(prop)
+	if valid_props.is_empty(): return
+	var first_prop: Model = valid_props.front()
+	if not first_prop.is_inside_tree(): return
+	var tween: Tween = first_prop.create_tween()
+	for prop: Model in valid_props:
+		tween.tween_callback(_drop_one.bind(prop))
+		tween.tween_interval(drop_interval)
+
+static func _get_decorations(tile: Structure) -> Node3D:
+	if not tile.model or not tile.model.has_node(NodePath(NODE_NAME)): return null
+	return tile.model.get_node(NodePath(NODE_NAME)) as Node3D
+
 ## An arch over some openings: whole ones between a room and a corridor, ruins between two corridors. The first of the two tiles to
 ## be revealed decides, as soon as the other one exists (it need not be revealed); otherwise the other one decides once revealed
 func _add_arches(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) -> void:
@@ -169,7 +312,7 @@ func _add_arches(decorations: Node3D, tile: Structure, decided: Array[Vector2i])
 		var neighbour_position: Vector2i = grid_position + Level.DIRECTION_VECTORS[direction]
 		var neighbour: Structure = tile.level.get_placed_tile(neighbour_position)
 		# Whether it is a doorway depends on the neighbour, so it is decided once the neighbour exists
-		if not neighbour or _has_decided(neighbour, grid_position): continue
+		if not neighbour or decided.has(neighbour_position) or _has_decided(neighbour, grid_position): continue
 		decided.append(neighbour_position)
 		var is_room: bool = tile.profile.room_type != null
 		var is_doorway: bool = is_room != (neighbour.profile.room_type != null)
@@ -179,7 +322,10 @@ func _add_arches(decorations: Node3D, tile: Structure, decided: Array[Vector2i])
 		random.seed = hash(grid_position) ^ hash(neighbour_position)
 		if random.randf() >= (doorway_arch_chance if is_doorway else corridor_arch_chance): continue
 		var arches: PropSet = doorway_arches if is_doorway else corridor_arches
-		_add_prop(decorations, arches, _on_edge(tile, direction, _facing_room(direction, is_room) if is_doorway else Basis.IDENTITY), random)
+		var arch: Model = _add_prop(decorations, arches, _on_edge(tile, direction, _facing_room(direction, is_room) if is_doorway else Basis.IDENTITY), random)
+		if not arch: continue
+		arch.set_meta(EDGE, neighbour_position)
+		arch.set_meta(DOORWAY, is_doorway)
 
 ## A wall on some sides without a connection; a neighbour across, if any, may have decided the edge already
 func _add_walls(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) -> void:
@@ -190,7 +336,7 @@ func _add_walls(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) 
 		if connections.has(direction): continue
 		var neighbour_position: Vector2i = grid_position + Level.DIRECTION_VECTORS[direction]
 		var neighbour: Structure = tile.level.get_placed_tile(neighbour_position)
-		if neighbour and _has_decided(neighbour, grid_position): continue
+		if decided.has(neighbour_position) or (neighbour and _has_decided(neighbour, grid_position)): continue
 		decided.append(neighbour_position)
 		# Seeded by the edge, so it does not matter which side decides
 		var random: RandomNumberGenerator = RandomNumberGenerator.new()
@@ -198,7 +344,8 @@ func _add_walls(decorations: Node3D, tile: Structure, decided: Array[Vector2i]) 
 		if random.randf() >= wall_chance: continue
 		# Either face may look into the tile, so crumbling ends vary
 		var flip: Basis = Basis(Vector3.UP, PI) if random.randf() < 0.5 else Basis.IDENTITY
-		_add_prop(decorations, walls, _on_edge(tile, direction, flip), random)
+		var wall: Model = _add_prop(decorations, walls, _on_edge(tile, direction, flip), random)
+		if wall: wall.set_meta(EDGE, neighbour_position)
 
 ## The middle of the tile's edge in [param direction] (in the level's axes), turned so a piece modelled along x spans the edge
 static func _on_edge(tile: Structure, direction: Level.Direction, turn: Basis) -> Transform3D:
@@ -233,7 +380,8 @@ func _add_pillars(decorations: Node3D, tile: Structure) -> void:
 		var random: RandomNumberGenerator = RandomNumberGenerator.new()
 		random.seed = hash(corner_index) ^ hash(&"pillar")
 		var spot: Vector2 = (Vector2(corner) - Vector2.ONE * 0.5) * tile.level.grid_size
-		_add_prop(decorations, room_pillars, _to_model(tile, _on_floor(spot), _random_turn(random).basis), random)
+		var pillar: Model = _add_prop(decorations, room_pillars, _to_model(tile, _on_floor(spot), _random_turn(random).basis), random)
+		if pillar: pillar.set_meta(CORNER, corner_index)
 
 ## Whether all four cells around the corner [param corner_index] are room tiles and the others are revealed already
 static func _is_last_room_tile_around(tile: Structure, corner_index: Vector2i) -> bool:
@@ -251,22 +399,51 @@ static func _to_model(tile: Structure, level_transform: Transform3D, level_basis
 static func _on_floor(spot: Vector2) -> Transform3D:
 	return Transform3D(Basis.IDENTITY, Vector3(spot.x, 0.0, spot.y))
 
+## The way along the side of a tile facing [param direction], in its model's space
+static func _along_edge(direction: Level.Direction) -> Vector3:
+	return Vector3(-Level.DIRECTION_VECTORS[direction].y, 0.0, Level.DIRECTION_VECTORS[direction].x)
+
 static func _random_turn(random: RandomNumberGenerator) -> Transform3D:
 	return Transform3D(Basis(Vector3.UP, random.randf() * TAU), Vector3.ZERO)
 
-## Adds a prop picked from [param prop_set] at [param prop_transform], in the tile model's space
-func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transform3D, random: RandomNumberGenerator) -> void:
-	if not collection: return
-	# Scale and material come from the (sub-)collection the prop is taken from
+## Adds a prop picked from [param prop_set] at [param prop_transform], in the tile model's space; scattered pieces spread
+## [param along] (e.g. the edge it stands by, also in the model's space)
+## @returns the prop, or [code]null[/code] if the set gave none
+func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transform3D, random: RandomNumberGenerator, along: Vector3 = Vector3.RIGHT) -> Model:
+	if not collection: return null
+	# Scale, material and arrangement come from the (sub-)collection the prop is taken from
 	var prop_set: PropSet = collection.pick_collection(random)
+	var pieces: int = 1
+	if prop_set.arrangement != PropSet.Arrangement.SINGLE: pieces = random.randi_range(prop_set.piece_count.x, maxi(prop_set.piece_count.x, prop_set.piece_count.y))
+	# A [Model] around the pieces, so model animations play on the whole prop
+	var prop: Model = Model.new()
+	for _piece: int in pieces:
+		var piece: Node3D = _make_piece(prop_set, random)
+		if not piece: break
+		prop.add_child(piece, true)
+	if prop.get_child_count() == 0:
+		prop.free()
+		return null
+	prop.name = prop.get_child(0).name
+	_arrange(prop_set, prop, random, prop_transform.basis.inverse() * along)
+	prop.transform = prop_transform
+	var animation: ModelAnimation = prop_set.drop_animation if prop_set.drop_animation else collection.drop_animation
+	if animation: prop.set_meta(DROP_ANIMATION, animation)
+	decorations.add_child(prop)
+	return prop
+
+## One piece of [param prop_set] picked by weight, scaled, painted and, if wanted, centred on its footprint; [code]null[/code] if
+## the set has no props
+func _make_piece(prop_set: PropSet, random: RandomNumberGenerator) -> Node3D:
 	var scene: PackedScene = prop_set.pick(random)
-	if not scene: return
+	if not scene: return null
 	var mesh: Node3D = scene.instantiate()
 	# Decorations never block clicks or movement
-	# Taken out at once, so they never collide; nested bodies leave with their parent, which is fine to remove and free again
+	# Freed at once, so they never collide nor linger outside the tree; nested bodies go with their parent
 	for body: Node in mesh.find_children("*", "CollisionObject3D", true, false):
+		if not is_instance_valid(body): continue
 		body.get_parent().remove_child(body)
-		body.queue_free()
+		body.free()
 	mesh.scale = prop_set.prop_scale
 	if prop_set.material_override:
 		var meshes: Array[MeshInstance3D] = Model.gather_all_geometry_instances_on(mesh)
@@ -275,14 +452,35 @@ func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transfo
 	if prop_set.center_props:
 		var footprint: Vector3 = _get_bounds(mesh).get_center() * prop_set.prop_scale
 		mesh.position = -Vector3(footprint.x, 0.0, footprint.z)
-	# A [Model] around the prop, so model animations play on it
-	var prop: Model = Model.new()
-	prop.name = mesh.name
-	prop.transform = prop_transform
-	var animation: ModelAnimation = prop_set.drop_animation if prop_set.drop_animation else collection.drop_animation
-	if animation: prop.set_meta(DROP_ANIMATION, animation)
-	prop.add_child(mesh)
-	decorations.add_child(prop)
+	return mesh
+
+## Lays out the pieces of [param prop] as [member PropSet.arrangement] says, scattered ones spread [param along] (in the prop's
+## own space); a single piece stays as it is
+func _arrange(prop_set: PropSet, prop: Model, random: RandomNumberGenerator, along: Vector3) -> void:
+	var pieces: Array[Node] = prop.get_children()
+	match prop_set.arrangement:
+		PropSet.Arrangement.SCATTER:
+			var lengthwise: Vector3 = Vector3(along.x, 0.0, along.z).normalized()
+			for index: int in pieces.size():
+				# Each in its own stretch along the edge, so they spread out evenly, and strewn around its place there
+				var stretch: float = lerpf(-prop_set.scatter_length, prop_set.scatter_length, (index + random.randf()) / pieces.size())
+				var stray: Vector2 = Vector2.from_angle(random.randf() * TAU) * sqrt(random.randf()) * prop_set.scatter_radius
+				_place_piece(pieces[index] as Node3D, random.randf() * TAU, lengthwise * stretch + Vector3(stray.x, 0.0, stray.y), prop_set, random)
+		PropSet.Arrangement.ROW:
+			# Side by side across the first piece's long side
+			var size: Vector3 = _get_bounds(pieces[0] as Node3D).size * prop_set.prop_scale
+			var long_x: bool = size.x >= size.z
+			var across: Vector3 = Vector3.BACK if long_x else Vector3.RIGHT
+			var lengthwise: Vector3 = Vector3.RIGHT if long_x else Vector3.BACK
+			var spacing: float = (size.z if long_x else size.x) + prop_set.row_gap
+			for index: int in pieces.size():
+				var offset: Vector3 = across * (index - (pieces.size() - 1) * 0.5) * spacing + lengthwise * random.randf_range(-prop_set.row_shift, prop_set.row_shift)
+				_place_piece(pieces[index] as Node3D, deg_to_rad(random.randf_range(-prop_set.row_turn_degrees, prop_set.row_turn_degrees)), offset, prop_set, random)
+
+## Turns [param piece] by [param turn] about its spot, sizes it by the set's jitter and moves it by [param offset]
+static func _place_piece(piece: Node3D, turn: float, offset: Vector3, prop_set: PropSet, random: RandomNumberGenerator) -> void:
+	var size: float = 1.0 + random.randf_range(-prop_set.size_jitter, prop_set.size_jitter) if prop_set.size_jitter > 0.0 else 1.0
+	piece.transform = Transform3D(Basis(Vector3.UP, turn).scaled(Vector3.ONE * size), offset) * piece.transform
 
 ## The bounds of every mesh in [param node], in its own space; works outside the tree
 static func _get_bounds(node: Node3D) -> AABB:

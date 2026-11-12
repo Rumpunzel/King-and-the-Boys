@@ -20,3 +20,12 @@ static func create_level() -> Level:
 
 static func load_hero_profile() -> CharacterProfile:
 	return load(HERO)
+
+## The sides [param tile] would connect to, turned by [param clockwise_turns]: its exits turn, its room sides stay
+static func turned_connections(tile: Structure, clockwise_turns: int) -> Array[Level.Direction]:
+	var connections_turned: Array[Level.Direction] = tile.get_room_sides()
+	for opening: Level.Direction in tile.get_openings():
+		var turned: Level.Direction = Level.turn_direction(opening, clockwise_turns)
+		if not connections_turned.has(turned): connections_turned.append(turned)
+	connections_turned.sort()
+	return connections_turned

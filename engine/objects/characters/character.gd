@@ -8,6 +8,9 @@ signal exited_grid_cell(cell: Vector2i)
 signal destination_reached
 signal movement_points_changed(movement_points: int)
 signal undo_steps_changed(undo_steps: int)
+signal ability_uses_changed
+signal active_ability_changed
+signal held_cost_changed(held_cost: int)
 ## Emitted on every peer when the animated figure crosses into [param cell], which lags behind [member grid_cell]
 signal figure_entered_grid_cell(cell: Vector2i)
 ## Emitted on every peer when the figure's move ended
@@ -67,7 +70,8 @@ var model: Model:
 		if not model: return
 		add_child(model, true)
 		_apply_body()
-		if shows_passed: model.rest_in(profile.passed_animations)
+		var rest: BodyAnimations = _get_rest()
+		if rest: model.rest_in(rest, false)
 		if equipment and model is ModularModel:
 			var modular_model: ModularModel = model
 			equipment.apply_to(modular_model)
@@ -122,6 +126,26 @@ var undo_steps: int = 0:
 		if new_undo_steps == undo_steps: return
 		undo_steps = new_undo_steps
 		undo_steps_changed.emit(undo_steps)
+## Uses so far of each [Ability] with [member Ability.charges], by its [ResourceId]; replicated and saved.
+## Replaced as a whole on every change, so the synchronizer notices it.
+var ability_uses: Dictionary = {}:
+	set(new_ability_uses):
+		if new_ability_uses == ability_uses: return
+		ability_uses = new_ability_uses
+		ability_uses_changed.emit()
+## The [ResourceId] of the held [Ability] in use (see [member Ability.held]), empty if none; set by the host, replicated
+var active_ability_id: String = "":
+	set(new_active_ability_id):
+		if new_active_ability_id == active_ability_id: return
+		active_ability_id = new_active_ability_id
+		active_ability_changed.emit()
+		if model: model.rest_in(_get_rest())
+## The movement points the held ability in use would cost as it is now, [code]0[/code] if none; set by the host, replicated
+var held_cost: int = 0:
+	set(new_held_cost):
+		if new_held_cost == held_cost: return
+		held_cost = new_held_cost
+		held_cost_changed.emit(held_cost)
 
 var _has_grid_state: bool = false
 var _grid_visual_update_queued: bool = false
@@ -134,6 +158,10 @@ var _move_target: Vector3
 var _move_backwards: bool = false
 # The cell the animated figure is in; lags behind grid_cell while it moves
 var _figure_grid_cell: Vector2i = Vector2i.ZERO
+
+# What the figure rides on, e.g. a lifted tile's model (see TileLift), and where on it
+var _carrier: Node3D
+var _carried_transform: Transform3D
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -178,6 +206,7 @@ func _physics_process(_delta: float) -> void:
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
+	if is_instance_valid(_carrier): global_transform = _carrier.global_transform * _carried_transform
 	_update_figure_grid_cell()
 	#if model: model.play_animation(_normalized_velocity, _is_on_floor)
 
@@ -237,6 +266,45 @@ func give_grid_state_to_host() -> void:
 func reset_movement_points() -> void:
 	assert(multiplayer.is_server())
 	movement_points = profile.speed
+
+## @returns the listed [Ability] named by [param ability_id], or [code]null[/code]; loads nothing, so peer-sent ids are safe.
+## The held ability in use is [code]get_ability(active_ability_id)[/code].
+func get_ability(ability_id: String) -> Ability:
+	if not profile or ability_id.is_empty(): return null
+	for ability: Ability in profile.abilities:
+		if ability and ResourceId.of(ability) == ability_id: return ability
+	return null
+
+## Host only: counts [param amount] uses of [param ability] against its charges; a negative amount takes them back,
+## e.g. on undo. See [method Ability.get_charges_left].
+func count_charges(ability: Ability, amount: int) -> void:
+	assert(multiplayer.is_server())
+	if ability.charges < 0: return
+	var ability_id: String = ResourceId.of(ability)
+	var new_ability_uses: Dictionary = ability_uses.duplicate()
+	var used: int = new_ability_uses.get(ability_id, 0)
+	used = clampi(used + amount, 0, ability.charges)
+	if used == 0: new_ability_uses.erase(ability_id)
+	else: new_ability_uses[ability_id] = used
+	ability_uses = new_ability_uses
+
+## Every peer: the figure rides on [param carrier] as it stands, e.g. on a lifted tile; [code]null[/code] sets it
+## down, snapping it onto its grid state. Grid state changes meanwhile show once it is set down.
+func carry_on(carrier: Node3D) -> void:
+	_carrier = carrier
+	if not carrier:
+		snap_to_grid()
+		return
+	# A move under way ends at once where it was going, and the figure arrives (e.g. to pass when out of moves): then it rides
+	if _is_moving():
+		_move_tween.kill()
+		global_position = _move_target
+		_on_move_finished()
+	if _turn_tween: _turn_tween.kill()
+	_carried_transform = carrier.global_transform.affine_inverse() * global_transform
+
+func is_carried() -> bool:
+	return is_instance_valid(_carrier)
 
 ## Snaps the model back onto its grid state, e.g. after something else moved it locally
 func snap_to_grid() -> void:
@@ -315,14 +383,16 @@ func _queue_grid_visual_update() -> void:
 
 func _apply_grid_visuals() -> void:
 	_grid_visual_update_queued = false
-	if not level or not is_inside_tree(): return
+	# A carried figure shows its grid state once it is set down
+	if not level or not is_inside_tree() or is_carried(): return
 	var target_position: Vector3 = level.get_spot_position(grid_cell, tile_spot)
 	var target_rotation: float = facing_to_rotation(facing)
 	if not _grid_visuals_applied:
 		_grid_visuals_applied = true
 		for tween: Tween in [_move_tween, _turn_tween, _model_tween]: if tween: tween.kill()
 		global_position = target_position
-		rotation.y = target_rotation
+		# Upright again after riding on a tilted carrier
+		rotation = Vector3(0.0, target_rotation, 0.0)
 		_update_figure_grid_cell()
 		return
 	_turn_to(target_rotation)
@@ -380,14 +450,20 @@ func _on_move_finished() -> void:
 	if not _move_backwards: _look_at_thing_on_tile()
 	figure_arrived.emit()
 
-## Shows that the character's player passed, or no longer has: the profile's pass animation, then its passed animations in place of the idles
-## (e.g. sitting down and sitting), or getting up again
+## Shows that the character's player passed, or no longer has: its passed animations in place of the idles (e.g. sitting down
+## and sitting), or getting up again
 func show_passed(passed: bool) -> void:
 	if passed == shows_passed: return
 	shows_passed = passed
-	if not model: return
-	if passed: model.rest_in(profile.passed_animations, profile.pass_animation)
-	else: model.rest_in(null, profile.unpass_animation)
+	if model: model.rest_in(_get_rest())
+
+## What the model rests in now: the cast animations of the held ability in use, the passed animations, or its idles
+## ([code]null[/code])
+func _get_rest() -> BodyAnimations:
+	var ability: Ability = get_ability(active_ability_id)
+	if ability and ability.cast_animations: return ability.cast_animations
+	if shows_passed: return profile.passed_animations
+	return null
 
 ## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
 func _look_at_thing_on_tile() -> void:

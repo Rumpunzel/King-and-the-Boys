@@ -3,16 +3,20 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_ice4o"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_arfpv"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_u6fvh"]
+[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_4m7y1"]
 [ext_resource type="Resource" uid="uid://5hbsrnqf3fcd" path="res://data/characters/people/knight_body.tres" id="5_0vpuq"]
 [ext_resource type="Texture2D" uid="uid://cc2x8ji73hxc4" path="res://data/characters/people/portraits/frog-mouth-helm.svg" id="5_63j5q"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_ltdy7"]
 [ext_resource type="Animation" uid="uid://bc8j12qn1ligs" path="res://data/characters/animations/quaternius/Sword_Idle.res" id="5_t8ti5"]
-[ext_resource type="Animation" uid="uid://c3yntvceq4y34" path="res://data/characters/animations/quaternius/Sword_Exit.res" id="6_5a45u"]
 [ext_resource type="Script" uid="uid://bmeof63fq3h8u" path="res://engine/objects/spawn_table.gd" id="7_meawf"]
+[ext_resource type="Animation" uid="uid://by3qgwvkpgfd8" path="res://data/characters/animations/quaternius_2/Fish_Cast.res" id="8_g0w26"]
+[ext_resource type="Animation" uid="uid://ltjdxm0p0luq" path="res://data/characters/animations/quaternius_2/Fish_Cast_Idle.res" id="9_4m7y1"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="10_7tsdp"]
+[ext_resource type="Animation" uid="uid://c3epbvmnp6hrg" path="res://data/characters/animations/quaternius_2/Fish_Reel.res" id="10_usogq"]
 [ext_resource type="ArrayMesh" uid="uid://d6cc7kxx5c07" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_10.res" id="11_73hd6"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="12_ek7te"]
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="13_bdx47"]
+[ext_resource type="Animation" uid="uid://dtg7jikclvl61" path="res://data/characters/animations/quaternius_2/Shield_Dash.res" id="14_g0w26"]
 [ext_resource type="Resource" uid="uid://dnkb4svltrc47" path="res://data/equipment/types/cape.tres" id="14_kpg6l"]
 [ext_resource type="ArrayMesh" uid="uid://c4bjv8tdymgs1" path="res://data/characters/people/meshes/gear/female/arm_lower_left/modular_character_ArmLowerLeft_Female_11.res" id="15_rg8qt"]
 [ext_resource type="ArrayMesh" uid="uid://cl706jrds2wr3" path="res://data/characters/people/meshes/gear/male/arm_lower_left/modular_character_ArmLowerLeft_Male_11.res" id="16_5a45u"]
@@ -51,10 +55,9 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="47_gfjk1"]
 [ext_resource type="ArrayMesh" uid="uid://n5cjrfw3l21g" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_12.res" id="48_hmc0y"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="49_wouu8"]
-[ext_resource type="Animation" uid="uid://y8vxu7fb7shw" path="res://data/characters/animations/quaternius/Sword_Enter.res" id="55_t8ti5"]
+[ext_resource type="Animation" uid="uid://ddupi8altqxmo" path="res://data/characters/animations/quaternius_2/Fish_Reel_Failed.res" id="58_hdg4a"]
 [ext_resource type="Resource" uid="uid://bokwo0ngtuf6x" path="res://data/model_animations/heroes/knight_move.tres" id="90_knight_move"]
 [ext_resource type="Resource" uid="uid://chaqmhbq3eugj" path="res://data/model_animations/heroes/knight_spawn.tres" id="90_knight_spawn"]
-[ext_resource type="Animation" uid="uid://bhjnwxdo022v7" path="res://data/characters/animations/quaternius/Dance.res" id="anim_Dance"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
 
 [sub_resource type="Resource" id="Resource_511xg"]
@@ -64,7 +67,10 @@ metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="BodyAnimations_passed"]
 script = ExtResource("body_animations")
-animations = Array[Animation]([ExtResource("anim_Dance")])
+animations = Array[Animation]([ExtResource("9_4m7y1"), ExtResource("9_4m7y1"), ExtResource("9_4m7y1"), ExtResource("9_4m7y1"), ExtResource("10_usogq")])
+order = 2
+entry = ExtResource("8_g0w26")
+exit = ExtResource("58_hdg4a")
 metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_13etc"]
@@ -255,8 +261,7 @@ name = "Belt 12"
 [resource]
 script = ExtResource("5_ltdy7")
 intelligence = 2
-vision = 0.0
-dark_vision = 1.5
+dark_vision = 0.0
 preview_offset = Vector3(0, 0.1, 0)
 gear_primary_color = Color(0.173, 0.29, 0.549, 1)
 gear_secondary_color = Color(0.851, 0.698, 0.29, 1)
@@ -272,10 +277,8 @@ spawn_animation = ExtResource("90_knight_spawn")
 move_animation = ExtResource("90_knight_move")
 fast_move_animation = ExtResource("90_knight_move")
 idle_animations = SubResource("Resource_511xg")
-pass_animation = ExtResource("6_5a45u")
 passed_animations = SubResource("BodyAnimations_passed")
-unpass_animation = ExtResource("55_t8ti5")
-selected_animation = ExtResource("55_t8ti5")
+selected_animation = ExtResource("14_g0w26")
 name = "Knight"
 portrait = ExtResource("5_63j5q")
 color = Color(0.227, 0.4, 0.784, 1)

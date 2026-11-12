@@ -3,24 +3,29 @@
 class_name MovesBar
 extends HBoxContainer
 ## A character's moves this turn as a row of pills, one per move, in the character's colour: moves used for good in full
-## colour, moves that could still be undone paler, moves left empty. Pills fill up and drain with a short tween; when several change
+## colour, moves that could still be undone paler, moves left empty; the moves a held ability would cost as it is now (e.g. the
+## lifted tile's turn, [member Character.held_cost]) in [member held_color]. Pills fill up and drain with a short tween; when several change
 ## at once (e.g. all moves come back with a new turn), one after another: filling from the first, draining from the last.
 
-enum MoveState { LEFT, UNDOABLE, USED }
+enum MoveState { LEFT, UNDOABLE, USED, HELD }
 
 @export var character: Character:
 	set(new_character):
 		if is_instance_valid(character):
 			character.movement_points_changed.disconnect(_on_moves_changed)
 			character.undo_steps_changed.disconnect(_on_moves_changed)
+			character.held_cost_changed.disconnect(_on_moves_changed)
 		character = new_character
 		if not character or Engine.is_editor_hint(): return
 		character.movement_points_changed.connect(_on_moves_changed)
 		character.undo_steps_changed.connect(_on_moves_changed)
+		character.held_cost_changed.connect(_on_moves_changed)
 		_update(false)
 
 ## Opacity of moves that could still be undone
 @export_range(0.0, 1.0) var undoable_alpha: float = 0.4
+## Colour of the moves a held ability would cost
+@export var held_color: Color = Color(1.0, 0.85, 0.35)
 ## How long a pill takes to fill up, drain or change its colour
 @export_range(0.0, 1.0) var fill_duration: float = 0.25
 ## Seconds between pills that change at once
@@ -42,9 +47,9 @@ var _tweens: Array[Tween] = []
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
-		# A preview: two moves used, one undoable, one left
-		_build(4)
-		for move: int in 4: _show(move, [MoveState.USED, MoveState.USED, MoveState.UNDOABLE, MoveState.LEFT][move] as MoveState, Color.CORNFLOWER_BLUE, false)
+		# A preview: two moves used, one undoable, one held, one left
+		_build(5)
+		for move: int in 5: _show(move, [MoveState.USED, MoveState.USED, MoveState.UNDOABLE, MoveState.HELD, MoveState.LEFT][move] as MoveState, Color.CORNFLOWER_BLUE, false)
 		return
 	if character: _update(false)
 
@@ -56,11 +61,13 @@ func _update(animate: bool = true) -> void:
 		animate = false
 	var moves_used: int = speed - maxi(character.movement_points, 0)
 	var moves_kept: int = moves_used - character.undo_steps
+	var moves_held: int = mini(moves_used + character.held_cost, speed)
 	var states: Array[MoveState] = []
 	for move: int in speed:
 		var state: MoveState = MoveState.LEFT
 		if move < moves_kept: state = MoveState.USED
 		elif move < moves_used: state = MoveState.UNDOABLE
+		elif move < moves_held: state = MoveState.HELD
 		states.append(state)
 	# Fills go from the first pill on, drains from the last one back
 	var delay: float = 0.0
@@ -107,6 +114,7 @@ func _show(move: int, state: MoveState, color: Color, animate: bool, delay: floa
 	var target_color: Color = _colors[move]
 	if state == MoveState.USED: target_color = color
 	elif state == MoveState.UNDOABLE: target_color = Color(color, color.a * undoable_alpha)
+	elif state == MoveState.HELD: target_color = held_color
 	# Compared with where the pill is heading, so a pill still tweening there carries on undisturbed
 	if state == _states[move] and target_color == _colors[move]: return false
 	_states[move] = state

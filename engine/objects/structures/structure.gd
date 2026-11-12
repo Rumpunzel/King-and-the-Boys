@@ -7,6 +7,12 @@ signal spawn_requested(profile_to_spawn: Profile)
 signal status_changed(status: Status)
 signal shown_status_changed(shown_status: Status)
 signal profile_changed
+## Emitted on every peer when the tile turns after it was ready, see [method Level.rotate_tile]
+signal clockwise_turns_changed(previous_clockwise_turns: int)
+## Emitted on every peer when the tile is lifted, turned while lifted, or set down
+signal lift_changed
+## Emitted on every peer when the tile's model came to rest on the board again after a lift or a turn
+signal landed
 
 enum Status {
 	NONE = -1,
@@ -53,10 +59,13 @@ static var debug_labels_shown: bool = false
 		profile_changed.emit()
 		add_to_group(profile.get_group_name())
 
+## Quarter turns clockwise, seen from above; replicated, so tiles turned after spawning turn on every peer
 @export var clockwise_turns: int = 0:
-	get: return posmod(-rotation.y / (PI * 0.5), 4)
+	get: return posmod(roundi(-rotation.y / (PI * 0.5)), 4)
 	set(new_clockwise_turns):
+		var previous_clockwise_turns: int = clockwise_turns
 		rotation.y = TAU - new_clockwise_turns * (PI * 0.5)
+		if is_node_ready() and clockwise_turns != previous_clockwise_turns: clockwise_turns_changed.emit(previous_clockwise_turns)
 
 ## What the players know about the tile; set by the host the moment a move reveals it.
 ## [member shown_status] catches up later through the [Level]'s delayed visual queues.
@@ -77,6 +86,22 @@ static var debug_labels_shown: bool = false
 var status_cause: NodePath
 ## The cause's [member Character.step_count] at that step; [code]0[/code] if no step raised the status
 var status_cause_step: int = 0
+
+## The [Character] that lifted the tile, empty if it lies on the board. A lifted tile has no connections.
+## Set by the host, replicated; not saved, like the held ability that lifts it.
+var lifted_by: NodePath:
+	set(new_lifted_by):
+		if new_lifted_by == lifted_by: return
+		lifted_by = new_lifted_by
+		# Set down: the turns go, which tells of the change once
+		if lifted_by.is_empty() and lift_turns != 0: lift_turns = 0
+		else: lift_changed.emit()
+## Quarter turns clockwise the lifted tile shows on top of [member clockwise_turns]; set by the host, replicated
+var lift_turns: int = 0:
+	set(new_lift_turns):
+		if new_lift_turns == lift_turns: return
+		lift_turns = new_lift_turns
+		lift_changed.emit()
 
 ## What the tile currently looks like on this peer
 var shown_status: Status = Status.NONE:
@@ -103,8 +128,12 @@ var level: Level:
 		var decorations: Node3D = _decorate()
 		if decorations: profile.decorations.drop(decorations)
 
+var _lift: TileLift
+
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	lift_changed.connect(_on_lift_changed)
+	clockwise_turns_changed.connect(_on_turned)
 	if level: name = "%s %s" % [get_grid_position(), profile.name]
 	else: name = "%s %s" % [global_position, profile.name]
 	if status == Status.NONE: status = Status.PLACED
@@ -172,13 +201,38 @@ func can_connect_to(grid_position: Vector2i, other_profile: StructureProfile) ->
 	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
 	return profile.can_connect(direction, clockwise_turns, other_profile)
 
-func has_connection(direction: Level.Direction) -> bool: return profile.has_connection(direction, clockwise_turns)
+func is_lifted() -> bool: return not lifted_by.is_empty()
+## @returns [code]true[/code] if the tile lies on the board and its model rests there, see [signal landed]
+func is_settled() -> bool: return not is_lifted() and (not _lift or not _lift.is_busy())
+
+## @returns [code]true[/code] if the tile opens into [param direction]; a lifted tile opens nowhere, see [method get_connections]
+func has_connection(direction: Level.Direction) -> bool:
+	return not is_lifted() and (profile.has_connection(direction, clockwise_turns) or _is_room_side(direction))
 func has_connection_to(grid_position: Vector2i) -> bool:
 	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
-	return profile.has_connection(direction, clockwise_turns)
+	return has_connection(direction)
 
-func get_connections() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
-func get_connection_vectors() -> Array[Vector2i]: return profile.get_connection_vectors(clockwise_turns)
+## @returns the sides the tile opens into, lifted or not: its [method get_openings] and, for a room tile, every side towards a
+## placed tile of its room type, which always connect; whether pieces pass is [method has_connection]
+func get_connections() -> Array[Level.Direction]:
+	var connections: Array[Level.Direction] = get_openings()
+	for side: Level.Direction in get_room_sides(): if not connections.has(side): connections.append(side)
+	return connections
+
+## @returns the sides the tile's shape opens into, as it is turned (a room tile's exits)
+func get_openings() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
+
+## @returns the sides of a room tile towards placed tiles of its room type; empty for other tiles
+func get_room_sides() -> Array[Level.Direction]:
+	var sides: Array[Level.Direction] = []
+	for direction: Level.Direction in Level.Direction.values(): if _is_room_side(direction): sides.append(direction)
+	return sides
+
+## Whether this is a room tile and the placed tile towards [param direction] is of its room type
+func _is_room_side(direction: Level.Direction) -> bool:
+	if not profile.room_type or not level: return false
+	var neighbour: Structure = level.get_placed_tile(get_grid_position() + Level.DIRECTION_VECTORS[direction])
+	return neighbour != null and neighbour.profile.room_type == profile.room_type
 
 func get_restriction_to(grid_position: Vector2i) -> ConnectionRestriction:
 	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
@@ -227,10 +281,33 @@ func _show_model() -> void:
 ## Dresses the model with the profile's props the first time it is revealed; they are part of the model, so they turn with it
 ## @returns the new props, or [code]null[/code] if the model already has them or the profile none
 func _decorate() -> Node3D:
+	if profile.decorations and level and not model.has_node(NodePath(TileDecorations.PATHS_NODE_NAME)): model.add_child(profile.decorations.create_paths(self))
 	if not profile.decorations or not level or model.has_node(NodePath(TileDecorations.NODE_NAME)): return null
 	var decorations: Node3D = profile.decorations.create(self)
 	model.add_child(decorations)
 	return decorations
+
+## @returns what shows this tile's lift, made the first time it is needed
+func _get_lift() -> TileLift:
+	if not _lift:
+		_lift = TileLift.new(self)
+		_lift.landed.connect(landed.emit)
+		add_child(_lift)
+	return _lift
+
+func _on_lift_changed() -> void:
+	_get_lift().update()
+
+## Every peer: the model catches up with the turn; the arches and walls it carries turn along and stay where they still fit,
+## edges left open are decided again and their props drop in once it landed
+func _on_turned(previous_clockwise_turns: int) -> void:
+	var lift: TileLift = _get_lift()
+	lift.on_turned(previous_clockwise_turns)
+	if not profile.decorations or not level: return
+	var props: Array[Model] = profile.decorations.redecide_edges(self, clockwise_turns - previous_clockwise_turns)
+	if props.is_empty(): return
+	if lift.is_busy(): lift.landed.connect(profile.decorations.drop_props.bind(props), CONNECT_ONE_SHOT)
+	else: profile.decorations.drop_props(props)
 
 func _get_direction_to_grid_position(grid_position: Vector2i) -> Level.Direction: return Level.get_direction(get_grid_position(), grid_position)
 

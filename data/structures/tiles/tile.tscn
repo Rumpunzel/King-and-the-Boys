@@ -12,6 +12,7 @@ metadata/_custom_type_script = "uid://bpkm2ws12sljg"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 
 [node name="Cube" parent="Tile" index="0" unique_id=1233982744]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
 surface_material_override/0 = ExtResource("3_l1ipo")
 
 [editable path="Tile"]

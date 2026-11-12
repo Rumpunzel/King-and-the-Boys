@@ -23,6 +23,10 @@ var available_interaction: Interaction:
 		if available_interaction: available_interactions.append(available_interaction)
 		available_interactions_changed.emit(available_interactions)
 
+## The move actions pressed in the current state: a step goes on releasing one of them, so a key held down from another
+## state (e.g. while aiming a held ability, where move keys act on press) does not step when let go
+var move_presses: Dictionary[StringName, bool] = {}
+
 var _state: PlayerState
 
 func handle_input(event: InputEvent) -> void:
@@ -46,6 +50,7 @@ func set_state(state: State) -> void:
 	assert(state is PlayerState)
 	var previous_controlled_character: Character = get_controlled_character()
 	_state = state
+	move_presses.clear()
 	_state.set_state_machine(self)
 	if get_controlled_character() != previous_controlled_character:
 		controlled_character_changed.emit(get_controlled_character())

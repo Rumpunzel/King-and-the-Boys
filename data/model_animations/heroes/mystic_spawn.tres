@@ -1,13 +1,15 @@
 [gd_resource type="Resource" script_class="ModelBounceAnimation" format=3 uid="uid://vtt52ve807ga"]
 
 [ext_resource type="Script" uid="uid://b5h27t8ow0ape" path="res://engine/objects/model/model_bounce_animation.gd" id="1_script"]
-[ext_resource type="Animation" uid="uid://dbhfx2cppv3hy" path="res://data/characters/animations/quaternius/Spell_Double_Exit.res" id="anim_Spell_Double_Exit"]
-[ext_resource type="Animation" uid="uid://chih14t85pd8t" path="res://data/characters/animations/quaternius/Spell_Double_Idle.res" id="anim_Spell_Double_Idle"]
+[ext_resource type="Animation" uid="uid://jaiw22tm5qff" path="res://data/characters/animations/quaternius_2/LiftAir.res" id="1_v73wo"]
+[ext_resource type="Animation" uid="uid://c70jfdeb33dyo" path="res://data/characters/animations/quaternius_2/LayToIdle.res" id="2_85oql"]
+[ext_resource type="Animation" uid="uid://4q62e6y4rnka" path="res://data/characters/animations/quaternius_2/LiftAir_Fall_Impact.res" id="3_3ibs5"]
 
 [resource]
 script = ExtResource("1_script")
 _bounce_height = 2.0
-body_animation = ExtResource("anim_Spell_Double_Idle")
-body_landing = ExtResource("anim_Spell_Double_Exit")
+body_animation = ExtResource("1_v73wo")
+body_landing = ExtResource("3_3ibs5")
 body_landing_time = 0.6
+body_follow_up = ExtResource("2_85oql")
 metadata/_custom_type_script = "uid://b5h27t8ow0ape"

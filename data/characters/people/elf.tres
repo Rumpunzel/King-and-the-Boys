@@ -3,6 +3,7 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_xkb2u"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_giiki"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_lr5qy"]
+[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_ntxgj"]
 [ext_resource type="Texture2D" uid="uid://ben162rfher0t" path="res://data/characters/people/portraits/elf-helmet.svg" id="5_1nbx6"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_4smo8"]
 [ext_resource type="Resource" uid="uid://c54swx5jwf76" path="res://data/characters/people/elf_body.tres" id="5_26gx7"]
@@ -12,6 +13,7 @@
 [ext_resource type="ArrayMesh" uid="uid://piwndcl1msah" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_03.res" id="11_bbn58"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="12_thqp2"]
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="13_14iws"]
+[ext_resource type="Animation" uid="uid://c2jy2tglgf0w2" path="res://data/characters/animations/quaternius/BackFlip.res" id="13_chxko"]
 [ext_resource type="Resource" uid="uid://bdokqsryh4q3j" path="res://data/equipment/types/hat.tres" id="14_16sf2"]
 [ext_resource type="Resource" uid="uid://dnkb4svltrc47" path="res://data/equipment/types/cape.tres" id="14_udkfc"]
 [ext_resource type="ArrayMesh" uid="uid://bpfxqpnjilye3" path="res://data/characters/people/meshes/gear/helmet_attachment/modular_character_HelmetAttachment_12.res" id="15_bbn58"]
@@ -41,11 +43,12 @@
 [ext_resource type="Animation" uid="uid://dtjpkwf3vv15a" path="res://data/characters/animations/quaternius/Spell_Simple_Exit.res" id="anim_Spell_Simple_Exit"]
 [ext_resource type="Animation" uid="uid://duatnu7n2jwur" path="res://data/characters/animations/quaternius/Spell_Simple_Idle.res" id="anim_Spell_Simple_Idle"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
-[ext_resource type="Animation" uid="uid://b7pvarvbfjg60" path="res://data/characters/animations/quaternius/Celebration.res" id="anim_selected"]
 
 [sub_resource type="Resource" id="BodyAnimations_passed"]
 script = ExtResource("body_animations")
 animations = Array[Animation]([ExtResource("anim_Spell_Simple_Idle")])
+entry = ExtResource("anim_Spell_Simple_Enter")
+exit = ExtResource("anim_Spell_Simple_Exit")
 metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_upsh0"]
@@ -193,10 +196,8 @@ spawn_animation = ExtResource("90_elf_spawn")
 move_animation = ExtResource("90_elf_move")
 fast_move_animation = ExtResource("90_elf_move")
 idle_animations = ExtResource("5_n73mo")
-pass_animation = ExtResource("anim_Spell_Simple_Enter")
 passed_animations = SubResource("BodyAnimations_passed")
-unpass_animation = ExtResource("anim_Spell_Simple_Exit")
-selected_animation = ExtResource("anim_selected")
+selected_animation = ExtResource("13_chxko")
 name = "Elf"
 portrait = ExtResource("5_1nbx6")
 color = Color(0.369, 0.78, 0.69, 1)
