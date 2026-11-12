@@ -198,3 +198,29 @@ func test_the_ability_bar_shows_and_arms_the_abilities() -> void:
 	hero.movement_points = 0
 	ability_bar.update()
 	assert_bool(button.disabled).is_true()
+
+func test_the_move_keys_turn_the_tile_until_the_mystic_faces_that_way() -> void:
+	var controller: PlayerController = _controller()
+	var hero: Character = controller.get_controlled_character()
+	var tile: Structure = _stand_on_turnable_tile(hero)
+	hero.facing = Level.Direction.UP
+	controller.arm_ability(TURN_TILE)
+	await await_idle_frame()
+	var aiming: PlayerState = _state_of(controller)
+	var press: InputEventAction = InputEventAction.new()
+	press.pressed = true
+	press.action = &"move_right"
+	aiming.handle_input(press)
+	assert_int(tile.lift_turns).is_equal(1)
+	press.action = &"move_left"
+	aiming.handle_input(press)
+	assert_int(tile.lift_turns).is_equal(3)
+	press.action = &"move_up"
+	aiming.handle_input(press)
+	assert_int(tile.lift_turns).is_equal(0)
+	# Facing back costs 2: out of reach with 1 move
+	hero.movement_points = 1
+	press.action = &"move_down"
+	aiming.handle_input(press)
+	assert_int(tile.lift_turns).is_equal(0)
+	controller.cancel_ability()

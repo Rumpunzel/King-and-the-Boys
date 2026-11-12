@@ -181,6 +181,19 @@ func adjust_ability(step: int) -> void:
 	_ability_argument = next_argument
 	turn_manager.request_ability_adjust.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), _ability_argument)
 
+## Points the held ability in use towards [param direction] (the Mystic's tile turns until they face it), if the
+## controlled character can pay for that
+func aim_ability_towards(direction: Level.Direction) -> void:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	var controlled_character: Character = get_controlled_character()
+	var ability: Ability = controlled_character.get_ability(controlled_character.active_ability_id)
+	if not turn_manager or not ability: return
+	var argument: int = ability.get_argument_towards(controlled_character, _ability_target, direction)
+	if argument < 0 or argument == _ability_argument: return
+	if ability.get_cost(controlled_character, _ability_target, argument) > controlled_character.movement_points: return
+	_ability_argument = argument
+	turn_manager.request_ability_adjust.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), _ability_argument)
+
 ## Ends the held ability in use with its current choice (sets the tile down); one that would change nothing is cancelled
 func confirm_ability() -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())

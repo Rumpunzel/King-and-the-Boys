@@ -75,6 +75,11 @@ func get_next_argument(character: Character, target: Vector2i, argument: int, st
 	var next_argument: int = argument + step
 	return next_argument if get_cost(character, target, next_argument) <= character.movement_points else argument
 
+## @returns the choice that points the ability towards [param _direction] (e.g. the move key pressed), or [code]-1[/code]
+## if directions mean nothing to it
+func get_argument_towards(_character: Character, _target: Vector2i, _direction: Level.Direction) -> int:
+	return -1
+
 ## The ability's own rules, the turn's limits are checked by the [TurnManager]
 func can_use(character: Character, target: Vector2i, _argument: int, level: Level) -> bool:
 	return not is_passive() and get_targets(character, level).has(target)

@@ -119,3 +119,24 @@ func test_connections_are_local_to_each_peer() -> void:
 	var pieces: Array = _connections_of(_tile) + connectors.values()
 	assert_array(pieces).is_not_empty()
 	for piece: Structure in pieces: assert_object(piece.get_node_or_null(^"Synchronizer")).is_null()
+
+## Connections of the neighbours of [param tile] that lead into it
+func _neighbour_connections_into(tile: Structure) -> int:
+	var connections: Dictionary = _level.get("_tile_connections")
+	var count: int = 0
+	for neighbour: Structure in connections:
+		if neighbour == tile: continue
+		for piece: Structure in connections[neighbour]:
+			if piece.global_position.distance_to(tile.global_position) < _level.grid_size * 0.8: count += 1
+	return count
+
+func test_neighbours_lead_nowhere_into_a_lifted_tile() -> void:
+	var leading_in: int = _neighbour_connections_into(_tile)
+	assert_int(leading_in).is_greater(0)
+	_tile.lifted_by = _hero.get_path()
+	assert_int(_neighbour_connections_into(_tile)).is_equal(0)
+	_tile.lift_turns = 1
+	assert_int(_neighbour_connections_into(_tile)).is_equal(0)
+	_tile.lifted_by = NodePath()
+	await await_millis(2000)
+	assert_int(_neighbour_connections_into(_tile)).is_equal(leading_in)

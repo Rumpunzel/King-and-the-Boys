@@ -34,6 +34,10 @@ func get_next_argument(character: Character, target: Vector2i, argument: int, st
 		if get_cost(character, target, next_argument) <= character.movement_points: return next_argument
 	return posmod(argument, Level.Direction.size())
 
+## Turns the tile until the character on it faces [param direction]
+func get_argument_towards(character: Character, _target: Vector2i, direction: Level.Direction) -> int:
+	return posmod(direction - character.facing, Level.Direction.size())
+
 ## Room tiles never turn, a room spans many cells; lifting needs the points for at least a quarter turn
 func can_begin(character: Character, target: Vector2i, level: Level) -> bool:
 	if not super(character, target, level) or character.movement_points < cost: return false

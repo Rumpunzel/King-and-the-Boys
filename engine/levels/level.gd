@@ -58,6 +58,8 @@ var _placed_tiles: Dictionary[Vector2i, Structure]
 # {Structure -> Array[Structure]}
 var _tile_connections: Dictionary[Structure, Array]
 var _tile_connectors: Dictionary[Vector3, Structure]
+## Tiles lifted off the board on this peer, until they have landed; they and their sides show no connections
+var _lifted_tiles: Array[Structure] = []
 
 var _placed_things: Dictionary[Vector2i, Thing]
 ## Things standing on a grid corner between four cells (e.g. room centrepieces), by the corner's index: corner [code]c[/code] lies
@@ -627,9 +629,7 @@ func _on_structure_created(structure: Structure) -> void:
 	# Registered first: tiles revealed already (loaded, joined) are dressed as they get their level, and look for themselves
 	_placed_tiles[tile_grid_position] = structure
 	structure.level = self
-	for connection: Direction in structure.get_connections():
-		_create_connection(structure, connection)
-		_create_connector(structure.global_position, connection)
+	_build_connections(structure)
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
 	structure.shown_status_changed.connect(_on_tile_shown_status_changed.bind(structure))
 	structure.clockwise_turns_changed.connect(_on_tile_turned.bind(structure).unbind(1))
@@ -683,15 +683,30 @@ func _show_connections_at(grid_position: Vector2i) -> void:
 
 ## Every peer: a turned [param tile] gets new connections, once it rests on the board again (see [method _on_tile_landed])
 func _on_tile_turned(tile: Structure) -> void:
-	if tile.is_settled(): _rebuild_connections(tile)
+	if tile.is_settled(): _rebuild_around(tile)
 
-## Every peer: a lifted [param tile] loses its connections and the connectors on its sides until it lands
+## Every peer: a lifted [param tile] loses its connections, the connectors on its sides and its neighbours' connections into
+## it until it has landed
 func _on_tile_lift_changed(tile: Structure) -> void:
-	if tile.is_lifted() and _placed_tiles.get(tile.get_grid_position()) == tile: _clear_connections(tile)
+	if not tile.is_lifted() or _lifted_tiles.has(tile) or _placed_tiles.get(tile.get_grid_position()) != tile: return
+	_lifted_tiles.append(tile)
+	_rebuild_around(tile)
 
 func _on_tile_landed(tile: Structure) -> void:
-	_rebuild_connections(tile)
+	_lifted_tiles.erase(tile)
+	_rebuild_around(tile)
 
+## Builds the connections of [param tile] and its neighbours anew, and shows those revealed
+func _rebuild_around(tile: Structure) -> void:
+	var grid_position: Vector2i = tile.get_grid_position()
+	if _placed_tiles.get(grid_position) != tile: return
+	var tiles: Array[Structure] = [tile]
+	tiles.append_array(_get_surrounding_tiles(grid_position))
+	for each_tile: Structure in tiles: _clear_connections(each_tile)
+	for each_tile: Structure in tiles: _build_connections(each_tile)
+	for each_tile: Structure in tiles: _show_connections_at(each_tile.get_grid_position())
+
+## Removes the connections of [param tile] and the connectors on its sides
 func _clear_connections(tile: Structure) -> void:
 	for tile_connection: Structure in _tile_connections.get(tile, []): _remove_local_structure(tile_connection)
 	_tile_connections.erase(tile)
@@ -701,19 +716,18 @@ func _clear_connections(tile: Structure) -> void:
 		_remove_local_structure(_tile_connectors[connector_position])
 		_tile_connectors.erase(connector_position)
 
-## Makes the connections of [param tile] anew from its shape, and the connectors on its sides that it or a neighbour needs
-func _rebuild_connections(tile: Structure) -> void:
-	# A tile leaving the level (see [method _forget_tile]) is no longer followed
+## Makes the connections of [param tile] from its shape, and the connectors on its sides that it or a neighbour opens into;
+## nothing towards or on a tile off the board (lifted, or still landing), which gets its own once it has landed
+func _build_connections(tile: Structure) -> void:
+	if not tile.is_settled(): return
 	var grid_position: Vector2i = tile.get_grid_position()
-	if _placed_tiles.get(grid_position) != tile: return
-	_clear_connections(tile)
 	var connections: Array[Direction] = tile.get_connections()
-	for connection: Direction in connections: _create_connection(tile, connection)
 	for direction: Direction in Direction.values():
 		var neighbour: Structure = _placed_tiles.get(grid_position + direction_to_vector(direction))
-		if connections.has(direction) or (neighbour != null and neighbour.get_connections().has(get_opposite(direction))): _create_connector(tile.global_position, direction)
-	_show_connections_at(grid_position)
-	for neighbour: Structure in _get_surrounding_tiles(grid_position): _show_connections_at(neighbour.get_grid_position())
+		if neighbour and not neighbour.is_settled(): continue
+		var opens: bool = connections.has(direction)
+		if opens: _create_connection(tile, direction)
+		if opens or (neighbour and neighbour.get_connections().has(get_opposite(direction))): _create_connector(tile.global_position, direction)
 
 func _on_thing_created(thing: Thing) -> void:
 	var on_grid: Vector2 = Vector2(thing.global_position.x, thing.global_position.z) / grid_size
@@ -735,6 +749,7 @@ func _forget_tile(tile: Structure) -> void:
 	var grid_position: Vector2i = world_to_grid_position(tile.global_position)
 	if _placed_tiles.get(grid_position) == tile: _placed_tiles.erase(grid_position)
 	_furnished_cells.erase(grid_position)
+	_lifted_tiles.erase(tile)
 	restriction_fallbacks.erase(grid_position)
 	# Until it is freed it may still change: nothing here follows it any more
 	for handler: Array in [[tile.status_changed, _on_tile_status_changed], [tile.shown_status_changed, _on_tile_shown_status_changed], [tile.spawn_requested, _on_spawn_requested]]:

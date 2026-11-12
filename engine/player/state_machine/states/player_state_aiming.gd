@@ -2,7 +2,7 @@
 class_name PlayerStateAiming
 extends PlayerState
 ## The controlled character holds an ability in use (see [member Character.active_ability_id], set by the host):
-## the player turns it, sets it down or cancels it; moving is off. Left once the host ends the held ability.
+## the player turns it (or points it with the move keys), sets it down or cancels it; moving is off. Left once the host ends the held ability.
 
 func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 	super.enter(state_machine, previous_state)
@@ -24,6 +24,10 @@ func handle_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("rotate_right"): player_controller.adjust_ability(1)
 	elif event.is_action_pressed("confirm_ability"): player_controller.confirm_ability()
 	elif event.is_action_pressed("cancel_ability"): player_controller.cancel_ability()
+	elif event.is_action_pressed("move_up"): player_controller.aim_ability_towards(Level.Direction.UP)
+	elif event.is_action_pressed("move_right"): player_controller.aim_ability_towards(Level.Direction.RIGHT)
+	elif event.is_action_pressed("move_down"): player_controller.aim_ability_towards(Level.Direction.DOWN)
+	elif event.is_action_pressed("move_left"): player_controller.aim_ability_towards(Level.Direction.LEFT)
 
 func _on_active_ability_changed() -> void:
 	if get_state_machine().get_state() != self: return

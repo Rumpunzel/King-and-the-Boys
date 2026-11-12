@@ -24,7 +24,8 @@ var _abilities: Array[Ability] = []
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	_aiming_hint.text = "Turn %s %s · Set down %s · Cancel %s" % [_key(&"rotate_left"), _key(&"rotate_right"), _key(&"confirm_ability"), _key(&"cancel_ability")]
+	var move_keys: String = "".join([_key(&"move_up"), _key(&"move_left"), _key(&"move_down"), _key(&"move_right")])
+	_aiming_hint.text = "Turn %s %s or face %s · Set down %s · Cancel %s" % [_key(&"rotate_left"), _key(&"rotate_right"), move_keys, _key(&"confirm_ability"), _key(&"cancel_ability")]
 	_build()
 
 ## Shows whether each ability can be used now and which one is held

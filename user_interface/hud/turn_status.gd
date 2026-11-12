@@ -73,13 +73,16 @@ func _update() -> void:
 static func _with_key_hint(text: String, action: StringName) -> String:
 	return "%s [%s]" % [text.get_slice("[", 0).strip_edges(), get_action_key(action)]
 
-## @returns the label of the first key of [param action] on this keyboard
+## @returns the label of the first keyboard key of [param action] on this keyboard
 static func get_action_key(action: StringName) -> String:
 	var events: Array[InputEvent] = InputMap.action_get_events(action)
 	if events.is_empty(): return "?"
-	var event: InputEvent = events.front()
-	var key_event: InputEventKey = event as InputEventKey
-	if not key_event: return event.as_text()
+	# Keys first: the move actions list a joypad axis before their keys
+	var key_event: InputEventKey = null
+	for event: InputEvent in events:
+		key_event = event as InputEventKey
+		if key_event: break
+	if not key_event: return events[0].as_text()
 	# Headless (tests, servers) has no keyboard layout
 	if DisplayServer.get_name() == "headless": return OS.get_keycode_string(key_event.physical_keycode)
 	return OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(key_event.physical_keycode))
