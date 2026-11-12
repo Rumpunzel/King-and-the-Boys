@@ -17,6 +17,8 @@ extends Resource
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
 
 const NODE_NAME: StringName = &"Decorations"
+## Name of the node holding a tile's ground, see [method create_ground]
+const GROUND_NODE_NAME: String = "Ground"
 ## Name of the node holding a tile's paths, see [method create_paths]
 const PATHS_NODE_NAME: StringName = &"Paths"
 ## How many frames dust waits for the rest of a room arriving tile by tile, see [method _add_room_dust]
@@ -93,6 +95,18 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 @export_range(0.0, 0.2) var path_height: float = 0.01
 ## A plank or slab over the gap where two tiles open to each other; laid with its long side across the gap
 @export var bridges: PropSet
+@export_group("Ground")
+## The ground under corridor tiles, reaching past them into the table so neighbours share it ([code]tile_ground.gdshader[/code],
+## which takes the patch's [code]half_size[/code] as an instance uniform); none leaves tiles on the bare table
+@export var ground_material: Material
+## The ground under room tiles, which reaches further so a room stands on one patch
+@export var room_ground_material: Material
+## How far the ground under a corridor tile reaches from its middle, as a share of a grid cell
+@export_range(0.5, 1.5) var ground_reach: float = 0.65
+## How far the ground under a room tile reaches from its middle, as a share of a grid cell
+@export_range(0.5, 1.5) var room_ground_reach: float = 0.8
+## How high the ground lies, relative to the tile's origin, in metres: just above the table
+@export_range(-0.2, 0.0) var ground_height: float = -0.085
 @export_group("Animation")
 ## Played on each prop as it drops in, one after another, unless its prop set has its own [member PropSet.drop_animation]
 @export var drop_animation: ModelAnimation = preload("uid://bf0msgn2okdfo")
@@ -268,6 +282,23 @@ func create_paths(tile: Structure) -> Node3D:
 		path.transform = Transform3D(Basis(Vector3.UP, atan2(outward.x, outward.y)), Vector3.UP * path_height)
 		paths.add_child(path)
 	return paths
+
+## The ground under [param tile], room or corridor; it belongs under the tile, not its model, so it stays when the tile lifts.
+## @returns [code]null[/code] without a material for the tile's kind
+func create_ground(tile: Structure) -> MeshInstance3D:
+	var material: Material = room_ground_material if tile.profile.room_type else ground_material
+	if not material: return null
+	var half_size: float = tile.level.grid_size * (room_ground_reach if tile.profile.room_type else ground_reach)
+	var patch: PlaneMesh = PlaneMesh.new()
+	patch.size = Vector2.ONE * half_size * 2.0
+	patch.material = material
+	var ground: MeshInstance3D = MeshInstance3D.new()
+	ground.name = GROUND_NODE_NAME
+	ground.mesh = patch
+	ground.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	ground.set_instance_shader_parameter(&"half_size", half_size)
+	ground.position = Vector3.UP * ground_height
+	return ground
 
 ## A bridge over the gap between the tile on [param grid_position] and its neighbour in [param direction], turned so its long
 ## side spans the gap; place it on the gap. Seeded by the two cells, so either side builds the same one on every peer.

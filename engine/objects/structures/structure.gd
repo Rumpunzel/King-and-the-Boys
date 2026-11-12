@@ -281,6 +281,9 @@ func _show_model() -> void:
 ## Dresses the model with the profile's props the first time it is revealed; they are part of the model, so they turn with it
 ## @returns the new props, or [code]null[/code] if the model already has them or the profile none
 func _decorate() -> Node3D:
+	if profile.decorations and level and not has_node(NodePath(TileDecorations.GROUND_NODE_NAME)):
+		var ground: MeshInstance3D = profile.decorations.create_ground(self)
+		if ground: add_child(ground)
 	if profile.decorations and level and not model.has_node(NodePath(TileDecorations.PATHS_NODE_NAME)): model.add_child(profile.decorations.create_paths(self))
 	if not profile.decorations or not level or model.has_node(NodePath(TileDecorations.NODE_NAME)): return null
 	var decorations: Node3D = profile.decorations.create(self)
