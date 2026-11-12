@@ -25,6 +25,8 @@ const ROOM_WAIT_FRAMES: int = 120
 const DECIDED_EDGES: StringName = &"decided_edges"
 ## Meta of an arch or wall: the grid position of the neighbour across the edge it stands on, see [method redecide_edges]
 const EDGE: StringName = &"edge"
+## Meta of a room pillar: the index of the grid corner it stands on, see [method _add_pillars]
+const CORNER: StringName = &"corner"
 ## Meta of an arch: whether it was raised as a doorway (between a room and a corridor)
 const DOORWAY: StringName = &"doorway"
 ## Meta of a prop: the [ModelAnimation] its prop set plays as it drops in, if not [member drop_animation]
@@ -176,7 +178,8 @@ func drop(decorations: Node3D, after: Tween = null) -> void:
 	if after and after.is_running(): after.finished.connect(_drop_each.bind(decorations), CONNECT_ONE_SHOT)
 	else: _drop_each(decorations)
 
-## Every peer, after [param tile] turned by [param clockwise_turns]: the arches and walls it carries turned with its model and
+## Every peer, after [param tile] turned by [param clockwise_turns]: its room pillars keep to their corners; the arches and
+## walls it carries turned with its model and
 ## stay, now facing other neighbours, unless that edge holds a prop of the neighbour already or an arch no longer fits (a doorway
 ## arch between two corridors, or the other way round). Edges left open are decided again; neighbours keep their props.
 ## @returns the new props, hidden until [method drop_props]
@@ -190,6 +193,8 @@ func redecide_edges(tile: Structure, clockwise_turns: int) -> Array[Model]:
 	for edge: Vector2i in decided_before: decided.append(_turn_edge(grid_position, edge, clockwise_turns))
 	decorations.set_meta(DECIDED_EDGES, decided)
 	for prop: Node in decorations.get_children():
+		# Pillars belong to their grid corner, which stays a corner of the room: they stay where they stand
+		if prop.has_meta(CORNER): (prop as Node3D).transform = Transform3D(Basis(Vector3.UP, clockwise_turns * PI * 0.5)) * (prop as Node3D).transform
 		if not prop.has_meta(EDGE): continue
 		var edge_before: Vector2i = prop.get_meta(EDGE)
 		var edge: Vector2i = _turn_edge(grid_position, edge_before, clockwise_turns)
@@ -353,7 +358,8 @@ func _add_pillars(decorations: Node3D, tile: Structure) -> void:
 		var random: RandomNumberGenerator = RandomNumberGenerator.new()
 		random.seed = hash(corner_index) ^ hash(&"pillar")
 		var spot: Vector2 = (Vector2(corner) - Vector2.ONE * 0.5) * tile.level.grid_size
-		_add_prop(decorations, room_pillars, _to_model(tile, _on_floor(spot), _random_turn(random).basis), random)
+		var pillar: Model = _add_prop(decorations, room_pillars, _to_model(tile, _on_floor(spot), _random_turn(random).basis), random)
+		if pillar: pillar.set_meta(CORNER, corner_index)
 
 ## Whether all four cells around the corner [param corner_index] are room tiles and the others are revealed already
 static func _is_last_room_tile_around(tile: Structure, corner_index: Vector2i) -> bool:

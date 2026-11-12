@@ -38,11 +38,12 @@ func get_next_argument(character: Character, target: Vector2i, argument: int, st
 func get_argument_towards(character: Character, _target: Vector2i, direction: Level.Direction) -> int:
 	return posmod(direction - character.facing, Level.Direction.size())
 
-## Room tiles never turn, a room spans many cells; lifting needs the points for at least a quarter turn
+## Lifting needs the points for at least a quarter turn. Room tiles turn too: only their exits move, as a room tile always
+## connects to the tiles of its room beside it.
 func can_begin(character: Character, target: Vector2i, level: Level) -> bool:
 	if not super(character, target, level) or character.movement_points < cost: return false
 	var tile: Structure = level.get_placed_tile(target)
-	return tile != null and not tile.is_lifted() and not tile.profile.room_type
+	return tile != null and not tile.is_lifted()
 
 func begin(character: Character, target: Vector2i, level: Level) -> void:
 	level.get_placed_tile(target).lifted_by = character.get_path()
@@ -68,8 +69,11 @@ func use(character: Character, target: Vector2i, argument: int, level: Level) ->
 	level.rotate_tile(tile, net_turns, character)
 	return RotateTileStep.new(self, character, get_cost(character, target, argument), tile, net_turns)
 
+## The sides [param tile] would connect to, turned by [param clockwise_turns]: its exits turn, its room sides stay
 static func _get_turned_connections(tile: Structure, clockwise_turns: int) -> Array[Level.Direction]:
-	var connections: Array[Level.Direction] = []
-	for connection: Level.Direction in tile.get_connections(): connections.append(Level.turn_direction(connection, clockwise_turns))
-	connections.sort()
-	return connections
+	var connections_turned: Array[Level.Direction] = tile.get_room_sides()
+	for opening: Level.Direction in tile.get_openings():
+		var turned: Level.Direction = Level.turn_direction(opening, clockwise_turns)
+		if not connections_turned.has(turned): connections_turned.append(turned)
+	connections_turned.sort()
+	return connections_turned

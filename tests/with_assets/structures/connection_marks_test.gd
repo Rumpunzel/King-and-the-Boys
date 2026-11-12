@@ -42,7 +42,7 @@ func test_each_opening_has_a_path() -> void:
 		if tile.shown_status != Structure.Status.REVEALED or not tile.model: continue
 		var paths: Node3D = tile.model.get_node_or_null(NodePath(TileDecorations.PATHS_NODE_NAME))
 		assert_object(paths).override_failure_message("%s has no paths" % tile).is_not_null()
-		assert_int(paths.get_child_count()).override_failure_message("Paths of %s" % tile).is_equal(tile.get_connections().size())
+		assert_int(paths.get_child_count()).override_failure_message("Paths of %s" % tile).is_equal(tile.get_openings().size())
 		for decal: Node in paths.get_children(): assert_object(decal).is_instanceof(Decal)
 		checked += 1
 	assert_int(checked).is_greater(0)

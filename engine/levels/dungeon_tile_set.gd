@@ -18,37 +18,10 @@ var _blueprints_bitflag: Dictionary[int, Array]:
 ## A blueprint fitting the passages of [param surrounding_tiles], drawn by weight with [param random] among those
 ## keeping the most of their connection restrictions (all of them, wherever one can)
 func pick_tile(tile_position: Vector2i, surrounding_tiles: Array[Structure], random: RandomNumberGenerator) -> Pick:
-	# Build bitflags based on surrounding tiles' connections
-	var surrounding_connection_bitflag: int = 0
-	var surrounding_wall_bitflag: int = 0
-	for surrounding_tile: Structure in surrounding_tiles:
-		var surrounding_tile_grid_position: Vector2i = surrounding_tile.get_grid_position()
-		var direction: Level.Direction = Level.get_direction(tile_position, surrounding_tile_grid_position)
-		var reverse_direction: Level.Direction = Level.get_direction(surrounding_tile_grid_position, tile_position)
-		if surrounding_tile.has_connection(reverse_direction):
-			assert(surrounding_tile.has_connection_to(tile_position))
-			surrounding_connection_bitflag |= 2 ** direction
-		else:
-			assert(not surrounding_tile.has_connection_to(tile_position))
-			surrounding_wall_bitflag |= 2 ** direction
-	var connections_in_bitflag: int = _count_true_bits(surrounding_connection_bitflag)
-	var walls_in_bitflag: int = _count_true_bits(surrounding_wall_bitflag)
-	assert(connections_in_bitflag + walls_in_bitflag == surrounding_tiles.size())
-	# Filter blueprints with bitflags
 	var fitting_blueprints: Array[TileBlueprint] = []
-	for connection_bitflag: int in _blueprints_bitflag.keys():
-		# Check if [connection_bitflag] has at least all the connections in [surrounding_connection_bitflag]
-		var shares_surrounding_connections: bool = connection_bitflag & surrounding_connection_bitflag == surrounding_connection_bitflag
-		# Check if [connection_bitflag] has no connections where there are walls in [surrounding_wall_bitflag]
-		var has_wall_conflicts: bool = connection_bitflag & surrounding_wall_bitflag > 0
-		if shares_surrounding_connections and not has_wall_conflicts:
-			var blueprints_with_fitting_connections: Array[TileBlueprint] = _blueprints_bitflag[connection_bitflag]
-			for surrounding_tile: Structure in surrounding_tiles:
-				for blueprint: TileBlueprint in blueprints_with_fitting_connections:
-					var surrounding_tile_has_connection: bool = surrounding_tile.has_connection_to(tile_position)
-					var blueprint_has_connection: bool = blueprint.has_connection(tile_position, surrounding_tile)
-					assert(surrounding_tile_has_connection == blueprint_has_connection)
-			fitting_blueprints.append_array(blueprints_with_fitting_connections)
+	for blueprints: Array in _blueprints_bitflag.values():
+		for blueprint: TileBlueprint in blueprints:
+			if blueprint.fits(tile_position, surrounding_tiles): fitting_blueprints.append(blueprint)
 	assert(not fitting_blueprints.is_empty())
 	# Restrictions: the blueprints suiting the most surrounding tiles, each once. All of them if any blueprint does;
 	# else the least broken, rather than any at all
@@ -110,8 +83,16 @@ class TileBlueprint extends RefCounted:
 		profile = for_profile
 		clockwise_turns = with_clockwise_turns
 
+	## Whether the blueprint opens exactly where [param surrounding_tiles] open towards [param grid_position], by their shape
+	## even while lifted. Towards a tile of its own room type a room tile fits either way: room tiles always connect.
+	func fits(grid_position: Vector2i, surrounding_tiles: Array[Structure]) -> bool:
+		for surrounding_tile: Structure in surrounding_tiles:
+			if profile.room_type and surrounding_tile.profile.room_type == profile.room_type: continue
+			var towards_us: Level.Direction = Level.get_direction(surrounding_tile.get_grid_position(), grid_position)
+			if has_connection(grid_position, surrounding_tile) != surrounding_tile.get_connections().has(towards_us): return false
+		return true
+
 	func is_legal_neighbour(grid_position: Vector2i, existing_tile: Structure) -> bool:
-		assert(has_connection(grid_position, existing_tile) == existing_tile.has_connection_to(grid_position))
 		return can_connect(grid_position, existing_tile) and existing_tile.can_connect_to(grid_position, profile)
 
 	func can_connect(grid_position: Vector2i, existing_tile: Structure) -> bool:

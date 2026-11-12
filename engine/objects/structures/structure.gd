@@ -205,14 +205,30 @@ func is_lifted() -> bool: return not lifted_by.is_empty()
 func is_settled() -> bool: return not is_lifted() and (not _lift or not _lift.is_busy())
 
 ## @returns [code]true[/code] if the tile opens into [param direction]; a lifted tile opens nowhere, see [method get_connections]
-func has_connection(direction: Level.Direction) -> bool: return not is_lifted() and profile.has_connection(direction, clockwise_turns)
+func has_connection(direction: Level.Direction) -> bool: return not is_lifted() and get_connections().has(direction)
 func has_connection_to(grid_position: Vector2i) -> bool:
 	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
 	return has_connection(direction)
 
-## @returns the sides the tile's shape opens into, lifted or not; whether pieces pass is [method has_connection]
-func get_connections() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
-func get_connection_vectors() -> Array[Vector2i]: return profile.get_connection_vectors(clockwise_turns)
+## @returns the sides the tile opens into, lifted or not: its [method get_openings] and, for a room tile, every side towards a
+## placed tile of its room type, which always connect; whether pieces pass is [method has_connection]
+func get_connections() -> Array[Level.Direction]:
+	var connections: Array[Level.Direction] = get_openings()
+	for side: Level.Direction in get_room_sides(): if not connections.has(side): connections.append(side)
+	return connections
+
+## @returns the sides the tile's shape opens into, as it is turned (a room tile's exits)
+func get_openings() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
+
+## @returns the sides of a room tile towards placed tiles of its room type; empty for other tiles
+func get_room_sides() -> Array[Level.Direction]:
+	var sides: Array[Level.Direction] = []
+	if not profile.room_type or not level: return sides
+	var grid_position: Vector2i = get_grid_position()
+	for direction: Level.Direction in Level.Direction.values():
+		var neighbour: Structure = level.get_placed_tile(grid_position + Level.DIRECTION_VECTORS[direction])
+		if neighbour and neighbour.profile.room_type == profile.room_type: sides.append(direction)
+	return sides
 
 func get_restriction_to(grid_position: Vector2i) -> ConnectionRestriction:
 	var direction: Level.Direction = _get_direction_to_grid_position(grid_position)
