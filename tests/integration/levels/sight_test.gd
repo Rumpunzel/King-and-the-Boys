@@ -12,6 +12,8 @@ func before() -> void:
 func before_test() -> void:
 	_level = auto_free(ModelFreeWorld.create_level())
 	add_child(_level)
+	# A fixed dungeon: an unlucky one can hem the walk in to a handful of cells
+	_level.generation_random.seed = 1
 	_level.build_level()
 	_turn_manager = auto_free(TurnManager.new())
 	_turn_manager.set("_level", _level)
