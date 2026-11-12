@@ -3,6 +3,7 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_riycf"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_x2406"]
 [ext_resource type="PackedScene" uid="uid://k2selbak4kwk" path="res://data/characters/dwarves/dwarf_character.tscn" id="3_ki3nk"]
+[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_c5b3e"]
 [ext_resource type="Texture2D" uid="uid://d3kpui0ngdvp8" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_3.png" id="4_xk1ji"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_34kdi"]
 [ext_resource type="Animation" uid="uid://bc8j12qn1ligs" path="res://data/characters/animations/quaternius/Sword_Idle.res" id="5_lk1de"]

@@ -3,6 +3,7 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_ice4o"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_arfpv"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_u6fvh"]
+[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_4m7y1"]
 [ext_resource type="Resource" uid="uid://5hbsrnqf3fcd" path="res://data/characters/people/knight_body.tres" id="5_0vpuq"]
 [ext_resource type="Texture2D" uid="uid://cc2x8ji73hxc4" path="res://data/characters/people/portraits/frog-mouth-helm.svg" id="5_63j5q"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_ltdy7"]
@@ -258,8 +259,7 @@ name = "Belt 12"
 [resource]
 script = ExtResource("5_ltdy7")
 intelligence = 2
-vision = 0.0
-dark_vision = 1.5
+dark_vision = 0.0
 preview_offset = Vector3(0, 0.1, 0)
 gear_primary_color = Color(0.173, 0.29, 0.549, 1)
 gear_secondary_color = Color(0.851, 0.698, 0.29, 1)

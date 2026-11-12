@@ -7,8 +7,12 @@
 [resource]
 script = ExtResource("1_script")
 _move_height = 1.5
+_rise_time = 0.5
+_fall_time = 0.75
 _tilt = -0.1
 duration = 0.75
+travel_transition = 1
+travel_ease = 2
 body_animation = ExtResource("1_4nwcm")
 body_landing = ExtResource("2_4nwcm")
 body_landing_time = 0.85

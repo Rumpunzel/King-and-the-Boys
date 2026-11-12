@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("1_script")
+_move_height = 0.75
 _wind_up = 0.2
 _tilt = -0.45
 _tilt_time = 0.2

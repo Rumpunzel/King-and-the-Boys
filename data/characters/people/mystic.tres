@@ -46,13 +46,13 @@
 [ext_resource type="Resource" uid="uid://cfa31yxttxnis" path="res://data/equipment/types/chest_armor.tres" id="39_arfk2"]
 [ext_resource type="ArrayMesh" uid="uid://cr8ggnelir72l" path="res://data/characters/people/meshes/gear/hips_attachment/modular_character_HipsAttachment_08.res" id="40_4fe7g"]
 [ext_resource type="Resource" uid="uid://c52b5nth0v8c3" path="res://data/equipment/types/belt.tres" id="41_qltrm"]
+[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="42_ab1ty"]
+[ext_resource type="Resource" uid="uid://p5xaavhjcjee" path="res://data/abilities/turn_tile.tres" id="43_t1le"]
 [ext_resource type="Animation" uid="uid://y8vxu7fb7shw" path="res://data/characters/animations/quaternius/Sword_Enter.res" id="50_psbju"]
 [ext_resource type="Resource" uid="uid://clu0nmk36mbeb" path="res://data/model_animations/heroes/mystic_move.tres" id="90_mystic_move"]
 [ext_resource type="Resource" uid="uid://vtt52ve807ga" path="res://data/model_animations/heroes/mystic_spawn.tres" id="90_mystic_spawn"]
 [ext_resource type="Animation" uid="uid://c3vetph6mrgca" path="res://data/characters/animations/quaternius/Idle_Talking.res" id="anim_Idle_Talking"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
-[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="42_ab1ty"]
-[ext_resource type="Resource" uid="uid://p5xaavhjcjee" path="res://data/abilities/turn_tile.tres" id="43_t1le"]
 
 [sub_resource type="Resource" id="Resource_hy2kd"]
 script = ExtResource("body_animations")
@@ -219,10 +219,10 @@ script = ExtResource("5_60tc1")
 strength = 2
 agility = 2
 intelligence = 5
+abilities = Array[ExtResource("42_ab1ty")]([ExtResource("43_t1le")])
 gear_primary_color = Color(0.29, 0.173, 0.439, 1)
 gear_secondary_color = Color(0.561, 0.816, 0.878, 1)
 model_configuration = ExtResource("5_vblr4")
-abilities = Array[ExtResource("42_ab1ty")]([ExtResource("43_t1le")])
 starting_head = SubResource("Resource_cbtai")
 starting_torso = SubResource("Resource_jcqoy")
 starting_hands = SubResource("Resource_1v0ni")

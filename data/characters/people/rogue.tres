@@ -3,6 +3,7 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="3_0y2lj"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="3_7rwy5"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_gg1jf"]
+[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_dvff2"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="4_ithgo"]
 [ext_resource type="Resource" uid="uid://dnan3ouabpslh" path="res://data/characters/people/rogue_body.tres" id="5_c4qnl"]
 [ext_resource type="Resource" uid="uid://c5eejei2kdwm2" path="res://data/characters/animations/default_idle.tres" id="5_khl4o"]
