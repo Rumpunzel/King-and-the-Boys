@@ -81,6 +81,8 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 ## A worn path on the floor from the tile's middle to each of its openings: a strip drawn with this material, e.g. sand
 ## ([code]worn_path.gdshader[/code], which takes the path's [code]half_width[/code] as an instance uniform)
 @export var path_material: Material
+## Paths on room tiles, which are shaped by their walls more than their openings; none leaves room tiles without paths
+@export var room_path_material: Material
 ## Width of a path, in metres
 @export_range(0.1, 2.0) var path_width: float = 0.7
 ## How high above the tile's floor (its model's origin) paths lie, in metres
@@ -237,7 +239,8 @@ static func _still_fits(tile: Structure, prop: Node, edge: Vector2i) -> bool:
 func create_paths(tile: Structure) -> Node3D:
 	var paths: Node3D = Node3D.new()
 	paths.name = PATHS_NODE_NAME
-	if not path_material: return paths
+	var material: Material = room_path_material if tile.profile.room_type else path_material
+	if not material: return paths
 	var floor_bounds: AABB = _get_bounds(tile.model)
 	for direction: Level.Direction in tile.profile.get_connections(0):
 		var outward: Vector2 = Vector2(Level.DIRECTION_VECTORS[direction])
@@ -248,7 +251,7 @@ func create_paths(tile: Structure) -> Node3D:
 		var strip: PlaneMesh = PlaneMesh.new()
 		strip.size = Vector2(path_width, reach + path_width * 0.5)
 		strip.center_offset = Vector3(0.0, 0.0, (reach - path_width * 0.5) * 0.5)
-		strip.material = path_material
+		strip.material = material
 		var path: MeshInstance3D = MeshInstance3D.new()
 		path.name = "Path %s" % Level.Direction.keys()[direction]
 		path.mesh = strip
