@@ -2,6 +2,8 @@ extends GdUnitTestSuite
 ## Weapons, shields and torches: meshes held in the hands of both bodies, a one-handed or a two-handed weapon in the main hand, a shield or
 ## a one-handed weapon (a torch, a second blade) in the off hand, and two-handed weapons leave no hand for either
 
+const ELF: String = "res://data/characters/people/elf.tres"
+
 var _models: Array[ModularModel]
 
 func before_test() -> void:
@@ -100,7 +102,7 @@ func _fire(model: ModularModel, hand: String = "off_hand_weapon") -> Node3D:
 	return null
 
 func test_the_elf_carries_a_torch_and_the_rogue_a_lantern() -> void:
-	var elf: CharacterProfile = load("res://data/characters/people/elf.tres")
+	var elf: CharacterProfile = load(ELF)
 	var off_hand: EquipmentLook = elf.starting_off_hand
 	assert_str(off_hand.type.name if off_hand else "").is_equal("Off-Hand Weapon")
 	assert_str(off_hand.get_part_mesh(off_hand.type.parts[0]).resource_path).contains("torch")
@@ -111,7 +113,7 @@ func test_the_elf_carries_a_torch_and_the_rogue_a_lantern() -> void:
 func test_a_torch_burns_while_held_only() -> void:
 	var model: ModularModel = _models[0]
 	var equipment: CharacterEquipment = _equipment_on(model)
-	var torch: EquipmentLook = (load("res://data/characters/people/elf.tres") as CharacterProfile).starting_off_hand
+	var torch: EquipmentLook = (load(ELF) as CharacterProfile).starting_off_hand
 	assert_object(_fire(model)).is_null()
 	assert_array(torch.get_light_sources()).override_failure_message("The torch is a light").is_not_empty()
 	assert_bool(equipment.equip(torch)).is_true()
