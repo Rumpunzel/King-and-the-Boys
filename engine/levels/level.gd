@@ -37,7 +37,7 @@ const _SHOWN: StringName = &"shown"
 ## [member _wall_tile]
 @export var _room_centrepieces: SpawnTable
 ## Chance of a room big enough (2x2 cells) to get a centrepiece
-@export_range(0.0, 1.0) var _room_centrepiece_chance: float = 0.5
+@export_range(0.0, 1.0) var _room_centrepiece_chance: float = 0.75
 
 ## How tiles move while lifted, e.g. by the Mystic turning one; set in the scene, as its particles are assets. Without one, tiles
 ## lift with [TileLiftAnimation]'s defaults and no particles
@@ -66,6 +66,9 @@ var _placed_tiles: Dictionary[Vector2i, Structure]
 var _bridges: Dictionary[Vector3, Model]
 ## Tiles lifted off the board on this peer, until they have landed; no bridge leads onto them
 var _lifted_tiles: Array[Structure] = []
+## Cells whose tile was just set down: what its turn brought into sight waits there a moment, see
+## [member TileLiftAnimation.reveal_delay]
+var _reveals_held_on: Dictionary[Vector2i, bool] = {}
 
 var _placed_things: Dictionary[Vector2i, Thing]
 ## Things standing on a grid corner between four cells (e.g. room centrepieces), by the corner's index: corner [code]c[/code] lies
@@ -122,11 +125,11 @@ func _is_waiting_to_show(tile: Structure, target_status: Structure.Status) -> bo
 	# Loading a game frees the tiles still queued
 	return is_instance_valid(tile) and tile.shown_status < target_status
 
-## @returns [code]true[/code] once this peer has the steps that raised [param tiles] and the figure entered its cell, and stands
-## on the board again (not riding a lifted tile)
+## @returns [code]true[/code] once this peer has the steps that raised [param tiles] and the figure entered its cell, and no
+## tile just set down holds the reveals there
 func _has_figure_caught_up(character: Character, tiles: Array) -> bool:
 	if not character.visible or not character.level: return true
-	if character.is_carried(): return false
+	if _reveals_held_on.has(character.grid_cell): return false
 	for tile: Structure in tiles:
 		if character.step_count < tile.status_cause_step: return false
 	return character.get_figure_grid_cell() == character.grid_cell
@@ -666,6 +669,7 @@ func _on_tile_turned(tile: Structure) -> void:
 
 ## Every peer: no bridge leads onto a lifted [param tile] until it has landed
 func _on_tile_lift_changed(tile: Structure) -> void:
+	if not tile.is_lifted() and _placed_tiles.get(tile.get_grid_position()) == tile: _hold_reveals_on(tile.get_grid_position())
 	if not tile.is_lifted() or _lifted_tiles.has(tile) or _placed_tiles.get(tile.get_grid_position()) != tile: return
 	_lifted_tiles.append(tile)
 	_update_gaps_of(tile)
@@ -673,12 +677,15 @@ func _on_tile_lift_changed(tile: Structure) -> void:
 func _on_tile_landed(tile: Structure) -> void:
 	_lifted_tiles.erase(tile)
 	_update_gaps_of(tile)
-	# What a turn brought into sight shows a moment after the tile and its figures came down
-	var delay: float = TileLiftAnimation.of(self).reveal_delay
-	for character: Character in _reveal_queues:
-		if character.grid_cell != tile.get_grid_position(): continue
-		_remaining_tile_reveal_delays[character] = maxf(_remaining_tile_reveal_delays[character], delay)
-		_remaining_tile_discover_delays[character] = maxf(_remaining_tile_discover_delays[character], delay)
+
+## What a turn brings into sight shows a moment after the tile was set down (its drop starts), see
+## [member TileLiftAnimation.reveal_delay]. A tween bound to the level, so it pauses with the game.
+func _hold_reveals_on(grid_position: Vector2i) -> void:
+	_reveals_held_on[grid_position] = true
+	create_tween().tween_callback(_release_reveals_on.bind(grid_position)).set_delay(TileLiftAnimation.of(self).reveal_delay)
+
+func _release_reveals_on(grid_position: Vector2i) -> void:
+	_reveals_held_on.erase(grid_position)
 
 ## Lays or takes up the bridges on the four sides of [param tile] as they are needed now; bridges that stay are left alone,
 ## so they do not drop in again, and those between other tiles are not touched

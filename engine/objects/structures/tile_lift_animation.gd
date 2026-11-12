@@ -19,8 +19,8 @@ static var _default: TileLiftAnimation = TileLiftAnimation.new()
 @export_range(0.0, 30.0, 0.1) var wobble_degrees: float = 2.5
 ## Radians per second of the slower of the two wobble axes
 @export_range(0.0, 10.0, 0.1) var wobble_speed: float = 2.3
-## Seconds after the tile has landed before the tiles its turn brought into sight show, one by one as after a step; they wait
-## while it is still in the air
+## Seconds after the tile was set down (as its drop starts) before the tiles its turn brought into sight show, one by one as
+## after a step
 @export_range(0.0, 3.0, 0.05, "or_greater") var reveal_delay: float = 0.3
 @export_group("Particles")
 ## Played on the floor under the tile as it rises, e.g. dust; its [GPUParticles3D] each emit once
