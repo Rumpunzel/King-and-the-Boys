@@ -1,6 +1,7 @@
 extends Node3D
-## An edge of the dungeon: one piece of cave wall among [member _variants], picked and turned by the grid cell it stands in, so
-## neighbouring walls differ and every peer shows the same without syncing
+## A cell of the dungeon's border: one piece among [member _variants] (square rock piles, each filling the cell, so the border
+## closes), picked and turned by the grid cell it stands in, so neighbouring pieces differ and every peer shows the same without
+## syncing
 
 @export var grid_size: float = 2.0
 
