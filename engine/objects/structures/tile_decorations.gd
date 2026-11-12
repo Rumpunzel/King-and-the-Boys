@@ -53,8 +53,12 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 ## Light sources: torches, braziers, candles; at most one per tile, in the middle of a closed side
 @export var lights: PropSet
 @export_range(0.0, 1.0) var light_chance: float = 0.2
+## Rare glowing things in corners between two closed sides (e.g. crystals), in place of a corner prop; scattered pieces spread
+## across the corner
+@export var corner_lights: PropSet
+@export_range(0.0, 1.0) var corner_light_chance: float = 0.05
 @export_group("Rooms")
-## Lie under the middle of room tiles, e.g. rugs; turned in quarter turns to the grid
+## Lie under the middle of room tiles, e.g. rugs; turned diagonally to the grid, in one of its four diagonals
 @export var room_floors: PropSet
 @export_range(0.0, 1.0) var room_floor_chance: float = 0.3
 ## Over the middle of some room tiles, e.g. sun beams
@@ -126,9 +130,13 @@ func create_clutter(connections: Array[Level.Direction], grid_position: Vector2i
 				var spot: Transform3D = _on_floor((outward * edge_distance + along) * half_tile) * _random_turn(random)
 				_add_prop(decorations, edge_props, spot, random, _along_edge(direction))
 		var corner_roll: float = random.randf()
-		if not connections.has(direction) and not connections.has(next_direction) and corner_roll < corner_chance:
-			var corner: Vector2 = outward + Vector2(Level.DIRECTION_VECTORS[next_direction])
-			_add_prop(decorations, corner_props, _on_floor(corner * edge_distance * half_tile) * _random_turn(random), random)
+		var corner_light_roll: float = random.randf()
+		if connections.has(direction) or connections.has(next_direction): continue
+		var corner: Vector2 = outward + Vector2(Level.DIRECTION_VECTORS[next_direction])
+		var corner_spot: Transform3D = _on_floor(corner * edge_distance * half_tile) * _random_turn(random)
+		if corner_lights and corner_light_roll < corner_light_chance:
+			_add_prop(decorations, corner_lights, corner_spot, random, Vector3(-corner.y, 0.0, corner.x).normalized())
+		elif corner_roll < corner_chance: _add_prop(decorations, corner_props, corner_spot, random)
 	return decorations
 
 ## Now and then a light source in the middle of a closed side
@@ -149,9 +157,9 @@ func _add_room_props(decorations: Node3D, tile: Structure) -> void:
 	if not tile.profile.room_type: return
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(tile.get_grid_position()) ^ hash(&"room")
-	var quarter_turn: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4))
+	var diagonal: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4) + PI * 0.25)
 	if room_floors and random.randf() < room_floor_chance:
-		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), quarter_turn), random)
+		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), diagonal), random)
 	if room_ambience and random.randf() < room_ambience_chance:
 		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO)), random)
 	_add_room_dust(decorations, tile)

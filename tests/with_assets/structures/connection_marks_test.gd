@@ -38,14 +38,14 @@ func _needs_bridge(tile: Structure, direction: Level.Direction) -> bool:
 	if not neighbour or (tile.profile.room_type and neighbour.profile.room_type == tile.profile.room_type): return false
 	return tile.get_connections().has(direction) and neighbour.get_connections().has(Level.get_opposite(direction))
 
-func test_each_opening_outside_rooms_has_a_path() -> void:
+func test_each_opening_has_a_path() -> void:
 	var checked: int = 0
 	for tile: Structure in _tiles_within(2):
 		if tile.shown_status != Structure.Status.REVEALED or not tile.model: continue
 		var paths: Node3D = tile.model.get_node_or_null(NodePath(TileDecorations.PATHS_NODE_NAME))
 		assert_object(paths).override_failure_message("%s has no paths" % tile).is_not_null()
-		# Room tiles go without, as the dungeon's decorations give them no path material
-		var expected: int = 0 if tile.profile.room_type else tile.get_openings().size()
+		# Room tiles have their own, subtler ones, to their exits
+		var expected: int = tile.get_openings().size()
 		assert_int(paths.get_child_count()).override_failure_message("Paths of %s" % tile).is_equal(expected)
 		for path: Node in paths.get_children(): assert_object(path).is_instanceof(MeshInstance3D)
 		if expected > 0: checked += 1

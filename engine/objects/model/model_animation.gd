@@ -19,6 +19,9 @@ extends Resource
 ## How long the figure stays put before it travels, as a fraction of [member duration], e.g. while winding up on the spot; it
 ## still arrives by the end of [member duration]
 @export_range(0.0, 0.9) var travel_delay: float = 0.0
+## As a move: how long after the figure crossed into its new cell the tiles its step brought into sight show, as a fraction of
+## [member duration]; later for a hop that lands late (e.g. a high one)
+@export_range(0.0, 2.0) var reveal_delay: float = 0.1
 
 @export_group("Body")
 ## The model's own animation as this one starts, e.g. a jump; any animation file of the bodies' rig

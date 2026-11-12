@@ -771,11 +771,13 @@ func _on_player_moved(character_grid_position: Vector2i, character: Character) -
 	_stepping_character = null
 	if _board_change_count != board_change_count_before: board_changed.emit(character)
 
-## Visual feedback on every peer: reveals start shortly after the figure crosses into a cell
+## Visual feedback on every peer: reveals start shortly after the figure crosses into a cell, as its move animation says
+## (see [member ModelAnimation.reveal_delay])
 func _on_figure_entered_grid_cell(_cell: Vector2i, character: Character) -> void:
 	if not _reveal_queues.has(character): return
-	_remaining_tile_reveal_delays[character] = character.profile.move_animation.duration * 0.1
-	_remaining_tile_discover_delays[character] = character.profile.move_animation.duration * 0.1
+	var move_animation: ModelAnimation = character.profile.move_animation
+	_remaining_tile_reveal_delays[character] = move_animation.duration * move_animation.reveal_delay
+	_remaining_tile_discover_delays[character] = move_animation.duration * move_animation.reveal_delay
 
 func _on_spawn_requested(profile_to_spawn: Profile, spawn_for: Structure) -> void:
 	if profile_to_spawn is StructureProfile:

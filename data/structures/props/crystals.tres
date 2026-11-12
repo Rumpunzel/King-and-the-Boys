@@ -15,7 +15,7 @@ ExtResource("5_prop"): 1.0
 })
 material_override = ExtResource("2_material")
 arrangement = 1
-piece_count = Vector2i(3, 5)
+piece_count = Vector2i(2, 4)
 size_jitter = 0.3
 scatter_radius = 0.1
-scatter_length = 0.6
+scatter_length = 0.25
