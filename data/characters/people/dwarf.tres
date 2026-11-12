@@ -3,6 +3,7 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_riycf"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_x2406"]
 [ext_resource type="PackedScene" uid="uid://k2selbak4kwk" path="res://data/characters/dwarves/dwarf_character.tscn" id="3_ki3nk"]
+[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_c5b3e"]
 [ext_resource type="Texture2D" uid="uid://d3kpui0ngdvp8" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_3.png" id="4_xk1ji"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_34kdi"]
 [ext_resource type="Animation" uid="uid://bc8j12qn1ligs" path="res://data/characters/animations/quaternius/Sword_Idle.res" id="5_lk1de"]
@@ -35,6 +36,8 @@ metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 [sub_resource type="Resource" id="Resource_xtw46"]
 script = ExtResource("body_animations")
 animations = Array[Animation]([ExtResource("9_lk1de")])
+entry = ExtResource("8_p3175")
+exit = ExtResource("26_xtw46")
 metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_iigc1"]
@@ -108,9 +111,7 @@ spawn_animation = ExtResource("90_dwarf_spawn")
 move_animation = ExtResource("90_dwarf_move")
 fast_move_animation = ExtResource("90_dwarf_move")
 idle_animations = SubResource("Resource_oam81")
-pass_animation = ExtResource("8_p3175")
 passed_animations = SubResource("Resource_xtw46")
-unpass_animation = ExtResource("26_xtw46")
 selected_animation = ExtResource("13_p3175")
 name = "Dwarf"
 portrait = ExtResource("4_xk1ji")

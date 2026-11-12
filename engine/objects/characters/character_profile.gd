@@ -37,6 +37,12 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var vision: float = 1.5
 @export var dark_vision: float = 2.5
 
+@export_category("Abilities")
+@export var abilities: Array[Ability]:
+	set(new_value):
+		abilities = new_value
+		changed.emit()
+
 @export_category("Model")
 ## Moves the character's model in menu previews (e.g. the lobby), so characters of other sizes stay framed alike, e.g. raises the
 ## smaller dwarf
@@ -106,12 +112,9 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var undo_animation: ModelAnimation
 ## What the character's model rests in when nothing else plays, e.g. a few idles in turn; its body's own idle if empty
 @export var idle_animations: BodyAnimations
-## Played as the character's player passes, e.g. sitting down; then [member passed_animations]
-@export var pass_animation: Animation
-## What the model rests in while its player has passed, in place of its idles, e.g. sitting
+## What the model rests in while its player has passed, in place of its idles: e.g. sitting down (its entry), sitting, and
+## getting up again (its exit) as the pass ends (taken back, or a new turn)
 @export var passed_animations: BodyAnimations
-## Played as the pass ends (taken back, or a new turn), e.g. getting up; then the idles
-@export var unpass_animation: Animation
 ## Played once as a player picks the character in the lobby, e.g. drawing a sword; then the idles
 @export var selected_animation: Animation
 

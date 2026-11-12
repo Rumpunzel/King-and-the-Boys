@@ -187,21 +187,33 @@ func _call_method_keys(animation: Animation, speed: float, start: float) -> void
 
 ## Plays [param animation] once, then the model rests again; just rests without one
 func play_body_animation(animation: Animation) -> void:
+	var animations: Array[Animation] = []
+	if animation: animations.append(animation)
+	play_body_animations(animations)
+
+## Plays [param animations] once each, one after another, then the model rests again
+func play_body_animations(animations: Array[Animation]) -> void:
 	var player: AnimationPlayer = get_animation_player()
 	if not player: return
 	_interrupt_body()
 	_body_tween = create_tween()
-	if animation:
-		_stow_before_drawing([animation])
+	_stow_before_drawing(animations)
+	for animation: Animation in animations:
 		_body_tween.tween_callback(_play_body.bind(animation, BODY_BLEND, 1.0, 0.0))
 		_body_tween.tween_interval(maxf(animation.length - BODY_BLEND, 0.0))
 	_body_tween.tween_callback(_rest)
 
-## Rests the model in [param resting] (e.g. sitting, while its player has passed) after playing [param through] once (e.g. sitting
-## down); [code]null[/code] rests it in its idles again
-func rest_in(resting: BodyAnimations, through: Animation = null) -> void:
+## Rests the model in [param resting] (e.g. sitting, while its player has passed), through the exit of what it rested in and
+## the entry of [param resting] (e.g. sitting down); [code]null[/code] rests it in its idles again. Without
+## [param transitions] it just rests there (e.g. a model rebuilt while its player has passed)
+func rest_in(resting: BodyAnimations, transitions: bool = true) -> void:
+	var leaving: BodyAnimations = _resting
 	_resting = resting
-	play_body_animation(through)
+	var through: Array[Animation] = []
+	if transitions and leaving != resting:
+		if leaving and leaving.exit: through.append(leaving.exit)
+		if resting and resting.entry: through.append(resting.entry)
+	play_body_animations(through)
 
 ## What the model rests in: what [method rest_in] chose, else its idles; [code]null[/code] for its autoplay
 func get_rest_animations() -> BodyAnimations:

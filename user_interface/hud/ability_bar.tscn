@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bt7kaqcsutt1r"]
+
+[ext_resource type="Script" uid="uid://cp2cn4te5lva7" path="res://user_interface/hud/ability_bar.gd" id="1_abilities"]
+
+[node name="AbilityBar" type="VBoxContainer" unique_id=588914752 node_paths=PackedStringArray("_buttons", "_aiming_hint")]
+offset_right = 173.0
+offset_bottom = 31.0
+script = ExtResource("1_abilities")
+_buttons = NodePath("Buttons")
+_aiming_hint = NodePath("AimingHint")
+
+[node name="Buttons" type="HBoxContainer" parent="." unique_id=228441714]
+layout_mode = 2
+
+[node name="AimingHint" type="Label" parent="." unique_id=1958654932]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+autowrap_mode = 3

@@ -54,6 +54,7 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `red/beard.svg` | lorc | [beard](https://game-icons.net/1x1/lorc/beard.html) |
 | `red/binoculars.svg` | delapouite | [binoculars](https://game-icons.net/1x1/delapouite/binoculars.html) |
 | `red/body-height.svg` | delapouite | [body-height](https://game-icons.net/1x1/delapouite/body-height.html) |
+| `red/bolt-spell-cast.svg` | delapouite | [bolt-spell-cast](https://game-icons.net/1x1/delapouite/bolt-spell-cast.html) |
 | `red/burning-skull.svg` | skoll | [burning-skull](https://game-icons.net/1x1/skoll/burning-skull.html) |
 | `red/candle-flame.svg` | lorc | [candle-flame](https://game-icons.net/1x1/lorc/candle-flame.html) |
 | `red/checklist.svg` | delapouite | [checklist](https://game-icons.net/1x1/delapouite/checklist.html) |

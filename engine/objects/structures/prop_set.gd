@@ -3,7 +3,18 @@
 class_name PropSet
 extends Resource
 
-## A collection of props tiles are dressed with (see [TileDecorations]), like a [DungeonTileSet] for tiles: each scene with its weight
+## A collection of props tiles are dressed with (see [TileDecorations]), like a [DungeonTileSet] for tiles: each scene with its weight.
+## A prop may be put together from several pieces (see [member arrangement]), e.g. a cluster of crystals or planks into a bridge.
+
+## Stored by number in prop set files: only append
+enum Arrangement {
+	## One piece
+	SINGLE,
+	## Pieces strewn around the spot, each turned its own way; along an edge, they spread along it
+	SCATTER,
+	## Pieces side by side across their long side, e.g. planks into a bridge
+	ROW,
+}
 
 ## {prop scene: [PackedScene] -> weight: [float]}
 @export var props: Dictionary[PackedScene, float] = {}
@@ -19,6 +30,23 @@ extends Resource
 ## Played on its props as they drop in, instead of the decorations' own (see [member TileDecorations.drop_animation]), e.g. a heavy
 ## fall from above for architecture
 @export var drop_animation: ModelAnimation
+@export_group("Arrangement")
+## How a prop is put together from this collection's pieces
+@export var arrangement: Arrangement = Arrangement.SINGLE
+## How many pieces a prop has, at least and at most (not for [constant Arrangement.SINGLE])
+@export var piece_count: Vector2i = Vector2i(1, 1)
+## Pieces vary in size by up to this share, both ways
+@export_range(0.0, 1.0) var size_jitter: float = 0.0
+## [constant Arrangement.SCATTER]: how far pieces stray from their place, in metres
+@export_range(0.0, 2.0) var scatter_radius: float = 0.3
+## [constant Arrangement.SCATTER]: how far pieces spread to either side along the edge they stand by, evenly, in metres
+@export_range(0.0, 2.0) var scatter_length: float = 0.0
+## [constant Arrangement.ROW]: the space between two pieces, in metres
+@export_range(0.0, 1.0) var row_gap: float = 0.02
+## [constant Arrangement.ROW]: each piece turns by up to this many degrees, so the row looks laid by hand
+@export_range(0.0, 45.0) var row_turn_degrees: float = 4.0
+## [constant Arrangement.ROW]: each piece shifts lengthwise by up to this many metres
+@export_range(0.0, 1.0) var row_shift: float = 0.05
 
 ## @returns the collection the next prop comes from: this one, or by weight one of [member collections] (and so on)
 func pick_collection(random: RandomNumberGenerator) -> PropSet:

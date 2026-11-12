@@ -3,6 +3,7 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_ul877"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_xol3p"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_ul877"]
+[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_stqs6"]
 [ext_resource type="Resource" uid="uid://dx6tahhpjkqy4" path="res://data/characters/people/soldier_body.tres" id="5_a0nqf"]
 [ext_resource type="Animation" uid="uid://bm83sk7ot2pwi" path="res://data/characters/animations/quaternius_2/Idle_Shield.res" id="5_id555"]
 [ext_resource type="Texture2D" uid="uid://b0o64egjvwnqs" path="res://data/characters/people/portraits/closed-barbute.svg" id="5_ul877"]
@@ -68,6 +69,8 @@ metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 script = ExtResource("body_animations")
 animations = Array[Animation]([ExtResource("9_o81pc"), ExtResource("9_o81pc"), ExtResource("9_o81pc"), ExtResource("10_id555"), ExtResource("10_id555"), ExtResource("11_cospf")])
 order = 2
+entry = ExtResource("8_o81pc")
+exit = ExtResource("55_id555")
 metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_vxo76"]
@@ -271,9 +274,7 @@ spawn_animation = ExtResource("90_soldier_spawn")
 move_animation = ExtResource("90_soldier_move")
 fast_move_animation = ExtResource("90_soldier_move")
 idle_animations = SubResource("Resource_eb7m2")
-pass_animation = ExtResource("8_o81pc")
 passed_animations = SubResource("Resource_3bgcd")
-unpass_animation = ExtResource("55_id555")
 selected_animation = ExtResource("15_cospf")
 name = "Soldier"
 portrait = ExtResource("5_ul877")

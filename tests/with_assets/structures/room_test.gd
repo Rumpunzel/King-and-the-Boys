@@ -5,6 +5,9 @@ const LEVEL: String = "res://data/levels/level.tscn"
 const ROOM: String = "res://data/structures/tiles/room/room_crossing.tres"
 const CORRIDOR: String = "res://data/structures/tiles/crossing.tres"
 const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tres"
+const ROOM_DEADEND: String = "res://data/structures/tiles/room/room_deadend.tres"
+const ROOM_CORNER: String = "res://data/structures/tiles/room/room_corner.tres"
+const CORRIDOR_CORNER: String = "res://data/structures/tiles/corner.tres"
 const DUST: String = "res://data/structures/props/room_dust.tres"
 const CENTREPIECES: Array[String] = ["res://data/things/centrepieces/sarcophagus.tres", "res://data/things/centrepieces/dwarf_throne.tres"]
 
@@ -195,3 +198,64 @@ func test_corner_spots_are_found_whatever_the_spot_directions() -> void:
 	var spots: Array[Vector2] = [Vector2.ZERO, Vector2(-0.4, -0.4), Vector2(0.4, -0.4), Vector2(0.4, 0.4), Vector2(-0.4, 0.4)]
 	assert_vector(Level.get_spot_towards(spots, Vector2(1, 1))).is_equal(Vector2(0.4, 0.4))
 	assert_vector(Level.get_spot_towards([Vector2.ZERO] as Array[Vector2], Vector2(1, 1))).is_equal(Vector2.INF)
+
+func _spawn(profile_path: String, cell: Vector2i, turns: int = 0) -> Structure:
+	_level._structure_spawner.spawn_at(load(profile_path) as StructureProfile, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell)), turns, Structure.Status.PLACED)
+	return _level.get_placed_tile(cell)
+
+func test_room_tiles_side_by_side_always_connect() -> void:
+	# Both open only upwards, so their shapes close the side between them
+	var left: Structure = _spawn(ROOM_DEADEND, Vector2i.ZERO)
+	_spawn(ROOM_DEADEND, Vector2i.RIGHT)
+	assert_array(left.get_openings()).contains_exactly([Level.Direction.UP])
+	assert_bool(_level.is_passage(Vector2i.ZERO, Level.Direction.RIGHT)).is_true()
+	assert_bool(_level.is_passage(Vector2i.RIGHT, Level.Direction.LEFT)).is_true()
+	# A corridor beside a room only connects where both open
+	_spawn(CORRIDOR_CORNER, Vector2i.DOWN)
+	assert_bool(_level.is_passage(Vector2i.ZERO, Level.Direction.DOWN)).is_false()
+	assert_array(_level.get_room_cells(Vector2i.ZERO)).contains_exactly_in_any_order([Vector2i.ZERO, Vector2i.RIGHT])
+
+func test_turning_a_room_tile_turns_its_exits_only() -> void:
+	var corner: Structure = _spawn(ROOM_CORNER, Vector2i.ZERO)
+	_spawn(ROOM_DEADEND, Vector2i.RIGHT)
+	assert_array(corner.get_openings()).contains_exactly_in_any_order([Level.Direction.UP, Level.Direction.RIGHT])
+	_level.rotate_tile(corner, 1, null)
+	assert_array(corner.get_openings()).contains_exactly_in_any_order([Level.Direction.RIGHT, Level.Direction.DOWN])
+	# Turning builds the dungeon around it, which may add room tiles beside it: those connect too
+	assert_array(corner.get_connections()).contains([Level.Direction.RIGHT, Level.Direction.DOWN])
+	_level.rotate_tile(corner, 1, null)
+	# Its exits face down and left now; the side to its room stays open
+	assert_array(corner.get_openings()).contains_exactly_in_any_order([Level.Direction.DOWN, Level.Direction.LEFT])
+	assert_array(corner.get_connections()).contains([Level.Direction.RIGHT, Level.Direction.DOWN, Level.Direction.LEFT])
+	assert_bool(_level.is_passage(Vector2i.ZERO, Level.Direction.RIGHT)).is_true()
+
+func test_a_room_tile_fits_beside_its_room_whatever_its_shape() -> void:
+	# Closed towards (1, 0)
+	var placed: Array[Structure] = [_spawn(ROOM_DEADEND, Vector2i.ZERO)]
+	# Turned twice, a corner opens down and left: towards the placed tile, which does not open back
+	var room_corner: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(load(ROOM_CORNER) as StructureProfile, 2)
+	var corridor_corner: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(load(CORRIDOR_CORNER) as StructureProfile, 2)
+	var opening_towards: Dictionary[Structure, bool] = DungeonTileSet.get_openings_towards(Vector2i.RIGHT, placed)
+	assert_bool(room_corner.fits(Vector2i.RIGHT, opening_towards)).is_true()
+	assert_bool(corridor_corner.fits(Vector2i.RIGHT, opening_towards)).is_false()
+
+func test_a_turned_room_tile_leaves_its_pillars_on_their_corners() -> void:
+	_surround_room()
+	_spawn_room(Structure.Status.REVEALED)
+	# The props drop in after the reveal
+	await await_millis(3000)
+	var holder: Structure = null
+	var pillar: Node3D = null
+	for tile: Structure in _level.get_placed_tiles():
+		if not tile.model or not tile.model.has_node(NodePath(TileDecorations.NODE_NAME)): continue
+		for prop: Node in tile.model.get_node(NodePath(TileDecorations.NODE_NAME)).get_children():
+			if prop.has_meta(TileDecorations.CORNER):
+				holder = tile
+				pillar = prop as Node3D
+	assert_object(pillar).override_failure_message("The room should have a pillar").is_not_null()
+	var standing: Vector2 = Vector2(pillar.global_position.x, pillar.global_position.z)
+	# The turn builds the dungeon on along its new passages, which the outer wall bounds, as in a game
+	_level.call("_build_outer_wall")
+	_level.rotate_tile(holder, 1, null)
+	await await_millis(2000)
+	assert_float(Vector2(pillar.global_position.x, pillar.global_position.z).distance_to(standing)).is_less(0.01)

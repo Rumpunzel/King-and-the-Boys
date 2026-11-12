@@ -2,8 +2,8 @@
 @icon("uid://cmbhx5v0d8ri8")
 class_name TurnStatus
 extends PanelContainer
-## The local player's turn: the other players' turns, auto-pass, undo and pass buttons and the moves of the character
-## the local player controls. The buttons only ask the local [PlayerController]; the rules live there and in [TurnManager].
+## The local player's turn: the other players' turns, auto-pass, undo and pass buttons and the moves and abilities of
+## the character the local player controls. The buttons only ask the local [PlayerController]; the rules live there and in [TurnManager].
 
 @export var _player_controller_spawner: PlayerControllerSpawner
 @export var _turn_manager: TurnManager
@@ -15,6 +15,7 @@ extends PanelContainer
 @export var _undo_button: Button
 @export var _pass_button: ToggleButton
 @export var _moves_bar: MovesBar
+@export var _ability_bar: AbilityBar
 @export var _player_turn_status_scene: PackedScene
 
 var _player_controller: PlayerController
@@ -26,10 +27,16 @@ var _character: Character:
 		if is_instance_valid(_character):
 			_character.movement_points_changed.disconnect(_on_character_turn_changed)
 			_character.undo_steps_changed.disconnect(_on_character_turn_changed)
+			_character.active_ability_changed.disconnect(_update)
+			_character.ability_uses_changed.disconnect(_update)
 		_character = new_character
 		_character.movement_points_changed.connect(_on_character_turn_changed)
 		_character.undo_steps_changed.connect(_on_character_turn_changed)
+		_character.active_ability_changed.connect(_update)
+		_character.ability_uses_changed.connect(_update)
 		_moves_bar.character = _character
+		_ability_bar.player_controller = _player_controller
+		_ability_bar.character = _character
 		_update()
 
 
@@ -60,17 +67,22 @@ func _update() -> void:
 	_pass_button.update_button()
 	_pass_button.disabled = must_pass
 	for player_id: int in _player_rows: _player_rows[player_id].show_passed(_turn_manager.has_passed(player_id))
+	_ability_bar.update()
 
 ## @returns [param text] without a key hint in brackets, followed by the current key of [param action]
 static func _with_key_hint(text: String, action: StringName) -> String:
-	return "%s [%s]" % [text.get_slice("[", 0).strip_edges(), _get_action_key(action)]
+	return "%s [%s]" % [text.get_slice("[", 0).strip_edges(), get_action_key(action)]
 
-static func _get_action_key(action: StringName) -> String:
+## @returns the label of the first keyboard key of [param action] on this keyboard
+static func get_action_key(action: StringName) -> String:
 	var events: Array[InputEvent] = InputMap.action_get_events(action)
 	if events.is_empty(): return "?"
-	var event: InputEvent = events.front()
-	var key_event: InputEventKey = event as InputEventKey
-	if not key_event: return event.as_text()
+	# Keys first: the move actions list a joypad axis before their keys
+	var key_event: InputEventKey = null
+	for event: InputEvent in events:
+		key_event = event as InputEventKey
+		if key_event: break
+	if not key_event: return events[0].as_text()
 	# Headless (tests, servers) has no keyboard layout
 	if DisplayServer.get_name() == "headless": return OS.get_keycode_string(key_event.physical_keycode)
 	return OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(key_event.physical_keycode))
@@ -129,5 +141,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not _undo_button: warnings.append("Missing undo Button reference.")
 	if not _pass_button: warnings.append("Missing pass ToggleButton reference.")
 	if not _moves_bar: warnings.append("Missing MovesBar reference.")
+	if not _ability_bar: warnings.append("Missing AbilityBar reference.")
 	if not _player_turn_status_scene: warnings.append("Missing PlayerTurnStatus scene.")
 	return warnings

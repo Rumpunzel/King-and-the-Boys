@@ -19,6 +19,12 @@ properties/2/replication_mode = 2
 properties/3/path = NodePath(".:status")
 properties/3/spawn = true
 properties/3/replication_mode = 2
+properties/4/path = NodePath(".:lifted_by")
+properties/4/spawn = false
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:lift_turns")
+properties/5/spawn = false
+properties/5/replication_mode = 2
 
 [node name="Structure" type="StaticBody3D" unique_id=1824059418 node_paths=PackedStringArray("_collision_shape") groups=["Navigation", "Structures"]]
 transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 0, 0, 0)

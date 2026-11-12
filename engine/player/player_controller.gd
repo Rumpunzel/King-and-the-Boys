@@ -36,6 +36,10 @@ var auto_pass: bool = true:
 		auto_pass = new_auto_pass
 		_auto_pass_if_out_of_moves()
 
+# The target and choice of the held ability this player armed; the host keeps its own and checks every request
+var _ability_target: Vector2i = Vector2i.ZERO
+var _ability_argument: int = 0
+
 var _controlled_character: Character:
 	set(new_controlled_character):
 		if is_instance_valid(_controlled_character):
@@ -133,8 +137,76 @@ func has_passed() -> bool:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	return turn_manager != null and turn_manager.has_passed(player.player_id)
 
+## Nothing can be undone while a held ability is in use: it is cancelled instead
 func can_undo() -> bool:
-	return get_controlled_character().undo_steps > 0
+	var controlled_character: Character = get_controlled_character()
+	return controlled_character.undo_steps > 0 and controlled_character.active_ability_id.is_empty()
+
+## Whether the controlled character could use [param ability] now; the held ability in use can always be pressed again,
+## which cancels it. Uses per turn are counted on the host only, which checks again.
+func can_arm(ability: Ability) -> bool:
+	if ability.is_passive() or has_passed(): return false
+	var controlled_character: Character = get_controlled_character()
+	if not controlled_character.active_ability_id.is_empty(): return controlled_character.active_ability_id == ResourceId.of(ability)
+	if ability.get_charges_left(controlled_character) == 0 or not controlled_character.level: return false
+	var targets: Array[Vector2i] = ability.get_targets(controlled_character, controlled_character.level)
+	if targets.is_empty(): return false
+	if ability.held: return ability.can_begin(controlled_character, targets[0], controlled_character.level)
+	return ability.get_cost(controlled_character, targets[0], 0) <= controlled_character.movement_points and ability.can_use(controlled_character, targets[0], 0, controlled_character.level)
+
+## Uses [param ability] of the controlled character on its first target: a [member Ability.held] one begins (the tile
+## lifts) and waits for [method adjust_ability] and [method confirm_ability]; pressed again, it is cancelled
+func arm_ability(ability: Ability) -> void:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	if not turn_manager or not can_arm(ability): return
+	var controlled_character: Character = get_controlled_character()
+	var ability_id: String = ResourceId.of(ability)
+	if controlled_character.active_ability_id == ability_id:
+		cancel_ability()
+		return
+	_ability_target = ability.get_targets(controlled_character, controlled_character.level)[0]
+	_ability_argument = 0
+	if ability.held: turn_manager.request_ability_begin.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), ability_id, _ability_target)
+	else: turn_manager.request_ability.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), ability_id, _ability_target, _ability_argument)
+
+## Steps the choice of the held ability in use by [param step] (e.g. a quarter turn clockwise for [code]1[/code]),
+## skipping choices the controlled character can not pay for
+func adjust_ability(step: int) -> void:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	var controlled_character: Character = get_controlled_character()
+	var ability: Ability = controlled_character.get_ability(controlled_character.active_ability_id)
+	if not turn_manager or not ability: return
+	var next_argument: int = ability.get_next_argument(controlled_character, _ability_target, _ability_argument, step)
+	if next_argument == _ability_argument: return
+	_ability_argument = next_argument
+	turn_manager.request_ability_adjust.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), _ability_argument)
+
+## Points the held ability in use towards [param direction] (the Mystic's tile turns until they face it), if the
+## controlled character can pay for that
+func aim_ability_towards(direction: Level.Direction) -> void:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	var controlled_character: Character = get_controlled_character()
+	var ability: Ability = controlled_character.get_ability(controlled_character.active_ability_id)
+	if not turn_manager or not ability: return
+	var argument: int = ability.get_argument_towards(controlled_character, _ability_target, direction)
+	if argument < 0 or argument == _ability_argument: return
+	if ability.get_cost(controlled_character, _ability_target, argument) > controlled_character.movement_points: return
+	_ability_argument = argument
+	turn_manager.request_ability_adjust.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), _ability_argument)
+
+## Ends the held ability in use with its current choice (sets the tile down); one that would change nothing is cancelled
+func confirm_ability() -> void:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	var controlled_character: Character = get_controlled_character()
+	if not turn_manager or controlled_character.active_ability_id.is_empty(): return
+	turn_manager.request_ability.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), controlled_character.active_ability_id, _ability_target, _ability_argument)
+
+## Stops the held ability in use without paying for it
+func cancel_ability() -> void:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	var controlled_character: Character = get_controlled_character()
+	if not turn_manager or controlled_character.active_ability_id.is_empty(): return
+	turn_manager.request_ability_cancel.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path())
 
 ## @returns [code]true[/code] if the controlled character has nothing left to do: no moves, no step to undo
 func must_pass() -> bool:

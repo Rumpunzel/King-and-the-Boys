@@ -3,6 +3,7 @@
 [ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_ice4o"]
 [ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_arfpv"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_u6fvh"]
+[ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_4m7y1"]
 [ext_resource type="Resource" uid="uid://5hbsrnqf3fcd" path="res://data/characters/people/knight_body.tres" id="5_0vpuq"]
 [ext_resource type="Texture2D" uid="uid://cc2x8ji73hxc4" path="res://data/characters/people/portraits/frog-mouth-helm.svg" id="5_63j5q"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_ltdy7"]
@@ -68,6 +69,8 @@ metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 script = ExtResource("body_animations")
 animations = Array[Animation]([ExtResource("9_4m7y1"), ExtResource("9_4m7y1"), ExtResource("9_4m7y1"), ExtResource("9_4m7y1"), ExtResource("10_usogq")])
 order = 2
+entry = ExtResource("8_g0w26")
+exit = ExtResource("58_hdg4a")
 metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_13etc"]
@@ -258,8 +261,7 @@ name = "Belt 12"
 [resource]
 script = ExtResource("5_ltdy7")
 intelligence = 2
-vision = 0.0
-dark_vision = 1.5
+dark_vision = 0.0
 preview_offset = Vector3(0, 0.1, 0)
 gear_primary_color = Color(0.173, 0.29, 0.549, 1)
 gear_secondary_color = Color(0.851, 0.698, 0.29, 1)
@@ -275,9 +277,7 @@ spawn_animation = ExtResource("90_knight_spawn")
 move_animation = ExtResource("90_knight_move")
 fast_move_animation = ExtResource("90_knight_move")
 idle_animations = SubResource("Resource_511xg")
-pass_animation = ExtResource("8_g0w26")
 passed_animations = SubResource("BodyAnimations_passed")
-unpass_animation = ExtResource("58_hdg4a")
 selected_animation = ExtResource("14_g0w26")
 name = "Knight"
 portrait = ExtResource("5_63j5q")
