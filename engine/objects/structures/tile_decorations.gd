@@ -18,7 +18,7 @@ extends Resource
 
 const NODE_NAME: StringName = &"Decorations"
 ## Name of the node holding a tile's ground, see [method create_ground]
-const GROUND_NODE_NAME: String = "Ground"
+const GROUND_NODE_NAME: StringName = &"Ground"
 ## Name of the node holding a tile's paths, see [method create_paths]
 const PATHS_NODE_NAME: StringName = &"Paths"
 ## How many frames dust waits for the rest of a room arriving tile by tile, see [method _add_room_dust]
@@ -174,7 +174,8 @@ func _add_room_props(decorations: Node3D, tile: Structure) -> void:
 	if room_floors and random.randf() < room_floor_chance:
 		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), _random_turn(random).basis), random)
 	if room_ambience and random.randf() < room_ambience_chance:
-		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO), _random_turn(random).basis), random)
+		# Unturned: a sun beam's slant shows where the light falls from, the same for every beam
+		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO)), random)
 	_add_room_dust(decorations, tile)
 
 ## Dust over [param tile] if its room is dusty. The room is rolled by its first cell, so it needs all its tiles: rooms are built whole,

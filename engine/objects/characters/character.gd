@@ -205,14 +205,15 @@ func _ready() -> void:
 func get_light_sources() -> Array[LightSource]:
 	var light_sources: Array[LightSource] = []
 	if equipment:
-		for look: EquipmentLook in equipment.get_all_equipped(): light_sources.append_array(look.get_light_sources())
+		for look: EquipmentLook in equipment.get_all_equipped():
+			for light_source: LightSource in look.get_light_sources(): _add_light_source(light_sources, light_source)
 	if profile:
-		for ability: Ability in profile.abilities: light_sources.append(ability.get_light_source(self) if ability else null)
-	# A light counts once, e.g. a torch in each hand
-	var distinct: Array[LightSource] = []
-	for light_source: LightSource in light_sources:
-		if light_source and not distinct.has(light_source): distinct.append(light_source)
-	return distinct
+		for ability: Ability in profile.abilities: _add_light_source(light_sources, ability.get_light_source(self) if ability else null)
+	return light_sources
+
+## A light counts once, e.g. a torch in each hand
+static func _add_light_source(light_sources: Array[LightSource], light_source: LightSource) -> void:
+	if light_source and not light_sources.has(light_source): light_sources.append(light_source)
 
 ## @returns how far the character sees ([member CharacterProfile.vision]), changed by the lights it carries
 func get_vision() -> float:

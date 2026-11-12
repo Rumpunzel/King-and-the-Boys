@@ -155,3 +155,10 @@ func test_a_torch_burns_in_either_hand() -> void:
 		# Burning upwards, however the hand holds it
 		await get_tree().process_frame
 		assert_float(_fire(model).global_basis.y.normalized().dot(Vector3.UP)).is_equal_approx(1.0, 0.001)
+		# Still, once it was stowed on the back and drawn again (stowing moves the hand's part)
+		model.stow_weapons()
+		model.draw_weapons()
+		_fire(model).global_basis = Basis(Vector3.RIGHT, 1.0)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		assert_float(_fire(model).global_basis.y.normalized().dot(Vector3.UP)).is_equal_approx(1.0, 0.001)

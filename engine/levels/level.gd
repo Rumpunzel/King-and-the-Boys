@@ -790,7 +790,9 @@ func follow_sight_of(character: Character) -> void:
 	character.light_sources_changed.connect(_on_player_lights_changed.bind(character))
 
 func _on_player_lights_changed(character: Character) -> void:
-	if character.is_node_ready() and _placed_tiles.has(character.grid_cell): update_sight(character, character.grid_cell)
+	# As on a turned tile: a hero hidden while it controls something else sees nothing
+	if not character.is_node_ready() or not character.visible or character.profile.group != CharacterProfile.Groups.HEROES: return
+	if _placed_tiles.has(character.grid_cell): update_sight(character, character.grid_cell)
 
 func _on_player_moved(character_grid_position: Vector2i, character: Character) -> void:
 	assert(_placed_tiles[character_grid_position])

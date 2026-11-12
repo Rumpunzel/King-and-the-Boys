@@ -23,7 +23,9 @@ var _own_range: float
 # The brightest light the character carries, or null; follows Character.light_sources_changed
 var _carried: LightSource
 var _tween: Tween
+var _target_color: Color
 var _target_energy: float = -1.0
+var _target_range: float
 var _since_check: float
 
 func _ready() -> void:
@@ -51,8 +53,10 @@ func _on_light_sources_changed() -> void:
 	else: _fade_to(_own_color, _own_energy * _own_share(), _own_range)
 
 func _fade_to(color: Color, energy: float, reach: float) -> void:
-	if is_equal_approx(energy, _target_energy) and color.is_equal_approx(light_color) and is_equal_approx(reach, omni_range): return
+	if is_equal_approx(energy, _target_energy) and color.is_equal_approx(_target_color) and is_equal_approx(reach, _target_range): return
+	_target_color = color
 	_target_energy = energy
+	_target_range = reach
 	if _tween: _tween.kill()
 	_tween = create_tween().set_parallel()
 	_tween.tween_property(self, "light_color", color, fade_time)
