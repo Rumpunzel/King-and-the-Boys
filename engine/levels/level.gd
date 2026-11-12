@@ -64,9 +64,7 @@ var _placed_tiles: Dictionary[Vector2i, Structure]
 ## Bridges over the gaps between tiles opening to each other, by the middle of the gap (see [method _get_gap_position]); each
 ## peer lays its own, as they are only for show
 var _bridges: Dictionary[Vector3, Model]
-## Tiles lifted off the board on this peer, until they have landed; no bridge leads onto them
-var _lifted_tiles: Array[Structure] = []
-## Cells whose tile was just set down: what its turn brought into sight waits there a moment, see
+## Cells whose tile just turned: what the turn brought into sight waits there a moment, see
 ## [member TileLiftAnimation.reveal_delay]
 var _reveals_held_on: Dictionary[Vector2i, bool] = {}
 
@@ -457,7 +455,7 @@ func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction, 
 		tile = _placed_tiles[grid_position]
 		if tile.profile.room_type: _build_room_from(grid_position, tile.profile.room_type, already_visited)
 		for connection: Direction in tile.get_connections():
-			if connection == direction or connection == direction - Level.Direction.size() / 2: continue
+			if connection == direction or connection == get_opposite(direction): continue
 			var neighbour_direction: Vector2i = direction_to_vector(connection)
 			var neighbour_position: Vector2i = grid_position + neighbour_direction
 			spawn_at(neighbour_position)
@@ -573,10 +571,11 @@ func _reveal_tile(tile: Structure, character: Character = null) -> void:
 	_set_status_cause(tile, character)
 	tile.reveal()
 	_board_change_count += 1
-	# Neighbours not built yet are discovered once they are placed, see _on_structure_created
+	# Neighbours not built yet are discovered once they are placed, see _on_structure_created. Only across passages, like
+	# sight: not through an opening a turned tile now has towards a closed side
 	for connection: Direction in tile.get_connections():
-		var neighbour: Structure = _placed_tiles.get(tile.get_grid_position() + direction_to_vector(connection))
-		if neighbour: _discover_tile(neighbour, character)
+		if not is_passage(tile.get_grid_position(), connection): continue
+		_discover_tile(_placed_tiles[tile.get_grid_position() + direction_to_vector(connection)], character)
 
 ## Host only: discovers [param tile] right away; peers show it later, see [method _reveal_tile]
 func _discover_tile(tile: Structure, character: Character = null) -> void:
@@ -592,8 +591,8 @@ static func _set_status_cause(tile: Structure, character: Character) -> void:
 
 func _is_next_to_revealed_tile(tile: Structure) -> bool:
 	for connection: Direction in tile.get_connections():
-		var neighbour: Structure = _placed_tiles.get(tile.get_grid_position() + direction_to_vector(connection))
-		if neighbour and neighbour.status == Structure.Status.REVEALED: return true
+		if not is_passage(tile.get_grid_position(), connection): continue
+		if _placed_tiles[tile.get_grid_position() + direction_to_vector(connection)].status == Structure.Status.REVEALED: return true
 	return false
 
 static func _get_distance(from_grid_position: Vector2i, to_grid_position: Vector2i) -> int:
@@ -673,22 +672,21 @@ func _show_bridge(tile: Structure, direction: Direction) -> void:
 	bridge.set_meta(_SHOWN, true)
 	tile.profile.decorations.drop_props([bridge] as Array[Model])
 
-## Every peer: a turned [param tile] gets new bridges, once it rests on the board again (see [method _on_tile_landed])
+## Every peer: a turned [param tile] gets new bridges, once it rests on the board again (see [method _on_tile_landed]); what
+## the turn brings into sight waits a moment, as the tile drops or spins into place
 func _on_tile_turned(tile: Structure) -> void:
+	if _placed_tiles.get(tile.get_grid_position()) != tile: return
+	_hold_reveals_on(tile.get_grid_position())
 	if tile.is_settled(): _update_gaps_of(tile)
 
 ## Every peer: no bridge leads onto a lifted [param tile] until it has landed
 func _on_tile_lift_changed(tile: Structure) -> void:
-	if not tile.is_lifted() and _placed_tiles.get(tile.get_grid_position()) == tile: _hold_reveals_on(tile.get_grid_position())
-	if not tile.is_lifted() or _lifted_tiles.has(tile) or _placed_tiles.get(tile.get_grid_position()) != tile: return
-	_lifted_tiles.append(tile)
-	_update_gaps_of(tile)
+	if tile.is_lifted(): _update_gaps_of(tile)
 
 func _on_tile_landed(tile: Structure) -> void:
-	_lifted_tiles.erase(tile)
 	_update_gaps_of(tile)
 
-## What a turn brings into sight shows a moment after the tile was set down (its drop starts), see
+## What a turn brings into sight shows a moment after the tile turned (as it is set down, its drop starting), see
 ## [member TileLiftAnimation.reveal_delay]. A tween bound to the level, so it pauses with the game.
 func _hold_reveals_on(grid_position: Vector2i) -> void:
 	_reveals_held_on[grid_position] = true
@@ -750,7 +748,6 @@ func _forget_tile(tile: Structure) -> void:
 	var grid_position: Vector2i = world_to_grid_position(tile.global_position)
 	if _placed_tiles.get(grid_position) == tile: _placed_tiles.erase(grid_position)
 	_furnished_cells.erase(grid_position)
-	_lifted_tiles.erase(tile)
 	restriction_fallbacks.erase(grid_position)
 	# Until it is freed it may still change: nothing here follows it any more
 	for handler: Array in [[tile.status_changed, _on_tile_status_changed], [tile.shown_status_changed, _on_tile_shown_status_changed], [tile.spawn_requested, _on_spawn_requested]]:

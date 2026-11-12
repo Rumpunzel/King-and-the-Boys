@@ -125,8 +125,9 @@ func test_what_a_turn_reveals_waits_a_moment_after_the_tile_is_set_down() -> voi
 	_tile.lifted_by = _hero.get_path()
 	await await_millis(600)
 	var landed: Array[bool] = _landed()
+	# Set down turned, as the ability does: a moment's wait, counted from now, not from the landing
 	_tile.lifted_by = NodePath()
-	# Set down: a moment's wait, counted from now, not from the landing
+	_level.rotate_tile(_tile, 1, _hero)
 	assert_bool(_level._has_figure_caught_up(_hero, [])).is_false()
 	var animation: TileLiftAnimation = TileLiftAnimation.of(_level)
 	assert_float(animation.reveal_delay).is_less(animation.spin_duration * 0.5 + animation.drop_duration)
@@ -151,6 +152,44 @@ func test_lifted_again_while_dropping_it_rises_again() -> void:
 	assert_bool(landed[0]).is_true()
 	assert_bool(_hero.is_carried()).is_false()
 	assert_float(_tile.model.position.y).is_equal(0.0)
+
+func test_a_figure_on_its_way_arrives_before_it_is_carried() -> void:
+	var other_spot: Vector2 = Vector2.INF
+	for spot: Vector2 in _tile.profile.get_tile_spots(): if spot != _hero.tile_spot: other_spot = spot
+	_hero.place_on_grid(_hero.grid_cell, other_spot, _hero.facing)
+	await await_idle_frame()
+	var arrived: Array[bool] = [false]
+	_hero.figure_arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
+	_tile.lifted_by = _hero.get_path()
+	assert_bool(arrived[0]).override_failure_message("The step under way ended").is_true()
+	assert_bool(_hero.is_carried()).is_true()
+	var spot_position: Vector3 = _level.get_spot_position(_hero.grid_cell, other_spot)
+	assert_vector(Vector3(_hero.global_position.x, 0.0, _hero.global_position.z)).is_equal_approx(Vector3(spot_position.x, 0.0, spot_position.z), Vector3.ONE * 0.01)
+
+func test_a_cancelled_lift_holds_nothing_back() -> void:
+	_tile.lifted_by = _hero.get_path()
+	await await_millis(300)
+	_tile.lifted_by = NodePath()
+	assert_bool(_level._has_figure_caught_up(_hero, [])).is_true()
+
+func test_setting_down_tells_of_it_once() -> void:
+	var changes: Array[int] = [0]
+	_tile.lift_changed.connect(func() -> void: changes[0] += 1)
+	_tile.lifted_by = _hero.get_path()
+	_tile.lift_turns = 2
+	changes[0] = 0
+	_tile.lifted_by = NodePath()
+	assert_int(changes[0]).is_equal(1)
+	assert_int(_tile.lift_turns).is_equal(0)
+
+func test_figures_ride_a_turn_on_the_board_and_step_off_once_it_is_in_place() -> void:
+	# As when a turn is undone: no lift, the model spins into place
+	_level.rotate_tile(_tile, 1, _hero)
+	assert_bool(_hero.is_carried()).is_true()
+	assert_bool(_level._has_figure_caught_up(_hero, [])).is_false()
+	await await_millis(800)
+	assert_bool(_hero.is_carried()).is_false()
+	assert_bool(_level._has_figure_caught_up(_hero, [])).is_true()
 
 func test_a_cancelled_lift_spins_back_and_lands() -> void:
 	var turns: int = _tile.clockwise_turns

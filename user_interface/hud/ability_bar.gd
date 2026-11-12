@@ -23,6 +23,9 @@ var character: Character:
 		_build()
 
 var _abilities: Array[Ability] = []
+# Worked out once per build, as the bar asks every frame: each ability's id and the label before its charges
+var _ability_ids: Array[String] = []
+var _labels: Array[String] = []
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
@@ -42,9 +45,8 @@ func update() -> void:
 		# Asked every frame: only what changed is set
 		var label: String = _get_label(ability, index)
 		if button.text != label: button.text = label
-		button.expand_icon = true
 		button.disabled = not player_controller.can_arm(ability)
-		button.set_pressed_no_signal(character.active_ability_id == ResourceId.of(ability))
+		button.set_pressed_no_signal(character.active_ability_id == _ability_ids[index])
 	_aiming_hint.visible = not character.active_ability_id.is_empty()
 
 func _build() -> void:
@@ -53,11 +55,19 @@ func _build() -> void:
 		_buttons.remove_child(button)
 		button.queue_free()
 	_abilities.clear()
+	_ability_ids.clear()
+	_labels.clear()
 	if is_instance_valid(character) and character.profile:
 		for ability: Ability in character.profile.abilities: if ability: _abilities.append(ability)
 	for index: int in _abilities.size():
 		var ability: Ability = _abilities[index]
+		_ability_ids.append(ResourceId.of(ability))
+		var label: String = ability.name
+		if ability.is_passive(): label = "%s (passive)" % label
+		elif index < ACTIONS.size(): label = "%s [%s]" % [label, TurnStatus.get_action_key(ACTIONS[index])]
+		_labels.append(label)
 		var button: Button = Button.new()
+		button.expand_icon = true
 		button.toggle_mode = true
 		button.focus_mode = Control.FOCUS_NONE
 		button.icon = ability.icon
@@ -73,12 +83,9 @@ func _build() -> void:
 	update()
 
 func _get_label(ability: Ability, index: int) -> String:
-	var label: String = ability.name
-	if ability.is_passive(): return "%s (passive)" % label
-	if index < ACTIONS.size(): label = "%s [%s]" % [label, TurnStatus.get_action_key(ACTIONS[index])]
+	if ability.is_passive(): return _labels[index]
 	var charges_left: int = ability.get_charges_left(character)
-	if charges_left >= 0: label = "%s · %d left" % [label, charges_left]
-	return label
+	return "%s · %d left" % [_labels[index], charges_left] if charges_left >= 0 else _labels[index]
 
 static func _key(action: StringName) -> String:
 	return "[%s]" % TurnStatus.get_action_key(action)

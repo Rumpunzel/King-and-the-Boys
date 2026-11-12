@@ -295,8 +295,12 @@ func carry_on(carrier: Node3D) -> void:
 	if not carrier:
 		snap_to_grid()
 		return
-	for tween: Tween in [_move_tween, _turn_tween]: if tween: tween.kill()
-	_move_tween = null
+	# A move under way ends at once where it was going, and the figure arrives (e.g. to pass when out of moves): then it rides
+	if _is_moving():
+		_move_tween.kill()
+		global_position = _move_target
+		_on_move_finished()
+	if _turn_tween: _turn_tween.kill()
 	_carried_transform = carrier.global_transform.affine_inverse() * global_transform
 
 func is_carried() -> bool:

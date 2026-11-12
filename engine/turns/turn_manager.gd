@@ -122,6 +122,10 @@ func request_undo(character_path: NodePath) -> void:
 		_set_passed(sender_id, false)
 		return
 	var previous_step: GridStep = last_step
+	# Not off nor onto a tile someone holds up: like steps, undo waits until it is set down
+	for cell: Vector2i in [character.grid_cell, previous_step.grid_cell]:
+		var tile: Structure = _level.get_placed_tile(cell)
+		if tile and tile.is_lifted(): return
 	# Another piece may have taken the old spot meanwhile
 	var free_spots: Array[Vector2] = _level.get_free_spots(previous_step.grid_cell, character)
 	if free_spots.is_empty(): return

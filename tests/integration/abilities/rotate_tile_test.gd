@@ -226,3 +226,20 @@ func test_a_character_leaving_sets_its_lifted_tile_down() -> void:
 	remove_child(hero)
 	assert_bool(tile.is_lifted()).is_false()
 	add_child(hero)
+
+func test_nobody_undoes_off_or_onto_a_lifted_tile() -> void:
+	var mystic: Character = await _spawn_hero(_start_cell())
+	var other: Character = await _spawn_hero(_start_cell())
+	var direction: Level.Direction = Level.Direction.UP
+	for candidate: Level.Direction in Level.Direction.values():
+		if _level.is_passage(_start_cell(), candidate): direction = candidate
+	# Out and back onto the start, which the mystic then lifts: the step back may not be undone off it
+	_turn_manager.request_move(other.get_path(), direction)
+	_turn_manager.request_move(other.get_path(), Level.get_opposite(direction))
+	assert_int(other.undo_steps).is_greater(0)
+	_begin(mystic, _start_cell())
+	_turn_manager.request_undo(other.get_path())
+	assert_vector(other.grid_cell).is_equal(_start_cell())
+	_turn_manager.request_ability_cancel(mystic.get_path())
+	_turn_manager.request_undo(other.get_path())
+	assert_vector(other.grid_cell).is_not_equal(_start_cell())

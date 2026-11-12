@@ -183,3 +183,17 @@ func test_a_cell_of_the_outer_wall_is_left_as_it_is() -> void:
 	# As when a turned tile next to the wall opens towards it
 	_level.spawn_at(wall_cell)
 	assert_object(_level.get_placed_tile(wall_cell)).is_same(wall)
+
+func test_a_revealed_tile_discovers_nothing_through_a_closed_side() -> void:
+	# Two tiles in an unbuilt corner: a crossing, and beside it one closed all round
+	var cell: Vector2i = Vector2i(-_level.grid_extents.x + 2, -_level.grid_extents.y + 2)
+	var beside: Vector2i = cell + Vector2i.RIGHT
+	assert_object(_level.get_placed_tile(cell)).is_null()
+	assert_object(_level.get_placed_tile(beside)).is_null()
+	for spawn: Array in [[ModelFreeWorld.STARTING_TILE, cell], ["res://tests/fixtures/tiles/solid.tres", beside]]:
+		var spawned_cell: Vector2i = spawn[1]
+		_level._structure_spawner.spawn_at(load(spawn[0] as String) as StructureProfile, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(spawned_cell)), 0, Structure.Status.PLACED)
+	var crossing: Structure = _level.get_placed_tile(cell)
+	assert_bool(crossing.get_connections().has(Level.Direction.RIGHT)).is_true()
+	_level._reveal_tile(crossing)
+	assert_int(_level.get_placed_tile(beside).status).is_less(Structure.Status.DISCOVERED)

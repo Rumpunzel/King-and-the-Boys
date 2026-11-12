@@ -93,8 +93,9 @@ var lifted_by: NodePath:
 	set(new_lifted_by):
 		if new_lifted_by == lifted_by: return
 		lifted_by = new_lifted_by
-		if lifted_by.is_empty(): lift_turns = 0
-		lift_changed.emit()
+		# Set down: the turns go, which tells of the change once
+		if lifted_by.is_empty() and lift_turns != 0: lift_turns = 0
+		else: lift_changed.emit()
 ## Quarter turns clockwise the lifted tile shows on top of [member clockwise_turns]; set by the host, replicated
 var lift_turns: int = 0:
 	set(new_lift_turns):

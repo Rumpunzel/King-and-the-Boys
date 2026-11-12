@@ -46,6 +46,8 @@ func update() -> void:
 func on_turned(previous_clockwise_turns: int) -> void:
 	if _has_nothing_to_show(): return
 	set_process(true)
+	# Turned on the board (e.g. undone), the figures ride the spin too
+	if not _structure.is_lifted(): _carry_figures()
 	_turns -= posmod(_structure.clockwise_turns - previous_clockwise_turns, Level.Direction.size())
 	_spin_to(_structure.lift_turns if _structure.is_lifted() else 0)
 	# Not a frame facing the new way before the model is held back
