@@ -145,15 +145,15 @@ func test_setting_down_unturned_is_free() -> void:
 	assert_int(hero.movement_points).is_equal(8)
 	assert_str(hero.active_ability_id).is_empty()
 
-func test_turning_into_the_same_shape_is_free() -> void:
-	# The start tile is a crossing
+func test_a_tile_turns_and_costs_even_into_the_same_shape() -> void:
+	# The start tile is a crossing: every turn keeps its shape, yet it still turns (its look, its props)
 	var hero: Character = await _spawn_hero(_start_cell())
 	var tile: Structure = _level.get_placed_tile(_start_cell())
 	assert_int(tile.get_connections().size()).is_equal(4)
 	var turns: int = tile.clockwise_turns
 	_turn(hero, 1)
-	assert_int(tile.clockwise_turns).is_equal(turns)
-	assert_int(hero.movement_points).is_equal(8)
+	assert_int(tile.clockwise_turns).is_equal(posmod(turns + 1, 4))
+	assert_int(hero.movement_points).is_equal(7)
 	assert_bool(tile.is_lifted()).is_false()
 
 func test_undo_turns_the_tile_back_and_refunds() -> void:

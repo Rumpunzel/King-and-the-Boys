@@ -67,14 +67,6 @@ func test_a_turned_tile_rebuilds_its_connections() -> void:
 		_level.rotate_tile(tile, 1, hero)
 		await await_idle_frame()
 		assert_array(_sorted_connections(tile)).is_equal(expected)
-		var tile_connections: Dictionary = _level.get("_tile_connections")
-		var own_connections: Array = tile_connections.get(tile, [])
-		assert_int(own_connections.size()).is_equal(expected.size())
-		var connectors: Dictionary = _level.get("_tile_connectors")
-		for direction: Level.Direction in Level.Direction.values():
-			var neighbour: Structure = _level.get_placed_tile(tile.get_grid_position() + Level.direction_to_vector(direction))
-			var needed: bool = expected.has(direction) or (neighbour != null and neighbour.get_connections().has(Level.get_opposite(direction)))
-			assert_bool(connectors.has(_level._get_connector_position(tile.global_position, direction))).is_equal(needed)
 		return
 	fail("No tile changes its shape when turned")
 

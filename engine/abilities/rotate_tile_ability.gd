@@ -55,12 +55,12 @@ func cancel(_character: Character, target: Vector2i, level: Level) -> void:
 	var tile: Structure = level.get_placed_tile(target)
 	if tile: tile.lifted_by = NodePath()
 
-## Setting the tile down unturned, or turned into the same shape, changes nothing: the [TurnManager] cancels it for free
+## Setting the tile down unturned changes nothing: the [TurnManager] cancels it for free. A turn into the same shape (e.g. in
+## the middle of a room, where every side connects) still turns the tile, and costs.
 func can_use(character: Character, target: Vector2i, argument: int, level: Level) -> bool:
 	var tile: Structure = level.get_placed_tile(target)
 	if not tile or tile.lifted_by != character.get_path(): return false
-	var net_turns: int = posmod(argument, Level.Direction.size())
-	return net_turns != 0 and _get_turned_connections(tile, net_turns) != _get_turned_connections(tile, 0)
+	return posmod(argument, Level.Direction.size()) != 0
 
 func use(character: Character, target: Vector2i, argument: int, level: Level) -> AbilityStep:
 	var tile: Structure = level.get_placed_tile(target)

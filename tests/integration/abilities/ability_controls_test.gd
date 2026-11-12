@@ -96,6 +96,8 @@ func test_arming_lifts_the_tile_and_aims_until_it_is_set_down() -> void:
 	assert_int(hero.movement_points).is_equal(7)
 	assert_int(hero.held_cost).is_equal(0)
 	assert_object(_state_of(controller)).is_instanceof(PlayerStateDefault)
+	# The tile can be lifted again at once
+	assert_bool(controller.can_arm(TURN_TILE)).override_failure_message("The ability can be armed again after setting the tile down").is_true()
 
 func test_pressing_the_ability_again_cancels_it_for_free() -> void:
 	var controller: PlayerController = _controller()

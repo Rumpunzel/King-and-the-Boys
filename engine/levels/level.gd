@@ -61,12 +61,10 @@ var generation_random: RandomNumberGenerator = RandomNumberGenerator.new()
 var restriction_fallbacks: Dictionary[Vector2i, bool] = {}
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
-# {Structure -> Array[Structure]}
-var _tile_connections: Dictionary[Structure, Array]
-var _tile_connectors: Dictionary[Vector3, Structure]
-## Bridges over the gaps between tiles opening to each other, by their connector's position; local like connectors
+## Bridges over the gaps between tiles opening to each other, by the middle of the gap (see [method _get_gap_position]); each
+## peer lays its own, as they are only for show
 var _bridges: Dictionary[Vector3, Model]
-## Tiles lifted off the board on this peer, until they have landed; they and their sides show no connections
+## Tiles lifted off the board on this peer, until they have landed; no bridge leads onto them
 var _lifted_tiles: Array[Structure] = []
 
 var _placed_things: Dictionary[Vector2i, Thing]
@@ -595,49 +593,17 @@ func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
 		surrounding_tiles.append(surrounding_tile)
 	return surrounding_tiles
 
-func _create_connection(tile: Structure, connection: Direction) -> void:
-	assert(tile)
-	# Tiles without a model (e.g. in tests) count as unscaled
-	var mesh_scale: float = tile.model.get_max_mesh_scale() if tile.model else 1.0
-	var connection_position: Vector3 = _get_connector_position(tile.global_position, connection, mesh_scale)
-	var tile_connection: Structure = _tile_set.tile_connection.create(-1, Transform3D(Basis.IDENTITY, connection_position), connection, Structure.Status.PLACED)
-	var tile_connections: Array[Structure] = _tile_connections.get_or_add(tile, [] as Array[Structure])
-	assert(not tile_connections.has(tile))
-	tile_connections.append(tile_connection)
-	_add_local_structure(tile_connection)
-
-## The middle of a tile's side towards [param connection], where connectors stand; [param mesh_scale] moves it out
-## with the tile's model (its connections)
-func _get_connector_position(tile_position: Vector3, connection: Direction, mesh_scale: float = 1.0) -> Vector3:
-	var direction_vector: Vector2i = direction_to_vector(connection)
-	return tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5 * mesh_scale
-
-func _create_connector(tile_position: Vector3, connection: Direction) -> void:
-	var connector_position: Vector3 = _get_connector_position(tile_position, connection)
-	if _tile_connectors.has(connector_position): return
-	var tile_connector: Structure = _tile_set.tile_connector.create(-1, Transform3D(Basis.IDENTITY, connector_position), connection, Structure.Status.PLACED)
-	_tile_connectors[connector_position] = tile_connector
-	_add_local_structure(tile_connector)
-
-## Connections and connectors are visuals each peer makes for itself: they neither sync nor save, so their synchronizer goes.
-## Their names differ between peers once tiles turn, which a synchronizer would miss on the others.
-func _add_local_structure(structure: Structure) -> void:
-	var synchronizer: Node = structure.get_node_or_null(^"Synchronizer")
-	if synchronizer:
-		structure.remove_child(synchronizer)
-		synchronizer.free()
-	add_child(structure)
-
-## Frees [param structure] (a connection or connector) at once, so a new one may take its name; nothing else holds on to it
-func _remove_local_structure(structure: Structure) -> void:
-	if is_instance_valid(structure): structure.free()
+## The middle of the gap between a tile on [param tile_position] and its neighbour towards [param direction]
+func _get_gap_position(tile_position: Vector3, direction: Direction) -> Vector3:
+	var direction_vector: Vector2i = direction_to_vector(direction)
+	return tile_position + Vector3(direction_vector.x, 0.0, direction_vector.y) * grid_size * 0.5
 
 func _on_structure_created(structure: Structure) -> void:
 	var tile_grid_position: Vector2i = world_to_grid_position(structure.global_position)
 	# Registered first: tiles revealed already (loaded, joined) are dressed as they get their level, and look for themselves
 	_placed_tiles[tile_grid_position] = structure
 	structure.level = self
-	_build_connections(structure)
+	_update_gaps_of(structure)
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
 	structure.shown_status_changed.connect(_on_tile_shown_status_changed.bind(structure))
 	structure.clockwise_turns_changed.connect(_on_tile_turned.bind(structure).unbind(1))
@@ -674,92 +640,70 @@ func _on_tile_shown_status_changed(shown_status: Structure.Status, tile: Structu
 	# A tween bound to the level, not a timer awaited: it goes with the level (e.g. leaving the game, a test ending)
 	# instead of resuming on a freed one, which crashed Godot at exit. It pauses with the game, so the board does
 	# not change while paused. Bound to the cell, not the tile: the tile may be gone by then (e.g. a save loaded).
-	create_tween().tween_callback(_show_connections_at.bind(grid_position)).set_delay(0.5)
+	create_tween().tween_callback(_show_bridges_at.bind(grid_position)).set_delay(0.5)
 
-## Shows the connections and connectors of the revealed tile on [param grid_position] to its revealed neighbours,
-## as far as they are still placed
-func _show_connections_at(grid_position: Vector2i) -> void:
+## Drops in the bridges between the revealed tile on [param grid_position] and its revealed neighbours, as far as it is still
+## placed
+func _show_bridges_at(grid_position: Vector2i) -> void:
 	var tile: Structure = _placed_tiles.get(grid_position)
-	if not tile or tile.shown_status != Structure.Status.REVEALED: return
-	for tile_connection: Structure in _tile_connections.get(tile, []): tile_connection.shown_status = Structure.Status.REVEALED
-	for connection: Direction in tile.get_connections():
-		var direction_vector: Vector2i = direction_to_vector(connection)
-		var neighbour: Structure = _placed_tiles.get(grid_position + direction_vector)
-		if not neighbour or neighbour.shown_status != Structure.Status.REVEALED: continue
-		var connector_position: Vector3 = _get_connector_position(tile.global_position, connection)
-		var tile_connector: Structure = _tile_connectors.get(connector_position)
-		if tile_connector: tile_connector.shown_status = Structure.Status.REVEALED
-		var bridge: Model = _bridges.get(connector_position)
-		# Both sides show it, often in one go: it drops in once
-		if not bridge or bridge.has_meta(_SHOWN): continue
-		bridge.set_meta(_SHOWN, true)
-		tile.profile.decorations.drop_props([bridge] as Array[Model])
+	if not tile: return
+	for direction: Direction in Direction.values(): _show_bridge(tile, direction)
 
-## Every peer: a turned [param tile] gets new connections, once it rests on the board again (see [method _on_tile_landed])
+## Drops in the bridge between [param tile] and its neighbour towards [param direction] once both are revealed; it drops in once
+func _show_bridge(tile: Structure, direction: Direction) -> void:
+	var bridge: Model = _bridges.get(_get_gap_position(tile.global_position, direction))
+	if not bridge or bridge.has_meta(_SHOWN) or tile.shown_status != Structure.Status.REVEALED: return
+	var neighbour: Structure = _placed_tiles.get(tile.get_grid_position() + direction_to_vector(direction))
+	if not neighbour or neighbour.shown_status != Structure.Status.REVEALED: return
+	bridge.set_meta(_SHOWN, true)
+	tile.profile.decorations.drop_props([bridge] as Array[Model])
+
+## Every peer: a turned [param tile] gets new bridges, once it rests on the board again (see [method _on_tile_landed])
 func _on_tile_turned(tile: Structure) -> void:
-	if tile.is_settled(): _rebuild_around(tile)
+	if tile.is_settled(): _update_gaps_of(tile)
 
-## Every peer: a lifted [param tile] loses its connections, the connectors on its sides and its neighbours' connections into
-## it until it has landed
+## Every peer: no bridge leads onto a lifted [param tile] until it has landed
 func _on_tile_lift_changed(tile: Structure) -> void:
 	if not tile.is_lifted() or _lifted_tiles.has(tile) or _placed_tiles.get(tile.get_grid_position()) != tile: return
 	_lifted_tiles.append(tile)
-	_rebuild_around(tile)
+	_update_gaps_of(tile)
 
 func _on_tile_landed(tile: Structure) -> void:
 	_lifted_tiles.erase(tile)
-	_rebuild_around(tile)
+	_update_gaps_of(tile)
 
-## Builds the connections of [param tile] and its neighbours anew, and shows those revealed
-func _rebuild_around(tile: Structure) -> void:
-	var grid_position: Vector2i = tile.get_grid_position()
-	if _placed_tiles.get(grid_position) != tile: return
-	var tiles: Array[Structure] = [tile]
-	tiles.append_array(_get_surrounding_tiles(grid_position))
-	for each_tile: Structure in tiles: _clear_connections(each_tile)
-	for each_tile: Structure in tiles: _build_connections(each_tile)
-	for each_tile: Structure in tiles: _show_connections_at(each_tile.get_grid_position())
-
-## Removes the connections of [param tile] and the connectors on its sides
-func _clear_connections(tile: Structure) -> void:
-	for tile_connection: Structure in _tile_connections.get(tile, []): _remove_local_structure(tile_connection)
-	_tile_connections.erase(tile)
+## Lays or takes up the bridges on the four sides of [param tile] as they are needed now; bridges that stay are left alone,
+## so they do not drop in again, and those between other tiles are not touched
+func _update_gaps_of(tile: Structure) -> void:
+	if _placed_tiles.get(tile.get_grid_position()) != tile: return
 	for direction: Direction in Direction.values():
-		var connector_position: Vector3 = _get_connector_position(tile.global_position, direction)
-		if _bridges.has(connector_position):
-			_bridges[connector_position].free()
-			_bridges.erase(connector_position)
-		if not _tile_connectors.has(connector_position): continue
-		_remove_local_structure(_tile_connectors[connector_position])
-		_tile_connectors.erase(connector_position)
+		var gap: Vector3 = _get_gap_position(tile.global_position, direction)
+		var needed: bool = _needs_bridge(tile, direction)
+		var bridge: Model = _bridges.get(gap)
+		if bridge and not needed:
+			_bridges.erase(gap)
+			bridge.free()
+		elif needed and not bridge:
+			_lay_bridge(tile, direction)
+			_show_bridge(tile, direction)
 
-## Makes the connections of [param tile] from its shape, and the connectors on its sides that it or a neighbour opens into;
-## nothing towards or on a tile off the board (lifted, or still landing), which gets its own once it has landed
-func _build_connections(tile: Structure) -> void:
-	if not tile.is_settled(): return
-	var grid_position: Vector2i = tile.get_grid_position()
-	var connections: Array[Direction] = tile.get_connections()
-	for direction: Direction in Direction.values():
-		var neighbour: Structure = _placed_tiles.get(grid_position + direction_to_vector(direction))
-		if neighbour and not neighbour.is_settled(): continue
-		var opens: bool = connections.has(direction)
-		if opens: _create_connection(tile, direction)
-		var neighbour_opens: bool = neighbour != null and neighbour.get_connections().has(get_opposite(direction))
-		if opens or neighbour_opens: _create_connector(tile.global_position, direction)
-		# Tiles of one room always connect: no bridge needed
-		var one_room: bool = neighbour != null and tile.profile.room_type != null and neighbour.profile.room_type == tile.profile.room_type
-		if opens and neighbour_opens and not one_room: _create_bridge(tile, direction)
+## Whether a bridge belongs between [param tile] and its neighbour towards [param direction]: both rest on the board and open
+## to each other, and they are not one room (whose tiles always connect)
+func _needs_bridge(tile: Structure, direction: Direction) -> bool:
+	if not tile.profile.decorations or not tile.is_settled() or not tile.get_connections().has(direction): return false
+	var neighbour: Structure = _placed_tiles.get(tile.get_grid_position() + direction_to_vector(direction))
+	if not neighbour or not neighbour.is_settled() or not neighbour.get_connections().has(get_opposite(direction)): return false
+	return tile.profile.room_type == null or neighbour.profile.room_type != tile.profile.room_type
 
 ## A bridge (see [member TileDecorations.bridges]) over the gap between [param tile] and its neighbour in [param direction],
 ## hidden until both are revealed
-func _create_bridge(tile: Structure, direction: Direction) -> void:
-	var bridge_position: Vector3 = _get_connector_position(tile.global_position, direction)
-	if _bridges.has(bridge_position) or not tile.profile.decorations: return
+func _lay_bridge(tile: Structure, direction: Direction) -> void:
 	var bridge: Model = tile.profile.decorations.create_bridge(tile.get_grid_position(), direction)
 	if not bridge: return
-	bridge.position = bridge_position
+	var gap: Vector3 = _get_gap_position(tile.global_position, direction)
+	bridge.position = gap
 	bridge.visible = false
-	_bridges[bridge_position] = bridge
+	_bridges[gap] = bridge
 	add_child(bridge)
 
 func _on_thing_created(thing: Thing) -> void:
@@ -776,8 +720,7 @@ func _on_thing_created(thing: Thing) -> void:
 	# Removed (e.g. by loading a save), it leaves the registries, so nothing looks for it any more
 	thing.tree_exiting.connect(_forget_thing.bind(thing), CONNECT_ONE_SHOT)
 
-## Drops a tile leaving the level from its registries, with its connections, and the connectors on its sides no
-## neighbour still reaches
+## Drops a tile leaving the level from its registries, with the bridges on its sides
 func _forget_tile(tile: Structure) -> void:
 	var grid_position: Vector2i = world_to_grid_position(tile.global_position)
 	if _placed_tiles.get(grid_position) == tile: _placed_tiles.erase(grid_position)
@@ -791,24 +734,12 @@ func _forget_tile(tile: Structure) -> void:
 		if tile_signal.is_connected(bound_handler): tile_signal.disconnect(bound_handler)
 	for queues: Dictionary in [_reveal_queues, _discover_queues]:
 		for queue: Array in queues.values(): queue.erase(tile)
-	var tile_connections: Array = _tile_connections.get(tile, [])
-	_tile_connections.erase(tile)
-	for tile_connection: Structure in tile_connections:
-		if is_instance_valid(tile_connection): tile_connection.queue_free()
-	for connection: Direction in tile.get_connections():
-		var neighbour: Structure = _placed_tiles.get(grid_position + direction_to_vector(connection))
-		var connector_position: Vector3 = _get_connector_position(tile.global_position, connection)
-		var tile_connector: Structure = _tile_connectors.get(connector_position)
-		# A bridge needs both sides
-		var bridge: Model = _bridges.get(connector_position)
-		_bridges.erase(connector_position)
+	# A bridge needs both sides
+	for direction: Direction in Direction.values():
+		var gap: Vector3 = _get_gap_position(tile.global_position, direction)
+		var bridge: Model = _bridges.get(gap)
+		_bridges.erase(gap)
 		if is_instance_valid(bridge): bridge.queue_free()
-		if neighbour and neighbour.has_connection_to(grid_position):
-			# Kept for the neighbour, but leading into an empty cell now, like one towards a cell not built yet
-			if is_instance_valid(tile_connector): tile_connector.shown_status = Structure.Status.PLACED
-			continue
-		_tile_connectors.erase(connector_position)
-		if is_instance_valid(tile_connector): tile_connector.queue_free()
 
 func _forget_thing(thing: Thing) -> void:
 	for registry: Dictionary in [_placed_things, _corner_things]:

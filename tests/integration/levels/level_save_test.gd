@@ -53,13 +53,6 @@ func test_a_restored_dungeon_is_the_saved_one() -> void:
 	for tile: Structure in _level.get_placed_tiles(): assert_bool(old_tiles.has(tile)).is_false()
 	var problems: PackedStringArray = DungeonRules.find_problems(_level, 42)
 	assert_array(problems).override_failure_message("\n".join(problems)).is_empty()
-	# The removed tiles left nothing behind: one entry per tile with connections, every one of them and its
-	# connections alive
-	var connections: Dictionary = _level.get("_tile_connections")
-	var with_connections: int = _level.get_placed_tiles().filter(func(tile: Structure) -> bool: return not tile.get_connections().is_empty()).size()
-	assert_int(connections.size()).is_equal(with_connections)
-	for tile: Object in connections:
-		assert_bool(is_instance_valid(tile)).is_true()
-		for tile_connection: Object in connections[tile]: assert_bool(is_instance_valid(tile_connection) and not (tile_connection as Node).is_queued_for_deletion()).is_true()
-	var connectors: Dictionary = _level.get("_tile_connectors")
-	for connector: Object in connectors.values(): assert_bool(is_instance_valid(connector) and not (connector as Node).is_queued_for_deletion()).is_true()
+	# The removed tiles left no bridges behind
+	var bridges: Dictionary = _level.get("_bridges")
+	for bridge: Object in bridges.values(): assert_bool(is_instance_valid(bridge) and not (bridge as Node).is_queued_for_deletion()).is_true()

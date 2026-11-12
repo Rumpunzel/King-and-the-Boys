@@ -30,7 +30,7 @@ func _bridges() -> Dictionary:
 	return _level.get("_bridges")
 
 func _bridge_between(tile: Structure, direction: Level.Direction) -> Model:
-	return _bridges().get(_level._get_connector_position(tile.global_position, direction))
+	return _bridges().get(_level._get_gap_position(tile.global_position, direction))
 
 ## Whether a bridge belongs between [param tile] and its neighbour in [param direction]: both open, and they are not one room
 func _needs_bridge(tile: Structure, direction: Level.Direction) -> bool:
@@ -78,6 +78,56 @@ func test_a_lifted_tile_keeps_its_paths_and_loses_its_bridges() -> void:
 	tile.lifted_by = NodePath()
 	await await_millis(2000)
 	for direction: Level.Direction in bridged: assert_object(_bridge_between(tile, direction)).is_not_null()
+
+## The bridges not on the sides of [param tile]
+func _bridges_apart_from(tile: Structure) -> Array[Model]:
+	var own: Array[Model] = []
+	for direction: Level.Direction in Level.Direction.values():
+		var bridge: Model = _bridge_between(tile, direction)
+		if bridge: own.append(bridge)
+	var others: Array[Model] = []
+	for bridge: Model in _bridges().values(): if not own.has(bridge): others.append(bridge)
+	return others
+
+func test_lifting_a_tile_leaves_the_other_bridges_alone() -> void:
+	# Long enough for every bridge to have dropped in
+	await await_millis(2000)
+	var tile: Structure = null
+	for candidate: Structure in _tiles_within(1):
+		if candidate.model and _bridges_apart_from(candidate).size() < _bridges().size(): tile = candidate
+	assert_object(tile).override_failure_message("A tile near the start should have a bridge").is_not_null()
+	var others: Array[Model] = _bridges_apart_from(tile)
+	assert_array(others).is_not_empty()
+	var positions: Array[Vector3] = []
+	for bridge: Model in others: positions.append(bridge.position)
+	tile.lifted_by = ^"Someone"
+	tile.lifted_by = NodePath()
+	await await_millis(2000)
+	# The same bridges, where they were, not dropped in again
+	for index: int in others.size():
+		var bridge: Model = others[index]
+		assert_bool(is_instance_valid(bridge) and _bridges().values().has(bridge)).is_true()
+		assert_vector(bridge.position).is_equal(positions[index])
+
+func test_a_removed_tile_takes_its_bridges() -> void:
+	var tile: Structure = null
+	var own: Array[Model] = []
+	for candidate: Structure in _tiles_within(2):
+		own.clear()
+		for direction: Level.Direction in Level.Direction.values():
+			var bridge: Model = _bridge_between(candidate, direction)
+			if bridge: own.append(bridge)
+		if not own.is_empty():
+			tile = candidate
+			break
+	assert_object(tile).is_not_null()
+	var others: Array[Model] = _bridges_apart_from(tile)
+	tile.get_parent().remove_child(tile)
+	tile.queue_free()
+	await await_idle_frame()
+	for bridge: Model in own: assert_bool(is_instance_valid(bridge)).is_false()
+	for bridge: Model in others: assert_bool(is_instance_valid(bridge)).is_true()
+	assert_int(_bridges().size()).is_equal(others.size())
 
 func test_crystals_spread_along_their_edge() -> void:
 	var decorations: TileDecorations = load("res://data/structures/tiles/dungeon_decorations.tres")

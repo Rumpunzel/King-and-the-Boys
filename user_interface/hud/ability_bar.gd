@@ -5,6 +5,8 @@ extends VBoxContainer
 ## The abilities of the character the local player controls, one button each with its key, its charges left and a disabled
 ## look while it can not be used; while a held ability is in use (the lifted tile), its button stays pressed and a hint
 ## shows its keys. The buttons only ask the [PlayerController]; the rules live there, in the [Ability] and the [TurnManager].
+## They ask every frame while shown: whether an ability can be used depends on the board too (e.g. a tile still lifted, or
+## landing later on a client than the character's own changes arrive), which sends no signal the bar could follow.
 
 ## Shortcuts of the first buttons, in order
 const ACTIONS: Array[StringName] = [&"ability_1", &"ability_2", &"ability_3"]
@@ -28,9 +30,12 @@ func _ready() -> void:
 	_aiming_hint.text = "Turn %s %s or face %s · Set down %s · Cancel %s" % [_key(&"rotate_left"), _key(&"rotate_right"), move_keys, _key(&"confirm_ability"), _key(&"cancel_ability")]
 	_build()
 
+func _process(_delta: float) -> void:
+	if not Engine.is_editor_hint() and is_visible_in_tree(): update()
+
 ## Shows whether each ability can be used now and which one is held
 func update() -> void:
-	if not is_node_ready() or not is_instance_valid(player_controller) or not is_instance_valid(character): return
+	if not is_node_ready() or not is_instance_valid(player_controller) or not player_controller.is_inside_tree() or not is_instance_valid(character): return
 	for index: int in _abilities.size():
 		var ability: Ability = _abilities[index]
 		var button: Button = _buttons.get_child(index) as Button
