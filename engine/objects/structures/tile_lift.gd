@@ -20,6 +20,7 @@ var _time: float = 0.0
 var _height_tween: Tween
 var _spin_tween: Tween
 var _carried: Array[Character] = []
+var _hover: Node3D
 
 func _init(structure: Structure) -> void:
 	_structure = structure
@@ -78,6 +79,7 @@ func _rise() -> void:
 	var animation: TileLiftAnimation = _get_animation()
 	_carry_figures()
 	_puff(animation.rise_particles)
+	_start_hover(animation.hover_particles)
 	if _height_tween: _height_tween.kill()
 	_height_tween = create_tween().set_parallel()
 	_height_tween.tween_property(self, "_height", animation.height, animation.rise_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
@@ -85,6 +87,7 @@ func _rise() -> void:
 
 func _drop() -> void:
 	var animation: TileLiftAnimation = _get_animation()
+	_stop_hover()
 	if _height_tween: _height_tween.kill()
 	_height_tween = create_tween().set_parallel()
 	# Lands once it faces its new way, so figures step off where their spots are
@@ -116,6 +119,29 @@ func _puff(particles: PackedScene) -> void:
 		longest = maxf(longest, emitter.lifetime / maxf(emitter.speed_scale, 0.01))
 	get_tree().create_timer(longest + 0.5).timeout.connect(puff.queue_free)
 
+## Shows [param particles] under the model until [method _stop_hover]
+func _start_hover(particles: PackedScene) -> void:
+	_stop_hover()
+	if not particles or not _structure.model: return
+	_hover = particles.instantiate()
+	_structure.model.add_child(_hover)
+
+## Lets the hover particles fade out, then frees them
+func _stop_hover() -> void:
+	if not is_instance_valid(_hover):
+		_hover = null
+		return
+	var hover: Node3D = _hover
+	_hover = null
+	var longest: float = 0.0
+	var emitters: Array[Node] = hover.find_children("*", "GPUParticles3D", true, false)
+	if hover is GPUParticles3D: emitters.append(hover)
+	for emitter: GPUParticles3D in emitters:
+		emitter.emitting = false
+		longest = maxf(longest, emitter.lifetime / maxf(emitter.speed_scale, 0.01))
+	for light: Node in hover.find_children("*", "Light3D", true, false): create_tween().tween_property(light, "light_energy", 0.0, 0.3)
+	get_tree().create_timer(longest).timeout.connect(hover.queue_free)
+
 func _carry_figures() -> void:
 	var model: Model = _structure.model
 	if not model: return
@@ -134,6 +160,7 @@ func _is_at_rest() -> bool:
 	return true
 
 func _land() -> void:
+	_stop_hover()
 	set_process(false)
 	_height = 0.0
 	_wobble = 0.0

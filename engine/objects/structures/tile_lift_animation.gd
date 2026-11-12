@@ -21,5 +21,8 @@ extends Resource
 @export var rise_particles: PackedScene
 ## Played on the floor as the dropping tile first hits it
 @export var landing_particles: PackedScene
+## Shown under the tile while it hangs in the air (e.g. magic sparkles and a glow), riding with it; its [GPUParticles3D] stop
+## emitting as it drops and it goes once they have faded
+@export var hover_particles: PackedScene
 ## When the dropping tile first hits the floor, as a share of [member drop_duration] (the bounce's first touch)
 @export_range(0.0, 1.0, 0.01) var landing_time: float = 0.36

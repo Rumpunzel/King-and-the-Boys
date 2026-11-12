@@ -101,6 +101,26 @@ func test_the_tile_puffs_as_it_rises_and_as_it_lands() -> void:
 	assert_int(_puffs_on(_tile)).is_equal(1)
 	_level.tile_lift_animation = null
 
+func test_sparkles_hang_under_the_tile_while_it_is_lifted() -> void:
+	var sparkles: GPUParticles3D = GPUParticles3D.new()
+	sparkles.lifetime = 0.2
+	var scene: PackedScene = PackedScene.new()
+	scene.pack(sparkles)
+	sparkles.free()
+	var animation: TileLiftAnimation = TileLiftAnimation.new()
+	animation.hover_particles = scene
+	_level.tile_lift_animation = animation
+	_tile.lifted_by = _hero.get_path()
+	var hovering: Array[Node] = _tile.model.find_children("*", "GPUParticles3D", false, false)
+	assert_int(hovering.size()).is_equal(1)
+	assert_bool((hovering[0] as GPUParticles3D).emitting).is_true()
+	await await_millis(600)
+	_tile.lifted_by = NodePath()
+	assert_bool((hovering[0] as GPUParticles3D).emitting).is_false()
+	await await_millis(1500)
+	assert_array(_tile.model.find_children("*", "GPUParticles3D", false, false)).is_empty()
+	_level.tile_lift_animation = null
+
 func test_a_cancelled_lift_spins_back_and_lands() -> void:
 	var turns: int = _tile.clockwise_turns
 	_tile.lifted_by = _hero.get_path()

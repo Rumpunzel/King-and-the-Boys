@@ -3,8 +3,10 @@
 [ext_resource type="Script" uid="uid://bxt5rf5ehxarw" path="res://engine/objects/structures/tile_lift_animation.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://13ancmv6bgqq" path="res://data/structures/props/lift/lift_dust.tscn" id="2_rise"]
 [ext_resource type="PackedScene" uid="uid://cmm7sr53x73mx" path="res://data/structures/props/lift/landing_dust.tscn" id="3_landing"]
+[ext_resource type="PackedScene" uid="uid://bwqrx4q7rkccq" path="res://data/structures/props/lift/hover_sparkles.tscn" id="4_hover"]
 
 [resource]
 script = ExtResource("1_script")
 rise_particles = ExtResource("2_rise")
 landing_particles = ExtResource("3_landing")
+hover_particles = ExtResource("4_hover")
