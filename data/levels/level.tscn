@@ -4,18 +4,18 @@
 [ext_resource type="Resource" uid="uid://sed2rxcgl038" path="res://data/structures/tiles/room/starting_tile.tres" id="2_c445m"]
 [ext_resource type="Resource" uid="uid://b50fre8sdxsyo" path="res://data/structures/tiles/default_tile_set.tres" id="3_c445m"]
 [ext_resource type="Resource" uid="uid://d3cc5nj7ogal8" path="res://data/structures/tiles/wall.tres" id="3_wall"]
-[ext_resource type="Environment" uid="uid://cgsk6aky1yr8a" path="res://data/levels/dungeon_environment.tres" id="5_environment"]
 [ext_resource type="Resource" uid="uid://8y0bv223d7px" path="res://data/things/centrepiece_spawn_table.tres" id="4_centrepieces"]
+[ext_resource type="Environment" uid="uid://cgsk6aky1yr8a" path="res://data/levels/dungeon_environment.tres" id="5_environment"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_tilt"]
 dof_blur_far_enabled = true
-dof_blur_far_distance = 32.0
-dof_blur_far_transition = 12.0
+dof_blur_far_distance = 28.0
+dof_blur_far_transition = 6.0
 dof_blur_near_enabled = true
-dof_blur_near_distance = 18.0
-dof_blur_near_transition = 6.0
-dof_blur_amount = 0.06
+dof_blur_near_distance = 22.5
+dof_blur_near_transition = 3.0
+dof_blur_amount = 0.14
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
 size = Vector2(64, 64)
@@ -35,10 +35,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 mesh = SubResource("PlaneMesh_bkb5w")
 skeleton = NodePath("..")
 surface_material_override/0 = ExtResource("16_jwwwr")
-
-[node name="Moonlight" type="DirectionalLight3D" parent="." unique_id=1846203517]
-transform = Transform3D(0.8660254, 0, -0.5, -0.4330127, 0.5, -0.75, 0.25, 0.8660254, 0.4330127, 0, 10, 0)
-light_color = Color(0.62, 0.7, 1, 1)
-light_energy = 0.25
-shadow_enabled = true
-directional_shadow_max_distance = 40.0

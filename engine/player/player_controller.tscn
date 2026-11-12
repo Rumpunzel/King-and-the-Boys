@@ -117,8 +117,8 @@ collision_layer = 1048576
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Character" unique_id=772574322]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 4, 1)
-light_color = Color(0.99999994, 0.7550197, 0.57437825, 1)
-light_energy = 5.5
+light_color = Color(0.62, 0.74, 1, 1)
+light_energy = 4.5
 light_size = 0.4
 shadow_enabled = true
 omni_range = 12.0
