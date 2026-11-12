@@ -45,7 +45,7 @@ func test_each_opening_has_a_path() -> void:
 		var paths: Node3D = tile.model.get_node_or_null(NodePath(TileDecorations.PATHS_NODE_NAME))
 		assert_object(paths).override_failure_message("%s has no paths" % tile).is_not_null()
 		assert_int(paths.get_child_count()).override_failure_message("Paths of %s" % tile).is_equal(tile.get_openings().size())
-		for decal: Node in paths.get_children(): assert_object(decal).is_instanceof(Decal)
+		for path: Node in paths.get_children(): assert_object(path).is_instanceof(MeshInstance3D)
 		checked += 1
 	assert_int(checked).is_greater(0)
 
@@ -77,15 +77,21 @@ func test_a_lifted_tile_keeps_its_paths_and_loses_its_bridges() -> void:
 	await await_millis(2000)
 	for direction: Level.Direction in bridged: assert_object(_bridge_between(tile, direction)).is_not_null()
 
-func test_crystals_grow_in_clusters() -> void:
+func test_crystals_spread_along_their_edge() -> void:
 	var decorations: TileDecorations = load("res://data/structures/tiles/dungeon_decorations.tres")
 	var crystals: PropSet = load("res://data/structures/props/crystals.tres")
 	var holder: Node3D = auto_free(Node3D.new())
 	add_child(holder)
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = 11
-	var cluster: Model = decorations.call("_add_prop", holder, crystals, Transform3D.IDENTITY, random)
+	# By the side facing right, turned any way: the edge runs along z
+	var spot: Transform3D = Transform3D(Basis(Vector3.UP, 1.0), Vector3.ZERO)
+	var cluster: Model = decorations.call("_add_prop", holder, crystals, spot, random, TileDecorations._along_edge(Level.Direction.RIGHT))
 	assert_int(cluster.get_child_count()).is_between(crystals.piece_count.x, crystals.piece_count.y)
+	var reach: float = 0.0
 	for piece: Node in cluster.get_children():
-		var spot: Vector3 = (piece as Node3D).position
-		assert_float(Vector2(spot.x, spot.z).length()).is_less_equal(crystals.scatter_radius + 0.01)
+		var place: Vector3 = spot * (piece as Node3D).position
+		assert_float(absf(place.x)).is_less_equal(crystals.scatter_radius + 0.01)
+		assert_float(absf(place.z)).is_less_equal(crystals.scatter_length + crystals.scatter_radius + 0.01)
+		reach = maxf(reach, absf(place.z))
+	assert_float(reach).override_failure_message("The crystals spread along the edge").is_greater(crystals.scatter_length * 0.4)

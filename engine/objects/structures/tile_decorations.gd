@@ -78,12 +78,13 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 @export var walls: PropSet
 @export_range(0.0, 1.0) var wall_chance: float = 0.5
 @export_group("Connections")
-## A worn path on the floor from the tile's middle to each of its openings, as a decal; its alpha gives the path its shape
-@export var path_texture: Texture2D
-## Tints [member path_texture]
-@export var path_color: Color = Color(0.3, 0.22, 0.14, 0.6)
+## A worn path on the floor from the tile's middle to each of its openings: a strip drawn with this material, e.g. sand
+## ([code]worn_path.gdshader[/code], which takes the path's [code]half_width[/code] as an instance uniform)
+@export var path_material: Material
 ## Width of a path, in metres
 @export_range(0.1, 2.0) var path_width: float = 0.7
+## How high above the tile's floor (its model's origin) paths lie, in metres
+@export_range(0.0, 0.2) var path_height: float = 0.01
 ## A plank or slab over the gap where two tiles open to each other; laid with its long side across the gap
 @export var bridges: PropSet
 @export_group("Animation")
@@ -120,7 +121,8 @@ func create_clutter(connections: Array[Level.Direction], grid_position: Vector2i
 		for edge_prop: int in props_per_edge:
 			var along: Vector2 = Vector2(-outward.y, outward.x) * random.randf_range(-edge_spread, edge_spread)
 			if not connections.has(direction) and direction != lit_side and random.randf() < edge_chance:
-				_add_prop(decorations, edge_props, _on_floor((outward * edge_distance + along) * half_tile) * _random_turn(random), random)
+				var spot: Transform3D = _on_floor((outward * edge_distance + along) * half_tile) * _random_turn(random)
+				_add_prop(decorations, edge_props, spot, random, _along_edge(direction))
 		var corner_roll: float = random.randf()
 		if not connections.has(direction) and not connections.has(next_direction) and corner_roll < corner_chance:
 			var corner: Vector2 = outward + Vector2(Level.DIRECTION_VECTORS[next_direction])
@@ -136,7 +138,8 @@ func _add_light(decorations: Node3D, connections: Array[Level.Direction], half_t
 	var roll: float = random.randf()
 	if not lights or closed.is_empty() or roll >= light_chance: return -1
 	var side: Level.Direction = closed[random.randi() % closed.size()]
-	_add_prop(decorations, lights, _on_floor(Vector2(Level.DIRECTION_VECTORS[side]) * edge_distance * half_tile) * _random_turn(random), random)
+	var spot: Transform3D = _on_floor(Vector2(Level.DIRECTION_VECTORS[side]) * edge_distance * half_tile) * _random_turn(random)
+	_add_prop(decorations, lights, spot, random, _along_edge(side))
 	return side
 
 ## A rug under the middle of some room tiles, and some ambience above it
@@ -228,23 +231,31 @@ static func _still_fits(tile: Structure, prop: Node, edge: Vector2i) -> bool:
 	var is_doorway: bool = (tile.profile.room_type != null) != (neighbour.profile.room_type != null)
 	return prop.get_meta(DOORWAY) == is_doorway
 
-## A path decal from the middle of [param tile] to each opening of its shape, as its model sees it (unrotated); a child of
-## the model, so it lifts and turns with the tile and shows its shape even while lifted
+## A path from the middle of [param tile] to each opening of its shape, as its model sees it (unrotated), ending where its
+## floor ends; a child of the model, so it lifts and turns with the tile and shows its shape even while lifted. Made before the
+## model holds any props, so it measures the floor alone
 func create_paths(tile: Structure) -> Node3D:
 	var paths: Node3D = Node3D.new()
 	paths.name = PATHS_NODE_NAME
-	if not path_texture: return paths
-	var half_tile: float = tile.level.grid_size * 0.5
+	if not path_material: return paths
+	var floor_bounds: AABB = _get_bounds(tile.model)
 	for direction: Level.Direction in tile.profile.get_connections(0):
-		var outward: Vector3 = Vector3(Level.DIRECTION_VECTORS[direction].x, 0.0, Level.DIRECTION_VECTORS[direction].y)
-		var decal: Decal = Decal.new()
-		decal.name = "Path %s" % Level.Direction.keys()[direction]
-		decal.texture_albedo = path_texture
-		decal.modulate = path_color
-		# Thin, so it marks the floor and little of what stands on it
-		decal.size = Vector3(path_width, 0.2, half_tile)
-		decal.transform = Transform3D(Basis(Vector3.UP, atan2(outward.x, outward.z)), outward * half_tile * 0.5)
-		paths.add_child(decal)
+		var outward: Vector2 = Vector2(Level.DIRECTION_VECTORS[direction])
+		var reach: float = tile.level.grid_size * 0.5
+		if floor_bounds.size != Vector3.ZERO:
+			reach = maxf(floor_bounds.end.x * outward.x, floor_bounds.position.x * outward.x) if outward.x != 0.0 else maxf(floor_bounds.end.z * outward.y, floor_bounds.position.z * outward.y)
+		# From just behind the middle, where the paths of a tile round off into each other, to the edge
+		var strip: PlaneMesh = PlaneMesh.new()
+		strip.size = Vector2(path_width, reach + path_width * 0.5)
+		strip.center_offset = Vector3(0.0, 0.0, (reach - path_width * 0.5) * 0.5)
+		strip.material = path_material
+		var path: MeshInstance3D = MeshInstance3D.new()
+		path.name = "Path %s" % Level.Direction.keys()[direction]
+		path.mesh = strip
+		path.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		path.set_instance_shader_parameter(&"half_width", path_width * 0.5)
+		path.transform = Transform3D(Basis(Vector3.UP, atan2(outward.x, outward.y)), Vector3.UP * path_height)
+		paths.add_child(path)
 	return paths
 
 ## A bridge over the gap between the tile on [param grid_position] and its neighbour in [param direction], turned so its long
@@ -377,12 +388,17 @@ static func _to_model(tile: Structure, level_transform: Transform3D, level_basis
 static func _on_floor(spot: Vector2) -> Transform3D:
 	return Transform3D(Basis.IDENTITY, Vector3(spot.x, 0.0, spot.y))
 
+## The way along the side of a tile facing [param direction], in its model's space
+static func _along_edge(direction: Level.Direction) -> Vector3:
+	return Vector3(-Level.DIRECTION_VECTORS[direction].y, 0.0, Level.DIRECTION_VECTORS[direction].x)
+
 static func _random_turn(random: RandomNumberGenerator) -> Transform3D:
 	return Transform3D(Basis(Vector3.UP, random.randf() * TAU), Vector3.ZERO)
 
-## Adds a prop picked from [param prop_set] at [param prop_transform], in the tile model's space
+## Adds a prop picked from [param prop_set] at [param prop_transform], in the tile model's space; scattered pieces spread
+## [param along] (e.g. the edge it stands by, also in the model's space)
 ## @returns the prop, or [code]null[/code] if the set gave none
-func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transform3D, random: RandomNumberGenerator) -> Model:
+func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transform3D, random: RandomNumberGenerator, along: Vector3 = Vector3.RIGHT) -> Model:
 	if not collection: return null
 	# Scale, material and arrangement come from the (sub-)collection the prop is taken from
 	var prop_set: PropSet = collection.pick_collection(random)
@@ -398,7 +414,7 @@ func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transfo
 		prop.free()
 		return null
 	prop.name = prop.get_child(0).name
-	_arrange(prop_set, prop, random)
+	_arrange(prop_set, prop, random, prop_transform.basis.inverse() * along)
 	prop.transform = prop_transform
 	var animation: ModelAnimation = prop_set.drop_animation if prop_set.drop_animation else collection.drop_animation
 	if animation: prop.set_meta(DROP_ANIMATION, animation)
@@ -427,15 +443,18 @@ func _make_piece(prop_set: PropSet, random: RandomNumberGenerator) -> Node3D:
 		mesh.position = -Vector3(footprint.x, 0.0, footprint.z)
 	return mesh
 
-## Lays out the pieces of [param prop] as [member PropSet.arrangement] says; a single piece stays as it is
-func _arrange(prop_set: PropSet, prop: Model, random: RandomNumberGenerator) -> void:
+## Lays out the pieces of [param prop] as [member PropSet.arrangement] says, scattered ones spread [param along] (in the prop's
+## own space); a single piece stays as it is
+func _arrange(prop_set: PropSet, prop: Model, random: RandomNumberGenerator, along: Vector3) -> void:
 	var pieces: Array[Node] = prop.get_children()
 	match prop_set.arrangement:
 		PropSet.Arrangement.SCATTER:
+			var lengthwise: Vector3 = Vector3(along.x, 0.0, along.z).normalized()
 			for index: int in pieces.size():
-				# The first one on the spot, the rest around it
-				var offset: Vector2 = Vector2.ZERO if index == 0 else Vector2.from_angle(random.randf() * TAU) * sqrt(random.randf()) * prop_set.scatter_radius
-				_place_piece(pieces[index] as Node3D, random.randf() * TAU, Vector3(offset.x, 0.0, offset.y), prop_set, random)
+				# Each in its own stretch along the edge, so they spread out evenly, and strewn around its place there
+				var stretch: float = lerpf(-prop_set.scatter_length, prop_set.scatter_length, (index + random.randf()) / pieces.size())
+				var stray: Vector2 = Vector2.from_angle(random.randf() * TAU) * sqrt(random.randf()) * prop_set.scatter_radius
+				_place_piece(pieces[index] as Node3D, random.randf() * TAU, lengthwise * stretch + Vector3(stray.x, 0.0, stray.y), prop_set, random)
 		PropSet.Arrangement.ROW:
 			# Side by side across the first piece's long side
 			var size: Vector3 = _get_bounds(pieces[0] as Node3D).size * prop_set.prop_scale

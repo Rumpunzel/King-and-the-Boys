@@ -10,7 +10,7 @@ extends Resource
 enum Arrangement {
 	## One piece
 	SINGLE,
-	## Pieces strewn around the spot, each turned its own way
+	## Pieces strewn around the spot, each turned its own way; along an edge, they spread along it
 	SCATTER,
 	## Pieces side by side across their long side, e.g. planks into a bridge
 	ROW,
@@ -37,8 +37,10 @@ enum Arrangement {
 @export var piece_count: Vector2i = Vector2i(1, 1)
 ## Pieces vary in size by up to this share, both ways
 @export_range(0.0, 1.0) var size_jitter: float = 0.0
-## [constant Arrangement.SCATTER]: how far pieces stray from the spot, in metres
+## [constant Arrangement.SCATTER]: how far pieces stray from their place, in metres
 @export_range(0.0, 2.0) var scatter_radius: float = 0.3
+## [constant Arrangement.SCATTER]: how far pieces spread to either side along the edge they stand by, evenly, in metres
+@export_range(0.0, 2.0) var scatter_length: float = 0.0
 ## [constant Arrangement.ROW]: the space between two pieces, in metres
 @export_range(0.0, 1.0) var row_gap: float = 0.02
 ## [constant Arrangement.ROW]: each piece turns by up to this many degrees, so the row looks laid by hand
