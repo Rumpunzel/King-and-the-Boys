@@ -1,16 +1,25 @@
 [gd_scene format=3 uid="uid://kecvh6aocwul"]
 
 [ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="1_lku0l"]
-[ext_resource type="Material" uid="uid://cvwu11s4ahpod" path="res://protoype_assets/textures/wood_06_1k/wood_06_1k.tres" id="2_usnct"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_ntlmk"]
-material = ExtResource("2_usnct")
-size = Vector3(2.5, 1, 2.5)
+[ext_resource type="Script" uid="uid://wgwij2ql488y" path="res://engine/objects/structures/cave_wall.gd" id="2_cave"]
+[ext_resource type="ArrayMesh" uid="uid://b347nw03g8jl3" path="res://assets/polygon_dungeon/Models/SM_Env_Cave_01_DoubleSided.res" id="3_cave"]
+[ext_resource type="ArrayMesh" uid="uid://c2vydy4icbovu" path="res://assets/polygon_dungeon/Models/SM_Env_Cave_Large_01_DoubleSided.res" id="4_cave_large"]
+[ext_resource type="Material" uid="uid://cc84pr7gyxx6x" path="res://data/structures/props/polygon_dungeon_material.tres" id="5_material"]
 
 [node name="Tile" type="Node3D" unique_id=1617054939]
 script = ExtResource("1_lku0l")
 metadata/_custom_type_script = "uid://bpkm2ws12sljg"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1648661705]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("BoxMesh_ntlmk")
+[node name="CaveWall" type="Node3D" parent="." node_paths=PackedStringArray("_variants")]
+script = ExtResource("2_cave")
+_variants = [NodePath("Cave"), NodePath("CaveLarge")]
+
+[node name="Cave" type="MeshInstance3D" parent="CaveWall"]
+transform = Transform3D(0.38, 0, 0, 0, 0.23, 0, 0, 0, 0.83, -1.0, 0, 0.11)
+mesh = ExtResource("3_cave")
+surface_material_override/0 = ExtResource("5_material")
+
+[node name="CaveLarge" type="MeshInstance3D" parent="CaveWall"]
+transform = Transform3D(0.21, 0, 0, 0, 0.18, 0, 0, 0, 0.63, 0, 0, 0.35)
+mesh = ExtResource("4_cave_large")
+surface_material_override/0 = ExtResource("5_material")
