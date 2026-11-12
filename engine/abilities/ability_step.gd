@@ -17,6 +17,11 @@ func _init(used_ability: Ability, used_by: Character, paid_cost: int) -> void:
 func undo(_level: Level) -> void:
 	pass
 
+## @returns [code]true[/code] if the use goes onto the turn's undo stack; a free use that changes nothing on the board (e.g. a
+## lantern lit or put out) stays done, and the steps before it stay undoable
+func can_be_undone() -> bool:
+	return true
+
 ## @returns [code]true[/code] if the use acts once the turn ends, see [method resolve_at_turn_end]
 func acts_at_turn_end() -> bool:
 	return false

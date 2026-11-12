@@ -4,13 +4,14 @@ class_name ToggleLightAbility
 extends Ability
 ## Turns a light the character carries on or off, e.g. the rogue's belt lantern. Lit, it shines from above the character
 ## and widens its sight (see [member light_source]); lighting it brings what it shows into sight at once (see
-## [method Level.follow_sight_of]), which can not be undone.
+## [method Level.follow_sight_of]). Toggling is free and is not undone (see [method AbilityStep.can_be_undone]).
 ## Whether it is lit is replicated by [member Character.toggled_ability_ids], which holds the abilities differing from how
 ## they start ([member lit_at_start])
 
+## Free and done at once: it goes onto no undo stack, so toggling never takes back or blocks other steps
 class ToggleStep extends AbilityStep:
-	func undo(_level: Level) -> void:
-		(ability as ToggleLightAbility).toggle(character)
+	func can_be_undone() -> bool:
+		return false
 
 ## The light shining while lit
 @export var light_source: LightSource:
