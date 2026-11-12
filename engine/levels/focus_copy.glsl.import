@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://c1mbx5oqgbddd"
+path="res://.godot/imported/focus_copy.glsl-61782ea3576066fe6f3d79d020760cb7.res"
+
+[deps]
+
+source_file="res://engine/levels/focus_copy.glsl"
+dest_files=["res://.godot/imported/focus_copy.glsl-61782ea3576066fe6f3d79d020760cb7.res"]
+
+[params]
+
