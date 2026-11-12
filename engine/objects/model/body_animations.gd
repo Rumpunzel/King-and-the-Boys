@@ -3,9 +3,10 @@
 class_name BodyAnimations
 extends Resource
 
-## Animations a model rests in (its idle, or while its player has passed), played on its [AnimationPlayer] (see
-## [method Model.rest_in]): one after another, one picked at random and kept, or a new one picked for every cycle.
-## A single animation simply loops
+## A state a model rests in (its idle, while its player has passed, while it holds an ability), played on its
+## [AnimationPlayer] (see [method Model.rest_in]): an [member entry] played once going in (e.g. sitting down), then its
+## [member animations] one after another, one picked at random and kept, or a new one picked for every cycle (a single one
+## simply loops), and an [member exit] played once leaving it (e.g. getting up)
 
 enum Order {
 	## One after another, from the first again after the last
@@ -23,6 +24,16 @@ enum Order {
 @export var order: Order = Order.SEQUENCE:
 	set(new_value):
 		order = new_value
+		changed.emit()
+## Played once as the model comes to rest in these, before them
+@export var entry: Animation:
+	set(new_value):
+		entry = new_value
+		changed.emit()
+## Played once as the model leaves them for something else
+@export var exit: Animation:
+	set(new_value):
+		exit = new_value
 		changed.emit()
 
 ## The animations that exist, leaving out empty entries the inspector leaves behind

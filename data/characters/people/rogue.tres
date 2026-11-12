@@ -58,6 +58,8 @@
 script = ExtResource("body_animations")
 animations = Array[Animation]([ExtResource("8_dvff2")])
 metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+entry = ExtResource("7_b4a8i")
+exit = ExtResource("51_5x40w")
 
 [sub_resource type="Resource" id="Resource_yo61b"]
 script = ExtResource("10_co6b3")
@@ -247,9 +249,7 @@ spawn_animation = ExtResource("90_rogue_spawn")
 move_animation = ExtResource("90_rogue_move")
 fast_move_animation = ExtResource("90_rogue_move")
 idle_animations = ExtResource("5_khl4o")
-pass_animation = ExtResource("7_b4a8i")
 passed_animations = SubResource("BodyAnimations_passed")
-unpass_animation = ExtResource("51_5x40w")
 selected_animation = ExtResource("13_b4a8i")
 name = "Rogue"
 portrait = ExtResource("5_r37cg")

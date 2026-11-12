@@ -70,7 +70,8 @@ var model: Model:
 		if not model: return
 		add_child(model, true)
 		_apply_body()
-		if shows_passed: model.rest_in(profile.passed_animations)
+		var rest: BodyAnimations = _get_rest()
+		if rest: model.rest_in(rest, false)
 		if equipment and model is ModularModel:
 			var modular_model: ModularModel = model
 			equipment.apply_to(modular_model)
@@ -138,6 +139,7 @@ var active_ability_id: String = "":
 		if new_active_ability_id == active_ability_id: return
 		active_ability_id = new_active_ability_id
 		active_ability_changed.emit()
+		if model: model.rest_in(_get_rest())
 ## The movement points the held ability in use would cost as it is now, [code]0[/code] if none; set by the host, replicated
 var held_cost: int = 0:
 	set(new_held_cost):
@@ -444,14 +446,20 @@ func _on_move_finished() -> void:
 	if not _move_backwards: _look_at_thing_on_tile()
 	figure_arrived.emit()
 
-## Shows that the character's player passed, or no longer has: the profile's pass animation, then its passed animations in place of the idles
-## (e.g. sitting down and sitting), or getting up again
+## Shows that the character's player passed, or no longer has: its passed animations in place of the idles (e.g. sitting down
+## and sitting), or getting up again
 func show_passed(passed: bool) -> void:
 	if passed == shows_passed: return
 	shows_passed = passed
-	if not model: return
-	if passed: model.rest_in(profile.passed_animations, profile.pass_animation)
-	else: model.rest_in(null, profile.unpass_animation)
+	if model: model.rest_in(_get_rest())
+
+## What the model rests in now: the cast animations of the held ability in use, the passed animations, or its idles
+## ([code]null[/code])
+func _get_rest() -> BodyAnimations:
+	var ability: Ability = get_ability(active_ability_id)
+	if ability and ability.cast_animations: return ability.cast_animations
+	if shows_passed: return profile.passed_animations
+	return null
 
 ## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
 func _look_at_thing_on_tile() -> void:

@@ -50,6 +50,12 @@ enum Targeting {
 	set(new_value):
 		held = new_value
 		changed.emit()
+## What the character's model rests in while the [member held] ability is in use, on every peer (e.g. casting: raising the
+## hands, holding them up, lowering them)
+@export var cast_animations: BodyAnimations:
+	set(new_value):
+		cast_animations = new_value
+		changed.emit()
 
 func is_passive() -> bool: return targeting == Targeting.NONE
 

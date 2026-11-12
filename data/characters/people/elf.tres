@@ -48,6 +48,8 @@
 script = ExtResource("body_animations")
 animations = Array[Animation]([ExtResource("anim_Spell_Simple_Idle")])
 metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
+entry = ExtResource("anim_Spell_Simple_Enter")
+exit = ExtResource("anim_Spell_Simple_Exit")
 
 [sub_resource type="Resource" id="Resource_upsh0"]
 script = ExtResource("10_eh6ha")
@@ -194,9 +196,7 @@ spawn_animation = ExtResource("90_elf_spawn")
 move_animation = ExtResource("90_elf_move")
 fast_move_animation = ExtResource("90_elf_move")
 idle_animations = ExtResource("5_n73mo")
-pass_animation = ExtResource("anim_Spell_Simple_Enter")
 passed_animations = SubResource("BodyAnimations_passed")
-unpass_animation = ExtResource("anim_Spell_Simple_Exit")
 selected_animation = ExtResource("13_chxko")
 name = "Elf"
 portrait = ExtResource("5_1nbx6")
