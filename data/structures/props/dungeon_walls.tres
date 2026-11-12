@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PropSet" format=3 uid="uid://cwygi0hianuse"]
+
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="1_script"]
+[ext_resource type="Material" uid="uid://cc84pr7gyxx6x" path="res://data/structures/props/polygon_dungeon_material.tres" id="2_material"]
+[ext_resource type="PackedScene" uid="uid://dbhdbo1icqvt3" path="res://assets/polygon_dungeon/Prefabs/Environments/Walls/SM_Env_Wall_01_DoubleSided.tscn" id="3_wall"]
+[ext_resource type="Resource" uid="uid://c5xyd11ftni1a" path="res://data/model_animations/drop_animation.tres" id="9_drop"]
+
+[resource]
+script = ExtResource("1_script")
+props = Dictionary[PackedScene, float]({
+ExtResource("3_wall"): 1.0
+})
+prop_scale = Vector3(0.4, 0.4, 0.5)
+center_props = true
+material_override = ExtResource("2_material")
+drop_animation = ExtResource("9_drop")
