@@ -24,17 +24,17 @@ sky_rotation = Vector3(4.2044983, 4.7787113, 0)
 [sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
 size = Vector2(64, 64)
 
-[node name="Level" instance=ExtResource("1_level")]
+[node name="Level" unique_id=2057570779 instance=ExtResource("1_level")]
 _starting_tile = ExtResource("2_c445m")
 _wall_tile = ExtResource("3_wall")
 _tile_set = ExtResource("3_c445m")
 _room_centrepieces = ExtResource("4_centrepieces")
 tile_lift_animation = ExtResource("5_lift")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1391764827]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="5" unique_id=1391764827]
 environment = SubResource("Environment_jwwwr")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1372172077]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="6" unique_id=1372172077]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 mesh = SubResource("PlaneMesh_bkb5w")
 skeleton = NodePath("..")

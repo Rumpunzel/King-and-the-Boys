@@ -40,6 +40,7 @@ func update() -> void:
 		var ability: Ability = _abilities[index]
 		var button: Button = _buttons.get_child(index) as Button
 		button.text = _get_label(ability, index)
+		button.expand_icon = true
 		button.disabled = not player_controller.can_arm(ability)
 		button.set_pressed_no_signal(character.active_ability_id == ResourceId.of(ability))
 	_aiming_hint.visible = not character.active_ability_id.is_empty()
