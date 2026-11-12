@@ -1,0 +1,17 @@
+@icon("uid://ba48wfee2hq2x")
+class_name TileLiftAnimation
+extends Resource
+## How a lifted tile moves (see [TileLift]): it rises, hangs wobbling, spins to its new turn and drops back with a bounce
+
+## How high the tile hangs, in metres
+@export_range(0.0, 5.0, 0.05, "or_greater") var height: float = 1.6
+## Seconds it takes to rise
+@export_range(0.0, 2.0, 0.01, "or_greater") var rise_duration: float = 0.4
+## Seconds a spin to the next turn takes
+@export_range(0.0, 2.0, 0.01, "or_greater") var spin_duration: float = 0.35
+## Seconds it takes to drop back; it starts halfway through the last spin
+@export_range(0.0, 2.0, 0.01, "or_greater") var drop_duration: float = 0.5
+## Most the hanging tile tips over, in degrees
+@export_range(0.0, 30.0, 0.1) var wobble_degrees: float = 2.5
+## Radians per second of the slower of the two wobble axes
+@export_range(0.0, 10.0, 0.1) var wobble_speed: float = 2.3

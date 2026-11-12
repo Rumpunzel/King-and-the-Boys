@@ -13,8 +13,10 @@ uniform vec4 tint : source_color = vec4(1.0);
 // Metres the textures cover once
 uniform float texture_size = 1.0;
 uniform float opacity : hint_range(0.0, 1.0) = 0.9;
-// How far into the path its frayed edge reaches, as a share of the half width
-uniform float edge_softness : hint_range(0.0, 1.0) = 0.45;
+// How far into the path it fades out towards its edges, as a share of the half width: the rest in the middle is fully covered
+uniform float edge_softness : hint_range(0.0, 1.0) = 0.85;
+// How unevenly the fade runs along the path, as a share of the half width
+uniform float fray : hint_range(0.0, 1.0) = 0.3;
 // Worn patches per metre
 uniform float patch_density = 2.5;
 
@@ -42,7 +44,7 @@ void vertex() {
 void fragment() {
 	// Distance from the path's spine, rounded around the middle
 	float from_spine = spot.y < 0.0 ? length(spot) : abs(spot.x);
-	float frayed = from_spine / half_width + (patches(spot * patch_density * 3.0) - 0.5) * edge_softness;
+	float frayed = from_spine / half_width + (patches(spot * patch_density * 3.0) - 0.5) * fray;
 	float edge = 1.0 - smoothstep(1.0 - edge_softness, 1.0, frayed);
 	float worn = patches(spot * patch_density);
 	vec2 ground_uv = spot / texture_size;

@@ -28,5 +28,5 @@ doorway_arches = ExtResource("4_doorways")
 corridor_arches = ExtResource("5_ruins")
 room_pillars = ExtResource("6_pillars")
 path_material = ExtResource("20_path")
-path_width = 0.8
+path_width = 1.4
 bridges = ExtResource("21_bridges")

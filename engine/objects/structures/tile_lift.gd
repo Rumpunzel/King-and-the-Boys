@@ -8,14 +8,8 @@ extends Node
 ## Emitted when the model is back on the board, at rest
 signal landed
 
-const _HEIGHT: float = 1.6
-const _RISE_DURATION: float = 0.4
-const _SPIN_DURATION: float = 0.35
-const _DROP_DURATION: float = 0.5
-## Most the hanging tile tips over, in degrees
-const _WOBBLE_DEGREES: float = 2.5
-## Radians per second of the slower of the two wobble axes
-const _WOBBLE_SPEED: float = 2.3
+## Used for tiles outside a level
+const _DEFAULT_ANIMATION: TileLiftAnimation = preload("uid://1uajovqss038")
 
 var _structure: Structure
 # Model offsets: height, turn in quarter turns clockwise on top of the structure's, wobble strength (0 to 1)
@@ -57,9 +51,11 @@ func _process(delta: float) -> void:
 	var model: Model = _structure.model
 	if not model: return
 	_time += delta
-	var tip: float = deg_to_rad(_WOBBLE_DEGREES) * _wobble
+	var animation: TileLiftAnimation = _get_animation()
+	var tip: float = deg_to_rad(animation.wobble_degrees) * _wobble
+	var wobble_speed: float = animation.wobble_speed
 	model.position.y = _height
-	model.rotation = Vector3(tip * sin(_time * _WOBBLE_SPEED), -_turns * PI * 0.5, tip * sin(_time * _WOBBLE_SPEED * 1.37 + 1.0))
+	model.rotation = Vector3(tip * sin(_time * wobble_speed), -_turns * PI * 0.5, tip * sin(_time * wobble_speed * 1.37 + 1.0))
 	if _is_at_rest(): _land()
 
 ## Without a model (e.g. in tests) nothing moves: the tile lands at once whenever it lies on the board
@@ -68,19 +64,25 @@ func _has_nothing_to_show() -> bool:
 	if not _structure.is_lifted(): _land()
 	return true
 
+func _get_animation() -> TileLiftAnimation:
+	var level: Level = _structure.level
+	return level.tile_lift_animation if level and level.tile_lift_animation else _DEFAULT_ANIMATION
+
 func _rise() -> void:
+	var animation: TileLiftAnimation = _get_animation()
 	_carry_figures()
 	if _height_tween: _height_tween.kill()
 	_height_tween = create_tween().set_parallel()
-	_height_tween.tween_property(self, "_height", _HEIGHT, _RISE_DURATION).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_height_tween.tween_property(self, "_wobble", 1.0, _RISE_DURATION * 2.0)
+	_height_tween.tween_property(self, "_height", animation.height, animation.rise_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_height_tween.tween_property(self, "_wobble", 1.0, animation.rise_duration * 2.0)
 
 func _drop() -> void:
+	var animation: TileLiftAnimation = _get_animation()
 	if _height_tween: _height_tween.kill()
 	_height_tween = create_tween().set_parallel()
 	# Lands once it faces its new way, so figures step off where their spots are
-	_height_tween.tween_property(self, "_height", 0.0, _DROP_DURATION).set_delay(_SPIN_DURATION * 0.5).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
-	_height_tween.tween_property(self, "_wobble", 0.0, _DROP_DURATION * 0.5)
+	_height_tween.tween_property(self, "_height", 0.0, animation.drop_duration).set_delay(animation.spin_duration * 0.5).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+	_height_tween.tween_property(self, "_wobble", 0.0, animation.drop_duration * 0.5)
 
 ## Spins the shorter way to [param target_turns], or the same turn a full circle away
 func _spin_to(target_turns: int) -> void:
@@ -88,7 +90,7 @@ func _spin_to(target_turns: int) -> void:
 	if is_equal_approx(nearest_target, _turns): return
 	if _spin_tween: _spin_tween.kill()
 	_spin_tween = create_tween()
-	_spin_tween.tween_property(self, "_turns", nearest_target, _SPIN_DURATION).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_spin_tween.tween_property(self, "_turns", nearest_target, _get_animation().spin_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _carry_figures() -> void:
 	var model: Model = _structure.model
