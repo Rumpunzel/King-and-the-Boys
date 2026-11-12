@@ -7,16 +7,11 @@
 [ext_resource type="Resource" uid="uid://8y0bv223d7px" path="res://data/things/centrepiece_spawn_table.tres" id="4_centrepieces"]
 [ext_resource type="Resource" uid="uid://1uajovqss038" path="res://data/model_animations/tile_lift_animation.tres" id="5_lift"]
 [ext_resource type="Environment" uid="uid://cgsk6aky1yr8a" path="res://data/levels/dungeon_environment.tres" id="5_environment"]
+[ext_resource type="Shader" path="res://engine/levels/tilt_shift.gdshader" id="6_tilt"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_tilt"]
-dof_blur_far_enabled = true
-dof_blur_far_distance = 28.0
-dof_blur_far_transition = 6.0
-dof_blur_near_enabled = true
-dof_blur_near_distance = 22.5
-dof_blur_near_transition = 3.0
-dof_blur_amount = 0.14
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tilt"]
+shader = ExtResource("6_tilt")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
 size = Vector2(64, 64)
@@ -30,10 +25,21 @@ tile_lift_animation = ExtResource("5_lift")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." index="5" unique_id=1391764827]
 environment = ExtResource("5_environment")
-camera_attributes = SubResource("CameraAttributesPractical_tilt")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." index="6" unique_id=1372172077]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 mesh = SubResource("PlaneMesh_bkb5w")
 skeleton = NodePath("..")
 surface_material_override/0 = ExtResource("16_jwwwr")
+
+[node name="TiltShift" type="CanvasLayer" parent="." unique_id=1730254811]
+layer = -1
+
+[node name="Blur" type="ColorRect" parent="TiltShift" unique_id=425907196]
+material = SubResource("ShaderMaterial_tilt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
