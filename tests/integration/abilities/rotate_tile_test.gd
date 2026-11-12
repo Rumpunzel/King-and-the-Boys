@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## The Mystic's Turn Tile ability on a generated level (no assets): lifting, cost by angle, setting down, undo
 
 const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const TURN_TILE: RotateTileAbility = preload("res://data/abilities/turn_tile.tres")
+const TURN_TILE: RotateTileAbility = preload("res://tests/fixtures/turn_tile.tres")
 
 var _level: Level
 var _turn_manager: TurnManager

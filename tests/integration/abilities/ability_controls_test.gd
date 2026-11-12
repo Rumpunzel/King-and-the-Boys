@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 
 const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
 const SPAWNER_SCENE: String = "res://engine/player/player_controller_spawner.tscn"
-const TURN_TILE: RotateTileAbility = preload("res://data/abilities/turn_tile.tres")
+const TURN_TILE: RotateTileAbility = preload("res://tests/fixtures/turn_tile.tres")
 
 var _level: Level
 var _spawner: PlayerControllerSpawner
