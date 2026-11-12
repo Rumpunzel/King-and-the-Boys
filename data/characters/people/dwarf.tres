@@ -36,9 +36,9 @@ metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 [sub_resource type="Resource" id="Resource_xtw46"]
 script = ExtResource("body_animations")
 animations = Array[Animation]([ExtResource("9_lk1de")])
-metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 entry = ExtResource("8_p3175")
 exit = ExtResource("26_xtw46")
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_iigc1"]
 script = ExtResource("10_iigc1")

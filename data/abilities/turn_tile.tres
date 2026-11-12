@@ -16,6 +16,5 @@ exit = ExtResource("5_exit")
 script = ExtResource("1_r0t8e")
 name = "Turn Tile"
 description = "Lift the tile you stand on, and yourself with it, turn it and set it down. Each quarter turn costs a move."
-targeting = 1
 held = true
 cast_animations = SubResource("BodyAnimations_cast")

@@ -57,9 +57,9 @@
 [sub_resource type="Resource" id="BodyAnimations_passed"]
 script = ExtResource("body_animations")
 animations = Array[Animation]([ExtResource("8_dvff2")])
-metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 entry = ExtResource("7_b4a8i")
 exit = ExtResource("51_5x40w")
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"
 
 [sub_resource type="Resource" id="Resource_yo61b"]
 script = ExtResource("10_co6b3")
