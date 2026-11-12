@@ -5,12 +5,12 @@ extends Resource
 
 @export var _dungeon_tiles: Dictionary[StructureProfile, float]
 
-# {Bit flag of directions: Array[TileBlueprint]}
-var _blueprints_bitflag: Dictionary[int, Array]:
+# Every tile in each of its four turns, made the first time they are needed
+var _blueprints: Array[TileBlueprint]:
 	get:
-		if _blueprints_bitflag.is_empty(): _generate_blueprints_bitflag()
-		assert(not _blueprints_bitflag.is_empty())
-		return _blueprints_bitflag
+		if _blueprints.is_empty(): _generate_blueprints()
+		assert(not _blueprints.is_empty())
+		return _blueprints
 
 ## A blueprint fitting the passages of [param surrounding_tiles], drawn by weight with [param random] among those
 ## keeping the most of their connection restrictions (all of them, wherever one can)
@@ -18,9 +18,8 @@ func pick_tile(tile_position: Vector2i, surrounding_tiles: Array[Structure], ran
 	# Asked once rather than for every blueprint
 	var opening_towards: Dictionary[Structure, bool] = get_openings_towards(tile_position, surrounding_tiles)
 	var fitting_blueprints: Array[TileBlueprint] = []
-	for blueprints: Array in _blueprints_bitflag.values():
-		for blueprint: TileBlueprint in blueprints:
-			if blueprint.fits(tile_position, opening_towards): fitting_blueprints.append(blueprint)
+	for blueprint: TileBlueprint in _blueprints:
+		if blueprint.fits(tile_position, opening_towards): fitting_blueprints.append(blueprint)
 	assert(not fitting_blueprints.is_empty())
 	# Restrictions: the blueprints suiting the most surrounding tiles, each once. All of them if any blueprint does;
 	# else the least broken, rather than any at all
@@ -55,22 +54,11 @@ func _draw(candidates: Array[TileBlueprint], random: RandomNumberGenerator) -> T
 	# randf() may return 1.0, and weights of 0 never win: the last one then
 	return candidates.back()
 
-func _generate_blueprints_bitflag() -> void:
-	var blueprints_bitflag: Dictionary[int, Array] = {}
+func _generate_blueprints() -> void:
+	var blueprints: Array[TileBlueprint] = []
 	for profile: StructureProfile in _dungeon_tiles.keys():
-		for clockwise_rotation: int in range(Level.Direction.size()):
-			var blueprint: TileBlueprint = TileBlueprint.new(profile, clockwise_rotation)
-			var connection_bitflag: int = blueprint.get_connection_bitflag()
-			var similar_blueprints: Array[TileBlueprint] = blueprints_bitflag.get_or_add(connection_bitflag, [] as Array[TileBlueprint])
-			similar_blueprints.append(blueprint)
-	_blueprints_bitflag = blueprints_bitflag
-
-func _count_true_bits(bitflag: int) -> int:
-	var count: int = 0
-	while count < bitflag:
-		bitflag &= bitflag - 1 # Clear the least significant bit set
-		count += 1
-	return count
+		for clockwise_rotation: int in range(Level.Direction.size()): blueprints.append(TileBlueprint.new(profile, clockwise_rotation))
+	_blueprints = blueprints
 
 ## What [method pick_tile] picked, and whether it keeps every neighbour's connection restrictions
 class Pick extends RefCounted:
@@ -110,11 +98,6 @@ class TileBlueprint extends RefCounted:
 
 	func get_connections() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
 	func get_connection_vectors() -> Array[Vector2i]: return profile.get_connection_vectors(clockwise_turns)
-	func get_connection_bitflag() -> int:
-		var connection_bitflag: int = 0
-		for connection: Level.Direction in get_connections(): connection_bitflag |= 2 ** connection
-		return connection_bitflag
-
 	func get_restriction(grid_position: Vector2i, existing_tile: Structure) -> ConnectionRestriction:
 		var direction: Level.Direction = _get_direction_to_tile(grid_position, existing_tile)
 		return profile.get_restriction(direction, clockwise_turns)

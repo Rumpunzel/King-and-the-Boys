@@ -183,13 +183,56 @@ func test_setting_down_tells_of_it_once() -> void:
 	assert_int(_tile.lift_turns).is_equal(0)
 
 func test_figures_ride_a_turn_on_the_board_and_step_off_once_it_is_in_place() -> void:
+	# Off the middle, where a jump would show
+	for spot: Vector2 in _tile.profile.get_tile_spots():
+		if spot.x != 0.0 and spot.y != 0.0: _hero.place_on_grid(_hero.grid_cell, spot, _hero.facing)
+	# Arrived there
+	await _hero.figure_arrived
+	var standing: Vector3 = _hero.global_position
+	# A slow spin, so the first frame shows where the ride starts
+	var slow: TileLiftAnimation = TileLiftAnimation.new()
+	slow.spin_duration = 0.8
+	_level.tile_lift_animation = slow
 	# As when a turn is undone: no lift, the model spins into place
 	_level.rotate_tile(_tile, 1, _hero)
 	assert_bool(_hero.is_carried()).is_true()
+	# It rides on from where it stood, not from a quarter turn away
+	for _frame: int in 3:
+		await await_idle_frame()
+		assert_float(_hero.global_position.distance_to(standing)).is_less(0.2)
+	_level.tile_lift_animation = null
 	assert_bool(_level._has_figure_caught_up(_hero, [])).is_false()
-	await await_millis(800)
+	await await_millis(1200)
 	assert_bool(_hero.is_carried()).is_false()
 	assert_bool(_level._has_figure_caught_up(_hero, [])).is_true()
+
+func test_the_thing_on_the_tile_rides_by_its_model() -> void:
+	var chest: Thing = auto_free(Thing.new())
+	chest.freeze = true
+	chest.model = Model.new()
+	add_child(chest)
+	chest.global_position = _tile.global_position
+	var placed_things: Dictionary = _level.get("_placed_things")
+	placed_things[_tile.get_grid_position()] = chest
+	_tile.lifted_by = _hero.get_path()
+	await await_millis(900)
+	assert_float(chest.model.global_position.y).is_greater(0.3)
+	assert_float(chest.global_position.y).is_equal_approx(_tile.global_position.y, 0.001)
+	_tile.lifted_by = NodePath()
+	await await_millis(1500)
+	assert_vector(chest.model.position).is_equal(Vector3.ZERO)
+	placed_things.erase(_tile.get_grid_position())
+
+func test_a_second_turn_soon_after_holds_its_own_reveals() -> void:
+	var delay: float = TileLiftAnimation.of(_level).reveal_delay
+	_level.rotate_tile(_tile, 1, _hero)
+	await await_millis(int(delay * 600.0))
+	# Undone a moment later: its own wait, not what is left of the first
+	_level.rotate_tile(_tile, -1, _hero)
+	await await_millis(int(delay * 600.0))
+	assert_bool(_level._reveals_held_on.has(_tile.get_grid_position())).is_true()
+	await await_millis(int(delay * 600.0))
+	assert_bool(_level._reveals_held_on.has(_tile.get_grid_position())).is_false()
 
 func test_a_cancelled_lift_spins_back_and_lands() -> void:
 	var turns: int = _tile.clockwise_turns

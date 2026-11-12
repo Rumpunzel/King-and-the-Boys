@@ -69,7 +69,13 @@ func get_connections(clockwise_turns: int) -> Array[Level.Direction]:
 	if _connection_left: connections.append(_get_adjusted_direction(Level.Direction.LEFT, clockwise_turns))
 	return connections
 
-func has_connection(direction: Level.Direction, clockwise_turns: int) -> bool: return get_connections(clockwise_turns).has(direction)
+## Whether the profile, turned by [param clockwise_turns], opens towards [param direction]; asked often, so without a list
+func has_connection(direction: Level.Direction, clockwise_turns: int) -> bool:
+	match posmod(direction - clockwise_turns, Level.Direction.size()):
+		Level.Direction.UP: return _connection_up
+		Level.Direction.RIGHT: return _connection_right
+		Level.Direction.DOWN: return _connection_down
+		_: return _connection_left
 
 func get_connection_vectors(clockwise_turns: int) -> Array[Vector2i]:
 	var connection_vectors: Array[Vector2i]

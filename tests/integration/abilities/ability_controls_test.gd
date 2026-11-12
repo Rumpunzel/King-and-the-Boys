@@ -226,3 +226,33 @@ func test_the_move_keys_turn_the_tile_until_the_mystic_faces_that_way() -> void:
 	aiming.handle_input(press)
 	assert_int(tile.lift_turns).is_equal(0)
 	controller.cancel_ability()
+
+func test_a_move_key_held_from_aiming_does_not_step_when_let_go() -> void:
+	var controller: PlayerController = _controller()
+	var hero: Character = controller.get_controlled_character()
+	_stand_on_turnable_tile(hero)
+	var cell: Vector2i = hero.grid_cell
+	var direction: Level.Direction = Level.Direction.UP
+	for candidate: Level.Direction in Level.Direction.values():
+		if controller.get_controlled_character().level.is_passage(cell, candidate): direction = candidate
+	var action: StringName = [&"move_up", &"move_right", &"move_down", &"move_left"][direction]
+	controller.arm_ability(TURN_TILE)
+	await await_idle_frame()
+	var key: InputEventAction = InputEventAction.new()
+	key.action = action
+	key.pressed = true
+	_state_of(controller).handle_input(key)
+	controller.cancel_ability()
+	await await_idle_frame()
+	var default: PlayerState = _state_of(controller)
+	assert_object(default).is_instanceof(PlayerStateDefault)
+	# Let go after aiming ended: no step
+	key.pressed = false
+	default.handle_input(key)
+	assert_vector(hero.grid_cell).is_equal(cell)
+	# Pressed and let go here, it steps
+	key.pressed = true
+	default.handle_input(key)
+	key.pressed = false
+	default.handle_input(key)
+	assert_vector(hero.grid_cell).is_not_equal(cell)

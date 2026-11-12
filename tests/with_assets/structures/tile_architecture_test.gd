@@ -205,7 +205,9 @@ func test_a_turned_tile_keeps_its_edge_props_and_decides_open_edges() -> void:
 	decorations.corridor_arch_chance = 1.0
 	var turned: Structure = null
 	for tile: Structure in _tiles_within(2):
+		# One with a corridor arch of its own, which the turn carries (a doorway arch goes once it no longer faces a room)
 		if tile.shown_status != Structure.Status.REVEALED or tile.profile.room_type: continue
+		if not _own_edge_props(tile).any(func(prop: Node) -> bool: return not prop.get_meta(TileDecorations.DOORWAY, false)): continue
 		var connections: Array[Level.Direction] = tile.get_connections()
 		var turned_connections: Array[Level.Direction] = []
 		for connection: Level.Direction in connections: turned_connections.append(Level.turn_direction(connection, 1))
@@ -214,7 +216,7 @@ func test_a_turned_tile_keeps_its_edge_props_and_decides_open_edges() -> void:
 		if connections != turned_connections:
 			turned = tile
 			break
-	assert_object(turned).override_failure_message("A corridor near the start should change its shape when turned").is_not_null()
+	assert_object(turned).override_failure_message("A corridor near the start with a corridor arch should change its shape when turned").is_not_null()
 	# Tiles the turn builds decide their edges themselves once they are revealed
 	var existing: Array[Vector2i] = []
 	for direction: Level.Direction in Level.Direction.values():

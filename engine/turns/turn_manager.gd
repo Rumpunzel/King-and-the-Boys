@@ -159,9 +159,7 @@ func request_ability(character_path: NodePath, ability_id: String, target_cell: 
 	if cost > character.movement_points or not ability.can_use(character, target_cell, argument, _level):
 		_cancel_held(character)
 		return
-	_held_abilities.erase(character)
-	character.active_ability_id = ""
-	character.held_cost = 0
+	_end_held(character)
 	_use_ability(character, ability, target_cell, argument)
 
 ## Starts using the [member Ability.held] ability [param ability_id] of [param character_path] on [param target_cell];
@@ -284,12 +282,18 @@ func _has_uses_left(character: Character, ability: Ability) -> bool:
 	return used < ability.uses_per_turn
 
 func _cancel_held(character: Character) -> void:
+	var held: HeldAbility = _end_held(character)
+	if held: held.ability.cancel(character, held.target, _level)
+
+## Forgets the held ability of [param character], used or cancelled
+## @returns it, or [code]null[/code] if none was held
+func _end_held(character: Character) -> HeldAbility:
 	var held: HeldAbility = _held_abilities.get(character)
-	if not held: return
+	if not held: return null
 	_held_abilities.erase(character)
 	character.active_ability_id = ""
 	character.held_cost = 0
-	held.ability.cancel(character, held.target, _level)
+	return held
 
 func _cancel_held_of(player_id: int) -> void:
 	for character: Character in _held_abilities.keys():

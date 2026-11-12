@@ -19,6 +19,11 @@ var _time: float = 0.0
 var _height_tween: Tween
 var _spin_tween: Tween
 var _carried: Array[Character] = []
+# The thing on the tile (e.g. a chest) rides by its model only, so its replicated transform stays its own: its model's
+# transform as it stood, and where it rides relative to the tile's model
+var _carried_thing: Thing
+var _thing_model_rest: Transform3D
+var _thing_on_tile: Transform3D
 # Whether the model is rising or hanging, rather than dropping or at rest; lifted again while it drops, it rises again
 var _raised: bool = false
 var _hover: Node3D
@@ -46,12 +51,13 @@ func update() -> void:
 func on_turned(previous_clockwise_turns: int) -> void:
 	if _has_nothing_to_show(): return
 	set_process(true)
-	# Turned on the board (e.g. undone), the figures ride the spin too
-	if not _structure.is_lifted(): _carry_figures()
 	_turns -= posmod(_structure.clockwise_turns - previous_clockwise_turns, Level.Direction.size())
 	_spin_to(_structure.lift_turns if _structure.is_lifted() else 0)
 	# Not a frame facing the new way before the model is held back
 	_show()
+	# Turned on the board (e.g. undone), what stands on it rides the spin too, from where it stood: taken on once the model
+	# looks as before the turn again
+	if not _structure.is_lifted(): _carry_pieces()
 
 func _process(delta: float) -> void:
 	_time += delta
@@ -67,6 +73,7 @@ func _show() -> void:
 	var wobble_speed: float = animation.wobble_speed
 	model.position.y = _height
 	model.rotation = Vector3(tip * sin(_time * wobble_speed), -_turns * PI * 0.5, tip * sin(_time * wobble_speed * 1.37 + 1.0))
+	if is_instance_valid(_carried_thing) and _carried_thing.model: _carried_thing.model.global_transform = model.global_transform * _thing_on_tile
 
 ## Without a model (e.g. in tests) nothing moves: the tile lands at once whenever it lies on the board
 func _has_nothing_to_show() -> bool:
@@ -80,7 +87,7 @@ func _get_animation() -> TileLiftAnimation:
 func _rise() -> void:
 	var animation: TileLiftAnimation = _get_animation()
 	_raised = true
-	_carry_figures()
+	_carry_pieces()
 	_puff(animation.rise_particles)
 	_start_hover(animation.hover_particles)
 	if _height_tween: _height_tween.kill()
@@ -146,7 +153,8 @@ func _stop_hover() -> void:
 	for light: Node in hover.find_children("*", "Light3D", true, false): create_tween().tween_property(light, "light_energy", 0.0, 0.3)
 	get_tree().create_timer(longest).timeout.connect(hover.queue_free)
 
-func _carry_figures() -> void:
+## Takes the figures and the thing on the tile along with its model, from where they stand
+func _carry_pieces() -> void:
 	var model: Model = _structure.model
 	if not model: return
 	var grid_position: Vector2i = _structure.get_grid_position()
@@ -154,6 +162,11 @@ func _carry_figures() -> void:
 		if not character.visible or character.grid_cell != grid_position or _carried.has(character): continue
 		character.carry_on(model)
 		_carried.append(character)
+	var thing: Thing = _structure.level.get_placed_thing(grid_position) if _structure.level else null
+	if is_instance_valid(_carried_thing) or not thing or not thing.model: return
+	_carried_thing = thing
+	_thing_model_rest = thing.model.transform
+	_thing_on_tile = model.global_transform.affine_inverse() * thing.model.global_transform
 
 func _is_at_rest() -> bool:
 	if _structure.is_lifted(): return false
@@ -172,4 +185,7 @@ func _land() -> void:
 		model.rotation = Vector3.ZERO
 	for character: Character in _carried: if is_instance_valid(character): character.carry_on(null)
 	_carried.clear()
+	# Back in place on the thing, which turned with the tile at once
+	if is_instance_valid(_carried_thing) and _carried_thing.model: _carried_thing.model.transform = _thing_model_rest
+	_carried_thing = null
 	landed.emit()

@@ -2,6 +2,14 @@
 class_name PlayerState
 extends State
 
+## {move action: the direction it steps}
+const _MOVE_ACTIONS: Dictionary[StringName, Level.Direction] = {
+	&"move_up": Level.Direction.UP,
+	&"move_right": Level.Direction.RIGHT,
+	&"move_down": Level.Direction.DOWN,
+	&"move_left": Level.Direction.LEFT,
+}
+
 var _state_machine: PlayerStateMachine
 var _take_control_action: Action = preload("uid://cuoqy5wkfjika")
 
@@ -45,11 +53,12 @@ func handle_turn_input(event: InputEvent) -> void:
 	var character: Character = get_controlled_character()
 	var turn_manager: TurnManager = TurnManager.get_instance(character.get_tree())
 	if not turn_manager: return
-	var character_path: NodePath = character.get_path()
-	if event.is_action_released("move_up"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.UP)
-	elif event.is_action_released("move_right"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.RIGHT)
-	elif event.is_action_released("move_down"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.DOWN)
-	elif event.is_action_released("move_left"): turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character_path, Level.Direction.LEFT)
+	var move_presses: Dictionary[StringName, bool] = get_state_machine().move_presses
+	for action: StringName in _MOVE_ACTIONS:
+		if event.is_action_pressed(action): move_presses[action] = true
+		# Only keys pressed in this state step
+		elif event.is_action_released(action) and move_presses.erase(action):
+			turn_manager.request_move.rpc_id(Multiplayer.HOST_ID, character.get_path(), _MOVE_ACTIONS[action])
 
 func _create_charcter_interaction(current_interactable: CharacterHitBox) -> CharacterInteraction:
 	return CharacterInteraction.new(get_state_machine().character, current_interactable, _take_control_action)

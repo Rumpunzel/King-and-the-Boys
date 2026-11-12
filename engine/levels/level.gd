@@ -66,7 +66,8 @@ var _placed_tiles: Dictionary[Vector2i, Structure]
 var _bridges: Dictionary[Vector3, Model]
 ## Cells whose tile just turned: what the turn brought into sight waits there a moment, see
 ## [member TileLiftAnimation.reveal_delay]
-var _reveals_held_on: Dictionary[Vector2i, bool] = {}
+## {cell: how many turns hold it}, so a second turn soon after the first is waited for too
+var _reveals_held_on: Dictionary[Vector2i, int] = {}
 
 var _placed_things: Dictionary[Vector2i, Thing]
 ## Things standing on a grid corner between four cells (e.g. room centrepieces), by the corner's index: corner [code]c[/code] lies
@@ -689,11 +690,13 @@ func _on_tile_landed(tile: Structure) -> void:
 ## What a turn brings into sight shows a moment after the tile turned (as it is set down, its drop starting), see
 ## [member TileLiftAnimation.reveal_delay]. A tween bound to the level, so it pauses with the game.
 func _hold_reveals_on(grid_position: Vector2i) -> void:
-	_reveals_held_on[grid_position] = true
+	_reveals_held_on[grid_position] = _reveals_held_on.get(grid_position, 0) + 1
 	create_tween().tween_callback(_release_reveals_on.bind(grid_position)).set_delay(TileLiftAnimation.of(self).reveal_delay)
 
 func _release_reveals_on(grid_position: Vector2i) -> void:
-	_reveals_held_on.erase(grid_position)
+	var holds: int = _reveals_held_on.get(grid_position, 0) - 1
+	if holds > 0: _reveals_held_on[grid_position] = holds
+	else: _reveals_held_on.erase(grid_position)
 
 ## Lays or takes up the bridges on the four sides of [param tile] as they are needed now; bridges that stay are left alone,
 ## so they do not drop in again, and those between other tiles are not touched
