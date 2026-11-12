@@ -32,9 +32,11 @@ func _bridges() -> Dictionary:
 func _bridge_between(tile: Structure, direction: Level.Direction) -> Model:
 	return _bridges().get(_level._get_connector_position(tile.global_position, direction))
 
-func _opens_both_ways(tile: Structure, direction: Level.Direction) -> bool:
+## Whether a bridge belongs between [param tile] and its neighbour in [param direction]: both open, and they are not one room
+func _needs_bridge(tile: Structure, direction: Level.Direction) -> bool:
 	var neighbour: Structure = _level.get_placed_tile(tile.get_grid_position() + Level.DIRECTION_VECTORS[direction])
-	return neighbour != null and tile.get_connections().has(direction) and neighbour.get_connections().has(Level.get_opposite(direction))
+	if not neighbour or (tile.profile.room_type and neighbour.profile.room_type == tile.profile.room_type): return false
+	return tile.get_connections().has(direction) and neighbour.get_connections().has(Level.get_opposite(direction))
 
 func test_each_opening_has_a_path() -> void:
 	var checked: int = 0
@@ -47,23 +49,43 @@ func test_each_opening_has_a_path() -> void:
 		checked += 1
 	assert_int(checked).is_greater(0)
 
-func test_bridges_join_tiles_opening_to_each_other() -> void:
+func test_bridges_join_tiles_opening_to_each_other_outside_rooms() -> void:
 	var bridged: int = 0
 	for tile: Structure in _tiles_within(2):
 		for direction: Level.Direction in Level.Direction.values():
 			var bridge: Model = _bridge_between(tile, direction)
-			assert_bool(bridge != null).override_failure_message("%s towards %s" % [tile, direction]).is_equal(_opens_both_ways(tile, direction))
-			if bridge: bridged += 1
+			assert_bool(bridge != null).override_failure_message("%s towards %s" % [tile, direction]).is_equal(_needs_bridge(tile, direction))
+			if not bridge: continue
+			bridged += 1
+			assert_int(bridge.get_child_count()).override_failure_message("A bridge is laid from several planks").is_greater(1)
 	assert_int(bridged).is_greater(0)
 
 func test_a_lifted_tile_keeps_its_paths_and_loses_its_bridges() -> void:
-	var tile: Structure = _level.get_placed_tile(Vector2i.ZERO)
+	var tile: Structure = null
 	var bridged: Array[Level.Direction] = []
-	for direction: Level.Direction in Level.Direction.values(): if _bridge_between(tile, direction): bridged.append(direction)
-	assert_array(bridged).is_not_empty()
+	for candidate: Structure in _tiles_within(2):
+		for direction: Level.Direction in Level.Direction.values(): if _bridge_between(candidate, direction): bridged.append(direction)
+		if not bridged.is_empty() and candidate.model:
+			tile = candidate
+			break
+		bridged.clear()
+	assert_object(tile).override_failure_message("A tile near the start should have a bridge").is_not_null()
 	tile.lifted_by = ^"Someone"
 	for direction: Level.Direction in bridged: assert_object(_bridge_between(tile, direction)).is_null()
 	assert_object(tile.model.get_node_or_null(NodePath(TileDecorations.PATHS_NODE_NAME))).is_not_null()
 	tile.lifted_by = NodePath()
 	await await_millis(2000)
 	for direction: Level.Direction in bridged: assert_object(_bridge_between(tile, direction)).is_not_null()
+
+func test_crystals_grow_in_clusters() -> void:
+	var decorations: TileDecorations = load("res://data/structures/tiles/dungeon_decorations.tres")
+	var crystals: PropSet = load("res://data/structures/props/crystals.tres")
+	var holder: Node3D = auto_free(Node3D.new())
+	add_child(holder)
+	var random: RandomNumberGenerator = RandomNumberGenerator.new()
+	random.seed = 11
+	var cluster: Model = decorations.call("_add_prop", holder, crystals, Transform3D.IDENTITY, random)
+	assert_int(cluster.get_child_count()).is_between(crystals.piece_count.x, crystals.piece_count.y)
+	for piece: Node in cluster.get_children():
+		var spot: Vector3 = (piece as Node3D).position
+		assert_float(Vector2(spot.x, spot.z).length()).is_less_equal(crystals.scatter_radius + 0.01)

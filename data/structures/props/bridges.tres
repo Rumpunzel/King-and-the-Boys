@@ -10,4 +10,10 @@ props = Dictionary[PackedScene, float]({
 ExtResource("2_prop"): 1.0,
 ExtResource("3_prop"): 1.0
 })
+prop_scale = Vector3(0.45, 0.45, 0.45)
 center_props = true
+arrangement = 2
+piece_count = Vector2i(3, 4)
+size_jitter = 0.05
+row_turn_degrees = 5.0
+row_shift = 0.08

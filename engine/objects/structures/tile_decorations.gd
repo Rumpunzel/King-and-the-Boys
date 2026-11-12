@@ -242,7 +242,7 @@ func create_paths(tile: Structure) -> Node3D:
 		decal.texture_albedo = path_texture
 		decal.modulate = path_color
 		# Thin, so it marks the floor and little of what stands on it
-		decal.size = Vector3(path_width, 0.4, half_tile)
+		decal.size = Vector3(path_width, 0.2, half_tile)
 		decal.transform = Transform3D(Basis(Vector3.UP, atan2(outward.x, outward.z)), outward * half_tile * 0.5)
 		paths.add_child(decal)
 	return paths
@@ -384,8 +384,30 @@ static func _random_turn(random: RandomNumberGenerator) -> Transform3D:
 ## @returns the prop, or [code]null[/code] if the set gave none
 func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transform3D, random: RandomNumberGenerator) -> Model:
 	if not collection: return null
-	# Scale and material come from the (sub-)collection the prop is taken from
+	# Scale, material and arrangement come from the (sub-)collection the prop is taken from
 	var prop_set: PropSet = collection.pick_collection(random)
+	var pieces: int = 1
+	if prop_set.arrangement != PropSet.Arrangement.SINGLE: pieces = random.randi_range(prop_set.piece_count.x, maxi(prop_set.piece_count.x, prop_set.piece_count.y))
+	# A [Model] around the pieces, so model animations play on the whole prop
+	var prop: Model = Model.new()
+	for _piece: int in pieces:
+		var piece: Node3D = _make_piece(prop_set, random)
+		if not piece: break
+		prop.add_child(piece, true)
+	if prop.get_child_count() == 0:
+		prop.free()
+		return null
+	prop.name = prop.get_child(0).name
+	_arrange(prop_set, prop, random)
+	prop.transform = prop_transform
+	var animation: ModelAnimation = prop_set.drop_animation if prop_set.drop_animation else collection.drop_animation
+	if animation: prop.set_meta(DROP_ANIMATION, animation)
+	decorations.add_child(prop)
+	return prop
+
+## One piece of [param prop_set] picked by weight, scaled, painted and, if wanted, centred on its footprint; [code]null[/code] if
+## the set has no props
+func _make_piece(prop_set: PropSet, random: RandomNumberGenerator) -> Node3D:
 	var scene: PackedScene = prop_set.pick(random)
 	if not scene: return null
 	var mesh: Node3D = scene.instantiate()
@@ -403,15 +425,32 @@ func _add_prop(decorations: Node3D, collection: PropSet, prop_transform: Transfo
 	if prop_set.center_props:
 		var footprint: Vector3 = _get_bounds(mesh).get_center() * prop_set.prop_scale
 		mesh.position = -Vector3(footprint.x, 0.0, footprint.z)
-	# A [Model] around the prop, so model animations play on it
-	var prop: Model = Model.new()
-	prop.name = mesh.name
-	prop.transform = prop_transform
-	var animation: ModelAnimation = prop_set.drop_animation if prop_set.drop_animation else collection.drop_animation
-	if animation: prop.set_meta(DROP_ANIMATION, animation)
-	prop.add_child(mesh)
-	decorations.add_child(prop)
-	return prop
+	return mesh
+
+## Lays out the pieces of [param prop] as [member PropSet.arrangement] says; a single piece stays as it is
+func _arrange(prop_set: PropSet, prop: Model, random: RandomNumberGenerator) -> void:
+	var pieces: Array[Node] = prop.get_children()
+	match prop_set.arrangement:
+		PropSet.Arrangement.SCATTER:
+			for index: int in pieces.size():
+				# The first one on the spot, the rest around it
+				var offset: Vector2 = Vector2.ZERO if index == 0 else Vector2.from_angle(random.randf() * TAU) * sqrt(random.randf()) * prop_set.scatter_radius
+				_place_piece(pieces[index] as Node3D, random.randf() * TAU, Vector3(offset.x, 0.0, offset.y), prop_set, random)
+		PropSet.Arrangement.ROW:
+			# Side by side across the first piece's long side
+			var size: Vector3 = _get_bounds(pieces[0] as Node3D).size * prop_set.prop_scale
+			var long_x: bool = size.x >= size.z
+			var across: Vector3 = Vector3.BACK if long_x else Vector3.RIGHT
+			var lengthwise: Vector3 = Vector3.RIGHT if long_x else Vector3.BACK
+			var spacing: float = (size.z if long_x else size.x) + prop_set.row_gap
+			for index: int in pieces.size():
+				var offset: Vector3 = across * (index - (pieces.size() - 1) * 0.5) * spacing + lengthwise * random.randf_range(-prop_set.row_shift, prop_set.row_shift)
+				_place_piece(pieces[index] as Node3D, deg_to_rad(random.randf_range(-prop_set.row_turn_degrees, prop_set.row_turn_degrees)), offset, prop_set, random)
+
+## Turns [param piece] by [param turn] about its spot, sizes it by the set's jitter and moves it by [param offset]
+static func _place_piece(piece: Node3D, turn: float, offset: Vector3, prop_set: PropSet, random: RandomNumberGenerator) -> void:
+	var size: float = 1.0 + random.randf_range(-prop_set.size_jitter, prop_set.size_jitter) if prop_set.size_jitter > 0.0 else 1.0
+	piece.transform = Transform3D(Basis(Vector3.UP, turn).scaled(Vector3.ONE * size), offset) * piece.transform
 
 ## The bounds of every mesh in [param node], in its own space; works outside the tree
 static func _get_bounds(node: Node3D) -> AABB:

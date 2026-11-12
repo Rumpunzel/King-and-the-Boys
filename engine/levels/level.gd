@@ -742,7 +742,9 @@ func _build_connections(tile: Structure) -> void:
 		if opens: _create_connection(tile, direction)
 		var neighbour_opens: bool = neighbour != null and neighbour.get_connections().has(get_opposite(direction))
 		if opens or neighbour_opens: _create_connector(tile.global_position, direction)
-		if opens and neighbour_opens: _create_bridge(tile, direction)
+		# Tiles of one room always connect: no bridge needed
+		var one_room: bool = neighbour != null and tile.profile.room_type != null and neighbour.profile.room_type == tile.profile.room_type
+		if opens and neighbour_opens and not one_room: _create_bridge(tile, direction)
 
 ## A bridge (see [member TileDecorations.bridges]) over the gap between [param tile] and its neighbour in [param direction],
 ## hidden until both are revealed
