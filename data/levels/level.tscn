@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://1uajovqss038" path="res://data/model_animations/tile_lift_animation.tres" id="5_lift"]
 [ext_resource type="Environment" uid="uid://cgsk6aky1yr8a" path="res://data/levels/dungeon_environment.tres" id="5_environment"]
 [ext_resource type="Shader" path="res://engine/levels/tilt_shift.gdshader" id="6_tilt"]
+[ext_resource type="PackedScene" uid="uid://bka6r1jummabd" path="res://data/levels/dust_motes.tscn" id="7_motes"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tilt"]
@@ -31,6 +32,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 mesh = SubResource("PlaneMesh_bkb5w")
 skeleton = NodePath("..")
 surface_material_override/0 = ExtResource("16_jwwwr")
+
+[node name="DustMotes" parent="." unique_id=1288405713 instance=ExtResource("7_motes")]
 
 [node name="TiltShift" type="CanvasLayer" parent="." unique_id=1730254811]
 layer = -1
