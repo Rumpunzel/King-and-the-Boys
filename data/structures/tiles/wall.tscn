@@ -1,16 +1,43 @@
 [gd_scene format=3 uid="uid://kecvh6aocwul"]
 
 [ext_resource type="Script" uid="uid://bpkm2ws12sljg" path="res://engine/objects/model/model.gd" id="1_lku0l"]
-[ext_resource type="Material" uid="uid://cvwu11s4ahpod" path="res://protoype_assets/textures/wood_06_1k/wood_06_1k.tres" id="2_usnct"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_ntlmk"]
-material = ExtResource("2_usnct")
-size = Vector3(2.5, 1, 2.5)
+[ext_resource type="Script" uid="uid://wgwij2ql488y" path="res://engine/objects/structures/cave_wall.gd" id="2_cave"]
+[ext_resource type="Material" uid="uid://cc84pr7gyxx6x" path="res://data/structures/props/polygon_dungeon_material.tres" id="3_material"]
+[ext_resource type="ArrayMesh" uid="uid://bjxx7qggm7128" path="res://assets/polygon_dungeon/Models/SM_Env_RockPile_Square_02.res" id="4_rocks_02"]
+[ext_resource type="ArrayMesh" uid="uid://d3kmvmdtvnimd" path="res://assets/polygon_dungeon/Models/SM_Env_RockPile_Square_03.res" id="4_rocks_03"]
+[ext_resource type="ArrayMesh" uid="uid://3gxvk5h871he" path="res://assets/polygon_dungeon/Models/SM_Env_RockPile_Square_04.res" id="4_rocks_04"]
+[ext_resource type="ArrayMesh" uid="uid://crjrooycdb1bf" path="res://assets/polygon_dungeon/Models/SM_Env_RockPile_Square_05.res" id="4_rocks_05"]
+[ext_resource type="ArrayMesh" uid="uid://cr652q1o6r5li" path="res://assets/polygon_dungeon/Models/SM_Env_RockPile_Square_06.res" id="4_rocks_06"]
 
 [node name="Tile" type="Node3D" unique_id=1617054939]
 script = ExtResource("1_lku0l")
 metadata/_custom_type_script = "uid://bpkm2ws12sljg"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1648661705]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("BoxMesh_ntlmk")
+[node name="Rocks" type="Node3D" parent="." node_paths=PackedStringArray("_variants")]
+script = ExtResource("2_cave")
+_variants = [NodePath("Rocks02"), NodePath("Rocks03"), NodePath("Rocks04"), NodePath("Rocks05"), NodePath("Rocks06")]
+
+[node name="Rocks02" type="MeshInstance3D" parent="Rocks"]
+transform = Transform3D(1.05, 0, 0, 0, 1.0, 0, 0, 0, 1.22, 0, 0, 0)
+mesh = ExtResource("4_rocks_02")
+surface_material_override/0 = ExtResource("3_material")
+
+[node name="Rocks03" type="MeshInstance3D" parent="Rocks"]
+transform = Transform3D(1.03, 0, 0, 0, 1.3, 0, 0, 0, 1.21, 0, 0, 0)
+mesh = ExtResource("4_rocks_03")
+surface_material_override/0 = ExtResource("3_material")
+
+[node name="Rocks04" type="MeshInstance3D" parent="Rocks"]
+transform = Transform3D(1.0, 0, 0, 0, 1.28, 0, 0, 0, 1.19, 0, 0, 0)
+mesh = ExtResource("4_rocks_04")
+surface_material_override/0 = ExtResource("3_material")
+
+[node name="Rocks05" type="MeshInstance3D" parent="Rocks"]
+transform = Transform3D(1.02, 0, 0, 0, 1.3, 0, 0, 0, 1.2, 0, 0, 0)
+mesh = ExtResource("4_rocks_05")
+surface_material_override/0 = ExtResource("3_material")
+
+[node name="Rocks06" type="MeshInstance3D" parent="Rocks"]
+transform = Transform3D(0.85, 0, 0, 0, 0.96, 0, 0, 0, 0.86, 0, 0, 0)
+mesh = ExtResource("4_rocks_06")
+surface_material_override/0 = ExtResource("3_material")

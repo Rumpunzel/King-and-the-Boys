@@ -5,21 +5,23 @@
 [ext_resource type="Resource" uid="uid://b50fre8sdxsyo" path="res://data/structures/tiles/default_tile_set.tres" id="3_c445m"]
 [ext_resource type="Resource" uid="uid://d3cc5nj7ogal8" path="res://data/structures/tiles/wall.tres" id="3_wall"]
 [ext_resource type="Resource" uid="uid://8y0bv223d7px" path="res://data/things/centrepiece_spawn_table.tres" id="4_centrepieces"]
+[ext_resource type="Environment" uid="uid://cgsk6aky1yr8a" path="res://data/levels/dungeon_environment.tres" id="5_environment"]
 [ext_resource type="Resource" uid="uid://1uajovqss038" path="res://data/model_animations/tile_lift_animation.tres" id="5_lift"]
+[ext_resource type="PackedScene" uid="uid://bka6r1jummabd" path="res://data/levels/dust_motes.tscn" id="7_motes"]
+[ext_resource type="Script" uid="uid://d1pxbcix74a37" path="res://engine/levels/focus_blur.gd" id="8_focus"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
-[ext_resource type="Texture2D" uid="uid://bwn2kfo8trdse" path="res://protoype_assets/sky_boxes/material_0_baseColor.png" id="19_mkmcm"]
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_3cql5"]
-panorama = ExtResource("19_mkmcm")
+[sub_resource type="CompositorEffect" id="CompositorEffect_focus"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("8_focus")
 
-[sub_resource type="Sky" id="Sky_olmtf"]
-sky_material = SubResource("PanoramaSkyMaterial_3cql5")
-
-[sub_resource type="Environment" id="Environment_jwwwr"]
-background_mode = 2
-background_energy_multiplier = 0.75
-sky = SubResource("Sky_olmtf")
-sky_rotation = Vector3(4.2044983, 4.7787113, 0)
+[sub_resource type="Compositor" id="Compositor_focus"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_focus")])
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_bkb5w"]
 size = Vector2(64, 64)
@@ -32,10 +34,13 @@ _room_centrepieces = ExtResource("4_centrepieces")
 tile_lift_animation = ExtResource("5_lift")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." index="5" unique_id=1391764827]
-environment = SubResource("Environment_jwwwr")
+environment = ExtResource("5_environment")
+compositor = SubResource("Compositor_focus")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." index="6" unique_id=1372172077]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 mesh = SubResource("PlaneMesh_bkb5w")
 skeleton = NodePath("..")
 surface_material_override/0 = ExtResource("16_jwwwr")
+
+[node name="DustMotes" parent="." index="7" unique_id=1288405713 instance=ExtResource("7_motes")]

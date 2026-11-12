@@ -115,5 +115,13 @@ func adjust(_character: Character, _target: Vector2i, _argument: int, _level: Le
 func cancel(_character: Character, _target: Vector2i, _level: Level) -> void:
 	pass
 
+## @returns the light [param _character] carries through this ability now, e.g. a lit lantern; [code]null[/code] for none
+func get_light_source(_character: Character) -> LightSource: return null
+
+## Shows the ability on [param _character]'s model, e.g. a lantern on the belt; called whenever the model or the ability's state
+## changes
+func show_on(_character: Character) -> void:
+	pass
+
 func _to_string() -> String:
 	return "[Ability %s]" % name

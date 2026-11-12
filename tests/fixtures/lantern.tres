@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ToggleLightAbility" format=3]
+
+[ext_resource type="Script" path="res://engine/abilities/toggle_light_ability.gd" id="1_script"]
+[ext_resource type="Resource" path="res://tests/fixtures/lantern_light.tres" id="2_light"]
+
+[resource]
+script = ExtResource("1_script")
+name = "Lantern"
+description = "The rogue's Lantern without its prop, an asset, and with a light that shows three cells further."
+targeting = 1
+cost = 0
+light_source = ExtResource("2_light")

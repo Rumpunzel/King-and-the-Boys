@@ -86,6 +86,17 @@ func get_part_mesh(part: int) -> ArrayMesh:
 		if part_mesh and part_mesh.part == part: return part_mesh.male_mesh
 	return null
 
+## @returns the lights the look's meshes are (see [constant LightSource.META]), e.g. a torch's
+func get_light_sources() -> Array[LightSource]:
+	var light_sources: Array[LightSource] = []
+	if not appearance: return light_sources
+	for part_mesh: EquipmentPartMesh in appearance.parts:
+		if not part_mesh: continue
+		for mesh: ArrayMesh in [part_mesh.male_mesh, part_mesh.female_mesh]:
+			var light_source: LightSource = LightSource.of_mesh(mesh)
+			if light_source and not light_sources.has(light_source): light_sources.append(light_source)
+	return light_sources
+
 ## A copy for its owner to store, e.g. a character's starting look, so it can change without touching this one; meshes and type stay shared
 func make_local() -> EquipmentLook:
 	return duplicate_deep(Resource.DEEP_DUPLICATE_INTERNAL) as EquipmentLook

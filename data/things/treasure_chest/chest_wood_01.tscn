@@ -11,4 +11,4 @@ metadata/_custom_type_script = "uid://bpkm2ws12sljg"
 [node name="SM_Prop_Chest_Wood_01" parent="." unique_id=1601099566 instance=ExtResource("2_ungkq")]
 
 [node name="TreasureLight" parent="." unique_id=593047522 instance=ExtResource("3_77jq3")]
-transform = Transform3D(1, 0, 0, 0, 0.99999964, 0, 0, 0, 1.0000001, 0, 1.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21, 0.19)

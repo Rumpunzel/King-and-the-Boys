@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://bka6r1jummabd"]
+
+[sub_resource type="Gradient" id="Gradient_mote"]
+offsets = PackedFloat32Array(0, 0.35, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mote"]
+gradient = SubResource("Gradient_mote")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mote"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("GradientTexture2D_mote")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_mote"]
+material = SubResource("StandardMaterial3D_mote")
+size = Vector2(0.2, 0.2)
+
+[sub_resource type="Gradient" id="Gradient_colours"]
+offsets = PackedFloat32Array(0, 0.35, 0.6, 0.85, 1)
+colors = PackedColorArray(1.4, 0.6, 0.15, 1, 1.3, 0.95, 0.35, 1, 1.2, 0.45, 0.4, 1, 1.35, 0.8, 0.25, 1, 0.3, 0.8, 1.1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_colours"]
+gradient = SubResource("Gradient_colours")
+
+[sub_resource type="Gradient" id="Gradient_fade"]
+offsets = PackedFloat32Array(0, 0.25, 0.75, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.7, 1, 1, 1, 0.7, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fade"]
+gradient = SubResource("Gradient_fade")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_mote"]
+emission_shape = 3
+emission_box_extents = Vector3(32, 3, 32)
+direction = Vector3(0.3, 1, 0.1)
+spread = 60.0
+initial_velocity_min = 0.03
+initial_velocity_max = 0.12
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 1.4
+color_ramp = SubResource("GradientTexture1D_fade")
+color_initial_ramp = SubResource("GradientTexture1D_colours")
+turbulence_enabled = true
+turbulence_noise_strength = 0.2
+turbulence_noise_scale = 6.0
+turbulence_influence_min = 0.02
+turbulence_influence_max = 0.06
+
+[node name="DustMotes" type="GPUParticles3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+cast_shadow = 0
+amount = 320
+lifetime = 12.0
+preprocess = 12.0
+visibility_aabb = AABB(-34, -4, -34, 68, 8, 68)
+process_material = SubResource("ParticleProcessMaterial_mote")
+draw_pass_1 = SubResource("QuadMesh_mote")

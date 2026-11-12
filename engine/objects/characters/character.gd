@@ -17,6 +17,8 @@ signal figure_entered_grid_cell(cell: Vector2i)
 signal figure_arrived
 
 signal profile_changed
+## Emitted when the lights the character carries change (see [method get_light_sources]), e.g. a torch equipped, a lantern lit
+signal light_sources_changed
 
 const GROUP: StringName = "Characters"
 
@@ -75,6 +77,7 @@ var model: Model:
 		if equipment and model is ModularModel:
 			var modular_model: ModularModel = model
 			equipment.apply_to(modular_model)
+		_show_abilities()
 
 ## Rolled once by the server, see [method ModelConfigurationRandom.roll]
 ## {part: [int] of the model's [code]Part[/code] enum -> mesh [ResourceId]: [String]}, an empty ID meaning no mesh
@@ -140,6 +143,14 @@ var active_ability_id: String = "":
 		active_ability_id = new_active_ability_id
 		active_ability_changed.emit()
 		if model: model.rest_in(_get_rest())
+## The [ResourceId]s of the toggled abilities whose state differs from how they start (see [ToggleLightAbility]), e.g. a
+## lantern put out; set by the host, replicated
+var toggled_ability_ids: PackedStringArray = []:
+	set(new_toggled_ability_ids):
+		if new_toggled_ability_ids == toggled_ability_ids: return
+		toggled_ability_ids = new_toggled_ability_ids
+		_show_abilities()
+		light_sources_changed.emit()
 ## The movement points the held ability in use would cost as it is now, [code]0[/code] if none; set by the host, replicated
 var held_cost: int = 0:
 	set(new_held_cost):
@@ -165,6 +176,11 @@ var _carried_transform: Transform3D
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+func _enter_tree() -> void:
+	# Before the children are ready, so the character's light sees equipment shown from the start
+	if equipment and not equipment.equipment_changed.is_connected(light_sources_changed.emit):
+		equipment.equipment_changed.connect(light_sources_changed.emit)
+
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	if model: model.play_model_animation(profile.spawn_animation)
@@ -184,6 +200,39 @@ func _ready() -> void:
 	_has_grid_state = true
 	_queue_grid_visual_update()
 	entered_grid_cell.emit(grid_cell)
+
+## @returns the lights the character carries: its equipment's (a torch) and its abilities' (a lit lantern), each once
+func get_light_sources() -> Array[LightSource]:
+	var light_sources: Array[LightSource] = []
+	if equipment:
+		for look: EquipmentLook in equipment.get_all_equipped():
+			for light_source: LightSource in look.get_light_sources(): _add_light_source(light_sources, light_source)
+	if profile:
+		for ability: Ability in profile.abilities: _add_light_source(light_sources, ability.get_light_source(self) if ability else null)
+	return light_sources
+
+## A light counts once, e.g. a torch in each hand
+static func _add_light_source(light_sources: Array[LightSource], light_source: LightSource) -> void:
+	if light_source and not light_sources.has(light_source): light_sources.append(light_source)
+
+## @returns how far the character sees ([member CharacterProfile.vision]), changed by the lights it carries
+func get_vision() -> float:
+	var vision: float = profile.vision
+	for light_source: LightSource in get_light_sources(): vision = StatModifier.apply_all(light_source.vision_modifiers, vision)
+	return vision
+
+## @returns how far the character sees in the dark ([member CharacterProfile.dark_vision]), changed by the lights it carries
+func get_dark_vision() -> float:
+	var dark_vision: float = profile.dark_vision
+	for light_source: LightSource in get_light_sources():
+		dark_vision = StatModifier.apply_all(light_source.dark_vision_modifiers, dark_vision)
+	return dark_vision
+
+## Lets each ability show itself on the model, e.g. a lantern on the belt, lit or not
+func _show_abilities() -> void:
+	if not profile or not model: return
+	for ability: Ability in profile.abilities:
+		if ability: ability.show_on(self)
 
 ## Host only, while spawning onto a full tile: the nearest tile with room instead, see
 ## [method Level.get_nearest_free_spot_position]

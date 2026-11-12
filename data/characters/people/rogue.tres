@@ -52,6 +52,7 @@
 [ext_resource type="Animation" uid="uid://dgq3ap333chbt" path="res://data/characters/animations/quaternius/GroundSit_Exit.res" id="51_5x40w"]
 [ext_resource type="Resource" uid="uid://c1io5bgjdq6kr" path="res://data/model_animations/heroes/rogue_move.tres" id="90_rogue_move"]
 [ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
+[ext_resource type="Resource" uid="uid://ce7d0kwrxd7xj" path="res://data/abilities/lantern.tres" id="93_lantern"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
 
 [sub_resource type="Resource" id="BodyAnimations_passed"]
@@ -234,6 +235,7 @@ name = "Belt 01"
 script = ExtResource("3_7rwy5")
 strength = 2
 speed = 4
+abilities = Array[ExtResource("4_dvff2")]([ExtResource("93_lantern")])
 gear_primary_color = Color(0.173, 0.29, 0.208, 1)
 gear_secondary_color = Color(0.659, 0.682, 0.706, 1)
 model_configuration = ExtResource("5_c4qnl")

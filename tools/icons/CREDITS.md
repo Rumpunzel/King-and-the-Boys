@@ -177,6 +177,8 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `yellow/dice-six-faces-six.svg` | delapouite | [dice-six-faces-six](https://game-icons.net/1x1/delapouite/dice-six-faces-six.html) |
 | `yellow/dice-six-faces-three.svg` | delapouite | [dice-six-faces-three](https://game-icons.net/1x1/delapouite/dice-six-faces-three.html) |
 | `yellow/gears.svg` | lorc | [gears](https://game-icons.net/1x1/lorc/gears.html) |
+| `yellow/lantern-flame.svg` | lorc | [lantern-flame](https://game-icons.net/1x1/lorc/lantern-flame.html) |
 | `yellow/load.svg` | delapouite | [load](https://game-icons.net/1x1/delapouite/load.html) |
 | `yellow/mustache.svg` | delapouite | [mustache](https://game-icons.net/1x1/delapouite/mustache.html) |
 | `yellow/save.svg` | delapouite | [save](https://game-icons.net/1x1/delapouite/save.html) |
+| `yellow/upgrade.svg` | delapouite | [upgrade](https://game-icons.net/1x1/delapouite/upgrade.html) |

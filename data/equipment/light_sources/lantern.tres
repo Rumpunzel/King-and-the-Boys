@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="LightSource" format=3 uid="uid://be5xknm7qowng"]
+
+[ext_resource type="Script" uid="uid://b2i2p8hawod4l" path="res://engine/objects/characters/modifiers/stat_modifier.gd" id="1_ftee8"]
+[ext_resource type="Script" uid="uid://dpalwhgn6li3m" path="res://engine/objects/characters/light_source.gd" id="1_light"]
+[ext_resource type="Script" uid="uid://b0syh88vy4qc8" path="res://engine/objects/characters/modifiers/add_stat_modifier.gd" id="2_add"]
+
+[sub_resource type="Resource" id="Resource_dark_vision"]
+script = ExtResource("2_add")
+
+[sub_resource type="Resource" id="Resource_vision"]
+script = ExtResource("2_add")
+
+[resource]
+script = ExtResource("1_light")
+color = Color(1, 0.74, 0.42, 1)
+energy = 5.0
+light_range = 14.0
+vision_modifiers = Array[ExtResource("1_ftee8")]([SubResource("Resource_vision")])
+dark_vision_modifiers = Array[ExtResource("1_ftee8")]([SubResource("Resource_dark_vision")])

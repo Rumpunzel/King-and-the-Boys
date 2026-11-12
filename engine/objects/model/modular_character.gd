@@ -37,6 +37,7 @@ enum Part {
 	MAIN_HAND,
 	TWO_HANDED,
 	OFF_HAND,
+	OFF_HAND_WEAPON,
 }
 
 ## The parts each slot owns; weapons and shields are attachments on the hands, from the shared meshes in [code]data/equipment/meshes/[/code]
@@ -50,7 +51,8 @@ const SLOT_PARTS: Dictionary[EquipmentLook.Slot, Array] = {
 	EquipmentLook.Slot.BACK: [Part.BACK_ATTACHMENT],
 	# One weapon in the right hand: one-handed, or two-handed (whose type blocks the off hand)
 	EquipmentLook.Slot.MAIN_HAND: [Part.MAIN_HAND, Part.TWO_HANDED],
-	EquipmentLook.Slot.OFF_HAND: [Part.OFF_HAND],
+	# A shield on the left forearm, or a one-handed weapon (a torch, a second blade) in the left hand's grip
+	EquipmentLook.Slot.OFF_HAND: [Part.OFF_HAND, Part.OFF_HAND_WEAPON],
 }
 
 @export_group("Body Parts")
@@ -88,6 +90,7 @@ const SLOT_PARTS: Dictionary[EquipmentLook.Slot, Array] = {
 @export var main_hand: ModularBodyPart
 @export var two_handed: ModularBodyPart
 @export var off_hand: ModularBodyPart
+@export var off_hand_weapon: ModularBodyPart
 
 func get_part_keys() -> PackedStringArray: return PackedStringArray(Part.keys())
 

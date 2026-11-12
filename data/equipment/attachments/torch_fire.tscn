@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dllo322x2u80a"]
+
+[ext_resource type="PackedScene" uid="uid://cbh8li7jllmet" path="res://assets/polygon_particle_fx/Prefabs/FX/FX_Fire_Small_01.tscn" id="1_fire"]
+[ext_resource type="Script" uid="uid://doncsrtlob2g8" path="res://engine/objects/model/upright.gd" id="3_upright"]
+
+[node name="TorchFire" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+script = ExtResource("3_upright")
+
+[node name="Fire" parent="." instance=ExtResource("1_fire")]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+local_coords = true
+
+[node name="FX_Fire_Embers_01" parent="Fire" index="0"]
+local_coords = true

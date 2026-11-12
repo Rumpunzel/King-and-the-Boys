@@ -45,6 +45,7 @@
 [ext_resource type="ArrayMesh" uid="uid://bgwirts1dyo7g" path="res://data/equipment/meshes/main_hand/weapon_hero_sword_small_36.res" id="42_wl2h2"]
 [ext_resource type="ArrayMesh" uid="uid://co14bygghh46w" path="res://data/equipment/meshes/main_hand/weapon_hero_sword_37.res" id="43_w6cm2"]
 [ext_resource type="ArrayMesh" uid="uid://r36eb00wp8r1" path="res://data/equipment/meshes/main_hand/weapon_hero_rapier_38.res" id="44_nt1fk"]
+[ext_resource type="ArrayMesh" uid="uid://blum2uqyaw1vm" path="res://data/equipment/meshes/main_hand/weapon_torch_39.res" id="90_torch"]
 
 [sub_resource type="Resource" id="Resource_ti5ve"]
 script = ExtResource("4_o1pjf")
@@ -616,7 +617,22 @@ type = ExtResource("7_rm62r")
 appearance = SubResource("Resource_y8ks8")
 name = "Dwarf Weapon 38"
 
+[sub_resource type="Resource" id="Resource_torch_part"]
+script = ExtResource("4_o1pjf")
+part = 8
+male_mesh = ExtResource("90_torch")
+
+[sub_resource type="Resource" id="Resource_torch_appearance"]
+script = ExtResource("6_n3aa2")
+parts = Array[ExtResource("4_o1pjf")]([SubResource("Resource_torch_part")])
+
+[sub_resource type="Resource" id="39"]
+script = ExtResource("1_4bgdr")
+type = ExtResource("7_rm62r")
+appearance = SubResource("Resource_torch_appearance")
+name = "Dwarf Weapon 39"
+
 [resource]
 script = ExtResource("38_mpeos")
 type = ExtResource("7_rm62r")
-looks = Array[ExtResource("1_4bgdr")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12"), SubResource("13"), SubResource("14"), SubResource("15"), SubResource("16"), SubResource("17"), SubResource("18"), SubResource("19"), SubResource("20"), SubResource("21"), SubResource("22"), SubResource("23"), SubResource("24"), SubResource("25"), SubResource("26"), SubResource("27"), SubResource("28"), SubResource("29"), SubResource("30"), SubResource("31"), SubResource("32"), SubResource("33"), SubResource("34"), SubResource("35"), SubResource("36"), SubResource("37"), SubResource("38")])
+looks = Array[ExtResource("1_4bgdr")]([SubResource("01"), SubResource("02"), SubResource("03"), SubResource("04"), SubResource("05"), SubResource("06"), SubResource("07"), SubResource("08"), SubResource("09"), SubResource("10"), SubResource("11"), SubResource("12"), SubResource("13"), SubResource("14"), SubResource("15"), SubResource("16"), SubResource("17"), SubResource("18"), SubResource("19"), SubResource("20"), SubResource("21"), SubResource("22"), SubResource("23"), SubResource("24"), SubResource("25"), SubResource("26"), SubResource("27"), SubResource("28"), SubResource("29"), SubResource("30"), SubResource("31"), SubResource("32"), SubResource("33"), SubResource("34"), SubResource("35"), SubResource("36"), SubResource("37"), SubResource("38"), SubResource("39")])

@@ -255,7 +255,7 @@ func _use_ability(character: Character, ability: Ability, target_cell: Vector2i,
 	uses[ability] = used + 1
 	character.count_charges(ability, 1)
 	if step.acts_at_turn_end(): _pending_steps.append(step)
-	if not _board_changed_during_use:
+	if not _board_changed_during_use and step.can_be_undone():
 		var undo_stack: Array = _undo_stacks.get_or_add(character, [])
 		undo_stack.append(step)
 	_update_undo_steps(character)

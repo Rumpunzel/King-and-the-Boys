@@ -17,6 +17,8 @@ extends Resource
 ## pieces stand on, lose their collision and are each a [Model], so they drop in with [member drop_animation]
 
 const NODE_NAME: StringName = &"Decorations"
+## Name of the node holding a tile's ground, see [method create_ground]
+const GROUND_NODE_NAME: StringName = &"Ground"
 ## Name of the node holding a tile's paths, see [method create_paths]
 const PATHS_NODE_NAME: StringName = &"Paths"
 ## How many frames dust waits for the rest of a room arriving tile by tile, see [method _add_room_dust]
@@ -58,7 +60,7 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 @export var corner_lights: PropSet
 @export_range(0.0, 1.0) var corner_light_chance: float = 0.05
 @export_group("Rooms")
-## Lie under the middle of room tiles, e.g. rugs; turned diagonally to the grid, in one of its four diagonals
+## Lie under the middle of room tiles, e.g. rugs; turned at random (a rug that fits the tile turned diagonally fits at any angle)
 @export var room_floors: PropSet
 @export_range(0.0, 1.0) var room_floor_chance: float = 0.3
 ## Over the middle of some room tiles, e.g. sun beams
@@ -93,6 +95,18 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 @export_range(0.0, 0.2) var path_height: float = 0.01
 ## A plank or slab over the gap where two tiles open to each other; laid with its long side across the gap
 @export var bridges: PropSet
+@export_group("Ground")
+## The ground under corridor tiles, reaching past them into the table so neighbours share it ([code]tile_ground.gdshader[/code],
+## which takes the patch's [code]half_size[/code] as an instance uniform); none leaves tiles on the bare table
+@export var ground_material: Material
+## The ground under room tiles, which reaches further so a room stands on one patch
+@export var room_ground_material: Material
+## How far the ground under a corridor tile reaches from its middle, as a share of a grid cell
+@export_range(0.5, 1.5) var ground_reach: float = 0.65
+## How far the ground under a room tile reaches from its middle, as a share of a grid cell
+@export_range(0.5, 1.5) var room_ground_reach: float = 0.8
+## How high the ground lies, relative to the tile's origin, in metres: just above the table
+@export_range(-0.2, 0.0) var ground_height: float = -0.085
 @export_group("Animation")
 ## Played on each prop as it drops in, one after another, unless its prop set has its own [member PropSet.drop_animation]
 @export var drop_animation: ModelAnimation = preload("uid://bf0msgn2okdfo")
@@ -157,10 +171,10 @@ func _add_room_props(decorations: Node3D, tile: Structure) -> void:
 	if not tile.profile.room_type: return
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(tile.get_grid_position()) ^ hash(&"room")
-	var diagonal: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4) + PI * 0.25)
 	if room_floors and random.randf() < room_floor_chance:
-		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), diagonal), random)
+		_add_prop(decorations, room_floors, _to_model(tile, _on_floor(Vector2.ZERO), _random_turn(random).basis), random)
 	if room_ambience and random.randf() < room_ambience_chance:
+		# Unturned: a sun beam's slant shows where the light falls from, the same for every beam
 		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO)), random)
 	_add_room_dust(decorations, tile)
 
@@ -179,7 +193,7 @@ func _add_room_dust(decorations: Node3D, tile: Structure, frames_left: int = ROO
 	if room_random.randf() >= dusty_room_chance: return
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(tile.get_grid_position()) ^ hash(&"dust")
-	_add_prop(decorations, room_dust, _to_model(tile, _on_floor(Vector2.ZERO)), random)
+	_add_prop(decorations, room_dust, _to_model(tile, _on_floor(Vector2.ZERO), _random_turn(random).basis), random)
 	# Late, the other props' drop is under way without it: it drops in on its own
 	if frames_left < ROOM_WAIT_FRAMES and drop_animation: _drop_one(decorations.get_child(decorations.get_child_count() - 1) as Model)
 
@@ -268,6 +282,33 @@ func create_paths(tile: Structure) -> Node3D:
 		path.transform = Transform3D(Basis(Vector3.UP, atan2(outward.x, outward.y)), Vector3.UP * path_height)
 		paths.add_child(path)
 	return paths
+
+## The ground under [param tile], room or corridor, reaching through its openings; it belongs under the tile, not its model, so
+## it stays when the tile lifts.
+## @returns [code]null[/code] without a material for the tile's kind
+func create_ground(tile: Structure) -> MeshInstance3D:
+	var material: Material = room_ground_material if tile.profile.room_type else ground_material
+	if not material: return null
+	var half_size: float = tile.level.grid_size * (room_ground_reach if tile.profile.room_type else ground_reach)
+	var patch: PlaneMesh = PlaneMesh.new()
+	patch.size = Vector2.ONE * half_size * 2.0
+	patch.material = material
+	var ground: MeshInstance3D = MeshInstance3D.new()
+	ground.name = GROUND_NODE_NAME
+	ground.mesh = patch
+	ground.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	ground.set_instance_shader_parameter(&"half_size", half_size)
+	# The structure's own space is the profile's unturned one, see create_paths
+	var open_sides: Vector4 = Vector4.ZERO
+	for direction: Level.Direction in tile.profile.get_connections(0):
+		var outward: Vector2i = Level.DIRECTION_VECTORS[direction]
+		if outward.x > 0: open_sides.x = 1.0
+		elif outward.x < 0: open_sides.y = 1.0
+		elif outward.y > 0: open_sides.z = 1.0
+		else: open_sides.w = 1.0
+	ground.set_instance_shader_parameter(&"open_sides", open_sides)
+	ground.position = Vector3.UP * ground_height
+	return ground
 
 ## A bridge over the gap between the tile on [param grid_position] and its neighbour in [param direction], turned so its long
 ## side spans the gap; place it on the gap. Seeded by the two cells, so either side builds the same one on every peer.

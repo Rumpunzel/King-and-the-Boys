@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cc84pr7gyxx6x"]
+
+[ext_resource type="Shader" uid="uid://bjskcyrt4rxbv" path="res://engine/objects/structures/occludable.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" uid="uid://d0xy5o7mkcrem" path="res://assets/polygon_dungeon/Textures/Dungeons_Texture_01.png" id="2_albedo"]
+
+[resource]
+resource_name = "Polygon Dungeon"
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/albedo_texture = ExtResource("2_albedo")
+shader_parameter/roughness = 0.85
+shader_parameter/saturated_glow = 0.0
+shader_parameter/clear_radius = 0.8
+shader_parameter/fade_width = 1.2
