@@ -77,6 +77,7 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `red/kevlar.svg` | sbed | [kevlar](https://game-icons.net/1x1/sbed/kevlar.html) |
 | `red/kid-slide.svg` | delapouite | [kid-slide](https://game-icons.net/1x1/delapouite/kid-slide.html) |
 | `red/load.svg` | delapouite | [load](https://game-icons.net/1x1/delapouite/load.html) |
+| `red/meeple.svg` | delapouite | [meeple](https://game-icons.net/1x1/delapouite/meeple.html) |
 | `red/mustache.svg` | delapouite | [mustache](https://game-icons.net/1x1/delapouite/mustache.html) |
 | `red/ore.svg` | faithtoken | [ore](https://game-icons.net/1x1/faithtoken/ore.html) |
 | `red/palette.svg` | delapouite | [palette](https://game-icons.net/1x1/delapouite/palette.html) |

@@ -326,7 +326,7 @@ func get_cells_in_reach(grid_position: Vector2i) -> Array[Vector2i]:
 
 ## The cells [param piece] stands on: a character's [member Character.grid_cell], a tile's cells, all four cells around
 ## a thing on a grid corner (e.g. a centrepiece), else the cell under it
-func get_cells_of(piece: Node3D) -> Array[Vector2i]:
+func get_cells_of(piece: BoardObject) -> Array[Vector2i]:
 	if piece is Character: return [(piece as Character).grid_cell]
 	if piece is Structure: return (piece as Structure).get_grid_cells()
 	var corner: Variant = _corner_things.find_key(piece)

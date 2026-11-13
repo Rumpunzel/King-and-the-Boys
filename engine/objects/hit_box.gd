@@ -1,5 +1,6 @@
 @tool
 @icon("uid://bv63hb5gynt8d")
+@abstract
 class_name HitBox
 extends Node
 ## What a player may take control of, on a character, thing or structure (see [method get_body]): the host decides who
@@ -63,14 +64,11 @@ func _get_sender_id() -> int:
 	var sender_id: int = multiplayer.get_remote_sender_id()
 	return sender_id if sender_id != 0 else multiplayer.get_unique_id()
 
-func get_body() -> Node3D:
-	assert(false, "HitBox.get_body is 'virtual' and needs to be overriden!")
-	return null
+## @returns the piece this hit box belongs to
+@abstract func get_body() -> BoardObject
 
 func get_model() -> Model:
-	assert(false, "HitBox.get_model is 'virtual' and needs to be overriden!")
-	return null
+	return get_body().model
 
 func get_heads_up_anchor() -> Vector3:
-	assert(false, "HitBox.get_heads_up_anchor is 'virtual' and needs to be overriden!")
-	return Vector3.ZERO
+	return get_body().get_heads_up_anchor()

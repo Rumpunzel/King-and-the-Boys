@@ -1,7 +1,7 @@
 @tool
 @icon("uid://bnaoddhf8gssj")
 class_name Character
-extends Node3D
+extends BoardObject
 
 signal entered_grid_cell(cell: Vector2i)
 signal exited_grid_cell(cell: Vector2i)
@@ -15,7 +15,6 @@ signal figure_entered_grid_cell(cell: Vector2i)
 ## Emitted on every peer when the figure's move ended
 signal figure_arrived
 
-signal profile_changed
 ## Emitted when the lights the character carries change (see [method get_light_sources]), e.g. a torch equipped, a lantern lit
 signal light_sources_changed
 
@@ -29,48 +28,14 @@ const EQUIPMENT: StringName = "equipment"
 
 const _TURN_DURATION: float = 0.5
 
-## Determines the varation of the [Model]
-## If [code]<0[/code] a random [Model] will be used
-@export var variation: int = -1:
-	set(new_variation):
-		if new_variation == variation: return
-		variation = new_variation
-		if not profile: return
-		if not model: return
-		model = profile.create_model(variation)
-
 @export var profile: CharacterProfile:
 	set(new_character_profile):
 		profile = new_character_profile
-		if not profile:
-			assert(Engine.is_editor_hint())
-			model = null
-			profile_changed.emit()
-			return
-		if variation < 0: variation = profile.get_random_variation()
-		model = profile.create_model(variation)
-		profile_changed.emit()
-		add_to_group(profile.get_group_name())
+		_show_profile(false)
 
 @export_group("Configuration")
 @export var _synchronizer: MultiplayerSynchronizer
 @export var equipment: CharacterEquipment
-
-var model: Model:
-	set(new_model):
-		if model:
-			remove_child(model)
-			model.queue_free()
-		model = new_model
-		if not model: return
-		add_child(model, true)
-		_apply_body()
-		var rest: BodyAnimations = _get_rest()
-		if rest: model.rest_in(rest, false)
-		if equipment and model is ModularModel:
-			var modular_model: ModularModel = model
-			equipment.apply_to(modular_model)
-		_show_abilities()
 
 ## Rolled once by the server, see [method ModelConfigurationRandom.roll]
 ## {part: [int] of the model's [code]Part[/code] enum -> mesh [ResourceId]: [String]}, an empty ID meaning no mesh
@@ -367,12 +332,17 @@ func _apply_body() -> void:
 	var modular_model: ModularModel = model
 	modular_model.apply_body(body)
 
-func get_portrait() -> Texture:
-	if model and model.portrait_override: return model.portrait_override
-	return profile.portrait
+func get_profile() -> Profile: return profile
 
-func get_heads_up_anchor() -> Vector3:
-	return position + profile.heads_up_display_offset
+## Dresses each new model: body, rest, equipment, abilities
+func _on_model_added() -> void:
+	_apply_body()
+	var rest: BodyAnimations = _get_rest()
+	if rest: model.rest_in(rest, false)
+	if equipment and model is ModularModel:
+		var modular_model: ModularModel = model
+		equipment.apply_to(modular_model)
+	_show_abilities()
 
 func get_grid_position() -> Vector2i:
 	return grid_cell
