@@ -107,16 +107,20 @@ script = ExtResource("8_mvbif")
 [node name="SynchronizerSerializer" parent="Character/CharacterSynchronizer" parent_id_path=PackedInt32Array(1983351460, 1181153482) index="0" unique_id=510585076]
 type = 64
 
-[node name="CharacterLight" type="OmniLight3D" parent="Character" unique_id=772574322 node_paths=PackedStringArray("_character")]
+[node name="CharacterLight" type="OmniLight3D" parent="Character" unique_id=772574322 node_paths=PackedStringArray("_character", "_carried_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 4, 1)
 light_color = Color(0.62, 0.74, 1, 1)
-light_energy = 1.2
+light_energy = 2.0
 light_size = 0.4
 shadow_enabled = true
 omni_range = 14.0
-lit_spot_share = 1.0
 script = ExtResource("21_character_light")
 _character = NodePath("..")
+_carried_light = NodePath("CarriedLight")
+
+[node name="CarriedLight" type="OmniLight3D" parent="Character/CharacterLight" unique_id=1460283917]
+light_size = 0.4
+shadow_enabled = true
 
 [connection signal="available_interactions_changed" from="StateMachine" to="HUD" method="_on_available_interactions_changed"]
 
