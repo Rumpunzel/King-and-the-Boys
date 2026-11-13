@@ -12,6 +12,10 @@ signal passed_players_changed
 signal phase_changed(phase: Phase)
 ## Host only: a block was rolled and played out on the board
 signal blocked(block: Block)
+## Every peer: a block's attacker strikes; [param dice] are the faces rolled ([enum Block.Face]), [param chosen] the one that counts
+signal block_shown(attacker: Character, defender: Character, dice: Array[int], chosen: int)
+## Every peer: a player is asked to choose for a block, or no longer is, see [member block_choice]
+signal block_choice_changed
 
 enum Phase {
 	HEROES,
@@ -25,6 +29,17 @@ const _HOP_POLL: float = 0.05
 const _MAX_HOP_WAIT: float = 3.0
 ## How long the host lets a block in sight play before the phase goes on
 const _BLOCK_PAUSE: float = 0.8
+
+## Keys of [member block_choice]
+const CHOICE_PICKER: StringName = &"picker"
+const CHOICE_ATTACKER: StringName = &"attacker"
+const CHOICE_DEFENDER: StringName = &"defender"
+const CHOICE_DICE: StringName = &"dice"
+const CHOICE_WAYS: StringName = &"ways"
+
+## Host only: how long a player has to choose for a block (see [member block_choice]) before the host chooses for them; at
+## [code]0[/code] the host always chooses (e.g. in tests)
+@export var choice_timeout: float = 20.0
 
 @export_group("Configuration")
 @export var _level: Level
@@ -50,8 +65,21 @@ var phase: Phase = Phase.HEROES:
 		phase = new_phase
 		phase_changed.emit(phase)
 
+## The choice a block waits for, set by the host and replicated, empty while none is asked: the player id who chooses
+## ([constant CHOICE_PICKER]), the paths of attacker and defender, and either the dice to pick one of ([constant CHOICE_DICE],
+## [enum Block.Face]s) or the ways to push the defender ([constant CHOICE_WAYS], [enum Level.Direction]s). Every request but
+## the choice waits meanwhile
+var block_choice: Dictionary = {}:
+	set(new_block_choice):
+		if new_block_choice == block_choice: return
+		block_choice = new_block_choice
+		block_choice_changed.emit()
+
 ## Host only: rolls the block dice and picks pushes; seed it to block the same again
 var combat_random: RandomNumberGenerator = RandomNumberGenerator.new()
+# Host only: the choice made for the block waiting, -1 while none came; counted runs end a choice the game moved on from
+var _chosen: int = -1
+var _choice_run: int = 0
 
 # Host only: steps and ability uses (GridStep, AbilityStep) that can still be undone this turn, newest last
 var _undo_stacks: Dictionary[Character, Array] = {}
@@ -127,14 +155,15 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	if has_passed(sender_id): return
 	var character: Character = _get_controlled_character(sender_id, character_path)
 	if not character or _held_abilities.has(character): return
-	try_step(character, direction, true)
+	await try_step(character, direction, true)
 
 ## Host only, the one rule for every step, the players' and the monsters': steps [param character] one cell into
 ## [param direction] if a wall, its movement points and the target tile allow it; otherwise only turns it. Turning is free.
 ## A fallen figure gets up instead, for a movement point. A standing enemy on the tile it leaves blocks it first: it steps on
 ## only if it keeps its feet and stays where it is. Stepping onto an enemy's tile ends its moves: a hero blocks a monster
 ## there as the monster phase starts, a monster blocks a hero at once.
-## [param undoable] steps go onto the character's undo stack; a block closes it.
+## [param undoable] steps go onto the character's undo stack; a block closes it. A block may wait for a player's choice
+## (see [member block_choice]), so await it.
 ## @returns whether it stepped
 func try_step(character: Character, direction: Level.Direction, undoable: bool = false) -> bool:
 	assert(multiplayer.is_server())
@@ -149,8 +178,8 @@ func try_step(character: Character, direction: Level.Direction, undoable: bool =
 	character.movement_points -= 1
 	var leaving_blocker: Character = _get_enemy_on(character.grid_cell, character)
 	if leaving_blocker:
-		var block: Block = _block(leaving_blocker, character)
-		if character.posture != Character.Posture.STANDING or block.was_pushed(): return false
+		var block: Block = await _block(leaving_blocker, character)
+		if not block or not is_instance_valid(character) or character.posture != Character.Posture.STANDING or block.was_pushed(): return false
 		free_spots = _level.get_free_spots(target_cell, character)
 		if free_spots.is_empty():
 			# Refused like any step into a full tile: it only turns
@@ -165,7 +194,7 @@ func try_step(character: Character, direction: Level.Direction, undoable: bool =
 	character.place_on_grid(target_cell, target_spot, direction)
 	if undoable: _update_undo_steps(character)
 	var enemy: Character = _get_enemy_on(target_cell, character)
-	if enemy: _engage(character, enemy)
+	if enemy: await _engage(character, enemy)
 	return true
 
 ## Host only: stepping onto [param enemy]'s tile ends [param character]'s moves; a hero blocks later (see [member _engaged]),
@@ -173,7 +202,7 @@ func try_step(character: Character, direction: Level.Direction, undoable: bool =
 func _engage(character: Character, enemy: Character) -> void:
 	character.movement_points = 0
 	if character.profile.group != CharacterProfile.Groups.HEROES:
-		_block(character, enemy)
+		await _block(character, enemy)
 		return
 	_track(character)
 	_engaged.append(character)
@@ -186,19 +215,37 @@ func _stand_up(character: Character) -> void:
 	character.movement_points -= 1
 	character.posture = Character.Posture.STANDING
 
-## Host only: [param attacker] blocks [param defender]; every peer sees the attack, the falls and the push. Nothing either did
-## before can be undone any more
+## Host only: [param attacker] blocks [param defender]: the dice are rolled, the side that picks chooses a die and an attacking
+## player the way to push (each a [member block_choice] the host waits for), then every peer sees the attack, the falls and the
+## push. Nothing either did before can be undone any more.
+## @returns the block, or [code]null[/code] if the game moved on while it waited (a save loaded, a figure gone)
 func _block(attacker: Character, defender: Character) -> Block:
 	var block: Block = Block.new(attacker, defender)
 	# Facing the defender, replicated like any turn
 	var to_defender: Vector3 = _level.get_spot_position(defender.grid_cell, defender.tile_spot) - _level.get_spot_position(attacker.grid_cell, attacker.tile_spot)
 	if to_defender.length_squared() > 0.0001:
 		attacker.place_on_grid(attacker.grid_cell, attacker.tile_spot, Character.rotation_to_facing(atan2(to_defender.x, to_defender.z)))
+	block.roll(_level, combat_random)
+	var run: int = _choice_run
+	if block.dice.size() > 1:
+		var dice: Array[int] = []
+		dice.assign(block.dice)
+		var die: int = await _ask(block.get_picker(), block, dice, [])
+		if run != _choice_run or not is_instance_valid(attacker) or not is_instance_valid(defender): return null
+		if die >= 0: block.chosen = block.dice[die]
+	if Block.pushes(block.chosen):
+		var ways: Array[int] = []
+		ways.assign(block.get_push_ways(_level))
+		if ways.size() > 1:
+			block.push_way = await _ask(attacker, block, [], ways)
+			if run != _choice_run or not is_instance_valid(attacker) or not is_instance_valid(defender): return null
 	# Before the outcome, so every peer holds the falls and the push until the strike lands
-	show_block(attacker.get_path(), defender.get_path())
+	var shown_dice: Array[int] = []
+	shown_dice.assign(block.dice)
+	show_block(attacker.get_path(), defender.get_path(), shown_dice, block.chosen)
 	for peer_id: int in _synced_peers:
-		if peer_id != multiplayer.get_unique_id(): show_block.rpc_id(peer_id, attacker.get_path(), defender.get_path())
-	block.resolve(_level, combat_random)
+		if peer_id != multiplayer.get_unique_id(): show_block.rpc_id(peer_id, attacker.get_path(), defender.get_path(), shown_dice, block.chosen)
+	block.apply(block.chosen, _level, combat_random)
 	_step_blocks.append(block)
 	blocked.emit(block)
 	_close_undo(attacker)
@@ -208,10 +255,61 @@ func _block(attacker: Character, defender: Character) -> Block:
 ## Every peer: [param attacker_path]'s figure strikes at [param defender_path]'s; the host calls it on itself and sends it to the
 ## peers that have this node
 @rpc("authority", "call_remote", "reliable")
-func show_block(attacker_path: NodePath, defender_path: NodePath) -> void:
+func show_block(attacker_path: NodePath, defender_path: NodePath, dice: Array[int], chosen: int) -> void:
 	var attacker: Character = get_node_or_null(attacker_path) as Character
 	var defender: Character = get_node_or_null(defender_path) as Character
-	if attacker and defender: attacker.show_block(defender)
+	if not attacker or not defender: return
+	attacker.show_block(defender)
+	block_shown.emit(attacker, defender, dice, chosen)
+
+## Host only: asks the player controlling [param chooser] to pick one of [param dice] (indices) or of [param ways] for
+## [param block], and waits for the choice, at most [member choice_timeout], while the player stays.
+## @returns the index or way chosen, [code]-1[/code] to leave it to the host (a monster, nobody to ask, no answer)
+func _ask(chooser: Character, block: Block, dice: Array[int], ways: Array[int]) -> int:
+	var picker_id: int = _get_choosing_player(chooser)
+	if picker_id == 0: return -1
+	var run: int = _choice_run
+	_chosen = -1
+	block_choice = {
+		CHOICE_PICKER: picker_id,
+		CHOICE_ATTACKER: block.attacker.get_path(),
+		CHOICE_DEFENDER: block.defender.get_path(),
+		CHOICE_DICE: dice,
+		CHOICE_WAYS: ways,
+	}
+	var waited: float = 0.0
+	# A tween, not a timer: it goes with this node (e.g. leaving the game), so nothing resumes on a freed one
+	while _chosen < 0 and run == _choice_run and waited < choice_timeout and Lobby.get_player(picker_id):
+		await create_tween().tween_interval(_HOP_POLL).finished
+		waited += _HOP_POLL
+	if run != _choice_run: return -1
+	block_choice = {}
+	return _chosen
+
+## @returns the id of the connected player who chooses for [param chooser], [code]0[/code] if the host chooses (a monster, or
+## choices off)
+func _get_choosing_player(chooser: Character) -> int:
+	if choice_timeout <= 0.0 or not is_instance_valid(chooser) or chooser.profile.group != CharacterProfile.Groups.HEROES: return 0
+	for player: Player in Lobby.get_connected_players():
+		if chooser.is_controlled_by(player.player_id): return player.player_id
+	return 0
+
+## The player asked by [member block_choice] chooses [param value]: a die's index, or a way to push
+@rpc("any_peer", "call_local", "reliable")
+func request_block_choice(value: int) -> void:
+	if not multiplayer.is_server() or block_choice.is_empty() or _chosen >= 0: return
+	var picker_id: int = block_choice[CHOICE_PICKER]
+	if _get_sender_id() != picker_id: return
+	var dice: Array = block_choice[CHOICE_DICE]
+	var ways: Array = block_choice[CHOICE_WAYS]
+	if not dice.is_empty() and (value < 0 or value >= dice.size()): return
+	if dice.is_empty() and not ways.has(value): return
+	_chosen = value
+
+## Host only: a choice under way is dropped, e.g. as a save is loaded; the block that waited for it does not happen
+func _cancel_choice() -> void:
+	_choice_run += 1
+	block_choice = {}
 
 ## @returns the standing enemy of [param character] on [param cell] who blocks it: the first by
 ## [member CharacterProfile.block_priority], or [code]null[/code]
@@ -322,7 +420,7 @@ func request_ability_cancel(character_path: NodePath) -> void:
 ## Passing cancels the held abilities of the sender's characters.
 @rpc("any_peer", "call_local", "reliable")
 func request_pass(passed: bool) -> void:
-	if not multiplayer.is_server() or phase != Phase.HEROES: return
+	if not multiplayer.is_server() or phase != Phase.HEROES or not block_choice.is_empty(): return
 	var sender_id: int = _get_sender_id()
 	if not Lobby.get_player(sender_id): return
 	if passed: _cancel_held_of(sender_id)
@@ -366,8 +464,9 @@ func _run_monster_phase() -> void:
 		var monster: Character = _get_enemy_on(hero.grid_cell, hero)
 		if not monster: continue
 		blocked_cells[hero.grid_cell] = true
-		var block: Block = _block(hero, monster)
-		if not _is_in_sight(hero.grid_cell): continue
+		var block: Block = await _block(hero, monster)
+		if run != _monster_phase_run: return
+		if not block or not _is_in_sight(hero.grid_cell): continue
 		await _wait_for_block(block)
 		if run != _monster_phase_run: return
 	# Pieces may leave while the host waits (a player leaving takes their hero along): each is checked before it is used
@@ -386,7 +485,8 @@ func _run_monster_phase() -> void:
 			var direction: int = agent.choose_step()
 			if direction < 0: break
 			_step_blocks.clear()
-			var stepped: bool = try_step(character, direction as Level.Direction)
+			var stepped: bool = await try_step(character, direction as Level.Direction)
+			if run != _monster_phase_run: return
 			# Blocks on leaving or arriving play out before anyone moves on, whatever they did
 			var blocks: Array[Block] = _step_blocks.duplicate()
 			if was_in_sight or _is_in_sight(character.grid_cell):
@@ -406,6 +506,7 @@ func stop_monster_phase() -> void:
 	assert(multiplayer.is_server())
 	_monster_phase_run += 1
 	phase = Phase.HEROES
+	_cancel_choice()
 	_engaged.clear()
 	_clear_alerts()
 
@@ -544,7 +645,8 @@ func _get_sender_id() -> int:
 ## @returns the [Character] at [param character_path] if [param sender_id] controls it
 func _get_controlled_character(sender_id: int, character_path: NodePath) -> Character:
 	var character: Character = get_node_or_null(character_path) as Character
-	if phase != Phase.HEROES or not character or not character.visible: return null
+	# While a block waits for a choice, the board holds still
+	if phase != Phase.HEROES or not block_choice.is_empty() or not character or not character.visible: return null
 	# Monsters belong to the host's agents, not to its player
 	if character.profile.group == CharacterProfile.Groups.MONSTERS: return null
 	if not character.is_controlled_by(sender_id): return null

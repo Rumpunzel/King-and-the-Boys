@@ -136,6 +136,19 @@ func request_pass(passed: bool) -> void:
 	if not passed and must_pass(): return
 	turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, passed)
 
+## Chooses for the block waiting on this player (see [member TurnManager.block_choice]): a die's index, or a way to push
+func request_block_choice(value: int) -> void:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	if not turn_manager or not is_choosing_for_block(): return
+	turn_manager.request_block_choice.rpc_id(Multiplayer.HOST_ID, value)
+
+## Whether a block waits for this player's choice
+func is_choosing_for_block() -> bool:
+	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	if not turn_manager or turn_manager.block_choice.is_empty(): return false
+	var picker_id: int = turn_manager.block_choice[TurnManager.CHOICE_PICKER]
+	return picker_id == player.player_id
+
 func has_passed() -> bool:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	return turn_manager != null and turn_manager.has_passed(player.player_id)

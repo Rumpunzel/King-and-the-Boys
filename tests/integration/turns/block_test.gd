@@ -21,6 +21,8 @@ func before_test() -> void:
 	_turn_manager = auto_free(TurnManager.new())
 	_turn_manager.set("_level", _level)
 	_turn_manager.combat_random.seed = 42
+	# The host chooses for every block, unless a test asks the player
+	_turn_manager.choice_timeout = 0.0
 	add_child(_turn_manager)
 	_blocks.clear()
 	_turn_manager.blocked.connect(func(block: Block) -> void: _blocks.append(block))
@@ -209,3 +211,75 @@ func test_the_monster_phase_lets_a_block_in_sight_play_out() -> void:
 	await _pass_turn()
 	assert_bool(times.has(&"blocked")).is_true()
 	assert_int(times[&"done"] - times[&"blocked"]).is_greater_equal(roundi(TurnManager._BLOCK_PAUSE * 1000.0) - 50)
+
+## Two heroes against one monster: the hero who stepped onto its tile blocks with an assist, rolls two dice and picks
+func _set_up_a_hero_who_picks() -> Character:
+	var start: Vector2i = _start_cell()
+	var way: Level.Direction = _way_out(start)
+	var monster_cell: Vector2i = start + Level.direction_to_vector(way)
+	var hero: Character = await _spawn_hero(start)
+	await _spawn_hero(monster_cell)
+	await _spawn_monster(monster_cell)
+	_turn_manager.request_move(hero.get_path(), way)
+	await await_idle_frame()
+	return hero
+
+## Passes and waits until a block asks the local player, or the block happened
+func _pass_until_asked() -> void:
+	_turn_manager.request_pass(true)
+	for _frame: int in MAX_FRAMES:
+		if not _turn_manager.block_choice.is_empty() or not _blocks.is_empty(): return
+		await await_idle_frame()
+
+func test_the_player_whose_side_picks_chooses_the_die_and_the_push() -> void:
+	_turn_manager.choice_timeout = 30.0
+	var hero: Character = await _set_up_a_hero_who_picks()
+	await _pass_until_asked()
+	var choice: Dictionary = _turn_manager.block_choice
+	assert_dict(choice).is_not_empty()
+	assert_int(choice[TurnManager.CHOICE_PICKER] as int).is_equal(multiplayer.get_unique_id())
+	var dice: Array = choice[TurnManager.CHOICE_DICE]
+	assert_int(dice.size()).is_equal(2)
+	# Nothing moves while the choice is open, and no wrong answer counts
+	var cell: Vector2i = hero.grid_cell
+	_turn_manager.request_move(hero.get_path(), _way_out(cell))
+	_turn_manager.request_block_choice(5)
+	await await_idle_frame()
+	assert_that(hero.grid_cell).is_equal(cell)
+	assert_dict(_turn_manager.block_choice).is_equal(choice)
+	_turn_manager.request_block_choice(1)
+	var picked: int = dice[1]
+	var way: int = -1
+	for _frame: int in MAX_FRAMES:
+		if not _blocks.is_empty(): break
+		var asked: Dictionary = _turn_manager.block_choice
+		if not asked.is_empty() and (asked[TurnManager.CHOICE_DICE] as Array).is_empty():
+			var ways: Array = asked[TurnManager.CHOICE_WAYS]
+			way = ways.back()
+			_turn_manager.request_block_choice(way)
+		await await_idle_frame()
+	assert_int(_blocks.size()).is_greater_equal(1)
+	assert_object(_blocks[0].attacker).is_same(hero)
+	assert_int(_blocks[0].chosen).is_equal(picked)
+	if way >= 0: assert_that(_blocks[0].pushed_to).is_equal(cell + Level.direction_to_vector(way as Level.Direction))
+
+func test_the_host_chooses_for_a_player_who_does_not() -> void:
+	_turn_manager.choice_timeout = 0.3
+	await _set_up_a_hero_who_picks()
+	await _pass_until_asked()
+	for _frame: int in MAX_FRAMES:
+		if not _blocks.is_empty(): break
+		await await_idle_frame()
+	assert_int(_blocks.size()).is_greater_equal(1)
+	var block: Block = _blocks[0]
+	assert_int(block.chosen).is_equal(Block.pick_best(block.dice, block.attacker_picks, block.stumbles_down()))
+
+func test_loading_drops_a_choice_and_its_block() -> void:
+	_turn_manager.choice_timeout = 30.0
+	await _set_up_a_hero_who_picks()
+	await _pass_until_asked()
+	assert_dict(_turn_manager.block_choice).is_not_empty()
+	_turn_manager.stop_monster_phase()
+	assert_dict(_turn_manager.block_choice).is_empty()
+	for _frame: int in 30: await await_idle_frame()
+	assert_array(_blocks).is_empty()
