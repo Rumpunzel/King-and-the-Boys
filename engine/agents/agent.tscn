@@ -28,11 +28,10 @@ script = ExtResource("3_ns2p6")
 _synchronizer = NodePath("..")
 metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
-[node name="StateMachine" type="Node" parent="." unique_id=931970586 node_paths=PackedStringArray("agent", "character", "hit_box")]
+[node name="StateMachine" type="Node" parent="." unique_id=931970586 node_paths=PackedStringArray("agent", "character")]
 script = ExtResource("3_00iam")
 agent = NodePath("..")
 character = NodePath("../Character")
-hit_box = NodePath("../Character/CharacterHitBox")
 _initial_state = ExtResource("4_pe618")
 metadata/_custom_type_script = "uid://d1mglynl0s74y"
 

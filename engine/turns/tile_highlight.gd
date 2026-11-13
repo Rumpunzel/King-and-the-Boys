@@ -2,7 +2,7 @@
 @icon("uid://bbd6uslekkp8l")
 class_name TileHighlight
 extends MeshInstance3D
-## Marks the tile the local player's controlled [Character] stands on in the game logic.
+## Marks the tile the local player's [Character] stands on in the game logic.
 ## Moves there at once, while the figure may still be walking.
 
 const _SHADER: Shader = preload("res://engine/turns/tile_highlight.gdshader")
@@ -13,30 +13,23 @@ const _SHADER: Shader = preload("res://engine/turns/tile_highlight.gdshader")
 @export_range(0.1, 1.0) var size_ratio: float = 0.92
 
 @export_group("Configuration")
-@export var _state_machine: PlayerStateMachine
-
-var _character: Character:
-	set(new_character):
-		if _character: _character.entered_grid_cell.disconnect(_on_character_entered_grid_cell)
-		_character = new_character
-		_character.entered_grid_cell.connect(_on_character_entered_grid_cell)
-		_move_to(_character.grid_cell)
+@export var _player_controller: PlayerController
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	top_level = true
 	# Every player controller carries one; only the local player sees theirs
-	if not _state_machine.player_controller.is_multiplayer_authority():
+	if not _player_controller.is_multiplayer_authority():
 		hide()
 		return
 	var material: ShaderMaterial = ShaderMaterial.new()
 	material.shader = _SHADER
 	material_override = material
-	_state_machine.controlled_character_changed.connect(_on_controlled_character_changed)
-	_character = _state_machine.get_controlled_character()
+	_player_controller.character.entered_grid_cell.connect(_move_to)
+	_move_to(_player_controller.character.grid_cell)
 
 func _move_to(cell: Vector2i) -> void:
-	var level: Level = _character.level
+	var level: Level = _player_controller.character.level
 	if not level:
 		hide()
 		return
@@ -47,13 +40,7 @@ func _move_to(cell: Vector2i) -> void:
 	global_position = level.grid_to_world_position(cell) + Vector3.UP * height
 	show()
 
-func _on_controlled_character_changed(controlled_character: Character) -> void:
-	_character = controlled_character
-
-func _on_character_entered_grid_cell(cell: Vector2i) -> void:
-	_move_to(cell)
-
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _state_machine: warnings.append("Missing PlayerStateMachine reference.")
+	if not _player_controller: warnings.append("Missing PlayerController reference.")
 	return warnings

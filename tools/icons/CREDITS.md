@@ -13,12 +13,10 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `green/button-finger.svg` | delapouite | [button-finger](https://game-icons.net/1x1/delapouite/button-finger.html) |
 | `green/diploma.svg` | delapouite | [diploma](https://game-icons.net/1x1/delapouite/diploma.html) |
 | `green/empty-hourglass.svg` | lorc | [empty-hourglass](https://game-icons.net/1x1/lorc/empty-hourglass.html) |
-| `green/gamepad-cross.svg` | lorc | [gamepad-cross](https://game-icons.net/1x1/lorc/gamepad-cross.html) |
 | `green/help.svg` | sbed | [help](https://game-icons.net/1x1/sbed/help.html) |
 | `green/id-card.svg` | delapouite | [id-card](https://game-icons.net/1x1/delapouite/id-card.html) |
 | `green/imperial-crown.svg` | delapouite | [imperial-crown](https://game-icons.net/1x1/delapouite/imperial-crown.html) |
 | `green/info.svg` | delapouite | [info](https://game-icons.net/1x1/delapouite/info.html) |
-| `green/keyboard.svg` | delapouite | [keyboard](https://game-icons.net/1x1/delapouite/keyboard.html) |
 | `green/mimic-chest.svg` | delapouite | [mimic-chest](https://game-icons.net/1x1/delapouite/mimic-chest.html) |
 | `green/mouse.svg` | delapouite, lorc | [mouse](https://game-icons.net/1x1/delapouite/mouse.html) |
 | `green/mustache.svg` | delapouite | [mustache](https://game-icons.net/1x1/delapouite/mustache.html) |
@@ -61,7 +59,6 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `red/chest-armor.svg` | delapouite | [chest-armor](https://game-icons.net/1x1/delapouite/chest-armor.html) |
 | `red/chest.svg` | delapouite | [chest](https://game-icons.net/1x1/delapouite/chest.html) |
 | `red/cog-lock.svg` | lorc | [cog-lock](https://game-icons.net/1x1/lorc/cog-lock.html) |
-| `red/companion-cube.svg` | delapouite | [companion-cube](https://game-icons.net/1x1/delapouite/companion-cube.html) |
 | `red/compass.svg` | lorc | [compass](https://game-icons.net/1x1/lorc/compass.html) |
 | `red/cowled.svg` | lorc | [cowled](https://game-icons.net/1x1/lorc/cowled.html) |
 | `red/cryo-chamber.svg` | delapouite | [cryo-chamber](https://game-icons.net/1x1/delapouite/cryo-chamber.html) |
@@ -69,8 +66,6 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `red/dolmen.svg` | delapouite | [dolmen](https://game-icons.net/1x1/delapouite/dolmen.html) |
 | `red/eye-target.svg` | delapouite | [eye-target](https://game-icons.net/1x1/delapouite/eye-target.html) |
 | `red/falling-rocks.svg` | delapouite | [falling-rocks](https://game-icons.net/1x1/delapouite/falling-rocks.html) |
-| `red/hand.svg` | lorc, sbed | [hand](https://game-icons.net/1x1/lorc/hand.html) |
-| `red/health-capsule.svg` | delapouite | [health-capsule](https://game-icons.net/1x1/delapouite/health-capsule.html) |
 | `red/house.svg` | delapouite | [house](https://game-icons.net/1x1/delapouite/house.html) |
 | `red/jump-across.svg` | delapouite | [jump-across](https://game-icons.net/1x1/delapouite/jump-across.html) |
 | `red/kevlar.svg` | sbed | [kevlar](https://game-icons.net/1x1/sbed/kevlar.html) |
@@ -116,7 +111,6 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `white/concrete-bag.svg` | delapouite | [concrete-bag](https://game-icons.net/1x1/delapouite/concrete-bag.html) |
 | `white/console-controller.svg` | skoll | [console-controller](https://game-icons.net/1x1/skoll/console-controller.html) |
 | `white/cryo-chamber.svg` | delapouite | [cryo-chamber](https://game-icons.net/1x1/delapouite/cryo-chamber.html) |
-| `white/control.svg` | lorc | [haunting](https://game-icons.net/1x1/lorc/haunting.html) (renamed) |
 | `white/diploma.svg` | delapouite | [diploma](https://game-icons.net/1x1/delapouite/diploma.html) |
 | `white/drop-weapon.svg` | skoll | [drop-weapon](https://game-icons.net/1x1/skoll/drop-weapon.html) |
 | `white/ecology.svg` | delapouite | [ecology](https://game-icons.net/1x1/delapouite/ecology.html) |
@@ -125,9 +119,7 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `white/files.svg` | delapouite | [files](https://game-icons.net/1x1/delapouite/files.html) |
 | `white/full-folder.svg` | delapouite | [full-folder](https://game-icons.net/1x1/delapouite/full-folder.html) |
 | `white/globe.svg` | lorc | [globe](https://game-icons.net/1x1/lorc/globe.html) |
-| `white/grab.svg` | lorc | [grab](https://game-icons.net/1x1/lorc/grab.html) |
 | `white/hand.svg` | lorc, sbed | [hand](https://game-icons.net/1x1/lorc/hand.html) |
-| `white/help.svg` | sbed | [help](https://game-icons.net/1x1/sbed/help.html) |
 | `white/hood.svg` | lorc | [hood](https://game-icons.net/1x1/lorc/hood.html) |
 | `white/hooded-figure.svg` | darkzaitzev | [hooded-figure](https://game-icons.net/1x1/darkzaitzev/hooded-figure.html) |
 | `white/hourglass.svg` | lorc | [hourglass](https://game-icons.net/1x1/lorc/hourglass.html) |
@@ -150,9 +142,7 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `white/round-table.svg` | delapouite | [round-table](https://game-icons.net/1x1/delapouite/round-table.html) |
 | `white/save.svg` | delapouite | [save](https://game-icons.net/1x1/delapouite/save.html) |
 | `white/server-rack.svg` | delapouite | [server-rack](https://game-icons.net/1x1/delapouite/server-rack.html) |
-| `white/shaking-hands.svg` | delapouite | [shaking-hands](https://game-icons.net/1x1/delapouite/shaking-hands.html) |
 | `white/slot-machine.svg` | caro-asercion | [slot-machine](https://game-icons.net/1x1/caro-asercion/slot-machine.html) |
-| `white/snatch.svg` | lorc | [snatch](https://game-icons.net/1x1/lorc/snatch.html) |
 | `white/spawn-node.svg` | sbed | [spawn-node](https://game-icons.net/1x1/sbed/spawn-node.html) |
 | `white/spiked-dragon-head.svg` | delapouite | [spiked-dragon-head](https://game-icons.net/1x1/delapouite/spiked-dragon-head.html) |
 | `white/spy.svg` | delapouite | [spy](https://game-icons.net/1x1/delapouite/spy.html) |
@@ -164,7 +154,6 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `white/tombstone.svg` | lorc, sbed | [tombstone](https://game-icons.net/1x1/lorc/tombstone.html) |
 | `white/treasure-map.svg` | lorc | [treasure-map](https://game-icons.net/1x1/lorc/treasure-map.html) |
 | `white/two-shadows.svg` | lorc | [two-shadows](https://game-icons.net/1x1/lorc/two-shadows.html) |
-| `white/usable.svg` | sbed | [usable](https://game-icons.net/1x1/sbed/usable.html) |
 | `white/wanted-reward.svg` | delapouite | [wanted-reward](https://game-icons.net/1x1/delapouite/wanted-reward.html) |
 | `white/wax-tablet.svg` | delapouite | [wax-tablet](https://game-icons.net/1x1/delapouite/wax-tablet.html) |
 | `white/werewolf.svg` | lorc | [werewolf](https://game-icons.net/1x1/lorc/werewolf.html) |

@@ -106,17 +106,13 @@ func _on_player_controller_created(player_controller: PlayerController) -> void:
 		_add_player_row(player_controller)
 		return
 	_player_controller = player_controller
-	_player_controller.controlled_character_changed.connect(_on_controlled_character_changed)
 	_player_controller.auto_pass = _auto_pass_toggle.button_pressed
-	_character = _player_controller.get_controlled_character()
+	_character = _player_controller.character
 	show()
 
 func _on_player_disconnected(player: Player) -> void:
 	_remove_player_row(player.player_id)
 	_update()
-
-func _on_controlled_character_changed(controlled_character: Character) -> void:
-	_character = controlled_character
 
 func _on_character_turn_changed(_value: int) -> void:
 	_update()

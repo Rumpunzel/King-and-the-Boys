@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://d1rn5h1erxn03" path="res://engine/objects/things/thing.gd" id="1_7qwap"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_plyi5"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_16bwq"]
-[ext_resource type="PackedScene" uid="uid://coieakxsf086s" path="res://engine/objects/things/thing_hit_box.tscn" id="4_pi2rr"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1myve"]
 properties/0/path = NodePath(".:transform")
@@ -31,10 +30,3 @@ metadata/_custom_type_script = "uid://crm43jylxmjbd"
 script = ExtResource("3_16bwq")
 _synchronizer = NodePath("..")
 metadata/_custom_type_script = "uid://047sfnl1r5sv"
-
-[node name="ThingHitBox" parent="." unique_id=593586508 node_paths=PackedStringArray("thing") instance=ExtResource("4_pi2rr")]
-thing = NodePath("..")
-
-[connection signal="profile_changed" from="." to="ThingHitBox" method="_on_profile_changed"]
-[connection signal="controlled" from="ThingHitBox" to="." method="_on_controlled"]
-[connection signal="released" from="ThingHitBox" to="." method="_on_released"]

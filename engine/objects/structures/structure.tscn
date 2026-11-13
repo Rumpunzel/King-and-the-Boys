@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://d4b5bccvs2ik1"]
 
 [ext_resource type="Script" uid="uid://g8gbwwqlcudv" path="res://engine/objects/structures/structure.gd" id="1_esc8u"]
-[ext_resource type="PackedScene" uid="uid://yutu4m8jrjxn" path="res://engine/objects/structures/structure_hit_box.tscn" id="2_c1vy7"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_iq8r1"]
 [ext_resource type="Material" uid="uid://2fi7awyv4jhn" path="res://engine/objects/structures/discover_material.tres" id="2_qbgox"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_qbgox"]
@@ -45,9 +44,6 @@ metadata/_custom_type_script = "uid://crm43jylxmjbd"
 script = ExtResource("3_qbgox")
 _synchronizer = NodePath("..")
 metadata/_custom_type_script = "uid://047sfnl1r5sv"
-
-[node name="StructureHitBox" parent="." unique_id=894402806 node_paths=PackedStringArray("structure") instance=ExtResource("2_c1vy7")]
-structure = NodePath("..")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=647613696]
 billboard = 1

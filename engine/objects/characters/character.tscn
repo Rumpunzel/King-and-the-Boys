@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://cwu2dwpvcrl3s" path="res://engine/objects/characters/character.gd" id="1_f5t6j"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="2_b3pdv"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_42yey"]
-[ext_resource type="PackedScene" uid="uid://bmk3aay8c7045" path="res://engine/objects/characters/character_hit_box.tscn" id="4_5i04j"]
 [ext_resource type="Script" uid="uid://ca8rg7sjibiiv" path="res://engine/objects/equipment/character_equipment.gd" id="5_eqp01"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3fwhk"]
@@ -87,11 +86,5 @@ avoidance_enabled = true
 height = 1.5
 debug_enabled = true
 
-[node name="CharacterHitBox" parent="." unique_id=1431592383 node_paths=PackedStringArray("character") instance=ExtResource("4_5i04j")]
-character = NodePath("..")
-
-[connection signal="profile_changed" from="." to="CharacterHitBox" method="_on_character_profile_changed"]
 [connection signal="navigation_finished" from="NavigationAgent3D" to="." method="_on_navigation_agent_navigation_finished"]
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_velocity_computed"]
-[connection signal="controlled" from="CharacterHitBox" to="." method="_on_controlled"]
-[connection signal="released" from="CharacterHitBox" to="." method="_on_released"]

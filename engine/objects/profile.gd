@@ -53,10 +53,6 @@ func configure_collision_shape(collision_shape: CollisionShape3D) -> void:
 	if not collision_shape: return
 	_collision_shape.configure_collision_shape(collision_shape)
 
-func configure_hit_box(hit_box: CollisionShape3D) -> void:
-	if not _hit_box_shape: configure_collision_shape(hit_box)
-	else: _hit_box_shape.configure_collision_shape(hit_box)
-
 func configure_collision_mesh(collision_mesh: MeshInstance3D) -> void:
 	if not collision_mesh: return
 	_collision_shape.configure_mesh(collision_mesh)

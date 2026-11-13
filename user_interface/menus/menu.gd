@@ -27,7 +27,6 @@ func _enter_tree() -> void:
 
 func open_menu() -> void:
 	if visible: return
-	get_tree().call_group("HUD", "hide")
 	show()
 	if _tween: _tween.kill()
 	_tween = create_tween()
@@ -43,6 +42,5 @@ func close_menu() -> void:
 	_tween.tween_property(self, "modulate:a", 0.0, _fade_out_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_tween.tween_callback(hide)
-	_tween.tween_callback(get_tree().call_group.bind("HUD", "show"))
 	_tween.tween_callback(fully_closed.emit)
 	closed.emit()

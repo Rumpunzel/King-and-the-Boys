@@ -6,7 +6,6 @@ extends StateMachine
 @export_group("Configuration")
 @export var agent: Agent
 @export var character: Character
-@export var hit_box: CharacterHitBox
 
 var _state: AgentState
 

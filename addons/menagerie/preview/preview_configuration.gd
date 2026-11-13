@@ -3,7 +3,6 @@ extends PanelContainer
 
 signal show_collision_changed(show_collision: bool)
 signal show_hit_box_changed(show_hit_box: bool)
-signal show_interaction_area_changed(show_interaction_area: bool)
 signal randomize_variation_changed(randomize_variation: bool)
 signal variation_changed(new_variation: int)
 signal randomized
@@ -11,7 +10,6 @@ signal randomized
 @export_group("Configuration")
 @export var _show_collision_button: CheckButton
 @export var _show_hit_box_button: CheckButton
-@export var _show_interaction_area_button: CheckButton
 @export var _randomize_variation_button: CheckButton
 @export var _variation_spin_box: SpinBox
 @export var _randomize_button: Button
@@ -33,8 +31,6 @@ func _ready() -> void:
 	show_collision_changed.emit(_show_collision_button.button_pressed)
 	_show_hit_box_button.set_pressed_no_signal(_config.get_value_from_config("Preview", "show_hit_box", true))
 	show_hit_box_changed.emit(_show_hit_box_button.button_pressed)
-	_show_interaction_area_button.set_pressed_no_signal(_config.get_value_from_config("Preview", "show_interaction_area", true))
-	show_interaction_area_changed.emit(_show_interaction_area_button.button_pressed)
 	_randomize_variation_button.set_pressed_no_signal(_config.get_value_from_config("Preview", "randomize_variation", true))
 	randomize_variation_changed.emit(_randomize_variation_button.button_pressed)
 
@@ -45,10 +41,6 @@ func _on_show_collision_toggled(toggled_on: bool) -> void:
 func _on_show_hit_box_toggled(toggled_on: bool) -> void:
 	show_hit_box_changed.emit(toggled_on)
 	_config.update_value_in_config(toggled_on, "Preview", "show_hit_box")
-
-func _on_show_interaction_area_toggled(toggled_on: bool) -> void:
-	show_interaction_area_changed.emit(toggled_on)
-	_config.update_value_in_config(toggled_on, "Preview", "show_interaction_area")
 
 func _on_randomize_variation_toggled(toggled_on: bool) -> void:
 	randomize_variation_changed.emit(toggled_on)

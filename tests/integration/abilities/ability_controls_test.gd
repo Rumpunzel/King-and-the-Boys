@@ -71,7 +71,7 @@ func _stand_on_turnable_tile(hero: Character) -> Structure:
 
 func test_arming_lifts_the_tile_and_aims_until_it_is_set_down() -> void:
 	var controller: PlayerController = _controller()
-	var hero: Character = controller.get_controlled_character()
+	var hero: Character = controller.character
 	var tile: Structure = _stand_on_turnable_tile(hero)
 	var turns: int = tile.clockwise_turns
 	assert_bool(controller.can_arm(TURN_TILE)).is_true()
@@ -101,7 +101,7 @@ func test_arming_lifts_the_tile_and_aims_until_it_is_set_down() -> void:
 
 func test_pressing_the_ability_again_cancels_it_for_free() -> void:
 	var controller: PlayerController = _controller()
-	var hero: Character = controller.get_controlled_character()
+	var hero: Character = controller.character
 	var tile: Structure = _stand_on_turnable_tile(hero)
 	var turns: int = tile.clockwise_turns
 	controller.arm_ability(TURN_TILE)
@@ -117,7 +117,7 @@ func test_pressing_the_ability_again_cancels_it_for_free() -> void:
 
 func test_aiming_keys_turn_set_down_and_cancel() -> void:
 	var controller: PlayerController = _controller()
-	var hero: Character = controller.get_controlled_character()
+	var hero: Character = controller.character
 	var tile: Structure = _stand_on_turnable_tile(hero)
 	controller.arm_ability(TURN_TILE)
 	await await_idle_frame()
@@ -144,7 +144,7 @@ func test_aiming_keys_turn_set_down_and_cancel() -> void:
 
 func test_angles_out_of_reach_are_skipped() -> void:
 	var controller: PlayerController = _controller()
-	var hero: Character = controller.get_controlled_character()
+	var hero: Character = controller.character
 	var tile: Structure = _stand_on_turnable_tile(hero)
 	hero.movement_points = 1
 	controller.arm_ability(TURN_TILE)
@@ -159,7 +159,7 @@ func test_without_moves_or_for_passives_nothing_is_armed() -> void:
 	var controller: PlayerController = _controller()
 	# Out of moves, the player would pass on their own and the turn would start anew
 	controller.auto_pass = false
-	var hero: Character = controller.get_controlled_character()
+	var hero: Character = controller.character
 	var tile: Structure = _stand_on_turnable_tile(hero)
 	hero.movement_points = 0
 	assert_bool(controller.can_arm(TURN_TILE)).is_false()
@@ -172,7 +172,7 @@ func test_without_moves_or_for_passives_nothing_is_armed() -> void:
 
 func test_the_ability_bar_shows_and_arms_the_abilities() -> void:
 	var controller: PlayerController = _controller()
-	var hero: Character = controller.get_controlled_character()
+	var hero: Character = controller.character
 	var tile: Structure = _stand_on_turnable_tile(hero)
 	var ability_bar: AbilityBar = auto_free((load("res://user_interface/hud/ability_bar.tscn") as PackedScene).instantiate())
 	add_child(ability_bar)
@@ -203,7 +203,7 @@ func test_the_ability_bar_shows_and_arms_the_abilities() -> void:
 
 func test_the_move_keys_turn_the_tile_until_the_mystic_faces_that_way() -> void:
 	var controller: PlayerController = _controller()
-	var hero: Character = controller.get_controlled_character()
+	var hero: Character = controller.character
 	var tile: Structure = _stand_on_turnable_tile(hero)
 	hero.facing = Level.Direction.UP
 	controller.arm_ability(TURN_TILE)
@@ -229,12 +229,12 @@ func test_the_move_keys_turn_the_tile_until_the_mystic_faces_that_way() -> void:
 
 func test_a_move_key_held_from_aiming_does_not_step_when_let_go() -> void:
 	var controller: PlayerController = _controller()
-	var hero: Character = controller.get_controlled_character()
+	var hero: Character = controller.character
 	_stand_on_turnable_tile(hero)
 	var cell: Vector2i = hero.grid_cell
 	var direction: Level.Direction = Level.Direction.UP
 	for candidate: Level.Direction in Level.Direction.values():
-		if controller.get_controlled_character().level.is_passage(cell, candidate): direction = candidate
+		if controller.character.level.is_passage(cell, candidate): direction = candidate
 	var action: StringName = [&"move_up", &"move_right", &"move_down", &"move_left"][direction]
 	controller.arm_ability(TURN_TILE)
 	await await_idle_frame()

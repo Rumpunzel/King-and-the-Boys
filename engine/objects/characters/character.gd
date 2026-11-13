@@ -90,10 +90,6 @@ var level: Level
 ## Whether the figure shows that its player has passed (see [method show_passed]); purely visual, on every peer
 var shows_passed: bool = false
 var look_target: Vector3 = Vector3.BACK
-## The [Character] currently controlling this one, if any
-var controlled_by: Character
-## The piece this [Character] currently controls, if any; set with [member HitBox.controller]
-var controlling: HitBox
 ## Steps taken so far, undos included; counted by the host, replicated. Tiles a step reveals carry its number
 ## (see [member Structure.status_cause_step]), so peers know which step to show them after.
 var step_count: int = 0
@@ -364,19 +360,6 @@ func snap_to_grid() -> void:
 func move_to_position(position_input: Vector3) -> void:
 	_navigation_agent.target_position = position_input
 
-@rpc("call_local", "reliable")
-func hide_character(keep_physics: bool = false) -> void:
-	assert(visible)
-	visible = false
-	if keep_physics: return
-	_disable_physics()
-
-@rpc("call_local", "reliable")
-func unhide_character() -> void:
-	assert(not visible)
-	visible = true
-	_enable_physics()
-
 func apply_character_data(character_data: Dictionary[StringName, Variant]) -> void:
 	validate_character_data(character_data)
 	variation = character_data[VARIATION]
@@ -544,24 +527,9 @@ func _look_forward(delta: float, direction: Vector3 = velocity) -> void:
 	var transform_looking_into_direction: Transform3D = transform.looking_at(look_target, Vector3.UP, true)
 	transform = transform.interpolate_with(transform_looking_into_direction, 8.0 * delta)
 
-func _enable_physics() -> void:
-	set_physics_process(true)
-	set_process(true)
-
-func _disable_physics() -> void:
-	set_physics_process(false)
-	set_process(false)
-
 ## @returns [code]true[/code] if the peer [param peer_id] may move this [Character]
 func is_controlled_by(peer_id: int) -> bool:
-	if controlled_by: return controlled_by.get_multiplayer_authority() == peer_id
 	return get_multiplayer_authority() == peer_id
-
-func _on_controlled(controller: Character) -> void:
-	controlled_by = controller
-
-func _on_released() -> void:
-	controlled_by = null
 
 func _on_navigation_agent_velocity_computed(safe_velocity: Vector3) -> void:
 	if _navigation_agent.is_navigation_finished(): return
