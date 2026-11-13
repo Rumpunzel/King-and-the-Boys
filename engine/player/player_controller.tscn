@@ -91,6 +91,7 @@ script = ExtResource("20_occlusion")
 _player_controller = NodePath("..")
 
 [node name="TopDownCamera" type="Camera3D" parent="." unique_id=113072833]
+physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 0.6246951, 0.78086877, 0, -0.78086877, 0.6246951, 0, 20, 16)
 top_level = true
 fov = 37.8493
