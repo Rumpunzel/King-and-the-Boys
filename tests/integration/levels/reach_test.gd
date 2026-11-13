@@ -50,7 +50,6 @@ func test_a_thing_on_a_grid_corner_stands_on_its_four_cells() -> void:
 
 func test_any_other_thing_stands_on_the_cell_under_it() -> void:
 	var thing: Thing = auto_free(Thing.new())
-	thing.freeze = true
 	thing.model = Model.new()
 	add_child(thing)
 	thing.global_position = _level.grid_to_world_position(Vector2i(2, -1))

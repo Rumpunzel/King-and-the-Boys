@@ -202,3 +202,17 @@ func test_a_revealed_tile_discovers_nothing_through_a_closed_side() -> void:
 	assert_bool(crossing.get_connections().has(Level.Direction.RIGHT)).is_true()
 	_level._reveal_tile(crossing)
 	assert_int(_level.get_placed_tile(beside).status).is_less(Structure.Status.DISCOVERED)
+
+func test_the_thing_on_a_turned_tile_turns_with_it_on_every_peer() -> void:
+	var tile: Structure = _level.get_placed_tile(_start_cell())
+	var chest: Thing = auto_free(Thing.new())
+	chest.model = Model.new()
+	add_child(chest)
+	chest.global_position = tile.global_position
+	var placed_things: Dictionary = _level.get("_placed_things")
+	placed_things[_start_cell()] = chest
+	var facing: Vector3 = chest.global_basis.z
+	# A peer only receives the tile's turns (the thing's transform is sent as it spawns): it turns the thing itself
+	tile.clockwise_turns = posmod(tile.clockwise_turns + 1, Level.Direction.size())
+	placed_things.erase(_start_cell())
+	assert_vector(chest.global_basis.z).is_equal_approx(facing.rotated(Vector3.UP, -PI * 0.5), Vector3.ONE * 0.001)

@@ -1,7 +1,5 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3]
 
-[ext_resource type="Resource" path="res://data/characters/defaults/default_collision_shape.tres" id="1_3mm47"]
-[ext_resource type="Resource" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_r86uu"]
 [ext_resource type="Resource" path="res://data/model_animations/miniature_move_animation.tres" id="3_s80u3"]
 [ext_resource type="Resource" path="res://data/characters/people/random_human.tres" id="4_fogkv"]
 [ext_resource type="Script" path="res://engine/objects/characters/character_profile.gd" id="5_1msby"]

@@ -37,7 +37,6 @@ func get_default_phantom_camera() ->  PhantomCamera3D: return get_state_machine(
 func get_active_camera_priority() -> int: return get_state_machine().player_controller.get_active_camera_priority()
 func get_default_camera_priority() -> int: return get_state_machine().player_controller.get_default_camera_priority()
 
-func get_direction_input() -> Vector2: return get_state_machine().input_reader.get_camera_adjusted_direction_input()
 func get_interaction_input() -> StringName: return get_state_machine().input_reader.interaction_input
 
 func set_state_machine(state_machine: StateMachine) -> void:

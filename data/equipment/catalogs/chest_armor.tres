@@ -1,8 +1,6 @@
 [gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://c0untm7mvwa2s"]
 
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_67sew"]
-[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_hkfud"]
-[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_mlw21"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_y8t4m"]
 [ext_resource type="ArrayMesh" uid="uid://cyhd4i0hp0irr" path="res://data/characters/people/meshes/gear/female/arm_upper_left/modular_character_ArmUpperLeft_Female_00.res" id="7_ju4ak"]
 [ext_resource type="ArrayMesh" uid="uid://blwj1hbiooowa" path="res://data/characters/people/meshes/gear/male/arm_upper_left/modular_character_ArmUpperLeft_Male_00.res" id="8_m0o1c"]

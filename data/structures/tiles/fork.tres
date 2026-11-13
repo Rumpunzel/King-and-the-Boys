@@ -1,6 +1,5 @@
 [gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://dckkvjgeuxvfx"]
 
-[ext_resource type="Resource" uid="uid://b5jv6e8g1uhqs" path="res://data/structures/tiles/tile_shape.tres" id="1_h4k73"]
 [ext_resource type="PackedScene" uid="uid://bb5otswt2l1ja" path="res://data/structures/tiles/tile.tscn" id="2_2acvw"]
 [ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="3_2vi4i"]
 [ext_resource type="Script" uid="uid://dol8cfhd12nbf" path="res://engine/objects/structures/structure_profile.gd" id="3_vqw4a"]
@@ -17,6 +16,4 @@ _connection_down = true
 name = "Fork"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_2acvw")])
-_collision_shape = ExtResource("1_h4k73")
-_hit_box_shape = ExtResource("1_h4k73")
 metadata/_custom_type_script = "uid://dol8cfhd12nbf"

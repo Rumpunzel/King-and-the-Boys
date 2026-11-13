@@ -49,18 +49,11 @@ properties/0/path = NodePath(".:equipped_ids")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="Character" type="CharacterBody3D" unique_id=280801836 node_paths=PackedStringArray("_collision_shape", "_navigation_agent", "_synchronizer", "equipment") groups=["Characters"]]
-collision_layer = 2
-collision_mask = 15
-input_ray_pickable = false
+[node name="Character" type="Node3D" unique_id=280801836 node_paths=PackedStringArray("_synchronizer", "equipment") groups=["Characters"]]
 script = ExtResource("1_f5t6j")
-_collision_shape = NodePath("CollisionShape3D")
-_navigation_agent = NodePath("NavigationAgent3D")
 _synchronizer = NodePath("CharacterSynchronizer")
 equipment = NodePath("CharacterEquipment")
 metadata/_custom_type_script = "uid://cwu2dwpvcrl3s"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=697396135]
 
 [node name="CharacterEquipment" type="Node" parent="." unique_id=1739204561]
 script = ExtResource("5_eqp01")
@@ -81,17 +74,8 @@ script = ExtResource("3_42yey")
 _synchronizer = NodePath("..")
 metadata/_custom_type_script = "uid://047sfnl1r5sv"
 
-[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=951416405]
-simplify_path = true
-avoidance_enabled = true
-height = 1.5
-debug_enabled = true
-
 [node name="CharacterHitBox" parent="." unique_id=1431592383 node_paths=PackedStringArray("character") instance=ExtResource("4_5i04j")]
 character = NodePath("..")
 
-[connection signal="profile_changed" from="." to="CharacterHitBox" method="_on_character_profile_changed"]
-[connection signal="navigation_finished" from="NavigationAgent3D" to="." method="_on_navigation_agent_navigation_finished"]
-[connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_velocity_computed"]
 [connection signal="controlled" from="CharacterHitBox" to="." method="_on_controlled"]
 [connection signal="released" from="CharacterHitBox" to="." method="_on_released"]

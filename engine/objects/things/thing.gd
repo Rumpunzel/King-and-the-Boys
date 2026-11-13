@@ -1,7 +1,7 @@
 @tool
 @icon("uid://whiw21f5vngd")
 class_name Thing
-extends RigidBody3D
+extends Node3D
 
 signal status_changed(status: Status)
 signal profile_changed
@@ -33,15 +33,10 @@ const STATUS: StringName = "status"
 		if not profile:
 			assert(Engine.is_editor_hint())
 			model = null
-			_collision_shape.shape = null
-			_collision_shape.position = Vector3.ZERO
-			_collision_shape.rotation_degrees = Vector3.ZERO
 			profile_changed.emit()
 			return
-		mass = profile.mass
 		variation = profile.get_random_variation()
 		model = profile.create_model(variation)
-		profile.configure_collision_shape(_collision_shape)
 		profile_changed.emit()
 		add_to_group(profile.get_group_name())
 
@@ -58,9 +53,6 @@ const STATUS: StringName = "status"
 			_: push_error("Status %s not implemented!" % status)
 		status_changed.emit(status)
 
-@export_group("Configuration")
-@export var _collision_shape: CollisionShape3D
-
 var model: Model:
 	set(new_model):
 		if model:
@@ -73,10 +65,6 @@ var model: Model:
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	if status == Status.NONE: status = Status.PLACED
-
-#func _process(_delta: float) -> void:
-	#if Engine.is_editor_hint(): return
-	#if model: model.play_animation(_normalized_velocity, _is_on_floor)
 
 static func from_thing_data(thing_data: Dictionary[StringName, Variant]) -> Thing:
 	validate_thing_data(thing_data)
@@ -108,20 +96,12 @@ func reveal() -> bool:
 	status = Status.REVEALED
 	return true
 
-@rpc("any_peer", "call_local")
-func apply_input_force(input_force: Vector3) -> void:
-	apply_central_force(input_force)
-
 func apply_thing_data(thing_data: Dictionary[StringName, Variant]) -> void:
 	validate_thing_data(thing_data)
 	variation = thing_data[VARIATION]
 	var profile_path: String = thing_data[PROFILE_PATH]
 	profile = load(profile_path)
-	PhysicsServer3D.body_set_state(
-		get_rid(),
-		PhysicsServer3D.BODY_STATE_TRANSFORM,
-		thing_data[SPAWN_TRANSFORM],
-	)
+	transform = thing_data[SPAWN_TRANSFORM]
 	status = thing_data[STATUS]
 
 func to_thing_data() -> Dictionary[StringName, Variant]:
@@ -145,8 +125,3 @@ func get_heads_up_anchor() -> Vector3:
 
 #func get_grid_cell() -> Vector3i:
 	#return Level.get_grid_cell_of_node(self)
-
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings: PackedStringArray = []
-	if not _collision_shape: warnings.append("Missing CollisionShape3D reference.")
-	return warnings

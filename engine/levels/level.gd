@@ -398,8 +398,7 @@ func rotate_tile(tile: Structure, clockwise_turns: int, character: Character) ->
 		var turned_spot: Vector2 = _get_nearest_spot(turn_spot(piece.tile_spot, clockwise_turns), open_spots)
 		open_spots.erase(turned_spot)
 		piece.place_on_grid(grid_position, turned_spot, turn_direction(piece.facing, clockwise_turns))
-	var thing: Thing = _placed_things.get(grid_position)
-	if thing: thing.rotate_y(-clockwise_turns * PI * 0.5)
+	# The thing on it turns with it, on every peer, see _on_tile_turned
 	tile.clockwise_turns = posmod(tile.clockwise_turns + clockwise_turns, Direction.size())
 	tile_rotated.emit(tile, character)
 	var board_change_count_before: int = _board_change_count
@@ -641,7 +640,7 @@ func _on_structure_created(structure: Structure) -> void:
 	_update_gaps_of(structure)
 	structure.status_changed.connect(_on_tile_status_changed.bind(structure))
 	structure.shown_status_changed.connect(_on_tile_shown_status_changed.bind(structure))
-	structure.clockwise_turns_changed.connect(_on_tile_turned.bind(structure).unbind(1))
+	structure.clockwise_turns_changed.connect(_on_tile_turned.bind(structure))
 	structure.lift_changed.connect(_on_tile_lift_changed.bind(structure))
 	structure.landed.connect(_on_tile_landed.bind(structure))
 	# Removed (e.g. by loading a save), it leaves the registries with its connections, like things do
@@ -695,8 +694,12 @@ func _show_bridge(tile: Structure, direction: Direction) -> void:
 
 ## Every peer: a turned [param tile] gets new bridges, once it rests on the board again (see [method _on_tile_landed]); what
 ## the turn brings into sight waits a moment, as the tile drops or spins into place
-func _on_tile_turned(tile: Structure) -> void:
+## Every peer: the thing on a turned tile turns with it (its transform is only sent as it spawns, like a character's), see
+## [method rotate_tile]
+func _on_tile_turned(previous_clockwise_turns: int, tile: Structure) -> void:
 	if _placed_tiles.get(tile.get_grid_position()) != tile: return
+	var thing: Thing = _placed_things.get(tile.get_grid_position())
+	if thing: thing.rotate_y(-(tile.clockwise_turns - previous_clockwise_turns) * PI * 0.5)
 	_hold_reveals_on(tile.get_grid_position())
 	if tile.is_settled(): _update_gaps_of(tile)
 

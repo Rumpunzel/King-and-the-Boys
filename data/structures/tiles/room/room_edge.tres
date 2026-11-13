@@ -1,7 +1,6 @@
 [gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://lwhl84tub2jy"]
 
 [ext_resource type="Resource" uid="uid://boyg6u55haqfd" path="res://data/structures/tiles/dungeon_decorations.tres" id="1_decorations"]
-[ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_dh8xs"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/tiles/room/room_tile.tscn" id="2_3hsrk"]
 [ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_restriction.tres" id="3_86pol"]
 [ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="4_dh8xs"]
@@ -37,6 +36,4 @@ _spawn_table = SubResource("Resource_vhyhk")
 name = "Room Edge"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_3hsrk")])
-_collision_shape = ExtResource("1_dh8xs")
-_hit_box_shape = ExtResource("1_dh8xs")
 metadata/_custom_type_script = "uid://dol8cfhd12nbf"

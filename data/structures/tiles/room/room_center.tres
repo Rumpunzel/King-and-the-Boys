@@ -1,7 +1,6 @@
 [gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://mmk57aplc5pu"]
 
 [ext_resource type="Resource" uid="uid://boyg6u55haqfd" path="res://data/structures/tiles/dungeon_decorations.tres" id="1_decorations"]
-[ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_v3bqd"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/tiles/room/room_tile.tscn" id="2_e84qc"]
 [ext_resource type="Resource" uid="uid://bjww6emicijx8" path="res://data/structures/tiles/restrictions/room_restriction.tres" id="3_btghr"]
 [ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="4_e84qc"]
@@ -25,6 +24,4 @@ _restriction_left = ExtResource("3_btghr")
 name = "Room Center"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_e84qc")])
-_collision_shape = ExtResource("1_v3bqd")
-_hit_box_shape = ExtResource("1_v3bqd")
 metadata/_custom_type_script = "uid://dol8cfhd12nbf"

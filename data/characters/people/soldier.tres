@@ -1,7 +1,5 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://bxlvdrtypiygb"]
 
-[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="1_ul877"]
-[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_xol3p"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_ul877"]
 [ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_stqs6"]
 [ext_resource type="Resource" uid="uid://dx6tahhpjkqy4" path="res://data/characters/people/soldier_body.tres" id="5_a0nqf"]

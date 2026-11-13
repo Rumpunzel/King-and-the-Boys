@@ -26,15 +26,11 @@ properties/5/path = NodePath(".:lift_turns")
 properties/5/spawn = false
 properties/5/replication_mode = 2
 
-[node name="Structure" type="StaticBody3D" unique_id=1824059418 node_paths=PackedStringArray("_collision_shape") groups=["Navigation", "Structures"]]
+[node name="Structure" type="Node3D" unique_id=1824059418 groups=["Structures"]]
 transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 0, 0, 0)
-collision_layer = 8
 script = ExtResource("1_esc8u")
-_collision_shape = NodePath("CollisionShape3D")
 _hidden_material = ExtResource("2_qbgox")
 metadata/_custom_type_script = "uid://g8gbwwqlcudv"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=221668453]
 
 [node name="Synchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2078102797]
 replication_config = SubResource("SceneReplicationConfig_5skvj")

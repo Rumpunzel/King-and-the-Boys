@@ -1,7 +1,7 @@
 @tool
 @icon("uid://btm20iemr2nfr")
 class_name Structure
-extends StaticBody3D
+extends Node3D
 
 signal spawn_requested(profile_to_spawn: Profile)
 signal status_changed(status: Status)
@@ -48,14 +48,10 @@ static var debug_labels_shown: bool = false
 		if not profile:
 			assert(Engine.is_editor_hint())
 			model = null
-			_collision_shape.shape = null
-			_collision_shape.position = Vector3.ZERO
-			_collision_shape.rotation_degrees = Vector3.ZERO
 			profile_changed.emit()
 			return
 		variation = profile.get_random_variation()
 		model = profile.create_model(variation)
-		profile.configure_collision_shape(_collision_shape)
 		profile_changed.emit()
 		add_to_group(profile.get_group_name())
 
@@ -78,7 +74,6 @@ static var debug_labels_shown: bool = false
 		status_changed.emit(status)
 
 @export_group("Configuration")
-@export var _collision_shape: CollisionShape3D
 @export var _hidden_material: Material
 
 ## The [Character] whose step raised [member status] last, empty if no step did (level build, spawning, loading).
@@ -347,6 +342,5 @@ func _to_string() -> String:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _collision_shape: warnings.append("Missing CollisionShape3D reference.")
 	if not _hidden_material: warnings.append("Missing hidden material reference.")
 	return warnings

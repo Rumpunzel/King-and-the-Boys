@@ -208,7 +208,6 @@ func test_figures_ride_a_turn_on_the_board_and_step_off_once_it_is_in_place() ->
 
 func test_the_thing_on_the_tile_rides_by_its_model() -> void:
 	var chest: Thing = auto_free(Thing.new())
-	chest.freeze = true
 	chest.model = Model.new()
 	add_child(chest)
 	chest.global_position = _tile.global_position

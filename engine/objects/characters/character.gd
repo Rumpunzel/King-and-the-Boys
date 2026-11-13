@@ -1,11 +1,10 @@
 @tool
 @icon("uid://bnaoddhf8gssj")
 class_name Character
-extends CharacterBody3D
+extends Node3D
 
 signal entered_grid_cell(cell: Vector2i)
 signal exited_grid_cell(cell: Vector2i)
-signal destination_reached
 signal movement_points_changed(movement_points: int)
 signal undo_steps_changed(undo_steps: int)
 signal ability_uses_changed
@@ -46,20 +45,14 @@ const _TURN_DURATION: float = 0.5
 		if not profile:
 			assert(Engine.is_editor_hint())
 			model = null
-			_collision_shape.shape = null
-			_collision_shape.position = Vector3.ZERO
-			_collision_shape.rotation_degrees = Vector3.ZERO
 			profile_changed.emit()
 			return
 		if variation < 0: variation = profile.get_random_variation()
 		model = profile.create_model(variation)
-		profile.configure_collision_shape(_collision_shape)
 		profile_changed.emit()
 		add_to_group(profile.get_group_name())
 
 @export_group("Configuration")
-@export var _collision_shape: CollisionShape3D
-@export var _navigation_agent: NavigationAgent3D
 @export var _synchronizer: MultiplayerSynchronizer
 @export var equipment: CharacterEquipment
 
@@ -89,7 +82,6 @@ var body: Dictionary = {}:
 var level: Level
 ## Whether the figure shows that its player has passed (see [method show_passed]); purely visual, on every peer
 var shows_passed: bool = false
-var look_target: Vector3 = Vector3.BACK
 ## The [Character] currently controlling this one, if any
 var controlled_by: Character
 ## The piece this [Character] currently controls, if any; set with [member HitBox.controller]
@@ -174,8 +166,6 @@ var _figure_grid_cell: Vector2i = Vector2i.ZERO
 var _carrier: Node3D
 var _carried_transform: Transform3D
 
-var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
-
 func _enter_tree() -> void:
 	# Before the children are ready, so the character's light sees equipment shown from the start
 	if equipment and not equipment.equipment_changed.is_connected(light_sources_changed.emit):
@@ -245,19 +235,10 @@ func _take_nearest_free_spot() -> void:
 	var offset: Vector3 = spot_position - level.grid_to_world_position(grid_cell)
 	tile_spot = Vector2(offset.x, offset.z)
 
-func _physics_process(_delta: float) -> void:
-	if Engine.is_editor_hint(): return
-	#_is_on_floor = is_on_floor()
-	#if not _is_on_floor: _apply_gravity(delta)
-	#_handle_pathfinding()
-	#move_and_slide()
-	#_look_forward(delta)
-
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	if is_instance_valid(_carrier): global_transform = _carrier.global_transform * _carried_transform
 	_update_figure_grid_cell()
-	#if model: model.play_animation(_normalized_velocity, _is_on_floor)
 
 static func from_character_data(character_data: Dictionary[StringName, Variant]) -> Character:
 	validate_character_data(character_data)
@@ -283,19 +264,6 @@ static func facing_to_rotation(direction: Level.Direction) -> float:
 
 static func rotation_to_facing(rotation_y: float) -> Level.Direction:
 	return posmod(2 - roundi(rotation_y / (PI * 0.5)), Level.Direction.size()) as Level.Direction
-
-## Used to move the [Character] without pathfinding
-@rpc("any_peer", "call_local")
-func move_into_direction(direction_input: Vector2, delta: float) -> void:
-	if not direction_input:
-		var deceleration: float = delta
-		velocity.x = move_toward(velocity.x, 0.0, deceleration)
-		velocity.z = move_toward(velocity.z, 0.0, deceleration)
-		return
-	var move_speed: float = 16.0
-	var acceleration: float = delta
-	velocity.x = move_toward(velocity.x, direction_input.x * move_speed, acceleration)
-	velocity.z = move_toward(velocity.z, direction_input.y * move_speed, acceleration)
 
 ## Host only: places the [Character] on the grid; peers follow through replication
 func place_on_grid(new_grid_cell: Vector2i, new_tile_spot: Vector2, new_facing: Level.Direction) -> void:
@@ -360,22 +328,17 @@ func snap_to_grid() -> void:
 	_grid_visuals_applied = false
 	_queue_grid_visual_update()
 
-@rpc("any_peer", "call_local", "reliable")
-func move_to_position(position_input: Vector3) -> void:
-	_navigation_agent.target_position = position_input
-
 @rpc("call_local", "reliable")
-func hide_character(keep_physics: bool = false) -> void:
+func hide_character(keep_processing: bool = false) -> void:
 	assert(visible)
 	visible = false
-	if keep_physics: return
-	_disable_physics()
+	if not keep_processing: set_process(false)
 
 @rpc("call_local", "reliable")
 func unhide_character() -> void:
 	assert(not visible)
 	visible = true
-	_enable_physics()
+	set_process(true)
 
 func apply_character_data(character_data: Dictionary[StringName, Variant]) -> void:
 	validate_character_data(character_data)
@@ -523,35 +486,6 @@ func _look_at_thing_on_tile() -> void:
 	if to_thing.length_squared() < 0.01: return
 	_turn_to(atan2(to_thing.x, to_thing.z))
 
-func _apply_gravity(delta: float) -> void:
-	velocity.y -= _gravity * delta
-
-func _handle_pathfinding() -> void:
-	# Do not query when the map has never synchronized and is empty.
-	if NavigationServer3D.map_get_iteration_id(_navigation_agent.get_navigation_map()) == 0: return
-	if _navigation_agent.is_navigation_finished(): return
-	var next_path_position: Vector3 = _navigation_agent.get_next_path_position()
-	var new_velocity: Vector3 = global_position.direction_to(next_path_position) * profile.speed
-	if _navigation_agent.avoidance_enabled:
-		_navigation_agent.set_velocity(new_velocity)
-	else:
-		_on_navigation_agent_velocity_computed(new_velocity)
-
-func _look_forward(delta: float, direction: Vector3 = velocity) -> void:
-	look_target = direction
-	look_target.y = position.y
-	if look_target.is_equal_approx(transform.origin): return
-	var transform_looking_into_direction: Transform3D = transform.looking_at(look_target, Vector3.UP, true)
-	transform = transform.interpolate_with(transform_looking_into_direction, 8.0 * delta)
-
-func _enable_physics() -> void:
-	set_physics_process(true)
-	set_process(true)
-
-func _disable_physics() -> void:
-	set_physics_process(false)
-	set_process(false)
-
 ## @returns [code]true[/code] if the peer [param peer_id] may move this [Character]
 func is_controlled_by(peer_id: int) -> bool:
 	if controlled_by: return controlled_by.get_multiplayer_authority() == peer_id
@@ -563,18 +497,8 @@ func _on_controlled(controller: Character) -> void:
 func _on_released() -> void:
 	controlled_by = null
 
-func _on_navigation_agent_velocity_computed(safe_velocity: Vector3) -> void:
-	if _navigation_agent.is_navigation_finished(): return
-	velocity = safe_velocity
-
-func _on_navigation_agent_navigation_finished() -> void:
-	velocity = Vector3.ZERO
-	destination_reached.emit()
-
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _collision_shape: warnings.append("Missing CollisionShape3D reference.")
-	if not _navigation_agent: warnings.append("Missing NavigationAgent3D reference.")
 	if not _synchronizer: warnings.append("Missing MultiplayerSynchronizer reference.")
 	if not equipment: warnings.append("Missing CharacterEquipment reference.")
 	return warnings

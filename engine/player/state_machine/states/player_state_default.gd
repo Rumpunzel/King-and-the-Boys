@@ -18,10 +18,6 @@ func update(_delta: float) -> void:
 	#if available_interaction.is_action_just_released():
 		#_take_control_timer.stop()
 
-func physics_update(_delta: float) -> void:
-	var direction_input: Vector2 = get_direction_input()
-	#get_character().move_into_direction.rpc(direction_input, delta)
-
 func exit() -> void:
 	var controlled_character: Character = get_controlled_character()
 	if controlled_character.active_ability_changed.is_connected(_on_active_ability_changed):

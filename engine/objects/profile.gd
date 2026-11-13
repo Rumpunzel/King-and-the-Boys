@@ -23,16 +23,6 @@ extends Resource
 	set(new_value):
 		_model_variations = new_value
 		changed.emit()
-@export var _collision_shape: AreaShape = preload("uid://d27l7tjgj4lrb"):
-	set(new_value):
-		_collision_shape = new_value
-		if not _collision_shape.changed.is_connected(changed.emit): _collision_shape.changed.connect(changed.emit)
-		changed.emit()
-@export var _hit_box_shape: AreaShape = preload("uid://718wpxdsx3bo"):
-	set(new_value):
-		_hit_box_shape = new_value
-		if not _hit_box_shape.changed.is_connected(changed.emit): _hit_box_shape.changed.connect(changed.emit)
-		changed.emit()
 
 @export var heads_up_display_offset: Vector3 = Vector3(0.0, 2.0, 0.0):
 	set(new_value):
@@ -48,22 +38,6 @@ func create_model(variation: int) -> Model:
 	assert(variation < get_variation_count())
 	var model: PackedScene = _model_variations[variation]
 	return model.instantiate()
-
-func configure_collision_shape(collision_shape: CollisionShape3D) -> void:
-	if not collision_shape: return
-	_collision_shape.configure_collision_shape(collision_shape)
-
-func configure_hit_box(hit_box: CollisionShape3D) -> void:
-	if not _hit_box_shape: configure_collision_shape(hit_box)
-	else: _hit_box_shape.configure_collision_shape(hit_box)
-
-func configure_collision_mesh(collision_mesh: MeshInstance3D) -> void:
-	if not collision_mesh: return
-	_collision_shape.configure_mesh(collision_mesh)
-
-func configure_hit_box_mesh(hit_box_mesh: MeshInstance3D) -> void:
-	if not _hit_box_shape: configure_collision_mesh(hit_box_mesh)
-	else: _hit_box_shape.configure_mesh(hit_box_mesh)
 
 ## @returns a random model variation, or [code]-1[/code] for a profile without models (e.g. in tests)
 func get_random_variation() -> int:
