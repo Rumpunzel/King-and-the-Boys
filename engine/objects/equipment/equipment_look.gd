@@ -132,7 +132,7 @@ func create_model(_variation: int) -> Model:
 	return model
 
 func get_variation_count() -> int: return 1
-func get_random_variation() -> int: return 0
+func get_random_variation(_random: RandomNumberGenerator = null) -> int: return 0
 
 ## The look's mesh for its type's first part, e.g. "Torso 05"; looks of one base are variations of each other
 func get_base_name() -> String:

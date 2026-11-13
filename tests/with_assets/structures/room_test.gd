@@ -181,11 +181,15 @@ func test_no_centrepiece_lands_on_a_figure() -> void:
 	_level.set("_room_centrepiece_chance", 1.0)
 	_spawn_room(Structure.Status.PLACED)
 	var knight: CharacterProfile = load(EquipmentFixtures.KNIGHT)
-	var figure: Character = auto_free(knight.create(0, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(Vector2i(-1, 0)))))
+	# On the spot of (-1, 0) towards the corner (0, 1) the centrepiece would take; one on the tile's centre would not keep it out
+	var tile: Structure = _level.get_placed_tile(Vector2i(-1, 0))
+	var corner_spot: Vector2 = Level.get_spot_towards(tile.profile.get_tile_spots(), Vector2(1, 1))
+	var figure: Character = auto_free(knight.create(0, Transform3D(Basis.IDENTITY, _level.get_spot_position(Vector2i(-1, 0), corner_spot))))
 	figure.level = _level
 	figure.add_to_group(Character.GROUP)
 	add_child(figure)
 	assert_vector(figure.grid_cell).is_equal(Vector2i(-1, 0))
+	assert_vector(figure.tile_spot).is_equal_approx(corner_spot, Vector2.ONE * 0.001)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
 	assert_bool((_level.get("_corner_things") as Dictionary).is_empty()).is_true()
