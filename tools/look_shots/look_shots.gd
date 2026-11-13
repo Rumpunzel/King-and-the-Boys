@@ -30,7 +30,13 @@ var _fovs: PackedFloat32Array = []
 
 func _ready() -> void:
 	_output = "%s/%s" % [OUTPUT, _get_argument("label", Time.get_datetime_string_from_system().replace(":", "-"))]
-	for fov: String in _get_argument("fovs", "").split(",", false): _fovs.append(fov.to_float())
+	for fov_text: String in _get_argument("fovs", "").split(",", false):
+		var fov: float = fov_text.to_float()
+		if not fov_text.is_valid_float() or fov <= 0.0 or fov >= 180.0:
+			push_error("Not a field of view between 0 and 180 degrees: %s" % fov_text)
+			get_tree().quit(1)
+			return
+		_fovs.append(fov)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output))
 	# Keeps the editor from importing every shot
 	FileAccess.open("%s/.gdignore" % OUTPUT, FileAccess.WRITE)
@@ -81,7 +87,7 @@ func _shoot_views(player_controller: PlayerController, file_name: String) -> voi
 		camera.fov = fov
 		follow.set(&"follow_offset", own_offset * tan(deg_to_rad(own_fov) * 0.5) / tan(deg_to_rad(fov) * 0.5))
 		for _frame: int in refocus_frames: await get_tree().physics_frame
-		await _shoot("%s_fov%02d" % [file_name, roundi(fov)])
+		await _shoot("%s_fov%s" % [file_name, String.num(fov).replace(".", "_")])
 	camera.fov = own_fov
 	follow.set(&"follow_offset", own_offset)
 
