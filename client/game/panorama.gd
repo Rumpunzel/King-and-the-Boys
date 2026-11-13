@@ -1,4 +1,4 @@
-@icon("uid://bgjmcb04v358t")
+@icon("uid://dsv67bofw4bhq")
 extends CanvasLayer
 ## The menus' 3D backdrop: loads a scene on a thread, fades it in from behind a black placeholder and out again.
 ## Every load it requests is taken from the loader once it ends, also when nobody waits for it any more, so a

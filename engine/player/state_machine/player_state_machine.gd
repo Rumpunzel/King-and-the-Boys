@@ -11,7 +11,6 @@ signal controlled_character_changed(controlled_character: Character)
 @export var input_reader: InputReader
 @export var character: Character
 @export var hit_box: CharacterHitBox
-@export var interaction_area: InteractionArea
 @export var default_phantom_camera: PhantomCamera3D
 
 @export var control_phantom_camera_scene: PackedScene
@@ -55,14 +54,10 @@ func set_state(state: State) -> void:
 	if get_controlled_character() != previous_controlled_character:
 		controlled_character_changed.emit(get_controlled_character())
 
-func _on_current_interactable_changed(current_interactable: HitBox) -> void:
-	handle_interactable(current_interactable)
-
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	if not player_controller: warnings.append("Missing PlayerController reference.")
 	if not input_reader: warnings.append("Missing InputReader reference.")
-	if not interaction_area: warnings.append("Missing InteractionArea reference.")
 	if not default_phantom_camera: warnings.append("Missing default PhantomCamera3D reference.")
 	if not control_phantom_camera_scene: warnings.append("Missing control phantom camera scene.")
 	return warnings + super._get_configuration_warnings()

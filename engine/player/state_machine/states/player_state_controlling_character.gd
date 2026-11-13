@@ -21,10 +21,7 @@ func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 	assert(_controlled)
 	var controlled_character: Character = _controlled.character
 	assert(controlled_character)
-	var interaction_area: InteractionArea = get_interaction_area()
 	character.hide_character.rpc()
-	interaction_area.add_hit_box_to_ignore(_controlled)
-	interaction_area.configure_collision_shape(controlled_character.profile)
 	_control_camera = _create_control_camera()
 	_control_camera.append_follow_targets(controlled_character)
 	_control_camera.append_look_at_target(controlled_character)
@@ -53,13 +50,10 @@ func exit() -> void:
 	var character: Character = get_character()
 	var controlled_character: Character = _controlled.character
 	assert(controlled_character)
-	var interaction_area: InteractionArea = get_interaction_area()
 	character.velocity = controlled_character.velocity
 	character.unhide_character.rpc()
 	character.snap_to_grid()
 	_controlled.request_release.rpc_id(Multiplayer.HOST_ID)
-	interaction_area.remove_hit_box_to_ignore(_controlled)
-	interaction_area.configure_collision_shape(character.profile)
 	_control_camera.queue_free()
 
 func serialize() -> Dictionary[StringName, Variant]:

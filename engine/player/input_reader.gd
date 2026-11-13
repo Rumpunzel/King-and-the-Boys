@@ -4,7 +4,6 @@ class_name InputReader
 extends Node
 
 @export_group("Configuration")
-@export var _interaction_area: InteractionArea
 @export var _camera: Camera3D
 
 var direction_input: Vector2 = Vector2.ZERO
@@ -44,6 +43,5 @@ func _collect_input() -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
-	if not _interaction_area: warnings.append("Missing InteractionArea reference.")
 	if not _camera: warnings.append("Missing Camera3D reference.")
 	return warnings

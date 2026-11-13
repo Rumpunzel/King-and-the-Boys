@@ -1,5 +1,5 @@
 @tool
-@icon("uid://bgjmcb04v358t")
+@icon("uid://r4re5w2nnw4h")
 class_name MainMenu
 extends Menu
 

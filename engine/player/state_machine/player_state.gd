@@ -31,7 +31,6 @@ func get_character() ->  Character: return get_state_machine().character
 ## The [Character] the player moves in this state; their own one unless they control another
 func get_controlled_character() -> Character: return get_character()
 func get_hit_box() ->  CharacterHitBox: return get_state_machine().hit_box
-func get_interaction_area() ->  InteractionArea: return get_state_machine().interaction_area
 func get_available_interaction() -> Interaction: return get_state_machine().available_interaction
 func get_default_phantom_camera() ->  PhantomCamera3D: return get_state_machine().default_phantom_camera
 
