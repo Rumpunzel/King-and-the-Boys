@@ -1,6 +1,5 @@
 [gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://c3sqiedcypv0x"]
 
-[ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_c61bo"]
 [ext_resource type="Resource" uid="uid://boyg6u55haqfd" path="res://data/structures/tiles/dungeon_decorations.tres" id="1_decorations"]
 [ext_resource type="PackedScene" uid="uid://e5sxig2yepxa" path="res://data/structures/tiles/room/room_tile.tscn" id="2_61inb"]
 [ext_resource type="Resource" uid="uid://bf0msgn2okdfo" path="res://data/model_animations/bounce_animation.tres" id="3_61inb"]
@@ -20,6 +19,4 @@ _connection_left = true
 name = "Room Crossing"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_61inb")])
-_collision_shape = ExtResource("1_c61bo")
-_hit_box_shape = ExtResource("1_c61bo")
 metadata/_custom_type_script = "uid://dol8cfhd12nbf"

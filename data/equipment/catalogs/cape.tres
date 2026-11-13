@@ -1,8 +1,6 @@
 [gd_resource type="Resource" script_class="EquipmentCatalog" format=3 uid="uid://dgmeq0jv8j7ap"]
 
 [ext_resource type="Script" uid="uid://c6jpy3paqarsu" path="res://engine/objects/equipment/equipment_look.gd" id="1_2c0lt"]
-[ext_resource type="Resource" uid="uid://d27l7tjgj4lrb" path="res://data/characters/defaults/default_collision_shape.tres" id="2_ljss8"]
-[ext_resource type="Resource" uid="uid://718wpxdsx3bo" path="res://data/characters/defaults/default_hit_box_shape.tres" id="3_tif7f"]
 [ext_resource type="Script" uid="uid://dvugufq72o7dt" path="res://engine/objects/equipment/equipment_part_mesh.gd" id="4_o4fu0"]
 [ext_resource type="ArrayMesh" uid="uid://drbg5ybd8jarg" path="res://data/characters/people/meshes/gear/back_attachment/modular_character_BackAttachment_01.res" id="5_gmeog"]
 [ext_resource type="Script" uid="uid://dx0r76nebj2q4" path="res://engine/objects/equipment/equipment_appearance.gd" id="6_7nrub"]

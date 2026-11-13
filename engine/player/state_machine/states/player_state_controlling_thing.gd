@@ -21,7 +21,6 @@ func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 	assert(_controlled)
 	var controlled_thing: Thing = _controlled.thing
 	assert(controlled_thing)
-	var input_force: Vector3 = character.get_heads_up_anchor() - controlled_thing.position
 	character.hide_character.rpc(true)
 	character.position = controlled_thing.position
 	_control_camera = _create_control_camera()
@@ -30,15 +29,6 @@ func update(_delta: float) -> void:
 	var interaction_input: StringName = get_interaction_input()
 	# Taking control of another piece means releasing this one first
 	if interaction_input == "release_control": finished.emit(PlayerStateDefault.new())
-
-func physics_update(_delta: float) -> void:
-	assert(_controlled)
-	var direction_input: Vector2 = get_direction_input()
-	var character: Character = get_character()
-	var controlled_thing: Thing = _controlled.thing
-	var input_force: Vector3 = character.get_heads_up_anchor() - controlled_thing.position
-	var horizontal_offset: Vector2 = Vector2(input_force.x, input_force.z)
-	var adjusted_direction_input: Vector2 = direction_input - (horizontal_offset * controlled_thing.mass / 100.0)
 
 func exit() -> void:
 	super.exit()

@@ -33,7 +33,6 @@ func update(_delta: float) -> void:
 
 func physics_update(_delta: float) -> void:
 	assert(_controlled)
-	var direction_input: Vector2 = get_direction_input()
 	var character: Character = get_character()
 	var controlled_character: Character = _controlled.character
 	assert(controlled_character)
@@ -50,7 +49,6 @@ func exit() -> void:
 	var character: Character = get_character()
 	var controlled_character: Character = _controlled.character
 	assert(controlled_character)
-	character.velocity = controlled_character.velocity
 	character.unhide_character.rpc()
 	character.snap_to_grid()
 	_controlled.request_release.rpc_id(Multiplayer.HOST_ID)

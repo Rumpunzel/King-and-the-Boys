@@ -1,13 +1,12 @@
 @tool
 @icon("uid://bv63hb5gynt8d")
 class_name HitBox
-extends Area3D
+extends Node
+## What a player may take control of, on a character, thing or structure (see [method get_body]): the host decides who
+## controls it
 
 signal controlled(controller: Character)
 signal released
-
-@export_group("Configuration")
-@export var _collision_shape: CollisionShape3D
 
 ## The [Character] controlling this piece, set by the host on every peer
 var controller: Character
@@ -75,8 +74,3 @@ func get_model() -> Model:
 func get_heads_up_anchor() -> Vector3:
 	assert(false, "HitBox.get_heads_up_anchor is 'virtual' and needs to be overriden!")
 	return Vector3.ZERO
-
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings: PackedStringArray = []
-	if not _collision_shape: warnings.append("Missing CollisionShape3D reference.")
-	return warnings

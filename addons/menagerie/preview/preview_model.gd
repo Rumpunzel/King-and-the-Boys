@@ -1,7 +1,7 @@
 @tool
 @icon("uid://cpbv0myc0qfxb")
 class_name PreviewModel
-extends RigidBody3D
+extends Node3D
 
 signal profile_changed
 signal model_changed(model: Model)
@@ -28,9 +28,6 @@ signal model_removed
 		profile.changed.connect(_update)
 
 @export_group("Configuration")
-@export var _collision_shape: CollisionShape3D
-@export var _collision_mesh: MeshInstance3D
-@export var _hit_box_mesh: MeshInstance3D
 @export var _heads_up_anchor: HeadsUpAnchor
 
 var _model: Model:
@@ -58,30 +55,13 @@ func get_heads_up_anchor() -> Vector3:
 
 func _update() -> void:
 	if not is_node_ready(): await ready
-	if profile is ThingProfile:
-		var thing_profile: ThingProfile = profile
-		mass = thing_profile.mass
-	else:
-		mass = 1.0
 	if variation >= profile.get_variation_count(): variation = 0
 	if variation >= 0: _model = profile.create_model(variation)
-	profile.configure_collision_shape(_collision_shape)
-	profile.configure_collision_mesh(_collision_mesh)
-	profile.configure_hit_box_mesh(_hit_box_mesh)
 	_heads_up_anchor.position = get_heads_up_anchor()
 	profile_changed.emit()
 
 func _reset_model() -> void:
 	_model = null
-	_collision_shape.shape = null
-	_collision_shape.position = Vector3.ZERO
-	_collision_shape.rotation_degrees = Vector3.ZERO
-	_collision_mesh.mesh = null
-	_collision_mesh.position = Vector3.ZERO
-	_collision_mesh.rotation_degrees = Vector3.ZERO
-	_hit_box_mesh.mesh = null
-	_hit_box_mesh.position = Vector3.ZERO
-	_hit_box_mesh.rotation_degrees = Vector3.ZERO
 	_heads_up_anchor.position = Vector3.ZERO
 
 func _on_active_profile_changed(active_profile: Profile) -> void:

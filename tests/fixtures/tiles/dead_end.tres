@@ -1,7 +1,5 @@
 [gd_resource type="Resource" script_class="StructureProfile" format=3]
 
-[ext_resource type="Resource" path="res://data/characters/defaults/default_collision_shape.tres" id="1_id6te"]
-[ext_resource type="Resource" path="res://data/characters/defaults/default_hit_box_shape.tres" id="2_l201f"]
 [ext_resource type="Resource" path="res://data/model_animations/bounce_animation.tres" id="3_2uxl6"]
 [ext_resource type="Resource" path="res://data/model_animations/flip_animation.tres" id="4_o030d"]
 [ext_resource type="Script" path="res://engine/objects/structures/structure_profile.gd" id="5_27vmh"]

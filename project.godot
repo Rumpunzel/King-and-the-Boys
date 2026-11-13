@@ -202,18 +202,6 @@ cancel_ability={
 ]
 }
 
-[layer_names]
-
-3d_physics/layer_1="World"
-3d_physics/layer_2="Characters"
-3d_physics/layer_3="Things"
-3d_physics/layer_4="Structures"
-3d_physics/layer_5="WorldAreas"
-3d_physics/layer_6="HitBoxes"
-3d_physics/layer_7="HurtBoxes"
-3d_physics/layer_17="Players"
-3d_physics/layer_21="PlayerHitBoxes"
-
 [physics]
 
 common/physics_jitter_fix=0.0

@@ -1,6 +1,5 @@
 [gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://lcjpjue1orcf"]
 
-[ext_resource type="Resource" uid="uid://b0gbb6uajuvm7" path="res://data/structures/tiles/room/room_tile_shape.tres" id="1_pad4c"]
 [ext_resource type="PackedScene" uid="uid://b75usk17jvre8" path="res://data/structures/tiles/treasure/treasure_tile.tscn" id="2_x5cmi"]
 [ext_resource type="Resource" uid="uid://0gh2a2to3fvl" path="res://data/structures/tiles/restrictions/non_room_restriction.tres" id="3_pad4c"]
 [ext_resource type="Resource" uid="uid://c7mdl4repm035" path="res://data/structures/tiles/restrictions/empty_space_restriction.tres" id="3_x5cmi"]
@@ -32,6 +31,4 @@ _spawn_table = SubResource("Resource_t8iam")
 name = "Treasure Deadend"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_x5cmi")])
-_collision_shape = ExtResource("1_pad4c")
-_hit_box_shape = ExtResource("1_pad4c")
 metadata/_custom_type_script = "uid://dol8cfhd12nbf"
