@@ -66,9 +66,8 @@ var shown: bool = true:
 		shown = new_shown
 		if not model: return
 		if not shown:
-			if is_figure_moving():
-				if not figure_arrived.is_connected(_hide_if_unseen): figure_arrived.connect(_hide_if_unseen, CONNECT_ONE_SHOT)
-			else: model.visible = false
+			# A figure under way or about to move hides as it comes to rest (see _hide_if_unseen)
+			if not _is_moving() and not _grid_visual_update_queued: model.visible = false
 			return
 		model.visible = true
 		if is_node_ready() and not is_figure_moving(): model.play_model_animation(profile.spawn_animation)
@@ -427,9 +426,13 @@ func _apply_grid_visuals() -> void:
 		# Upright again after riding on a tilted carrier
 		rotation = Vector3(0.0, target_rotation, 0.0)
 		_update_figure_grid_cell()
+		# Placed without a hop (e.g. as it spawns): at rest
+		_hide_if_unseen()
 		return
 	_turn_to(target_rotation)
-	if target_position.is_equal_approx(_move_target if _is_moving() else global_position): return
+	if target_position.is_equal_approx(_move_target if _is_moving() else global_position):
+		if not _is_moving(): _hide_if_unseen()
+		return
 	# A push waits until the strike landed; the figure counts as moving meanwhile
 	var held: float = _get_hold()
 	if held > 0.0:
@@ -444,6 +447,8 @@ func _apply_grid_visuals() -> void:
 func _is_figure_seen() -> bool:
 	return model.visible if model else shown
 
+## Where the figure comes to rest (placed, or a hop ended): a figure that should be hidden hides now, so one stepping out of
+## sight finishes its hop first
 func _hide_if_unseen() -> void:
 	if model and not shown: model.visible = false
 
@@ -495,6 +500,7 @@ func _on_move_finished() -> void:
 	# The tween still counts as running during its own callback; listeners must see the figure arrived
 	_move_tween = null
 	if not _move_backwards: _look_at_thing_on_tile()
+	_hide_if_unseen()
 	figure_arrived.emit()
 
 ## Shows that the character's player passed, or no longer has: its passed animations in place of the idles (e.g. sitting down
