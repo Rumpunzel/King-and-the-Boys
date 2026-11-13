@@ -79,3 +79,10 @@ func test_a_restored_monster_stands_where_it_was_saved() -> void:
 	assert_int(monsters.size()).is_equal(1)
 	var monster: Character = monsters.front()
 	assert_array([monster.profile.resource_path, monster.variation, monster.grid_cell, monster.tile_spot, monster.facing]).is_equal(saved)
+
+func test_no_monster_spawns_where_no_tile_lies() -> void:
+	var empty_cell: Vector2i = _start + Vector2i(_level.grid_extents.x * 3, 0)
+	assert_object(_level.get_placed_tile(empty_cell)).is_null()
+	_level.spawn_monster(ModelFreeWorld.load_monster_profile(), empty_cell)
+	await await_idle_frame()
+	assert_array(_monsters()).is_empty()
