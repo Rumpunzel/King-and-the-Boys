@@ -232,6 +232,9 @@ func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> 
 func spawn_monster(profile: CharacterProfile, cell: Vector2i, facing: Direction = Direction.DOWN) -> void:
 	assert(multiplayer.is_server())
 	assert(profile.group == CharacterProfile.Groups.MONSTERS)
+	if not _placed_tiles.has(cell):
+		push_warning("No tile on %s for a %s" % [cell, profile.name])
+		return
 	var spot_position: Vector3 = get_nearest_free_spot_position(cell)
 	if spot_position == Vector3.INF:
 		push_warning("No free spot for a %s near %s" % [profile.name, cell])
