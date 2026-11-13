@@ -12,7 +12,7 @@
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_mvbif"]
 [ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="10_irqko"]
 [ext_resource type="PackedScene" uid="uid://dlla8034gqdsb" path="res://engine/player/control_camera.tscn" id="10_jlh3c"]
-[ext_resource type="Script" path="res://engine/turns/tile_highlight.gd" id="12_highlight"]
+[ext_resource type="Script" uid="uid://cbyhe8sss08td" path="res://engine/turns/tile_highlight.gd" id="12_highlight"]
 [ext_resource type="Script" uid="uid://c00i3uyt5qol5" path="res://engine/player/occlusion_target.gd" id="20_occlusion"]
 [ext_resource type="Script" uid="uid://b2xxex2bc873s" path="res://engine/objects/characters/character_light.gd" id="21_character_light"]
 
@@ -60,7 +60,7 @@ control_phantom_camera_scene = ExtResource("10_jlh3c")
 _initial_state = ExtResource("4_irqko")
 metadata/_custom_type_script = "uid://hcr7qut3ys1y"
 
-[node name="TileHighlight" type="MeshInstance3D" parent="." node_paths=PackedStringArray("_state_machine")]
+[node name="TileHighlight" type="MeshInstance3D" parent="." unique_id=1456167489 node_paths=PackedStringArray("_state_machine")]
 cast_shadow = 0
 script = ExtResource("12_highlight")
 _state_machine = NodePath("../StateMachine")
@@ -107,15 +107,22 @@ script = ExtResource("8_mvbif")
 [node name="SynchronizerSerializer" parent="Character/CharacterSynchronizer" parent_id_path=PackedInt32Array(1983351460, 1181153482) index="0" unique_id=510585076]
 type = 64
 
-[node name="CharacterLight" type="OmniLight3D" parent="Character" unique_id=772574322 node_paths=PackedStringArray("_character")]
+[node name="CharacterLight" type="OmniLight3D" parent="Character" unique_id=772574322 node_paths=PackedStringArray("_character", "_carried_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 4, 1)
 light_color = Color(0.62, 0.74, 1, 1)
-light_energy = 4.0
+light_energy = 1.3
 light_size = 0.4
 shadow_enabled = true
 omni_range = 10.0
+omni_attenuation = 0.7
 script = ExtResource("21_character_light")
 _character = NodePath("..")
+_carried_light = NodePath("CarriedLight")
+
+[node name="CarriedLight" type="OmniLight3D" parent="Character/CharacterLight" unique_id=1460283917]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+light_size = 0.4
+shadow_enabled = true
 
 [connection signal="available_interactions_changed" from="StateMachine" to="HUD" method="_on_available_interactions_changed"]
 

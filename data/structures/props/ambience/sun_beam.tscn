@@ -15,5 +15,5 @@ spot_range = 5.0
 spot_angle = 14.0
 spot_angle_attenuation = 0.5
 distance_fade_enabled = true
-distance_fade_begin = 20.0
-distance_fade_length = 5.0
+distance_fade_begin = 45.0
+distance_fade_length = 10.0
