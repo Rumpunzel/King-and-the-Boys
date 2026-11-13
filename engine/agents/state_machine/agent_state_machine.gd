@@ -14,9 +14,11 @@ func get_state() -> AgentState:
 	return _state
 
 func set_state(state: State) -> void:
-	assert(state is AgentState)
+	if state and not state is AgentState:
+		push_error("%s is no AgentState" % state)
+		return
 	_state = state
-	_state._state_machine = self
+	if _state: _state._state_machine = self
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
