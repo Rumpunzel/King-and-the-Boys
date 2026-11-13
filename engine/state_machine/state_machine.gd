@@ -1,5 +1,6 @@
 @tool
 @icon("uid://dlf5ckv713eok")
+@abstract
 class_name StateMachine
 extends Node
 
@@ -65,12 +66,8 @@ func transition_to_next_state(target_state: State) -> void:
 	set_state(target_state)
 	get_state().enter(self, previous_state)
 
-func get_state() -> State:
-	assert(false, "StateMachine._get_state is 'virtual' and needs to be overriden!")
-	return null
-
-func set_state(_state: State) -> void:
-	assert(false, "StateMachine._set_state is 'virtual' and needs to be overriden!")
+@abstract func get_state() -> State
+@abstract func set_state(state: State) -> void
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = [ ]
