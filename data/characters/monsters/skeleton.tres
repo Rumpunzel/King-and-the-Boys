@@ -1,6 +1,8 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://dxost8s6wpuxo"]
 
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="1_profile"]
+[ext_resource type="Resource" uid="uid://dlh6oc4mhmewh" path="res://data/model_animations/down_animations.tres" id="down_animations"]
+[ext_resource type="Animation" uid="uid://0qyyhlemq8vo" path="res://data/characters/animations/quaternius/Punch_Cross.res" id="block_animation"]
 [ext_resource type="PackedScene" uid="uid://c2yjyntbuik41" path="res://data/characters/monsters/skeleton/skeleton_01.tscn" id="2_plain"]
 [ext_resource type="PackedScene" uid="uid://be0n7y6a2dvcm" path="res://data/characters/monsters/skeleton/skeleton_light_armor_01.tscn" id="3_light"]
 [ext_resource type="PackedScene" uid="uid://bhm5i4rfolrp3" path="res://data/characters/monsters/skeleton/skeleton_heavy_armor_01.tscn" id="4_heavy"]
@@ -13,3 +15,5 @@ vision = 3.0
 name = "Skeleton"
 color = Color(0.85, 0.8, 0.68, 1)
 _model_variations = Array[PackedScene]([ExtResource("2_plain"), ExtResource("3_light"), ExtResource("4_heavy")])
+down_animations = ExtResource("down_animations")
+block_animation = ExtResource("block_animation")

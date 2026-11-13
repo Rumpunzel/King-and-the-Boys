@@ -18,6 +18,13 @@ signal figure_arrived
 ## Emitted when the lights the character carries change (see [method get_light_sources]), e.g. a torch equipped, a lantern lit
 signal light_sources_changed
 
+## How a figure stands: knocked down in a block, it lies on its spot until it gets up (see [method TurnManager.try_step]).
+## Stored by number: only append
+enum Posture {
+	STANDING,
+	DOWN,
+}
+
 const GROUP: StringName = "Characters"
 
 const VARIATION: StringName = "variation"
@@ -73,6 +80,13 @@ var alerted: bool = false:
 		# The alert and the pass end together as a turn starts, in either order (they come through different synchronizers):
 		# a hero still showing its pass leaves the alert as the pass ends, so it never sits down again in between
 		if model and (alerted or not shows_passed): model.rest_in(_get_rest())
+## Set by the host, replicated and saved: a figure that is [constant Posture.DOWN] can not step or block, still holds its spot,
+## and rests in its [member CharacterProfile.down_animations]
+var posture: Posture = Posture.STANDING:
+	set(new_posture):
+		if new_posture == posture: return
+		posture = new_posture
+		if model: model.rest_in(_get_rest())
 ## The [Character] currently controlling this one, if any
 var controlled_by: Character
 ## The piece this [Character] currently controls, if any; set with [member HitBox.controller]
@@ -475,9 +489,18 @@ func show_passed(passed: bool) -> void:
 	shows_passed = passed
 	if model: model.rest_in(_get_rest())
 
-## What the model rests in now: the cast animations of the held ability in use, the alert animations, the passed animations, or
-## its idles ([code]null[/code])
+## Every peer, as a block starts: the figure turns to [param defender] and strikes (see
+## [member CharacterProfile.block_animation])
+func show_block(defender: Character) -> void:
+	if not model or not shown: return
+	var to_defender: Vector3 = defender.global_position - global_position
+	if to_defender.length_squared() > 0.0001: _turn_to(atan2(to_defender.x, to_defender.z))
+	if profile.block_animation: model.play_body_animation(profile.block_animation)
+
+## What the model rests in now: lying down, the cast animations of the held ability in use, the alert animations, the passed
+## animations, or its idles ([code]null[/code])
 func _get_rest() -> BodyAnimations:
+	if posture == Posture.DOWN: return profile.down_animations
 	var ability: Ability = get_ability(active_ability_id)
 	if ability and ability.cast_animations: return ability.cast_animations
 	if alerted: return profile.alert_animations

@@ -1,6 +1,8 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://4knh77xf2vfl"]
 
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_lr5qy"]
+[ext_resource type="Resource" uid="uid://dlh6oc4mhmewh" path="res://data/model_animations/down_animations.tres" id="down_animations"]
+[ext_resource type="Animation" uid="uid://dv3e6mvw3hve7" path="res://data/characters/animations/quaternius/Sword_Attack.res" id="block_animation"]
 [ext_resource type="Resource" uid="uid://c8iu5rx5ryw42" path="res://data/model_animations/sword_alert_animations.tres" id="alert_animations"]
 [ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_ntxgj"]
 [ext_resource type="Texture2D" uid="uid://ben162rfher0t" path="res://data/characters/people/portraits/elf-helmet.svg" id="5_1nbx6"]
@@ -199,6 +201,7 @@ strength = 2
 agility = 4
 intelligence = 4
 speed = 5
+block_priority = 3
 gear_primary_color = Color(0.184, 0.42, 0.384, 1)
 gear_secondary_color = Color(0.902, 0.863, 0.58, 1)
 model_configuration = ExtResource("5_26gx7")
@@ -215,6 +218,8 @@ fast_move_animation = ExtResource("90_elf_move")
 idle_animations = ExtResource("5_n73mo")
 passed_animations = SubResource("BodyAnimations_passed")
 alert_animations = ExtResource("alert_animations")
+down_animations = ExtResource("down_animations")
+block_animation = ExtResource("block_animation")
 selected_animation = ExtResource("13_chxko")
 name = "Elf"
 portrait = ExtResource("5_1nbx6")

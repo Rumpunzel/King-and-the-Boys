@@ -1,6 +1,8 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://d18sc738vkuku"]
 
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="3_7rwy5"]
+[ext_resource type="Resource" uid="uid://dlh6oc4mhmewh" path="res://data/model_animations/down_animations.tres" id="down_animations"]
+[ext_resource type="Animation" uid="uid://dv3e6mvw3hve7" path="res://data/characters/animations/quaternius/Sword_Attack.res" id="block_animation"]
 [ext_resource type="Resource" uid="uid://c8iu5rx5ryw42" path="res://data/model_animations/sword_alert_animations.tres" id="alert_animations"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_gg1jf"]
 [ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_dvff2"]
@@ -234,6 +236,7 @@ name = "Belt 01"
 script = ExtResource("3_7rwy5")
 strength = 2
 speed = 4
+block_priority = 4
 abilities = Array[ExtResource("4_dvff2")]([ExtResource("93_lantern")])
 gear_primary_color = Color(0.173, 0.29, 0.208, 1)
 gear_secondary_color = Color(0.659, 0.682, 0.706, 1)
@@ -252,6 +255,8 @@ fast_move_animation = ExtResource("90_rogue_move")
 idle_animations = ExtResource("5_khl4o")
 passed_animations = SubResource("BodyAnimations_passed")
 alert_animations = ExtResource("alert_animations")
+down_animations = ExtResource("down_animations")
+block_animation = ExtResource("block_animation")
 selected_animation = ExtResource("13_b4a8i")
 name = "Rogue"
 portrait = ExtResource("5_r37cg")

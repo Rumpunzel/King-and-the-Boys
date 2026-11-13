@@ -33,6 +33,8 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 	set(new_value):
 		speed = new_value
 		changed.emit()
+## Of several heroes on a tile, the one with the lowest number is the one a monster blocks (and blocks a monster leaving it)
+@export var block_priority: int = 0
 
 @export var vision: float = 1.5
 @export var dark_vision: float = 2.5
@@ -119,6 +121,11 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 ## animations, e.g. drawing a weapon (its entry), holding it ready, and putting it away again (its exit) as the next turn
 ## starts; without any, its idles
 @export var alert_animations: BodyAnimations
+## What the model rests in while knocked down (see [member Character.posture]), e.g. falling back (its entry), lying, and getting
+## up again (its exit)
+@export var down_animations: BodyAnimations
+## Played as the character blocks another, e.g. a sword stroke; then it rests again
+@export var block_animation: Animation
 ## Played once as a player picks the character in the lobby, e.g. drawing a sword; then the idles
 @export var selected_animation: Animation
 
