@@ -250,7 +250,7 @@ func spawn_monster(profile: CharacterProfile, cell: Vector2i, facing: Direction 
 	_agent_spawner.spawn_agent(profile.create_character_data(profile.get_random_variation(random), spawn_transform))
 
 ## Every peer: a monster shows only on a tile this peer has revealed; it holds its spot either way
-func update_shown(character: Character) -> void:
+func _update_shown(character: Character) -> void:
 	if character.profile.group != CharacterProfile.Groups.MONSTERS: return
 	var tile: Structure = _placed_tiles.get(character.grid_cell)
 	character.shown = tile != null and tile.shown_status == Structure.Status.REVEALED
@@ -343,6 +343,37 @@ func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
 	if not tile or not tile.has_connection(direction): return false
 	var neighbour: Structure = get_placed_tile(grid_position + direction_to_vector(direction))
 	return neighbour != null and neighbour.has_connection(get_opposite(direction))
+
+## The first step from [param from] along passages towards the nearest of [param targets] that is in sight from there within
+## [param vision], by the rule heroes see by (straight along passages, across whole rooms; see [method update_sight]), so a
+## monster sees a hero as that hero would see it. Targets on [param from] itself are not looked for.
+## @returns its [enum Direction], or [code]-1[/code] if none is in sight
+func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision: float) -> int:
+	var in_sight: Dictionary[Vector2i, bool] = {}
+	_update_player_vision(from, vision, func(tile: Structure) -> void: in_sight[tile.get_grid_position()] = true)
+	var seen: Array[Vector2i] = []
+	for target: Vector2i in targets:
+		if target != from and in_sight.has(target): seen.append(target)
+	if seen.is_empty(): return -1
+	# Breadth first from the cells one step away, each knowing the step it started with
+	var first_steps: Dictionary[Vector2i, int] = {from: -1}
+	var frontier: Array[Vector2i] = []
+	for direction: Direction in Direction.values():
+		if not is_passage(from, direction): continue
+		var neighbour: Vector2i = from + direction_to_vector(direction)
+		first_steps[neighbour] = direction
+		frontier.append(neighbour)
+	while not frontier.is_empty():
+		var next_frontier: Array[Vector2i] = []
+		for cell: Vector2i in frontier:
+			if seen.has(cell): return first_steps[cell]
+			for direction: Direction in Direction.values():
+				var neighbour: Vector2i = cell + direction_to_vector(direction)
+				if first_steps.has(neighbour) or not is_passage(cell, direction): continue
+				first_steps[neighbour] = first_steps[cell]
+				next_frontier.append(neighbour)
+		frontier = next_frontier
+	return -1
 
 ## The cells a piece on [param grid_position] reaches, e.g. to take control of what stands there: its own and the next ones
 ## along passages, where it could step
@@ -871,12 +902,12 @@ func _on_player_controller_created(player_controller: PlayerController) -> void:
 
 func _register_character(character: Character) -> void:
 	character.level = self
-	character.entered_grid_cell.connect(update_shown.bind(character).unbind(1))
+	character.entered_grid_cell.connect(_update_shown.bind(character).unbind(1))
 	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
 
 func _update_shown_on(grid_position: Vector2i) -> void:
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if character.level == self and character.grid_cell == grid_position: update_shown(character)
+		if character.level == self and character.grid_cell == grid_position: _update_shown(character)
 
 ## Host only: what the hero [param character] sees comes into sight as it steps and as the lights it carries change (a torch
 ## equipped, a lantern lit; see [method Character.get_vision])

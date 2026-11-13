@@ -47,14 +47,21 @@ var body: Dictionary = {}:
 
 var level: Level
 ## Whether the figure shows on this peer; purely visual, the piece still holds its spot. Monsters hide on tiles this peer has not
-## revealed (see [method Level.update_shown]) and drop in with their spawn animation as they come into sight
+## revealed (see [code]Level._update_shown()[/code]). One that comes into sight where it stands (its tile revealed) drops in with
+## its spawn animation; one stepping into sight just hops in, so the two animations never fight. One stepping out of sight
+## finishes its hop, then hides
 var shown: bool = true:
 	set(new_shown):
 		if new_shown == shown: return
 		shown = new_shown
 		if not model: return
-		model.visible = shown
-		if shown and is_node_ready(): model.play_model_animation(profile.spawn_animation)
+		if not shown:
+			if is_figure_moving():
+				if not figure_arrived.is_connected(_hide_if_unseen): figure_arrived.connect(_hide_if_unseen, CONNECT_ONE_SHOT)
+			else: model.visible = false
+			return
+		model.visible = true
+		if is_node_ready() and not is_figure_moving(): model.play_model_animation(profile.spawn_animation)
 ## Whether the figure shows that its player has passed (see [method show_passed]); purely visual, on every peer
 var shows_passed: bool = false
 ## The [Character] currently controlling this one, if any
@@ -380,7 +387,8 @@ func _apply_grid_visuals() -> void:
 	if not level or not is_inside_tree() or is_carried(): return
 	var target_position: Vector3 = level.get_spot_position(grid_cell, tile_spot)
 	var target_rotation: float = facing_to_rotation(facing)
-	if not _grid_visuals_applied:
+	# A figure nobody sees (hidden, see [member shown]) moves at once
+	if not _grid_visuals_applied or not _is_figure_seen():
 		_grid_visuals_applied = true
 		for tween: Tween in [_move_tween, _turn_tween, _model_tween]: if tween: tween.kill()
 		global_position = target_position
@@ -392,6 +400,14 @@ func _apply_grid_visuals() -> void:
 	if target_position.is_equal_approx(_move_target if _is_moving() else global_position): return
 	if _is_moving(): _extend_move(target_position)
 	else: _start_move(target_position, target_rotation)
+
+## Whether the figure can be seen on this peer: its model shows (it may still finish a hop out of sight), or, without a model,
+## it is [member shown]
+func _is_figure_seen() -> bool:
+	return model.visible if model else shown
+
+func _hide_if_unseen() -> void:
+	if model and not shown: model.visible = false
 
 func _is_moving() -> bool:
 	return _move_tween != null and _move_tween.is_running()

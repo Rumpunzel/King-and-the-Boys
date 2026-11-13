@@ -35,6 +35,11 @@ static func validate_agent_data(agent_data: Dictionary[StringName, Variant]) -> 
 	assert(agent_data.has_all([CHARACTER_DATA]))
 	assert(agent_data.size() == 1)
 
+## Host only, in the monster phase: the direction of the character's next step, as its current state decides;
+## [code]-1[/code] to stop for this turn
+func choose_step() -> int:
+	return _state_machine.get_state().choose_step()
+
 func to_agent_data() -> Dictionary[StringName, Variant]:
 	assert(character)
 	var character_data: Dictionary[StringName, Variant] = character.to_character_data()

@@ -3,13 +3,24 @@
 class_name TurnManager
 extends Node
 ## Runs simultaneous turns: every player moves their [Character]s up to their movement points,
-## uses their abilities, may undo steps and uses, and passes. The turn ends once every connected player has passed.
+## uses their abilities, may undo steps and uses, and passes. Once every connected player has passed, the monsters take
+## their turn one after another (see [method _run_monster_phase]), then the next turn starts.
 ## The host is the referee; peers send requests and follow the replicated state.
 
 signal turn_started(turn_number: int)
 signal passed_players_changed
+signal phase_changed(phase: Phase)
+
+enum Phase {
+	HEROES,
+	MONSTERS,
+}
 
 const GROUP: StringName = "TurnManager"
+## How often the host looks whether a monster's figure arrived, and how long it waits for one at most (a figure that never
+## arrives must not hold the game)
+const _HOP_POLL: float = 0.05
+const _MAX_HOP_WAIT: float = 3.0
 
 @export_group("Configuration")
 @export var _level: Level
@@ -27,6 +38,13 @@ var passed_player_ids: PackedInt32Array = PackedInt32Array():
 		if new_passed_player_ids == passed_player_ids: return
 		passed_player_ids = new_passed_player_ids
 		passed_players_changed.emit()
+## Who acts: the players, or the monsters while the heroes wait; a loaded game starts with the heroes (see
+## [method stop_monster_phase])
+var phase: Phase = Phase.HEROES:
+	set(new_phase):
+		if new_phase == phase: return
+		phase = new_phase
+		phase_changed.emit(phase)
 
 # Host only: steps and ability uses (GridStep, AbilityStep) that can still be undone this turn, newest last
 var _undo_stacks: Dictionary[Character, Array] = {}
@@ -39,6 +57,8 @@ var _pending_steps: Array[AbilityStep] = []
 # Host only: an ability that changes the board while it is used can not be undone
 var _using_character: Character
 var _board_changed_during_use: bool = false
+# Host only: counts monster phases started or stopped, so a phase that was stopped (e.g. by loading) ends where it waits
+var _monster_phase_run: int = 0
 
 class GridStep extends RefCounted:
 	var grid_cell: Vector2i
@@ -92,19 +112,29 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	if has_passed(sender_id): return
 	var character: Character = _get_controlled_character(sender_id, character_path)
 	if not character or _held_abilities.has(character): return
+	try_step(character, direction, true)
+
+## Host only, the one rule for every step, the players' and the monsters': steps [param character] one cell into
+## [param direction] if a wall, its movement points and the target tile allow it; otherwise only turns it. Turning is free.
+## [param undoable] steps go onto the character's undo stack.
+## @returns whether it stepped
+func try_step(character: Character, direction: Level.Direction, undoable: bool = false) -> bool:
+	assert(multiplayer.is_server())
 	var target_cell: Vector2i = _level.get_step_target(character.grid_cell, direction)
 	var free_spots: Array[Vector2] = _level.get_free_spots(target_cell, character)
 	if target_cell == character.grid_cell or character.movement_points <= 0 or free_spots.is_empty():
 		character.place_on_grid(character.grid_cell, character.tile_spot, direction)
-		return
-	# Record before moving: a move that changes the board clears the stack again
-	_track(character)
-	var undo_stack: Array = _undo_stacks.get_or_add(character, [])
-	undo_stack.append(GridStep.new(character))
+		return false
+	if undoable:
+		# Record before moving: a move that changes the board clears the stack again
+		_track(character)
+		var undo_stack: Array = _undo_stacks.get_or_add(character, [])
+		undo_stack.append(GridStep.new(character))
 	character.movement_points -= 1
 	var target_spot: Vector2 = free_spots.front()
 	character.place_on_grid(target_cell, target_spot, direction)
-	_update_undo_steps(character)
+	if undoable: _update_undo_steps(character)
+	return true
 
 ## Takes back the last step of [param character_path] this turn and refunds its movement point.
 ## A pass of the sender is taken back with it, but only if the step could be undone.
@@ -202,7 +232,7 @@ func request_ability_cancel(character_path: NodePath) -> void:
 ## Passing cancels the held abilities of the sender's characters.
 @rpc("any_peer", "call_local", "reliable")
 func request_pass(passed: bool) -> void:
-	if not multiplayer.is_server(): return
+	if not multiplayer.is_server() or phase != Phase.HEROES: return
 	var sender_id: int = _get_sender_id()
 	if not Lobby.get_player(sender_id): return
 	if passed: _cancel_held_of(sender_id)
@@ -220,16 +250,64 @@ func request_auto_pass(character_path: NodePath) -> void:
 	request_pass(true)
 
 func _end_turn_if_everyone_passed() -> void:
+	if phase != Phase.HEROES: return
 	for player: Player in Lobby.get_connected_players():
 		if not has_passed(player.player_id): return
+	_run_monster_phase()
+
+## Host only: the heroes' turn ends, then every monster in turn steps as its [Agent] chooses (see [method Agent.choose_step])
+## until it is out of movement points or stops; the next turn starts once all are done. Players' requests wait meanwhile.
+## The host waits for each hop the heroes can see (from or onto a revealed tile); hidden monsters move at once.
+func _run_monster_phase() -> void:
+	assert(multiplayer.is_server())
+	_end_heroes_turn()
+	phase = Phase.MONSTERS
+	_monster_phase_run += 1
+	var run: int = _monster_phase_run
+	# Pieces may leave while the host waits (a player leaving takes their hero along): each is checked before it is used
+	var nodes: Array[Node] = get_tree().get_nodes_in_group(Character.GROUP)
+	for index: int in nodes.size():
+		if not is_instance_valid(nodes[index]): continue
+		var character: Character = nodes[index] as Character
+		var agent: Agent = character.get_parent() as Agent if character else null
+		if not agent or character.profile.group != CharacterProfile.Groups.MONSTERS: continue
+		while is_instance_valid(character) and character.is_inside_tree() and character.movement_points > 0:
+			var was_in_sight: bool = _is_in_sight(character.grid_cell)
+			var direction: int = agent.choose_step()
+			if direction < 0 or not try_step(character, direction as Level.Direction): break
+			if not was_in_sight and not _is_in_sight(character.grid_cell): continue
+			await _wait_for_figure(character)
+			if run != _monster_phase_run: return
+	phase = Phase.HEROES
 	_start_next_turn()
+
+## Host only: a monster phase under way stops where it waits, e.g. as a save is loaded; the heroes act again, and no turn ends
+func stop_monster_phase() -> void:
+	assert(multiplayer.is_server())
+	_monster_phase_run += 1
+	phase = Phase.HEROES
+
+## Waits until [param character]'s figure arrived, at most [constant _MAX_HOP_WAIT]: its hop may last longer than its move
+## animation (delays, body animations). Tweens, not timers: they go with this node (e.g. leaving the game), so nothing resumes
+## on a freed one
+func _wait_for_figure(character: Character) -> void:
+	var waited: float = 0.0
+	while is_instance_valid(character) and character.is_figure_moving() and waited < _MAX_HOP_WAIT:
+		await create_tween().tween_interval(_HOP_POLL).finished
+		waited += _HOP_POLL
+
+func _is_in_sight(cell: Vector2i) -> bool:
+	var tile: Structure = _level.get_placed_tile(cell)
+	return tile != null and tile.status == Structure.Status.REVEALED
 
 ## Host only: player ids differ between sessions, so passes do not survive loading a game
 func clear_passes() -> void:
 	assert(multiplayer.is_server())
 	passed_player_ids = PackedInt32Array()
 
-func _start_next_turn() -> void:
+## Host only, before the monsters act: held abilities are cancelled, uses that act at the turn's end resolve, and nothing done
+## this turn can be undone any more
+func _end_heroes_turn() -> void:
 	assert(multiplayer.is_server())
 	for character: Character in _held_abilities.keys(): _cancel_held(character)
 	var pending_steps: Array[AbilityStep] = _pending_steps
@@ -237,9 +315,11 @@ func _start_next_turn() -> void:
 	for step: AbilityStep in pending_steps: step.resolve_at_turn_end(_level)
 	_undo_stacks.clear()
 	_ability_uses.clear()
-	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		character.reset_movement_points()
-		character.undo_steps = 0
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.undo_steps = 0
+
+func _start_next_turn() -> void:
+	assert(multiplayer.is_server())
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.reset_movement_points()
 	clear_passes()
 	turn_number += 1
 
@@ -322,7 +402,9 @@ func _get_sender_id() -> int:
 ## @returns the [Character] at [param character_path] if [param sender_id] controls it
 func _get_controlled_character(sender_id: int, character_path: NodePath) -> Character:
 	var character: Character = get_node_or_null(character_path) as Character
-	if not character or not character.visible: return null
+	if phase != Phase.HEROES or not character or not character.visible: return null
+	# Monsters belong to the host's agents, not to its player
+	if character.profile.group == CharacterProfile.Groups.MONSTERS: return null
 	if not character.is_controlled_by(sender_id): return null
 	return character
 

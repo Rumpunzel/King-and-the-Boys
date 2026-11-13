@@ -11,6 +11,8 @@ func before() -> void:
 
 func before_test() -> void:
 	_level = auto_free(ModelFreeWorld.create_level())
+	# Seeded: some tests need tiles that turn into a closed side, which not every dungeon has after its first build
+	_level.generation_random.seed = 42
 	_hero_profile = ModelFreeWorld.load_hero_profile()
 	add_child(_level)
 	_level.build_level()

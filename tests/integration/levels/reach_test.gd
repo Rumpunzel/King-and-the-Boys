@@ -8,6 +8,8 @@ var _level: Level
 
 func before_test() -> void:
 	_level = auto_free(ModelFreeWorld.create_level())
+	# Seeded: it needs both open and walled neighbours, which not every dungeon has after its first build
+	_level.generation_random.seed = 42
 	add_child(_level)
 	_level.build_level()
 	await await_idle_frame()

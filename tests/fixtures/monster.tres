@@ -6,4 +6,5 @@
 script = ExtResource("1_profile")
 group = 1
 speed = 2
+vision = 3.0
 name = "Test monster"
