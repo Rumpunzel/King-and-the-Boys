@@ -24,7 +24,6 @@ func enter(state_machine: StateMachine, previous_state: State = null) -> void:
 	var input_force: Vector3 = character.get_heads_up_anchor() - controlled_thing.position
 	character.hide_character.rpc(true)
 	character.position = controlled_thing.position
-	get_interaction_area().add_hit_box_to_ignore(_controlled)
 	_control_camera = _create_control_camera()
 
 func update(_delta: float) -> void:
@@ -50,7 +49,6 @@ func exit() -> void:
 	character.unhide_character.rpc()
 	character.snap_to_grid()
 	_controlled.request_release.rpc_id(Multiplayer.HOST_ID)
-	get_interaction_area().remove_hit_box_to_ignore(_controlled)
 	_control_camera.queue_free()
 
 func serialize() -> Dictionary[StringName, Variant]:

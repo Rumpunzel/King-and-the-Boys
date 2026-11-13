@@ -31,7 +31,6 @@ signal model_removed
 @export var _collision_shape: CollisionShape3D
 @export var _collision_mesh: MeshInstance3D
 @export var _hit_box_mesh: MeshInstance3D
-@export var _interaction_area_mesh: MeshInstance3D
 @export var _heads_up_anchor: HeadsUpAnchor
 
 var _model: Model:
@@ -84,10 +83,6 @@ func _reset_model() -> void:
 	_hit_box_mesh.position = Vector3.ZERO
 	_hit_box_mesh.rotation_degrees = Vector3.ZERO
 	_heads_up_anchor.position = Vector3.ZERO
-	_interaction_area_mesh.mesh = null
-	_interaction_area_mesh.position = Vector3.ZERO
-	_interaction_area_mesh.rotation_degrees = Vector3.ZERO
-	_interaction_area_mesh.position = Vector3.ZERO
 
 func _on_active_profile_changed(active_profile: Profile) -> void:
 	profile = active_profile

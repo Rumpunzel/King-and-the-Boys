@@ -12,6 +12,7 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `green/bookmarklet.svg` | lorc | [bookmarklet](https://game-icons.net/1x1/lorc/bookmarklet.html) |
 | `green/button-finger.svg` | delapouite | [button-finger](https://game-icons.net/1x1/delapouite/button-finger.html) |
 | `green/diploma.svg` | delapouite | [diploma](https://game-icons.net/1x1/delapouite/diploma.html) |
+| `green/dungeon-gate.svg` | delapouite | [dungeon-gate](https://game-icons.net/1x1/delapouite/dungeon-gate.html) |
 | `green/empty-hourglass.svg` | lorc | [empty-hourglass](https://game-icons.net/1x1/lorc/empty-hourglass.html) |
 | `green/gamepad-cross.svg` | lorc | [gamepad-cross](https://game-icons.net/1x1/lorc/gamepad-cross.html) |
 | `green/help.svg` | sbed | [help](https://game-icons.net/1x1/sbed/help.html) |

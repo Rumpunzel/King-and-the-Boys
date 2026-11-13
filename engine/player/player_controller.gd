@@ -110,10 +110,13 @@ func get_default_camera_priority() -> int:
 func _on_passed_players_changed() -> void:
 	if player: character.show_passed(has_passed())
 
-## Whether [param hit_box] is within reach of this player's character, e.g. to take control of it;
-## nothing is without an interaction area (the controller scene has none while taking control is tabled)
+## Whether [param hit_box] is within reach of this player's character, e.g. to take control of it: standing on a cell of
+## [method Level.get_cells_in_reach]
 func can_reach(hit_box: HitBox) -> bool:
-	return _state_machine.interaction_area != null and _state_machine.interaction_area.reaches(hit_box)
+	var level: Level = character.level
+	if not level: return false
+	var in_reach: Array[Vector2i] = level.get_cells_in_reach(character.grid_cell)
+	return level.get_cells_of(hit_box.get_body()).any(func(cell: Vector2i) -> bool: return in_reach.has(cell))
 
 ## @returns the [Character] the player currently moves
 func get_controlled_character() -> Character:

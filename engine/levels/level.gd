@@ -316,6 +316,26 @@ func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
 	var neighbour: Structure = get_placed_tile(grid_position + direction_to_vector(direction))
 	return neighbour != null and neighbour.has_connection(get_opposite(direction))
 
+## The cells a piece on [param grid_position] reaches, e.g. to take control of what stands there: its own and the next ones
+## along passages, where it could step
+func get_cells_in_reach(grid_position: Vector2i) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = [grid_position]
+	for direction: Direction in Direction.values():
+		if is_passage(grid_position, direction): cells.append(grid_position + direction_to_vector(direction))
+	return cells
+
+## The cells [param piece] stands on: a character's [member Character.grid_cell], a tile's cells, all four cells around
+## a thing on a grid corner (e.g. a centrepiece), else the cell under it
+func get_cells_of(piece: Node3D) -> Array[Vector2i]:
+	if piece is Character: return [(piece as Character).grid_cell]
+	if piece is Structure: return (piece as Structure).get_grid_cells()
+	var corner: Variant = _corner_things.find_key(piece)
+	if corner == null: return [world_to_grid_position(piece.global_position)]
+	var corner_cell: Vector2i = corner
+	var cells: Array[Vector2i] = []
+	for offset: Vector2i in CELL_CORNERS: cells.append(corner_cell - offset)
+	return cells
+
 func get_spot_position(grid_position: Vector2i, spot: Vector2) -> Vector3:
 	return grid_to_world_position(grid_position) + Vector3(spot.x, 0.0, spot.y)
 

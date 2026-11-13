@@ -43,23 +43,21 @@ func _add_level(build: bool = true) -> void:
 	if build: _level.build_level()
 	await await_idle_frame()
 
-## Gives [param controller] the interaction area its scene lacks while taking control is tabled
-func _give_interaction_area(controller: PlayerController) -> void:
-	var area: InteractionArea = (load("res://engine/player/interaction_area.tscn") as PackedScene).instantiate()
-	controller.character.add_child(area)
-	var state_machine: PlayerStateMachine = controller.get("_state_machine")
-	state_machine.interaction_area = area
-
-## A character no player owns, within [param controller]'s reach. The tabled interaction area has no shape and
-## does not look at character hit boxes yet, so the piece is put in its list instead of overlapping in physics.
+## A character no player owns, on [param controller]'s tile (or next door through a passage, if the tile is full): in
+## its reach
 func _add_piece_near(controller: Character) -> Character:
 	var piece: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, controller.global_position)))
 	piece.level = _level
 	add_child(piece)
 	await await_idle_frame()
-	var state_machine: PlayerStateMachine = (controller.get_parent() as PlayerController).get("_state_machine")
-	var hit_boxes_in_area: Array[HitBox] = state_machine.interaction_area.get("_hit_boxes_in_area")
-	hit_boxes_in_area.append(_hit_box_of(piece))
+	return piece
+
+## A character no player owns, on [param cell]
+func _add_piece_at(cell: Vector2i) -> Character:
+	var piece: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell))))
+	piece.level = _level
+	add_child(piece)
+	await await_idle_frame()
 	return piece
 
 func _add_other_player() -> Player:
@@ -139,19 +137,35 @@ func test_only_the_owner_asks_with_a_character() -> void:
 	_spawner.start_synching_players()
 	await await_idle_frame()
 	var local_character: Character = _controller_of(Multiplayer.HOST_ID).character
-	_give_interaction_area(_controller_of(Multiplayer.HOST_ID))
 	var piece: Character = await _add_piece_near(local_character)
 	var hit_box: HitBox = _hit_box_of(piece)
 	assert_bool(hit_box.may_be_controlled_by(local_character, Multiplayer.HOST_ID)).is_true()
 	# The other player may not ask with the host's character
 	assert_bool(hit_box.may_be_controlled_by(local_character, OTHER_PLAYER_ID)).is_false()
 
+func test_pieces_are_in_reach_on_the_tile_and_along_passages_only() -> void:
+	await _add_level()
+	_spawner.start_synching_players()
+	await await_idle_frame()
+	var local_character: Character = _controller_of(Multiplayer.HOST_ID).character
+	var start: Vector2i = local_character.grid_cell
+	var in_reach: Array[Vector2i] = _level.get_cells_in_reach(start)
+	assert_int(in_reach.size()).override_failure_message("The start has a passage").is_greater(1)
+	var next_door: Character = await _add_piece_at(in_reach[in_reach.size() - 1])
+	assert_bool(_hit_box_of(next_door).may_be_controlled_by(local_character, Multiplayer.HOST_ID)).is_true()
+	# Reach goes by the grid: a walkable tile beyond it is out of reach
+	var beyond: Array[Vector2i] = []
+	for cell: Vector2i in (_level.get("_placed_tiles") as Dictionary):
+		if not in_reach.has(cell) and not _level.get_placed_tile(cell).get_connections().is_empty(): beyond.append(cell)
+	assert_array(beyond).is_not_empty()
+	var far: Character = await _add_piece_at(beyond[0])
+	assert_bool(_hit_box_of(far).may_be_controlled_by(local_character, Multiplayer.HOST_ID)).is_false()
+
 func test_granted_control_reaches_both_sides_and_ends_with_the_controller() -> void:
 	await _add_level()
 	_spawner.start_synching_players()
 	await await_idle_frame()
 	var local_character: Character = _controller_of(Multiplayer.HOST_ID).character
-	_give_interaction_area(_controller_of(Multiplayer.HOST_ID))
 	var piece: Character = await _add_piece_near(local_character)
 	var hit_box: HitBox = _hit_box_of(piece)
 	hit_box.request_control(local_character.get_path())
@@ -172,7 +186,6 @@ func test_the_controller_releases() -> void:
 	_spawner.start_synching_players()
 	await await_idle_frame()
 	var local_character: Character = _controller_of(Multiplayer.HOST_ID).character
-	_give_interaction_area(_controller_of(Multiplayer.HOST_ID))
 	var piece: Character = await _add_piece_near(local_character)
 	var hit_box: HitBox = _hit_box_of(piece)
 	hit_box.request_control(local_character.get_path())
