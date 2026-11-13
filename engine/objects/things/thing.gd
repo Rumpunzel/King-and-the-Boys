@@ -1,10 +1,9 @@
 @tool
 @icon("uid://whiw21f5vngd")
 class_name Thing
-extends Node3D
+extends BoardObject
 
 signal status_changed(status: Status)
-signal profile_changed
 
 enum Status {
 	NONE = -1,
@@ -17,28 +16,11 @@ const PROFILE_PATH: StringName = "profile_path"
 const SPAWN_TRANSFORM: StringName = "spawn_transform"
 const STATUS: StringName = "status"
 
-## Determines the varation of the [Model]
-## If [code]<0[/code] a random [Model] will be used
-@export var variation: int = -1:
-	set(new_variation):
-		if new_variation == variation: return
-		variation = new_variation
-		if not profile: return
-		if not model: return
-		model = profile.create_model(variation)
-
 @export var profile: ThingProfile:
 	set(new_profile):
+		var previous_profile: ThingProfile = profile
 		profile = new_profile
-		if not profile:
-			assert(Engine.is_editor_hint())
-			model = null
-			profile_changed.emit()
-			return
-		variation = profile.get_random_variation()
-		model = profile.create_model(variation)
-		profile_changed.emit()
-		add_to_group(profile.get_group_name())
+		_show_profile(previous_profile)
 
 @export var status: Status = Status.NONE:
 	set(new_status):
@@ -52,15 +34,6 @@ const STATUS: StringName = "status"
 				model.play_model_animation(profile.spawn_animation)
 			_: push_error("Status %s not implemented!" % status)
 		status_changed.emit(status)
-
-var model: Model:
-	set(new_model):
-		if model:
-			remove_child(model)
-			model.queue_free()
-		model = new_model
-		if not model: return
-		add_child(model, true)
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
@@ -115,13 +88,5 @@ func to_thing_data() -> Dictionary[StringName, Variant]:
 	validate_thing_data(thing_data)
 	return thing_data
 
-func get_portrait() -> Texture:
-	if model.portrait_override:
-		return model.portrait_override
-	return profile.portrait
+func get_profile() -> Profile: return profile
 
-func get_heads_up_anchor() -> Vector3:
-	return position + profile.heads_up_display_offset
-
-#func get_grid_cell() -> Vector3i:
-	#return Level.get_grid_cell_of_node(self)

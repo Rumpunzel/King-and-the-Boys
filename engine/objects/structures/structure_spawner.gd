@@ -27,7 +27,8 @@ func spawn_at(profile: StructureProfile, transform: Transform3D, clockwise_turns
 	assert(multiplayer.is_server())
 	assert(profile)
 	var tile_data: Dictionary[StringName, Variant] = {
-		Structure.VARIATION: -1,
+		# Rolled here, on the host, so every peer shows the same model
+		Structure.VARIATION: profile.get_random_variation(),
 		Structure.PROFILE_PATH: profile.resource_path,
 		Structure.SPAWN_TRANSFORM: transform,
 		Structure.CLOCKWISE_TURNS: clockwise_turns,

@@ -1,12 +1,11 @@
 @tool
 @icon("uid://btm20iemr2nfr")
 class_name Structure
-extends Node3D
+extends BoardObject
 
 signal spawn_requested(profile_to_spawn: Profile)
 signal status_changed(status: Status)
 signal shown_status_changed(shown_status: Status)
-signal profile_changed
 ## Emitted on every peer when the tile turns after it was ready, see [method Level.rotate_tile]
 signal clockwise_turns_changed(previous_clockwise_turns: int)
 ## Emitted on every peer when the tile is lifted, turned while lifted, or set down
@@ -32,28 +31,11 @@ const GROUP: StringName = &"Structures"
 ## Whether structures show their debug label (name and grid position), see [LevelDebug]; on this peer only
 static var debug_labels_shown: bool = false
 
-## Determines the varation of the [Model]
-## If [code]<0[/code] a random [Model] will be used
-@export var variation: int = -1:
-	set(new_variation):
-		if new_variation == variation: return
-		variation = new_variation
-		if not profile: return
-		if not model: return
-		model = profile.create_model(variation)
-
 @export var profile: StructureProfile:
 	set(new_profile):
+		var previous_profile: StructureProfile = profile
 		profile = new_profile
-		if not profile:
-			assert(Engine.is_editor_hint())
-			model = null
-			profile_changed.emit()
-			return
-		variation = profile.get_random_variation()
-		model = profile.create_model(variation)
-		profile_changed.emit()
-		add_to_group(profile.get_group_name())
+		_show_profile(previous_profile)
 
 ## Quarter turns clockwise, seen from above; replicated, so tiles turned after spawning turn on every peer
 @export var clockwise_turns: int = 0:
@@ -105,15 +87,6 @@ var shown_status: Status = Status.NONE:
 		shown_status = new_shown_status
 		_show_model()
 		shown_status_changed.emit(shown_status)
-
-var model: Model:
-	set(new_model):
-		if model:
-			remove_child(model)
-			model.queue_free()
-		model = new_model
-		if not model: return
-		add_child(model, true)
 
 var level: Level:
 	set(new_level):
@@ -235,12 +208,7 @@ func get_restriction_to(grid_position: Vector2i) -> ConnectionRestriction:
 
 func get_restrictions() -> Dictionary[Level.Direction, ConnectionRestriction]: return profile.get_restrictions(clockwise_turns)
 
-func get_portrait() -> Texture:
-	if model and model.portrait_override: return model.portrait_override
-	return profile.portrait
-
-func get_heads_up_anchor() -> Vector3:
-	return position + profile.heads_up_display_offset
+func get_profile() -> Profile: return profile
 
 func get_grid_position() -> Vector2i:
 	return level.world_to_grid_position(global_position)

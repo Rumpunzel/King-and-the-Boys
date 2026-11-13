@@ -79,7 +79,6 @@ func _spawn_player_controller(player_controller_data: Dictionary[StringName, Var
 	var player: Player = Lobby.get_player(player_id)
 	assert(player)
 	var character_data: Dictionary[StringName, Variant] = player_controller_data[PlayerController.CHARACTER_DATA]
-	character_data[Character.VARIATION] = -1
 	var player_controller: PlayerController = PlayerController.create(player, character_data)
 	assert(not _player_controllers.has(player_id))
 	_player_controllers[player_id] = player_controller
