@@ -84,3 +84,27 @@ func test_a_monster_shows_once_its_tile_is_revealed() -> void:
 	_level.call("_reveal_tile", hidden_tile)
 	await await_idle_frame()
 	assert_bool(hidden.shown).is_true()
+
+func test_a_tile_placed_outside_a_build_rolls_no_monster() -> void:
+	await _build(42)
+	_level.set(&"_monster_chance", 1.0)
+	_level.set(&"_room_monster_chance", 1.0)
+	var lone_cell: Vector2i = _start() + Vector2i(_level.grid_extents.x - 2, _level.grid_extents.y - 2)
+	assert_object(_level.get_placed_tile(lone_cell)).is_null()
+	_level.spawn_at(lone_cell)
+	DungeonRules.explore(_level, 1)
+	await await_idle_frame()
+	for monster: Character in _monsters(): assert_that(monster.grid_cell).is_not_equal(lone_cell)
+
+func test_only_a_figure_on_its_spot_keeps_a_centrepiece_out() -> void:
+	await _build(42)
+	var start: Vector2i = _start()
+	# The corner whose spot on the start tile lies towards (1, 1); a figure on the tile's centre leaves it free
+	var corner: Vector2i = start + Vector2i(1, 1)
+	var profile: CharacterProfile = ModelFreeWorld.load_monster_profile()
+	_level.spawn_monster(profile, start)
+	await await_idle_frame()
+	assert_bool(_level.call("_is_corner_spot_taken", corner)).is_false()
+	for _spot: int in _level.get_free_spots(start).size(): _level.spawn_monster(profile, start)
+	await await_idle_frame()
+	assert_bool(_level.call("_is_corner_spot_taken", corner)).is_true()

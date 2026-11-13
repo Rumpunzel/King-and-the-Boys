@@ -40,9 +40,10 @@ func create_model(variation: int) -> Model:
 	return model.instantiate()
 
 ## @returns a random model variation, or [code]-1[/code] for a profile without models (e.g. in tests)
-func get_random_variation() -> int:
+## Rolls with [param random] if given (e.g. seeded, so the same seed spawns the same), else the global one
+func get_random_variation(random: RandomNumberGenerator = null) -> int:
 	if _model_variations.is_empty(): return -1
-	return randi() % get_variation_count()
+	return (random.randi() if random else randi()) % get_variation_count()
 
 func get_variation_count() -> int:
 	return _model_variations.size()
