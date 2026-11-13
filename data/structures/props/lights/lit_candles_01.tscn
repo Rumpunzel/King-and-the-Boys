@@ -19,7 +19,7 @@ local_coords = true
 [node name="Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 light_color = Color(1, 0.62, 0.3, 1)
-light_energy = 1.0
+light_energy = 2.0
 omni_range = 1.6
 omni_attenuation = 1.5
 distance_fade_enabled = true

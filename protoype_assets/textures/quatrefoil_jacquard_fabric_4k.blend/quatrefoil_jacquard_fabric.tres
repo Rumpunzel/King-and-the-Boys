@@ -6,8 +6,9 @@
 [resource]
 resource_name = "quatrefoil_jacquard_fabric"
 cull_mode = 2
+albedo_color = Color(0.45, 0.38, 0.38, 1)
 albedo_texture = ExtResource("1_ko3n8")
-metallic = 1.0
+metallic = 0.2
 metallic_texture = ExtResource("2_xfin2")
 metallic_texture_channel = 2
 roughness_texture = ExtResource("2_xfin2")
