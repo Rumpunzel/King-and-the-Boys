@@ -30,8 +30,9 @@ const _TURN_DURATION: float = 0.5
 
 @export var profile: CharacterProfile:
 	set(new_character_profile):
+		var previous_profile: CharacterProfile = profile
 		profile = new_character_profile
-		_show_profile(false)
+		_show_profile(previous_profile)
 
 @export_group("Configuration")
 @export var _synchronizer: MultiplayerSynchronizer

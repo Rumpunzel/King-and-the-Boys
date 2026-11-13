@@ -27,7 +27,8 @@ func spawn_at(profile: ThingProfile, transform: Transform3D, status: Thing.Statu
 	assert(multiplayer.is_server())
 	assert(profile)
 	var thing_data: Dictionary[StringName, Variant] = {
-		Thing.VARIATION: -1,
+		# Rolled here, on the host, so every peer shows the same model
+		Thing.VARIATION: profile.get_random_variation(),
 		Thing.PROFILE_PATH: profile.resource_path,
 		Thing.SPAWN_TRANSFORM: transform,
 		Thing.STATUS: status,

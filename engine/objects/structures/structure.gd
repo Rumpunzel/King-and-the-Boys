@@ -33,8 +33,9 @@ static var debug_labels_shown: bool = false
 
 @export var profile: StructureProfile:
 	set(new_profile):
+		var previous_profile: StructureProfile = profile
 		profile = new_profile
-		_show_profile(true)
+		_show_profile(previous_profile)
 
 ## Quarter turns clockwise, seen from above; replicated, so tiles turned after spawning turn on every peer
 @export var clockwise_turns: int = 0:

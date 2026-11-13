@@ -42,8 +42,7 @@ var _model: Model:
 		model_changed.emit(_model)
 
 func get_portrait() -> Texture:
-	if _model.portrait_override:
-		return _model.portrait_override
+	if _model and _model.portrait_override: return _model.portrait_override
 	return profile.portrait
 
 func get_heads_up_anchor() -> Vector3:

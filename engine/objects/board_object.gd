@@ -32,21 +32,26 @@ var model: Model:
 
 func get_portrait() -> Texture:
 	if model and model.portrait_override: return model.portrait_override
-	return get_profile().portrait
+	var profile: Profile = get_profile()
+	return profile.portrait if profile else null
 
 func get_heads_up_anchor() -> Vector3:
-	return position + get_profile().heads_up_display_offset
+	var profile: Profile = get_profile()
+	return position + (profile.heads_up_display_offset if profile else Vector3.ZERO)
 
-## Shows the new profile; each subclass's profile setter calls it. With [param roll_variation], a new variation is rolled
-## even if one was set, else only if none was (e.g. a character keeps the one of its spawn data)
-func _show_profile(roll_variation: bool) -> void:
+## Shows the new profile in place of [param previous_profile]; each subclass's profile setter calls it. The variation comes
+## with the piece (rolled by the host, see the spawners), so every peer shows the same model; only a piece without one rolls
+## its own (e.g. placed in the editor).
+func _show_profile(previous_profile: Profile) -> void:
+	if previous_profile: remove_from_group(previous_profile.get_group_name())
+	# Dropped first, so the variation below does not build a model only to have it replaced
+	model = null
 	var profile: Profile = get_profile()
 	if not profile:
 		assert(Engine.is_editor_hint())
-		model = null
 		profile_changed.emit()
 		return
-	if roll_variation or variation < 0: variation = profile.get_random_variation()
+	if variation < 0: variation = profile.get_random_variation()
 	model = profile.create_model(variation)
 	profile_changed.emit()
 	add_to_group(profile.get_group_name())

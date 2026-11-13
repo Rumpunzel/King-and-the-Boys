@@ -18,8 +18,9 @@ const STATUS: StringName = "status"
 
 @export var profile: ThingProfile:
 	set(new_profile):
+		var previous_profile: ThingProfile = profile
 		profile = new_profile
-		_show_profile(true)
+		_show_profile(previous_profile)
 
 @export var status: Status = Status.NONE:
 	set(new_status):
@@ -89,5 +90,3 @@ func to_thing_data() -> Dictionary[StringName, Variant]:
 
 func get_profile() -> Profile: return profile
 
-#func get_grid_cell() -> Vector3i:
-	#return Level.get_grid_cell_of_node(self)
