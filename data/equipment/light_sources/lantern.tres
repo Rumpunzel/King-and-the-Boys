@@ -12,7 +12,7 @@ script = ExtResource("2_add")
 
 [resource]
 script = ExtResource("1_light")
-color = Color(1, 0.74, 0.42, 1)
+color = Color(1, 0.8, 0.6, 1)
 energy = 5.0
 light_range = 14.0
 vision_modifiers = Array[ExtResource("1_ftee8")]([SubResource("Resource_vision")])
