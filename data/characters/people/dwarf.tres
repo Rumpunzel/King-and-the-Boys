@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://ro6wvnf88xbo"]
 
 [ext_resource type="PackedScene" uid="uid://k2selbak4kwk" path="res://data/characters/dwarves/dwarf_character.tscn" id="3_ki3nk"]
+[ext_resource type="Resource" uid="uid://c8iu5rx5ryw42" path="res://data/model_animations/sword_alert_animations.tres" id="alert_animations"]
 [ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_c5b3e"]
 [ext_resource type="Texture2D" uid="uid://d3kpui0ngdvp8" path="res://protoype_assets/fantasy_character_portraits/FCP#FREE_3.png" id="4_xk1ji"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_34kdi"]
@@ -110,6 +111,7 @@ move_animation = ExtResource("90_dwarf_move")
 fast_move_animation = ExtResource("90_dwarf_move")
 idle_animations = SubResource("Resource_oam81")
 passed_animations = SubResource("Resource_xtw46")
+alert_animations = ExtResource("alert_animations")
 selected_animation = ExtResource("13_p3175")
 name = "Dwarf"
 portrait = ExtResource("4_xk1ji")
