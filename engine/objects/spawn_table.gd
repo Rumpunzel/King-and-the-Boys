@@ -10,8 +10,9 @@ var _total_weight: float = -1:
 		assert(_total_weight >= 0)
 		return _total_weight
 
-func get_spawn() -> Profile:
-	var random_selection: float = randf() * _total_weight
+## Rolls with [param random] if given (e.g. seeded, so the same seed spawns the same), else the global one
+func get_spawn(random: RandomNumberGenerator = null) -> Profile:
+	var random_selection: float = (random.randf() if random else randf()) * _total_weight
 	for profile: Profile in _get_profiles():
 		var weight: float = _get_weight(profile)
 		if random_selection < weight: return profile

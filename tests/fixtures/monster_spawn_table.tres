@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ProfileSpawnTable" format=3 uid="uid://cuouko06qbqgp"]
+
+[ext_resource type="Script" path="res://engine/objects/profile.gd" id="1_profile"]
+[ext_resource type="Resource" uid="uid://bjyijp00nyg5d" path="res://tests/fixtures/monster.tres" id="2_monster"]
+[ext_resource type="Script" path="res://engine/objects/profle_spawn_table.gd" id="3_script"]
+
+[resource]
+script = ExtResource("3_script")
+_profile_distribution = Dictionary[ExtResource("1_profile"), float]({
+ExtResource("2_monster"): 1.0
+})

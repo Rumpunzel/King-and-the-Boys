@@ -39,6 +39,13 @@ const _SHOWN: StringName = &"shown"
 ## Chance of a room big enough (2x2 cells) to get a centrepiece
 @export_range(0.0, 1.0) var _room_centrepiece_chance: float = 0.75
 
+## What may wait on a newly placed tile (e.g. a skeleton); set in the scene, like [member _wall_tile]
+@export var _monsters: SpawnTable
+## Chance of a newly placed corridor tile to hold a monster
+@export_range(0.0, 1.0) var _monster_chance: float = 0.08
+## Chance of a newly placed room tile to hold a monster
+@export_range(0.0, 1.0) var _room_monster_chance: float = 0.15
+
 ## How tiles move while lifted, e.g. by the Mystic turning one; set in the scene, as its particles are assets. Without one, tiles
 ## lift with [TileLiftAnimation]'s defaults and no particles
 @export var tile_lift_animation: TileLiftAnimation
@@ -229,7 +236,7 @@ func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> 
 
 ## Host only: spawns a monster of [param profile] (a random model variation) on the free spot nearest [param cell], that cell's if
 ## it has room (see [method get_nearest_free_spot_position]), facing [param facing]; peers get it through the [AgentSpawner]
-func spawn_monster(profile: CharacterProfile, cell: Vector2i, facing: Direction = Direction.DOWN) -> void:
+func spawn_monster(profile: CharacterProfile, cell: Vector2i, facing: Direction = Direction.DOWN, random: RandomNumberGenerator = null) -> void:
 	assert(multiplayer.is_server())
 	assert(profile.group == CharacterProfile.Groups.MONSTERS)
 	if not _placed_tiles.has(cell):
@@ -240,7 +247,13 @@ func spawn_monster(profile: CharacterProfile, cell: Vector2i, facing: Direction 
 		push_warning("No free spot for a %s near %s" % [profile.name, cell])
 		return
 	var spawn_transform: Transform3D = Transform3D(Basis(Vector3.UP, Character.facing_to_rotation(facing)), spot_position)
-	_agent_spawner.spawn_agent(profile.create_character_data(-1, spawn_transform))
+	_agent_spawner.spawn_agent(profile.create_character_data(profile.get_random_variation(random), spawn_transform))
+
+## Every peer: a monster shows only on a tile this peer has revealed; it holds its spot either way
+func update_shown(character: Character) -> void:
+	if character.profile.group != CharacterProfile.Groups.MONSTERS: return
+	var tile: Structure = _placed_tiles.get(character.grid_cell)
+	character.shown = tile != null and tile.shown_status == Structure.Status.REVEALED
 
 func get_placed_tile(grid_position: Vector2i) -> Structure: return _placed_tiles.get(grid_position)
 func get_placed_thing(grid_position: Vector2i) -> Thing: return _placed_things.get(grid_position)
@@ -457,14 +470,18 @@ func _build_outer_wall() -> void:
 			var wall: Structure = _placed_tiles[wall_position]
 			wall.reveal()
 
-func _place_starting_tile() -> Vector2i:
+## The cell of the level's only [PlayerSpawnPoint], where the starting tile lies
+func _get_starting_cell() -> Vector2i:
 	var all_player_spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	assert(all_player_spawn_points.size() == 1)
 	var player_spawn_point: PlayerSpawnPoint = all_player_spawn_points.front()
 	assert(player_spawn_point)
+	return world_to_grid_position(player_spawn_point.global_position)
+
+func _place_starting_tile() -> Vector2i:
 	assert(_starting_tile)
 	var starting_tile_blueprint: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(_starting_tile, 0)
-	var starting_grid_position: Vector2i = world_to_grid_position(player_spawn_point.global_position)
+	var starting_grid_position: Vector2i = _get_starting_cell()
 	_spawn_at(starting_tile_blueprint, starting_grid_position)
 	var starting_tile: Structure = _placed_tiles[starting_grid_position]
 	assert(starting_tile)
@@ -474,9 +491,30 @@ func _place_starting_tile() -> Vector2i:
 func _build_dungeon_from(origin_grid_position: Vector2i) -> void:
 	var tile: Structure = _placed_tiles[origin_grid_position]
 	assert(tile)
+	var placed_before: Dictionary[Vector2i, Structure] = _placed_tiles.duplicate()
 	var already_visited: Array[Vector2i] = [origin_grid_position]
 	if tile.profile.room_type: _build_room_from(origin_grid_position, tile.profile.room_type, already_visited)
 	for direction: Direction in tile.get_connections(): _build_corridor_from(origin_grid_position, direction, already_visited)
+	# After the rooms are furnished, so the centrepieces are decided first
+	var placed_now: Array[Vector2i] = []
+	for cell: Vector2i in _placed_tiles:
+		if not placed_before.has(cell): placed_now.append(cell)
+	_populate(placed_now)
+
+## Host only: each tile the dungeon grew by (the [param cells] a build placed) may hold a monster, rolled once as it is placed;
+## a loaded tile never is. The roll is seeded by the level's seed and the cell, so the same seed places the same monsters.
+## None near the start
+func _populate(cells: Array[Vector2i]) -> void:
+	if not _monsters or cells.is_empty(): return
+	var starting_cell: Vector2i = _get_starting_cell()
+	for cell: Vector2i in cells:
+		var tile: Structure = _placed_tiles.get(cell)
+		if not tile or _get_distance(cell, starting_cell) <= 1: continue
+		var random: RandomNumberGenerator = RandomNumberGenerator.new()
+		random.seed = hash([generation_random.seed, cell, &"monster"])
+		if random.randf() >= (_room_monster_chance if tile.profile.room_type else _monster_chance): continue
+		var profile: CharacterProfile = _monsters.get_spawn(random) as CharacterProfile
+		if profile: spawn_monster(profile, cell, (random.randi() % Direction.size()) as Direction, random)
 
 func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction, already_visited: Array[Vector2i]) -> void:
 	var tile: Structure = _placed_tiles[origin_grid_position]
@@ -529,9 +567,8 @@ func _furnish_room(grid_position: Vector2i) -> void:
 	if _corner_things.has(corner):
 		_remember_furnished(cells)
 		return
-	# A figure on one of the corner's tiles (e.g. in a save from before rooms had centrepieces) may stand where it would go: later
-	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if CELL_CORNERS.has(corner - character.grid_cell): return
+	# A figure (e.g. in a save from before rooms had centrepieces) may stand on a spot it would take on one of its tiles: later
+	if _is_corner_spot_taken(corner): return
 	_remember_furnished(cells)
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(cells.min()) ^ hash(&"centrepiece")
@@ -541,6 +578,18 @@ func _furnish_room(grid_position: Vector2i) -> void:
 	var turn: Basis = Basis(Vector3.UP, PI * 0.5 * (random.randi() % 4))
 	# Unrevealed: every peer shows it with its own view of the four tiles, see _on_thing_created
 	_thing_spawner.spawn_at(profile, Transform3D(turn, get_corner_world_position(corner)), Thing.Status.PLACED)
+
+## @returns whether a figure stands on a spot a thing on [param corner] would take (the spot towards it on each of its four
+## tiles, see [method get_free_spots])
+func _is_corner_spot_taken(corner: Vector2i) -> bool:
+	for offset: Vector2i in CELL_CORNERS:
+		var cell: Vector2i = corner - offset
+		var tile: Structure = get_placed_tile(cell)
+		if not tile: continue
+		var spot: Vector2 = get_spot_towards(tile.profile.get_tile_spots(), Vector2(offset) * 2.0 - Vector2.ONE)
+		for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+			if character.grid_cell == cell and character.tile_spot.is_equal_approx(spot): return true
+	return false
 
 ## Rooms are built again on every step; their centrepiece is decided once
 func _remember_furnished(cells: Array[Vector2i]) -> void:
@@ -661,6 +710,8 @@ func _on_structure_created(structure: Structure) -> void:
 	# Removed (e.g. by loading a save), it leaves the registries with its connections, like things do
 	structure.tree_exiting.connect(_forget_tile.bind(structure), CONNECT_ONE_SHOT)
 	tile_placed.emit(structure)
+	# A monster replicated before its tile shows once the tile does
+	_update_shown_on(tile_grid_position)
 	if not multiplayer.is_server(): return
 	structure.spawn_requested.connect(_on_spawn_requested.bind(structure))
 	if _is_next_to_revealed_tile(structure): structure.ready.connect(_discover_tile.bind(structure, _stepping_character), CONNECT_ONE_SHOT)
@@ -680,6 +731,7 @@ func _on_tile_shown_status_changed(shown_status: Structure.Status, tile: Structu
 	if _placed_things.has(grid_position):
 		var thing_on_tile: Thing = _placed_things[grid_position]
 		thing_on_tile.status = Thing.structure_status_to_thing_status(shown_status)
+	_update_shown_on(grid_position)
 	# A thing on a corner shows as soon as one of its four cells does
 	var thing_status: Thing.Status = Thing.structure_status_to_thing_status(shown_status)
 	for corner: Vector2i in CELL_CORNERS:
@@ -819,7 +871,12 @@ func _on_player_controller_created(player_controller: PlayerController) -> void:
 
 func _register_character(character: Character) -> void:
 	character.level = self
+	character.entered_grid_cell.connect(update_shown.bind(character).unbind(1))
 	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
+
+func _update_shown_on(grid_position: Vector2i) -> void:
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if character.level == self and character.grid_cell == grid_position: update_shown(character)
 
 ## Host only: what the hero [param character] sees comes into sight as it steps and as the lights it carries change (a torch
 ## equipped, a lantern lit; see [method Character.get_vision])
