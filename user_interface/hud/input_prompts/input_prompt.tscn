@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://d3ufd1hkx3mvi"]
+
+[ext_resource type="Script" uid="uid://ebuushpy8m1r" path="res://user_interface/hud/input_prompts/input_prompt.gd" id="1_6ubau"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xrj8a"]
+
+[node name="InputPrompt" type="PanelContainer" unique_id=40908240 node_paths=PackedStringArray("_timer")]
+offset_right = 9.0
+offset_bottom = 23.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_xrj8a")
+script = ExtResource("1_6ubau")
+_timer = NodePath("Timer")
+metadata/_custom_type_script = "uid://ebuushpy8m1r"
+
+[node name="Timer" type="Timer" parent="." unique_id=35820328]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

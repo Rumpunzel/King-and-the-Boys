@@ -3,6 +3,9 @@
 class_name PlayerController
 extends Node
 
+## Emitted on the local player's peer when the character they move changes, e.g. when taking control of one
+signal controlled_character_changed(controlled_character: Character)
+
 const PLAYER_ID: StringName = "player_id"
 const CHARACTER_DATA: StringName = "character_data"
 
@@ -25,7 +28,7 @@ const _INACTIVE_CAMERA_PRIORITY: int = 0
 @export var _state_machine: PlayerStateMachine
 @export var _camera: Camera3D
 
-## Passes for the player once the character is out of moves and its figure arrived;
+## Passes for the player once the controlled character is out of moves and its figure arrived;
 ## undo takes such a pass back. Without moves and without a step to undo, the player passes either way.
 ## Only acts on the local player's peer.
 var auto_pass: bool = true:
@@ -37,6 +40,16 @@ var auto_pass: bool = true:
 var _ability_target: Vector2i = Vector2i.ZERO
 var _ability_argument: int = 0
 
+var _controlled_character: Character:
+	set(new_controlled_character):
+		if is_instance_valid(_controlled_character):
+			_controlled_character.movement_points_changed.disconnect(_on_turn_state_changed)
+			_controlled_character.undo_steps_changed.disconnect(_on_turn_state_changed)
+		_controlled_character = new_controlled_character
+		_controlled_character.movement_points_changed.connect(_on_turn_state_changed)
+		_controlled_character.undo_steps_changed.connect(_on_turn_state_changed)
+		_auto_pass_if_out_of_moves()
+
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	# Every peer shows who has passed
@@ -45,10 +58,9 @@ func _ready() -> void:
 		turn_manager.passed_players_changed.connect(_on_passed_players_changed)
 		_on_passed_players_changed()
 	if not is_multiplayer_authority(): return
+	_state_machine.controlled_character_changed.connect(_on_controlled_character_changed)
 	_state_machine.start()
-	character.movement_points_changed.connect(_on_turn_state_changed)
-	character.undo_steps_changed.connect(_on_turn_state_changed)
-	_auto_pass_if_out_of_moves()
+	_controlled_character = get_controlled_character()
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
@@ -98,12 +110,21 @@ func get_default_camera_priority() -> int:
 func _on_passed_players_changed() -> void:
 	if player: character.show_passed(has_passed())
 
-## Takes back the character's last step; a pass is taken back first
+## Whether [param hit_box] is within reach of this player's character, e.g. to take control of it;
+## nothing is without an interaction area (the controller scene has none while taking control is tabled)
+func can_reach(hit_box: HitBox) -> bool:
+	return _state_machine.interaction_area != null and _state_machine.interaction_area.reaches(hit_box)
+
+## @returns the [Character] the player currently moves
+func get_controlled_character() -> Character:
+	return _state_machine.get_controlled_character()
+
+## Takes back the controlled character's last step; a pass is taken back first
 func request_undo() -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	if not turn_manager or not can_undo(): return
 	# The host takes a pass back along with a successful undo
-	turn_manager.request_undo.rpc_id(Multiplayer.HOST_ID, character.get_path())
+	turn_manager.request_undo.rpc_id(Multiplayer.HOST_ID, get_controlled_character().get_path())
 
 ## Passes, or takes a pass back while that is still possible
 func request_pass(passed: bool) -> void:
@@ -118,84 +139,96 @@ func has_passed() -> bool:
 
 ## Nothing can be undone while a held ability is in use: it is cancelled instead
 func can_undo() -> bool:
-	return character.undo_steps > 0 and character.active_ability_id.is_empty()
+	var controlled_character: Character = get_controlled_character()
+	return controlled_character.undo_steps > 0 and controlled_character.active_ability_id.is_empty()
 
-## Whether the character could use [param ability] now; the held ability in use can always be pressed again,
+## Whether the controlled character could use [param ability] now; the held ability in use can always be pressed again,
 ## which cancels it. Uses per turn are counted on the host only, which checks again.
 func can_arm(ability: Ability) -> bool:
 	if ability.is_passive() or has_passed(): return false
-	if not character.active_ability_id.is_empty(): return character.active_ability_id == ResourceId.of(ability)
-	if ability.get_charges_left(character) == 0 or not character.level: return false
-	var targets: Array[Vector2i] = ability.get_targets(character, character.level)
+	var controlled_character: Character = get_controlled_character()
+	if not controlled_character.active_ability_id.is_empty(): return controlled_character.active_ability_id == ResourceId.of(ability)
+	if ability.get_charges_left(controlled_character) == 0 or not controlled_character.level: return false
+	var targets: Array[Vector2i] = ability.get_targets(controlled_character, controlled_character.level)
 	if targets.is_empty(): return false
-	if ability.held: return ability.can_begin(character, targets[0], character.level)
-	return ability.get_cost(character, targets[0], 0) <= character.movement_points and ability.can_use(character, targets[0], 0, character.level)
+	if ability.held: return ability.can_begin(controlled_character, targets[0], controlled_character.level)
+	return ability.get_cost(controlled_character, targets[0], 0) <= controlled_character.movement_points and ability.can_use(controlled_character, targets[0], 0, controlled_character.level)
 
-## Uses [param ability] of the character on its first target: a [member Ability.held] one begins (the tile
+## Uses [param ability] of the controlled character on its first target: a [member Ability.held] one begins (the tile
 ## lifts) and waits for [method adjust_ability] and [method confirm_ability]; pressed again, it is cancelled
 func arm_ability(ability: Ability) -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	if not turn_manager or not can_arm(ability): return
+	var controlled_character: Character = get_controlled_character()
 	var ability_id: String = ResourceId.of(ability)
-	if character.active_ability_id == ability_id:
+	if controlled_character.active_ability_id == ability_id:
 		cancel_ability()
 		return
-	_ability_target = ability.get_targets(character, character.level)[0]
+	_ability_target = ability.get_targets(controlled_character, controlled_character.level)[0]
 	_ability_argument = 0
-	if ability.held: turn_manager.request_ability_begin.rpc_id(Multiplayer.HOST_ID, character.get_path(), ability_id, _ability_target)
-	else: turn_manager.request_ability.rpc_id(Multiplayer.HOST_ID, character.get_path(), ability_id, _ability_target, _ability_argument)
+	if ability.held: turn_manager.request_ability_begin.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), ability_id, _ability_target)
+	else: turn_manager.request_ability.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), ability_id, _ability_target, _ability_argument)
 
 ## Steps the choice of the held ability in use by [param step] (e.g. a quarter turn clockwise for [code]1[/code]),
-## skipping choices the character can not pay for
+## skipping choices the controlled character can not pay for
 func adjust_ability(step: int) -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
-	var ability: Ability = character.get_ability(character.active_ability_id)
+	var controlled_character: Character = get_controlled_character()
+	var ability: Ability = controlled_character.get_ability(controlled_character.active_ability_id)
 	if not turn_manager or not ability: return
-	var next_argument: int = ability.get_next_argument(character, _ability_target, _ability_argument, step)
+	var next_argument: int = ability.get_next_argument(controlled_character, _ability_target, _ability_argument, step)
 	if next_argument == _ability_argument: return
 	_ability_argument = next_argument
-	turn_manager.request_ability_adjust.rpc_id(Multiplayer.HOST_ID, character.get_path(), _ability_argument)
+	turn_manager.request_ability_adjust.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), _ability_argument)
 
 ## Points the held ability in use towards [param direction] (the Mystic's tile turns until they face it), if the
-## character can pay for that
+## controlled character can pay for that
 func aim_ability_towards(direction: Level.Direction) -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
-	var ability: Ability = character.get_ability(character.active_ability_id)
+	var controlled_character: Character = get_controlled_character()
+	var ability: Ability = controlled_character.get_ability(controlled_character.active_ability_id)
 	if not turn_manager or not ability: return
-	var argument: int = ability.get_argument_towards(character, _ability_target, direction)
+	var argument: int = ability.get_argument_towards(controlled_character, _ability_target, direction)
 	if argument < 0 or argument == _ability_argument: return
-	if ability.get_cost(character, _ability_target, argument) > character.movement_points: return
+	if ability.get_cost(controlled_character, _ability_target, argument) > controlled_character.movement_points: return
 	_ability_argument = argument
-	turn_manager.request_ability_adjust.rpc_id(Multiplayer.HOST_ID, character.get_path(), _ability_argument)
+	turn_manager.request_ability_adjust.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), _ability_argument)
 
 ## Ends the held ability in use with its current choice (sets the tile down); one that would change nothing is cancelled
 func confirm_ability() -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
-	if not turn_manager or character.active_ability_id.is_empty(): return
-	turn_manager.request_ability.rpc_id(Multiplayer.HOST_ID, character.get_path(), character.active_ability_id, _ability_target, _ability_argument)
+	var controlled_character: Character = get_controlled_character()
+	if not turn_manager or controlled_character.active_ability_id.is_empty(): return
+	turn_manager.request_ability.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path(), controlled_character.active_ability_id, _ability_target, _ability_argument)
 
 ## Stops the held ability in use without paying for it
 func cancel_ability() -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
-	if not turn_manager or character.active_ability_id.is_empty(): return
-	turn_manager.request_ability_cancel.rpc_id(Multiplayer.HOST_ID, character.get_path())
+	var controlled_character: Character = get_controlled_character()
+	if not turn_manager or controlled_character.active_ability_id.is_empty(): return
+	turn_manager.request_ability_cancel.rpc_id(Multiplayer.HOST_ID, controlled_character.get_path())
 
-## @returns [code]true[/code] if the character has nothing left to do: no moves, no step to undo
+## @returns [code]true[/code] if the controlled character has nothing left to do: no moves, no step to undo
 func must_pass() -> bool:
-	return character.movement_points == 0 and character.undo_steps == 0
+	var controlled_character: Character = get_controlled_character()
+	return controlled_character.movement_points == 0 and controlled_character.undo_steps == 0
 
 func _auto_pass_if_out_of_moves() -> void:
 	if not is_node_ready() or not is_multiplayer_authority(): return
-	if character.movement_points != 0: return
+	if not is_instance_valid(_controlled_character) or _controlled_character.movement_points != 0: return
 	if not auto_pass and not must_pass(): return
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	if not turn_manager or has_passed(): return
 	# Pass when the figure arrived: passing ends the turn at once if everyone else passed, and moves reset
-	if character.is_figure_moving():
-		if not character.figure_arrived.is_connected(_auto_pass_if_out_of_moves): character.figure_arrived.connect(_auto_pass_if_out_of_moves, CONNECT_ONE_SHOT)
+	if _controlled_character.is_figure_moving():
+		if not _controlled_character.figure_arrived.is_connected(_auto_pass_if_out_of_moves): _controlled_character.figure_arrived.connect(_auto_pass_if_out_of_moves, CONNECT_ONE_SHOT)
 		return
 	# The host checks the moves again: this peer may still see the last turn's moves
-	turn_manager.request_auto_pass.rpc_id(Multiplayer.HOST_ID, character.get_path())
+	turn_manager.request_auto_pass.rpc_id(Multiplayer.HOST_ID, _controlled_character.get_path())
+
+func _on_controlled_character_changed(controlled_character: Character) -> void:
+	_controlled_character = controlled_character
+	controlled_character_changed.emit(controlled_character)
 
 func _on_turn_state_changed(_value: int) -> void:
 	# Deferred: on the host the points change just before the step that starts the figure moving

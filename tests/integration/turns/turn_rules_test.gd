@@ -95,8 +95,7 @@ func test_pieces_share_a_tile_on_their_own_spots() -> void:
 	assert_vector(second.tile_spot).is_equal(tile_spots[1])
 	assert_bool(second.global_position.is_equal_approx(first.global_position)).is_false()
 	# The center frees up for the next piece, the second keeps its corner
-	# A hidden figure holds no spot
-	first.visible = false
+	first.hide_character()
 	assert_vector(_level.get_free_spots(_start_cell()).front()).is_equal(tile_spots[0])
 	assert_vector(second.tile_spot).is_equal(tile_spots[1])
 
