@@ -47,14 +47,15 @@ var body: Dictionary = {}:
 
 var level: Level
 ## Whether the figure shows on this peer; purely visual, the piece still holds its spot. Monsters hide on tiles this peer has not
-## revealed (see [code]Level._update_shown()[/code]) and drop in with their spawn animation as they come into sight
+## revealed (see [code]Level._update_shown()[/code]). One that comes into sight where it stands (its tile revealed) drops in with
+## its spawn animation; one stepping into sight just hops in, so the two animations never fight
 var shown: bool = true:
 	set(new_shown):
 		if new_shown == shown: return
 		shown = new_shown
 		if not model: return
 		model.visible = shown
-		if shown and is_node_ready(): model.play_model_animation(profile.spawn_animation)
+		if shown and is_node_ready() and not is_figure_moving(): model.play_model_animation(profile.spawn_animation)
 ## Whether the figure shows that its player has passed (see [method show_passed]); purely visual, on every peer
 var shows_passed: bool = false
 ## The [Character] currently controlling this one, if any
