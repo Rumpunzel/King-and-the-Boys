@@ -227,6 +227,18 @@ func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Stat
 func spawn_at_all(grid_positions: Array[Vector2i], status: Structure.Status) -> void:
 	for grid_position: Vector2i in grid_positions: spawn_at(grid_position, status)
 
+## Host only: spawns a monster of [param profile] (a random model variation) on the free spot nearest [param cell], that cell's if
+## it has room (see [method get_nearest_free_spot_position]), facing [param facing]; peers get it through the [AgentSpawner]
+func spawn_monster(profile: CharacterProfile, cell: Vector2i, facing: Direction = Direction.DOWN) -> void:
+	assert(multiplayer.is_server())
+	assert(profile.group == CharacterProfile.Groups.MONSTERS)
+	var spot_position: Vector3 = get_nearest_free_spot_position(cell)
+	if spot_position == Vector3.INF:
+		push_warning("No free spot for a %s near %s" % [profile.name, cell])
+		return
+	var spawn_transform: Transform3D = Transform3D(Basis(Vector3.UP, Character.facing_to_rotation(facing)), spot_position)
+	_agent_spawner.spawn_agent(profile.create_character_data(-1, spawn_transform))
+
 func get_placed_tile(grid_position: Vector2i) -> Structure: return _placed_tiles.get(grid_position)
 func get_placed_thing(grid_position: Vector2i) -> Thing: return _placed_things.get(grid_position)
 func get_placed_tiles() -> Array[Structure]: return _placed_tiles.values()

@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bjrtb35qaaveb"]
+
+[ext_resource type="Texture2D" uid="uid://dua2aveaxd43n" path="res://assets/polygon_dark_fantasy/Textures/Alts/PolygonDarkFantasy_01_A.png" id="1_albedo"]
+
+[resource]
+resource_name = "Dark Fantasy"
+albedo_texture = ExtResource("1_albedo")
+roughness = 0.8
