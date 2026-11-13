@@ -34,6 +34,9 @@ const BODY: StringName = "body"
 const EQUIPMENT: StringName = "equipment"
 
 const _TURN_DURATION: float = 0.5
+## How far into the strike (see [member CharacterProfile.block_animation]) it lands: the falls and the push it causes wait
+## until then, see [method show_block]
+const _STRIKE_LANDS: float = 0.5
 
 @export var profile: CharacterProfile:
 	set(new_character_profile):
@@ -86,7 +89,11 @@ var posture: Posture = Posture.STANDING:
 	set(new_posture):
 		if new_posture == posture: return
 		posture = new_posture
-		if model: model.rest_in(_get_rest())
+		if not model: return
+		# A fall waits until the strike that caused it landed
+		var held: float = _get_hold()
+		if held > 0.0: create_tween().tween_interval(held).finished.connect(_rest_in_posture)
+		else: model.rest_in(_get_rest())
 ## The [Character] currently controlling this one, if any
 var controlled_by: Character
 ## The piece this [Character] currently controls, if any; set with [member HitBox.controller]
@@ -156,6 +163,8 @@ var held_cost: int = 0:
 		held_cost_changed.emit(held_cost)
 
 var _has_grid_state: bool = false
+# Until when (Time.get_ticks_msec) a strike at or by the figure is still landing, see show_block
+var _hold_until_msec: int = 0
 var _grid_visual_update_queued: bool = false
 var _grid_visuals_applied: bool = false
 # The figure's move: one hop; a step that comes in while it is under way redirects it to the new target
@@ -421,6 +430,12 @@ func _apply_grid_visuals() -> void:
 		return
 	_turn_to(target_rotation)
 	if target_position.is_equal_approx(_move_target if _is_moving() else global_position): return
+	# A push waits until the strike landed; the figure counts as moving meanwhile
+	var held: float = _get_hold()
+	if held > 0.0:
+		_grid_visual_update_queued = true
+		create_tween().tween_interval(held).finished.connect(_apply_grid_visuals)
+		return
 	if _is_moving(): _extend_move(target_position)
 	else: _start_move(target_position, target_rotation)
 
@@ -492,10 +507,19 @@ func show_passed(passed: bool) -> void:
 ## Every peer, as a block starts: the figure turns to [param defender] and strikes (see
 ## [member CharacterProfile.block_animation])
 func show_block(defender: Character) -> void:
-	if not model or not shown: return
-	var to_defender: Vector3 = defender.global_position - global_position
-	if to_defender.length_squared() > 0.0001: _turn_to(atan2(to_defender.x, to_defender.z))
-	if profile.block_animation: model.play_body_animation(profile.block_animation)
+	if not model or not shown or not profile.block_animation: return
+	model.play_body_animation(profile.block_animation)
+	# What the block does to either figure (a fall, a push) shows once the strike lands
+	var lands: int = Time.get_ticks_msec() + roundi(profile.block_animation.length * _STRIKE_LANDS * 1000.0)
+	_hold_until_msec = maxi(_hold_until_msec, lands)
+	defender._hold_until_msec = maxi(defender._hold_until_msec, lands)
+
+## @returns how long the figure still waits for a strike to land, in seconds; [code]0[/code] if it does not
+func _get_hold() -> float:
+	return maxf(_hold_until_msec - Time.get_ticks_msec(), 0.0) / 1000.0
+
+func _rest_in_posture() -> void:
+	if model: model.rest_in(_get_rest())
 
 ## What the model rests in now: lying down, the cast animations of the held ability in use, the alert animations, the passed
 ## animations, or its idles ([code]null[/code])

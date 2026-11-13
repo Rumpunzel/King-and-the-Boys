@@ -69,6 +69,10 @@ var _monster_phase_run: int = 0
 # Host only: heroes that stepped onto a monster's tile this turn, in the order they did; the first on a tile blocks a monster
 # there as the monster phase starts. Not saved: a loaded game starts a fresh turn
 var _engaged: Array[Character] = []
+# Host only: the blocks of the step under way, so the monster phase lets each play out, see _wait_for_block
+var _step_blocks: Array[Block] = []
+# Host only: peers whose game scene has this node (see start_syncing_peer); only they get its RPCs
+var _synced_peers: Array[int] = []
 
 class GridStep extends RefCounted:
 	var grid_cell: Vector2i
@@ -109,6 +113,7 @@ func _ready() -> void:
 func start_syncing_peer(peer_id: int) -> void:
 	assert(multiplayer.is_server())
 	_synchronizer.set_visibility_for(peer_id, true)
+	if not _synced_peers.has(peer_id): _synced_peers.append(peer_id)
 
 func has_passed(player_id: int) -> bool:
 	return passed_player_ids.has(player_id)
@@ -147,7 +152,10 @@ func try_step(character: Character, direction: Level.Direction, undoable: bool =
 		var block: Block = _block(leaving_blocker, character)
 		if character.posture != Character.Posture.STANDING or block.was_pushed(): return false
 		free_spots = _level.get_free_spots(target_cell, character)
-		if free_spots.is_empty(): return false
+		if free_spots.is_empty():
+			# Refused like any step into a full tile: it only turns
+			character.place_on_grid(character.grid_cell, character.tile_spot, direction)
+			return false
 	elif undoable:
 		# Record before moving: a move that changes the board clears the stack again
 		_track(character)
@@ -182,15 +190,24 @@ func _stand_up(character: Character) -> void:
 ## before can be undone any more
 func _block(attacker: Character, defender: Character) -> Block:
 	var block: Block = Block.new(attacker, defender)
-	show_block.rpc(attacker.get_path(), defender.get_path())
+	# Facing the defender, replicated like any turn
+	var to_defender: Vector3 = _level.get_spot_position(defender.grid_cell, defender.tile_spot) - _level.get_spot_position(attacker.grid_cell, attacker.tile_spot)
+	if to_defender.length_squared() > 0.0001:
+		attacker.place_on_grid(attacker.grid_cell, attacker.tile_spot, Character.rotation_to_facing(atan2(to_defender.x, to_defender.z)))
+	# Before the outcome, so every peer holds the falls and the push until the strike lands
+	show_block(attacker.get_path(), defender.get_path())
+	for peer_id: int in _synced_peers:
+		if peer_id != multiplayer.get_unique_id(): show_block.rpc_id(peer_id, attacker.get_path(), defender.get_path())
 	block.resolve(_level, combat_random)
+	_step_blocks.append(block)
 	blocked.emit(block)
 	_close_undo(attacker)
 	_close_undo(defender)
 	return block
 
-## Every peer: [param attacker_path]'s figure strikes at [param defender_path]'s
-@rpc("authority", "call_local", "reliable")
+## Every peer: [param attacker_path]'s figure strikes at [param defender_path]'s; the host calls it on itself and sends it to the
+## peers that have this node
+@rpc("authority", "call_remote", "reliable")
 func show_block(attacker_path: NodePath, defender_path: NodePath) -> void:
 	var attacker: Character = get_node_or_null(attacker_path) as Character
 	var defender: Character = get_node_or_null(defender_path) as Character
@@ -367,14 +384,18 @@ func _run_monster_phase() -> void:
 				_stand_up(character)
 				continue
 			var direction: int = agent.choose_step()
-			if direction < 0 or not try_step(character, direction as Level.Direction): break
+			if direction < 0: break
+			_step_blocks.clear()
+			var stepped: bool = try_step(character, direction as Level.Direction)
+			# Blocks on leaving or arriving play out before anyone moves on, whatever they did
+			var blocks: Array[Block] = _step_blocks.duplicate()
 			if was_in_sight or _is_in_sight(character.grid_cell):
-				await _wait_for_figure(character)
-				if run != _monster_phase_run: return
-				# A monster stepping onto a hero's tile blocks at once: its attack plays out before the next one moves
-				if is_instance_valid(character) and character.movement_points == 0 and _get_enemy_on(character.grid_cell, character):
-					await create_tween().tween_interval(_BLOCK_PAUSE).finished
+				if stepped: await _wait_for_figure(character)
+				for block: Block in blocks:
 					if run != _monster_phase_run: return
+					await _wait_for_block(block)
+				if run != _monster_phase_run: return
+			if not stepped: break
 			# Once it hopped in: the heroes react to what they see
 			if is_instance_valid(character): _alert_heroes_seen_by(character)
 	phase = Phase.HEROES
@@ -414,7 +435,7 @@ func _clear_alerts() -> void:
 ## Lets a block play: the attack, then the pushed figure's move
 func _wait_for_block(block: Block) -> void:
 	await create_tween().tween_interval(_BLOCK_PAUSE).finished
-	if block.was_pushed(): await _wait_for_figure(block.defender)
+	if block.was_pushed() and is_instance_valid(block.defender): await _wait_for_figure(block.defender)
 
 func _is_in_sight(cell: Vector2i) -> bool:
 	var tile: Structure = _level.get_placed_tile(cell)
@@ -563,6 +584,7 @@ func _on_character_exiting(character: Character) -> void:
 		if step.character == character: _pending_steps.erase(step)
 
 func _on_player_disconnected(player: Player) -> void:
+	_synced_peers.erase(player.player_id)
 	_cancel_held_of(player.player_id)
 	_set_passed(player.player_id, false)
 	_end_turn_if_everyone_passed()

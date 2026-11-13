@@ -25,12 +25,14 @@ var chosen: Face = Face.PUSH
 var attacker_picks: bool = true
 ## Where the defender stood, and where it was pushed to (the same cell if it was not)
 var defender_cell: Vector2i
+var defender_spot: Vector2
 var pushed_to: Vector2i
 
 func _init(blocking: Character, blocked: Character) -> void:
 	attacker = blocking
 	defender = blocked
 	defender_cell = blocked.grid_cell
+	defender_spot = blocked.tile_spot
 	pushed_to = blocked.grid_cell
 
 ## Host only: rolls the dice, picks the face best for whoever picks (players pick their own later), and plays it out on the

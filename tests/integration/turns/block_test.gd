@@ -182,3 +182,30 @@ func test_a_fallen_monster_gets_up_in_its_phase() -> void:
 	monster.posture = Character.Posture.DOWN
 	await _pass_turn()
 	assert_int(monster.posture).is_equal(Character.Posture.STANDING)
+
+func test_the_attacker_turns_to_face_the_defender() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	var monster: Character = await _spawn_monster(start)
+	_turn_manager.request_move(hero.get_path(), _way_out(start))
+	await await_idle_frame()
+	var block: Block = _blocks[0]
+	assert_object(block.attacker).is_same(monster)
+	# Where the hero stood as the monster struck
+	var to_defender: Vector3 = _level.get_spot_position(start, block.defender_spot) - _level.get_spot_position(start, monster.tile_spot)
+	assert_int(monster.facing).is_equal(Character.rotation_to_facing(atan2(to_defender.x, to_defender.z)))
+
+func test_the_monster_phase_lets_a_block_in_sight_play_out() -> void:
+	var start: Vector2i = _start_cell()
+	var way: Level.Direction = _way_out(start)
+	await _spawn_hero(start)
+	# Next door, in the hero's sight: it steps onto the hero's tile and blocks at once
+	await _spawn_monster(start + Level.direction_to_vector(way))
+	var times: Dictionary[StringName, int] = {}
+	_turn_manager.blocked.connect(func(_block: Block) -> void: times[&"blocked"] = Time.get_ticks_msec())
+	_turn_manager.phase_changed.connect(func(phase: TurnManager.Phase) -> void:
+		if phase == TurnManager.Phase.HEROES: times[&"done"] = Time.get_ticks_msec()
+	)
+	await _pass_turn()
+	assert_bool(times.has(&"blocked")).is_true()
+	assert_int(times[&"done"] - times[&"blocked"]).is_greater_equal(roundi(TurnManager._BLOCK_PAUSE * 1000.0) - 50)
