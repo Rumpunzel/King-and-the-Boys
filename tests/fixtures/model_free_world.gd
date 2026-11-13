@@ -1,5 +1,5 @@
 extends RefCounted
-## A level and a hero from profiles without models, so tests need no imported meshes or textures.
+## A level, a hero and a monster from profiles without models, so tests need no imported meshes or textures.
 ## The real profiles (data/) hold their model scenes and load them with themselves.
 ## The profiles are files because spawners replicate structures by their profile's path.
 
@@ -9,6 +9,7 @@ const TILE_SET: String = "res://tests/fixtures/tiles/tile_set.tres"
 const STARTING_TILE: String = "res://tests/fixtures/tiles/crossing.tres"
 const WALL_TILE: String = "res://tests/fixtures/tiles/wall.tres"
 const HERO: String = "res://tests/fixtures/hero.tres"
+const MONSTER: String = "res://tests/fixtures/monster.tres"
 
 ## @returns a level with the model-free tiles; add it to the tree, then call [method Level.build_level]
 static func create_level() -> Level:
@@ -20,6 +21,9 @@ static func create_level() -> Level:
 
 static func load_hero_profile() -> CharacterProfile:
 	return load(HERO)
+
+static func load_monster_profile() -> CharacterProfile:
+	return load(MONSTER)
 
 ## The sides [param tile] would connect to, turned by [param clockwise_turns]: its exits turn, its room sides stay
 static func turned_connections(tile: Structure, clockwise_turns: int) -> Array[Level.Direction]:

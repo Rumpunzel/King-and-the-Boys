@@ -5,9 +5,11 @@ extends Node
 ## Debug drawings over the level, redrawn every frame while shown: an outline around every room (in its room type's colour, with
 ## its size and its centrepiece corner), each tile's connection restrictions (see [method Structure.draw_debug]) and the tiles' labels
 ## with their name and grid position.
-## The [constant ACTION] toggles them (F3); only on this peer, nothing is synced
+## The [constant ACTION] toggles them (F3); only on this peer, nothing is synced.
+## On the host of a debug build, [constant SPAWN_MONSTER_ACTION] (F4) spawns a [member debug_monster] beside the host's own hero.
 
 const ACTION: StringName = &"toggle_debug_drawings"
+const SPAWN_MONSTER_ACTION: StringName = &"spawn_debug_monster"
 ## How far outlines stay inside a room's edge, as a fraction of a tile, so neighbouring rooms' outlines keep apart
 const OUTLINE_INSET: float = 0.06
 ## How high the drawings float above the floor
@@ -19,6 +21,8 @@ const HEIGHT: float = 0.06
 		# The tiles' labels too, so either every debug mark shows or none
 		Structure.debug_labels_shown = shown
 		if is_inside_tree(): get_tree().call_group(Structure.GROUP, &"show_debug_label", shown)
+## The monster [constant SPAWN_MONSTER_ACTION] spawns; set in the dungeon level, as its models are assets
+@export var debug_monster: CharacterProfile
 
 @export_group("Configuration")
 @export var _level: Level
@@ -28,9 +32,31 @@ func _ready() -> void:
 	shown = shown
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not event.is_action_pressed(ACTION): return
-	shown = not shown
-	get_viewport().set_input_as_handled()
+	if event.is_action_pressed(ACTION):
+		shown = not shown
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(SPAWN_MONSTER_ACTION) and _spawn_debug_monster():
+		get_viewport().set_input_as_handled()
+
+## The host referees, so only it spawns, and only in debug builds: on the free spot nearest its own hero, turned towards it
+## @returns whether it spawned one
+func _spawn_debug_monster() -> bool:
+	if not OS.is_debug_build() or not _level or not debug_monster or not multiplayer.is_server(): return false
+	var hero: Character = _get_own_hero()
+	if not hero: return false
+	# The spot spawn_monster takes, so the monster can face the hero from there
+	var spot_position: Vector3 = _level.get_nearest_free_spot_position(hero.grid_cell)
+	if spot_position == Vector3.INF: return false
+	var to_hero: Vector3 = hero.global_position - spot_position
+	_level.spawn_monster(debug_monster, hero.grid_cell, Character.rotation_to_facing(atan2(to_hero.x, to_hero.z)))
+	return true
+
+func _get_own_hero() -> Character:
+	for node: Node in get_tree().get_nodes_in_group(Character.GROUP):
+		var character: Character = node as Character
+		if not character or not character.visible or character.level != _level: continue
+		if character.profile.group == CharacterProfile.Groups.HEROES and character.is_controlled_by(multiplayer.get_unique_id()): return character
+	return null
 
 func _process(_delta: float) -> void:
 	if not shown or not _level: return

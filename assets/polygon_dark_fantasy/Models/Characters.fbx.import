@@ -2098,9 +2098,9 @@ _subresources={
 },
 "materials": {
 "standardSurface1": {
-"use_external/enabled": false,
-"use_external/fallback_path": "",
-"use_external/path": "res://Assets/Synty/PolygonDarkFantasy/Models/extracted/standardSurface1.material"
+"use_external/enabled": true,
+"use_external/fallback_path": "res://data/characters/monsters/dark_fantasy_material.tres",
+"use_external/path": "uid://bjrtb35qaaveb"
 }
 },
 "meshes": {
@@ -2271,6 +2271,9 @@ _subresources={
 "PATH:AnimationPlayer": {
 "optimizer/enabled": true,
 "optimizer/max_angular_error": 0.00277777777777777
+},
+"PATH:Skeleton3D": {
+"retarget/bone_map": Resource("uid://krg3lve45d8a", "res://data/characters/monsters/dark_fantasy_bone_map.tres")
 }
 }
 }

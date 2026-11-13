@@ -9,6 +9,7 @@
 [ext_resource type="Resource" uid="uid://1uajovqss038" path="res://data/model_animations/tile_lift_animation.tres" id="5_lift"]
 [ext_resource type="PackedScene" uid="uid://bka6r1jummabd" path="res://data/levels/dust_motes.tscn" id="7_motes"]
 [ext_resource type="Script" uid="uid://d1pxbcix74a37" path="res://engine/levels/focus_blur.gd" id="8_focus"]
+[ext_resource type="Resource" uid="uid://dxost8s6wpuxo" path="res://data/characters/monsters/skeleton.tres" id="17_skeleton"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 
 [sub_resource type="CompositorEffect" id="CompositorEffect_focus"]
@@ -32,6 +33,9 @@ _wall_tile = ExtResource("3_wall")
 _tile_set = ExtResource("3_c445m")
 _room_centrepieces = ExtResource("4_centrepieces")
 tile_lift_animation = ExtResource("5_lift")
+
+[node name="LevelDebug" parent="."]
+debug_monster = ExtResource("17_skeleton")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." index="5" unique_id=1391764827]
 environment = ExtResource("5_environment")

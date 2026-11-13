@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://be0n7y6a2dvcm"]
+
+[ext_resource type="PackedScene" uid="uid://c2yjyntbuik41" path="res://data/characters/monsters/skeleton/skeleton_01.tscn" id="1_base"]
+[ext_resource type="ArrayMesh" uid="uid://sa7fcolq5d3p" path="res://assets/polygon_dark_fantasy/Models/extracted/SM_Chr_Skeleton_LightArmor_01.mesh" id="2_body"]
+
+[node name="SkeletonCharacter" instance=ExtResource("1_base")]
+
+[node name="Body" parent="GeneralSkeleton"]
+mesh = ExtResource("2_body")
