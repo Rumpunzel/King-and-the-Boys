@@ -1,9 +1,6 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://d18sc738vkuku"]
 
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="3_7rwy5"]
-[ext_resource type="Resource" uid="uid://dlh6oc4mhmewh" path="res://data/model_animations/down_animations.tres" id="down_animations"]
-[ext_resource type="Animation" uid="uid://dv3e6mvw3hve7" path="res://data/characters/animations/quaternius/Sword_Attack.res" id="block_animation"]
-[ext_resource type="Resource" uid="uid://c8iu5rx5ryw42" path="res://data/model_animations/sword_alert_animations.tres" id="alert_animations"]
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_gg1jf"]
 [ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_dvff2"]
 [ext_resource type="Resource" uid="uid://dnan3ouabpslh" path="res://data/characters/people/rogue_body.tres" id="5_c4qnl"]
@@ -54,7 +51,10 @@
 [ext_resource type="Resource" uid="uid://c1io5bgjdq6kr" path="res://data/model_animations/heroes/rogue_move.tres" id="90_rogue_move"]
 [ext_resource type="Resource" uid="uid://daq4wq3kkucrt" path="res://data/model_animations/heroes/rogue_spawn.tres" id="90_rogue_spawn"]
 [ext_resource type="Resource" uid="uid://ce7d0kwrxd7xj" path="res://data/abilities/lantern.tres" id="93_lantern"]
+[ext_resource type="Resource" uid="uid://c8iu5rx5ryw42" path="res://data/model_animations/sword_alert_animations.tres" id="alert_animations"]
+[ext_resource type="Animation" uid="uid://dv3e6mvw3hve7" path="res://data/characters/animations/quaternius/Sword_Attack.res" id="block_animation"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+[ext_resource type="Resource" uid="uid://dlh6oc4mhmewh" path="res://data/model_animations/down_animations.tres" id="down_animations"]
 
 [sub_resource type="Resource" id="BodyAnimations_passed"]
 script = ExtResource("body_animations")

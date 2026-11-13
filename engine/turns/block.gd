@@ -27,6 +27,8 @@ var attacker_picks: bool = true
 var defender_cell: Vector2i
 var defender_spot: Vector2
 var pushed_to: Vector2i
+## The way the attacker chose to push; [code]-1[/code] for one at random
+var push_way: int = -1
 
 func _init(blocking: Character, blocked: Character) -> void:
 	attacker = blocking
@@ -35,15 +37,31 @@ func _init(blocking: Character, blocked: Character) -> void:
 	defender_spot = blocked.tile_spot
 	pushed_to = blocked.grid_cell
 
-## Host only: rolls the dice, picks the face best for whoever picks (players pick their own later), and plays it out on the
-## board with [param random] (a push picks its way with it)
-func resolve(level: Level, random: RandomNumberGenerator) -> void:
+## Host only: rolls the dice with [param random] and decides who picks; [member chosen] starts as the face best for the picker
+## (what a monster or an absent player takes, see [method TurnManager._ask])
+func roll(level: Level, random: RandomNumberGenerator) -> void:
 	var attack: int = get_strength(attacker, level)
 	var defence: int = get_strength(defender, level)
 	attacker_picks = attack >= defence
+	dice.clear()
 	for _die: int in count_dice(attack, defence): dice.append(FACES[random.randi() % FACES.size()])
-	chosen = pick_best(dice, attacker_picks, _stumbles_down())
-	apply(chosen, level, random)
+	chosen = pick_best(dice, attacker_picks, stumbles_down())
+
+## @returns the figure whose side picks the die
+func get_picker() -> Character:
+	return attacker if attacker_picks else defender
+
+## @returns whether [param face] pushes the defender
+static func pushes(face: Face) -> bool:
+	return face == Face.PUSH or face == Face.DEFENDER_STUMBLES or face == Face.DEFENDER_DOWN
+
+## @returns the ways the defender can be pushed: through a passage onto a tile with a free spot
+func get_push_ways(level: Level) -> Array[Level.Direction]:
+	var cell: Vector2i = defender.grid_cell
+	var ways: Array[Level.Direction] = []
+	for direction: Level.Direction in Level.Direction.values():
+		if level.is_passage(cell, direction) and not level.get_free_spots(cell + Level.direction_to_vector(direction), defender).is_empty(): ways.append(direction)
+	return ways
 
 ## Host only: plays out [param face]: who falls, and the push (the attacker does not follow)
 func apply(face: Face, level: Level, random: RandomNumberGenerator) -> void:
@@ -57,7 +75,7 @@ func apply(face: Face, level: Level, random: RandomNumberGenerator) -> void:
 			_push(level, random)
 		Face.DEFENDER_STUMBLES:
 			_push(level, random)
-			if _stumbles_down(): defender.posture = Character.Posture.DOWN
+			if stumbles_down(): defender.posture = Character.Posture.DOWN
 		Face.DEFENDER_DOWN:
 			_push(level, random)
 			defender.posture = Character.Posture.DOWN
@@ -67,17 +85,16 @@ func was_pushed() -> bool:
 	return pushed_to != defender_cell
 
 ## A stumbling defender keeps its feet only if it is at least as agile as the attacker
-func _stumbles_down() -> bool:
+func stumbles_down() -> bool:
 	return defender.profile.agility < attacker.profile.agility
 
-## Onto a free spot of a neighbouring tile through a passage, picked at random; with none, the defender stays
+## Onto a free spot of a neighbouring tile through a passage: the way chosen ([member push_way]) if it is still open, else one
+## picked at random; with none, the defender stays
 func _push(level: Level, random: RandomNumberGenerator) -> void:
 	var cell: Vector2i = defender.grid_cell
-	var ways: Array[Level.Direction] = []
-	for direction: Level.Direction in Level.Direction.values():
-		if level.is_passage(cell, direction) and not level.get_free_spots(cell + Level.direction_to_vector(direction), defender).is_empty(): ways.append(direction)
+	var ways: Array[Level.Direction] = get_push_ways(level)
 	if ways.is_empty(): return
-	var way: Level.Direction = ways[random.randi() % ways.size()]
+	var way: Level.Direction = push_way as Level.Direction if ways.has(push_way) else ways[random.randi() % ways.size()]
 	pushed_to = cell + Level.direction_to_vector(way)
 	# Facing back towards the one who pushed it
 	var spot: Vector2 = level.get_free_spots(pushed_to, defender).front()

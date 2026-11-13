@@ -1,9 +1,6 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://bxlvdrtypiygb"]
 
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_ul877"]
-[ext_resource type="Resource" uid="uid://dlh6oc4mhmewh" path="res://data/model_animations/down_animations.tres" id="down_animations"]
-[ext_resource type="Animation" uid="uid://dv3e6mvw3hve7" path="res://data/characters/animations/quaternius/Sword_Attack.res" id="block_animation"]
-[ext_resource type="Resource" uid="uid://c8iu5rx5ryw42" path="res://data/model_animations/sword_alert_animations.tres" id="alert_animations"]
 [ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_stqs6"]
 [ext_resource type="Resource" uid="uid://dx6tahhpjkqy4" path="res://data/characters/people/soldier_body.tres" id="5_a0nqf"]
 [ext_resource type="Animation" uid="uid://bm83sk7ot2pwi" path="res://data/characters/animations/quaternius_2/Idle_Shield.res" id="5_id555"]
@@ -59,7 +56,10 @@
 [ext_resource type="Animation" uid="uid://y8vxu7fb7shw" path="res://data/characters/animations/quaternius/Sword_Enter.res" id="55_id555"]
 [ext_resource type="Resource" uid="uid://bm3fv320x14lq" path="res://data/model_animations/heroes/soldier_move.tres" id="90_soldier_move"]
 [ext_resource type="Resource" uid="uid://rm08eak7lkva" path="res://data/model_animations/heroes/soldier_spawn.tres" id="90_soldier_spawn"]
+[ext_resource type="Resource" uid="uid://c8iu5rx5ryw42" path="res://data/model_animations/sword_alert_animations.tres" id="alert_animations"]
+[ext_resource type="Animation" uid="uid://dv3e6mvw3hve7" path="res://data/characters/animations/quaternius/Sword_Attack.res" id="block_animation"]
 [ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="body_animations"]
+[ext_resource type="Resource" uid="uid://dlh6oc4mhmewh" path="res://data/model_animations/down_animations.tres" id="down_animations"]
 
 [sub_resource type="Resource" id="Resource_eb7m2"]
 script = ExtResource("body_animations")

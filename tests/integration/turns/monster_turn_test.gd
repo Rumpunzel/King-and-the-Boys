@@ -20,6 +20,8 @@ func before_test() -> void:
 	_turn_manager = auto_free(TurnManager.new())
 	_turn_manager.set("_level", _level)
 	_turn_manager.combat_random.seed = 42
+	# The host chooses for every block, unless a test asks the player
+	_turn_manager.choice_timeout = 0.0
 	add_child(_turn_manager)
 	await await_idle_frame()
 

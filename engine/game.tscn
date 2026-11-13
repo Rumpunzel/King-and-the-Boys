@@ -20,6 +20,9 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath(".:phase")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath(".:block_choice")
+properties/3/spawn = true
+properties/3/replication_mode = 2
 
 [node name="Game" type="Node" unique_id=808135939 node_paths=PackedStringArray("_serializer", "_level", "_player_controller_spawner")]
 script = ExtResource("1_ybrgk")
@@ -57,6 +60,10 @@ metadata/_custom_type_script = "uid://047sfnl1r5sv"
 [node name="UserInterface" parent="." unique_id=30514551 instance=ExtResource("8_aqpue")]
 
 [node name="TurnStatus" parent="UserInterface/MarginContainer" parent_id_path=PackedInt32Array(30514551, 1277819004) index="0" unique_id=1584571151 node_paths=PackedStringArray("_player_controller_spawner", "_turn_manager")]
+_player_controller_spawner = NodePath("../../../PlayerControllerSpawner")
+_turn_manager = NodePath("../../../TurnManager")
+
+[node name="CombatStatus" parent="UserInterface/MarginContainer" parent_id_path=PackedInt32Array(30514551, 1277819004) unique_id=1937408211 node_paths=PackedStringArray("_player_controller_spawner", "_turn_manager")]
 _player_controller_spawner = NodePath("../../../PlayerControllerSpawner")
 _turn_manager = NodePath("../../../TurnManager")
 
