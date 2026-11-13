@@ -33,6 +33,9 @@ func handle_input(event: InputEvent) -> void:
 	assert(_status == Status.RUNNING)
 	get_state().handle_input(event)
 
+## Offers [param current_interactable] (or nothing, for [code]null[/code]) to the current state, which turns it into the
+## [member available_interaction] the input prompts show. Nothing calls it yet: it waits for a grid-based finder of the
+## pieces within reach (see [method Level.get_cells_in_reach]), now that the interaction area is gone.
 func handle_interactable(current_interactable: HitBox) -> void:
 	if _status == Status.STOPPED: return
 	assert(_status == Status.RUNNING)

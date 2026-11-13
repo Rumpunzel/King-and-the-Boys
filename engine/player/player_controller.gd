@@ -110,16 +110,13 @@ func get_default_camera_priority() -> int:
 func _on_passed_players_changed() -> void:
 	if player: character.show_passed(has_passed())
 
-## Whether [param hit_box] is within reach of this player's character, e.g. to take control of it: on the character's
-## tile, or on the next one along a passage
+## Whether [param hit_box] is within reach of this player's character, e.g. to take control of it: standing on a cell of
+## [method Level.get_cells_in_reach]
 func can_reach(hit_box: HitBox) -> bool:
 	var level: Level = character.level
 	if not level: return false
-	var body: Node3D = hit_box.get_body()
-	var cell: Vector2i = (body as Character).grid_cell if body is Character else level.world_to_grid_position(body.global_position)
-	if cell == character.grid_cell: return true
-	var offset: Vector2i = cell - character.grid_cell
-	return absi(offset.x) + absi(offset.y) == 1 and level.is_passage(character.grid_cell, Level.get_direction(character.grid_cell, cell))
+	var in_reach: Array[Vector2i] = level.get_cells_in_reach(character.grid_cell)
+	return level.get_cells_of(hit_box.get_body()).any(func(cell: Vector2i) -> bool: return in_reach.has(cell))
 
 ## @returns the [Character] the player currently moves
 func get_controlled_character() -> Character:
