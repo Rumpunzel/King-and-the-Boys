@@ -46,6 +46,15 @@ var body: Dictionary = {}:
 		_apply_body()
 
 var level: Level
+## Whether the figure shows on this peer; purely visual, the piece still holds its spot. Monsters hide on tiles this peer has not
+## revealed (see [method Level.update_shown]) and drop in with their spawn animation as they come into sight
+var shown: bool = true:
+	set(new_shown):
+		if new_shown == shown: return
+		shown = new_shown
+		if not model: return
+		model.visible = shown
+		if shown and is_node_ready(): model.play_model_animation(profile.spawn_animation)
 ## Whether the figure shows that its player has passed (see [method show_passed]); purely visual, on every peer
 var shows_passed: bool = false
 ## The [Character] currently controlling this one, if any
@@ -337,6 +346,7 @@ func get_profile() -> Profile: return profile
 
 ## Dresses each new model: body, rest, equipment, abilities
 func _on_model_added() -> void:
+	model.visible = shown
 	_apply_body()
 	var rest: BodyAnimations = _get_rest()
 	if rest: model.rest_in(rest, false)

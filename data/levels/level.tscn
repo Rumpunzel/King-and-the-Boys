@@ -9,6 +9,7 @@
 [ext_resource type="Resource" uid="uid://1uajovqss038" path="res://data/model_animations/tile_lift_animation.tres" id="5_lift"]
 [ext_resource type="PackedScene" uid="uid://bka6r1jummabd" path="res://data/levels/dust_motes.tscn" id="7_motes"]
 [ext_resource type="Script" uid="uid://d1pxbcix74a37" path="res://engine/levels/focus_blur.gd" id="8_focus"]
+[ext_resource type="Resource" uid="uid://cpxomsfowq1bg" path="res://data/characters/monsters/monster_spawn_table.tres" id="18_monsters"]
 [ext_resource type="Resource" uid="uid://dxost8s6wpuxo" path="res://data/characters/monsters/skeleton.tres" id="17_skeleton"]
 [ext_resource type="Material" uid="uid://dctyx6mhwae3v" path="res://protoype_assets/textures/quatrefoil_jacquard_fabric_4k.blend/quatrefoil_jacquard_fabric.tres" id="16_jwwwr"]
 
@@ -32,6 +33,7 @@ _starting_tile = ExtResource("2_c445m")
 _wall_tile = ExtResource("3_wall")
 _tile_set = ExtResource("3_c445m")
 _room_centrepieces = ExtResource("4_centrepieces")
+_monsters = ExtResource("18_monsters")
 tile_lift_animation = ExtResource("5_lift")
 
 [node name="LevelDebug" parent="."]
