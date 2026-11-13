@@ -276,10 +276,11 @@ func _run_monster_phase() -> void:
 			var was_in_sight: bool = _is_in_sight(character.grid_cell)
 			var direction: int = agent.choose_step()
 			if direction < 0 or not try_step(character, direction as Level.Direction): break
-			_alert_heroes_seen_by(character)
-			if not was_in_sight and not _is_in_sight(character.grid_cell): continue
-			await _wait_for_figure(character)
-			if run != _monster_phase_run: return
+			if was_in_sight or _is_in_sight(character.grid_cell):
+				await _wait_for_figure(character)
+				if run != _monster_phase_run: return
+			# Once it hopped in: the heroes react to what they see
+			if is_instance_valid(character): _alert_heroes_seen_by(character)
 	phase = Phase.HEROES
 	_start_next_turn()
 
@@ -288,7 +289,7 @@ func stop_monster_phase() -> void:
 	assert(multiplayer.is_server())
 	_monster_phase_run += 1
 	phase = Phase.HEROES
-	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.alerted = false
+	_clear_alerts()
 
 ## Waits until [param character]'s figure arrived, at most [constant _MAX_HOP_WAIT]: its hop may last longer than its move
 ## animation (delays, body animations). Tweens, not timers: they go with this node (e.g. leaving the game), so nothing resumes
@@ -303,11 +304,15 @@ func _wait_for_figure(character: Character) -> void:
 ## [member Character.alerted]
 func _alert_heroes_seen_by(monster: Character) -> void:
 	if not _is_in_sight(monster.grid_cell): return
-	var in_sight: Array[Vector2i] = _level.get_cells_in_sight(monster.grid_cell, monster.get_vision())
+	var in_sight: Dictionary[Vector2i, bool] = _level.get_cells_in_sight(monster.grid_cell, monster.get_vision())
 	for node: Node in get_tree().get_nodes_in_group(Character.GROUP):
 		var hero: Character = node as Character
 		if not hero or not hero.visible or hero.level != _level or hero.profile.group != CharacterProfile.Groups.HEROES: continue
 		if in_sight.has(hero.grid_cell): hero.alerted = true
+
+## After the passes are cleared: a hero that also stops showing its pass then goes straight from its alert to its idles
+func _clear_alerts() -> void:
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.alerted = false
 
 func _is_in_sight(cell: Vector2i) -> bool:
 	var tile: Structure = _level.get_placed_tile(cell)
@@ -332,10 +337,9 @@ func _end_heroes_turn() -> void:
 
 func _start_next_turn() -> void:
 	assert(multiplayer.is_server())
-	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		character.reset_movement_points()
-		character.alerted = false
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.reset_movement_points()
 	clear_passes()
+	_clear_alerts()
 	turn_number += 1
 
 func _use_ability(character: Character, ability: Ability, target_cell: Vector2i, argument: int) -> void:

@@ -70,7 +70,9 @@ var alerted: bool = false:
 	set(new_alerted):
 		if new_alerted == alerted: return
 		alerted = new_alerted
-		if model: model.rest_in(_get_rest())
+		# The alert and the pass end together as a turn starts, in either order (they come through different synchronizers):
+		# a hero still showing its pass leaves the alert as the pass ends, so it never sits down again in between
+		if model and (alerted or not shows_passed): model.rest_in(_get_rest())
 ## The [Character] currently controlling this one, if any
 var controlled_by: Character
 ## The piece this [Character] currently controls, if any; set with [member HitBox.controller]

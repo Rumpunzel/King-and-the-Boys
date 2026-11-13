@@ -346,7 +346,7 @@ func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
 ## monster sees a hero as that hero would see it. Targets on [param from] itself are not looked for.
 ## @returns its [enum Direction], or [code]-1[/code] if none is in sight
 func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision: float) -> int:
-	var in_sight: Array[Vector2i] = get_cells_in_sight(from, vision)
+	var in_sight: Dictionary[Vector2i, bool] = get_cells_in_sight(from, vision)
 	var seen: Array[Vector2i] = []
 	for target: Vector2i in targets:
 		if target != from and in_sight.has(target): seen.append(target)
@@ -371,16 +371,13 @@ func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision:
 		frontier = next_frontier
 	return -1
 
-## @returns the cells in sight from [param from] within [param vision], by the rule heroes see by (straight along passages,
-## across whole rooms; see [method update_sight]); [param from] itself among them. Sight goes both ways: what stands on one of
-## them sees [param from] with the same vision.
-func get_cells_in_sight(from: Vector2i, vision: float) -> Array[Vector2i]:
-	# Rooms see some tiles twice
+## @returns the cells in sight from [param from] within [param vision] (as keys), by the rule heroes see by (straight along
+## passages, across whole rooms; see [method update_sight]); [param from] itself among them. Sight goes both ways: what stands
+## on one of them sees [param from] with the same vision.
+func get_cells_in_sight(from: Vector2i, vision: float) -> Dictionary[Vector2i, bool]:
 	var seen: Dictionary[Vector2i, bool] = {}
 	_update_player_vision(from, vision, func(tile: Structure) -> void: seen[tile.get_grid_position()] = true)
-	var cells: Array[Vector2i] = []
-	cells.assign(seen.keys())
-	return cells
+	return seen
 
 ## The cells a piece on [param grid_position] reaches, e.g. to take control of what stands there: its own and the next ones
 ## along passages, where it could step

@@ -215,3 +215,20 @@ func test_weapons_put_away_for_a_draw_come_back_when_it_is_cut_short() -> void:
 	# Moving before the follow-up draws the sword
 	model.play_model_animation(load(KNIGHT_MOVE) as ModelAnimation)
 	assert_bool(model.are_weapons_stowed()).override_failure_message("The sword is back in hand").is_false()
+
+## The alert and the pass end together as a turn starts, in either order: the hero never sits down again in between
+func test_an_alerted_hero_stands_ready_until_alert_and_pass_both_end() -> void:
+	var knight: CharacterProfile = load("res://data/characters/people/knight.tres")
+	for alert_ends_first: bool in [true, false]:
+		var hero: Character = knight.create(0, Transform3D.IDENTITY)
+		hero.show_passed(true)
+		assert_object(hero.model.get_rest_animations()).is_same(knight.passed_animations)
+		hero.alerted = true
+		assert_object(hero.model.get_rest_animations()).is_same(knight.alert_animations)
+		if alert_ends_first: hero.alerted = false
+		else: hero.show_passed(false)
+		assert_object(hero.model.get_rest_animations()).override_failure_message("Sat down again (alert ended first: %s)" % alert_ends_first).is_same(knight.alert_animations)
+		if alert_ends_first: hero.show_passed(false)
+		else: hero.alerted = false
+		assert_object(hero.model.get_rest_animations()).is_same(hero.model.idle_animations)
+		hero.free()

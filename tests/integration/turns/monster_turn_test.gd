@@ -204,10 +204,14 @@ func test_a_hero_a_monster_comes_for_is_on_alert_until_the_next_turn() -> void:
 	assert_bool(hero.alerted).is_false()
 	var turn: int = _turn_manager.turn_number
 	_turn_manager.request_pass(true)
-	assert_bool(hero.alerted).is_true()
+	# The monster starts on a tile the hero has not revealed: the hero reacts once it hopped into sight, not as it sets off
+	assert_bool(hero.alerted).is_false()
+	var alerted_in_phase: Array[bool] = [false]
 	for _frame: int in MAX_FRAMES:
 		if _turn_manager.turn_number > turn: break
+		alerted_in_phase[0] = alerted_in_phase[0] or (hero.alerted and _turn_manager.phase == TurnManager.Phase.MONSTERS)
 		await await_idle_frame()
+	assert_bool(alerted_in_phase[0]).is_true()
 	assert_bool(hero.alerted).is_false()
 
 func test_a_monster_out_of_sight_alerts_nobody() -> void:
