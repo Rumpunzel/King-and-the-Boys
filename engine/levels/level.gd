@@ -253,7 +253,7 @@ func spawn_monster(profile: CharacterProfile, cell: Vector2i, facing: Direction 
 	_agent_spawner.spawn_agent(profile.create_character_data(variation, spawn_transform))
 
 ## Every peer: a monster shows only on a tile this peer has revealed; it holds its spot either way
-func update_shown(character: Character) -> void:
+func _update_shown(character: Character) -> void:
 	if character.profile.group != CharacterProfile.Groups.MONSTERS: return
 	var tile: Structure = _placed_tiles.get(character.grid_cell)
 	character.shown = tile != null and tile.shown_status == Structure.Status.REVEALED
@@ -346,6 +346,27 @@ func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
 	if not tile or not tile.has_connection(direction): return false
 	var neighbour: Structure = get_placed_tile(grid_position + direction_to_vector(direction))
 	return neighbour != null and neighbour.has_connection(get_opposite(direction))
+
+## The first step from [param from] along passages towards the nearest of [param targets], which must be at most
+## [param max_steps] steps away (a target on [param from] itself needs no step)
+## @returns its [enum Direction], or [code]-1[/code] if no target is that close
+func get_step_towards(from: Vector2i, targets: Array[Vector2i], max_steps: int) -> int:
+	if targets.is_empty() or targets.has(from): return -1
+	var first_steps: Dictionary[Vector2i, int] = {from: -1}
+	var frontier: Array[Vector2i] = [from]
+	for _distance: int in max_steps:
+		var next_frontier: Array[Vector2i] = []
+		for cell: Vector2i in frontier:
+			for direction: Direction in Direction.values():
+				if not is_passage(cell, direction): continue
+				var neighbour: Vector2i = cell + direction_to_vector(direction)
+				if first_steps.has(neighbour): continue
+				var first_step: int = first_steps[cell] if cell != from else direction
+				if targets.has(neighbour): return first_step
+				first_steps[neighbour] = first_step
+				next_frontier.append(neighbour)
+		frontier = next_frontier
+	return -1
 
 ## The cells a piece on [param grid_position] reaches, e.g. to take control of what stands there: its own and the next ones
 ## along passages, where it could step
@@ -859,11 +880,11 @@ func _register_character(character: Character) -> void:
 	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
 
 func _on_character_entered_grid_cell(_cell: Vector2i, character: Character) -> void:
-	update_shown(character)
+	_update_shown(character)
 
 func _update_shown_on(grid_position: Vector2i) -> void:
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if character.level == self and character.grid_cell == grid_position: update_shown(character)
+		if character.level == self and character.grid_cell == grid_position: _update_shown(character)
 
 ## Host only: what the hero [param character] sees comes into sight as it steps and as the lights it carries change (a torch
 ## equipped, a lantern lit; see [method Character.get_vision])

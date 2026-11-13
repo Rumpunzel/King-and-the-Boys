@@ -3,11 +3,18 @@
 class_name TurnManager
 extends Node
 ## Runs simultaneous turns: every player moves their [Character]s up to their movement points,
-## uses their abilities, may undo steps and uses, and passes. The turn ends once every connected player has passed.
+## uses their abilities, may undo steps and uses, and passes. Once every connected player has passed, the monsters take
+## their turn one after another (see [method _run_monster_phase]), then the next turn starts.
 ## The host is the referee; peers send requests and follow the replicated state.
 
 signal turn_started(turn_number: int)
 signal passed_players_changed
+signal phase_changed(phase: Phase)
+
+enum Phase {
+	HEROES,
+	MONSTERS,
+}
 
 const GROUP: StringName = "TurnManager"
 
@@ -27,6 +34,12 @@ var passed_player_ids: PackedInt32Array = PackedInt32Array():
 		if new_passed_player_ids == passed_player_ids: return
 		passed_player_ids = new_passed_player_ids
 		passed_players_changed.emit()
+## Who acts: the players, or the monsters while the heroes wait; not saved, a loaded game starts with the heroes
+var phase: Phase = Phase.HEROES:
+	set(new_phase):
+		if new_phase == phase: return
+		phase = new_phase
+		phase_changed.emit(phase)
 
 # Host only: steps and ability uses (GridStep, AbilityStep) that can still be undone this turn, newest last
 var _undo_stacks: Dictionary[Character, Array] = {}
@@ -92,19 +105,29 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	if has_passed(sender_id): return
 	var character: Character = _get_controlled_character(sender_id, character_path)
 	if not character or _held_abilities.has(character): return
+	try_step(character, direction, true)
+
+## Host only, the one rule for every step, the players' and the monsters': steps [param character] one cell into
+## [param direction] if a wall, its movement points and the target tile allow it; otherwise only turns it. Turning is free.
+## [param undoable] steps go onto the character's undo stack.
+## @returns whether it stepped
+func try_step(character: Character, direction: Level.Direction, undoable: bool = false) -> bool:
+	assert(multiplayer.is_server())
 	var target_cell: Vector2i = _level.get_step_target(character.grid_cell, direction)
 	var free_spots: Array[Vector2] = _level.get_free_spots(target_cell, character)
 	if target_cell == character.grid_cell or character.movement_points <= 0 or free_spots.is_empty():
 		character.place_on_grid(character.grid_cell, character.tile_spot, direction)
-		return
-	# Record before moving: a move that changes the board clears the stack again
-	_track(character)
-	var undo_stack: Array = _undo_stacks.get_or_add(character, [])
-	undo_stack.append(GridStep.new(character))
+		return false
+	if undoable:
+		# Record before moving: a move that changes the board clears the stack again
+		_track(character)
+		var undo_stack: Array = _undo_stacks.get_or_add(character, [])
+		undo_stack.append(GridStep.new(character))
 	character.movement_points -= 1
 	var target_spot: Vector2 = free_spots.front()
 	character.place_on_grid(target_cell, target_spot, direction)
-	_update_undo_steps(character)
+	if undoable: _update_undo_steps(character)
+	return true
 
 ## Takes back the last step of [param character_path] this turn and refunds its movement point.
 ## A pass of the sender is taken back with it, but only if the step could be undone.
@@ -202,7 +225,7 @@ func request_ability_cancel(character_path: NodePath) -> void:
 ## Passing cancels the held abilities of the sender's characters.
 @rpc("any_peer", "call_local", "reliable")
 func request_pass(passed: bool) -> void:
-	if not multiplayer.is_server(): return
+	if not multiplayer.is_server() or phase != Phase.HEROES: return
 	var sender_id: int = _get_sender_id()
 	if not Lobby.get_player(sender_id): return
 	if passed: _cancel_held_of(sender_id)
@@ -220,9 +243,32 @@ func request_auto_pass(character_path: NodePath) -> void:
 	request_pass(true)
 
 func _end_turn_if_everyone_passed() -> void:
+	if phase != Phase.HEROES: return
 	for player: Player in Lobby.get_connected_players():
 		if not has_passed(player.player_id): return
+	_run_monster_phase()
+
+## Host only: every monster in turn steps as its [Agent] chooses (see [method Agent.choose_step]) until it is out of
+## movement points or stops; the next turn starts once all are done. Players' requests wait meanwhile.
+## The host waits for each hop the heroes can see; a monster on a tile no hero revealed moves at once.
+func _run_monster_phase() -> void:
+	assert(multiplayer.is_server())
+	phase = Phase.MONSTERS
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		var agent: Agent = character.get_parent() as Agent
+		if not agent or character.profile.group != CharacterProfile.Groups.MONSTERS: continue
+		while is_instance_valid(character) and character.is_inside_tree() and character.movement_points > 0:
+			var direction: int = agent.choose_step()
+			if direction < 0 or not try_step(character, direction as Level.Direction): break
+			if not _is_in_sight(character): continue
+			# A tween, not a timer: it goes with this node (e.g. leaving the game), so nothing resumes on a freed one
+			await create_tween().tween_interval(character.profile.move_animation.duration).finished
+	phase = Phase.HEROES
 	_start_next_turn()
+
+func _is_in_sight(character: Character) -> bool:
+	var tile: Structure = _level.get_placed_tile(character.grid_cell)
+	return tile != null and tile.status == Structure.Status.REVEALED
 
 ## Host only: player ids differ between sessions, so passes do not survive loading a game
 func clear_passes() -> void:
@@ -322,7 +368,9 @@ func _get_sender_id() -> int:
 ## @returns the [Character] at [param character_path] if [param sender_id] controls it
 func _get_controlled_character(sender_id: int, character_path: NodePath) -> Character:
 	var character: Character = get_node_or_null(character_path) as Character
-	if not character or not character.visible: return null
+	if phase != Phase.HEROES or not character or not character.visible: return null
+	# Monsters belong to the host's agents, not to its player
+	if character.profile.group == CharacterProfile.Groups.MONSTERS: return null
 	if not character.is_controlled_by(sender_id): return null
 	return character
 

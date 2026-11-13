@@ -47,7 +47,7 @@ var body: Dictionary = {}:
 
 var level: Level
 ## Whether the figure shows on this peer; purely visual, the piece still holds its spot. Monsters hide on tiles this peer has not
-## revealed (see [method Level.update_shown]) and drop in with their spawn animation as they come into sight
+## revealed (see [code]Level._update_shown()[/code]) and drop in with their spawn animation as they come into sight
 var shown: bool = true:
 	set(new_shown):
 		if new_shown == shown: return
@@ -380,7 +380,8 @@ func _apply_grid_visuals() -> void:
 	if not level or not is_inside_tree() or is_carried(): return
 	var target_position: Vector3 = level.get_spot_position(grid_cell, tile_spot)
 	var target_rotation: float = facing_to_rotation(facing)
-	if not _grid_visuals_applied:
+	# A hidden figure (see [member shown]) moves at once: nobody sees it
+	if not _grid_visuals_applied or not shown:
 		_grid_visuals_applied = true
 		for tween: Tween in [_move_tween, _turn_tween, _model_tween]: if tween: tween.kill()
 		global_position = target_position
