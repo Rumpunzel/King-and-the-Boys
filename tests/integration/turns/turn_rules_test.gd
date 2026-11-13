@@ -242,7 +242,7 @@ func test_undo_steps_follow_the_host_stack() -> void:
 	assert_int(hero.undo_steps).is_equal(2)
 	await _undo(hero)
 	assert_int(hero.undo_steps).is_equal(1)
-	_turn_manager._start_next_turn()
+	_end_turn()
 	assert_int(hero.undo_steps).is_zero()
 
 func test_undo_stops_at_a_board_change() -> void:
@@ -260,9 +260,9 @@ func test_undo_can_not_reach_into_the_previous_turn() -> void:
 	var start: Vector2i = hero.grid_cell
 	await _move(hero, _open_direction(start))
 	var first_cell: Vector2i = hero.grid_cell
-	_turn_manager._start_next_turn()
+	_end_turn()
 	await _move(hero, Level.get_direction(first_cell, start))
-	_turn_manager._start_next_turn()
+	_end_turn()
 	await _undo(hero)
 	assert_vector(hero.grid_cell).is_equal(start)
 
@@ -421,3 +421,8 @@ func test_tiles_no_step_raised_show_at_once() -> void:
 	# Spawning reveals the start: no step caused it
 	await _spawn_hero(_start_cell())
 	assert_array(_lagging_tiles()).is_empty()
+
+## The heroes' turn ends and the next starts, as after the monster phase (no monsters act here)
+func _end_turn() -> void:
+	_turn_manager._end_heroes_turn()
+	_turn_manager._start_next_turn()

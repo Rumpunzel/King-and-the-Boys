@@ -1,8 +1,8 @@
 @icon("uid://clji5px21jyvw")
 class_name AgentStateDefault
 extends AgentState
-## The agent acts on its own: in the monster phase it hunts the nearest hero it sees along passages (within its
-## [method Character.get_vision], in steps) and wanders along passages otherwise, see [method choose_step]. It hands over
+## The agent acts on its own: in the monster phase it hunts the nearest hero it sees (within its
+## [method Character.get_vision], as heroes see) along passages, and wanders along passages otherwise, see [method choose_step]. It hands over
 ## once a player takes control of it.
 
 func enter(state_machine: StateMachine, previous_state: State = null) -> void:
@@ -19,7 +19,7 @@ func choose_step() -> int:
 		if other and other.visible and other.level == level and other.profile.group == CharacterProfile.Groups.HEROES: hero_cells.append(other.grid_cell)
 	# On a hero's tile already: it stays (blocks come later)
 	if hero_cells.has(character.grid_cell): return -1
-	var hunting: int = level.get_step_towards(character.grid_cell, hero_cells, floori(character.get_vision()))
+	var hunting: int = level.get_step_towards_in_sight(character.grid_cell, hero_cells, character.get_vision())
 	if hunting >= 0: return hunting
 	return _wander(character, level)
 

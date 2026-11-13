@@ -17,6 +17,10 @@ enum Phase {
 }
 
 const GROUP: StringName = "TurnManager"
+## How often the host looks whether a monster's figure arrived, and how long it waits for one at most (a figure that never
+## arrives must not hold the game)
+const _HOP_POLL: float = 0.05
+const _MAX_HOP_WAIT: float = 3.0
 
 @export_group("Configuration")
 @export var _level: Level
@@ -34,7 +38,8 @@ var passed_player_ids: PackedInt32Array = PackedInt32Array():
 		if new_passed_player_ids == passed_player_ids: return
 		passed_player_ids = new_passed_player_ids
 		passed_players_changed.emit()
-## Who acts: the players, or the monsters while the heroes wait; not saved, a loaded game starts with the heroes
+## Who acts: the players, or the monsters while the heroes wait; a loaded game starts with the heroes (see
+## [method stop_monster_phase])
 var phase: Phase = Phase.HEROES:
 	set(new_phase):
 		if new_phase == phase: return
@@ -52,6 +57,8 @@ var _pending_steps: Array[AbilityStep] = []
 # Host only: an ability that changes the board while it is used can not be undone
 var _using_character: Character
 var _board_changed_during_use: bool = false
+# Host only: counts monster phases started or stopped, so a phase that was stopped (e.g. by loading) ends where it waits
+var _monster_phase_run: int = 0
 
 class GridStep extends RefCounted:
 	var grid_cell: Vector2i
@@ -248,26 +255,49 @@ func _end_turn_if_everyone_passed() -> void:
 		if not has_passed(player.player_id): return
 	_run_monster_phase()
 
-## Host only: every monster in turn steps as its [Agent] chooses (see [method Agent.choose_step]) until it is out of
-## movement points or stops; the next turn starts once all are done. Players' requests wait meanwhile.
-## The host waits for each hop the heroes can see; a monster on a tile no hero revealed moves at once.
+## Host only: the heroes' turn ends, then every monster in turn steps as its [Agent] chooses (see [method Agent.choose_step])
+## until it is out of movement points or stops; the next turn starts once all are done. Players' requests wait meanwhile.
+## The host waits for each hop the heroes can see (from or onto a revealed tile); hidden monsters move at once.
 func _run_monster_phase() -> void:
 	assert(multiplayer.is_server())
+	_end_heroes_turn()
 	phase = Phase.MONSTERS
-	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		var agent: Agent = character.get_parent() as Agent
+	_monster_phase_run += 1
+	var run: int = _monster_phase_run
+	# Pieces may leave while the host waits (a player leaving takes their hero along): each is checked before it is used
+	var nodes: Array[Node] = get_tree().get_nodes_in_group(Character.GROUP)
+	for index: int in nodes.size():
+		if not is_instance_valid(nodes[index]): continue
+		var character: Character = nodes[index] as Character
+		var agent: Agent = character.get_parent() as Agent if character else null
 		if not agent or character.profile.group != CharacterProfile.Groups.MONSTERS: continue
 		while is_instance_valid(character) and character.is_inside_tree() and character.movement_points > 0:
+			var was_in_sight: bool = _is_in_sight(character.grid_cell)
 			var direction: int = agent.choose_step()
 			if direction < 0 or not try_step(character, direction as Level.Direction): break
-			if not _is_in_sight(character): continue
-			# A tween, not a timer: it goes with this node (e.g. leaving the game), so nothing resumes on a freed one
-			await create_tween().tween_interval(character.profile.move_animation.duration).finished
+			if not was_in_sight and not _is_in_sight(character.grid_cell): continue
+			await _wait_for_figure(character)
+			if run != _monster_phase_run: return
 	phase = Phase.HEROES
 	_start_next_turn()
 
-func _is_in_sight(character: Character) -> bool:
-	var tile: Structure = _level.get_placed_tile(character.grid_cell)
+## Host only: a monster phase under way stops where it waits, e.g. as a save is loaded; the heroes act again, and no turn ends
+func stop_monster_phase() -> void:
+	assert(multiplayer.is_server())
+	_monster_phase_run += 1
+	phase = Phase.HEROES
+
+## Waits until [param character]'s figure arrived, at most [constant _MAX_HOP_WAIT]: its hop may last longer than its move
+## animation (delays, body animations). Tweens, not timers: they go with this node (e.g. leaving the game), so nothing resumes
+## on a freed one
+func _wait_for_figure(character: Character) -> void:
+	var waited: float = 0.0
+	while is_instance_valid(character) and character.is_figure_moving() and waited < _MAX_HOP_WAIT:
+		await create_tween().tween_interval(_HOP_POLL).finished
+		waited += _HOP_POLL
+
+func _is_in_sight(cell: Vector2i) -> bool:
+	var tile: Structure = _level.get_placed_tile(cell)
 	return tile != null and tile.status == Structure.Status.REVEALED
 
 ## Host only: player ids differ between sessions, so passes do not survive loading a game
@@ -275,7 +305,9 @@ func clear_passes() -> void:
 	assert(multiplayer.is_server())
 	passed_player_ids = PackedInt32Array()
 
-func _start_next_turn() -> void:
+## Host only, before the monsters act: held abilities are cancelled, uses that act at the turn's end resolve, and nothing done
+## this turn can be undone any more
+func _end_heroes_turn() -> void:
 	assert(multiplayer.is_server())
 	for character: Character in _held_abilities.keys(): _cancel_held(character)
 	var pending_steps: Array[AbilityStep] = _pending_steps
@@ -283,9 +315,11 @@ func _start_next_turn() -> void:
 	for step: AbilityStep in pending_steps: step.resolve_at_turn_end(_level)
 	_undo_stacks.clear()
 	_ability_uses.clear()
-	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		character.reset_movement_points()
-		character.undo_steps = 0
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.undo_steps = 0
+
+func _start_next_turn() -> void:
+	assert(multiplayer.is_server())
+	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.reset_movement_points()
 	clear_passes()
 	turn_number += 1
 

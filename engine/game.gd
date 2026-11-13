@@ -75,6 +75,7 @@ func load_game() -> Error:
 	print_debug("Loading game...")
 	var error: Error = _serializer.load_world_state()
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
+	turn_manager.stop_monster_phase()
 	turn_manager.clear_passes()
 	for peer_id: int in _ready_peers: turn_manager.start_syncing_peer(peer_id)
 	_player_controller_spawner.start_synching_players()

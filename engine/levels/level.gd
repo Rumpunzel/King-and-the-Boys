@@ -344,23 +344,33 @@ func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
 	var neighbour: Structure = get_placed_tile(grid_position + direction_to_vector(direction))
 	return neighbour != null and neighbour.has_connection(get_opposite(direction))
 
-## The first step from [param from] along passages towards the nearest of [param targets], which must be at most
-## [param max_steps] steps away (a target on [param from] itself needs no step)
-## @returns its [enum Direction], or [code]-1[/code] if no target is that close
-func get_step_towards(from: Vector2i, targets: Array[Vector2i], max_steps: int) -> int:
-	if targets.is_empty() or targets.has(from): return -1
+## The first step from [param from] along passages towards the nearest of [param targets] that is in sight from there within
+## [param vision], by the rule heroes see by (straight along passages, across whole rooms; see [method update_sight]), so a
+## monster sees a hero as that hero would see it. Targets on [param from] itself are not looked for.
+## @returns its [enum Direction], or [code]-1[/code] if none is in sight
+func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision: float) -> int:
+	var in_sight: Dictionary[Vector2i, bool] = {}
+	_update_player_vision(from, vision, func(tile: Structure) -> void: in_sight[tile.get_grid_position()] = true)
+	var seen: Array[Vector2i] = []
+	for target: Vector2i in targets:
+		if target != from and in_sight.has(target): seen.append(target)
+	if seen.is_empty(): return -1
+	# Breadth first from the cells one step away, each knowing the step it started with
 	var first_steps: Dictionary[Vector2i, int] = {from: -1}
-	var frontier: Array[Vector2i] = [from]
-	for _distance: int in max_steps:
+	var frontier: Array[Vector2i] = []
+	for direction: Direction in Direction.values():
+		if not is_passage(from, direction): continue
+		var neighbour: Vector2i = from + direction_to_vector(direction)
+		first_steps[neighbour] = direction
+		frontier.append(neighbour)
+	while not frontier.is_empty():
 		var next_frontier: Array[Vector2i] = []
 		for cell: Vector2i in frontier:
+			if seen.has(cell): return first_steps[cell]
 			for direction: Direction in Direction.values():
-				if not is_passage(cell, direction): continue
 				var neighbour: Vector2i = cell + direction_to_vector(direction)
-				if first_steps.has(neighbour): continue
-				var first_step: int = first_steps[cell] if cell != from else direction
-				if targets.has(neighbour): return first_step
-				first_steps[neighbour] = first_step
+				if first_steps.has(neighbour) or not is_passage(cell, direction): continue
+				first_steps[neighbour] = first_steps[cell]
 				next_frontier.append(neighbour)
 		frontier = next_frontier
 	return -1

@@ -94,7 +94,7 @@ func test_uses_per_turn_are_limited_until_the_next_turn() -> void:
 	_turn_manager.request_undo(_hero.get_path())
 	_use(TEST_ABILITY)
 	assert_int(_effects()).is_equal(2)
-	_turn_manager._start_next_turn()
+	_end_turn()
 	_use(TEST_ABILITY)
 	assert_int(_effects()).is_equal(3)
 
@@ -102,7 +102,7 @@ func test_charges_last_the_game_and_undo_refunds_them() -> void:
 	for _turn: int in 2:
 		_use(CHARGED_ABILITY)
 		_use(CHARGED_ABILITY)
-		_turn_manager._start_next_turn()
+		_end_turn()
 	assert_int(CHARGED_ABILITY.get_charges_left(_hero)).is_equal(0)
 	_hero.movement_points = 8
 	_use(TEST_ABILITY)
@@ -193,7 +193,7 @@ func test_cancel_pass_and_turn_end_cancel_a_held_ability() -> void:
 	_turn_manager.request_pass(true)
 	assert_str(_hero.active_ability_id).is_empty()
 	_begin()
-	_turn_manager._start_next_turn()
+	_end_turn()
 	assert_str(_hero.active_ability_id).is_empty()
 	assert_int(_hero.get_meta(TestAbility.CANCELLED, 0) as int).is_equal(3)
 	assert_int(_effects()).is_equal(0)
@@ -201,13 +201,18 @@ func test_cancel_pass_and_turn_end_cancel_a_held_ability() -> void:
 func test_turn_end_effects_resolve_when_the_turn_ends() -> void:
 	_use(LATER_ABILITY)
 	assert_int(_effects()).is_equal(0)
-	_turn_manager._start_next_turn()
+	_end_turn()
 	assert_int(_effects()).is_equal(1)
-	_turn_manager._start_next_turn()
+	_end_turn()
 	assert_int(_effects()).is_equal(1)
 
 func test_an_undone_turn_end_effect_never_resolves() -> void:
 	_use(LATER_ABILITY)
 	_turn_manager.request_undo(_hero.get_path())
-	_turn_manager._start_next_turn()
+	_end_turn()
 	assert_int(_effects()).is_equal(0)
+
+## The heroes' turn ends and the next starts, as after the monster phase (no monsters act here)
+func _end_turn() -> void:
+	_turn_manager._end_heroes_turn()
+	_turn_manager._start_next_turn()

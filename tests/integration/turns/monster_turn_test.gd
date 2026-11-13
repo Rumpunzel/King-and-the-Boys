@@ -63,6 +63,18 @@ func _cell_at(steps: int) -> Vector2i:
 	assert(not cells.is_empty())
 	return cells.front()
 
+## @returns a cell [param steps] steps straight from the start along passages, so heroes there see it (vision 3)
+func _cell_in_sight(steps: int) -> Vector2i:
+	var start: Vector2i = _start_cell()
+	for direction: Level.Direction in Level.Direction.values():
+		var cell: Vector2i = start
+		for _step: int in steps:
+			if not _level.is_passage(cell, direction): break
+			cell += Level.direction_to_vector(direction)
+		if cell == start + Level.direction_to_vector(direction) * steps: return cell
+	assert(false, "No straight passage of %d steps from the start" % steps)
+	return start
+
 ## Passes for the local player and waits until the monsters are done and the next turn started
 func _pass_turn() -> void:
 	var turn: int = _turn_manager.turn_number
@@ -97,7 +109,7 @@ func test_monsters_step_along_passages_only() -> void:
 
 func test_a_monster_hunts_a_hero_it_sees() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
-	var monster: Character = await _spawn_monster(_cell_at(2))
+	var monster: Character = await _spawn_monster(_cell_in_sight(2))
 	await _pass_turn()
 	# Two steps along passages, its speed: onto the hero's tile, where it stays
 	assert_that(monster.grid_cell).is_equal(hero.grid_cell)
@@ -106,7 +118,7 @@ func test_a_monster_hunts_a_hero_it_sees() -> void:
 
 func test_players_wait_while_monsters_act() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
-	await _spawn_monster(_cell_at(2))
+	await _spawn_monster(_cell_in_sight(2))
 	_turn_manager.request_pass(true)
 	# The hunt's first hop is in sight, so the host waits for it
 	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
@@ -130,3 +142,58 @@ func test_a_hidden_monster_moves_at_once() -> void:
 	# Only the start tile is revealed: it is still out of sight, and already where its grid state says
 	assert_bool(monster.shown).is_false()
 	assert_vector(monster.global_position).is_equal_approx(_level.get_spot_position(monster.grid_cell, monster.tile_spot), Vector3.ONE * 0.001)
+
+func test_a_piece_leaving_during_the_monster_phase_stalls_nothing() -> void:
+	# The monster first, the hero after it: the phase meets the hero only after it has gone
+	var monster: Character = await _spawn_monster(_cell_in_sight(2))
+	var hero: Character = await _spawn_hero(_start_cell())
+	var turn: int = _turn_manager.turn_number
+	_turn_manager.request_pass(true)
+	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
+	# As a player leaving takes their hero along
+	remove_child(hero)
+	hero.free()
+	for _frame: int in MAX_FRAMES:
+		if _turn_manager.turn_number > turn: break
+		await await_idle_frame()
+	assert_int(_turn_manager.turn_number).is_equal(turn + 1)
+	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.HEROES)
+	assert_bool(is_instance_valid(monster)).is_true()
+
+func test_loading_stops_the_monster_phase() -> void:
+	await _spawn_hero(_start_cell())
+	await _spawn_monster(_cell_in_sight(2))
+	var turn: int = _turn_manager.turn_number
+	_turn_manager.request_pass(true)
+	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
+	# As Game.load_game does
+	_turn_manager.stop_monster_phase()
+	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.HEROES)
+	# The phase that was waiting ends no turn
+	for _frame: int in 120: await await_idle_frame()
+	assert_int(_turn_manager.turn_number).is_equal(turn)
+
+func test_the_heroes_turn_ends_before_the_monsters_act() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	await _spawn_monster(_cell_in_sight(2))
+	# Out and back: the first step reveals tiles, which closes the way back; the second can be undone
+	var out: Level.Direction = Level.get_direction(_start_cell(), _cell_in_sight(1))
+	_turn_manager.request_move(hero.get_path(), out)
+	await await_idle_frame()
+	_turn_manager.request_move(hero.get_path(), Level.get_opposite(out))
+	await await_idle_frame()
+	assert_int(hero.undo_steps).is_equal(1)
+	_turn_manager.request_pass(true)
+	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
+	assert_int(hero.undo_steps).is_zero()
+
+func test_the_host_waits_for_a_monster_stepping_out_of_sight() -> void:
+	# Only the start tile is revealed: wherever the monster goes, it leaves the heroes' sight
+	var monster: Character = await _spawn_monster(_start_cell())
+	_turn_manager.request_pass(true)
+	assert_that(monster.grid_cell).is_not_equal(_start_cell())
+	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
+	for _frame: int in MAX_FRAMES:
+		if _turn_manager.phase == TurnManager.Phase.HEROES: break
+		await await_idle_frame()
+	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.HEROES)
