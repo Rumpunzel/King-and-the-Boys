@@ -11,7 +11,7 @@ extends OmniLight3D
 @export var fade_time: float = 0.4
 ## How much further the baseline reaches than a carried light, so a cool rim of the same width always shows around the
 ## warm pool; without a carried light it reaches as far as the scene sets it
-@export var reach_beyond_carried: float = 4.0
+@export var reach_beyond_carried: float = 6.0
 
 @export_group("Configuration")
 @export var _character: Character

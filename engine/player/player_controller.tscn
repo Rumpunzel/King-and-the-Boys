@@ -12,7 +12,7 @@
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_mvbif"]
 [ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="10_irqko"]
 [ext_resource type="PackedScene" uid="uid://dlla8034gqdsb" path="res://engine/player/control_camera.tscn" id="10_jlh3c"]
-[ext_resource type="Script" path="res://engine/turns/tile_highlight.gd" id="12_highlight"]
+[ext_resource type="Script" uid="uid://cbyhe8sss08td" path="res://engine/turns/tile_highlight.gd" id="12_highlight"]
 [ext_resource type="Script" uid="uid://c00i3uyt5qol5" path="res://engine/player/occlusion_target.gd" id="20_occlusion"]
 [ext_resource type="Script" uid="uid://b2xxex2bc873s" path="res://engine/objects/characters/character_light.gd" id="21_character_light"]
 
@@ -60,7 +60,7 @@ control_phantom_camera_scene = ExtResource("10_jlh3c")
 _initial_state = ExtResource("4_irqko")
 metadata/_custom_type_script = "uid://hcr7qut3ys1y"
 
-[node name="TileHighlight" type="MeshInstance3D" parent="." node_paths=PackedStringArray("_state_machine")]
+[node name="TileHighlight" type="MeshInstance3D" parent="." unique_id=1456167489 node_paths=PackedStringArray("_state_machine")]
 cast_shadow = 0
 script = ExtResource("12_highlight")
 _state_machine = NodePath("../StateMachine")
@@ -91,7 +91,6 @@ script = ExtResource("20_occlusion")
 _player_controller = NodePath("..")
 
 [node name="TopDownCamera" type="Camera3D" parent="." unique_id=113072833]
-physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 0.6246951, 0.78086877, 0, -0.78086877, 0.6246951, 0, 20, 16)
 top_level = true
 fov = 37.8493
@@ -113,7 +112,7 @@ light_color = Color(0.62, 0.74, 1, 1)
 light_energy = 1.3
 light_size = 0.4
 shadow_enabled = true
-omni_range = 6.0
+omni_range = 10.0
 omni_attenuation = 0.7
 script = ExtResource("21_character_light")
 _character = NodePath("..")
