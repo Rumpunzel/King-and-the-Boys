@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://cxpwkihxyjf23"]
+
+[ext_resource type="Script" path="res://tools/look_shots/look_shots.gd" id="1_shots"]
+[ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="2_profile"]
+[ext_resource type="Resource" uid="uid://cqkx0op1msr7s" path="res://data/characters/people/knight.tres" id="3_knight"]
+[ext_resource type="Resource" uid="uid://4knh77xf2vfl" path="res://data/characters/people/elf.tres" id="4_elf"]
+[ext_resource type="Resource" uid="uid://d18sc738vkuku" path="res://data/characters/people/rogue.tres" id="5_rogue"]
+
+[node name="LookShots" type="Node"]
+script = ExtResource("1_shots")
+heroes = Array[ExtResource("2_profile")]([ExtResource("3_knight"), ExtResource("4_elf"), ExtResource("5_rogue")])
+path = Array[int]([2, 2, 0, 0, 0, 3, 1, 1, 0, 0])
