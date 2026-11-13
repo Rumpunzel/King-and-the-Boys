@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://dptm3ey44x73g"]
 
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_44wk6"]
+[ext_resource type="Resource" uid="uid://b7l750qf0a05b" path="res://data/model_animations/spell_alert_animations.tres" id="alert_animations"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_60tc1"]
 [ext_resource type="Texture2D" uid="uid://bp0wdwf7ydvi3" path="res://data/characters/people/portraits/pointy-hat.svg" id="5_e7bq6"]
 [ext_resource type="Resource" uid="uid://bxrtwssk6b5uw" path="res://data/characters/people/mystic_body.tres" id="5_vblr4"]
@@ -235,6 +236,7 @@ move_animation = ExtResource("90_mystic_move")
 fast_move_animation = ExtResource("90_mystic_move")
 idle_animations = SubResource("Resource_hy2kd")
 passed_animations = SubResource("BodyAnimations_passed")
+alert_animations = ExtResource("alert_animations")
 selected_animation = ExtResource("15_t6chr")
 name = "Mystic"
 portrait = ExtResource("5_e7bq6")

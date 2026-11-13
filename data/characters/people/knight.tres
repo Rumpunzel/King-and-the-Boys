@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://cqkx0op1msr7s"]
 
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_u6fvh"]
+[ext_resource type="Resource" uid="uid://c8iu5rx5ryw42" path="res://data/model_animations/sword_alert_animations.tres" id="alert_animations"]
 [ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_4m7y1"]
 [ext_resource type="Resource" uid="uid://5hbsrnqf3fcd" path="res://data/characters/people/knight_body.tres" id="5_0vpuq"]
 [ext_resource type="Texture2D" uid="uid://cc2x8ji73hxc4" path="res://data/characters/people/portraits/frog-mouth-helm.svg" id="5_63j5q"]
@@ -276,6 +277,7 @@ move_animation = ExtResource("90_knight_move")
 fast_move_animation = ExtResource("90_knight_move")
 idle_animations = SubResource("Resource_511xg")
 passed_animations = SubResource("BodyAnimations_passed")
+alert_animations = ExtResource("alert_animations")
 selected_animation = ExtResource("14_g0w26")
 name = "Knight"
 portrait = ExtResource("5_63j5q")

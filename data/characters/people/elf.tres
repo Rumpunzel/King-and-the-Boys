@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://4knh77xf2vfl"]
 
 [ext_resource type="PackedScene" uid="uid://c6oheyitbnlpu" path="res://data/characters/people/modular_character.tscn" id="3_lr5qy"]
+[ext_resource type="Resource" uid="uid://c8iu5rx5ryw42" path="res://data/model_animations/sword_alert_animations.tres" id="alert_animations"]
 [ext_resource type="Script" uid="uid://busm6eeeyxhef" path="res://engine/abilities/ability.gd" id="4_ntxgj"]
 [ext_resource type="Texture2D" uid="uid://ben162rfher0t" path="res://data/characters/people/portraits/elf-helmet.svg" id="5_1nbx6"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_4smo8"]
@@ -213,6 +214,7 @@ move_animation = ExtResource("90_elf_move")
 fast_move_animation = ExtResource("90_elf_move")
 idle_animations = ExtResource("5_n73mo")
 passed_animations = SubResource("BodyAnimations_passed")
+alert_animations = ExtResource("alert_animations")
 selected_animation = ExtResource("13_chxko")
 name = "Elf"
 portrait = ExtResource("5_1nbx6")

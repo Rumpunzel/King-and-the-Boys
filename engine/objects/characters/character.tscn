@@ -43,6 +43,9 @@ properties/10/replication_mode = 2
 properties/11/path = NodePath(".:toggled_ability_ids")
 properties/11/spawn = true
 properties/11/replication_mode = 2
+properties/12/path = NodePath(".:alerted")
+properties/12/spawn = true
+properties/12/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_eqp01"]
 properties/0/path = NodePath(".:equipped_ids")

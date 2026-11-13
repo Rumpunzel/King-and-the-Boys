@@ -64,6 +64,15 @@ var shown: bool = true:
 		if is_node_ready() and not is_figure_moving(): model.play_model_animation(profile.spawn_animation)
 ## Whether the figure shows that its player has passed (see [method show_passed]); purely visual, on every peer
 var shows_passed: bool = false
+## Whether a monster is in the hero's sight during the monster phase: the hero gets up from its pass and rests in its
+## [member CharacterProfile.alert_animations] until the next turn starts; set by the host, replicated
+var alerted: bool = false:
+	set(new_alerted):
+		if new_alerted == alerted: return
+		alerted = new_alerted
+		# The alert and the pass end together as a turn starts, in either order (they come through different synchronizers):
+		# a hero still showing its pass leaves the alert as the pass ends, so it never sits down again in between
+		if model and (alerted or not shows_passed): model.rest_in(_get_rest())
 ## The [Character] currently controlling this one, if any
 var controlled_by: Character
 ## The piece this [Character] currently controls, if any; set with [member HitBox.controller]
@@ -466,11 +475,12 @@ func show_passed(passed: bool) -> void:
 	shows_passed = passed
 	if model: model.rest_in(_get_rest())
 
-## What the model rests in now: the cast animations of the held ability in use, the passed animations, or its idles
-## ([code]null[/code])
+## What the model rests in now: the cast animations of the held ability in use, the alert animations, the passed animations, or
+## its idles ([code]null[/code])
 func _get_rest() -> BodyAnimations:
 	var ability: Ability = get_ability(active_ability_id)
 	if ability and ability.cast_animations: return ability.cast_animations
+	if alerted: return profile.alert_animations
 	if shows_passed: return profile.passed_animations
 	return null
 

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BodyAnimations" format=3 uid="uid://b7l750qf0a05b"]
+
+[ext_resource type="Script" uid="uid://dd0v2a4n6fbo7" path="res://engine/objects/model/body_animations.gd" id="1_script"]
+[ext_resource type="Animation" uid="uid://cfeewivnqmoba" path="res://data/characters/animations/quaternius/Spell_Simple_Enter.res" id="2_enter"]
+[ext_resource type="Animation" uid="uid://duatnu7n2jwur" path="res://data/characters/animations/quaternius/Spell_Simple_Idle.res" id="3_idle"]
+[ext_resource type="Animation" uid="uid://dtjpkwf3vv15a" path="res://data/characters/animations/quaternius/Spell_Simple_Exit.res" id="4_exit"]
+
+[resource]
+script = ExtResource("1_script")
+animations = Array[Animation]([ExtResource("3_idle")])
+entry = ExtResource("2_enter")
+exit = ExtResource("4_exit")
+metadata/_custom_type_script = "uid://dd0v2a4n6fbo7"

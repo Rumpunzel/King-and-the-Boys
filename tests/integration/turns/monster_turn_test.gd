@@ -197,3 +197,29 @@ func test_the_host_waits_for_a_monster_stepping_out_of_sight() -> void:
 		if _turn_manager.phase == TurnManager.Phase.HEROES: break
 		await await_idle_frame()
 	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.HEROES)
+
+func test_a_hero_a_monster_comes_for_is_on_alert_until_the_next_turn() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	await _spawn_monster(_cell_in_sight(2))
+	assert_bool(hero.alerted).is_false()
+	var turn: int = _turn_manager.turn_number
+	_turn_manager.request_pass(true)
+	# The monster starts on a tile the hero has not revealed: the hero reacts once it hopped into sight, not as it sets off
+	assert_bool(hero.alerted).is_false()
+	var alerted_in_phase: Array[bool] = [false]
+	for _frame: int in MAX_FRAMES:
+		if _turn_manager.turn_number > turn: break
+		alerted_in_phase[0] = alerted_in_phase[0] or (hero.alerted and _turn_manager.phase == TurnManager.Phase.MONSTERS)
+		await await_idle_frame()
+	assert_bool(alerted_in_phase[0]).is_true()
+	assert_bool(hero.alerted).is_false()
+
+func test_a_monster_out_of_sight_alerts_nobody() -> void:
+	var hero: Character = await _spawn_hero(_start_cell())
+	# Far off on tiles no hero revealed: whatever it sees, the heroes do not see it coming
+	var monster: Character = await _spawn_monster(_cell_at(5))
+	var alerted: Array[bool] = [false]
+	_turn_manager.phase_changed.connect(func(_phase: TurnManager.Phase) -> void: alerted[0] = alerted[0] or hero.alerted)
+	await _pass_turn()
+	assert_bool(_level.get_placed_tile(monster.grid_cell).status == Structure.Status.REVEALED).is_false()
+	assert_bool(alerted[0] or hero.alerted).is_false()

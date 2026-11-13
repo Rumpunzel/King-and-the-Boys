@@ -115,6 +115,10 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 ## What the model rests in while its player has passed, in place of its idles: e.g. sitting down (its entry), sitting, and
 ## getting up again (its exit) as the pass ends (taken back, or a new turn)
 @export var passed_animations: BodyAnimations
+## What the model rests in while a monster is in the hero's sight during the monster phase, in place of its idles and passed
+## animations, e.g. drawing a weapon (its entry), holding it ready, and putting it away again (its exit) as the next turn
+## starts; without any, its idles
+@export var alert_animations: BodyAnimations
 ## Played once as a player picks the character in the lobby, e.g. drawing a sword; then the idles
 @export var selected_animation: Animation
 
