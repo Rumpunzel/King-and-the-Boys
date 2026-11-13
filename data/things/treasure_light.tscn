@@ -53,6 +53,7 @@ color = Color(2.5, 1.9, 0.8, 1)
 [node name="TreasureLight" type="OmniLight3D" unique_id=593047522]
 light_color = Color(1, 0.83, 0.42, 1)
 light_energy = 1.4
+light_volumetric_fog_energy = 0.0
 light_bake_mode = 0
 distance_fade_enabled = true
 distance_fade_begin = 45.0
