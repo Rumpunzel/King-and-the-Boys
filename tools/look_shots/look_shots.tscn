@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cxpwkihxyjf23"]
 
-[ext_resource type="Script" path="res://tools/look_shots/look_shots.gd" id="1_shots"]
+[ext_resource type="Script" uid="uid://cd54qudheocih" path="res://tools/look_shots/look_shots.gd" id="1_shots"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="2_profile"]
 [ext_resource type="Resource" uid="uid://cqkx0op1msr7s" path="res://data/characters/people/knight.tres" id="3_knight"]
 [ext_resource type="Resource" uid="uid://4knh77xf2vfl" path="res://data/characters/people/elf.tres" id="4_elf"]

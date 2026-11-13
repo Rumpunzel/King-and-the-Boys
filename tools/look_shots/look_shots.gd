@@ -26,6 +26,8 @@ var _output: String
 func _ready() -> void:
 	_output = "%s/%s" % [OUTPUT, _get_label()]
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output))
+	# Keeps the editor from importing every shot
+	FileAccess.open("%s/.gdignore" % OUTPUT, FileAccess.WRITE)
 	Panorama.clear_background()
 	Client.start_game()
 	await get_tree().process_frame

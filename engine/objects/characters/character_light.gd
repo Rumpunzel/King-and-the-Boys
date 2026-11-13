@@ -34,13 +34,13 @@ func _on_light_sources_changed() -> void:
 	var carried: LightSource = null
 	for light_source: LightSource in _character.get_light_sources():
 		if not carried or light_source.energy > carried.energy: carried = light_source
-	# Both shine from above the figure, so one shadow is enough
-	shadow_enabled = carried == null
-	_carried_light.shadow_enabled = carried != null
 	if _tween: _tween.kill()
 	_tween = create_tween().set_parallel()
 	_tween.tween_property(self, "omni_range", carried.light_range + reach_beyond_carried if carried else _own_range, fade_time)
+	# Both shine from above the figure, so one shadow is enough: the carried light's while it shines. It keeps its shadow
+	# until it is out, and the baseline gives up its own only once the carried light has come on
 	if not carried:
+		shadow_enabled = true
 		_tween.tween_property(_carried_light, "light_energy", 0.0, fade_time)
 		_tween.chain().tween_callback(_carried_light.hide)
 		return
@@ -48,3 +48,4 @@ func _on_light_sources_changed() -> void:
 	_tween.tween_property(_carried_light, "light_color", carried.color, fade_time)
 	_tween.tween_property(_carried_light, "light_energy", carried.energy, fade_time)
 	_tween.tween_property(_carried_light, "omni_range", carried.light_range, fade_time)
+	_tween.chain().tween_callback(func() -> void: shadow_enabled = false)
