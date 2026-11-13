@@ -18,6 +18,13 @@ signal figure_arrived
 ## Emitted when the lights the character carries change (see [method get_light_sources]), e.g. a torch equipped, a lantern lit
 signal light_sources_changed
 
+## How a figure stands: knocked down in a block, it lies on its spot until it gets up (see [method TurnManager.try_step]).
+## Stored by number: only append
+enum Posture {
+	STANDING,
+	DOWN,
+}
+
 const GROUP: StringName = "Characters"
 
 const VARIATION: StringName = "variation"
@@ -27,6 +34,9 @@ const BODY: StringName = "body"
 const EQUIPMENT: StringName = "equipment"
 
 const _TURN_DURATION: float = 0.5
+## How far into the strike (see [member CharacterProfile.block_animation]) it lands: the falls and the push it causes wait
+## until then, see [method show_block]
+const _STRIKE_LANDS: float = 0.5
 
 @export var profile: CharacterProfile:
 	set(new_character_profile):
@@ -73,6 +83,17 @@ var alerted: bool = false:
 		# The alert and the pass end together as a turn starts, in either order (they come through different synchronizers):
 		# a hero still showing its pass leaves the alert as the pass ends, so it never sits down again in between
 		if model and (alerted or not shows_passed): model.rest_in(_get_rest())
+## Set by the host, replicated and saved: a figure that is [constant Posture.DOWN] can not step or block, still holds its spot,
+## and rests in its [member CharacterProfile.down_animations]
+var posture: Posture = Posture.STANDING:
+	set(new_posture):
+		if new_posture == posture: return
+		posture = new_posture
+		if not model: return
+		# A fall waits until the strike that caused it landed
+		var held: float = _get_hold()
+		if held > 0.0: create_tween().tween_interval(held).finished.connect(_rest_in_posture)
+		else: model.rest_in(_get_rest())
 ## The [Character] currently controlling this one, if any
 var controlled_by: Character
 ## The piece this [Character] currently controls, if any; set with [member HitBox.controller]
@@ -142,6 +163,8 @@ var held_cost: int = 0:
 		held_cost_changed.emit(held_cost)
 
 var _has_grid_state: bool = false
+# Until when (Time.get_ticks_msec) a strike at or by the figure is still landing, see show_block
+var _hold_until_msec: int = 0
 var _grid_visual_update_queued: bool = false
 var _grid_visuals_applied: bool = false
 # The figure's move: one hop; a step that comes in while it is under way redirects it to the new target
@@ -407,6 +430,12 @@ func _apply_grid_visuals() -> void:
 		return
 	_turn_to(target_rotation)
 	if target_position.is_equal_approx(_move_target if _is_moving() else global_position): return
+	# A push waits until the strike landed; the figure counts as moving meanwhile
+	var held: float = _get_hold()
+	if held > 0.0:
+		_grid_visual_update_queued = true
+		create_tween().tween_interval(held).finished.connect(_apply_grid_visuals)
+		return
 	if _is_moving(): _extend_move(target_position)
 	else: _start_move(target_position, target_rotation)
 
@@ -475,9 +504,27 @@ func show_passed(passed: bool) -> void:
 	shows_passed = passed
 	if model: model.rest_in(_get_rest())
 
-## What the model rests in now: the cast animations of the held ability in use, the alert animations, the passed animations, or
-## its idles ([code]null[/code])
+## Every peer, as a block starts: the figure turns to [param defender] and strikes (see
+## [member CharacterProfile.block_animation])
+func show_block(defender: Character) -> void:
+	if not model or not shown or not profile.block_animation: return
+	model.play_body_animation(profile.block_animation)
+	# What the block does to either figure (a fall, a push) shows once the strike lands
+	var lands: int = Time.get_ticks_msec() + roundi(profile.block_animation.length * _STRIKE_LANDS * 1000.0)
+	_hold_until_msec = maxi(_hold_until_msec, lands)
+	defender._hold_until_msec = maxi(defender._hold_until_msec, lands)
+
+## @returns how long the figure still waits for a strike to land, in seconds; [code]0[/code] if it does not
+func _get_hold() -> float:
+	return maxf(_hold_until_msec - Time.get_ticks_msec(), 0.0) / 1000.0
+
+func _rest_in_posture() -> void:
+	if model: model.rest_in(_get_rest())
+
+## What the model rests in now: lying down, the cast animations of the held ability in use, the alert animations, the passed
+## animations, or its idles ([code]null[/code])
 func _get_rest() -> BodyAnimations:
+	if posture == Posture.DOWN: return profile.down_animations
 	var ability: Ability = get_ability(active_ability_id)
 	if ability and ability.cast_animations: return ability.cast_animations
 	if alerted: return profile.alert_animations

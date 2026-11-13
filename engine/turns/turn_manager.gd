@@ -10,6 +10,8 @@ extends Node
 signal turn_started(turn_number: int)
 signal passed_players_changed
 signal phase_changed(phase: Phase)
+## Host only: a block was rolled and played out on the board
+signal blocked(block: Block)
 
 enum Phase {
 	HEROES,
@@ -21,6 +23,8 @@ const GROUP: StringName = "TurnManager"
 ## arrives must not hold the game)
 const _HOP_POLL: float = 0.05
 const _MAX_HOP_WAIT: float = 3.0
+## How long the host lets a block in sight play before the phase goes on
+const _BLOCK_PAUSE: float = 0.8
 
 @export_group("Configuration")
 @export var _level: Level
@@ -46,6 +50,9 @@ var phase: Phase = Phase.HEROES:
 		phase = new_phase
 		phase_changed.emit(phase)
 
+## Host only: rolls the block dice and picks pushes; seed it to block the same again
+var combat_random: RandomNumberGenerator = RandomNumberGenerator.new()
+
 # Host only: steps and ability uses (GridStep, AbilityStep) that can still be undone this turn, newest last
 var _undo_stacks: Dictionary[Character, Array] = {}
 # Host only: uses of each Ability this turn, by character
@@ -59,6 +66,13 @@ var _using_character: Character
 var _board_changed_during_use: bool = false
 # Host only: counts monster phases started or stopped, so a phase that was stopped (e.g. by loading) ends where it waits
 var _monster_phase_run: int = 0
+# Host only: heroes that stepped onto a monster's tile this turn, in the order they did; the first on a tile blocks a monster
+# there as the monster phase starts. Not saved: a loaded game starts a fresh turn
+var _engaged: Array[Character] = []
+# Host only: the blocks of the step under way, so the monster phase lets each play out, see _wait_for_block
+var _step_blocks: Array[Block] = []
+# Host only: peers whose game scene has this node (see start_syncing_peer); only they get its RPCs
+var _synced_peers: Array[int] = []
 
 class GridStep extends RefCounted:
 	var grid_cell: Vector2i
@@ -99,6 +113,7 @@ func _ready() -> void:
 func start_syncing_peer(peer_id: int) -> void:
 	assert(multiplayer.is_server())
 	_synchronizer.set_visibility_for(peer_id, true)
+	if not _synced_peers.has(peer_id): _synced_peers.append(peer_id)
 
 func has_passed(player_id: int) -> bool:
 	return passed_player_ids.has(player_id)
@@ -116,25 +131,100 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 
 ## Host only, the one rule for every step, the players' and the monsters': steps [param character] one cell into
 ## [param direction] if a wall, its movement points and the target tile allow it; otherwise only turns it. Turning is free.
-## [param undoable] steps go onto the character's undo stack.
+## A fallen figure gets up instead, for a movement point. A standing enemy on the tile it leaves blocks it first: it steps on
+## only if it keeps its feet and stays where it is. Stepping onto an enemy's tile ends its moves: a hero blocks a monster
+## there as the monster phase starts, a monster blocks a hero at once.
+## [param undoable] steps go onto the character's undo stack; a block closes it.
 ## @returns whether it stepped
 func try_step(character: Character, direction: Level.Direction, undoable: bool = false) -> bool:
 	assert(multiplayer.is_server())
+	if character.posture != Character.Posture.STANDING:
+		_stand_up(character)
+		return false
 	var target_cell: Vector2i = _level.get_step_target(character.grid_cell, direction)
 	var free_spots: Array[Vector2] = _level.get_free_spots(target_cell, character)
 	if target_cell == character.grid_cell or character.movement_points <= 0 or free_spots.is_empty():
 		character.place_on_grid(character.grid_cell, character.tile_spot, direction)
 		return false
-	if undoable:
+	character.movement_points -= 1
+	var leaving_blocker: Character = _get_enemy_on(character.grid_cell, character)
+	if leaving_blocker:
+		var block: Block = _block(leaving_blocker, character)
+		if character.posture != Character.Posture.STANDING or block.was_pushed(): return false
+		free_spots = _level.get_free_spots(target_cell, character)
+		if free_spots.is_empty():
+			# Refused like any step into a full tile: it only turns
+			character.place_on_grid(character.grid_cell, character.tile_spot, direction)
+			return false
+	elif undoable:
 		# Record before moving: a move that changes the board clears the stack again
 		_track(character)
 		var undo_stack: Array = _undo_stacks.get_or_add(character, [])
 		undo_stack.append(GridStep.new(character))
-	character.movement_points -= 1
 	var target_spot: Vector2 = free_spots.front()
 	character.place_on_grid(target_cell, target_spot, direction)
 	if undoable: _update_undo_steps(character)
+	var enemy: Character = _get_enemy_on(target_cell, character)
+	if enemy: _engage(character, enemy)
 	return true
+
+## Host only: stepping onto [param enemy]'s tile ends [param character]'s moves; a hero blocks later (see [member _engaged]),
+## a monster at once
+func _engage(character: Character, enemy: Character) -> void:
+	character.movement_points = 0
+	if character.profile.group != CharacterProfile.Groups.HEROES:
+		_block(character, enemy)
+		return
+	_track(character)
+	_engaged.append(character)
+	# The way back is closed: the hero is in the fight
+	_close_undo(character)
+
+## Host only: a fallen [param character] gets up for a movement point
+func _stand_up(character: Character) -> void:
+	if character.movement_points <= 0: return
+	character.movement_points -= 1
+	character.posture = Character.Posture.STANDING
+
+## Host only: [param attacker] blocks [param defender]; every peer sees the attack, the falls and the push. Nothing either did
+## before can be undone any more
+func _block(attacker: Character, defender: Character) -> Block:
+	var block: Block = Block.new(attacker, defender)
+	# Facing the defender, replicated like any turn
+	var to_defender: Vector3 = _level.get_spot_position(defender.grid_cell, defender.tile_spot) - _level.get_spot_position(attacker.grid_cell, attacker.tile_spot)
+	if to_defender.length_squared() > 0.0001:
+		attacker.place_on_grid(attacker.grid_cell, attacker.tile_spot, Character.rotation_to_facing(atan2(to_defender.x, to_defender.z)))
+	# Before the outcome, so every peer holds the falls and the push until the strike lands
+	show_block(attacker.get_path(), defender.get_path())
+	for peer_id: int in _synced_peers:
+		if peer_id != multiplayer.get_unique_id(): show_block.rpc_id(peer_id, attacker.get_path(), defender.get_path())
+	block.resolve(_level, combat_random)
+	_step_blocks.append(block)
+	blocked.emit(block)
+	_close_undo(attacker)
+	_close_undo(defender)
+	return block
+
+## Every peer: [param attacker_path]'s figure strikes at [param defender_path]'s; the host calls it on itself and sends it to the
+## peers that have this node
+@rpc("authority", "call_remote", "reliable")
+func show_block(attacker_path: NodePath, defender_path: NodePath) -> void:
+	var attacker: Character = get_node_or_null(attacker_path) as Character
+	var defender: Character = get_node_or_null(defender_path) as Character
+	if attacker and defender: attacker.show_block(defender)
+
+## @returns the standing enemy of [param character] on [param cell] who blocks it: the first by
+## [member CharacterProfile.block_priority], or [code]null[/code]
+func _get_enemy_on(cell: Vector2i, character: Character) -> Character:
+	var enemy: Character = null
+	for other: Character in Block.get_standing_on(cell, _level):
+		if other.profile.group == character.profile.group: continue
+		if not enemy or other.profile.block_priority < enemy.profile.block_priority: enemy = other
+	return enemy
+
+func _close_undo(character: Character) -> void:
+	_undo_stacks.erase(character)
+	_update_undo_steps(character)
 
 ## Takes back the last step of [param character_path] this turn and refunds its movement point.
 ## A pass of the sender is taken back with it, but only if the step could be undone.
@@ -264,6 +354,22 @@ func _run_monster_phase() -> void:
 	phase = Phase.MONSTERS
 	_monster_phase_run += 1
 	var run: int = _monster_phase_run
+	# The heroes who stepped onto a monster's tile block first, one per tile
+	var engaged: Array[Character] = _engaged
+	_engaged = []
+	var blocked_cells: Dictionary[Vector2i, bool] = {}
+	for index: int in engaged.size():
+		# Heroes may leave while the host waits, like monsters below
+		if not is_instance_valid(engaged[index]): continue
+		var hero: Character = engaged[index]
+		if hero.posture != Character.Posture.STANDING or blocked_cells.has(hero.grid_cell): continue
+		var monster: Character = _get_enemy_on(hero.grid_cell, hero)
+		if not monster: continue
+		blocked_cells[hero.grid_cell] = true
+		var block: Block = _block(hero, monster)
+		if not _is_in_sight(hero.grid_cell): continue
+		await _wait_for_block(block)
+		if run != _monster_phase_run: return
 	# Pieces may leave while the host waits (a player leaving takes their hero along): each is checked before it is used
 	var nodes: Array[Node] = get_tree().get_nodes_in_group(Character.GROUP)
 	for index: int in nodes.size():
@@ -274,11 +380,22 @@ func _run_monster_phase() -> void:
 		_alert_heroes_seen_by(character)
 		while is_instance_valid(character) and character.is_inside_tree() and character.movement_points > 0:
 			var was_in_sight: bool = _is_in_sight(character.grid_cell)
+			if character.posture != Character.Posture.STANDING:
+				_stand_up(character)
+				continue
 			var direction: int = agent.choose_step()
-			if direction < 0 or not try_step(character, direction as Level.Direction): break
+			if direction < 0: break
+			_step_blocks.clear()
+			var stepped: bool = try_step(character, direction as Level.Direction)
+			# Blocks on leaving or arriving play out before anyone moves on, whatever they did
+			var blocks: Array[Block] = _step_blocks.duplicate()
 			if was_in_sight or _is_in_sight(character.grid_cell):
-				await _wait_for_figure(character)
+				if stepped: await _wait_for_figure(character)
+				for block: Block in blocks:
+					if run != _monster_phase_run: return
+					await _wait_for_block(block)
 				if run != _monster_phase_run: return
+			if not stepped: break
 			# Once it hopped in: the heroes react to what they see
 			if is_instance_valid(character): _alert_heroes_seen_by(character)
 	phase = Phase.HEROES
@@ -289,6 +406,7 @@ func stop_monster_phase() -> void:
 	assert(multiplayer.is_server())
 	_monster_phase_run += 1
 	phase = Phase.HEROES
+	_engaged.clear()
 	_clear_alerts()
 
 ## Waits until [param character]'s figure arrived, at most [constant _MAX_HOP_WAIT]: its hop may last longer than its move
@@ -313,6 +431,11 @@ func _alert_heroes_seen_by(monster: Character) -> void:
 ## After the passes are cleared: a hero that also stops showing its pass then goes straight from its alert to its idles
 func _clear_alerts() -> void:
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.alerted = false
+
+## Lets a block play: the attack, then the pushed figure's move
+func _wait_for_block(block: Block) -> void:
+	await create_tween().tween_interval(_BLOCK_PAUSE).finished
+	if block.was_pushed() and is_instance_valid(block.defender): await _wait_for_figure(block.defender)
 
 func _is_in_sight(cell: Vector2i) -> bool:
 	var tile: Structure = _level.get_placed_tile(cell)
@@ -453,6 +576,7 @@ func _on_tile_rotated(tile: Structure, turning_character: Character) -> void:
 
 func _on_character_exiting(character: Character) -> void:
 	_undo_stacks.erase(character)
+	_engaged.erase(character)
 	_ability_uses.erase(character)
 	# Its lifted tile is set down again, so it does not hang on for good
 	_cancel_held(character)
@@ -460,6 +584,7 @@ func _on_character_exiting(character: Character) -> void:
 		if step.character == character: _pending_steps.erase(step)
 
 func _on_player_disconnected(player: Player) -> void:
+	_synced_peers.erase(player.player_id)
 	_cancel_held_of(player.player_id)
 	_set_passed(player.player_id, false)
 	_end_turn_if_everyone_passed()

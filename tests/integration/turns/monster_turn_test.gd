@@ -19,6 +19,7 @@ func before_test() -> void:
 	_level.build_level()
 	_turn_manager = auto_free(TurnManager.new())
 	_turn_manager.set("_level", _level)
+	_turn_manager.combat_random.seed = 42
 	add_child(_turn_manager)
 	await await_idle_frame()
 
@@ -110,11 +111,15 @@ func test_monsters_step_along_passages_only() -> void:
 func test_a_monster_hunts_a_hero_it_sees() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	var monster: Character = await _spawn_monster(_cell_in_sight(2))
+	var blocks: Array[Block] = []
+	_turn_manager.blocked.connect(func(block: Block) -> void: blocks.append(block))
+	var hero_cell: Vector2i = hero.grid_cell
 	await _pass_turn()
-	# Two steps along passages, its speed: onto the hero's tile, where it stays
-	assert_that(monster.grid_cell).is_equal(hero.grid_cell)
-	await _pass_turn()
-	assert_that(monster.grid_cell).is_equal(hero.grid_cell)
+	# Two steps along passages, its speed: onto the hero's tile, where it blocks the hero at once
+	assert_that(monster.grid_cell).is_equal(hero_cell)
+	assert_int(blocks.size()).is_equal(1)
+	assert_object(blocks[0].attacker).is_same(monster)
+	assert_object(blocks[0].defender).is_same(hero)
 
 func test_players_wait_while_monsters_act() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
