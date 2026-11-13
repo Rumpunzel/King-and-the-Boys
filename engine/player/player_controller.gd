@@ -58,6 +58,8 @@ func _ready() -> void:
 		turn_manager.passed_players_changed.connect(_on_passed_players_changed)
 		_on_passed_players_changed()
 	if not is_multiplayer_authority(): return
+	# The host refuses passes while a block waits for a choice: auto-pass tries again once it closed
+	if turn_manager: turn_manager.block_choice_changed.connect(_on_turn_state_changed.bind(0))
 	_state_machine.controlled_character_changed.connect(_on_controlled_character_changed)
 	_state_machine.start()
 	_controlled_character = get_controlled_character()
@@ -140,7 +142,8 @@ func request_pass(passed: bool) -> void:
 func request_block_choice(value: int) -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	if not turn_manager or not is_choosing_for_block(): return
-	turn_manager.request_block_choice.rpc_id(Multiplayer.HOST_ID, value)
+	var choice_id: int = turn_manager.block_choice[TurnManager.CHOICE_ID]
+	turn_manager.request_block_choice.rpc_id(Multiplayer.HOST_ID, choice_id, value)
 
 ## Whether a block waits for this player's choice
 func is_choosing_for_block() -> bool:

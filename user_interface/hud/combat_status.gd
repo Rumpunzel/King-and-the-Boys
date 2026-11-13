@@ -71,7 +71,11 @@ func _on_block_choice_changed() -> void:
 	if _hide_tween: _hide_tween.kill()
 	var attacker: Character = get_node_or_null(choice[TurnManager.CHOICE_ATTACKER] as NodePath) as Character
 	var defender: Character = get_node_or_null(choice[TurnManager.CHOICE_DEFENDER] as NodePath) as Character
-	if not attacker or not defender: return
+	# Figures this peer does not have (yet): nothing to show, and no dice of an earlier block left behind
+	if not attacker or not defender:
+		_clear()
+		_block_panel.hide()
+		return
 	var choosing: bool = is_instance_valid(_player_controller) and _player_controller.is_choosing_for_block()
 	var dice: Array = choice[TurnManager.CHOICE_DICE]
 	var ways: Array = choice[TurnManager.CHOICE_WAYS]
