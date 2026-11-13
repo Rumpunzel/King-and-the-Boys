@@ -34,8 +34,6 @@ func exit() -> void:
 	super.exit()
 	assert(_controlled)
 	var character: Character = get_character()
-	var controlled_thing: Thing = _controlled.thing
-	assert(controlled_thing)
 	character.unhide_character.rpc()
 	character.snap_to_grid()
 	_controlled.request_release.rpc_id(Multiplayer.HOST_ID)

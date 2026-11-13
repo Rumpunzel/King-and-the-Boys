@@ -41,9 +41,6 @@ var _model: Model:
 		add_child(_model, true)
 		model_changed.emit(_model)
 
-func play_animation(normalized_velocity: Vector3, is_on_floor: bool) -> void:
-	_model.play_animation(normalized_velocity, is_on_floor)
-
 func get_portrait() -> Texture:
 	if _model.portrait_override:
 		return _model.portrait_override

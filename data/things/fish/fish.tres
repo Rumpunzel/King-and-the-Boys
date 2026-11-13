@@ -9,7 +9,6 @@
 
 [resource]
 script = ExtResource("8_l001u")
-mass = 0.5
 name = "Fish"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("1_hpr2k"), ExtResource("2_dnlk6"), ExtResource("3_l6kfr"), ExtResource("4_bo3md")])

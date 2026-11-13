@@ -332,14 +332,13 @@ func snap_to_grid() -> void:
 func hide_character(keep_processing: bool = false) -> void:
 	assert(visible)
 	visible = false
-	if keep_processing: return
-	_disable_processing()
+	if not keep_processing: set_process(false)
 
 @rpc("call_local", "reliable")
 func unhide_character() -> void:
 	assert(not visible)
 	visible = true
-	_enable_processing()
+	set_process(true)
 
 func apply_character_data(character_data: Dictionary[StringName, Variant]) -> void:
 	validate_character_data(character_data)
@@ -486,14 +485,6 @@ func _look_at_thing_on_tile() -> void:
 	to_thing.y = 0.0
 	if to_thing.length_squared() < 0.01: return
 	_turn_to(atan2(to_thing.x, to_thing.z))
-
-func _enable_processing() -> void:
-	set_physics_process(true)
-	set_process(true)
-
-func _disable_processing() -> void:
-	set_physics_process(false)
-	set_process(false)
 
 ## @returns [code]true[/code] if the peer [param peer_id] may move this [Character]
 func is_controlled_by(peer_id: int) -> bool:

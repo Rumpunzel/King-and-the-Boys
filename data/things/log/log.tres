@@ -6,7 +6,6 @@
 
 [resource]
 script = ExtResource("4_tp7fo")
-mass = 100.0
 name = "Log"
 color = Color(0.878431, 0.878431, 0.878431, 1)
 _model_variations = Array[PackedScene]([ExtResource("1_08lp2")])

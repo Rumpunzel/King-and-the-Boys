@@ -50,7 +50,6 @@ properties/0/spawn = true
 properties/0/replication_mode = 2
 
 [node name="Character" type="Node3D" unique_id=280801836 node_paths=PackedStringArray("_synchronizer", "equipment") groups=["Characters"]]
-input_ray_pickable = false
 script = ExtResource("1_f5t6j")
 _synchronizer = NodePath("CharacterSynchronizer")
 equipment = NodePath("CharacterEquipment")

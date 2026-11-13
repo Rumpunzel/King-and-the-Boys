@@ -6,7 +6,6 @@
 
 [resource]
 script = ExtResource("3_script")
-mass = 800.0
 spawn_animation = ExtResource("2_drop")
 name = "Sarcophagus"
 _model_variations = Array[PackedScene]([ExtResource("1_model")])

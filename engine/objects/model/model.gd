@@ -43,16 +43,6 @@ static func gather_all_geometry_instances_on(node: Node) -> Array[MeshInstance3D
 		geometry_instances.append_array(gather_all_geometry_instances_on(child))
 	return geometry_instances
 
-func play_animation(normalized_velocity: Vector3, _is_on_floor: bool) -> void:
-	if not _animation_tree: return
-	var playback: AnimationNodeStateMachinePlayback = _animation_tree["parameters/playback"]
-	assert(playback)
-	if normalized_velocity:
-		playback.travel("Walk")
-		_animation_tree.set("parameters/Walk/blend_position", normalized_velocity.length_squared())
-	else:
-		playback.travel("Idle")
-
 ## Plays [param model_animation] on this model, with the model's own animations it names
 func play_model_animation(model_animation: ModelAnimation) -> Tween:
 	assert(model_animation)
