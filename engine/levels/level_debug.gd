@@ -6,7 +6,7 @@ extends Node
 ## its size and its centrepiece corner), each tile's connection restrictions (see [method Structure.draw_debug]) and the tiles' labels
 ## with their name and grid position.
 ## The [constant ACTION] toggles them (F3); only on this peer, nothing is synced.
-## On the host, [constant SPAWN_MONSTER_ACTION] (F4) spawns a [member debug_monster] beside the host's own hero.
+## On the host of a debug build, [constant SPAWN_MONSTER_ACTION] (F4) spawns a [member debug_monster] beside the host's own hero.
 
 const ACTION: StringName = &"toggle_debug_drawings"
 const SPAWN_MONSTER_ACTION: StringName = &"spawn_debug_monster"
@@ -35,15 +35,21 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(ACTION):
 		shown = not shown
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed(SPAWN_MONSTER_ACTION):
-		_spawn_debug_monster()
+	elif event.is_action_pressed(SPAWN_MONSTER_ACTION) and _spawn_debug_monster():
 		get_viewport().set_input_as_handled()
 
-## The host referees, so only it spawns: on the free spot nearest its own hero, facing it
-func _spawn_debug_monster() -> void:
-	if not _level or not debug_monster or not multiplayer.is_server(): return
+## The host referees, so only it spawns, and only in debug builds: on the free spot nearest its own hero, turned towards it
+## @returns whether it spawned one
+func _spawn_debug_monster() -> bool:
+	if not OS.is_debug_build() or not _level or not debug_monster or not multiplayer.is_server(): return false
 	var hero: Character = _get_own_hero()
-	if hero: _level.spawn_monster(debug_monster, hero.grid_cell, Level.get_opposite(hero.facing))
+	if not hero: return false
+	# The spot spawn_monster takes, so the monster can face the hero from there
+	var spot_position: Vector3 = _level.get_nearest_free_spot_position(hero.grid_cell)
+	if spot_position == Vector3.INF: return false
+	var to_hero: Vector3 = hero.global_position - spot_position
+	_level.spawn_monster(debug_monster, hero.grid_cell, Character.rotation_to_facing(atan2(to_hero.x, to_hero.z)))
+	return true
 
 func _get_own_hero() -> Character:
 	for node: Node in get_tree().get_nodes_in_group(Character.GROUP):

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CharacterProfile" format=3]
+[gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://bjyijp00nyg5d"]
 
 [ext_resource type="Script" path="res://engine/objects/characters/character_profile.gd" id="1_profile"]
 
