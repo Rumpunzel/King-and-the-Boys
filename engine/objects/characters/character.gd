@@ -66,9 +66,9 @@ var shown: bool = true:
 		shown = new_shown
 		if not model: return
 		if not shown:
-			if is_figure_moving():
-				if not figure_arrived.is_connected(_hide_if_unseen): figure_arrived.connect(_hide_if_unseen, CONNECT_ONE_SHOT)
-			else: model.visible = false
+			# A hop under way finishes first; a grid update still queued hides it once applied (see _apply_grid_visuals)
+			if _is_moving(): _hide_after_move()
+			elif not _grid_visual_update_queued: model.visible = false
 			return
 		model.visible = true
 		if is_node_ready() and not is_figure_moving(): model.play_model_animation(profile.spawn_animation)
@@ -414,6 +414,14 @@ func _queue_grid_visual_update() -> void:
 	_apply_grid_visuals.call_deferred()
 
 func _apply_grid_visuals() -> void:
+	_place_figure()
+	# A figure that should be hidden hides once it stands still: at once if it did not set off (e.g. placed as it spawns, which
+	# is no hop), else as it arrives
+	if shown or not model: return
+	if _is_moving(): _hide_after_move()
+	elif not _grid_visual_update_queued: model.visible = false
+
+func _place_figure() -> void:
 	_grid_visual_update_queued = false
 	# A carried figure shows its grid state once it is set down
 	if not level or not is_inside_tree() or is_carried(): return
@@ -443,6 +451,9 @@ func _apply_grid_visuals() -> void:
 ## it is [member shown]
 func _is_figure_seen() -> bool:
 	return model.visible if model else shown
+
+func _hide_after_move() -> void:
+	if not figure_arrived.is_connected(_hide_if_unseen): figure_arrived.connect(_hide_if_unseen, CONNECT_ONE_SHOT)
 
 func _hide_if_unseen() -> void:
 	if model and not shown: model.visible = false
