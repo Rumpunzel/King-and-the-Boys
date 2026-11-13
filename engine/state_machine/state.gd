@@ -12,12 +12,22 @@ const PREVIOUS_STATE_SCRIPT: StringName = "previous_state_script"
 
 var _previous_state_script: GDScript
 
+## @returns the state [param serialized_state] describes; [code]null[/code] if it names no [State] script (it may come
+## from a peer)
 static func from_serialized_state(serialized_state: Dictionary[StringName, Variant]) -> State:
-	var state_script_path: String = serialized_state[STATE_SCRIPT]
-	var state_script: GDScript = load(state_script_path)
+	var state_script: GDScript = load_state_script(serialized_state.get(STATE_SCRIPT, "") as String)
+	if not state_script:
+		push_error("No State script in %s" % serialized_state)
+		return null
 	var state: State = state_script.new()
 	state.deserialize(serialized_state)
 	return state
+
+## @returns the [State] script at [param path], else [code]null[/code]; paths may come from peers, so nothing else loads
+static func load_state_script(path: String) -> GDScript:
+	if not path.begins_with("res://") or path.get_extension() != "gd" or not ResourceLoader.exists(path): return null
+	var script: GDScript = load(path) as GDScript
+	return script if StateMachine.script_is_valid_state(script) else null
 
 ## Called by the state machine upon changing the active state.
 ## The [param data] parameter is a dictionary with arbitrary data the state can use to initialize itself.
@@ -51,7 +61,7 @@ func serialize() -> Dictionary[StringName, Variant]:
 func deserialize(serialized_state: Dictionary[StringName, Variant]) -> State:
 	var previous_state_script_path: String = serialized_state.get(PREVIOUS_STATE_SCRIPT, "")
 	if not previous_state_script_path.is_empty():
-		_previous_state_script = load(previous_state_script_path)
+		_previous_state_script = load_state_script(previous_state_script_path)
 	return self
 
 @abstract func get_state_machine() -> StateMachine

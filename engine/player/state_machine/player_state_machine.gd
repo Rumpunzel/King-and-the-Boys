@@ -49,11 +49,13 @@ func get_controlled_character() -> Character:
 	return _state.get_controlled_character() if _state else character
 
 func set_state(state: State) -> void:
-	assert(state is PlayerState)
+	if state and not state is PlayerState:
+		push_error("%s is no PlayerState" % state)
+		return
 	var previous_controlled_character: Character = get_controlled_character()
 	_state = state
 	move_presses.clear()
-	_state.set_state_machine(self)
+	if _state: _state.set_state_machine(self)
 	if get_controlled_character() != previous_controlled_character:
 		controlled_character_changed.emit(get_controlled_character())
 

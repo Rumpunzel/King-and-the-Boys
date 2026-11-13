@@ -17,24 +17,34 @@ var _status: Status = Status.STOPPED
 ## This is used for serialization purposes; serves otherwise no purpose
 @warning_ignore("unused_private_class_variable")
 var _serialized_state: Dictionary[StringName, Variant]:
-	get: return get_state().serialize()
+	# Empty without a state: before it starts, or for a player's machine on the host until its peer first syncs it
+	get:
+		var state: State = get_state()
+		if not state: return {}
+		return state.serialize()
 	set(new_serialized_state):
-		set_state(State.from_serialized_state(new_serialized_state))
+		if new_serialized_state.is_empty(): return
+		var state: State = State.from_serialized_state(new_serialized_state)
+		if not state: return
+		set_state(state)
+		# Refused by the machine (another kind of state)
+		if get_state() != state: return
 		match _status:
 			Status.STOPPED: pass
 			Status.RUNNING: get_state().enter(self)
 			_: push_error("Status %s not implemented!" % _status)
 
 static func script_is_valid_state(script: Script) -> bool:
+	if not script: return false
 	if script.get_global_name() == "State": return true
 	if script_is_valid_state(script.get_base_script()): return true
 	return false
 
 func start() -> void:
 	assert(_status == Status.STOPPED)
-	#if not is_node_ready(): await ready
 	var initial_state: State = get_state()
 	if not initial_state:
+		assert(script_is_valid_state(_initial_state), "%s has no initial State script" % get_path())
 		initial_state = _initial_state.new()
 		set_state(initial_state)
 	initial_state.enter(self)
@@ -67,6 +77,7 @@ func transition_to_next_state(target_state: State) -> void:
 	get_state().enter(self, previous_state)
 
 @abstract func get_state() -> State
+## [param state] [code]null[/code] leaves it without a state (see [method stop])
 @abstract func set_state(state: State) -> void
 
 func _get_configuration_warnings() -> PackedStringArray:
