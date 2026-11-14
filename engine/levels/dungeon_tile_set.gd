@@ -57,6 +57,11 @@ func _draw(candidates: Array[TileBlueprint], crowded_directions: Array[Level.Dir
 			if blueprint.profile.has_connection(direction, blueprint.clockwise_turns): weight *= crowding_weight
 		weights.append(weight)
 		total_weight += weight
+	# Every candidate crowded out (a crowding weight of 0): drawn by their own weights, so the seed still decides
+	if total_weight <= 0.0:
+		for index: int in candidates.size():
+			weights[index] = _dungeon_tiles[candidates[index].profile]
+			total_weight += weights[index]
 	var random_selection: float = random.randf() * total_weight
 	for index: int in candidates.size():
 		if random_selection < weights[index]: return candidates[index]

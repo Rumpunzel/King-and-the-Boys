@@ -8,17 +8,19 @@ const SEEDS: int = 30
 
 var _level: Level
 var _tile_set: DungeonTileSet
+var _own_crowding_weight: float
 
 func before_test() -> void:
 	_level = auto_free(ModelFreeWorld.create_level())
 	_tile_set = _level.get(&"_tile_set")
+	_own_crowding_weight = _tile_set.crowding_weight
 	# Never into a crowded cell where another tile fits
 	_tile_set.crowding_weight = 0.0
 	add_child(_level)
 
 func after_test() -> void:
 	# The tile set is cached and shared with the other suites
-	_tile_set.crowding_weight = 1.0
+	_tile_set.crowding_weight = _own_crowding_weight
 	await await_idle_frame()
 
 ## @returns for each seed whether the tile it places on [param cell] leads towards [param direction]
@@ -37,6 +39,19 @@ func test_no_passage_leads_beside_a_closed_side() -> void:
 	# A dead end on (1, 1) opening down turns its closed back to (1, 0), right of (0, 0)
 	_level.call("_spawn_at", DungeonTileSet.TileBlueprint.new(load(DEAD_END) as StructureProfile, Level.Direction.DOWN), Vector2i(1, 1))
 	assert_array(_leads_towards(Vector2i.ZERO, Level.Direction.RIGHT)).not_contains([true])
+
+func test_a_cell_a_passage_leads_into_is_not_crowded() -> void:
+	# (1, 0) has the dead end's closed back below it, but a dead end on (2, 0) opens into it: it gets a tile anyway
+	_level.call("_spawn_at", DungeonTileSet.TileBlueprint.new(load(DEAD_END) as StructureProfile, Level.Direction.DOWN), Vector2i(1, 1))
+	_level.call("_spawn_at", DungeonTileSet.TileBlueprint.new(load(DEAD_END) as StructureProfile, Level.Direction.LEFT), Vector2i(2, 0))
+	assert_array(_leads_towards(Vector2i.ZERO, Level.Direction.RIGHT)).contains([true])
+
+func test_a_lifted_tile_counts_by_its_shape() -> void:
+	# The dead end on (2, 0) opens into (1, 0) by its shape; lifted, its passage is closed, but the cell stays uncrowded
+	_level.call("_spawn_at", DungeonTileSet.TileBlueprint.new(load(DEAD_END) as StructureProfile, Level.Direction.DOWN), Vector2i(1, 1))
+	_level.call("_spawn_at", DungeonTileSet.TileBlueprint.new(load(DEAD_END) as StructureProfile, Level.Direction.LEFT), Vector2i(2, 0))
+	_level.get_placed_tile(Vector2i(2, 0)).lifted_by = ^"Lifter"
+	assert_array(_leads_towards(Vector2i.ZERO, Level.Direction.RIGHT)).contains([true])
 
 func test_the_outer_wall_crowds_no_one() -> void:
 	_level.call("_build_outer_wall")

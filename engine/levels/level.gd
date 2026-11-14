@@ -669,18 +669,21 @@ func _get_surrounding_tiles(grid_position: Vector2i) -> Array[Structure]:
 	return surrounding_tiles
 
 ## The sides of [param grid_position] leading into an empty cell that a placed tile turns its back on (a closed side, not
-## the outer wall's): a passage there would grow the dungeon into the gap beside that tile, see
-## [member DungeonTileSet.crowding_weight]
+## the outer wall's) and none opens into: a passage there would grow the dungeon into the gap beside that tile, see
+## [member DungeonTileSet.crowding_weight]. Tiles count by their shape, even while lifted (their passages are closed then)
 func _get_crowded_directions(grid_position: Vector2i) -> Array[Direction]:
 	var crowded: Array[Direction] = []
 	for direction: Direction in Direction.values():
 		var cell: Vector2i = grid_position + direction_to_vector(direction)
 		if _placed_tiles.has(cell): continue
-		for neighbour_vector: Vector2i in DIRECTION_VECTORS:
-			var neighbour: Structure = _placed_tiles.get(cell + neighbour_vector)
-			if neighbour and neighbour.profile != _wall_tile and not neighbour.has_connection_to(cell):
-				crowded.append(direction)
-				break
+		var backed_onto: bool = false
+		var opened_into: bool = false
+		for neighbour_direction: Direction in Direction.values():
+			var neighbour: Structure = _placed_tiles.get(cell + direction_to_vector(neighbour_direction))
+			if not neighbour or neighbour.profile == _wall_tile: continue
+			if neighbour.get_connections().has(get_opposite(neighbour_direction)): opened_into = true
+			else: backed_onto = true
+		if backed_onto and not opened_into: crowded.append(direction)
 	return crowded
 
 ## The middle of the gap between a tile on [param tile_position] and its neighbour towards [param direction]

@@ -1,7 +1,7 @@
 extends Node
 ## Measures how crowded generated dungeons are, to compare generator changes: builds the real dungeon over many seeds,
 ## explores each until it grows no more and prints, per seed and on average, its tiles, how many pairs of neighbouring
-## tiles touch without a passage (walls back to back, the crowding), those per tile, and its dead ends. Runs headless:
+## tiles touch without a passage both ways (walls back to back, the crowding), those per tile, and its dead ends. Runs headless:
 ## [code]<godot> --headless --path . res://tools/dungeon_stats/dungeon_stats.tscn -- --seeds=40[/code];
 ## [code]--crowding=0.2[/code] tries another [member DungeonTileSet.crowding_weight] than the dungeon's, [code]--map[/code]
 ## draws each dungeon (thin lines corridors, thick ones rooms)
@@ -16,12 +16,14 @@ const ROOM_SHAPES: String = "▪╹╺┗╻┃┏┣╸┛━┻┓┫┳╋"
 
 func _ready() -> void:
 	var seeds: int = int(_get_argument("seeds", "40"))
+	var crowding: String = _get_argument("crowding", "")
+	var draws_maps: bool = OS.get_cmdline_user_args().has("--map")
 	var totals: PackedFloat64Array = [0.0, 0.0, 0.0, 0.0]
 	print("seed  tiles  contacts  per tile  dead ends")
 	for generation_seed: int in seeds:
 		var level: Level = (load(LEVEL) as PackedScene).instantiate()
 		level.spawns_monsters = false
-		var crowding: String = _get_argument("crowding", "")
+		# Every seed: the tile set goes with the level freed before and is loaded again
 		if crowding: (level.get(&"_tile_set") as DungeonTileSet).crowding_weight = crowding.to_float()
 		level.generation_random.seed = generation_seed
 		add_child(level)
@@ -30,7 +32,7 @@ func _ready() -> void:
 		var row: PackedFloat64Array = _measure(level)
 		print("%4d  %5d  %8d  %8.2f  %9d" % [generation_seed, row[0], row[1], row[2], row[3]])
 		for index: int in row.size(): totals[index] += row[index]
-		if OS.get_cmdline_user_args().has("--map"): _draw_map(level)
+		if draws_maps: _draw_map(level)
 		remove_child(level)
 		level.queue_free()
 		await get_tree().process_frame
@@ -60,7 +62,7 @@ func _measure(level: Level) -> PackedFloat64Array:
 		for direction: Level.Direction in [Level.Direction.RIGHT, Level.Direction.DOWN]:
 			var neighbour_cell: Vector2i = cell + Level.direction_to_vector(direction)
 			if _is_wall(level, neighbour_cell) or not level.get_placed_tile(neighbour_cell): continue
-			if not tile.has_connection(direction): contacts += 1
+			if not level.is_passage(cell, direction): contacts += 1
 	return [tiles, contacts, float(contacts) / maxi(tiles, 1), dead_ends]
 
 func _draw_map(level: Level) -> void:
