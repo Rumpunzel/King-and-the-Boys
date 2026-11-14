@@ -6,10 +6,12 @@ extends Node
 ## its size and its centrepiece corner), each tile's connection restrictions (see [method Structure.draw_debug]) and the tiles' labels
 ## with their name and grid position.
 ## The [constant ACTION] toggles them (F3); only on this peer, nothing is synced.
-## On the host of a debug build, [constant SPAWN_MONSTER_ACTION] (F4) spawns a [member debug_monster] beside the host's own hero.
+## On the host of a debug build, [constant SPAWN_MONSTER_ACTION] (F4) spawns a [member debug_monster] beside the host's own hero,
+## and [constant TOGGLE_MONSTERS_ACTION] (F5) turns monsters off and on again (see [member Level.monsters_enabled]).
 
 const ACTION: StringName = &"toggle_debug_drawings"
 const SPAWN_MONSTER_ACTION: StringName = &"spawn_debug_monster"
+const TOGGLE_MONSTERS_ACTION: StringName = &"toggle_monsters"
 ## How far outlines stay inside a room's edge, as a fraction of a tile, so neighbouring rooms' outlines keep apart
 const OUTLINE_INSET: float = 0.06
 ## How high the drawings float above the floor
@@ -37,6 +39,17 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed(SPAWN_MONSTER_ACTION) and _spawn_debug_monster():
 		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(TOGGLE_MONSTERS_ACTION) and _toggle_monsters():
+		get_viewport().set_input_as_handled()
+
+## Host only, in debug builds: monsters off or on again
+## @returns whether it toggled them
+func _toggle_monsters() -> bool:
+	if not OS.is_debug_build() or not _level or not multiplayer.is_server(): return false
+	_level.monsters_enabled = not _level.monsters_enabled
+	var message: String = "Monsters on" if _level.monsters_enabled else "Monsters off"
+	Toaster.show_toast(message, Toaster.Type.INFO, Toaster.HorizontalPosition.CENTER, Toaster.VerticalPosition.TOP, Toaster.Gravity.BOTTOM, 18, false)
+	return true
 
 ## The host referees, so only it spawns, and only in debug builds: on the free spot nearest its own hero, turned towards it
 ## @returns whether it spawned one

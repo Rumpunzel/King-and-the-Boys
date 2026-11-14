@@ -230,3 +230,26 @@ func test_a_monster_out_of_sight_alerts_nobody() -> void:
 	await _pass_turn()
 	assert_bool(_level.get_placed_tile(monster.grid_cell).status == Structure.Status.REVEALED).is_false()
 	assert_bool(alerted[0] or hero.alerted).is_false()
+
+func test_monsters_turned_off_neither_act_nor_block_and_come_back_where_they_stood() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	var monster: Character = await _spawn_monster(start)
+	_level.monsters_enabled = false
+	assert_bool(monster.visible).is_false()
+	# Spawned while off: off too
+	var later: Character = await _spawn_monster(_cell_at(3))
+	assert_bool(later.visible).is_false()
+	var cells: Array[Vector2i] = [monster.grid_cell, later.grid_cell]
+	var blocks: Array[Block] = []
+	_turn_manager.blocked.connect(func(block: Block) -> void: blocks.append(block))
+	# The hero leaves the monster's tile unblocked
+	_turn_manager.request_move(hero.get_path(), Level.get_direction(start, _cell_in_sight(1)))
+	await await_idle_frame()
+	assert_that(hero.grid_cell).is_equal(_cell_in_sight(1))
+	await _pass_turn()
+	assert_array(blocks).is_empty()
+	assert_array([monster.grid_cell, later.grid_cell]).is_equal(cells)
+	_level.monsters_enabled = true
+	assert_bool(monster.visible).is_true()
+	assert_bool(later.visible).is_true()
