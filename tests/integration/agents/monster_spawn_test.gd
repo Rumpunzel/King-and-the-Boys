@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## Monsters are characters driven by an [Agent]: the host spawns them through the level's [AgentSpawner] onto free spots, and a
 ## save brings them back where they stood
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 
 var _level: Level
 var _start: Vector2i

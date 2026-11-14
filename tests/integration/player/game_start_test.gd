@@ -2,8 +2,8 @@ extends GdUnitTestSuite
 ## Starting a hosted game: a client is ready once its own character and the tile under it arrived; the host
 ## waits for the peers it sent, not for those that leave
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const SPAWNER_SCENE: String = "res://engine/player/player_controller_spawner.tscn"
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const SPAWNER_SCENE: String = "uid://bvj0ntif5bqqq"  # engine/player/player_controller_spawner.tscn
 const OTHER_PEER_ID: int = 2
 
 var _level: Level

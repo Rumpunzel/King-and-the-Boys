@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## Weapons, shields and torches: meshes held in the hands of both bodies, a one-handed or a two-handed weapon in the main hand, a shield or
 ## a one-handed weapon (a torch, a second blade) in the off hand, and two-handed weapons leave no hand for either
 
-const ELF: String = "res://data/characters/people/elf.tres"
+const ELF: String = "uid://4knh77xf2vfl"  # data/characters/people/elf.tres
 
 var _models: Array[ModularModel]
 
@@ -106,7 +106,7 @@ func test_the_elf_carries_a_torch_and_the_rogue_a_lantern() -> void:
 	var off_hand: EquipmentLook = elf.starting_off_hand
 	assert_str(off_hand.type.name if off_hand else "").is_equal("Off-Hand Weapon")
 	assert_str(off_hand.get_part_mesh(off_hand.type.parts[0]).resource_path).contains("torch")
-	var rogue: CharacterProfile = load("res://data/characters/people/rogue.tres")
+	var rogue: CharacterProfile = load("uid://d18sc738vkuku")  # data/characters/people/rogue.tres
 	assert_object(rogue.starting_off_hand).is_null()
 	assert_bool(rogue.abilities.any(func(ability: Ability) -> bool: return ability is ToggleLightAbility)).is_true()
 

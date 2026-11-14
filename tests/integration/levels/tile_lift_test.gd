@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 ## How a lifted tile shows on a generated level (no assets): it rises with the figures on it, wobbles, spins and lands
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 
 var _level: Level
 var _hero: Character

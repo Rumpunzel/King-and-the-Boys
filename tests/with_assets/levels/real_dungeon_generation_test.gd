@@ -2,8 +2,8 @@ extends GdUnitTestSuite
 ## The real dungeon tiles (with their connection restrictions: rooms, corridors) keep the generation rules too, see
 ## [code]tests/fixtures/dungeon_rules.gd[/code]; fewer seeds than the model-free test, as these load models
 
-const DungeonRules = preload("res://tests/fixtures/dungeon_rules.gd")
-const LEVEL: String = "res://data/levels/level.tscn"
+const DungeonRules = preload("uid://cgmlfyuplqyjq")  # tests/fixtures/dungeon_rules.gd
+const LEVEL: String = "uid://bmwhs3lwb74ue"  # data/levels/level.tscn
 const SEEDS: int = 4
 const EXPLORATION_ROUNDS: int = 1
 

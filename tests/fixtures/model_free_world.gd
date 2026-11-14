@@ -3,13 +3,13 @@ extends RefCounted
 ## The real profiles (data/) hold their model scenes and load them with themselves.
 ## The profiles are files because spawners replicate structures by their profile's path.
 
-const LEVEL_SCENE: String = "res://engine/levels/level.tscn"
+const LEVEL_SCENE: String = "uid://cee5ey6dt3t0"  # engine/levels/level.tscn
 ## Tiles of every shape; with rotations they fit any neighbourhood the level generator asks for
-const TILE_SET: String = "res://tests/fixtures/tiles/tile_set.tres"
-const STARTING_TILE: String = "res://tests/fixtures/tiles/crossing.tres"
-const WALL_TILE: String = "res://tests/fixtures/tiles/wall.tres"
-const HERO: String = "res://tests/fixtures/hero.tres"
-const MONSTER: String = "res://tests/fixtures/monster.tres"
+const TILE_SET: String = "uid://d2agep66n6j50"  # tests/fixtures/tiles/tile_set.tres
+const STARTING_TILE: String = "uid://0wxtdhri4q23"  # tests/fixtures/tiles/crossing.tres
+const WALL_TILE: String = "uid://brepy2qx21x2g"  # tests/fixtures/tiles/wall.tres
+const HERO: String = "uid://b5brg76ytc255"  # tests/fixtures/hero.tres
+const MONSTER: String = "uid://bjyijp00nyg5d"  # tests/fixtures/monster.tres
 
 ## @returns a level with the model-free tiles; add it to the tree, then call [method Level.build_level]
 static func create_level() -> Level:

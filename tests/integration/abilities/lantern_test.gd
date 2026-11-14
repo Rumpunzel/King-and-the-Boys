@@ -2,8 +2,8 @@ extends GdUnitTestSuite
 ## A light the character turns on and off (the rogue's Lantern) on a generated level (no assets): it starts lit, widens sight,
 ## lighting it shows what it brings into sight, and toggling is free and stays done, leaving earlier steps undoable
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const LANTERN: ToggleLightAbility = preload("res://tests/fixtures/lantern.tres")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const LANTERN: ToggleLightAbility = preload("uid://s4o504byc2n0")  # tests/fixtures/lantern.tres
 
 var _level: Level
 var _turn_manager: TurnManager

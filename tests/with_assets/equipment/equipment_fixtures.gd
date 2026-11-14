@@ -14,11 +14,11 @@ const BELT: String = MESHES + "/hips_attachment/modular_character_HipsAttachment
 const CAPE: String = MESHES + "/back_attachment/modular_character_BackAttachment_01.res"
 
 const TYPES: String = "res://data/equipment/types"
-const MODULAR_CHARACTER: String = "res://data/characters/people/modular_character.tscn"
-const DWARF_CHARACTER: String = "res://data/characters/dwarves/dwarf_character.tscn"
-const DWARF: String = "res://data/characters/people/dwarf.tres"
+const MODULAR_CHARACTER: String = "uid://c6oheyitbnlpu"  # data/characters/people/modular_character.tscn
+const DWARF_CHARACTER: String = "uid://k2selbak4kwk"  # data/characters/dwarves/dwarf_character.tscn
+const DWARF: String = "uid://ro6wvnf88xbo"  # data/characters/people/dwarf.tres
 const CHARACTER: String = "uid://cvj6b1m2b65hd"
-const KNIGHT: String = "res://data/characters/people/knight.tres"
+const KNIGHT: String = "uid://cqkx0op1msr7s"  # data/characters/people/knight.tres
 ## Saved test items live here, as peers may only request items below [constant EquipmentLook.ITEM_DIRECTORY]
 const SAVED_ITEMS: String = EquipmentLook.ITEM_DIRECTORY + "/__tests__"
 

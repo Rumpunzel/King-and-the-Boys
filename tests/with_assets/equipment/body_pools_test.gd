@@ -2,8 +2,8 @@ extends GdUnitTestSuite
 ## Body configurations roll parts from their pools, and every hero has one of their own
 
 const HEROES: Array[String] = ["knight", "rogue", "mystic", "soldier", "elf"]
-const KNIGHT_BODY: String = "res://data/characters/people/knight_body.tres"
-const ELF: String = "res://data/characters/people/elf.tres"
+const KNIGHT_BODY: String = "uid://5hbsrnqf3fcd"  # data/characters/people/knight_body.tres
+const ELF: String = "uid://4knh77xf2vfl"  # data/characters/people/elf.tres
 
 var _model: ModularCharacter
 
@@ -50,7 +50,7 @@ func test_bodies_outside_the_pools_are_refused() -> void:
 
 func test_the_server_rolls_anew_for_a_body_outside_the_pools() -> void:
 	var knight: CharacterProfile = load(EquipmentFixtures.KNIGHT)
-	var chosen: Dictionary = (load("res://data/characters/people/mystic_body.tres") as ModelConfigurationRandom).roll(_model)
+	var chosen: Dictionary = (load("uid://bxrtwssk6b5uw") as ModelConfigurationRandom).roll(_model)  # data/characters/people/mystic_body.tres
 	# Mystic beards are none of the knight's
 	var data: Dictionary[StringName, Variant] = knight.create_character_data(0, Transform3D.IDENTITY, chosen)
 	assert_dict(data[Character.BODY] as Dictionary).is_not_equal(chosen)
@@ -87,10 +87,10 @@ func test_the_editor_lists_each_body_part_of_the_configured_body() -> void:
 	var bodies: Array[PackedScene] = BodyPoolsProperty.find_bodies()
 	var knight_body: ModelConfigurationRandom = load(KNIGHT_BODY)
 	var human: PackedScene = bodies[BodyPoolsProperty.guess_body(knight_body, bodies)]
-	assert_str(human.resource_path).is_equal(EquipmentFixtures.MODULAR_CHARACTER)
-	var random_dwarf: ModelConfigurationRandom = load("res://data/characters/dwarves/random_dwarf.tres")
+	assert_object(human).is_same(load(EquipmentFixtures.MODULAR_CHARACTER))
+	var random_dwarf: ModelConfigurationRandom = load("uid://d4l2t2lakts58")  # data/characters/dwarves/random_dwarf.tres
 	var dwarf: PackedScene = bodies[BodyPoolsProperty.guess_body(random_dwarf, bodies)]
-	assert_str(dwarf.resource_path).is_equal(EquipmentFixtures.DWARF_CHARACTER)
+	assert_object(dwarf).is_same(load(EquipmentFixtures.DWARF_CHARACTER))
 	var model_parts: ModularModelParts = ModularModelParts.of(human)
 	var part_keys: Array = model_parts.get_body_parts().map(func(part: int) -> String: return model_parts.get_part_key(part))
 	assert_array(part_keys).contains(["HEAD", "EYEBROW", "FACIAL_HAIR", "HAIR", "EARS"])
@@ -183,6 +183,6 @@ func test_the_elf_is_female_wherever_her_body_is_built() -> void:
 	elf.dress_model(model, body)
 	assert_str(model.torso.mesh.resource_path).contains("/female/")
 	# The pools' editor lists the female meshes
-	var scene: PackedScene = load("res://data/characters/people/modular_character.tscn")
+	var scene: PackedScene = load("uid://c6oheyitbnlpu")  # data/characters/people/modular_character.tscn
 	assert_array(ModularModelParts.of(scene, ModularBodyPartGendered.Gender.FEMALE).get_mesh_numbers(ModularCharacter.Part.EYEBROW)).has_size(7)
 	assert_array(ModularModelParts.of(scene).get_mesh_numbers(ModularCharacter.Part.EYEBROW)).has_size(10)

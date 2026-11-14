@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## A tile that leaves the level (e.g. a save being loaded) leaves its registries, also while its bridges still wait to be
 ## shown after its reveal (the bridges themselves are checked with the real tiles, in connection_marks_test.gd)
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 
 var _level: Level
 var _start: Vector2i

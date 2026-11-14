@@ -1,8 +1,8 @@
 extends GdUnitTestSuite
 ## The Mystic's Turn Tile ability on a generated level (no assets): lifting, cost by angle, setting down, undo
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const TURN_TILE: RotateTileAbility = preload("res://tests/fixtures/turn_tile.tres")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const TURN_TILE: RotateTileAbility = preload("uid://ch3s1rw37k6xu")  # tests/fixtures/turn_tile.tres
 
 var _level: Level
 var _turn_manager: TurnManager
@@ -47,7 +47,7 @@ func _stand_on_turnable_tile(hero: Character) -> Structure:
 	var best: Structure = null
 	for cell: Vector2i in placed_tiles:
 		var tile: Structure = placed_tiles[cell]
-		if tile.profile.resource_path == ModelFreeWorld.WALL_TILE: continue
+		if tile.profile == load(ModelFreeWorld.WALL_TILE): continue
 		if ModelFreeWorld.turned_connections(tile, 1) == ModelFreeWorld.turned_connections(tile, 0): continue
 		if not best or cell.distance_squared_to(_start_cell()) < best.get_grid_position().distance_squared_to(_start_cell()): best = tile
 	assert_object(best).is_not_null()
@@ -184,7 +184,7 @@ func _stand_where_a_turn_opens_into_nothing(hero: Character) -> int:
 	var placed_tiles: Dictionary = _level.get("_placed_tiles")
 	for cell: Vector2i in placed_tiles.keys():
 		var tile: Structure = placed_tiles[cell]
-		if tile.profile.resource_path == ModelFreeWorld.WALL_TILE or tile.status != Structure.Status.REVEALED: continue
+		if tile.profile == load(ModelFreeWorld.WALL_TILE) or tile.status != Structure.Status.REVEALED: continue
 		hero.place_on_grid(cell, Vector2.ZERO, hero.facing)
 		for turns: int in range(1, 4):
 			for direction: Level.Direction in ModelFreeWorld.turned_connections(tile, turns):

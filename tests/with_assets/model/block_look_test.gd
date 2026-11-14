@@ -2,8 +2,8 @@ extends GdUnitTestSuite
 ## How blocks look on real figures: a fallen hero lies in its down animations and gets up into its idles, and what a block does
 ## to a figure (its fall, its push) waits until the strike landed
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const KNIGHT: String = "res://data/characters/people/knight.tres"
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const KNIGHT: String = "uid://cqkx0op1msr7s"  # data/characters/people/knight.tres
 
 var _level: Level
 

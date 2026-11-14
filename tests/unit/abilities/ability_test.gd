@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 ## Ability rules that need no level: targeting, cost, passives, charges left
 
-const CHARGED_ABILITY: Ability = preload("res://tests/fixtures/charged_ability.tres")
+const CHARGED_ABILITY: Ability = preload("uid://co0ut6egps37w")  # tests/fixtures/charged_ability.tres
 
 func _character_at(cell: Vector2i) -> Character:
 	var character: Character = auto_free(Character.new())

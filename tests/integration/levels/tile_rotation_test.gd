@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 ## Turning tiles on a generated level (no assets): passages, connections, pieces on the tile, lifting, building after the turn
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 
 var _level: Level
 var _hero_profile: CharacterProfile
@@ -36,7 +36,7 @@ func _inner_tiles() -> Array[Structure]:
 	var tiles: Array[Structure] = []
 	for cell: Vector2i in placed_tiles:
 		var tile: Structure = placed_tiles[cell]
-		if tile.profile.resource_path != ModelFreeWorld.WALL_TILE: tiles.append(tile)
+		if tile.profile != load(ModelFreeWorld.WALL_TILE): tiles.append(tile)
 	var start: Vector2i = _start_cell()
 	tiles.sort_custom(func(a: Structure, b: Structure) -> bool: return a.get_grid_position().distance_squared_to(start) < b.get_grid_position().distance_squared_to(start))
 	return tiles
@@ -166,13 +166,13 @@ func test_building_stops_at_a_closed_side_a_turned_tile_faces() -> void:
 	var closed_neighbour: Vector2i = cell + Vector2i.RIGHT
 	for nearby: Vector2i in [cell, closed_neighbour, closed_neighbour + Vector2i.UP, closed_neighbour + Vector2i.DOWN]:
 		assert_object(_level.get_placed_tile(nearby)).is_null()
-	var dead_end: Structure = _spawn_tile("res://tests/fixtures/tiles/dead_end.tres", cell, 0)
+	var dead_end: Structure = _spawn_tile("uid://d3genhasqmljm", cell, 0)  # tests/fixtures/tiles/dead_end.tres
 	var only_right: Array[Level.Direction] = [Level.Direction.RIGHT]
 	for _turn: int in 3:
 		if dead_end.get_connections() == only_right: break
 		dead_end.clockwise_turns = posmod(dead_end.clockwise_turns + 1, 4)
 	assert_array(dead_end.get_connections()).contains_exactly([Level.Direction.RIGHT])
-	var straight: Structure = _spawn_tile("res://tests/fixtures/tiles/straight.tres", closed_neighbour, 0)
+	var straight: Structure = _spawn_tile("uid://cnebsw1r05wei", closed_neighbour, 0)  # tests/fixtures/tiles/straight.tres
 	if straight.get_connections().has(Level.Direction.LEFT): straight.clockwise_turns = 1
 	assert_bool(straight.get_connections().has(Level.Direction.LEFT)).is_false()
 	assert_bool(straight.get_connections().has(Level.Direction.UP)).is_true()
@@ -200,7 +200,7 @@ func test_a_revealed_tile_discovers_nothing_through_a_closed_side() -> void:
 	assert_object(_level.get_placed_tile(cell)).is_null()
 	assert_object(_level.get_placed_tile(beside)).is_null()
 	var crossing: Structure = _spawn_tile(ModelFreeWorld.STARTING_TILE, cell, 0)
-	_spawn_tile("res://tests/fixtures/tiles/solid.tres", beside, 0)
+	_spawn_tile("uid://b4yq6by3tvd0g", beside, 0)  # tests/fixtures/tiles/solid.tres
 	assert_bool(crossing.get_connections().has(Level.Direction.RIGHT)).is_true()
 	_level._reveal_tile(crossing)
 	assert_int(_level.get_placed_tile(beside).status).is_less(Structure.Status.DISCOVERED)

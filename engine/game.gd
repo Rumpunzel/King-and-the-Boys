@@ -5,6 +5,11 @@ extends Node
 
 ## Host only: a peer the start waits for reported its part of the game arrived, or left
 signal peer_readiness_changed
+## Every peer: the level's scenes were instanced once, see _warm_up
+signal warmed_up
+
+## engine/levels/scene_warm_up.gd
+const SceneWarmUp = preload("uid://6aqir8e2vhvx")
 
 @export_group("Configuration")
 @export var _serializer: Serializer
@@ -18,6 +23,9 @@ var _placed_count: int = 0
 var _ready_peers: Dictionary[int, bool] = {}
 # Client: told the host its part of the game arrived
 var _has_reported: bool = false
+var _is_warmed_up: bool = false
+# Every peer: the level's scenes still to be instanced once, see _process
+var _scene_warm_up: SceneWarmUp
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
@@ -27,6 +35,9 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	# Behind the loading screen, so the dungeon does not hitch the first time it shows a torch or a candle; stepped in
+	# _process, so it stops with the game
+	_scene_warm_up = SceneWarmUp.new(_level)
 	if multiplayer.is_server():
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 		return
@@ -34,6 +45,12 @@ func _ready() -> void:
 	_player_controller_spawner.player_controller_created.connect(_on_part_arrived, CONNECT_DEFERRED)
 	_level.tile_placed.connect(_on_part_arrived)
 	_on_part_arrived(null)
+
+func _process(_delta: float) -> void:
+	if not _scene_warm_up or not _scene_warm_up.step(): return
+	_scene_warm_up = null
+	_is_warmed_up = true
+	warmed_up.emit()
 
 ## Host only, once its game scene is shown: waits until every peer sent here shows it too (see
 ## [method SceneManager.transition_everyone_to]), sets the game up, then waits until each of them has its
@@ -54,6 +71,8 @@ func start_hosted_game() -> Error:
 	while not _awaited_peers.is_empty():
 		SceneManager.tell_transitioning_peers("Placing players [%d / %d]" % [_placed_count + 1, _placed_count + _awaited_peers.size() + 1])
 		await peer_readiness_changed
+	# The loading screens end once the host's scenes are warm too; each client waits for its own before it reports
+	if not _is_warmed_up: await warmed_up
 	SceneManager.end_transition()
 	return Error.OK
 
@@ -101,6 +120,7 @@ func _on_part_arrived(_part: Node) -> void:
 	_has_reported = true
 	_player_controller_spawner.player_controller_created.disconnect(_on_part_arrived)
 	_level.tile_placed.disconnect(_on_part_arrived)
+	if not _is_warmed_up: await warmed_up
 	_report_ready.rpc_id(Multiplayer.HOST_ID)
 
 ## Sent by a client once its own character and the tile under it arrived

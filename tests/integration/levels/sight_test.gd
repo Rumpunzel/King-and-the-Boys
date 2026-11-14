@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 ## Sight on a generated level built from model-free tiles: a character sees the tile it stands on, even without vision
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 
 var _level: Level
 var _turn_manager: TurnManager

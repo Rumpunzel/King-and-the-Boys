@@ -2,8 +2,8 @@ extends GdUnitTestSuite
 ## Player controllers spawn once per player, wait for the level, and the spawner can start again;
 ## taking control of a piece is the host's decision
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const SPAWNER_SCENE: String = "res://engine/player/player_controller_spawner.tscn"
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const SPAWNER_SCENE: String = "uid://bvj0ntif5bqqq"  # engine/player/player_controller_spawner.tscn
 const OTHER_PLAYER_ID: int = 2
 const THIRD_PLAYER_ID: int = 3
 ## Players with ids from 10 on fill the start tile beyond its five spots

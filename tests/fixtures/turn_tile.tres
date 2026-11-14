@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="RotateTileAbility" format=3]
+[gd_resource type="Resource" script_class="RotateTileAbility" format=3 uid="uid://ch3s1rw37k6xu"]
 
 [ext_resource type="Script" path="res://engine/abilities/rotate_tile_ability.gd" id="1_script"]
 

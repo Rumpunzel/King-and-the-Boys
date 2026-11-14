@@ -56,8 +56,7 @@ var _serialized_character: String:
 	set(new_serialized_character): if not new_serialized_character.is_empty(): character = load(new_serialized_character)
 
 static func create(new_player_id: int, new_player_name: String) -> Player:
-	var scene: PackedScene = load("uid://bvdlyl1asckv4")
-	var new_player: Player = scene.instantiate()
+	var new_player: Player = (Files.load_kept("uid://bvdlyl1asckv4") as PackedScene).instantiate()
 	new_player.player_id = new_player_id
 	new_player.player_name = new_player_name
 	return new_player

@@ -21,7 +21,7 @@ func test_every_part_has_meshes_in_number_order() -> void:
 
 func test_only_hair_and_beard_are_rolled_per_character() -> void:
 	assert_array(_dwarf.get_body_parts()).contains_exactly([DwarfCharacter.Part.HAIR, DwarfCharacter.Part.BEARD, DwarfCharacter.Part.BEARD_ATTACHMENT])
-	var body: Dictionary = (load("res://data/characters/dwarves/random_dwarf.tres") as ModelConfigurationRandom).roll(_dwarf)
+	var body: Dictionary = (load("uid://d4l2t2lakts58") as ModelConfigurationRandom).roll(_dwarf)  # data/characters/dwarves/random_dwarf.tres
 	# Plus their colours
 	var keys: Array = []
 	keys.append_array(_dwarf.get_body_parts())
@@ -29,7 +29,7 @@ func test_only_hair_and_beard_are_rolled_per_character() -> void:
 	assert_array(body.keys()).contains_exactly(keys)
 
 func test_a_human_body_configuration_skips_parts_dwarves_lack() -> void:
-	var body: Dictionary = (load("res://data/characters/people/random_human.tres") as ModelConfigurationRandom).roll(_dwarf)
+	var body: Dictionary = (load("uid://c1i0e1p4feqhe") as ModelConfigurationRandom).roll(_dwarf)  # data/characters/people/random_human.tres
 	# HAIR is shared and rolled; HEAD and EYEBROW do not exist on a dwarf
 	assert_array(body.keys()).contains_exactly(_dwarf.get_body_parts())
 

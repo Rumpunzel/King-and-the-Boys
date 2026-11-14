@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## The monster phase: once every player passed, each monster steps as its agent chooses (hunting a hero it sees along
 ## passages, wandering otherwise) through the same step rule as the players, then the next turn starts
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 ## Frames a monster phase may take before a test gives up on it
 const MAX_FRAMES: int = 600
 

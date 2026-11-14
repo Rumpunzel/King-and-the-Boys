@@ -1,12 +1,12 @@
 extends GdUnitTestSuite
 ## Abilities in turns on a generated level (no assets): limits, costs, undo, held abilities, turn-end effects
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const TestAbility = preload("res://tests/fixtures/test_ability.gd")
-const TEST_ABILITY: Ability = preload("res://tests/fixtures/test_ability.tres")
-const HELD_ABILITY: Ability = preload("res://tests/fixtures/held_test_ability.tres")
-const LATER_ABILITY: Ability = preload("res://tests/fixtures/later_test_ability.tres")
-const CHARGED_ABILITY: Ability = preload("res://tests/fixtures/charged_ability.tres")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const TestAbility = preload("uid://cdoh6hg4355dr")  # tests/fixtures/test_ability.gd
+const TEST_ABILITY: Ability = preload("uid://bjw6pqguam657")  # tests/fixtures/test_ability.tres
+const HELD_ABILITY: Ability = preload("uid://bgf7w50r6f4he")  # tests/fixtures/held_test_ability.tres
+const LATER_ABILITY: Ability = preload("uid://dl146ymimq8rj")  # tests/fixtures/later_test_ability.tres
+const CHARGED_ABILITY: Ability = preload("uid://co0ut6egps37w")  # tests/fixtures/charged_ability.tres
 
 var _level: Level
 var _turn_manager: TurnManager

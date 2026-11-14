@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="StructureProfile" format=3]
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://fl240n5xrwej"]
 
 [ext_resource type="Script" path="res://engine/objects/structures/structure_profile.gd" id="1_picky"]
 [ext_resource type="Script" path="res://engine/objects/structures/connection_restrictions/tile_connection_restriction.gd" id="2_picky"]

@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 
 var _character: Character
 var _equipment: CharacterEquipment

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="StructureProfile" format=3]
+[gd_resource type="Resource" script_class="StructureProfile" format=3 uid="uid://brepy2qx21x2g"]
 
 [ext_resource type="Resource" path="res://data/model_animations/bounce_animation.tres" id="3_mwhle"]
 [ext_resource type="Resource" path="res://data/model_animations/flip_animation.tres" id="4_p6mha"]
