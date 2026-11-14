@@ -7,7 +7,10 @@
 [ext_resource type="Resource" uid="uid://cv041ktdn6jph" path="res://data/structures/props/dungeon_doorway_arches.tres" id="4_doorways"]
 [ext_resource type="Resource" uid="uid://d08bvlx052dw3" path="res://data/structures/props/dungeon_ruined_arches.tres" id="5_ruins"]
 [ext_resource type="Resource" uid="uid://bifb83r2doed1" path="res://data/structures/props/dungeon_room_pillars.tres" id="6_pillars"]
-[ext_resource type="Resource" uid="uid://jluba74jliwr" path="res://data/structures/props/dungeon_lights.tres" id="8_lights"]
+[ext_resource type="Script" uid="uid://c2p737sm5xhvf" path="res://engine/objects/structures/tile_light.gd" id="1_script_tile_light"]
+[ext_resource type="Resource" uid="uid://c2q2e6le58exl" path="res://data/structures/props/lights/torch_light.tres" id="8_torch"]
+[ext_resource type="Resource" uid="uid://bf5si6vqu5jw1" path="res://data/structures/props/lights/brazier_light.tres" id="8_brazier"]
+[ext_resource type="Resource" uid="uid://dvuocex7xu2vn" path="res://data/structures/props/lights/candle_light.tres" id="8_candles"]
 [ext_resource type="Resource" uid="uid://oitmmh7nnns2" path="res://data/structures/props/room_rugs.tres" id="9_rugs"]
 [ext_resource type="Resource" uid="uid://tj2yln8n45jb" path="res://data/structures/props/room_ambience.tres" id="10_ambience"]
 [ext_resource type="Resource" uid="uid://b5cplg8jqeufa" path="res://data/structures/props/room_dust.tres" id="11_dust"]
@@ -22,7 +25,11 @@
 script = ExtResource("1_script")
 edge_props = ExtResource("2_clutter")
 corner_props = ExtResource("3_storage")
-lights = ExtResource("8_lights")
+tile_lights = Dictionary[ExtResource("1_script_tile_light"), float]({
+ExtResource("8_torch"): 1.0,
+ExtResource("8_brazier"): 0.6,
+ExtResource("8_candles"): 1.3
+})
 corner_lights = ExtResource("22_crystals")
 room_floors = ExtResource("9_rugs")
 room_floor_chance = 0.05

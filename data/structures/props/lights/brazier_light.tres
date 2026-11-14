@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TileLight" format=3 uid="uid://bf5si6vqu5jw1"]
+
+[ext_resource type="Script" uid="uid://c2p737sm5xhvf" path="res://engine/objects/structures/tile_light.gd" id="1_light"]
+[ext_resource type="Script" uid="uid://ps34hkxwk5mj" path="res://engine/objects/structures/prop_set.gd" id="2_props"]
+[ext_resource type="Resource" uid="uid://bn4b5kkklc2h5" path="res://data/equipment/light_sources/torch.tres" id="3_source"]
+[ext_resource type="PackedScene" uid="uid://cmawns2y3tdby" path="res://data/structures/props/lights/brazier.tscn" id="4_prop"]
+
+[sub_resource type="Resource" id="Resource_props"]
+script = ExtResource("2_props")
+props = Dictionary[PackedScene, float]({
+ExtResource("4_prop"): 1.0
+})
+prop_scale = Vector3(1, 1, 1)
+
+[resource]
+script = ExtResource("1_light")
+props = SubResource("Resource_props")
+light_source = ExtResource("3_source")
