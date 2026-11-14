@@ -6,6 +6,9 @@ extends Node
 ## Host only: a peer the start waits for reported its part of the game arrived, or left
 signal peer_readiness_changed
 
+## engine/levels/scene_warm_up.gd
+const SceneWarmUp = preload("uid://6aqir8e2vhvx")
+
 @export_group("Configuration")
 @export var _serializer: Serializer
 @export var _level: Level
@@ -27,6 +30,8 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	# Behind the loading screen, so the dungeon does not hitch the first time it shows a torch or a candle
+	SceneWarmUp.warm_up(_level)
 	if multiplayer.is_server():
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 		return
