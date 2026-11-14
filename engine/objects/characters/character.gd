@@ -218,6 +218,11 @@ func get_light_sources() -> Array[LightSource]:
 static func _add_light_source(light_sources: Array[LightSource], light_source: LightSource) -> void:
 	if light_source and not light_sources.has(light_source): light_sources.append(light_source)
 
+## @returns how far along passages the character notices heroes ([member CharacterProfile.perception]), as a monster does; unlike
+## sight, lights do not change it
+func get_perception() -> float:
+	return profile.perception
+
 ## @returns how far the character sees ([member CharacterProfile.vision]), by the strongest of the lights it carries and those it
 ## stands in: lights do not stack
 func get_vision() -> float:

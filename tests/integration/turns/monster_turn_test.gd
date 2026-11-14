@@ -66,7 +66,7 @@ func _cell_at(steps: int) -> Vector2i:
 	assert(not cells.is_empty())
 	return cells.front()
 
-## @returns a cell [param steps] steps straight from the start along passages, so heroes there see it (vision 3)
+## @returns a cell [param steps] steps straight from the start along passages, so a monster there notices heroes on the start (perception 3)
 func _cell_in_sight(steps: int) -> Vector2i:
 	var start: Vector2i = _start_cell()
 	for direction: Level.Direction in Level.Direction.values():
@@ -253,3 +253,11 @@ func test_monsters_turned_off_neither_act_nor_block_and_come_back_where_they_sto
 	_level.monsters_enabled = true
 	assert_bool(monster.visible).is_true()
 	assert_bool(later.visible).is_true()
+
+func test_a_monster_notices_heroes_by_perception_and_not_by_light() -> void:
+	var monster: Character = await _spawn_monster(_cell_at(2))
+	assert_float(monster.get_perception()).is_equal(monster.profile.perception)
+	# Standing in a torch's light widens a hero's sight, not a monster's notice
+	_level.get_placed_tile(monster.grid_cell).light = load("uid://cvimunviu8yb1")  # tests/fixtures/torch_tile_light.tres
+	assert_float(monster.get_vision()).is_greater(monster.profile.vision)
+	assert_float(monster.get_perception()).is_equal(monster.profile.perception)

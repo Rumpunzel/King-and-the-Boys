@@ -537,7 +537,7 @@ func _wait_for_figure(character: Character) -> void:
 ## [member Character.alerted]
 func _alert_heroes_seen_by(monster: Character) -> void:
 	if not _is_in_sight(monster.grid_cell): return
-	var in_sight: Dictionary[Vector2i, bool] = _level.get_cells_in_sight(monster.grid_cell, monster.get_vision())
+	var in_sight: Dictionary[Vector2i, bool] = _level.get_cells_in_sight(monster.grid_cell, monster.get_perception())
 	for node: Node in get_tree().get_nodes_in_group(Character.GROUP):
 		var hero: Character = node as Character
 		if not hero or not hero.visible or hero.level != _level or hero.profile.group != CharacterProfile.Groups.HEROES: continue
