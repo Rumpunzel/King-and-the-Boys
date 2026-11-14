@@ -67,3 +67,80 @@ func test_tile_data_without_a_light_loads_unlit() -> void:
 	data.erase(Structure.LIGHT)
 	var copy: Structure = auto_free(Structure.from_structure_data(data))
 	assert_object(copy.light).is_null()
+
+## A hero of [param profile] (the fixture hero by default) on the start
+func _spawn_hero(profile: CharacterProfile = null) -> Character:
+	var hero_profile: CharacterProfile = profile if profile else ModelFreeWorld.load_hero_profile()
+	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
+	var hero: Character = auto_free(hero_profile.create(-1, (spawn_points.front() as Node3D).global_transform))
+	hero.level = _level
+	add_child(hero)
+	await await_idle_frame()
+	return hero
+
+## A placed cell and a direction from it towards a placed neighbour, through a passage or not as [param passage] asks
+func _neighbours(passage: bool) -> Array:
+	for tile: Structure in _level.get_placed_tiles():
+		var cell: Vector2i = tile.get_grid_position()
+		for direction: Level.Direction in Level.Direction.values():
+			if not _level.get_placed_tile(cell + Level.direction_to_vector(direction)): continue
+			if _level.is_passage(cell, direction) == passage: return [cell, direction]
+	return []
+
+func _expect_sight(hero: Character, extra: float) -> void:
+	assert_float(hero.get_vision()).is_equal(hero.profile.vision + extra)
+	assert_float(hero.get_dark_vision()).is_equal(hero.profile.dark_vision + extra)
+
+func test_standing_on_a_lit_tile_widens_sight() -> void:
+	var hero: Character = await _spawn_hero()
+	_expect_sight(hero, 0.0)
+	_level.get_placed_tile(hero.grid_cell).light = TORCH
+	_expect_sight(hero, 1.0)
+
+func test_a_light_next_door_widens_sight_through_a_passage() -> void:
+	var hero: Character = await _spawn_hero()
+	var through: Array = _neighbours(true)
+	var cell: Vector2i = through[0]
+	var direction: Level.Direction = through[1]
+	hero.place_on_grid(cell, Vector2.ZERO, hero.facing)
+	var next_door: Structure = _level.get_placed_tile(cell + Level.direction_to_vector(direction))
+	next_door.light = TORCH
+	_expect_sight(hero, 1.0)
+	next_door.light = null
+	# Two cells away the light does not reach
+	var beyond: Structure = _level.get_placed_tile(cell + Level.direction_to_vector(direction) * 2)
+	if beyond:
+		beyond.light = TORCH
+		_expect_sight(hero, 0.0)
+		beyond.light = null
+	# Nor through a wall
+	var walled: Array = _neighbours(false)
+	assert_array(walled).is_not_empty()
+	hero.place_on_grid(walled[0] as Vector2i, Vector2.ZERO, hero.facing)
+	_level.get_placed_tile((walled[0] as Vector2i) + Level.direction_to_vector(walled[1] as Level.Direction)).light = TORCH
+	_expect_sight(hero, 0.0)
+
+func test_candles_widen_no_sight() -> void:
+	var hero: Character = await _spawn_hero()
+	_level.get_placed_tile(hero.grid_cell).light = CANDLES
+	_expect_sight(hero, 0.0)
+
+func test_two_lights_around_count_once() -> void:
+	var hero: Character = await _spawn_hero()
+	var lit: int = 0
+	for direction: Level.Direction in Level.Direction.values():
+		if lit == 2 or not _level.is_passage(hero.grid_cell, direction): continue
+		_level.get_placed_tile(hero.grid_cell + Level.direction_to_vector(direction)).light = TORCH
+		lit += 1
+	assert_int(lit).is_equal(2)
+	_expect_sight(hero, 1.0)
+
+func test_a_carried_torch_and_a_wall_torch_count_once() -> void:
+	var lamp: ToggleLightAbility = ToggleLightAbility.new()
+	lamp.light_source = TORCH.light_source
+	var profile: CharacterProfile = ModelFreeWorld.load_hero_profile().duplicate()
+	profile.abilities = [lamp]
+	var hero: Character = await _spawn_hero(profile)
+	_expect_sight(hero, 1.0)
+	_level.get_placed_tile(hero.grid_cell).light = TORCH
+	_expect_sight(hero, 1.0)
