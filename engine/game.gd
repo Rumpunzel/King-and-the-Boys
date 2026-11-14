@@ -5,6 +5,8 @@ extends Node
 
 ## Host only: a peer the start waits for reported its part of the game arrived, or left
 signal peer_readiness_changed
+## Every peer: the level's scenes were instanced once, see _warm_up
+signal warmed_up
 
 ## engine/levels/scene_warm_up.gd
 const SceneWarmUp = preload("uid://6aqir8e2vhvx")
@@ -21,6 +23,7 @@ var _placed_count: int = 0
 var _ready_peers: Dictionary[int, bool] = {}
 # Client: told the host its part of the game arrived
 var _has_reported: bool = false
+var _is_warmed_up: bool = false
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
@@ -30,8 +33,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
-	# Behind the loading screen, so the dungeon does not hitch the first time it shows a torch or a candle
-	SceneWarmUp.warm_up(_level)
+	_warm_up()
 	if multiplayer.is_server():
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 		return
@@ -59,6 +61,8 @@ func start_hosted_game() -> Error:
 	while not _awaited_peers.is_empty():
 		SceneManager.tell_transitioning_peers("Placing players [%d / %d]" % [_placed_count + 1, _placed_count + _awaited_peers.size() + 1])
 		await peer_readiness_changed
+	# The loading screens end once the host's scenes are warm too; each client waits for its own before it reports
+	if not _is_warmed_up: await warmed_up
 	SceneManager.end_transition()
 	return Error.OK
 
@@ -92,6 +96,13 @@ func stop_game() -> void:
 	SceneManager.to_main()
 
 ## Client: its own character and the tile under it arrived, so the host may lift its loading screen
+## Behind the loading screen, on every peer, so the dungeon does not hitch the first time it shows a torch or a candle (see
+## [code]engine/levels/scene_warm_up.gd[/code])
+func _warm_up() -> void:
+	await SceneWarmUp.warm_up(_level)
+	_is_warmed_up = true
+	warmed_up.emit()
+
 func _has_own_part_arrived() -> bool:
 	for child: Node in _player_controller_spawner.get_children():
 		var player_controller: PlayerController = child as PlayerController
@@ -106,6 +117,7 @@ func _on_part_arrived(_part: Node) -> void:
 	_has_reported = true
 	_player_controller_spawner.player_controller_created.disconnect(_on_part_arrived)
 	_level.tile_placed.disconnect(_on_part_arrived)
+	if not _is_warmed_up: await warmed_up
 	_report_ready.rpc_id(Multiplayer.HOST_ID)
 
 ## Sent by a client once its own character and the tile under it arrived

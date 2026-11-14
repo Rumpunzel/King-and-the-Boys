@@ -9,9 +9,6 @@ enum Groups {
 	TILE,
 }
 
-## structure.tscn, loaded on first use and kept: a scene nothing holds is freed after each instance and read from disk again
-static var _structure_scene: PackedScene
-
 @export var group: Groups = Groups.BUILDING
 @export var room_type: RoomType
 ## Props the tile is dressed with once revealed, see [TileDecorations]
@@ -47,8 +44,7 @@ static func _get_adjusted_direction(direction: Level.Direction, clockwise_turns:
 	return posmod(direction + clockwise_turns * (direction_count / 4), direction_count)
 
 func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, status: Structure.Status) -> Structure:
-	if not _structure_scene: _structure_scene = load("uid://d4b5bccvs2ik1")
-	var new_structure: Structure = _structure_scene.instantiate()
+	var new_structure: Structure = (Files.load_kept("uid://d4b5bccvs2ik1") as PackedScene).instantiate()
 	new_structure.variation = variation
 	new_structure.profile = self
 	new_structure.transform = spawn_transform

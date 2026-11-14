@@ -5,9 +5,6 @@ extends Node
 
 const CHARACTER_DATA: StringName = "character_data"
 
-## agent.tscn, loaded on first use and kept: a scene nothing holds is freed after each instance and read from disk again
-static var _agent_scene: PackedScene
-
 @export var character: Character
 
 @export_group("Configuration")
@@ -29,8 +26,7 @@ func _physics_process(delta: float) -> void:
 	_state_machine.physics_update(delta)
 
 static func create(character_data: Dictionary[StringName, Variant]) -> Agent:
-	if not _agent_scene: _agent_scene = load("uid://bbjgxgkshjet6")
-	var new_agent: Agent = _agent_scene.instantiate()
+	var new_agent: Agent = (Files.load_kept("uid://bbjgxgkshjet6") as PackedScene).instantiate()
 	new_agent.character.apply_character_data(character_data)
 	return new_agent
 

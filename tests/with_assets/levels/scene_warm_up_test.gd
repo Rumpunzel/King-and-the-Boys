@@ -15,10 +15,10 @@ func test_the_dungeon_finds_its_props_monsters_and_centrepieces() -> void:
 		"res://data/things/centrepieces/sarcophagus_01.tscn",
 	])
 
-func test_the_warm_up_finishes_and_leaves_nothing_behind() -> void:
+func test_the_warm_up_instances_every_scene_and_keeps_none() -> void:
 	var level: Level = auto_free((load(LEVEL) as PackedScene).instantiate())
 	add_child(level)
-	var child_count: int = level.get_child_count()
-	await SceneWarmUp.warm_up(level)
-	# Each instance is freed at once: gdUnit counts orphans too
-	assert_int(level.get_child_count()).is_equal(child_count)
+	var scene_count: int = SceneWarmUp.find_scenes(level).size()
+	assert_int(scene_count).is_greater(50)
+	assert_int(await SceneWarmUp.warm_up(level)).is_equal(scene_count)
+	# Each instance was freed at once: gdUnit counts orphans too

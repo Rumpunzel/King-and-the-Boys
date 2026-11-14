@@ -11,9 +11,6 @@ const PLAYER_SECTION: StringName = "player"
 const ID: StringName = "player_id"
 const NAME: StringName = "player_name"
 
-## player.tscn, loaded on first use and kept: a scene nothing holds is freed after each instance and read from disk again
-static var _player_scene: PackedScene
-
 @export var player_id: int = Multiplayer.HOST_ID:
 	set(new_player_id):
 		if not Engine.is_editor_hint(): name = "%d" % new_player_id
@@ -59,8 +56,7 @@ var _serialized_character: String:
 	set(new_serialized_character): if not new_serialized_character.is_empty(): character = load(new_serialized_character)
 
 static func create(new_player_id: int, new_player_name: String) -> Player:
-	if not _player_scene: _player_scene = load("uid://bvdlyl1asckv4")
-	var new_player: Player = _player_scene.instantiate()
+	var new_player: Player = (Files.load_kept("uid://bvdlyl1asckv4") as PackedScene).instantiate()
 	new_player.player_id = new_player_id
 	new_player.player_name = new_player_name
 	return new_player

@@ -7,15 +7,22 @@ extends RefCounted
 const USEC_PER_FRAME: int = 8000
 
 ## Instances each of [method find_scenes] of [param node] once, while [param node] stays in the tree
-static func warm_up(node: Node) -> void:
+## @returns how many scenes it instanced
+static func warm_up(node: Node) -> int:
+	var count: int = 0
 	var frame_start: int = Time.get_ticks_usec()
 	for scene: PackedScene in find_scenes(node):
-		scene.instantiate().free()
+		# None for a scene missing a dependency
+		var instance: Node = scene.instantiate()
+		if instance:
+			instance.free()
+			count += 1
 		if Time.get_ticks_usec() - frame_start < USEC_PER_FRAME: continue
 		await node.get_tree().process_frame
 		# Gone meanwhile (e.g. the game stopped while loading)
-		if not is_instance_valid(node) or not node.is_inside_tree(): return
+		if not is_instance_valid(node) or not node.is_inside_tree(): return count
 		frame_start = Time.get_ticks_usec()
+	return count
 
 ## @returns every scene [param object]'s stored properties hold, directly or through the resources they hold (for a level:
 ## tiles' models, props, lights, monsters, centrepieces)

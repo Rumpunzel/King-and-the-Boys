@@ -13,9 +13,6 @@ const _ACTIVE_CAMERA_PRIORITY: int = 16
 const _DEFAULT_CAMERA_PRIORITY: int = 1
 const _INACTIVE_CAMERA_PRIORITY: int = 0
 
-## player_controller.tscn, loaded on first use and kept: a scene nothing holds is freed after each instance and read from disk again
-static var _player_controller_scene: PackedScene
-
 @export var player: Player:
 	set(new_player):
 		assert(new_player)
@@ -84,8 +81,7 @@ func _input(event: InputEvent) -> void:
 
 static func create(for_player: Player, character_data: Dictionary[StringName, Variant]) -> PlayerController:
 	assert(for_player)
-	if not _player_controller_scene: _player_controller_scene = load("uid://ckcrpkujohkql")
-	var new_player_controller: PlayerController = _player_controller_scene.instantiate()
+	var new_player_controller: PlayerController = (Files.load_kept("uid://ckcrpkujohkql") as PackedScene).instantiate()
 	new_player_controller.player = for_player
 	assert(new_player_controller.character)
 	new_player_controller.character.apply_character_data(character_data)
