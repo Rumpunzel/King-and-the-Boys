@@ -11,6 +11,9 @@ enum Groups {
 # miniature_move_animation.tres, the default of both move animations
 const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 
+## character.tscn, loaded on first use and kept: a scene nothing holds is freed after each instance and read from disk again
+static var _character_scene: PackedScene
+
 @export var group: Groups = Groups.HEROES:
 	set(new_value):
 		group = new_value
@@ -139,8 +142,8 @@ var _preview_model_path: String = ""
 var _preview_random_equipment: Array[EquipmentLook] = []
 
 func create(variation: int, spawn_transform: Transform3D) -> Character:
-	var scene: PackedScene = load("uid://cvj6b1m2b65hd")
-	var new_character: Character = scene.instantiate()
+	if not _character_scene: _character_scene = load("uid://cvj6b1m2b65hd")
+	var new_character: Character = _character_scene.instantiate()
 	new_character.variation = variation
 	new_character.profile = self
 	new_character.transform = spawn_transform

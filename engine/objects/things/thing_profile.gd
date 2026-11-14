@@ -7,6 +7,9 @@ enum Groups {
 	ITEMS,
 }
 
+## thing.tscn, loaded on first use and kept: a scene nothing holds is freed after each instance and read from disk again
+static var _thing_scene: PackedScene
+
 @export var group: Groups = Groups.ITEMS:
 	set(new_value):
 		group = new_value
@@ -18,8 +21,8 @@ enum Groups {
 @export_group("Configuration")
 
 func create(variation: int, spawn_transform: Transform3D, status: Thing.Status) -> Thing:
-	var scene: PackedScene = load("uid://dnxaisin8ueu5")
-	var new_thing: Thing = scene.instantiate()
+	if not _thing_scene: _thing_scene = load("uid://dnxaisin8ueu5")
+	var new_thing: Thing = _thing_scene.instantiate()
 	new_thing.variation = variation
 	new_thing.profile = self
 	new_thing.transform = spawn_transform
