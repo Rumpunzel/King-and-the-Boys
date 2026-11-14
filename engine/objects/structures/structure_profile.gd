@@ -93,7 +93,13 @@ func get_restrictions(clockwise_turns: int) -> Dictionary[Level.Direction, Conne
 		_get_adjusted_direction(Level.Direction.LEFT, clockwise_turns): _restriction_left,
 	}
 
-func get_restriction(direction: Level.Direction, clockwise_turns: int) -> ConnectionRestriction: return get_restrictions(clockwise_turns)[direction]
+## Its restriction towards [param direction], turned by [param clockwise_turns]; asked often, so without a dictionary
+func get_restriction(direction: Level.Direction, clockwise_turns: int) -> ConnectionRestriction:
+	match posmod(direction - clockwise_turns, Level.Direction.size()):
+		Level.Direction.UP: return _restriction_up
+		Level.Direction.RIGHT: return _restriction_right
+		Level.Direction.DOWN: return _restriction_down
+		_: return _restriction_left
 
 ## @returns the offsets from the tile center where pieces stand, in order of preference
 func get_tile_spots() -> Array[Vector2]:

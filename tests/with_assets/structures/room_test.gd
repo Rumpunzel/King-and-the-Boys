@@ -239,9 +239,9 @@ func test_a_room_tile_fits_beside_its_room_whatever_its_shape() -> void:
 	# Turned twice, a corner opens down and left: towards the placed tile, which does not open back
 	var room_corner: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(load(ROOM_CORNER) as StructureProfile, 2)
 	var corridor_corner: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(load(CORRIDOR_CORNER) as StructureProfile, 2)
-	var opening_towards: Dictionary[Structure, bool] = DungeonTileSet.get_openings_towards(Vector2i.RIGHT, placed)
-	assert_bool(room_corner.fits(Vector2i.RIGHT, opening_towards)).is_true()
-	assert_bool(corridor_corner.fits(Vector2i.RIGHT, opening_towards)).is_false()
+	var neighbours: Array[DungeonTileSet.Neighbour] = DungeonTileSet.get_neighbours(Vector2i.RIGHT, placed)
+	assert_bool(room_corner.fits(neighbours)).is_true()
+	assert_bool(corridor_corner.fits(neighbours)).is_false()
 
 func test_a_turned_room_tile_leaves_its_pillars_on_their_corners() -> void:
 	_surround_room()
