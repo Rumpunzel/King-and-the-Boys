@@ -16,8 +16,10 @@ static func resolve_path(path: String) -> String:
 	return ResourceUID.get_id_path(uid) if ResourceUID.has_id(uid) else ""
 
 ## The resource at [param path] (a path or a UID), loaded on first use and kept from then on. For what is loaded again and again,
-## e.g. the scene a profile instances: a resource nothing holds is freed after each use and read from disk anew.
+## e.g. the scene a profile instances: a resource nothing holds is freed after each use and read from disk anew. The editor
+## keeps nothing, so a file changed on disk shows as it is now (e.g. in Menagerie's previews).
 static func load_kept(path: String) -> Resource:
+	if Engine.is_editor_hint(): return load(path)
 	var resource: Resource = _kept.get(path)
 	if not resource:
 		resource = load(path)

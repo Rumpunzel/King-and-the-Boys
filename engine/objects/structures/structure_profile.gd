@@ -60,6 +60,8 @@ func get_spawn() -> Profile:
 	if not _spawn_table: return
 	return _spawn_table.get_spawn()
 
+## In the order of the unturned sides: corridors are built in this order, so another order would build another dungeon from
+## the same seed
 func get_connections(clockwise_turns: int) -> Array[Level.Direction]:
 	var connections: Array[Level.Direction]
 	if _connection_up: connections.append(_get_adjusted_direction(Level.Direction.UP, clockwise_turns))
@@ -82,12 +84,9 @@ func get_connection_vectors(clockwise_turns: int) -> Array[Vector2i]:
 	return connection_vectors
 
 func get_restrictions(clockwise_turns: int) -> Dictionary[Level.Direction, ConnectionRestriction]:
-	return {
-		_get_adjusted_direction(Level.Direction.UP, clockwise_turns): _restriction_up,
-		_get_adjusted_direction(Level.Direction.RIGHT, clockwise_turns): _restriction_right,
-		_get_adjusted_direction(Level.Direction.DOWN, clockwise_turns): _restriction_down,
-		_get_adjusted_direction(Level.Direction.LEFT, clockwise_turns): _restriction_left,
-	}
+	var restrictions: Dictionary[Level.Direction, ConnectionRestriction] = {}
+	for direction: Level.Direction in Level.Direction.values(): restrictions[direction] = get_restriction(direction, clockwise_turns)
+	return restrictions
 
 ## Its restriction towards [param direction], turned by [param clockwise_turns]; asked often, so without a dictionary
 func get_restriction(direction: Level.Direction, clockwise_turns: int) -> ConnectionRestriction:

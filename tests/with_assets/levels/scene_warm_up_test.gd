@@ -20,5 +20,7 @@ func test_the_warm_up_instances_every_scene_and_keeps_none() -> void:
 	add_child(level)
 	var scene_count: int = SceneWarmUp.find_scenes(level).size()
 	assert_int(scene_count).is_greater(50)
-	assert_int(await SceneWarmUp.warm_up(level)).is_equal(scene_count)
+	var warm_up: SceneWarmUp = SceneWarmUp.new(level)
+	while not warm_up.step(): pass
+	assert_int(warm_up.count).is_equal(scene_count)
 	# Each instance was freed at once: gdUnit counts orphans too
