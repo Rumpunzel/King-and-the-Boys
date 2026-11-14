@@ -645,7 +645,9 @@ func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vect
 	assert(absi(grid_position.y) <= grid_extents.y)
 	var tile_position: Vector3 = grid_to_world_position(grid_position)
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position)
-	_structure_spawner.spawn_at(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status)
+	var decorations: TileDecorations = tile_blueprint.profile.decorations
+	var light: TileLight = decorations.roll_light(tile_blueprint.profile, generation_random.seed, grid_position) if decorations else null
+	_structure_spawner.spawn_at(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status, light)
 
 ## Calls [param reveal_function] with every tile in sight within [param vision_radius], always with the tile at
 ## [param from_grid_position] (a character sees the tile it stands on, even without vision)

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="TileLight" format=3 uid="uid://dtgexy6ytp6us"]
+
+[ext_resource type="Script" uid="uid://c2p737sm5xhvf" path="res://engine/objects/structures/tile_light.gd" id="1_light"]
+
+[resource]
+script = ExtResource("1_light")
+lights_neighbours = false

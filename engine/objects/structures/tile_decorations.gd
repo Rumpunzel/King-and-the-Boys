@@ -117,7 +117,7 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 
 ## Builds the props of [param tile], which must be in a [Level] and just revealed
 func create(tile: Structure) -> Node3D:
-	var decorations: Node3D = create_clutter(tile.profile.get_connections(0), tile.get_grid_position(), tile.level.grid_size)
+	var decorations: Node3D = create_clutter(tile.profile.get_connections(0), tile.get_grid_position(), tile.level.grid_size, tile.light)
 	var clutter_count: int = decorations.get_child_count()
 	var decided: Array[Vector2i] = []
 	decorations.set_meta(DECIDED_EDGES, decided)
@@ -128,6 +128,16 @@ func create(tile: Structure) -> Node3D:
 	for index: int in range(clutter_count, decorations.get_child_count()): decorations.move_child(decorations.get_child(index), index - clutter_count)
 	_add_room_props(decorations, tile)
 	return decorations
+
+## Host only: the wall light a tile of [param profile] placed on [param cell] holds, rolled by [member light_chance] from
+## [member tile_lights], seeded by the level's seed [param level_seed] and the cell (like monsters), so the same seed lights the same
+## tiles; [code]null[/code] for none, and always for a tile without a closed side
+func roll_light(profile: StructureProfile, level_seed: int, cell: Vector2i) -> TileLight:
+	if tile_lights.is_empty() or profile.get_connections(0).size() == Level.Direction.size(): return null
+	var random: RandomNumberGenerator = RandomNumberGenerator.new()
+	random.seed = hash([level_seed, cell, &"light"])
+	if random.randf() >= light_chance: return null
+	return tile_lights.keys()[random.rand_weighted(PackedFloat32Array(tile_lights.values()))] as TileLight
 
 ## Builds the clutter of a tile whose open sides are [param connections], as its model sees them (unrotated), with the wall light
 ## [param light] the tile holds, if any (see [member Structure.light])

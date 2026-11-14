@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TileLight" format=3 uid="uid://cvimunviu8yb1"]
+
+[ext_resource type="Script" uid="uid://c2p737sm5xhvf" path="res://engine/objects/structures/tile_light.gd" id="1_light"]
+[ext_resource type="Resource" uid="uid://c4ebugbseetna" path="res://tests/fixtures/torch_light_source.tres" id="2_source"]
+
+[resource]
+script = ExtResource("1_light")
+light_source = ExtResource("2_source")
