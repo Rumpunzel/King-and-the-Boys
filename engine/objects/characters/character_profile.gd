@@ -139,8 +139,7 @@ var _preview_model_path: String = ""
 var _preview_random_equipment: Array[EquipmentLook] = []
 
 func create(variation: int, spawn_transform: Transform3D) -> Character:
-	var scene: PackedScene = load("uid://cvj6b1m2b65hd")
-	var new_character: Character = scene.instantiate()
+	var new_character: Character = (Files.load_kept("uid://cvj6b1m2b65hd") as PackedScene).instantiate()
 	new_character.variation = variation
 	new_character.profile = self
 	new_character.transform = spawn_transform

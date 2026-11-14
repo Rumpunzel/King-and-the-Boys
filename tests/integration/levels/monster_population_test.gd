@@ -2,9 +2,9 @@ extends GdUnitTestSuite
 ## Tiles the dungeon grows by may hold a monster, rolled by the level's seed and the cell: the same seed places the same
 ## monsters, none near the start, each on its own spot, and each shows only once its tile is revealed
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const DungeonRules = preload("res://tests/fixtures/dungeon_rules.gd")
-const MONSTERS: String = "res://tests/fixtures/monster_spawn_table.tres"
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const DungeonRules = preload("uid://cgmlfyuplqyjq")  # tests/fixtures/dungeon_rules.gd
+const MONSTERS: String = "uid://cuouko06qbqgp"  # tests/fixtures/monster_spawn_table.tres
 const SEEDS: Array[int] = [1, 7, 42, 1234, 99999]
 
 var _level: Level

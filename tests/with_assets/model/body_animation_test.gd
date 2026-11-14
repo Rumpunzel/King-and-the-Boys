@@ -2,11 +2,11 @@ extends GdUnitTestSuite
 ## Models play animation files along with a ModelAnimation (a jump while they hop), and rest in their idles: in turn, at random,
 ## or in what they were told to rest in, such as sitting while their player has passed
 
-const MOVE: String = "res://data/model_animations/miniature_move_animation.tres"
-const SPAWN: String = "res://data/model_animations/high_bounce_animation.tres"
-const KNIGHT_MOVE: String = "res://data/model_animations/heroes/knight_move.tres"
-const ROGUE_MOVE: String = "res://data/model_animations/heroes/rogue_move.tres"
-const KNIGHT_SPAWN: String = "res://data/model_animations/heroes/knight_spawn.tres"
+const MOVE: String = "uid://bwiaycc13h0eo"  # data/model_animations/miniature_move_animation.tres
+const SPAWN: String = "uid://djq27fwrmrv2"  # data/model_animations/high_bounce_animation.tres
+const KNIGHT_MOVE: String = "uid://bokwo0ngtuf6x"  # data/model_animations/heroes/knight_move.tres
+const ROGUE_MOVE: String = "uid://c1io5bgjdq6kr"  # data/model_animations/heroes/rogue_move.tres
+const KNIGHT_SPAWN: String = "uid://chaqmhbq3eugj"  # data/model_animations/heroes/knight_spawn.tres
 const ANIMATIONS: String = "res://data/characters/animations/quaternius/%s.res"
 const HEROES: Array[String] = ["knight", "rogue", "mystic", "soldier", "elf", "dwarf"]
 
@@ -218,7 +218,7 @@ func test_weapons_put_away_for_a_draw_come_back_when_it_is_cut_short() -> void:
 
 ## The alert and the pass end together as a turn starts, in either order: the hero never sits down again in between
 func test_an_alerted_hero_stands_ready_until_alert_and_pass_both_end() -> void:
-	var knight: CharacterProfile = load("res://data/characters/people/knight.tres")
+	var knight: CharacterProfile = load("uid://cqkx0op1msr7s")  # data/characters/people/knight.tres
 	for alert_ends_first: bool in [true, false]:
 		var hero: Character = knight.create(0, Transform3D.IDENTITY)
 		hero.show_passed(true)

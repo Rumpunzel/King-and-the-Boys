@@ -81,8 +81,7 @@ func _input(event: InputEvent) -> void:
 
 static func create(for_player: Player, character_data: Dictionary[StringName, Variant]) -> PlayerController:
 	assert(for_player)
-	var scene: PackedScene = load("uid://ckcrpkujohkql")
-	var new_player_controller: PlayerController = scene.instantiate()
+	var new_player_controller: PlayerController = (Files.load_kept("uid://ckcrpkujohkql") as PackedScene).instantiate()
 	new_player_controller.player = for_player
 	assert(new_player_controller.character)
 	new_player_controller.character.apply_character_data(character_data)

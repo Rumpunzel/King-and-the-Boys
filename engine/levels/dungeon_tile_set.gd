@@ -15,32 +15,31 @@ var _blueprints: Array[TileBlueprint]:
 ## A blueprint fitting the passages of [param surrounding_tiles], drawn by weight with [param random] among those
 ## keeping the most of their connection restrictions (all of them, wherever one can)
 func pick_tile(tile_position: Vector2i, surrounding_tiles: Array[Structure], random: RandomNumberGenerator) -> Pick:
-	# Asked once rather than for every blueprint
-	var opening_towards: Dictionary[Structure, bool] = get_openings_towards(tile_position, surrounding_tiles)
-	var fitting_blueprints: Array[TileBlueprint] = []
-	for blueprint: TileBlueprint in _blueprints:
-		if blueprint.fits(tile_position, opening_towards): fitting_blueprints.append(blueprint)
-	assert(not fitting_blueprints.is_empty())
-	# Restrictions: the blueprints suiting the most surrounding tiles, each once. All of them if any blueprint does;
+	# Asked of each surrounding tile once rather than for every blueprint: this runs for every tile the dungeon grows by
+	var neighbours: Array[Neighbour] = get_neighbours(tile_position, surrounding_tiles)
+	# Restrictions: the fitting blueprints suiting the most surrounding tiles, each once. All of them if any blueprint does;
 	# else the least broken, rather than any at all
 	var most_suited: int = -1
 	var candidates: Array[TileBlueprint] = []
-	for blueprint: TileBlueprint in fitting_blueprints:
-		var suited: int = surrounding_tiles.filter(func(surrounding_tile: Structure) -> bool: return blueprint.is_legal_neighbour(tile_position, surrounding_tile)).size()
+	for blueprint: TileBlueprint in _blueprints:
+		if not blueprint.fits(neighbours): continue
+		var suited: int = 0
+		for neighbour: Neighbour in neighbours:
+			if blueprint.is_legal_neighbour(neighbour): suited += 1
 		if suited > most_suited:
 			most_suited = suited
 			candidates.clear()
 		if suited == most_suited: candidates.append(blueprint)
-	var suits_all: bool = most_suited == surrounding_tiles.size()
-	if not suits_all: print_debug("No tile keeps every neighbour's restrictions at %s; taking one that keeps %d of %d" % [tile_position, most_suited, surrounding_tiles.size()])
+	assert(not candidates.is_empty())
+	var suits_all: bool = most_suited == neighbours.size()
+	if not suits_all: print_verbose("No tile keeps every neighbour's restrictions at %s; taking one that keeps %d of %d" % [tile_position, most_suited, neighbours.size()])
 	return Pick.new(_draw(candidates, random), suits_all)
 
-## @returns whether each of [param surrounding_tiles] opens towards [param tile_position], see [method TileBlueprint.fits]
-static func get_openings_towards(tile_position: Vector2i, surrounding_tiles: Array[Structure]) -> Dictionary[Structure, bool]:
-	var opening_towards: Dictionary[Structure, bool] = {}
-	for surrounding_tile: Structure in surrounding_tiles:
-		opening_towards[surrounding_tile] = surrounding_tile.get_connections().has(Level.get_direction(surrounding_tile.get_grid_position(), tile_position))
-	return opening_towards
+## @returns what [method pick_tile] needs of each of [param surrounding_tiles] around [param tile_position]
+static func get_neighbours(tile_position: Vector2i, surrounding_tiles: Array[Structure]) -> Array[Neighbour]:
+	var neighbours: Array[Neighbour] = []
+	for surrounding_tile: Structure in surrounding_tiles: neighbours.append(Neighbour.new(tile_position, surrounding_tile))
+	return neighbours
 
 ## One of [param candidates] by their weights
 func _draw(candidates: Array[TileBlueprint], random: RandomNumberGenerator) -> TileBlueprint:
@@ -77,33 +76,39 @@ class TileBlueprint extends RefCounted:
 		profile = for_profile
 		clockwise_turns = with_clockwise_turns
 
-	## Whether the blueprint opens exactly where the neighbours open towards [param grid_position] (each in [param opening_towards], by its shape
-	## even while lifted). Towards a tile of its own room type a room tile fits either way: room tiles always connect.
-	func fits(grid_position: Vector2i, opening_towards: Dictionary[Structure, bool]) -> bool:
-		for surrounding_tile: Structure in opening_towards:
-			if profile.room_type and surrounding_tile.profile.room_type == profile.room_type: continue
-			if has_connection(grid_position, surrounding_tile) != opening_towards[surrounding_tile]: return false
+	## Whether the blueprint opens exactly where [param neighbours] open towards it. Towards a tile of its own room type a room
+	## tile fits either way: room tiles always connect.
+	func fits(neighbours: Array[Neighbour]) -> bool:
+		for neighbour: Neighbour in neighbours:
+			if profile.room_type and neighbour.profile.room_type == profile.room_type: continue
+			if profile.has_connection(neighbour.direction, clockwise_turns) != neighbour.opens_towards: return false
 		return true
 
-	func is_legal_neighbour(grid_position: Vector2i, existing_tile: Structure) -> bool:
-		return can_connect(grid_position, existing_tile) and existing_tile.can_connect_to(grid_position, profile)
-
-	func can_connect(grid_position: Vector2i, existing_tile: Structure) -> bool:
-		var direction: Level.Direction = _get_direction_to_tile(grid_position, existing_tile)
-		return profile.can_connect(direction, clockwise_turns, existing_tile.profile)
-
-	func has_connection(grid_position: Vector2i, existing_tile: Structure) -> bool:
-		var direction: Level.Direction = _get_direction_to_tile(grid_position, existing_tile)
-		return profile.has_connection(direction, clockwise_turns)
+	## Whether the blueprint and [param neighbour] keep each other's connection restrictions
+	func is_legal_neighbour(neighbour: Neighbour) -> bool:
+		if not profile.can_connect(neighbour.direction, clockwise_turns, neighbour.profile): return false
+		return not neighbour.restriction or neighbour.restriction.can_connect(neighbour.profile, profile)
 
 	func get_connections() -> Array[Level.Direction]: return profile.get_connections(clockwise_turns)
 	func get_connection_vectors() -> Array[Vector2i]: return profile.get_connection_vectors(clockwise_turns)
-	func get_restriction(grid_position: Vector2i, existing_tile: Structure) -> ConnectionRestriction:
-		var direction: Level.Direction = _get_direction_to_tile(grid_position, existing_tile)
-		return profile.get_restriction(direction, clockwise_turns)
 
 	func get_restrictions() -> Dictionary[Level.Direction, ConnectionRestriction]: return profile.get_restrictions(clockwise_turns)
 
-	func _get_direction_to_tile(grid_position: Vector2i, tile: Structure) -> Level.Direction: return Level.get_direction(grid_position, tile.get_grid_position())
-
 	func _to_string() -> String: return "%s rotated %d times" % [profile.name, clockwise_turns]
+
+## A tile placed beside the one being picked, as [method DungeonTileSet.pick_tile] needs it
+class Neighbour extends RefCounted:
+	var profile: StructureProfile
+	## From the tile being picked towards it
+	var direction: Level.Direction
+	## Whether it opens towards the tile being picked (by its shape, even while lifted; room tiles towards their room too)
+	var opens_towards: bool
+	## Its restriction on what lies towards the tile being picked
+	var restriction: ConnectionRestriction
+
+	func _init(tile_position: Vector2i, tile: Structure) -> void:
+		profile = tile.profile
+		direction = Level.get_direction(tile_position, tile.get_grid_position())
+		var back: Level.Direction = Level.get_opposite(direction)
+		opens_towards = tile.get_connections().has(back)
+		restriction = profile.get_restriction(back, tile.clockwise_turns)

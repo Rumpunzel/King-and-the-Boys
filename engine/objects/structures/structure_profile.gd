@@ -44,8 +44,7 @@ static func _get_adjusted_direction(direction: Level.Direction, clockwise_turns:
 	return posmod(direction + clockwise_turns * (direction_count / 4), direction_count)
 
 func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, status: Structure.Status) -> Structure:
-	var scene: PackedScene = load("uid://d4b5bccvs2ik1")
-	var new_structure: Structure = scene.instantiate()
+	var new_structure: Structure = (Files.load_kept("uid://d4b5bccvs2ik1") as PackedScene).instantiate()
 	new_structure.variation = variation
 	new_structure.profile = self
 	new_structure.transform = spawn_transform
@@ -61,6 +60,8 @@ func get_spawn() -> Profile:
 	if not _spawn_table: return
 	return _spawn_table.get_spawn()
 
+## In the order of the unturned sides: corridors are built in this order, so another order would build another dungeon from
+## the same seed
 func get_connections(clockwise_turns: int) -> Array[Level.Direction]:
 	var connections: Array[Level.Direction]
 	if _connection_up: connections.append(_get_adjusted_direction(Level.Direction.UP, clockwise_turns))
@@ -83,14 +84,17 @@ func get_connection_vectors(clockwise_turns: int) -> Array[Vector2i]:
 	return connection_vectors
 
 func get_restrictions(clockwise_turns: int) -> Dictionary[Level.Direction, ConnectionRestriction]:
-	return {
-		_get_adjusted_direction(Level.Direction.UP, clockwise_turns): _restriction_up,
-		_get_adjusted_direction(Level.Direction.RIGHT, clockwise_turns): _restriction_right,
-		_get_adjusted_direction(Level.Direction.DOWN, clockwise_turns): _restriction_down,
-		_get_adjusted_direction(Level.Direction.LEFT, clockwise_turns): _restriction_left,
-	}
+	var restrictions: Dictionary[Level.Direction, ConnectionRestriction] = {}
+	for direction: Level.Direction in Level.Direction.values(): restrictions[direction] = get_restriction(direction, clockwise_turns)
+	return restrictions
 
-func get_restriction(direction: Level.Direction, clockwise_turns: int) -> ConnectionRestriction: return get_restrictions(clockwise_turns)[direction]
+## Its restriction towards [param direction], turned by [param clockwise_turns]; asked often, so without a dictionary
+func get_restriction(direction: Level.Direction, clockwise_turns: int) -> ConnectionRestriction:
+	match posmod(direction - clockwise_turns, Level.Direction.size()):
+		Level.Direction.UP: return _restriction_up
+		Level.Direction.RIGHT: return _restriction_right
+		Level.Direction.DOWN: return _restriction_down
+		_: return _restriction_left
 
 ## @returns the offsets from the tile center where pieces stand, in order of preference
 func get_tile_spots() -> Array[Vector2]:

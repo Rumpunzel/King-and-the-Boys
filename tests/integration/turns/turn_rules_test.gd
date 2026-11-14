@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 ## Turn rules on a generated level built from model-free tiles (no assets): movement points, walls, undo, tile spots, reveals
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 
 var _level: Level
 var _turn_manager: TurnManager

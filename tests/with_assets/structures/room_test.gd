@@ -1,15 +1,15 @@
 extends GdUnitTestSuite
 ## Rooms as a whole: dust fills every tile of a dusty room, and centrepieces stand on the corner in a room's middle
 
-const LEVEL: String = "res://data/levels/level.tscn"
-const ROOM: String = "res://data/structures/tiles/room/room_crossing.tres"
-const CORRIDOR: String = "res://data/structures/tiles/crossing.tres"
-const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tres"
-const ROOM_DEADEND: String = "res://data/structures/tiles/room/room_deadend.tres"
-const ROOM_CORNER: String = "res://data/structures/tiles/room/room_corner.tres"
-const CORRIDOR_CORNER: String = "res://data/structures/tiles/corner.tres"
-const DUST: String = "res://data/structures/props/room_dust.tres"
-const CENTREPIECES: Array[String] = ["res://data/things/centrepieces/sarcophagus.tres", "res://data/things/centrepieces/dwarf_throne.tres"]
+const LEVEL: String = "uid://bmwhs3lwb74ue"  # data/levels/level.tscn
+const ROOM: String = "uid://c3sqiedcypv0x"  # data/structures/tiles/room/room_crossing.tres
+const CORRIDOR: String = "uid://dwljjhol16iea"  # data/structures/tiles/crossing.tres
+const DECORATIONS: String = "uid://boyg6u55haqfd"  # data/structures/tiles/dungeon_decorations.tres
+const ROOM_DEADEND: String = "uid://bgamr2kpoe8de"  # data/structures/tiles/room/room_deadend.tres
+const ROOM_CORNER: String = "uid://b6wth35w4tdk2"  # data/structures/tiles/room/room_corner.tres
+const CORRIDOR_CORNER: String = "uid://djc0kwgsfemkg"  # data/structures/tiles/corner.tres
+const DUST: String = "uid://b5cplg8jqeufa"  # data/structures/props/room_dust.tres
+const CENTREPIECES: Array[String] = ["uid://4gxlas34qp2u", "uid://c42mc4ie0lctr"]  # data/things/centrepieces/sarcophagus.tres, data/things/centrepieces/dwarf_throne.tres
 
 var _level: Level
 var _dusty_room_chance: float
@@ -95,7 +95,7 @@ func test_a_centrepiece_stands_on_the_middle_corner_once() -> void:
 	var corner_things: Dictionary[Vector2i, Thing] = _level.get("_corner_things")
 	assert_array(corner_things.keys()).contains_exactly([Vector2i(0, 1)])
 	var thing: Thing = corner_things[Vector2i(0, 1)]
-	assert_array(CENTREPIECES).contains([thing.profile.resource_path])
+	assert_array(CENTREPIECES.map(func(centrepiece: String) -> Resource: return load(centrepiece))).contains([thing.profile])
 	assert_vector(thing.global_position).is_equal_approx(Vector3(-0.5, 0.0, 0.5) * _level.grid_size, Vector3.ONE * 0.001)
 	# The figure on the tile looks at it
 	assert_object(_level.get_thing_near(Vector2i(-1, 0))).is_same(thing)
@@ -239,9 +239,9 @@ func test_a_room_tile_fits_beside_its_room_whatever_its_shape() -> void:
 	# Turned twice, a corner opens down and left: towards the placed tile, which does not open back
 	var room_corner: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(load(ROOM_CORNER) as StructureProfile, 2)
 	var corridor_corner: DungeonTileSet.TileBlueprint = DungeonTileSet.TileBlueprint.new(load(CORRIDOR_CORNER) as StructureProfile, 2)
-	var opening_towards: Dictionary[Structure, bool] = DungeonTileSet.get_openings_towards(Vector2i.RIGHT, placed)
-	assert_bool(room_corner.fits(Vector2i.RIGHT, opening_towards)).is_true()
-	assert_bool(corridor_corner.fits(Vector2i.RIGHT, opening_towards)).is_false()
+	var neighbours: Array[DungeonTileSet.Neighbour] = DungeonTileSet.get_neighbours(Vector2i.RIGHT, placed)
+	assert_bool(room_corner.fits(neighbours)).is_true()
+	assert_bool(corridor_corner.fits(neighbours)).is_false()
 
 func test_a_turned_room_tile_leaves_its_pillars_on_their_corners() -> void:
 	_surround_room()

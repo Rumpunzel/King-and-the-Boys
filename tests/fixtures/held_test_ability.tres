@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Ability" format=3]
+[gd_resource type="Resource" script_class="Ability" format=3 uid="uid://bgf7w50r6f4he"]
 
 [ext_resource type="Script" path="res://tests/fixtures/test_ability.gd" id="1_t3st"]
 

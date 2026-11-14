@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## Reach on the grid: a piece reaches its own cell and the next ones along passages, and things on a grid corner stand on
 ## all four cells around it
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 
 var _level: Level
 

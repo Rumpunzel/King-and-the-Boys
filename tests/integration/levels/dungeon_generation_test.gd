@@ -3,8 +3,8 @@ extends GdUnitTestSuite
 ## seed builds the same dungeon again. Every failure names its seed, so it can be built again. The model-free tiles
 ## have no connection restrictions; the real ones are checked in [code]tests/with_assets/levels/[/code].
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const DungeonRules = preload("res://tests/fixtures/dungeon_rules.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const DungeonRules = preload("uid://cgmlfyuplqyjq")  # tests/fixtures/dungeon_rules.gd
 const SEEDS: int = 10
 const EXPLORATION_ROUNDS: int = 1
 
