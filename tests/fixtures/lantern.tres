@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ToggleLightAbility" format=3]
+[gd_resource type="Resource" script_class="ToggleLightAbility" format=3 uid="uid://s4o504byc2n0"]
 
 [ext_resource type="Script" path="res://engine/abilities/toggle_light_ability.gd" id="1_script"]
 [ext_resource type="Resource" path="res://tests/fixtures/lantern_light.tres" id="2_light"]

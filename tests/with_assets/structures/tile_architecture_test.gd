@@ -1,13 +1,13 @@
 extends GdUnitTestSuite
 ## Arches and pillars on the real dungeon: each opening and corner is shared, so it must be dressed exactly once
 
-const LEVEL: String = "res://data/levels/level.tscn"
-const DOORWAY_ARCHES: String = "res://data/structures/props/dungeon_doorway_arches.tres"
-const ROOM_PILLARS: String = "res://data/structures/props/dungeon_room_pillars.tres"
+const LEVEL: String = "uid://bmwhs3lwb74ue"  # data/levels/level.tscn
+const DOORWAY_ARCHES: String = "uid://cv041ktdn6jph"  # data/structures/props/dungeon_doorway_arches.tres
+const ROOM_PILLARS: String = "uid://bifb83r2doed1"  # data/structures/props/dungeon_room_pillars.tres
 ## The dungeon has no walls yet; the arch ruins stand in for them, so the shared edges are still checked
-const WALLS: String = "res://data/structures/props/dungeon_ruined_arches.tres"
+const WALLS: String = "uid://d08bvlx052dw3"  # data/structures/props/dungeon_ruined_arches.tres
 
-const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tres"
+const DECORATIONS: String = "uid://boyg6u55haqfd"  # data/structures/tiles/dungeon_decorations.tres
 
 var _level: Level
 var _doorway_arch_chance: float
@@ -171,7 +171,7 @@ func test_doorway_arches_face_the_room() -> void:
 func test_tiles_spawned_revealed_raise_their_pillars() -> void:
 	var loaded: Level = auto_free((load(LEVEL) as PackedScene).instantiate())
 	add_child(loaded)
-	var room: StructureProfile = load("res://data/structures/tiles/room/room_crossing.tres")
+	var room: StructureProfile = load("uid://c3sqiedcypv0x")  # data/structures/tiles/room/room_crossing.tres
 	# Four room tiles around the even corner (0, 0)
 	for cell: Vector2i in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0)]:
 		loaded._structure_spawner.spawn_at(room, Transform3D(Basis.IDENTITY, loaded.grid_to_world_position(cell)), 0, Structure.Status.REVEALED)

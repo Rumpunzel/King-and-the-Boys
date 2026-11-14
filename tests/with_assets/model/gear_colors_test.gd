@@ -2,8 +2,8 @@ extends GdUnitTestSuite
 ## Gear is repainted in its character's colours: the packs' blue and gold highlights, on whichever atlas the gear uses
 
 const HEROES: Array[String] = ["knight", "rogue", "mystic", "soldier", "elf", "dwarf"]
-const HERO_MATERIAL: String = "res://data/characters/gear/hero_gear_material.tres"
-const DWARF_MATERIAL: String = "res://data/characters/gear/dwarf_gear_material.tres"
+const HERO_MATERIAL: String = "uid://bfwv8gb2fse5i"  # data/characters/gear/hero_gear_material.tres
+const DWARF_MATERIAL: String = "uid://bi0qcogabe33g"  # data/characters/gear/dwarf_gear_material.tres
 
 func test_gear_takes_the_material_of_its_atlas_and_the_colours() -> void:
 	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())

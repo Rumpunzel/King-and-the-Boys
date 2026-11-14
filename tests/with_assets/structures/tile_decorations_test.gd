@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 ## The dungeon tiles' props: the same on every peer, along closed sides only and clear of the tile spots
 
-const DECORATIONS: String = "res://data/structures/tiles/dungeon_decorations.tres"
+const DECORATIONS: String = "uid://boyg6u55haqfd"  # data/structures/tiles/dungeon_decorations.tres
 const TILE_SIZE: float = 2.0
 
 func _props(connections: Array[Level.Direction], grid_position: Vector2i) -> Array[Node3D]:
@@ -26,7 +26,7 @@ func test_open_tiles_stay_empty() -> void:
 
 func test_props_keep_to_closed_sides_and_clear_of_tile_spots() -> void:
 	var hallway: Array[Level.Direction] = [Level.Direction.UP, Level.Direction.DOWN]
-	var spots: Array[Vector2] = (load("res://data/structures/tiles/hallway.tres") as StructureProfile).get_tile_spots()
+	var spots: Array[Vector2] = (load("uid://bdfrpagwkpemd") as StructureProfile).get_tile_spots()  # data/structures/tiles/hallway.tres
 	var placed: int = 0
 	for x: int in 20:
 		for prop: Node3D in _props(hallway, Vector2i(x, 1)):

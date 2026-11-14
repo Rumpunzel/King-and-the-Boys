@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 ## Menagerie's sky box buttons show the saved choice, or the one pressed in the scene file if the saved one is gone
 
-const SKY_BOX_BUTTON: String = "res://addons/menagerie/preview/sky_box_button.gd"
+const SKY_BOX_BUTTON: String = "uid://2sxvt8rs6p8d"  # addons/menagerie/preview/sky_box_button.gd
 const CONFIG_NAME: String = "sky_box_button_test"
 
 var _row: HBoxContainer

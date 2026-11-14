@@ -1,8 +1,8 @@
 extends GdUnitTestSuite
 ## Bodies roll skin and hair colours from their configuration, peers send them with the body, and every part is painted in them
 
-const KNIGHT_BODY: String = "res://data/characters/people/knight_body.tres"
-const DWARF_BODY: String = "res://data/characters/dwarves/random_dwarf.tres"
+const KNIGHT_BODY: String = "uid://5hbsrnqf3fcd"  # data/characters/people/knight_body.tres
+const DWARF_BODY: String = "uid://d4l2t2lakts58"  # data/characters/dwarves/random_dwarf.tres
 
 var _model: ModularCharacter
 
@@ -83,7 +83,7 @@ func test_dwarves_are_painted_by_their_atlas_colours() -> void:
 	assert_object(_painted(dwarf.body, &"hair_color")).is_equal(Color.TRANSPARENT)
 
 func test_a_preview_rolls_anew_once_its_colours_leave_the_configuration() -> void:
-	var knight: CharacterProfile = load("res://data/characters/people/knight.tres")
+	var knight: CharacterProfile = load("uid://cqkx0op1msr7s")  # data/characters/people/knight.tres
 	var own: ModelConfigurationRandom = knight.model_configuration
 	var edited: ModelConfigurationRandom = own.duplicate()
 	knight.model_configuration = edited

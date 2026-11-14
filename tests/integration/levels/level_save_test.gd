@@ -3,8 +3,8 @@ extends GdUnitTestSuite
 ## through the save file's encoding, and restoring removes the tiles and spawns new ones from it (the level's
 ## registries follow, see Level._forget_tile)
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const DungeonRules = preload("res://tests/fixtures/dungeon_rules.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const DungeonRules = preload("uid://cgmlfyuplqyjq")  # tests/fixtures/dungeon_rules.gd
 
 var _level: Level
 

@@ -1,8 +1,8 @@
 extends GdUnitTestSuite
 ## The combat HUD shows the monsters' turn, each block's dice, and a block's choice; it holds no rules
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const COMBAT_STATUS: String = "res://user_interface/hud/combat_status.tscn"
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const COMBAT_STATUS: String = "uid://bjc5pkwxojvvn"  # user_interface/hud/combat_status.tscn
 
 var _level: Level
 var _turn_manager: TurnManager

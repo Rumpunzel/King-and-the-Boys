@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## Blocks on a generated level: engaging, the heroes' blocks as the monster phase starts, blocks on leaving, what each face
 ## does, assists, and getting up again
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 ## Frames a monster phase may take before a test gives up on it
 const MAX_FRAMES: int = 600
 

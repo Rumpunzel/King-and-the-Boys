@@ -1,8 +1,8 @@
 extends GdUnitTestSuite
 ## Ability charges on a hero in a generated level (no assets): listed by the profile, counted, refunded, saved
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const CHARGED_ABILITY: Ability = preload("res://tests/fixtures/charged_ability.tres")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const CHARGED_ABILITY: Ability = preload("uid://co0ut6egps37w")  # tests/fixtures/charged_ability.tres
 
 var _level: Level
 var _hero_profile: CharacterProfile

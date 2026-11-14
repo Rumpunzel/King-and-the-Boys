@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CharacterProfile" format=3]
+[gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://b5brg76ytc255"]
 
 [ext_resource type="Resource" path="res://data/model_animations/miniature_move_animation.tres" id="3_s80u3"]
 [ext_resource type="Resource" path="res://data/characters/people/random_human.tres" id="4_fogkv"]

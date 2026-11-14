@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-const EDITOR_SCENE: String = "res://addons/menagerie/equipment_editor.tscn"
+const EDITOR_SCENE: String = "uid://c6t0i1clircon"  # addons/menagerie/equipment_editor.tscn
 
 var _editor: PanelContainer
 var _model: ModularCharacter

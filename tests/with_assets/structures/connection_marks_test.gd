@@ -2,7 +2,7 @@ extends GdUnitTestSuite
 ## Worn paths and bridges on the real dungeon: a path decal per opening of each revealed tile, a bridge wherever two tiles
 ## open to each other, and none into a lifted tile
 
-const LEVEL: String = "res://data/levels/level.tscn"
+const LEVEL: String = "uid://bmwhs3lwb74ue"  # data/levels/level.tscn
 
 var _level: Level
 
@@ -130,8 +130,8 @@ func test_a_removed_tile_takes_its_bridges() -> void:
 	assert_int(_bridges().size()).is_equal(others.size())
 
 func test_crystals_spread_along_their_edge() -> void:
-	var decorations: TileDecorations = load("res://data/structures/tiles/dungeon_decorations.tres")
-	var crystals: PropSet = load("res://data/structures/props/crystals.tres")
+	var decorations: TileDecorations = load("uid://boyg6u55haqfd")  # data/structures/tiles/dungeon_decorations.tres
+	var crystals: PropSet = load("uid://c7erdy8qpnb1o")  # data/structures/props/crystals.tres
 	var holder: Node3D = auto_free(Node3D.new())
 	add_child(holder)
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()

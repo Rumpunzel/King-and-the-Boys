@@ -3,8 +3,8 @@ extends GdUnitTestSuite
 ## [code]engine/levels/scene_warm_up.gd[/code]), as a scene's first instance hitches; the warm-up finds them through the level's
 ## resources
 
-const SceneWarmUp = preload("res://engine/levels/scene_warm_up.gd")
-const LEVEL: String = "res://data/levels/level.tscn"
+const SceneWarmUp = preload("uid://6aqir8e2vhvx")  # engine/levels/scene_warm_up.gd
+const LEVEL: String = "uid://bmwhs3lwb74ue"  # data/levels/level.tscn
 
 func test_the_dungeon_finds_its_props_monsters_and_centrepieces() -> void:
 	var level: Level = auto_free((load(LEVEL) as PackedScene).instantiate())

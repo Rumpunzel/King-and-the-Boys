@@ -2,8 +2,8 @@ extends GdUnitTestSuite
 ## A monster's model shows only on a tile this peer has revealed: one spawned on a face-down or unseen tile stays hidden until
 ## the tile is revealed
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const SKELETON: String = "res://data/characters/monsters/skeleton.tres"
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const SKELETON: String = "uid://dxost8s6wpuxo"  # data/characters/monsters/skeleton.tres
 
 var _level: Level
 

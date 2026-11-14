@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 ## creates the thing from the same spawn data, so all show the same model
 
 ## Four model variations
-const FISH: String = "res://data/things/fish/fish.tres"
+const FISH: String = "uid://buicitfb4e20w"  # data/things/fish/fish.tres
 
 func test_a_thing_keeps_the_variation_it_was_created_with() -> void:
 	var fish: ThingProfile = load(FISH)

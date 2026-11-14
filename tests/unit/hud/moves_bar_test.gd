@@ -1,8 +1,8 @@
 extends GdUnitTestSuite
 ## The moves bar shows used, undoable, held and left moves of a character
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const MOVES_BAR_SCENE: String = "res://user_interface/hud/moves_bar.tscn"
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const MOVES_BAR_SCENE: String = "uid://b8ix8nx66t01e"  # user_interface/hud/moves_bar.tscn
 
 func _states_of(moves_bar: MovesBar) -> Array:
 	return moves_bar.get("_states")

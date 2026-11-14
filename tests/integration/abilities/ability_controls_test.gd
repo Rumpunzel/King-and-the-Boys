@@ -2,9 +2,9 @@ extends GdUnitTestSuite
 ## The local player's ability controls on a generated level (no assets): arming lifts the tile, the aiming state turns it,
 ## sets it down or cancels it, and the held cost reaches the character
 
-const ModelFreeWorld = preload("res://tests/fixtures/model_free_world.gd")
-const SPAWNER_SCENE: String = "res://engine/player/player_controller_spawner.tscn"
-const TURN_TILE: RotateTileAbility = preload("res://tests/fixtures/turn_tile.tres")
+const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const SPAWNER_SCENE: String = "uid://bvj0ntif5bqqq"  # engine/player/player_controller_spawner.tscn
+const TURN_TILE: RotateTileAbility = preload("uid://ch3s1rw37k6xu")  # tests/fixtures/turn_tile.tres
 
 var _level: Level
 var _spawner: PlayerControllerSpawner
@@ -61,7 +61,7 @@ func _stand_on_turnable_tile(hero: Character) -> Structure:
 	var best: Structure = null
 	for cell: Vector2i in placed_tiles:
 		var tile: Structure = placed_tiles[cell]
-		if tile.profile.resource_path == ModelFreeWorld.WALL_TILE: continue
+		if tile.profile == load(ModelFreeWorld.WALL_TILE): continue
 		if ModelFreeWorld.turned_connections(tile, 1) == ModelFreeWorld.turned_connections(tile, 0): continue
 		if not best or cell.distance_squared_to(start) < best.get_grid_position().distance_squared_to(start): best = tile
 	assert_object(best).is_not_null()
@@ -174,7 +174,7 @@ func test_the_ability_bar_shows_and_arms_the_abilities() -> void:
 	var controller: PlayerController = _controller()
 	var hero: Character = controller.get_controlled_character()
 	var tile: Structure = _stand_on_turnable_tile(hero)
-	var ability_bar: AbilityBar = auto_free((load("res://user_interface/hud/ability_bar.tscn") as PackedScene).instantiate())
+	var ability_bar: AbilityBar = auto_free((load("uid://bt7kaqcsutt1r") as PackedScene).instantiate())  # user_interface/hud/ability_bar.tscn
 	add_child(ability_bar)
 	ability_bar.player_controller = controller
 	ability_bar.character = hero
