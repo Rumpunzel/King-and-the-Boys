@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://smff1uvc3vj5"]
+
+[ext_resource type="Script" uid="uid://dcarlq77o1udr" path="res://tools/dungeon_stats/dungeon_stats.gd" id="1_stats"]
+
+[node name="DungeonStats" type="Node"]
+script = ExtResource("1_stats")
