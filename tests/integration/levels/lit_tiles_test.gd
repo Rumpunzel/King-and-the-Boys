@@ -144,3 +144,86 @@ func test_a_carried_torch_and_a_wall_torch_count_once() -> void:
 	_expect_sight(hero, 1.0)
 	_level.get_placed_tile(hero.grid_cell).light = TORCH
 	_expect_sight(hero, 1.0)
+
+## A hero who sees nothing beyond its own tile, so whatever else shows is lit
+func _dark_hero() -> Character:
+	var profile: CharacterProfile = ModelFreeWorld.load_hero_profile().duplicate()
+	profile.vision = 0.0
+	profile.dark_vision = 0.0
+	return await _spawn_hero(profile)
+
+func _is_revealed(cell: Vector2i) -> bool:
+	return _level.get_placed_tile(cell).status == Structure.Status.REVEALED
+
+## A cell the hero's sight reaches along passages within [param reach], at least two cells off, not revealed yet, with a neighbour
+## through a passage that is also in sight and not revealed; Vector2i.MAX if there is none
+func _far_cell_in_sight(hero: Character, reach: float) -> Vector2i:
+	var seen: Dictionary[Vector2i, bool] = _level.get_cells_in_sight(hero.grid_cell, reach)
+	for cell: Vector2i in seen:
+		if Vector2(cell - hero.grid_cell).length() < 2.0 or _is_revealed(cell): continue
+		if not _passage_neighbours(cell, seen).is_empty(): return cell
+	return Vector2i.MAX
+
+## The neighbours of [param cell] through a passage that are in [param seen] and not revealed
+func _passage_neighbours(cell: Vector2i, seen: Dictionary[Vector2i, bool]) -> Array[Vector2i]:
+	var neighbours: Array[Vector2i] = []
+	for direction: Level.Direction in Level.Direction.values():
+		var neighbour: Vector2i = cell + Level.direction_to_vector(direction)
+		if _level.is_passage(cell, direction) and seen.has(neighbour) and not _is_revealed(neighbour): neighbours.append(neighbour)
+	return neighbours
+
+func test_a_lit_tile_down_a_passage_is_revealed() -> void:
+	var hero: Character = await _dark_hero()
+	var cell: Vector2i = _far_cell_in_sight(hero, _level.beacon_reach)
+	assert_object(cell).is_not_equal(Vector2i.MAX)
+	var lit_neighbours: Array[Vector2i] = _passage_neighbours(cell, _level.get_cells_in_sight(hero.grid_cell, _level.beacon_reach))
+	_level.get_placed_tile(cell).light = TORCH
+	_level.update_sight(hero, hero.grid_cell)
+	assert_bool(_is_revealed(cell)).is_true()
+	# The torch lights the tiles opening onto its own, as far as the hero sees them
+	for neighbour: Vector2i in lit_neighbours: assert_bool(_is_revealed(neighbour)).is_true()
+
+func test_a_candle_reveals_only_its_own_tile() -> void:
+	var hero: Character = await _dark_hero()
+	var cell: Vector2i = _far_cell_in_sight(hero, _level.beacon_reach)
+	var seen: Dictionary[Vector2i, bool] = _level.get_cells_in_sight(hero.grid_cell, _level.beacon_reach)
+	var neighbours: Array[Vector2i] = _passage_neighbours(cell, seen)
+	_level.get_placed_tile(cell).light = CANDLES
+	_level.update_sight(hero, hero.grid_cell)
+	assert_bool(_is_revealed(cell)).is_true()
+	for neighbour: Vector2i in neighbours: assert_bool(_is_revealed(neighbour)).is_false()
+
+func test_no_beacon_around_a_corner() -> void:
+	var hero: Character = await _dark_hero()
+	var seen: Dictionary[Vector2i, bool] = _level.get_cells_in_sight(hero.grid_cell, _level.beacon_reach)
+	var hidden: Array[Vector2i] = []
+	for tile: Structure in _level.get_placed_tiles():
+		var cell: Vector2i = tile.get_grid_position()
+		if seen.has(cell) or _is_revealed(cell) or Vector2(cell - hero.grid_cell).length() > _level.beacon_reach: continue
+		tile.light = TORCH
+		hidden.append(cell)
+	assert_array(hidden).is_not_empty()
+	_level.update_sight(hero, hero.grid_cell)
+	for cell: Vector2i in hidden: assert_bool(_is_revealed(cell)).override_failure_message("%s shows around a corner" % cell).is_false()
+
+func test_a_lit_tile_beyond_reach_stays_dark() -> void:
+	var hero: Character = await _dark_hero()
+	var near: Dictionary[Vector2i, bool] = _level.get_cells_in_sight(hero.grid_cell, _level.beacon_reach)
+	var far: Array[Vector2i] = []
+	for cell: Vector2i in _level.get_cells_in_sight(hero.grid_cell, _level.beacon_reach + 4.0):
+		if near.has(cell) or _is_revealed(cell): continue
+		_level.get_placed_tile(cell).light = TORCH
+		far.append(cell)
+	assert_array(far).is_not_empty()
+	_level.update_sight(hero, hero.grid_cell)
+	for cell: Vector2i in far: assert_bool(_is_revealed(cell)).is_false()
+
+func test_a_turned_tile_still_shows_its_beacon() -> void:
+	var hero: Character = await _dark_hero()
+	var cell: Vector2i = _far_cell_in_sight(hero, _level.beacon_reach)
+	var tile: Structure = _level.get_placed_tile(cell)
+	tile.light = TORCH
+	# A whole turn round: the tile keeps its shape and its light, and the sight after the turn shows it
+	_level.rotate_tile(tile, Level.Direction.size(), hero)
+	assert_object(tile.light).is_same(TORCH)
+	assert_bool(_is_revealed(cell)).is_true()

@@ -45,6 +45,8 @@ const _SHOWN: StringName = &"shown"
 @export_range(0.0, 1.0) var _monster_chance: float = 0.08
 ## Chance of a newly placed room tile to hold a monster
 @export_range(0.0, 1.0) var _room_monster_chance: float = 0.15
+## How far along passages a hero sees a lit tile beyond its own sight (see [member Structure.light]), in cells
+@export var beacon_reach: float = 6.0
 
 ## How tiles move while lifted, e.g. by the Mystic turning one; set in the scene, as its particles are assets. Without one, tiles
 ## lift with [TileLiftAnimation]'s defaults and no particles
@@ -481,6 +483,7 @@ func rotate_tile(tile: Structure, clockwise_turns: int, character: Character) ->
 		if not hero.visible or hero.level != self or hero.profile.group != CharacterProfile.Groups.HEROES: continue
 		_update_player_vision(hero.grid_cell, hero.get_vision(), _reveal_tile.bind(character))
 		_update_player_vision(hero.grid_cell, hero.get_dark_vision(), _discover_tile.bind(character))
+		_reveal_beacons(hero.grid_cell, character)
 	_stepping_character = null
 	if _board_change_count != board_change_count_before: board_changed.emit(character)
 
@@ -951,8 +954,23 @@ func update_sight(character: Character, from_cell: Vector2i) -> void:
 	_build_dungeon_from(from_cell)
 	_update_player_vision(from_cell, character.get_vision(), _reveal_tile.bind(character))
 	_update_player_vision(from_cell, character.get_dark_vision(), _discover_tile.bind(character))
+	_reveal_beacons(from_cell, character)
 	_stepping_character = null
 	if _board_change_count != board_change_count_before: board_changed.emit(character)
+
+## Lit tiles show from afar: each tile with a wall light that sight from [param from_cell] reaches along passages within
+## [member beacon_reach] is revealed, and with it, where its light reaches its neighbours, those of them through a passage that the
+## same sight reaches; never around a corner. [param character] caused it, as for any reveal
+func _reveal_beacons(from_cell: Vector2i, character: Character) -> void:
+	var seen: Dictionary[Vector2i, bool] = get_cells_in_sight(from_cell, beacon_reach)
+	for cell: Vector2i in seen:
+		var tile: Structure = _placed_tiles.get(cell)
+		if not tile or not tile.light: continue
+		_reveal_tile(tile, character)
+		if not tile.light.lights_neighbours: continue
+		for direction: Direction in Direction.values():
+			var neighbour: Vector2i = cell + direction_to_vector(direction)
+			if seen.has(neighbour) and is_passage(cell, direction): _reveal_tile(_placed_tiles[neighbour], character)
 
 ## Visual feedback on every peer: reveals start shortly after the figure crosses into a cell, as its move animation says
 ## (see [member ModelAnimation.reveal_delay])
