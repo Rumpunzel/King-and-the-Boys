@@ -58,6 +58,16 @@ const _SHOWN: StringName = &"shown"
 @export var _thing_spawner: ThingSpawner
 @export var _agent_spawner: AgentSpawner
 
+## Host only, for debugging: monsters off are taken off the board (not visible, replicated), so they neither show, act, block
+## nor hold a spot; spawning goes on, and turning them on again brings every one back where it stood. Not saved
+var monsters_enabled: bool = true:
+	set(new_monsters_enabled):
+		assert(multiplayer.is_server())
+		monsters_enabled = new_monsters_enabled
+		for node: Node in _agent_spawner.get_children():
+			var agent: Agent = node as Agent
+			if agent and not agent.is_queued_for_deletion(): agent.character.visible = monsters_enabled
+
 ## Host only: whether [method build_level] ran, see [signal built]
 var is_built: bool = false
 ## Host only: the dice the dungeon is generated with. Seeded, it builds the same dungeon again for the same order of
@@ -898,6 +908,8 @@ func _forget_thing(thing: Thing) -> void:
 
 func _on_agent_created(agent: Agent) -> void:
 	_register_character(agent.character)
+	# Spawned while monsters are off: off with them, until they are turned on
+	if multiplayer.is_server() and not monsters_enabled: agent.character.visible = false
 
 func _on_player_controller_created(player_controller: PlayerController) -> void:
 	var character: Character = player_controller.character

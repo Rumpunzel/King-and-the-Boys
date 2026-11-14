@@ -488,7 +488,8 @@ func _run_monster_phase() -> void:
 		if not is_instance_valid(nodes[index]): continue
 		var character: Character = nodes[index] as Character
 		var agent: Agent = character.get_parent() as Agent if character else null
-		if not agent or character.profile.group != CharacterProfile.Groups.MONSTERS: continue
+		# Off the board (e.g. monsters turned off for debugging): no turn
+		if not agent or not character.visible or character.profile.group != CharacterProfile.Groups.MONSTERS: continue
 		_alert_heroes_seen_by(character)
 		while is_instance_valid(character) and character.is_inside_tree() and character.movement_points > 0:
 			var was_in_sight: bool = _is_in_sight(character.grid_cell)
