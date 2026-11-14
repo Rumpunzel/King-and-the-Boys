@@ -34,7 +34,7 @@ func _ready() -> void:
 	_level = (load(LEVEL) as PackedScene).instantiate()
 	_level.generation_random.seed = GENERATION_SEED
 	# No monsters: they roll as the dungeon grows, and the benchmark measures the dungeon
-	_level.set(&"_monsters", null)
+	_level.spawns_monsters = false
 	add_child(_level)
 	_level.build_level()
 	_explore_everything()

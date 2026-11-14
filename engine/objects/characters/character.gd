@@ -224,7 +224,7 @@ func get_perception() -> float:
 	return profile.perception
 
 ## @returns how far the character sees ([member CharacterProfile.vision]), by the strongest of the lights it carries and those it
-## stands in: lights do not stack
+## stands in: lights do not stack, and only widen it (the profile's value is the floor)
 func get_vision() -> float:
 	var vision: float = profile.vision
 	for light_source: LightSource in _get_sight_lights():
@@ -232,7 +232,7 @@ func get_vision() -> float:
 	return vision
 
 ## @returns how far the character sees in the dark ([member CharacterProfile.dark_vision]), by the strongest of the lights it
-## carries and those it stands in: lights do not stack
+## carries and those it stands in: lights do not stack, and only widen it (the profile's value is the floor)
 func get_dark_vision() -> float:
 	var dark_vision: float = profile.dark_vision
 	for light_source: LightSource in _get_sight_lights():

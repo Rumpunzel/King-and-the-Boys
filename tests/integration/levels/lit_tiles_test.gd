@@ -282,3 +282,25 @@ func test_the_strongest_light_wins() -> void:
 	_level.get_placed_tile(hero.grid_cell).light = TORCH
 	assert_float(hero.get_vision()).is_equal(hero.profile.vision + 3.0)
 	assert_float(hero.get_dark_vision()).is_equal(hero.profile.dark_vision + 1.0)
+
+func test_a_step_updates_every_heros_sight() -> void:
+	var near: Character = await _dark_hero()
+	var cell: Vector2i = _far_cell_in_sight(near, _level.beacon_reach)
+	assert_object(cell).is_not_equal(Vector2i.MAX)
+	# Another hero far off, out of reach of that cell, whose step lights it (as a tile its step places could)
+	var far_tile: Structure = null
+	for tile: Structure in _level.get_placed_tiles():
+		if Vector2(tile.get_grid_position() - cell).length() > _level.beacon_reach + 2.0 and tile.profile.resource_path != ModelFreeWorld.WALL_TILE:
+			far_tile = tile
+	assert_object(far_tile).is_not_null()
+	var far: Character = await _dark_hero()
+	far.place_on_grid(far_tile.get_grid_position(), Vector2.ZERO, far.facing)
+	_level.get_placed_tile(cell).light = TORCH
+	_level.update_sight(far, far.grid_cell)
+	assert_bool(_is_revealed(cell)).override_failure_message("The near hero does not see the torch far off").is_true()
+
+func test_kinds_weighted_zero_never_come_up() -> void:
+	var decorations: TileDecorations = LIT_DECORATIONS.duplicate()
+	decorations.light_chance = 1.0
+	decorations.tile_lights = {TORCH: 0.0}
+	for x: int in 20: assert_object(decorations.roll_light(load(LIT_STRAIGHT) as StructureProfile, 1, Vector2i(x, 0))).is_null()

@@ -53,7 +53,7 @@ func _walk(hero: CharacterProfile) -> void:
 	var game: Game = (load(GAME) as PackedScene).instantiate()
 	(game.get_node(^"Level") as Level).generation_random.seed = generation_seed
 	# No monsters: they roll as the dungeon grows, and the shots compare lighting, not them
-	(game.get_node(^"Level") as Level).set(&"_monsters", null)
+	(game.get_node(^"Level") as Level).spawns_monsters = false
 	(game.get_node(^"UserInterface") as CanvasLayer).visible = false
 	add_child(game)
 	var spawner: PlayerControllerSpawner = game.get_node(^"PlayerControllerSpawner")

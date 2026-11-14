@@ -39,6 +39,8 @@ const _SHOWN: StringName = &"shown"
 ## Chance of a room big enough (2x2 cells) to get a centrepiece
 @export_range(0.0, 1.0) var _room_centrepiece_chance: float = 0.75
 
+## Whether newly placed tiles may hold monsters at all (scenes and tests that are not about monsters turn it off)
+@export var spawns_monsters: bool = true
 ## What may wait on a newly placed tile (e.g. a skeleton); set in the scene, like [member _wall_tile]
 @export var _monsters: SpawnTable
 ## Chance of a newly placed corridor tile to hold a monster
@@ -80,6 +82,8 @@ var generation_random: RandomNumberGenerator = RandomNumberGenerator.new()
 var restriction_fallbacks: Dictionary[Vector2i, bool] = {}
 
 var _placed_tiles: Dictionary[Vector2i, Structure]
+# Answers what can be seen on the board; the level reveals and discovers what it names
+var _sight: LevelSight = LevelSight.new(self)
 ## Bridges over the gaps between tiles opening to each other, by the middle of the gap (see [method _get_gap_position]); each
 ## peer lays its own, as they are only for show
 var _bridges: Dictionary[Vector3, Model]
@@ -353,43 +357,16 @@ func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
 	var neighbour: Structure = get_placed_tile(grid_position + direction_to_vector(direction))
 	return neighbour != null and neighbour.has_connection(get_opposite(direction))
 
-## The first step from [param from] along passages towards the nearest of [param targets] that is in sight from there within
-## [param vision], by the rule heroes see by (straight along passages, across whole rooms; see [method update_sight]), so a
-## monster sees a hero as that hero would see it. Targets on [param from] itself are not looked for.
+## The first step from [param from] along passages towards the nearest of [param targets] in sight within [param vision], e.g. a
+## monster coming for the heroes it notices (see [method LevelSight.get_step_towards_in_sight])
 ## @returns its [enum Direction], or [code]-1[/code] if none is in sight
 func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision: float) -> int:
-	var in_sight: Dictionary[Vector2i, bool] = get_cells_in_sight(from, vision)
-	var seen: Array[Vector2i] = []
-	for target: Vector2i in targets:
-		if target != from and in_sight.has(target): seen.append(target)
-	if seen.is_empty(): return -1
-	# Breadth first from the cells one step away, each knowing the step it started with
-	var first_steps: Dictionary[Vector2i, int] = {from: -1}
-	var frontier: Array[Vector2i] = []
-	for direction: Direction in Direction.values():
-		if not is_passage(from, direction): continue
-		var neighbour: Vector2i = from + direction_to_vector(direction)
-		first_steps[neighbour] = direction
-		frontier.append(neighbour)
-	while not frontier.is_empty():
-		var next_frontier: Array[Vector2i] = []
-		for cell: Vector2i in frontier:
-			if seen.has(cell): return first_steps[cell]
-			for direction: Direction in Direction.values():
-				var neighbour: Vector2i = cell + direction_to_vector(direction)
-				if first_steps.has(neighbour) or not is_passage(cell, direction): continue
-				first_steps[neighbour] = first_steps[cell]
-				next_frontier.append(neighbour)
-		frontier = next_frontier
-	return -1
+	return _sight.get_step_towards_in_sight(from, targets, vision)
 
 ## @returns the cells in sight from [param from] within [param vision] (as keys), by the rule heroes see by (straight along
-## passages, across whole rooms; see [method update_sight]); [param from] itself among them. Sight goes both ways: what stands
-## on one of them sees [param from] with the same vision.
+## passages, across whole rooms); see [method LevelSight.get_cells_in_sight]
 func get_cells_in_sight(from: Vector2i, vision: float) -> Dictionary[Vector2i, bool]:
-	var seen: Dictionary[Vector2i, bool] = {}
-	_update_player_vision(from, vision, func(tile: Structure) -> void: seen[tile.get_grid_position()] = true)
-	return seen
+	return _sight.get_cells_in_sight(from, vision)
 
 ## The cells a piece on [param grid_position] reaches, e.g. to take control of what stands there: its own and the next ones
 ## along passages, where it could step
@@ -479,11 +456,7 @@ func rotate_tile(tile: Structure, clockwise_turns: int, character: Character) ->
 	var board_change_count_before: int = _board_change_count
 	_stepping_character = character
 	_build_dungeon_from(grid_position)
-	for hero: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if not hero.visible or hero.level != self or hero.profile.group != CharacterProfile.Groups.HEROES: continue
-		_update_player_vision(hero.grid_cell, hero.get_vision(), _reveal_tile.bind(character))
-		_update_player_vision(hero.grid_cell, hero.get_dark_vision(), _discover_tile.bind(character))
-		_reveal_beacons(hero.grid_cell, character)
+	_update_heroes_sight(character)
 	_stepping_character = null
 	if _board_change_count != board_change_count_before: board_changed.emit(character)
 
@@ -553,7 +526,7 @@ func _build_dungeon_from(origin_grid_position: Vector2i) -> void:
 ## a loaded tile never is. The roll is seeded by the level's seed and the cell, so the same seed places the same monsters.
 ## None near the start
 func _populate(cells: Array[Vector2i]) -> void:
-	if not _monsters or cells.is_empty(): return
+	if not spawns_monsters or not _monsters or cells.is_empty(): return
 	var starting_cell: Vector2i = _get_starting_cell()
 	for cell: Vector2i in cells:
 		var tile: Structure = _placed_tiles.get(cell)
@@ -651,52 +624,6 @@ func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vect
 	var decorations: TileDecorations = tile_blueprint.profile.decorations
 	var light: TileLight = decorations.roll_light(tile_blueprint.profile, generation_random.seed, grid_position) if decorations else null
 	_structure_spawner.spawn_at(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status, light)
-
-## Calls [param reveal_function] with every tile in sight within [param vision_radius], always with the tile at
-## [param from_grid_position] (a character sees the tile it stands on, even without vision)
-func _update_player_vision(from_grid_position: Vector2i, vision_radius: float, reveal_function: Callable, origin_grid_position: Vector2i = from_grid_position) -> void:
-	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
-	var from_tile: Structure = _placed_tiles[from_grid_position]
-	assert(from_tile)
-	# The passages below only reach the tiles they lead to (rooms reveal this one again, harmlessly)
-	reveal_function.call(from_tile)
-	var origin_room: Structure = _placed_tiles[origin_grid_position]
-	assert(origin_room)
-	var origin_tile_room_type: RoomType = origin_room.profile.room_type
-	if origin_tile_room_type and origin_tile_room_type == from_tile.profile.room_type:
-		_update_player_vision_in_room(from_grid_position, vision_radius, reveal_function, origin_grid_position)
-	for direction: Direction in from_tile.get_connections():
-		var direction_vector: Vector2i = direction_to_vector(direction)
-		var tile: Structure = from_tile
-		for radius: int in range(1, ceili(vision_radius) + 1):
-			# Sight follows passages only, like the corridors built in _build_corridor_from,
-			# so coming back to a cell never reveals tiles that were built later
-			if not is_passage(tile.get_grid_position(), direction): break
-			var next_tile_grid_position: Vector2i = from_grid_position + direction_vector * radius
-			if origin_grid_position.distance_squared_to(next_tile_grid_position) > vision_radius ** 2.0: break
-			if not _placed_tiles.has(next_tile_grid_position): break
-			tile = _placed_tiles[next_tile_grid_position]
-			reveal_function.call(tile)
-
-func _update_player_vision_in_room(from_grid_position: Vector2i, vision_radius: float, reveal_function: Callable, origin_grid_position: Vector2i, already_visited: Array[Vector2i] = []) -> void:
-	assert(not already_visited.has(from_grid_position))
-	already_visited.append(from_grid_position)
-	if origin_grid_position.distance_squared_to(from_grid_position) > vision_radius ** 2.0: return
-	var from_tile: Structure = _placed_tiles[from_grid_position]
-	assert(from_tile)
-	reveal_function.call(from_tile)
-	var origin_room: Structure = _placed_tiles[origin_grid_position]
-	assert(origin_room)
-	var origin_tile_room_type: RoomType = origin_room.profile.room_type
-	assert(origin_tile_room_type)
-	assert(from_tile.profile.room_type == origin_tile_room_type)
-	for connection: Direction in from_tile.get_connections():
-		var direction_vector: Vector2i = direction_to_vector(connection)
-		var room_tile_grid_position: Vector2i = from_grid_position + direction_vector
-		var room_tile: Structure = _placed_tiles[room_tile_grid_position]
-		assert(room_tile)
-		if origin_tile_room_type == room_tile.profile.room_type and not already_visited.has(room_tile_grid_position):
-			_update_player_vision_in_room(room_tile_grid_position, vision_radius, reveal_function, origin_grid_position, already_visited)
 
 ## Host only: reveals [param tile] right away and discovers its neighbours; peers show it later, after the step of
 ## [param character] that caused it, or at once if no step did
@@ -952,25 +879,31 @@ func update_sight(character: Character, from_cell: Vector2i) -> void:
 	# Tiles placed while building are discovered with this step too, see _on_structure_created
 	_stepping_character = character
 	_build_dungeon_from(from_cell)
-	_update_player_vision(from_cell, character.get_vision(), _reveal_tile.bind(character))
-	_update_player_vision(from_cell, character.get_dark_vision(), _discover_tile.bind(character))
-	_reveal_beacons(from_cell, character)
+	_see_from(from_cell, character, character)
+	# What the step placed (a lit tile) may change what the others see too
+	_update_heroes_sight(character, character)
 	_stepping_character = null
 	if _board_change_count != board_change_count_before: board_changed.emit(character)
 
-## Lit tiles show from afar: each tile with a wall light that sight from [param from_cell] reaches along passages within
-## [member beacon_reach] is revealed, and with it, where its light reaches its neighbours, those of them through a passage that the
-## same sight reaches; never around a corner. [param character] caused it, as for any reveal
+## What every hero on the board sees from where it stands comes into sight, [param character] causing it; [param skip] has seen
+## already. A hero hidden while it controls something else sees nothing
+func _update_heroes_sight(character: Character, skip: Character = null) -> void:
+	for hero: Character in get_tree().get_nodes_in_group(Character.GROUP):
+		if hero == skip or not hero.visible or hero.level != self or hero.profile.group != CharacterProfile.Groups.HEROES: continue
+		if hero.is_node_ready() and _placed_tiles.has(hero.grid_cell): _see_from(hero.grid_cell, hero, character)
+
+## What [param hero] sees from [param from_cell] comes into sight: it reveals by its vision, discovers by its darkvision and sees
+## lit tiles from afar; [param character] caused it
+func _see_from(from_cell: Vector2i, hero: Character, character: Character) -> void:
+	_sight.see(from_cell, hero.get_vision(), _reveal_tile.bind(character))
+	_sight.see(from_cell, hero.get_dark_vision(), _discover_tile.bind(character))
+	_reveal_beacons(from_cell, character)
+
+## Lit tiles show from afar: every cell a wall light lights that sight from [param from_cell] reaches along passages within
+## [member beacon_reach] is revealed, never one around a corner (see [method LevelSight.get_beacon_cells]); [param character]
+## caused it, as for any reveal
 func _reveal_beacons(from_cell: Vector2i, character: Character) -> void:
-	var seen: Dictionary[Vector2i, bool] = get_cells_in_sight(from_cell, beacon_reach)
-	for cell: Vector2i in seen:
-		var tile: Structure = _placed_tiles.get(cell)
-		if not tile or not tile.light: continue
-		_reveal_tile(tile, character)
-		if not tile.light.lights_neighbours: continue
-		for direction: Direction in Direction.values():
-			var neighbour: Vector2i = cell + direction_to_vector(direction)
-			if seen.has(neighbour) and is_passage(cell, direction): _reveal_tile(_placed_tiles[neighbour], character)
+	for cell: Vector2i in _sight.get_beacon_cells(from_cell, beacon_reach): _reveal_tile(_placed_tiles[cell], character)
 
 ## Visual feedback on every peer: reveals start shortly after the figure crosses into a cell, as its move animation says
 ## (see [member ModelAnimation.reveal_delay])

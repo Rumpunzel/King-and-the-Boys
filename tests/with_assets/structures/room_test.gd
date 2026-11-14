@@ -18,7 +18,7 @@ func before_test() -> void:
 	_dusty_room_chance = (load(DECORATIONS) as TileDecorations).dusty_room_chance
 	_level = auto_free((load(LEVEL) as PackedScene).instantiate())
 	# No monsters: they roll as the dungeon grows, and nothing here is about them
-	_level.set(&"_monsters", null)
+	_level.spawns_monsters = false
 	add_child(_level)
 
 func after_test() -> void:

@@ -12,7 +12,7 @@ func before() -> void:
 func before_test() -> void:
 	_level = auto_free((load(LEVEL) as PackedScene).instantiate())
 	# No monsters: they roll as the dungeon grows, and nothing here is about them
-	_level.set(&"_monsters", null)
+	_level.spawns_monsters = false
 	_level.generation_random.seed = 4321
 	add_child(_level)
 	_level.build_level()

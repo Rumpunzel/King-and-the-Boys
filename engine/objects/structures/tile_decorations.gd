@@ -54,7 +54,7 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 @export_range(0.0, 1.0) var edge_spread: float = 0.3
 @export_group("Lights")
 ## The kinds of wall light a tile may hold (torches, braziers, candles), by weight: the host rolls one per tile with a closed side, by
-## [member light_chance], as it places the tile (see [method Level.roll_light]); it stands in the middle of a closed side
+## [member light_chance], as it places the tile (see [method roll_light]); a weight of 0 never comes up; it stands in the middle of a closed side
 @export var tile_lights: Dictionary[TileLight, float] = {}
 @export_range(0.0, 1.0) var light_chance: float = 0.2
 ## Rare glowing things in corners between two closed sides (e.g. crystals), in place of a corner prop; scattered pieces spread
@@ -137,7 +137,9 @@ func roll_light(profile: StructureProfile, level_seed: int, cell: Vector2i) -> T
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash([level_seed, cell, &"light"])
 	if random.randf() >= light_chance: return null
-	return tile_lights.keys()[random.rand_weighted(PackedFloat32Array(tile_lights.values()))] as TileLight
+	# rand_weighted gives -1 when every weight is 0: then no light at all
+	var pick: int = random.rand_weighted(PackedFloat32Array(tile_lights.values()))
+	return tile_lights.keys()[pick] as TileLight if pick >= 0 else null
 
 ## Builds the clutter of a tile whose open sides are [param connections], as its model sees them (unrotated), with the wall light
 ## [param light] the tile holds, if any (see [member Structure.light])

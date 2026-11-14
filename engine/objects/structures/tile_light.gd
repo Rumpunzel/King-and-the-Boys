@@ -3,7 +3,7 @@
 class_name TileLight
 extends Resource
 ## A kind of wall light a tile may hold (a torch, a brazier, candles): the host rolls one per tile as it places it (see
-## [method Level.roll_light]) and sends it with the tile, the decorations show it on a closed side, and it lights the way:
+## [method TileDecorations.roll_light]) and sends it with the tile, the decorations show it on a closed side, and it lights the way:
 ## heroes standing in it see as if they carried [member light_source], and it shows from afar along passages
 
 ## What stands on the closed side, picked like any prop set
