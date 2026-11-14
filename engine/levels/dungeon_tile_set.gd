@@ -4,6 +4,10 @@ class_name DungeonTileSet
 extends Resource
 
 @export var _dungeon_tiles: Dictionary[StructureProfile, float]
+## Scales a blueprint's weight once for each passage it opens into a crowded cell (an empty one beside a placed tile's
+## closed side, see [method Level._get_crowded_directions]): below 1, the dungeon grows less into the gaps between its
+## corridors and rooms, leaving room between them; 1 ignores crowding
+@export_range(0.0, 1.0) var crowding_weight: float = 1.0
 
 # Every tile in each of its four turns, made the first time they are needed
 var _blueprints: Array[TileBlueprint]:
@@ -13,8 +17,9 @@ var _blueprints: Array[TileBlueprint]:
 		return _blueprints
 
 ## A blueprint fitting the passages of [param surrounding_tiles], drawn by weight with [param random] among those
-## keeping the most of their connection restrictions (all of them, wherever one can)
-func pick_tile(tile_position: Vector2i, surrounding_tiles: Array[Structure], random: RandomNumberGenerator) -> Pick:
+## keeping the most of their connection restrictions (all of them, wherever one can); one opening towards
+## [param crowded_directions] weighs less (see [member crowding_weight])
+func pick_tile(tile_position: Vector2i, surrounding_tiles: Array[Structure], crowded_directions: Array[Level.Direction], random: RandomNumberGenerator) -> Pick:
 	# Asked of each surrounding tile once rather than for every blueprint: this runs for every tile the dungeon grows by
 	var neighbours: Array[Neighbour] = get_neighbours(tile_position, surrounding_tiles)
 	# Restrictions: the fitting blueprints suiting the most surrounding tiles, each once. All of them if any blueprint does;
@@ -33,7 +38,7 @@ func pick_tile(tile_position: Vector2i, surrounding_tiles: Array[Structure], ran
 	assert(not candidates.is_empty())
 	var suits_all: bool = most_suited == neighbours.size()
 	if not suits_all: print_verbose("No tile keeps every neighbour's restrictions at %s; taking one that keeps %d of %d" % [tile_position, most_suited, neighbours.size()])
-	return Pick.new(_draw(candidates, random), suits_all)
+	return Pick.new(_draw(candidates, crowded_directions, random), suits_all)
 
 ## @returns what [method pick_tile] needs of each of [param surrounding_tiles] around [param tile_position]
 static func get_neighbours(tile_position: Vector2i, surrounding_tiles: Array[Structure]) -> Array[Neighbour]:
@@ -41,15 +46,21 @@ static func get_neighbours(tile_position: Vector2i, surrounding_tiles: Array[Str
 	for surrounding_tile: Structure in surrounding_tiles: neighbours.append(Neighbour.new(tile_position, surrounding_tile))
 	return neighbours
 
-## One of [param candidates] by their weights
-func _draw(candidates: Array[TileBlueprint], random: RandomNumberGenerator) -> TileBlueprint:
+## One of [param candidates] by their weights, scaled for each of their passages towards [param crowded_directions]
+func _draw(candidates: Array[TileBlueprint], crowded_directions: Array[Level.Direction], random: RandomNumberGenerator) -> TileBlueprint:
 	assert(not candidates.is_empty())
-	var total_weight: float = candidates.reduce(func(sum: float, blueprint: TileBlueprint) -> float: return sum + _dungeon_tiles[blueprint.profile], 0.0)
-	var random_selection: float = random.randf() * total_weight
+	var weights: PackedFloat64Array = []
+	var total_weight: float = 0.0
 	for blueprint: TileBlueprint in candidates:
 		var weight: float = _dungeon_tiles[blueprint.profile]
-		if random_selection < weight: return blueprint
-		random_selection -= weight
+		for direction: Level.Direction in crowded_directions:
+			if blueprint.profile.has_connection(direction, blueprint.clockwise_turns): weight *= crowding_weight
+		weights.append(weight)
+		total_weight += weight
+	var random_selection: float = random.randf() * total_weight
+	for index: int in candidates.size():
+		if random_selection < weights[index]: return candidates[index]
+		random_selection -= weights[index]
 	# randf() may return 1.0, and weights of 0 never win: the last one then
 	return candidates.back()
 

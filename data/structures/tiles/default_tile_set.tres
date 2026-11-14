@@ -31,4 +31,5 @@ ExtResource("14_7476t"): 1.0,
 ExtResource("12_twuq3"): 0.1,
 ExtResource("12_tqqpw"): 1.0
 })
+crowding_weight = 0.1
 metadata/_custom_type_script = "uid://cgmfnge5uakbt"
