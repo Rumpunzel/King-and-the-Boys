@@ -218,22 +218,24 @@ func get_light_sources() -> Array[LightSource]:
 static func _add_light_source(light_sources: Array[LightSource], light_source: LightSource) -> void:
 	if light_source and not light_sources.has(light_source): light_sources.append(light_source)
 
-## @returns how far the character sees ([member CharacterProfile.vision]), changed by the lights it carries and those it stands in
+## @returns how far the character sees ([member CharacterProfile.vision]), by the strongest of the lights it carries and those it
+## stands in: lights do not stack
 func get_vision() -> float:
 	var vision: float = profile.vision
-	for light_source: LightSource in _get_sight_lights(): vision = StatModifier.apply_all(light_source.vision_modifiers, vision)
+	for light_source: LightSource in _get_sight_lights():
+		vision = maxf(vision, StatModifier.apply_all(light_source.vision_modifiers, profile.vision))
 	return vision
 
-## @returns how far the character sees in the dark ([member CharacterProfile.dark_vision]), changed by the lights it carries and
-## those it stands in
+## @returns how far the character sees in the dark ([member CharacterProfile.dark_vision]), by the strongest of the lights it
+## carries and those it stands in: lights do not stack
 func get_dark_vision() -> float:
 	var dark_vision: float = profile.dark_vision
 	for light_source: LightSource in _get_sight_lights():
-		dark_vision = StatModifier.apply_all(light_source.dark_vision_modifiers, dark_vision)
+		dark_vision = maxf(dark_vision, StatModifier.apply_all(light_source.dark_vision_modifiers, profile.dark_vision))
 	return dark_vision
 
 ## The lights the character sees by: those it carries and the wall lights it stands in (see [method Structure.get_light_sources]),
-## each once, so a torch-bearer by a wall torch sees as far as with one torch
+## each once
 func _get_sight_lights() -> Array[LightSource]:
 	var light_sources: Array[LightSource] = get_light_sources()
 	var tile: Structure = level.get_placed_tile(grid_cell) if level else null

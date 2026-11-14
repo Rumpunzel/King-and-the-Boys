@@ -5,6 +5,7 @@ const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_fre
 const TORCH: TileLight = preload("uid://cvimunviu8yb1")  # tests/fixtures/torch_tile_light.tres
 const CANDLES: TileLight = preload("uid://dtgexy6ytp6us")  # tests/fixtures/candle_tile_light.tres
 const LIT_DECORATIONS: TileDecorations = preload("uid://y703cko861sr")  # tests/fixtures/lit_decorations.tres
+const LANTERN_LIGHT: LightSource = preload("uid://6wrv5wq3o88f")  # tests/fixtures/lantern_light.tres
 const STRAIGHT: String = "uid://cnebsw1r05wei"  # tests/fixtures/tiles/straight.tres
 const CROSSING: String = "uid://0wxtdhri4q23"  # tests/fixtures/tiles/crossing.tres
 ## A straight tile with wall lights to roll, as a file: spawners send tiles by their profile's path
@@ -260,3 +261,24 @@ func test_a_quarter_turned_tile_keeps_its_light_and_beacon() -> void:
 	# Shown from afar exactly when the turned tile is still in sight
 	var seen: bool = _level.get_cells_in_sight(hero.grid_cell, _level.beacon_reach).has(cell)
 	assert_bool(_is_revealed(cell)).is_equal(seen)
+
+func test_different_lights_do_not_stack() -> void:
+	# A light of its own (as the rogue's lantern is), not the same resource as the wall torch's
+	var lamp: ToggleLightAbility = ToggleLightAbility.new()
+	lamp.light_source = TORCH.light_source.duplicate(true)
+	var profile: CharacterProfile = ModelFreeWorld.load_hero_profile().duplicate()
+	profile.abilities = [lamp]
+	var hero: Character = await _spawn_hero(profile)
+	_level.get_placed_tile(hero.grid_cell).light = TORCH
+	_expect_sight(hero, 1.0)
+
+func test_the_strongest_light_wins() -> void:
+	# The lantern fixture shows three cells further, a wall torch one: the lantern's reach counts
+	var lamp: ToggleLightAbility = ToggleLightAbility.new()
+	lamp.light_source = LANTERN_LIGHT
+	var profile: CharacterProfile = ModelFreeWorld.load_hero_profile().duplicate()
+	profile.abilities = [lamp]
+	var hero: Character = await _spawn_hero(profile)
+	_level.get_placed_tile(hero.grid_cell).light = TORCH
+	assert_float(hero.get_vision()).is_equal(hero.profile.vision + 3.0)
+	assert_float(hero.get_dark_vision()).is_equal(hero.profile.dark_vision + 1.0)
