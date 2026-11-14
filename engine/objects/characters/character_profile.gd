@@ -36,8 +36,13 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 ## Of several heroes on a tile, the one with the lowest number is the one a monster blocks (and blocks a monster leaving it)
 @export var block_priority: int = 0
 
+## A hero's sight along passages: what it reveals, widened by the lights it carries or stands in (see [method Character.get_vision])
 @export var vision: float = 1.5
+## A hero's sight in the dark along passages: what it discovers (outlines), widened by lights like [member vision]
 @export var dark_vision: float = 2.5
+## How far along passages a monster notices heroes, to hunt them and alert them; lights play no part in it (see
+## [method Character.get_perception]). Heroes see by [member vision] and [member dark_vision] instead
+@export var perception: float = 3.0
 
 @export_category("Abilities")
 @export var abilities: Array[Ability]:

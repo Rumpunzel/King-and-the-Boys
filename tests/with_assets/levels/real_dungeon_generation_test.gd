@@ -10,6 +10,8 @@ const EXPLORATION_ROUNDS: int = 1
 func test_every_seed_keeps_the_rules() -> void:
 	for generation_seed: int in SEEDS:
 		var level: Level = (load(LEVEL) as PackedScene).instantiate()
+		# No monsters: they roll as the dungeon grows, and nothing here is about them
+		level.spawns_monsters = false
 		level.generation_random.seed = generation_seed
 		add_child(level)
 		level.build_level()

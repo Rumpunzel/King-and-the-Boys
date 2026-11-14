@@ -27,6 +27,8 @@ func before_test() -> void:
 	decorations.wall_chance = 0.5
 	seed(4321)
 	_level = auto_free((load(LEVEL) as PackedScene).instantiate())
+	# No monsters: they roll as the dungeon grows, and nothing here is about them
+	_level.spawns_monsters = false
 	# The dungeon draws from its own dice, not the global ones
 	_level.generation_random.seed = 4321
 	add_child(_level)
@@ -170,6 +172,8 @@ func test_doorway_arches_face_the_room() -> void:
 ## Like loading a save or joining mid-game: tiles arrive revealed already and are dressed as they get their level
 func test_tiles_spawned_revealed_raise_their_pillars() -> void:
 	var loaded: Level = auto_free((load(LEVEL) as PackedScene).instantiate())
+	# No monsters: they roll as the dungeon grows, and nothing here is about them
+	loaded.spawns_monsters = false
 	add_child(loaded)
 	var room: StructureProfile = load("uid://c3sqiedcypv0x")  # data/structures/tiles/room/room_crossing.tres
 	# Four room tiles around the even corner (0, 0)

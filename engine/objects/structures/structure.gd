@@ -25,6 +25,8 @@ const PROFILE_PATH: StringName = "profile_path"
 const SPAWN_TRANSFORM: StringName = "spawn_transform"
 const CLOCKWISE_TURNS: StringName = "clockwise_turns"
 const STATUS: StringName = "status"
+## The [ResourceId] of the tile's [member light], empty for none; optional, as tiles saved before lights have none
+const LIGHT: StringName = "light"
 ## Every structure in the tree, e.g. so [LevelDebug] can show or hide their labels
 const GROUP: StringName = &"Structures"
 
@@ -58,6 +60,9 @@ static var debug_labels_shown: bool = false
 @export_group("Configuration")
 @export var _hidden_material: Material
 
+## The wall light the tile holds (a torch, brazier or candles), rolled by the host as it placed the tile (see
+## [method TileDecorations.roll_light]) and sent with it, so every peer shows the same; [code]null[/code] for none
+var light: TileLight
 ## The [Character] whose step raised [member status] last, empty if no step did (level build, spawning, loading).
 ## Replicated before [member status], so peers know it when the status changes.
 var status_cause: NodePath
@@ -125,11 +130,17 @@ static func from_structure_data(structure_data: Dictionary[StringName, Variant])
 	var new_spawn_transform: Transform3D = structure_data[SPAWN_TRANSFORM]
 	var new_clockwise_turns: Status = structure_data[CLOCKWISE_TURNS]
 	var new_status: Status = structure_data[STATUS]
-	return new_profile.create(new_variation, new_spawn_transform, new_clockwise_turns, new_status)
+	return new_profile.create(new_variation, new_spawn_transform, new_clockwise_turns, new_status, _light_in(structure_data))
 
 static func validate_structure_data(structure_data: Dictionary[StringName, Variant]) -> void:
 	assert(structure_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM, CLOCKWISE_TURNS, STATUS]))
-	assert(structure_data.size() == 5)
+	assert(structure_data.size() == (6 if structure_data.has(LIGHT) else 5))
+	assert(not structure_data.has(LIGHT) or structure_data[LIGHT] is String)
+
+## The tile light [param structure_data] names, [code]null[/code] for none (or none named, as saved before lights)
+static func _light_in(structure_data: Dictionary[StringName, Variant]) -> TileLight:
+	var light_id: String = structure_data.get(LIGHT, "")
+	return ResourceId.find(light_id) as TileLight if not light_id.is_empty() else null
 
 ## Host only; @returns [code]true[/code] if the status went up
 func discover() -> bool:
@@ -151,6 +162,7 @@ func apply_structure_data(structure_data: Dictionary[StringName, Variant]) -> vo
 	transform = structure_data[SPAWN_TRANSFORM]
 	clockwise_turns = structure_data[CLOCKWISE_TURNS]
 	status = structure_data[STATUS]
+	light = _light_in(structure_data)
 
 func to_structure_data() -> Dictionary[StringName, Variant]:
 	assert(profile)
@@ -160,9 +172,37 @@ func to_structure_data() -> Dictionary[StringName, Variant]:
 		SPAWN_TRANSFORM: transform,
 		CLOCKWISE_TURNS: clockwise_turns,
 		STATUS: status,
+		LIGHT: ResourceId.of(light) if light else "",
 	}
 	validate_structure_data(structure_data)
 	return structure_data
+
+## @returns the cells this tile's wall light lights: its own, and where the light reaches its neighbours (see
+## [member TileLight.lights_neighbours]) each one through a passage; none without a light. Figures there stand in it, and they show
+## with it from afar (see [method LevelSight.get_beacon_cells])
+func get_lit_cells() -> Array[Vector2i]:
+	if not light: return []
+	var cell: Vector2i = get_grid_position()
+	var lit: Array[Vector2i] = [cell]
+	if not light.lights_neighbours or not level: return lit
+	for direction: Level.Direction in Level.Direction.values():
+		if level.is_passage(cell, direction): lit.append(cell + Level.direction_to_vector(direction))
+	return lit
+
+## @returns the lights a figure on this tile stands in: those of the wall lights whose light reaches it (see [method get_lit_cells]),
+## each once; a weak light (candles) gives none
+func get_light_sources() -> Array[LightSource]:
+	var light_sources: Array[LightSource] = []
+	var cell: Vector2i = get_grid_position()
+	var lighting: Array[Structure] = [self]
+	if level:
+		for direction: Level.Direction in Level.Direction.values():
+			var neighbour: Structure = level.get_placed_tile(cell + Level.direction_to_vector(direction))
+			if neighbour: lighting.append(neighbour)
+	for tile: Structure in lighting:
+		if not tile.light or not tile.light.light_source or light_sources.has(tile.light.light_source): continue
+		if tile.get_lit_cells().has(cell): light_sources.append(tile.light.light_source)
+	return light_sources
 
 func can_connect(direction: Level.Direction, other_profile: StructureProfile) -> bool: return profile.can_connect(direction, clockwise_turns, other_profile)
 func can_connect_to(grid_position: Vector2i, other_profile: StructureProfile) -> bool:

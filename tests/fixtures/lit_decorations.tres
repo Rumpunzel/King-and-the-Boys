@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="TileDecorations" format=3 uid="uid://y703cko861sr"]
+
+[ext_resource type="Script" uid="uid://b1uid0fmgjyie" path="res://engine/objects/structures/tile_decorations.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c2p737sm5xhvf" path="res://engine/objects/structures/tile_light.gd" id="2_tile_light"]
+[ext_resource type="Resource" uid="uid://cvimunviu8yb1" path="res://tests/fixtures/torch_tile_light.tres" id="3_torch"]
+
+[resource]
+script = ExtResource("1_script")
+tile_lights = Dictionary[ExtResource("2_tile_light"), float]({
+ExtResource("3_torch"): 1.0
+})
+light_chance = 0.5

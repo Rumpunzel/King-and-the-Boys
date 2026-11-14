@@ -9,7 +9,8 @@ extends Resource
 ## - architecture: arches over openings (whole ones where a corridor enters a room, facing it, ruins between corridor tiles), raised by the first
 ##   of the two tiles to be revealed once the other one exists, and pillars on every other grid corner inside rooms, raised by the last of its four
 ##   room tiles to be revealed
-## - lights: now and then a torch, brazier or candles in the middle of a closed side, which then gets no other clutter
+## - lights: the wall light the host rolled for the tile (a torch, brazier or candles) in the middle of a closed side, which then gets
+##   no other clutter
 ## - rooms: rugs under the middle of some room tiles (flat, so pieces stand on them), ambience such as sun beams, and dust over every
 ##   tile of some rooms (rolled per room, see [method Level.get_room_cells])
 ## - walls: mostly crumbling, along some closed sides; an edge is shared too, so the first of its tiles to be revealed decides it
@@ -52,8 +53,9 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 ## How far props on a side may stray from its middle, as a fraction of half the tile
 @export_range(0.0, 1.0) var edge_spread: float = 0.3
 @export_group("Lights")
-## Light sources: torches, braziers, candles; at most one per tile, in the middle of a closed side
-@export var lights: PropSet
+## The kinds of wall light a tile may hold (torches, braziers, candles), by weight: the host rolls one per tile with a closed side, by
+## [member light_chance], as it places the tile (see [method roll_light]); a weight of 0 never comes up; it stands in the middle of a closed side
+@export var tile_lights: Dictionary[TileLight, float] = {}
 @export_range(0.0, 1.0) var light_chance: float = 0.2
 ## Rare glowing things in corners between two closed sides (e.g. crystals), in place of a corner prop; scattered pieces spread
 ## across the corner
@@ -115,7 +117,7 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 
 ## Builds the props of [param tile], which must be in a [Level] and just revealed
 func create(tile: Structure) -> Node3D:
-	var decorations: Node3D = create_clutter(tile.profile.get_connections(0), tile.get_grid_position(), tile.level.grid_size)
+	var decorations: Node3D = create_clutter(tile.profile.get_connections(0), tile.get_grid_position(), tile.level.grid_size, tile.light)
 	var clutter_count: int = decorations.get_child_count()
 	var decided: Array[Vector2i] = []
 	decorations.set_meta(DECIDED_EDGES, decided)
@@ -127,14 +129,27 @@ func create(tile: Structure) -> Node3D:
 	_add_room_props(decorations, tile)
 	return decorations
 
-## Builds the clutter of a tile whose open sides are [param connections], as its model sees them (unrotated)
-func create_clutter(connections: Array[Level.Direction], grid_position: Vector2i, tile_size: float) -> Node3D:
+## Host only: the wall light a tile of [param profile] placed on [param cell] holds, rolled by [member light_chance] from
+## [member tile_lights], seeded by the level's seed [param level_seed] and the cell (like monsters), so the same seed lights the same
+## tiles; [code]null[/code] for none, and always for a tile without a closed side
+func roll_light(profile: StructureProfile, level_seed: int, cell: Vector2i) -> TileLight:
+	if tile_lights.is_empty() or profile.get_connections(0).size() == Level.Direction.size(): return null
+	var random: RandomNumberGenerator = RandomNumberGenerator.new()
+	random.seed = hash([level_seed, cell, &"light"])
+	if random.randf() >= light_chance: return null
+	# rand_weighted gives -1 when every weight is 0: then no light at all
+	var pick: int = random.rand_weighted(PackedFloat32Array(tile_lights.values()))
+	return tile_lights.keys()[pick] as TileLight if pick >= 0 else null
+
+## Builds the clutter of a tile whose open sides are [param connections], as its model sees them (unrotated), with the wall light
+## [param light] the tile holds, if any (see [member Structure.light])
+func create_clutter(connections: Array[Level.Direction], grid_position: Vector2i, tile_size: float, light: TileLight = null) -> Node3D:
 	var decorations: Node3D = Node3D.new()
 	decorations.name = NODE_NAME
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(grid_position)
 	var half_tile: float = tile_size * 0.5
-	var lit_side: int = _add_light(decorations, connections, half_tile, random)
+	var lit_side: int = _add_light(decorations, connections, half_tile, random, light)
 	for direction: Level.Direction in Level.Direction.values():
 		var outward: Vector2 = Vector2(Level.DIRECTION_VECTORS[direction])
 		var next_direction: Level.Direction = ((direction + 1) % Level.DIRECTION_VECTORS.size()) as Level.Direction
@@ -153,17 +168,18 @@ func create_clutter(connections: Array[Level.Direction], grid_position: Vector2i
 		elif corner_roll < corner_chance: _add_prop(decorations, corner_props, corner_spot, random)
 	return decorations
 
-## Now and then a light source in the middle of a closed side
+## The tile's wall light [param light], if any, in the middle of a closed side
 ## @returns the side it stands on, or [code]-1[/code]
-func _add_light(decorations: Node3D, connections: Array[Level.Direction], half_tile: float, random: RandomNumberGenerator) -> int:
+func _add_light(decorations: Node3D, connections: Array[Level.Direction], half_tile: float, random: RandomNumberGenerator, light: TileLight) -> int:
 	var closed: Array[Level.Direction] = []
 	for direction: Level.Direction in Level.Direction.values():
 		if not connections.has(direction): closed.append(direction)
-	var roll: float = random.randf()
-	if not lights or closed.is_empty() or roll >= light_chance: return -1
+	# Drawn either way, so the clutter after it stays the same whether the tile is lit or not
+	random.randf()
+	if not light or not light.props or closed.is_empty(): return -1
 	var side: Level.Direction = closed[random.randi() % closed.size()]
 	var spot: Transform3D = _on_floor(Vector2(Level.DIRECTION_VECTORS[side]) * edge_distance * half_tile) * _random_turn(random)
-	_add_prop(decorations, lights, spot, random, _along_edge(side))
+	_add_prop(decorations, light.props, spot, random, _along_edge(side))
 	return side
 
 ## A rug under the middle of some room tiles, and some ambience above it

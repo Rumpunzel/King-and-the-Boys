@@ -43,13 +43,14 @@ static func _get_adjusted_direction(direction: Level.Direction, clockwise_turns:
 	var direction_count: int = Level.Direction.size()
 	return posmod(direction + clockwise_turns * (direction_count / 4), direction_count)
 
-func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, status: Structure.Status) -> Structure:
+func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, status: Structure.Status, light: TileLight = null) -> Structure:
 	var new_structure: Structure = (Files.load_kept("uid://d4b5bccvs2ik1") as PackedScene).instantiate()
 	new_structure.variation = variation
 	new_structure.profile = self
 	new_structure.transform = spawn_transform
 	new_structure.clockwise_turns = clockwise_turns
 	new_structure.status = status
+	new_structure.light = light
 	return new_structure
 
 func can_connect(direction: Level.Direction, clockwise_turns: int, other_profile: StructureProfile) -> bool:

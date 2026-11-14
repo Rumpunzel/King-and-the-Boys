@@ -12,9 +12,10 @@ var _level: Level
 func after_test() -> void:
 	await _drop_level()
 
-func _build(generation_seed: int) -> void:
+func _build(generation_seed: int, spawns_monsters: bool = true) -> void:
 	await _drop_level()
 	_level = ModelFreeWorld.create_level()
+	_level.spawns_monsters = spawns_monsters
 	_level.set(&"_monsters", load(MONSTERS))
 	_level.set(&"_monster_chance", 0.5)
 	_level.set(&"_room_monster_chance", 0.5)
@@ -108,3 +109,7 @@ func test_only_a_figure_on_its_spot_keeps_a_centrepiece_out() -> void:
 	for _spot: int in _level.get_free_spots(start).size(): _level.spawn_monster(profile, start)
 	await await_idle_frame()
 	assert_bool(_level.call("_is_corner_spot_taken", corner)).is_true()
+
+func test_a_level_told_not_to_spawns_no_monsters() -> void:
+	await _build(3, false)
+	assert_array(_monsters()).is_empty()
