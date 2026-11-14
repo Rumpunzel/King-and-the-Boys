@@ -7,6 +7,8 @@ const CANDLES: TileLight = preload("uid://dtgexy6ytp6us")  # tests/fixtures/cand
 const LIT_DECORATIONS: TileDecorations = preload("uid://y703cko861sr")  # tests/fixtures/lit_decorations.tres
 const STRAIGHT: String = "uid://cnebsw1r05wei"  # tests/fixtures/tiles/straight.tres
 const CROSSING: String = "uid://0wxtdhri4q23"  # tests/fixtures/tiles/crossing.tres
+## A straight tile with wall lights to roll, as a file: spawners send tiles by their profile's path
+const LIT_STRAIGHT: String = "uid://l2wc52dgdg3b"  # tests/fixtures/tiles/lit_straight.tres
 
 var _level: Level
 
@@ -227,3 +229,34 @@ func test_a_turned_tile_still_shows_its_beacon() -> void:
 	_level.rotate_tile(tile, Level.Direction.size(), hero)
 	assert_object(tile.light).is_same(TORCH)
 	assert_bool(_is_revealed(cell)).is_true()
+
+func test_a_placed_tile_holds_the_light_rolled_for_it() -> void:
+	var straight: StructureProfile = load(LIT_STRAIGHT)
+	var level_seed: int = _level.generation_random.seed
+	# An empty cell the roll lights, placed the way the dungeon grows
+	var cell: Vector2i = Vector2i.MAX
+	for x: int in range(-10, 11):
+		for y: int in range(-10, 11):
+			var candidate: Vector2i = Vector2i(x, y)
+			if cell == Vector2i.MAX and not _level.get_placed_tile(candidate) and LIT_DECORATIONS.roll_light(straight, level_seed, candidate):
+				cell = candidate
+	assert_object(cell).is_not_equal(Vector2i.MAX)
+	_level.call("_spawn_at", DungeonTileSet.TileBlueprint.new(straight, 0), cell)
+	await await_idle_frame()
+	var tile: Structure = _level.get_placed_tile(cell)
+	assert_object(tile).is_not_null()
+	assert_object(tile.light).is_same(TORCH)
+	# And the light is what the tile saves
+	assert_str(tile.to_structure_data()[Structure.LIGHT] as String).is_equal(ResourceId.of(TORCH))
+
+func test_a_quarter_turned_tile_keeps_its_light_and_beacon() -> void:
+	var hero: Character = await _dark_hero()
+	var cell: Vector2i = _far_cell_in_sight(hero, _level.beacon_reach)
+	assert_object(cell).is_not_equal(Vector2i.MAX)
+	var tile: Structure = _level.get_placed_tile(cell)
+	tile.light = TORCH
+	_level.rotate_tile(tile, 1, hero)
+	assert_object(tile.light).is_same(TORCH)
+	# Shown from afar exactly when the turned tile is still in sight
+	var seen: bool = _level.get_cells_in_sight(hero.grid_cell, _level.beacon_reach).has(cell)
+	assert_bool(_is_revealed(cell)).is_equal(seen)
