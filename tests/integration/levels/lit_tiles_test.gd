@@ -76,7 +76,7 @@ func _spawn_hero(profile: CharacterProfile = null) -> Character:
 	var hero_profile: CharacterProfile = profile if profile else ModelFreeWorld.load_hero_profile()
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	var hero: Character = auto_free(hero_profile.create(-1, (spawn_points.front() as Node3D).global_transform))
-	hero.level = _level
+	_level.add_character(hero)
 	add_child(hero)
 	await await_idle_frame()
 	return hero

@@ -3,8 +3,8 @@
 class_name CombatStatus
 extends VBoxContainer
 ## Shows what the monsters and blocks do: a banner while the monsters take their turn, and each block's dice with the one that
-## counts. When a block waits for the local player (see [member TurnManager.block_choice]), its dice or the ways to push become
-## buttons; pressing one only asks the local [PlayerController], the rules live in [TurnManager].
+## counts. When a block waits for the local player (see [member TurnManager.block_choice]), its dice become buttons; pressing one
+## only asks the local [PlayerController], the rules live in [TurnManager].
 
 @export var _player_controller_spawner: PlayerControllerSpawner
 @export var _turn_manager: TurnManager
@@ -16,7 +16,6 @@ extends VBoxContainer
 @export var _block_panel: Control
 @export var _title: Label
 @export var _dice: Container
-@export var _ways: Container
 
 var _player_controller: PlayerController
 var _hide_tween: Tween
@@ -62,7 +61,7 @@ func _on_block_shown(attacker: Character, defender: Character, dice: Array[int],
 	_hide_tween.tween_interval(dice_duration)
 	_hide_tween.tween_callback(_hide_unless_choosing)
 
-## A choice for the local player: the dice or the ways as buttons; others see whose choice it is
+## A choice for the local player: the dice as buttons; others see whose choice it is
 func _on_block_choice_changed() -> void:
 	var choice: Dictionary = _turn_manager.block_choice
 	if choice.is_empty():
@@ -78,24 +77,13 @@ func _on_block_choice_changed() -> void:
 		return
 	var choosing: bool = is_instance_valid(_player_controller) and _player_controller.is_choosing_for_block()
 	var dice: Array = choice[TurnManager.CHOICE_DICE]
-	var ways: Array = choice[TurnManager.CHOICE_WAYS]
 	_clear()
-	if not dice.is_empty():
-		_title.text = "Pick a die: %s blocks %s" % [attacker.profile.name, defender.profile.name] if choosing else "Picking a die…"
-		for index: int in dice.size():
-			var face: int = dice[index]
-			var die: Button = _add_die(face, attacker, defender, choice.get(TurnManager.CHOICE_PINNED, false) as bool)
-			die.disabled = not choosing
-			die.pressed.connect(_choose.bind(index))
-	else:
-		_title.text = "Push %s which way?" % defender.profile.name if choosing else "Choosing where to push…"
-		for way_value: Variant in ways:
-			var way: int = way_value
-			var button: Button = Button.new()
-			button.text = _way_name(way)
-			button.disabled = not choosing
-			button.pressed.connect(_choose.bind(way))
-			_ways.add_child(button)
+	_title.text = "Pick a die: %s blocks %s" % [attacker.profile.name, defender.profile.name] if choosing else "Picking a die…"
+	for index: int in dice.size():
+		var face: int = dice[index]
+		var die: Button = _add_die(face, attacker, defender, choice.get(TurnManager.CHOICE_PINNED, false) as bool)
+		die.disabled = not choosing
+		die.pressed.connect(_choose.bind(index))
 	_block_panel.show()
 
 func _choose(value: int) -> void:
@@ -105,10 +93,9 @@ func _hide_unless_choosing() -> void:
 	if _turn_manager.block_choice.is_empty() and not (_hide_tween and _hide_tween.is_running()): _block_panel.hide()
 
 func _clear() -> void:
-	for container: Container in [_dice, _ways]:
-		for child: Node in container.get_children():
-			container.remove_child(child)
-			child.queue_free()
+	for child: Node in _dice.get_children():
+		_dice.remove_child(child)
+		child.queue_free()
 
 func _add_die(face: int, attacker: Character, defender: Character, pinned: bool) -> Button:
 	var die: Button = Button.new()
@@ -125,12 +112,4 @@ static func face_name(face: Block.Face, attacker_name: String, defender_name: St
 		Block.Face.PUSH: return "Push: %s falls against the wall" % defender_name if pinned else "Push"
 		Block.Face.DEFENDER_STUMBLES: return "%s stumbles and falls against the wall" % defender_name if pinned else "%s stumbles" % defender_name
 		Block.Face.DEFENDER_DOWN: return "%s falls" % defender_name
-	return "?"
-
-static func _way_name(way: int) -> String:
-	match way:
-		Level.Direction.UP: return "↑ Up"
-		Level.Direction.RIGHT: return "→ Right"
-		Level.Direction.DOWN: return "↓ Down"
-		Level.Direction.LEFT: return "← Left"
 	return "?"

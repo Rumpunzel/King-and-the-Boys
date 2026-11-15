@@ -103,23 +103,17 @@ func test_a_centrepiece_stands_on_the_middle_corner_once() -> void:
 	assert_object(_level.get_thing_near(Vector2i(-1, 0))).is_same(thing)
 	assert_object(_level.get_placed_thing(Vector2i(-1, 0))).is_null()
 
-func test_a_centrepiece_takes_the_spot_towards_it_on_its_four_tiles() -> void:
+func test_a_centrepiece_keeps_figures_away_from_its_corner_on_its_four_tiles() -> void:
 	_level.set("_room_centrepiece_chance", 1.0)
 	_spawn_room(Structure.Status.PLACED)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
-	var extents: Vector2 = _level.get_placed_tile(Vector2i.ZERO).profile.tile_spot_extents
 	# Corner (0, 1) lies at the lower left of (0, 0), the lower right of (-1, 0), and so on
 	var taken: Dictionary[Vector2i, Vector2] = {
 		Vector2i(0, 0): Vector2(-1.0, 1.0), Vector2i(-1, 0): Vector2(1.0, 1.0), Vector2i(0, 1): Vector2(-1.0, -1.0), Vector2i(-1, 1): Vector2(1.0, -1.0),
 	}
-	for cell: Vector2i in taken:
-		var free_spots: Array[Vector2] = _level.get_free_spots(cell)
-		assert_int(free_spots.size()).is_equal(4)
-		assert_array(free_spots).not_contains([taken[cell] * extents])
-		# The middle stays free for pieces
-		assert_vector(free_spots.front()).is_equal(Vector2.ZERO)
-	assert_int(_level.get_free_spots(Vector2i(1, -1)).size()).is_equal(5)
+	for cell: Vector2i in taken: assert_array(_level.get_blocked_spots(cell)).is_equal([taken[cell] * 0.5])
+	assert_array(_level.get_blocked_spots(Vector2i(1, -1))).is_empty()
 
 func test_a_centrepiece_shows_with_the_first_of_its_tiles() -> void:
 	_level.set("_room_centrepiece_chance", 1.0)
@@ -168,7 +162,7 @@ func test_a_removed_centrepiece_leaves_its_corner() -> void:
 	thing.free()
 	assert_bool(corner_things.has(Vector2i(0, 1))).is_false()
 	assert_object(_level.get_thing_near(Vector2i(0, 0))).is_null()
-	assert_int(_level.get_free_spots(Vector2i(0, 0)).size()).is_equal(5)
+	assert_array(_level.get_blocked_spots(Vector2i(0, 0))).is_empty()
 
 func test_each_peer_reveals_a_centrepiece_with_its_own_tiles() -> void:
 	_level.set("_room_centrepiece_chance", 1.0)
@@ -183,13 +177,13 @@ func test_no_centrepiece_lands_on_a_figure() -> void:
 	_level.set("_room_centrepiece_chance", 1.0)
 	_spawn_room(Structure.Status.PLACED)
 	var knight: CharacterProfile = load(EquipmentFixtures.KNIGHT)
-	# On the spot of (-1, 0) towards the corner (0, 1) the centrepiece would take; one on the tile's centre would not keep it out
-	var tile: Structure = _level.get_placed_tile(Vector2i(-1, 0))
-	var corner_spot: Vector2 = Level.get_spot_towards(tile.profile.get_tile_spots(), Vector2(1, 1))
-	var figure: Character = auto_free(knight.create(0, Transform3D(Basis.IDENTITY, _level.get_spot_position(Vector2i(-1, 0), corner_spot))))
-	figure.level = _level
+	# On (-1, 0) towards the corner (0, 1) the centrepiece would stand on; one in the tile's middle would not keep it out
+	var corner_spot: Vector2 = Vector2(0.5, 0.5)
+	var figure: Character = auto_free(knight.create(0, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(Vector2i(-1, 0)))))
+	_level.add_character(figure)
 	figure.add_to_group(Character.GROUP)
 	add_child(figure)
+	figure.place_on_grid(Vector2i(-1, 0), corner_spot, figure.facing)
 	assert_vector(figure.grid_cell).is_equal(Vector2i(-1, 0))
 	assert_vector(figure.tile_spot).is_equal_approx(corner_spot, Vector2.ONE * 0.001)
 	_level.call("_furnish_room", Vector2i.ZERO)
@@ -199,11 +193,6 @@ func test_no_centrepiece_lands_on_a_figure() -> void:
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
 	assert_bool((_level.get("_corner_things") as Dictionary).has(Vector2i(0, 1))).override_failure_message("Furnished once the figure left").is_true()
-
-func test_corner_spots_are_found_whatever_the_spot_directions() -> void:
-	var spots: Array[Vector2] = [Vector2.ZERO, Vector2(-0.4, -0.4), Vector2(0.4, -0.4), Vector2(0.4, 0.4), Vector2(-0.4, 0.4)]
-	assert_vector(Level.get_spot_towards(spots, Vector2(1, 1))).is_equal(Vector2(0.4, 0.4))
-	assert_vector(Level.get_spot_towards([Vector2.ZERO] as Array[Vector2], Vector2(1, 1))).is_equal(Vector2.INF)
 
 func _spawn(profile_path: String, cell: Vector2i, turns: int = 0) -> Structure:
 	_level._structure_spawner.spawn_at(load(profile_path) as StructureProfile, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell)), turns, Structure.Status.PLACED)

@@ -29,7 +29,7 @@ func after_test() -> void:
 func _figures() -> Array[Character]:
 	var start: Vector2i = _level.world_to_grid_position((get_tree().get_first_node_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS) as Node3D).global_position)
 	var hero: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(start))))
-	hero.level = _level
+	_level.add_character(hero)
 	add_child(hero)
 	_level.spawn_monster(ModelFreeWorld.load_monster_profile(), start)
 	await await_idle_frame()
@@ -67,7 +67,6 @@ func test_others_see_whose_choice_it_is_without_buttons_to_press() -> void:
 		TurnManager.CHOICE_ATTACKER: figures[0].get_path(),
 		TurnManager.CHOICE_DEFENDER: figures[1].get_path(),
 		TurnManager.CHOICE_DICE: [Block.Face.PUSH, Block.Face.ATTACKER_DOWN],
-		TurnManager.CHOICE_WAYS: [],
 	}
 	assert_bool((_status.get("_block_panel") as Control).visible).is_true()
 	var buttons: Array[Button] = _dice()

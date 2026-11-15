@@ -48,9 +48,9 @@ func test_a_monster_spawns_on_the_cell_it_is_given() -> void:
 	assert_int(monster.facing).is_equal(Level.Direction.LEFT)
 	assert_int(monster.movement_points).is_equal(monster.profile.speed)
 
-func test_monsters_fill_a_tile_spot_by_spot() -> void:
+func test_monsters_fill_a_tile_up_to_a_side_each_on_its_own_spot() -> void:
 	var profile: CharacterProfile = ModelFreeWorld.load_monster_profile()
-	var spot_count: int = _level.get_free_spots(_start).size()
+	var spot_count: int = Formation.MAX_PER_SIDE
 	for _monster: int in spot_count: _level.spawn_monster(profile, _start)
 	await await_idle_frame()
 	var spots: Dictionary[Vector2, bool] = {}
@@ -58,7 +58,9 @@ func test_monsters_fill_a_tile_spot_by_spot() -> void:
 		assert_that(monster.grid_cell).is_equal(_start)
 		spots[monster.tile_spot] = true
 	assert_int(spots.size()).is_equal(spot_count)
-	assert_array(_level.get_free_spots(_start)).is_empty()
+	assert_bool(_level.has_room(_start, CharacterProfile.Groups.MONSTERS)).is_false()
+	# The heroes' side still has room
+	assert_bool(_level.has_room(_start, CharacterProfile.Groups.HEROES)).is_true()
 
 func test_a_restored_monster_stands_where_it_was_saved() -> void:
 	_level.spawn_monster(ModelFreeWorld.load_monster_profile(), _start, Level.Direction.UP)

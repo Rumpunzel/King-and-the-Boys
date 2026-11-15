@@ -40,13 +40,12 @@ func spawn_player_controller(player: Player) -> void:
 	assert(_level.is_built)
 	var player_spawn_point: PlayerSpawnPoint = _get_player_spawn_point()
 	assert(player_spawn_point)
-	# Created on its own spot, so the figure shows there at once on every peer instead of moving there from the
-	# center; characters spawned before (also in this loop) are in the tree already and hold theirs. A full start
-	# tile sends the player to the nearest tile with room.
+	# On the start tile, whose formation makes room for it (see LevelFormations); a full start tile sends the player to the
+	# nearest tile with room
 	var cell: Vector2i = _level.world_to_grid_position(player_spawn_point.global_position)
-	var spot_position: Vector3 = _level.get_nearest_free_spot_position(cell)
+	var spot_position: Vector3 = _level.get_nearest_room_position(cell, player.character.group)
 	if spot_position == Vector3.INF:
-		push_warning("No free spot for %s near %s: placed on the start tile's centre" % [player, cell])
+		push_warning("No room for %s near %s: placed on the start tile" % [player, cell])
 		spot_position = _level.grid_to_world_position(cell)
 	# On the start tile at the spawn point's height (e.g. a raised start). World values: the controller and the
 	# spawner are no Node3Ds, so the character's transform is its world transform

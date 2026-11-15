@@ -37,7 +37,7 @@ func _start_cell() -> Vector2i:
 
 func _spawn_hero(cell: Vector2i) -> Character:
 	var hero: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell))))
-	hero.level = _level
+	_level.add_character(hero)
 	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
 	add_child(hero)
 	await await_idle_frame()
@@ -52,7 +52,7 @@ func _spawn_monster(cell: Vector2i) -> Character:
 ## @returns a direction with a passage out of [param cell] onto a tile with room
 func _way_out(cell: Vector2i) -> Level.Direction:
 	for direction: Level.Direction in Level.Direction.values():
-		if _level.is_passage(cell, direction) and not _level.get_free_spots(cell + Level.direction_to_vector(direction)).is_empty(): return direction
+		if _level.is_passage(cell, direction) and _level.has_room(cell + Level.direction_to_vector(direction), CharacterProfile.Groups.HEROES): return direction
 	assert(false, "No way out of %s" % cell)
 	return Level.Direction.UP
 
@@ -111,16 +111,16 @@ func test_each_face_plays_out() -> void:
 	var hero: Character = await _spawn_hero(start)
 	var monster: Character = await _spawn_monster(start)
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
-	Block.new(hero, monster).apply(Block.Face.ATTACKER_DOWN, _level, random)
+	Block.new(hero, monster).apply(Block.Face.ATTACKER_DOWN, _level)
 	assert_int(hero.posture).is_equal(Character.Posture.DOWN)
 	assert_int(monster.posture).is_equal(Character.Posture.STANDING)
 	hero.posture = Character.Posture.STANDING
-	Block.new(hero, monster).apply(Block.Face.BOTH_DOWN, _level, random)
+	Block.new(hero, monster).apply(Block.Face.BOTH_DOWN, _level)
 	assert_array([hero.posture, monster.posture]).is_equal([Character.Posture.DOWN, Character.Posture.DOWN])
 	hero.posture = Character.Posture.STANDING
 	monster.posture = Character.Posture.STANDING
 	var push: Block = Block.new(hero, monster)
-	push.apply(Block.Face.PUSH, _level, random)
+	push.apply(Block.Face.PUSH, _level)
 	assert_bool(push.was_pushed()).is_true()
 	assert_that(monster.grid_cell).is_equal(push.pushed_to)
 	assert_bool(_level.get_cells_in_reach(start).has(monster.grid_cell)).is_true()
@@ -128,7 +128,7 @@ func test_each_face_plays_out() -> void:
 	# The attacker does not follow
 	assert_that(hero.grid_cell).is_equal(start)
 	var down: Block = Block.new(monster, hero)
-	down.apply(Block.Face.DEFENDER_DOWN, _level, random)
+	down.apply(Block.Face.DEFENDER_DOWN, _level)
 	assert_int(hero.posture).is_equal(Character.Posture.DOWN)
 	assert_bool(down.was_pushed()).is_true()
 
@@ -138,20 +138,20 @@ func test_a_stumbling_defender_falls_only_if_clumsier() -> void:
 	var monster: Character = await _spawn_monster(start)
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	# Equally agile: it keeps its feet
-	Block.new(hero, monster).apply(Block.Face.DEFENDER_STUMBLES, _level, random)
+	Block.new(hero, monster).apply(Block.Face.DEFENDER_STUMBLES, _level)
 	assert_int(monster.posture).is_equal(Character.Posture.STANDING)
 
 func test_a_push_with_nowhere_to_go_knocks_the_defender_down_where_it_is() -> void:
 	var start: Vector2i = _start_cell()
 	var hero: Character = await _spawn_hero(start)
 	var monster: Character = await _spawn_monster(start)
-	# Fill every tile next door
-	for direction: Level.Direction in Level.Direction.values():
-		if not _level.is_passage(start, direction): continue
-		var cell: Vector2i = start + Level.direction_to_vector(direction)
-		for _spot: int in _level.get_free_spots(cell).size(): await _spawn_monster(cell)
+	# Fill the tile beyond the monsters' edge, if a passage leads there
+	var edge: int = _level.get_side_edge(start, CharacterProfile.Groups.MONSTERS)
+	if _level.is_passage(start, edge as Level.Direction):
+		var cell: Vector2i = start + Level.direction_to_vector(edge as Level.Direction)
+		while _level.has_room(cell, CharacterProfile.Groups.MONSTERS): await _spawn_monster(cell)
 	var push: Block = Block.new(hero, monster)
-	push.apply(Block.Face.PUSH, _level, RandomNumberGenerator.new())
+	push.apply(Block.Face.PUSH, _level)
 	assert_bool(push.was_pushed()).is_false()
 	assert_that(monster.grid_cell).is_equal(start)
 	assert_int(monster.posture).is_equal(Character.Posture.DOWN)
@@ -246,7 +246,7 @@ func _pass_until_asked() -> void:
 		if not _turn_manager.block_choice.is_empty() or not _blocks.is_empty(): return
 		await await_idle_frame()
 
-func test_the_player_whose_side_picks_chooses_the_die_and_the_push() -> void:
+func test_the_player_whose_side_picks_chooses_the_die() -> void:
 	_turn_manager.choice_timeout = 30.0
 	var hero: Character = await _set_up_a_hero_who_picks()
 	await _pass_until_asked()
@@ -266,19 +266,12 @@ func test_the_player_whose_side_picks_chooses_the_die_and_the_push() -> void:
 	assert_dict(_turn_manager.block_choice).is_equal(choice)
 	_answer(1)
 	var picked: int = dice[1]
-	var way: int = -1
 	for _frame: int in MAX_FRAMES:
 		if not _blocks.is_empty(): break
-		var asked: Dictionary = _turn_manager.block_choice
-		if not asked.is_empty() and (asked[TurnManager.CHOICE_DICE] as Array).is_empty():
-			var ways: Array = asked[TurnManager.CHOICE_WAYS]
-			way = ways.back()
-			_answer(way)
 		await await_idle_frame()
 	assert_int(_blocks.size()).is_greater_equal(1)
 	assert_object(_blocks[0].attacker).is_same(hero)
 	assert_int(_blocks[0].chosen).is_equal(picked)
-	if way >= 0: assert_that(_blocks[0].pushed_to).is_equal(cell + Level.direction_to_vector(way as Level.Direction))
 
 func test_the_host_chooses_for_a_player_who_does_not() -> void:
 	_turn_manager.choice_timeout = 0.3
@@ -320,11 +313,9 @@ func test_the_turn_ends_only_once_a_choice_and_its_step_are_done() -> void:
 	_answer(0)
 	for _frame: int in MAX_FRAMES:
 		if _turn_manager.turn_number > turn: break
-		var asked: Dictionary = _turn_manager.block_choice
-		if not asked.is_empty():
-			var ways: Array = asked[TurnManager.CHOICE_WAYS]
-			var way: int = ways.front() if not ways.is_empty() else 0
-			_answer(way if (asked[TurnManager.CHOICE_DICE] as Array).is_empty() else 0)
+		if not _turn_manager.block_choice.is_empty(): _answer(0)
 		await await_idle_frame()
-	assert_int(_blocks.size()).is_equal(1)
+	# The step's block came first; the monster phase may have brought more
+	assert_int(_blocks.size()).is_greater_equal(1)
+	assert_object(_blocks[0].defender).is_same(hero)
 	assert_int(_turn_manager.turn_number).is_equal(turn + 1)

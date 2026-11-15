@@ -14,12 +14,6 @@ enum Groups {
 ## Props the tile is dressed with once revealed, see [TileDecorations]
 @export var decorations: TileDecorations
 @export var grid_cell_extents: Vector3i = Vector3i.ONE
-@export_group("Tile Spots", "tile_spot")
-## Where pieces stand on the tile, in order of preference; things hold the first spot
-@export var tile_spot_directions: Array[Vector2] = [Vector2.ZERO, Vector2(-1.0, -1.0), Vector2(1.0, -1.0), Vector2(1.0, 1.0), Vector2(-1.0, 1.0)]
-## Distance of the spots from the tile center, per axis
-@export var tile_spot_extents: Vector2 = Vector2(0.5, 0.5)
-@export_group("")
 
 @export var discover_animation: ModelAnimation = preload("uid://bf0msgn2okdfo")
 @export var reveal_animation: ModelAnimation = preload("uid://80ut5hvuftsw")
@@ -96,12 +90,6 @@ func get_restriction(direction: Level.Direction, clockwise_turns: int) -> Connec
 		Level.Direction.RIGHT: return _restriction_right
 		Level.Direction.DOWN: return _restriction_down
 		_: return _restriction_left
-
-## @returns the offsets from the tile center where pieces stand, in order of preference
-func get_tile_spots() -> Array[Vector2]:
-	var tile_spots: Array[Vector2] = []
-	for direction: Vector2 in tile_spot_directions: tile_spots.append(direction * tile_spot_extents)
-	return tile_spots
 
 func get_group_name() -> StringName:
 	var group_name: StringName = Groups.keys()[group]

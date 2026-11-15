@@ -31,7 +31,7 @@ func test_a_monster_on_a_tile_not_revealed_stays_hidden_until_it_is() -> void:
 	for wanted: Structure.Status in [Structure.Status.DISCOVERED, Structure.Status.PLACED]:
 		var tile: Structure = null
 		for placed: Structure in _level.get_placed_tiles():
-			if placed.shown_status == wanted and not placed.get_connections().is_empty() and not _level.get_free_spots(placed.get_grid_position()).is_empty(): tile = placed
+			if placed.shown_status == wanted and not placed.get_connections().is_empty() and _level.has_room(placed.get_grid_position(), CharacterProfile.Groups.MONSTERS): tile = placed
 		assert_object(tile).override_failure_message("No tile with status %d" % wanted).is_not_null()
 		var monster: Character = await _spawn_skeleton(tile.get_grid_position())
 		assert_that(monster.grid_cell).is_equal(tile.get_grid_position())
@@ -55,8 +55,7 @@ func test_a_monster_stepping_out_of_sight_finishes_its_hop_then_hides() -> void:
 		if _level.is_passage(start, direction) and next.shown_status != Structure.Status.REVEALED: way = direction
 	assert_int(way).override_failure_message("No unrevealed tile next to the start").is_not_equal(-1)
 	var target: Vector2i = start + Level.direction_to_vector(way as Level.Direction)
-	var spot: Vector2 = _level.get_free_spots(target, monster).front()
-	monster.place_on_grid(target, spot, way as Level.Direction)
+	monster.place_on_grid(target, Vector2.ZERO, way as Level.Direction)
 	await await_idle_frame()
 	assert_bool(monster.shown).is_false()
 	assert_bool(monster.is_figure_moving()).is_true()

@@ -23,7 +23,7 @@ func before_test() -> void:
 func _spawn_hero(profile: CharacterProfile) -> Character:
 	var spawn_point: Node3D = get_tree().get_first_node_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	var hero: Character = auto_free(profile.create(-1, Transform3D(Basis.IDENTITY, spawn_point.global_position)))
-	hero.level = _level
+	_level.add_character(hero)
 	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
 	add_child(hero)
 	await await_idle_frame()

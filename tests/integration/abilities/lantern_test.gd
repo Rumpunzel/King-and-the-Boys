@@ -35,7 +35,7 @@ func after_test() -> void:
 func _spawn_hero(dark: bool = false) -> Character:
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	var hero: Character = auto_free(_hero_profile.create(-1, (spawn_points.front() as Node3D).global_transform))
-	hero.level = _level
+	_level.add_character(hero)
 	if dark: hero.toggled_ability_ids = [ResourceId.of(LANTERN)]
 	_level.follow_sight_of(hero)
 	add_child(hero)

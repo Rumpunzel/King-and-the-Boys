@@ -48,7 +48,7 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 @export_range(0.0, 1.0) var edge_chance: float = 0.5
 ## Chance of a prop per corner between two closed sides
 @export_range(0.0, 1.0) var corner_chance: float = 0.5
-## How far out props stand, as a fraction of half the tile; tile spots lie at 0.5
+## How far out props stand, as a fraction of half the tile; figures stand within 0.75 (see [Formation])
 @export_range(0.0, 1.0) var edge_distance: float = 0.8
 ## How far props on a side may stray from its middle, as a fraction of half the tile
 @export_range(0.0, 1.0) var edge_spread: float = 0.3

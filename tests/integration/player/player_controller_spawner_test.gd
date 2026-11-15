@@ -47,7 +47,7 @@ func _add_level(build: bool = true) -> void:
 ## its reach
 func _add_piece_near(controller: Character) -> Character:
 	var piece: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, controller.global_position)))
-	piece.level = _level
+	_level.add_character(piece)
 	add_child(piece)
 	await await_idle_frame()
 	return piece
@@ -55,7 +55,7 @@ func _add_piece_near(controller: Character) -> Character:
 ## A character no player owns, on [param cell]
 func _add_piece_at(cell: Vector2i) -> Character:
 	var piece: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell))))
-	piece.level = _level
+	_level.add_character(piece)
 	add_child(piece)
 	await await_idle_frame()
 	return piece
@@ -235,6 +235,11 @@ func test_a_full_start_tile_sends_players_to_the_nearest_tile_with_room() -> voi
 	_spawner.start_synching_players()
 	await await_idle_frame()
 	var start_cell: Vector2i = _level.world_to_grid_position((get_tree().get_first_node_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS) as Node3D).global_position)
+	# Figures on the start tile shuffle over as each new one comes
+	for controller: PlayerController in _controllers():
+		for _frame: int in 120:
+			if not controller.character.is_figure_moving(): break
+			await await_idle_frame()
 	var places: Array[String] = []
 	var off_start: int = 0
 	for controller: PlayerController in _controllers():
@@ -249,14 +254,14 @@ func test_a_full_start_tile_sends_players_to_the_nearest_tile_with_room() -> voi
 		assert_int(absi(character.grid_cell.x - start_cell.x) + absi(character.grid_cell.y - start_cell.y)).is_equal(1)
 		assert_bool(_level.get_placed_tile(start_cell).has_connection_to(character.grid_cell)).is_true()
 	assert_int(places.size()).is_equal(CROWD_SIZE + 1)
-	# Five spots on the start tile: the other two go next door
-	assert_int(off_start).is_equal(CROWD_SIZE + 1 - 5)
+	# Room for a side on the start tile: the others go next door
+	assert_int(off_start).is_equal(CROWD_SIZE + 1 - Formation.MAX_PER_SIDE)
 
 func test_any_character_spawned_onto_a_full_tile_goes_next_door() -> void:
 	await _add_level()
 	var players: Dictionary = Lobby.get("_players")
-	# The host and four more fill the start tile's five spots
-	for crowd_id: int in range(CROWD_FIRST_ID, CROWD_FIRST_ID + 4):
+	# The host and the others fill the start tile's room for heroes
+	for crowd_id: int in range(CROWD_FIRST_ID, CROWD_FIRST_ID + Formation.MAX_PER_SIDE - 1):
 		var crowd_player: Player = auto_free(Player.create(crowd_id, "Crowd %d" % crowd_id))
 		crowd_player.character = ModelFreeWorld.load_hero_profile()
 		players[crowd_id] = crowd_player
@@ -265,7 +270,7 @@ func test_any_character_spawned_onto_a_full_tile_goes_next_door() -> void:
 	var start_cell: Vector2i = _controller_of(Multiplayer.HOST_ID).character.grid_cell
 	# E.g. an agent, created on the start tile's centre like characters used to be
 	var piece: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(start_cell))))
-	piece.level = _level
+	_level.add_character(piece)
 	add_child(piece)
 	await await_idle_frame()
 	assert_that(piece.grid_cell).is_not_equal(start_cell)
