@@ -198,12 +198,17 @@ func _transition_to_scene(scene_path: String) -> void:
 		return
 	assert(_exection == Execution.LOCAL)
 	var scene: Node = packed_scene.instantiate()
-	if _setup_mode == SetupMode.PRE_CHANGE: await _scene_setup.call(scene)
+	if _setup_mode == SetupMode.PRE_CHANGE: await _set_up(scene)
 	scene_tree.change_scene_to_node(scene)
 	await scene_tree.scene_changed
-	if _setup_mode == SetupMode.POST_CHANGE: await _scene_setup.call(scene)
+	if _setup_mode == SetupMode.POST_CHANGE: await _set_up(scene)
 	_scene_setup = Callable()
 	if _loading_screen: remove_loading_screen()
+
+## Runs the scene setup on [param scene]; one that fails is reported, and the transition goes on, as no setup can fail yet
+func _set_up(scene: Node) -> void:
+	var error: Error = await _scene_setup.call(scene)
+	if error != OK: push_error("Scene setup failed: %s" % error_string(error))
 
 func _transition_to_packed_scene(packed_scene: PackedScene) -> void:
 	var scene_tree: SceneTree = get_tree()

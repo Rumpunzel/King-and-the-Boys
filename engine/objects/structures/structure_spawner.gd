@@ -23,7 +23,7 @@ func spawn_all_from_spawn_spoints() -> Array[Structure]:
 		spawn(structure_spawn_point.get_structure_data())
 	return _structures
 
-func spawn_at(profile: StructureProfile, transform: Transform3D, clockwise_turns: int, status: Structure.Status, light: TileLight = null) -> Array[Structure]:
+func spawn_at(profile: StructureProfile, transform: Transform3D, clockwise_turns: int, status: Structure.Status, light: TileLight = null, dusty: bool = false) -> Array[Structure]:
 	assert(multiplayer.is_server())
 	assert(profile)
 	var tile_data: Dictionary[StringName, Variant] = {
@@ -34,6 +34,7 @@ func spawn_at(profile: StructureProfile, transform: Transform3D, clockwise_turns
 		Structure.CLOCKWISE_TURNS: clockwise_turns,
 		Structure.STATUS: status,
 		Structure.LIGHT: ResourceId.of(light) if light else "",
+		Structure.DUSTY: dusty,
 	}
 	Structure.validate_structure_data(tile_data)
 	spawn(tile_data)

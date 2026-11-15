@@ -27,6 +27,8 @@ const CLOCKWISE_TURNS: StringName = "clockwise_turns"
 const STATUS: StringName = "status"
 ## The [ResourceId] of the tile's [member light], empty for none; optional, as tiles saved before lights have none
 const LIGHT: StringName = "light"
+## Whether dust lies over the tile, see [member dusty]; optional, as tiles saved before have none
+const DUSTY: StringName = "dusty"
 ## Every structure in the tree, e.g. so [LevelDebug] can show or hide their labels
 const GROUP: StringName = &"Structures"
 
@@ -63,6 +65,9 @@ static var debug_labels_shown: bool = false
 ## The wall light the tile holds (a torch, brazier or candles), rolled by the host as it placed the tile (see
 ## [method TileDecorations.roll_light]) and sent with it, so every peer shows the same; [code]null[/code] for none
 var light: TileLight
+## Whether dust lies over the room tile, decided by the host as it placed the tile (see [method Level.is_dusty]) and sent with it, so
+## every peer shows the same and a room keeps its dust as it grows
+var dusty: bool = false
 ## The [Character] whose step raised [member status] last, empty if no step did (level build, spawning, loading).
 ## Replicated before [member status], so peers know it when the status changes.
 var status_cause: NodePath
@@ -130,17 +135,23 @@ static func from_structure_data(structure_data: Dictionary[StringName, Variant])
 	var new_spawn_transform: Transform3D = structure_data[SPAWN_TRANSFORM]
 	var new_clockwise_turns: Status = structure_data[CLOCKWISE_TURNS]
 	var new_status: Status = structure_data[STATUS]
-	return new_profile.create(new_variation, new_spawn_transform, new_clockwise_turns, new_status, _light_in(structure_data))
+	return new_profile.create(new_variation, new_spawn_transform, new_clockwise_turns, new_status, _light_in(structure_data), _is_dusty_in(structure_data))
 
 static func validate_structure_data(structure_data: Dictionary[StringName, Variant]) -> void:
 	assert(structure_data.has_all([VARIATION, PROFILE_PATH, SPAWN_TRANSFORM, CLOCKWISE_TURNS, STATUS]))
-	assert(structure_data.size() == (6 if structure_data.has(LIGHT) else 5))
+	assert(structure_data.size() == 5 + int(structure_data.has(LIGHT)) + int(structure_data.has(DUSTY)))
 	assert(not structure_data.has(LIGHT) or structure_data[LIGHT] is String)
+	assert(not structure_data.has(DUSTY) or structure_data[DUSTY] is bool)
 
 ## The tile light [param structure_data] names, [code]null[/code] for none (or none named, as saved before lights)
 static func _light_in(structure_data: Dictionary[StringName, Variant]) -> TileLight:
 	var light_id: String = structure_data.get(LIGHT, "")
 	return ResourceId.find(light_id) as TileLight if not light_id.is_empty() else null
+
+## Whether [param structure_data] says dust lies over the tile; not if it does not say (saved before dust was)
+static func _is_dusty_in(structure_data: Dictionary[StringName, Variant]) -> bool:
+	var found: Variant = structure_data.get(DUSTY, false)
+	return found is bool and found
 
 ## Host only; @returns [code]true[/code] if the status went up
 func discover() -> bool:
@@ -163,6 +174,7 @@ func apply_structure_data(structure_data: Dictionary[StringName, Variant]) -> vo
 	clockwise_turns = structure_data[CLOCKWISE_TURNS]
 	status = structure_data[STATUS]
 	light = _light_in(structure_data)
+	dusty = _is_dusty_in(structure_data)
 
 func to_structure_data() -> Dictionary[StringName, Variant]:
 	assert(profile)
@@ -173,6 +185,7 @@ func to_structure_data() -> Dictionary[StringName, Variant]:
 		CLOCKWISE_TURNS: clockwise_turns,
 		STATUS: status,
 		LIGHT: ResourceId.of(light) if light else "",
+		DUSTY: dusty,
 	}
 	validate_structure_data(structure_data)
 	return structure_data

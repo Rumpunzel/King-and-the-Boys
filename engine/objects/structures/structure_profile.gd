@@ -33,7 +33,7 @@ enum Groups {
 
 @export_group("Configuration")
 
-func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, status: Structure.Status, light: TileLight = null) -> Structure:
+func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, status: Structure.Status, light: TileLight = null, dusty: bool = false) -> Structure:
 	var new_structure: Structure = (Files.load_kept("uid://d4b5bccvs2ik1") as PackedScene).instantiate()
 	new_structure.variation = variation
 	new_structure.profile = self
@@ -41,6 +41,7 @@ func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, 
 	new_structure.clockwise_turns = clockwise_turns
 	new_structure.status = status
 	new_structure.light = light
+	new_structure.dusty = dusty
 	return new_structure
 
 func can_connect(direction: Level.Direction, clockwise_turns: int, other_profile: StructureProfile) -> bool:

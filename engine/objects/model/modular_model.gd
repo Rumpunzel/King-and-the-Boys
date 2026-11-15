@@ -69,12 +69,19 @@ func apply_body(body: Dictionary) -> void:
 	set_body_colors(get_body_color(body, BODY_SKIN_COLOR), get_body_color(body, BODY_HAIR_COLOR))
 	for key: Variant in body:
 		if is_body_color_key(key): continue
-		var part: int = key if key is int else -1
-		var mesh_id: String = body[key] if body[key] is String else ""
-		if part < 0 or not body[key] is String or not fits_part(part, mesh_id):
+		if not _fits_body_entry(key, body[key]):
 			push_warning("%s does not fit part %s of %s; skipped." % [body[key], key, scene_file_path])
 			continue
+		var part: int = key
+		var mesh_id: String = body[key]
 		get_part(part).apply_mesh(ResourceId.find(mesh_id) as ArrayMesh)
+
+## Whether [param key] and [param mesh_id], an entry of a body dictionary (it may come from a peer), name a part and a mesh it fits
+func _fits_body_entry(key: Variant, mesh_id: Variant) -> bool:
+	if not key is int or not mesh_id is String: return false
+	var part: int = key
+	var id: String = mesh_id
+	return fits_part(part, id)
 
 ## Whether [param body] names a mesh for exactly this body's body parts (see [method get_body_parts]), each fitting its part, e.g. a
 ## body a peer rolled in the lobby
@@ -86,9 +93,7 @@ func is_complete_body(body: Dictionary) -> bool:
 		colors += 1
 	if body.size() - colors != get_body_parts().size(): return false
 	for part: int in get_body_parts():
-		if not body.get(part) is String: return false
-		var mesh_id: String = body[part]
-		if not fits_part(part, mesh_id): return false
+		if not _fits_body_entry(part, body.get(part)): return false
 	return true
 
 ## Whether [param mesh_id] names one of [param part]'s own meshes, or none where the part may show none; checked by file path, so
@@ -176,9 +181,10 @@ func get_gear_material(mesh: Mesh) -> ShaderMaterial:
 
 static func _get_albedo_texture(material: Material) -> Texture2D:
 	if material is StandardMaterial3D: return (material as StandardMaterial3D).albedo_texture
+	# Any mesh's material, of any pack: its parameter may hold anything
 	if material is ShaderMaterial:
-		var texture: Texture2D = (material as ShaderMaterial).get_shader_parameter(_GEAR_TEXTURE)
-		return texture
+		var texture: Variant = (material as ShaderMaterial).get_shader_parameter(_GEAR_TEXTURE)
+		return texture if texture is Texture2D else null
 	return null
 
 ## Leaves meshes to a material put on the whole model, and paints them again once it goes
