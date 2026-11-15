@@ -128,7 +128,8 @@ func show(combination: Dictionary, fallback_meshes: Dictionary[int, Mesh]) -> vo
 	var options: Array[Array] = []
 	for dimension: Array in dimensions: options.append(Array(get_options(dimension)))
 	var counters: Array[int] = []
-	counters.assign(combination.counters as Array)
+	var combination_counters: Array = combination.counters
+	counters.assign(combination_counters)
 	_apply(dimensions, options, counters, fallback_meshes)
 
 ## @returns [code]false[/code] if a leader cannot show its option

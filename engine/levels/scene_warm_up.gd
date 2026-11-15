@@ -37,12 +37,15 @@ static func find_scenes(object: Object) -> Array[PackedScene]:
 
 static func _collect_properties(object: Object, scenes: Dictionary[PackedScene, bool], seen: Dictionary[Resource, bool]) -> void:
 	for property: Dictionary in object.get_property_list():
-		if (property["usage"] as int) & PROPERTY_USAGE_STORAGE: _collect(object.get(property["name"] as StringName), scenes, seen)
+		var usage: int = property["usage"]
+		var property_name: StringName = property["name"]
+		if usage & PROPERTY_USAGE_STORAGE: _collect(object.get(property_name), scenes, seen)
 
 ## Adds the scenes [param value] holds (itself, in its properties, arrays and dictionaries) to [param scenes]
 static func _collect(value: Variant, scenes: Dictionary[PackedScene, bool], seen: Dictionary[Resource, bool]) -> void:
 	if value is Array:
-		for item: Variant in value as Array: _collect(item, scenes, seen)
+		var items: Array = value
+		for item: Variant in items: _collect(item, scenes, seen)
 		return
 	if value is Dictionary:
 		var dictionary: Dictionary = value

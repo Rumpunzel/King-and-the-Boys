@@ -90,5 +90,7 @@ func _see_in_room(from: Vector2i, vision: float, see_tile: Callable, origin: Vec
 	for connection: Level.Direction in from_tile.get_connections():
 		var room_cell: Vector2i = from + Level.direction_to_vector(connection)
 		var room_tile: Structure = _level.get_placed_tile(room_cell)
-		assert(room_tile)
+		# An exit may lead into a cell the dungeon has not grown into yet: a room tile placed beside a corridor joins a room built
+		# before it, its own exits unbuilt
+		if not room_tile: continue
 		if room_type == room_tile.profile.room_type and not already_visited.has(room_cell): _see_in_room(room_cell, vision, see_tile, origin, already_visited)

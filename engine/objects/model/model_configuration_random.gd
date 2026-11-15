@@ -64,14 +64,16 @@ func roll(model: ModularModel) -> Dictionary:
 func allows(model: ModularModel, body: Dictionary) -> bool:
 	if not _allows_color(body, ModularModel.BODY_SKIN_COLOR, skin_colors) or not _allows_color(body, ModularModel.BODY_HAIR_COLOR, hair_colors): return false
 	var part_keys: PackedStringArray = model.get_part_keys()
-	for part: Variant in body:
-		if ModularModel.is_body_color_key(part): continue
-		if not part is int or not model.has_part(part as int) or not body[part] is String: return false
-		var part_key: String = part_keys[part as int]
+	for key: Variant in body:
+		if ModularModel.is_body_color_key(key): continue
+		if not key is int or not body[key] is String: return false
+		var part: int = key
+		if not model.has_part(part): return false
+		var part_key: String = part_keys[part]
 		if not randomized_parts.has(part_key) or not mesh_pools.has(part_key): continue
 		var mesh_id: String = body[part]
 		# Parts without meshes (e.g. facial hair on a female body) roll none, whatever their pool
-		if mesh_id.is_empty() and model.get_part(part as int).get_mesh_count() == 0: continue
+		if mesh_id.is_empty() and model.get_part(part).get_mesh_count() == 0: continue
 		var mesh_number: String = ModularBodyPart.EMPTY_MESH_NUMBER if mesh_id.is_empty() else ModularBodyPart.get_mesh_number(ResourceId.get_file_path(mesh_id))
 		if not mesh_pools[part_key].has(mesh_number): return false
 	return true
@@ -128,5 +130,7 @@ static func _roll_color(colors: PackedColorArray) -> Color:
 
 static func _allows_color(body: Dictionary, key: String, colors: PackedColorArray) -> bool:
 	if colors.is_empty(): return not body.has(key)
-	var color: Variant = body.get(key)
-	return color is Color and colors.has(color as Color)
+	var found: Variant = body.get(key)
+	if not found is Color: return false
+	var color: Color = found
+	return colors.has(color)

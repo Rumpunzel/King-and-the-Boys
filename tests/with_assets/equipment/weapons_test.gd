@@ -92,7 +92,7 @@ func test_weapons_fit_their_own_body_only() -> void:
 func test_weapon_types_are_valid() -> void:
 	for type_name: String in ["weapon", "two_handed_weapon", "shield", "off_hand_weapon", "dwarf_weapon", "dwarf_two_handed_weapon", "dwarf_shield", "dwarf_off_hand_weapon"]:
 		var equipment_type: EquipmentType = EquipmentFixtures.load_type(type_name)
-		assert_array(equipment_type.call("_get_configuration_warnings") as PackedStringArray).override_failure_message("%s: %s" % [type_name, equipment_type.call("_get_configuration_warnings")]).is_empty()
+		assert_array(equipment_type.call("_get_configuration_warnings")).override_failure_message("%s: %s" % [type_name, equipment_type.call("_get_configuration_warnings")]).is_empty()
 
 ## The torch's fire, shown on [param hand] (a hand part's name) while it holds the torch
 func _fire(model: ModularModel, hand: String = "off_hand_weapon") -> Node3D:

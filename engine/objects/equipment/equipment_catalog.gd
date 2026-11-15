@@ -59,7 +59,7 @@ static func get_key_of(look: EquipmentLook) -> String:
 func get_first_key() -> String:
 	for look: EquipmentLook in looks:
 		if look.allowed: return get_key_of(look)
-	return get_key_of(looks.front() as EquipmentLook) if not looks.is_empty() else ""
+	return get_key_of(looks[0]) if not looks.is_empty() else ""
 
 ## The numbers the [param link_index]th link takes among the looks that share [param combination_key]'s earlier numbers, in natural order
 ## So a base (link 0) offers every base, and an attachment only those stored with the shown base

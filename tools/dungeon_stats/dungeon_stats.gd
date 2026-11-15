@@ -24,7 +24,9 @@ func _ready() -> void:
 		var level: Level = (load(LEVEL) as PackedScene).instantiate()
 		level.spawns_monsters = false
 		# Every seed: the tile set goes with the level freed before and is loaded again
-		if crowding: (level.get(&"_tile_set") as DungeonTileSet).crowding_weight = crowding.to_float()
+		if crowding:
+			var tile_set: DungeonTileSet = level.get(&"_tile_set")
+			tile_set.crowding_weight = crowding.to_float()
 		level.generation_random.seed = generation_seed
 		add_child(level)
 		level.build_level()

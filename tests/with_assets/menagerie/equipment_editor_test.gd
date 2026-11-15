@@ -92,7 +92,8 @@ func test_checking_adds_and_flips_the_shown_look() -> void:
 
 func test_reviewing_steps_through_combinations_and_wraps() -> void:
 	var helmet_type: EquipmentType = _use_type("helmet")
-	var head_check: CheckBox = (_editor.get("_vary_check_boxes") as Dictionary)[ModularCharacter.Part.HEAD_NO_ELEMENTS]
+	var vary_check_boxes: Dictionary = _editor.get("_vary_check_boxes")
+	var head_check: CheckBox = vary_check_boxes[ModularCharacter.Part.HEAD_NO_ELEMENTS]
 	head_check.button_pressed = false
 	_show_helmet("05", "02")
 	var combinations: EquipmentCombinations = EquipmentCombinations.new(helmet_type, _model)
@@ -100,10 +101,10 @@ func test_reviewing_steps_through_combinations_and_wraps() -> void:
 	var keys: Array = combinations.list().map(func(combination: Dictionary) -> String: return combination.key)
 	var start: int = keys.find("05 02")
 	_editor.call("_step_combination", 1)
-	assert_str(_editor.call("_get_combination_key") as String).is_equal(keys[(start + 1) % keys.size()] as String)
+	assert_str(_editor.call("_get_combination_key")).is_equal(keys[(start + 1) % keys.size()])
 	_editor.call("_step_combination", -1)
 	_editor.call("_step_combination", -1)
-	assert_str(_editor.call("_get_combination_key") as String).is_equal(keys[start - 1] as String)
+	assert_str(_editor.call("_get_combination_key")).is_equal(keys[start - 1])
 	var label: Label = _editor.get("_review_label")
 	assert_str(label.text).is_equal("Combination %d / %d" % [start, keys.size()])
 

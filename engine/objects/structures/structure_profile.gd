@@ -33,11 +33,7 @@ enum Groups {
 
 @export_group("Configuration")
 
-static func _get_adjusted_direction(direction: Level.Direction, clockwise_turns: int) -> Level.Direction:
-	var direction_count: int = Level.Direction.size()
-	return posmod(direction + clockwise_turns * (direction_count / 4), direction_count)
-
-func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, status: Structure.Status, light: TileLight = null) -> Structure:
+func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, status: Structure.Status, light: TileLight = null, dusty: bool = false) -> Structure:
 	var new_structure: Structure = (Files.load_kept("uid://d4b5bccvs2ik1") as PackedScene).instantiate()
 	new_structure.variation = variation
 	new_structure.profile = self
@@ -45,6 +41,7 @@ func create(variation: int, spawn_transform: Transform3D, clockwise_turns: int, 
 	new_structure.clockwise_turns = clockwise_turns
 	new_structure.status = status
 	new_structure.light = light
+	new_structure.dusty = dusty
 	return new_structure
 
 func can_connect(direction: Level.Direction, clockwise_turns: int, other_profile: StructureProfile) -> bool:
@@ -59,10 +56,10 @@ func get_spawn() -> Profile:
 ## the same seed
 func get_connections(clockwise_turns: int) -> Array[Level.Direction]:
 	var connections: Array[Level.Direction]
-	if _connection_up: connections.append(_get_adjusted_direction(Level.Direction.UP, clockwise_turns))
-	if _connection_right: connections.append(_get_adjusted_direction(Level.Direction.RIGHT, clockwise_turns))
-	if _connection_down: connections.append(_get_adjusted_direction(Level.Direction.DOWN, clockwise_turns))
-	if _connection_left: connections.append(_get_adjusted_direction(Level.Direction.LEFT, clockwise_turns))
+	if _connection_up: connections.append(Level.turn_direction(Level.Direction.UP, clockwise_turns))
+	if _connection_right: connections.append(Level.turn_direction(Level.Direction.RIGHT, clockwise_turns))
+	if _connection_down: connections.append(Level.turn_direction(Level.Direction.DOWN, clockwise_turns))
+	if _connection_left: connections.append(Level.turn_direction(Level.Direction.LEFT, clockwise_turns))
 	return connections
 
 ## Whether the profile, turned by [param clockwise_turns], opens towards [param direction]; asked often, so without a list

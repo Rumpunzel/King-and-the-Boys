@@ -32,19 +32,20 @@ func _body_mesh_paths(character: Character) -> PackedStringArray:
 ## The parts of [param body], leaving out its colours
 func _parts(body: Dictionary) -> Array[int]:
 	var parts: Array[int] = []
-	for key: Variant in body: if key is int: parts.append(key as int)
+	for key: Variant in body: if key is int: parts.append(key)
 	return parts
 
 func test_character_data_has_all_keys() -> void:
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(-1, Transform3D())
 	Character.validate_character_data(data)
-	assert_int(data[Character.VARIATION] as int).is_greater_equal(0)
+	assert_int(data[Character.VARIATION]).is_greater_equal(0)
 	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
 	var keys: Array = []
 	keys.append_array(model.get_body_parts())
 	keys.append_array([ModularModel.BODY_SKIN_COLOR, ModularModel.BODY_HAIR_COLOR])
-	assert_array((data[Character.BODY] as Dictionary).keys()).contains_exactly(keys)
-	assert_array(data[Character.EQUIPMENT] as PackedStringArray).is_empty()
+	var body: Dictionary = data[Character.BODY]
+	assert_array(body.keys()).contains_exactly(keys)
+	assert_array(data[Character.EQUIPMENT]).is_empty()
 
 func test_body_is_sent_as_mesh_uids() -> void:
 	var body: Dictionary = _knight.create_character_data(0, Transform3D())[Character.BODY]
@@ -60,16 +61,16 @@ func test_peers_show_the_body_the_server_rolled() -> void:
 	var body: Dictionary = data[Character.BODY]
 	var rolled: PackedStringArray = []
 	for part: int in _parts(body):
-		var mesh: Resource = ResourceId.find(body[part] as String)
+		var mesh: Resource = ResourceId.find(str(body[part]))
 		rolled.append(mesh.resource_path if mesh else "")
 	assert_array(_body_mesh_paths(host)).is_equal(rolled)
 	assert_array(_body_mesh_paths(peer)).is_equal(rolled)
 
 func test_body_survives_a_model_rebuild() -> void:
 	var host: Character = auto_free(Character.from_character_data(_knight.create_character_data(0, Transform3D())))
-	var before: PackedStringArray = _body_mesh_paths(host)
+	var paths_before: PackedStringArray = _body_mesh_paths(host)
 	host.profile = _knight
-	assert_array(_body_mesh_paths(host)).is_equal(before)
+	assert_array(_body_mesh_paths(host)).is_equal(paths_before)
 
 func test_server_rolls_differ_between_spawns() -> void:
 	var first: Dictionary = _knight.create_character_data(0, Transform3D())[Character.BODY]
@@ -88,12 +89,12 @@ func test_starting_and_rolled_equipment_reach_peers() -> void:
 	_knight.starting_face = mask
 	_knight.random_equipment = [table, null]
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D())
-	assert_array(data[Character.EQUIPMENT] as PackedStringArray).contains_exactly([ResourceId.of(mask), ResourceId.of(helmet)])
+	assert_array(data[Character.EQUIPMENT]).contains_exactly([ResourceId.of(mask), ResourceId.of(helmet)])
 	var host: Character = auto_free(Character.from_character_data(data))
 	assert_object(host.equipment.get_equipped(EquipmentLook.Slot.HEAD)).is_same(helmet)
 	assert_object(host.equipment.get_equipped(EquipmentLook.Slot.FACE)).is_null()
 	var round_trip: Dictionary[StringName, Variant] = host.to_character_data()
-	assert_array(round_trip[Character.EQUIPMENT] as PackedStringArray).contains_exactly([ResourceId.of(helmet)])
+	assert_array(round_trip[Character.EQUIPMENT]).contains_exactly([ResourceId.of(helmet)])
 	var peer: Character = _peer_from(round_trip)
 	var peer_model: ModularCharacter = peer.model
 	assert_str(EquipmentFixtures.mesh_path(peer_model.helmet_attachment)).is_equal(EquipmentFixtures.HELMET_ATTACHMENT)
@@ -110,23 +111,24 @@ func test_looks_stored_in_a_profile_reach_peers_by_resource_id() -> void:
 	var look_id: String = ResourceId.of(stored)
 	assert_str(look_id).contains(ResourceId.SEPARATOR)
 	assert_object(ResourceId.find(look_id)).is_same(stored)
-	assert_array(loaded.create_character_data(0, Transform3D())[Character.EQUIPMENT] as PackedStringArray).contains([look_id])
+	assert_array(loaded.create_character_data(0, Transform3D())[Character.EQUIPMENT]).contains([look_id])
 
 func test_the_body_chosen_in_the_lobby_carries_into_the_game() -> void:
 	var chosen: Dictionary = _knight.roll_body(0)
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D(), chosen)
-	assert_dict(data[Character.BODY] as Dictionary).is_equal(chosen)
+	assert_dict(data[Character.BODY]).is_equal(chosen)
 	var character: Character = auto_free(Character.from_character_data(data))
 	var shown: PackedStringArray = []
-	for part: int in _parts(chosen): shown.append(ResourceId.get_file_path(chosen[part] as String))
+	for part: int in _parts(chosen): shown.append(ResourceId.get_file_path(str(chosen[part])))
 	assert_array(_body_mesh_paths(character)).is_equal(shown)
 
 func test_a_body_that_does_not_fit_is_rolled_anew() -> void:
 	var dwarf_body: Dictionary = (load(EquipmentFixtures.DWARF) as CharacterProfile).roll_body(0)
 	var data: Dictionary[StringName, Variant] = _knight.create_character_data(0, Transform3D(), dwarf_body)
 	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())
-	assert_bool(model.is_complete_body(data[Character.BODY] as Dictionary)).is_true()
-	assert_dict(data[Character.BODY] as Dictionary).is_not_equal(dwarf_body)
+	var body: Dictionary = data[Character.BODY]
+	assert_bool(model.is_complete_body(body)).is_true()
+	assert_dict(body).is_not_equal(dwarf_body)
 
 func test_peer_sent_meshes_outside_the_part_are_refused_unloaded() -> void:
 	var model: ModularCharacter = auto_free(EquipmentFixtures.make_model())

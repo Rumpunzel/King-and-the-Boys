@@ -33,12 +33,14 @@ func _figures() -> Array[Character]:
 	add_child(hero)
 	_level.spawn_monster(ModelFreeWorld.load_monster_profile(), start)
 	await await_idle_frame()
-	var monster: Character = ((_level.get("_agent_spawner") as AgentSpawner).get_children().back() as Agent).character
+	var spawner: AgentSpawner = _level.get("_agent_spawner")
+	var monster: Character = (spawner.get_children()[-1] as Agent).character
 	return [hero, monster]
 
 func _dice() -> Array[Button]:
 	var buttons: Array[Button] = []
-	for child: Node in (_status.get("_dice") as Container).get_children():
+	var dice: Container = _status.get("_dice")
+	for child: Node in dice.get_children():
 		if not child.is_queued_for_deletion(): buttons.append(child as Button)
 	return buttons
 
@@ -54,7 +56,7 @@ func test_a_blocks_dice_show_with_the_one_that_counts() -> void:
 	var figures: Array[Character] = await _figures()
 	var dice: Array[int] = [Block.Face.PUSH, Block.Face.DEFENDER_DOWN]
 	_turn_manager.block_shown.emit(figures[0], figures[1], dice, Block.Face.DEFENDER_DOWN, false)
-	assert_bool((_status.get("_block_panel") as Control).visible).is_true()
+	assert_bool(_block_panel().visible).is_true()
 	var buttons: Array[Button] = _dice()
 	assert_int(buttons.size()).is_equal(2)
 	assert_str(buttons[1].text).is_equal("★ Test monster falls")
@@ -68,12 +70,12 @@ func test_others_see_whose_choice_it_is_without_buttons_to_press() -> void:
 		TurnManager.CHOICE_DEFENDER: figures[1].get_path(),
 		TurnManager.CHOICE_DICE: [Block.Face.PUSH, Block.Face.ATTACKER_DOWN],
 	}
-	assert_bool((_status.get("_block_panel") as Control).visible).is_true()
+	assert_bool(_block_panel().visible).is_true()
 	var buttons: Array[Button] = _dice()
 	assert_int(buttons.size()).is_equal(2)
 	for button: Button in buttons: assert_bool(button.disabled).is_true()
 	_turn_manager.block_choice = {}
-	assert_bool((_status.get("_block_panel") as Control).visible).is_false()
+	assert_bool(_block_panel().visible).is_false()
 
 func test_face_names_say_who_falls() -> void:
 	assert_str(CombatStatus.face_name(Block.Face.ATTACKER_DOWN, "Knight", "Skeleton")).is_equal("Knight falls")
@@ -82,3 +84,6 @@ func test_face_names_say_who_falls() -> void:
 	# Pinned, a push is a fall
 	assert_str(CombatStatus.face_name(Block.Face.PUSH, "Knight", "Skeleton", true)).is_equal("Push: Skeleton falls against the wall")
 	assert_str(CombatStatus.face_name(Block.Face.DEFENDER_STUMBLES, "Knight", "Skeleton", true)).is_equal("Skeleton stumbles and falls against the wall")
+
+func _block_panel() -> Control:
+	return _status.get("_block_panel")

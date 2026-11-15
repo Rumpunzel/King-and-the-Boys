@@ -34,7 +34,7 @@ func after_test() -> void:
 ## [param dark]: the hero spawns with the lantern out, so what it saw on arrival was without it
 func _spawn_hero(dark: bool = false) -> Character:
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
-	var hero: Character = auto_free(_hero_profile.create(-1, (spawn_points.front() as Node3D).global_transform))
+	var hero: Character = auto_free(_hero_profile.create(-1, (spawn_points[0] as Node3D).global_transform))
 	_level.add_character(hero)
 	if dark: hero.toggled_ability_ids = [ResourceId.of(LANTERN)]
 	_level.follow_sight_of(hero)
@@ -74,19 +74,19 @@ func test_putting_it_out_is_free_and_stays_done() -> void:
 func test_toggling_leaves_the_steps_before_undoable() -> void:
 	var hero: Character = await _spawn_hero()
 	# Steps that reveal tiles can not be undone: step on until one can
-	var before: Vector2i = hero.grid_cell
+	var cell_before: Vector2i = hero.grid_cell
 	for _attempt: int in 3:
 		for direction: Level.Direction in Level.Direction.values():
 			if hero.undo_steps > 0: break
 			if _level.get_step_target(hero.grid_cell, direction) == hero.grid_cell: continue
-			before = hero.grid_cell
+			cell_before = hero.grid_cell
 			_turn_manager.request_move(hero.get_path(), direction)
 	assert_int(hero.undo_steps).override_failure_message("No undoable step to test with").is_greater(0)
 	var steps: int = hero.undo_steps
 	_toggle(hero)
 	assert_int(hero.undo_steps).is_equal(steps)
 	_turn_manager.request_undo(hero.get_path())
-	assert_object(hero.grid_cell).is_equal(before)
+	assert_object(hero.grid_cell).is_equal(cell_before)
 	assert_bool(LANTERN.is_lit(hero)).is_false()
 
 func test_lighting_it_shows_what_it_brings_into_sight() -> void:

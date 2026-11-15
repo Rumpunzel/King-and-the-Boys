@@ -39,7 +39,7 @@ func _spawn_hero(grid_cell: Vector2i) -> Character:
 
 func _start_cell() -> Vector2i:
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
-	return _level.world_to_grid_position((spawn_points.front() as Node3D).global_position)
+	return _level.world_to_grid_position((spawn_points[0] as Node3D).global_position)
 
 ## Puts [param hero] on the tile nearest the start whose shape changes when turned; standing there reveals it
 func _stand_on_turnable_tile(hero: Character) -> Structure:
@@ -91,7 +91,7 @@ func test_the_mystic_lifts_turns_and_sets_down_their_tile() -> void:
 	var expected: Array[Level.Direction] = ModelFreeWorld.turned_connections(tile, argument)
 	_begin(hero, hero.grid_cell)
 	assert_bool(tile.lifted_by == hero.get_path()).is_true()
-	assert_bool(_level.is_passage(hero.grid_cell, tile.get_connections().front() as Level.Direction)).is_false()
+	assert_bool(_level.is_passage(hero.grid_cell, tile.get_connections()[0])).is_false()
 	_adjust(hero, 1)
 	assert_int(tile.lift_turns).is_equal(1)
 	_adjust(hero, argument)

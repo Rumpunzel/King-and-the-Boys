@@ -206,7 +206,7 @@ static func get_direction(first_grid_position: Vector2i, second_grid_position: V
 	return Direction.UP
 
 static func get_opposite(direction: Direction) -> Direction:
-	return posmod(direction + Direction.size() / 2, Direction.size()) as Direction
+	return turn_direction(direction, 2)
 
 ## @returns [param direction] turned by [param clockwise_turns] quarter turns
 static func turn_direction(direction: Direction, clockwise_turns: int) -> Direction:
@@ -315,12 +315,6 @@ func get_room_cells(grid_position: Vector2i) -> Array[Vector2i]:
 
 ## Whether every connection of the room's [param cells] leads to a placed tile. Rooms are built whole, so a room is only incomplete
 ## while its tiles still arrive (loading, joining)
-func is_room_complete(cells: Array[Vector2i]) -> bool:
-	for cell: Vector2i in cells:
-		for connection: Direction in _placed_tiles[cell].get_connections():
-			if not _placed_tiles.has(cell + direction_to_vector(connection)): return false
-	return true
-
 ## The grid corner where a room's centrepiece stands: the one nearest the room's centre among those with all four cells in the room
 ## and no pillar (corners with even indices, see [TileDecorations]); [code]null[/code] if there is none, e.g. in rooms narrower than 2 cells
 static func get_centrepiece_corner(cells: Array[Vector2i]) -> Variant:
@@ -556,7 +550,7 @@ func _build_corridor_from(origin_grid_position: Vector2i, direction: Direction, 
 			if connection == direction or connection == get_opposite(direction): continue
 			var neighbour_direction: Vector2i = direction_to_vector(connection)
 			var neighbour_position: Vector2i = grid_position + neighbour_direction
-			spawn_at(neighbour_position)
+			_spawn_whole(neighbour_position, already_visited)
 		# On only where the next tile opens back: a turned tile may face a closed side (or the outer wall)
 		var next_tile: Structure = _placed_tiles.get(grid_position + relative_direction)
 		if next_tile and not next_tile.has_connection(get_opposite(direction)): break
@@ -576,8 +570,16 @@ func _spread_room_from(origin_grid_position: Vector2i, room_type: RoomType, alre
 		var grid_position: Vector2i = origin_grid_position + relative_direction
 		if already_visited.has(grid_position): continue
 		already_visited.append(grid_position)
-		spawn_at(grid_position)
+		_spawn_whole(grid_position, already_visited, room_type)
 		_spread_room_from(grid_position, room_type, already_visited)
+
+## Places a tile on [param grid_position] (see [method spawn_at]). A new tile of a room other than [param spreading] (the one being
+## built) is built out with its whole room, so no room waits half built, its exits leading nowhere, until a hero steps in
+func _spawn_whole(grid_position: Vector2i, already_visited: Array[Vector2i], spreading: RoomType = null) -> void:
+	var is_new: bool = not _placed_tiles.has(grid_position)
+	spawn_at(grid_position)
+	var room_type: RoomType = _placed_tiles[grid_position].profile.room_type
+	if is_new and room_type and room_type != spreading: _build_room_from(grid_position, room_type, already_visited)
 
 ## Host only: now and then a centrepiece in the middle of the room around [param grid_position], which must be built whole. Rooms are
 ## built again on every step, so the roll is seeded by the room, and a corner holding a thing already is left alone
@@ -585,13 +587,12 @@ func _furnish_room(grid_position: Vector2i) -> void:
 	if not _room_centrepieces or _furnished_cells.has(grid_position): return
 	var cells: Array[Vector2i] = get_room_cells(grid_position)
 	var found: Variant = get_centrepiece_corner(cells)
-	if found == null:
+	# Decided already: a room that grew (a tile of its type placed beside it joins it) was as it was first built; and none where no
+	# corner suits one, or a thing stands there
+	if cells.any(func(cell: Vector2i) -> bool: return _furnished_cells.has(cell)) or found == null or _corner_things.has(found):
 		_remember_furnished(cells)
 		return
 	var corner: Vector2i = found
-	if _corner_things.has(corner):
-		_remember_furnished(cells)
-		return
 	# A figure (e.g. in a save from before rooms had centrepieces) may stand on a spot it would take on one of its tiles: later
 	if _is_corner_spot_taken(corner): return
 	_remember_furnished(cells)
@@ -624,7 +625,18 @@ func _spawn_at(tile_blueprint: DungeonTileSet.TileBlueprint, grid_position: Vect
 	var tile_transform: Transform3D = Transform3D(Basis.IDENTITY, tile_position)
 	var decorations: TileDecorations = tile_blueprint.profile.decorations
 	var light: TileLight = decorations.roll_light(tile_blueprint.profile, generation_random.seed, grid_position) if decorations else null
-	_structure_spawner.spawn_at(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status, light)
+	_structure_spawner.spawn_at(tile_blueprint.profile, tile_transform, tile_blueprint.clockwise_turns, status, light, is_dusty(tile_blueprint.profile, grid_position))
+
+## Host only: whether dust lies over a tile of [param profile] placed on [param cell]. A room is dusty or not as a whole: a room tile
+## beside a placed tile of its room type (which it connects to, see [method Structure.get_connections]) takes that tile's dust, so
+## a room keeps it as it grows (one joining two rooms takes the first one's); the first tile of a room rolls it (see
+## [method TileDecorations.roll_dust])
+func is_dusty(profile: StructureProfile, cell: Vector2i) -> bool:
+	if not profile.room_type or not profile.decorations: return false
+	for direction_vector: Vector2i in DIRECTION_VECTORS:
+		var neighbour: Structure = _placed_tiles.get(cell + direction_vector)
+		if neighbour and neighbour.profile.room_type == profile.room_type: return neighbour.dusty
+	return profile.decorations.roll_dust(generation_random.seed, cell)
 
 ## Host only: reveals [param tile] right away and discovers its neighbours; peers show it later, after the step of
 ## [param character] that caused it, or at once if no step did
@@ -841,7 +853,8 @@ func _forget_tile(tile: Structure) -> void:
 	# Until it is freed it may still change: nothing here follows it any more
 	for handler: Array in [[tile.status_changed, _on_tile_status_changed], [tile.shown_status_changed, _on_tile_shown_status_changed], [tile.spawn_requested, _on_spawn_requested]]:
 		var tile_signal: Signal = handler[0]
-		var bound_handler: Callable = (handler[1] as Callable).bind(tile)
+		var method: Callable = handler[1]
+		var bound_handler: Callable = method.bind(tile)
 		if tile_signal.is_connected(bound_handler): tile_signal.disconnect(bound_handler)
 	for queues: Dictionary in [_reveal_queues, _discover_queues]:
 		for queue: Array in queues.values(): queue.erase(tile)

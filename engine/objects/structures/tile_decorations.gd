@@ -22,8 +22,6 @@ const NODE_NAME: StringName = &"Decorations"
 const GROUND_NODE_NAME: StringName = &"Ground"
 ## Name of the node holding a tile's paths, see [method create_paths]
 const PATHS_NODE_NAME: StringName = &"Paths"
-## How many frames dust waits for the rest of a room arriving tile by tile, see [method _add_room_dust]
-const ROOM_WAIT_FRAMES: int = 120
 ## Meta of a tile's decorations: the grid positions of the neighbours whose shared edge (an opening or a wall) it decided
 const DECIDED_EDGES: StringName = &"decided_edges"
 ## Meta of an arch or wall: the grid position of the neighbour across the edge it stands on, see [method redecide_edges]
@@ -70,7 +68,7 @@ const CORNERS: Array[Vector2i] = Level.CELL_CORNERS
 @export_range(0.0, 1.0) var room_ambience_chance: float = 0.2
 ## Over the middle of every tile of a dusty room, so the room reads as one
 @export var room_dust: PropSet
-## Chance of a room being dusty
+## Chance of a room being dusty, see [method roll_dust]
 @export_range(0.0, 1.0) var dusty_room_chance: float = 0.4
 @export_group("Architecture")
 ## Span openings where a corridor enters a room, by [member doorway_arch_chance]
@@ -129,6 +127,14 @@ func create(tile: Structure) -> Node3D:
 	_add_room_props(decorations, tile)
 	return decorations
 
+## Host only: whether the room whose first tile is placed on [param cell] is dusty, by [member dusty_room_chance], seeded by the
+## level's seed [param level_seed] and the cell (like [method roll_light]); its later tiles take it (see [method Level.is_dusty])
+func roll_dust(level_seed: int, cell: Vector2i) -> bool:
+	if not room_dust: return false
+	var random: RandomNumberGenerator = RandomNumberGenerator.new()
+	random.seed = hash([level_seed, cell, &"dust"])
+	return random.randf() < dusty_room_chance
+
 ## Host only: the wall light a tile of [param profile] placed on [param cell] holds, rolled by [member light_chance] from
 ## [member tile_lights], seeded by the level's seed [param level_seed] and the cell (like monsters), so the same seed lights the same
 ## tiles; [code]null[/code] for none, and always for a tile without a closed side
@@ -139,7 +145,9 @@ func roll_light(profile: StructureProfile, level_seed: int, cell: Vector2i) -> T
 	if random.randf() >= light_chance: return null
 	# rand_weighted gives -1 when every weight is 0: then no light at all
 	var pick: int = random.rand_weighted(PackedFloat32Array(tile_lights.values()))
-	return tile_lights.keys()[pick] as TileLight if pick >= 0 else null
+	if pick < 0: return null
+	var light: TileLight = tile_lights.keys()[pick]
+	return light
 
 ## Builds the clutter of a tile whose open sides are [param connections], as its model sees them (unrotated), with the wall light
 ## [param light] the tile holds, if any (see [member Structure.light])
@@ -194,24 +202,12 @@ func _add_room_props(decorations: Node3D, tile: Structure) -> void:
 		_add_prop(decorations, room_ambience, _to_model(tile, _on_floor(Vector2.ZERO)), random)
 	_add_room_dust(decorations, tile)
 
-## Dust over [param tile] if its room is dusty. The room is rolled by its first cell, so it needs all its tiles: rooms are built whole,
-## but loaded and joining peers get their tiles one by one, possibly over several frames, so the dust waits until the room is
-## complete (at most [constant ROOM_WAIT_FRAMES] frames, then rolls with what is there)
-func _add_room_dust(decorations: Node3D, tile: Structure, frames_left: int = ROOM_WAIT_FRAMES) -> void:
-	if not room_dust or not is_instance_valid(decorations) or not is_instance_valid(tile) or not tile.level: return
-	var cells: Array[Vector2i] = tile.level.get_room_cells(tile.get_grid_position())
-	if frames_left > 0 and not tile.level.is_room_complete(cells) and tile.is_inside_tree():
-		# A lambda per tile: one method bound twice counts as one connection
-		tile.get_tree().process_frame.connect(func() -> void: _add_room_dust(decorations, tile, frames_left - 1), CONNECT_ONE_SHOT)
-		return
-	var room_random: RandomNumberGenerator = RandomNumberGenerator.new()
-	room_random.seed = hash(cells.min()) ^ hash(&"dust")
-	if room_random.randf() >= dusty_room_chance: return
+## Dust over [param tile] if dust lies over it ([member Structure.dusty], decided per room by the host)
+func _add_room_dust(decorations: Node3D, tile: Structure) -> void:
+	if not room_dust or not tile.dusty: return
 	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	random.seed = hash(tile.get_grid_position()) ^ hash(&"dust")
 	_add_prop(decorations, room_dust, _to_model(tile, _on_floor(Vector2.ZERO), _random_turn(random).basis), random)
-	# Late, the other props' drop is under way without it: it drops in on its own
-	if frames_left < ROOM_WAIT_FRAMES and drop_animation: _drop_one(decorations.get_child(decorations.get_child_count() - 1) as Model)
 
 ## Hides the props of [param decorations] and drops them in one after another once [param after] (e.g. the tile's reveal) finished
 func drop(decorations: Node3D, after: Tween = null) -> void:
@@ -568,4 +564,5 @@ func _drop_each(decorations: Node3D) -> void:
 
 func _drop_one(prop: Model) -> void:
 	prop.visible = true
-	prop.play_model_animation(prop.get_meta(DROP_ANIMATION, drop_animation) as ModelAnimation)
+	var animation: ModelAnimation = prop.get_meta(DROP_ANIMATION, drop_animation)
+	prop.play_model_animation(animation)

@@ -1,7 +1,7 @@
 extends RefCounted
 ## The rules every generated dungeon keeps, for the dungeon generation tests: passages lead both ways, neighbours
 ## keep their connection restrictions (except where the generator found no tile suiting them all, see
-## [member Level.restriction_fallbacks]), tiles stay inside the closed outer wall
+## [member Level.restriction_fallbacks]), rooms are built whole, tiles stay inside the closed outer wall
 
 ## Builds on from every placed tile [param rounds] times, as characters exploring would
 static func explore(level: Level, rounds: int) -> void:
@@ -21,6 +21,11 @@ static func find_problems(level: Level, generation_seed: int) -> PackedStringArr
 		var cell: Vector2i = tile.get_grid_position()
 		if absi(cell.x) > extents.x or absi(cell.y) > extents.y: problems.append("Seed %d: a tile at %s outside the extents %s" % [generation_seed, cell, extents])
 		if is_wall(level, cell): continue
+		# Rooms are built whole: no passage of a room tile leads into a cell not built yet
+		if tile.profile.room_type:
+			for direction: Level.Direction in tile.get_connections():
+				var beyond: Vector2i = cell + Level.direction_to_vector(direction)
+				if not level.get_placed_tile(beyond): problems.append("Seed %d: %s at %s leads into %s, not built yet" % [generation_seed, tile.profile.name, cell, beyond])
 		for direction: Level.Direction in Level.Direction.values():
 			var neighbour: Structure = level.get_placed_tile(cell + Level.direction_to_vector(direction))
 			if not neighbour: continue

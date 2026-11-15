@@ -155,7 +155,8 @@ func test_pieces_are_in_reach_on_the_tile_and_along_passages_only() -> void:
 	assert_bool(_hit_box_of(next_door).may_be_controlled_by(local_character, Multiplayer.HOST_ID)).is_true()
 	# Reach goes by the grid: a walkable tile beyond it is out of reach
 	var beyond: Array[Vector2i] = []
-	for cell: Vector2i in (_level.get("_placed_tiles") as Dictionary):
+	var placed_tiles: Dictionary = _level.get("_placed_tiles")
+	for cell: Vector2i in placed_tiles:
 		if not in_reach.has(cell) and not _level.get_placed_tile(cell).get_connections().is_empty(): beyond.append(cell)
 	assert_array(beyond).is_not_empty()
 	var far: Character = await _add_piece_at(beyond[0])

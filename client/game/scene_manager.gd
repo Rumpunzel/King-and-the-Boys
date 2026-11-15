@@ -75,7 +75,7 @@ func preload_scene(scene_path: String) -> void:
 	_scene_path_to_load = scene_path
 
 ## Loads the scene and transitions to it when it's ready
-func transition_to_scene(scene_path: String, show_loading_screen: bool = true) -> void:
+func transition_to_scene(scene_path: String, with_loading_screen: bool = true) -> void:
 	_transitions_requested += 1
 	_exection = Execution.LOCAL
 	preload_scene(scene_path)
@@ -84,7 +84,7 @@ func transition_to_scene(scene_path: String, show_loading_screen: bool = true) -
 		_transition_to_scene(scene_path)
 		return
 	set_process(true)
-	if show_loading_screen: show_loading_screen()
+	if with_loading_screen: show_loading_screen()
 
 func transition_to_scene_with_setup(scene_path: String, scene_setup: Callable, setup_mode: SetupMode) -> void:
 	_scene_setup = scene_setup
@@ -92,11 +92,11 @@ func transition_to_scene_with_setup(scene_path: String, scene_setup: Callable, s
 	_setup_mode = setup_mode
 	transition_to_scene(scene_path)
 
-func to_main(show_loading_screen: bool = true) -> void:
+func to_main(with_loading_screen: bool = true) -> void:
 	_exection = Execution.LOCAL
 	var main_scene_path: String = get_main_scene_path()
 	assert(not get_tree().current_scene or get_tree().current_scene.scene_file_path != main_scene_path)
-	transition_to_scene(main_scene_path, show_loading_screen)
+	transition_to_scene(main_scene_path, with_loading_screen)
 
 ## @returns the main scene's file path (the project setting holds its uid://)
 func get_main_scene_path() -> String:
@@ -198,12 +198,17 @@ func _transition_to_scene(scene_path: String) -> void:
 		return
 	assert(_exection == Execution.LOCAL)
 	var scene: Node = packed_scene.instantiate()
-	if _setup_mode == SetupMode.PRE_CHANGE: var error: Error = await _scene_setup.call(scene)
+	if _setup_mode == SetupMode.PRE_CHANGE: await _set_up(scene)
 	scene_tree.change_scene_to_node(scene)
 	await scene_tree.scene_changed
-	if _setup_mode == SetupMode.POST_CHANGE: var error: Error = await _scene_setup.call(scene)
+	if _setup_mode == SetupMode.POST_CHANGE: await _set_up(scene)
 	_scene_setup = Callable()
 	if _loading_screen: remove_loading_screen()
+
+## Runs the scene setup on [param scene]; one that fails is reported, and the transition goes on, as no setup can fail yet
+func _set_up(scene: Node) -> void:
+	var error: Error = await _scene_setup.call(scene)
+	if error != OK: push_error("Scene setup failed: %s" % error_string(error))
 
 func _transition_to_packed_scene(packed_scene: PackedScene) -> void:
 	var scene_tree: SceneTree = get_tree()

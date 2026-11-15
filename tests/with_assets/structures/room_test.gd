@@ -35,7 +35,18 @@ func _spawn_room(status: Structure.Status) -> Array[Vector2i]:
 			cells.append(cell)
 	return cells
 
-## Corridor tiles around the 3x3 room, so every connection of the room leads to a placed tile: the room is complete
+## A 3x3 room around (0, 0), placed by the host (which decides its dust) tile by tile, already [param status]
+func _place_room(status: Structure.Status) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	for y: int in range(-1, 2):
+		for x: int in range(-1, 2): cells.append(Vector2i(x, y))
+	for cell: Vector2i in cells: _place_room_tile(cell, status)
+	return cells
+
+func _place_room_tile(cell: Vector2i, status: Structure.Status) -> void:
+	_level.call("_spawn_at", DungeonTileSet.TileBlueprint.new(load(ROOM) as StructureProfile), cell, status)
+
+## Corridor tiles around the 3x3 room, so every connection of the room leads to a placed tile
 func _surround_room() -> void:
 	var corridor: StructureProfile = load(CORRIDOR)
 	for y: int in range(-2, 3):
@@ -54,36 +65,35 @@ func test_room_cells_follow_the_connections_of_one_room() -> void:
 	var cells: Array[Vector2i] = _spawn_room(Structure.Status.PLACED)
 	var found: Array[Vector2i] = _level.get_room_cells(Vector2i(1, 1))
 	assert_array(found).contains_exactly_in_any_order(cells)
-	# The outer tiles still lead to cells that are not built
-	assert_bool(_level.is_room_complete(found)).is_false()
 	assert_array(_level.get_room_cells(Vector2i(5, 5))).is_empty()
 
 func test_a_dusty_room_is_dusty_throughout() -> void:
 	(load(DECORATIONS) as TileDecorations).dusty_room_chance = 1.0
-	_surround_room()
-	var cells: Array[Vector2i] = _spawn_room(Structure.Status.REVEALED)
+	var cells: Array[Vector2i] = _place_room(Structure.Status.REVEALED)
 	await await_idle_frame()
 	for cell: Vector2i in cells: assert_int(_dust_count(cell)).override_failure_message("No dust at %s" % cell).is_equal(1)
 
-func test_dust_waits_for_a_room_arriving_over_several_frames() -> void:
+func test_a_room_keeps_its_dust_as_it_grows() -> void:
+	(load(DECORATIONS) as TileDecorations).dusty_room_chance = 0.0
+	_place_room(Structure.Status.REVEALED)
+	# Were it rolled again, the grown room would be dusty now
 	(load(DECORATIONS) as TileDecorations).dusty_room_chance = 1.0
-	_surround_room()
-	var room: StructureProfile = load(ROOM)
-	var cells: Array[Vector2i] = []
-	for y: int in range(-1, 2):
-		for x: int in range(-1, 2): cells.append(Vector2i(x, y))
-	# All but the room's first cell, whose position seeds the roll, as a joining peer may get them
-	for cell: Vector2i in cells.slice(1): _level._structure_spawner.spawn_at(room, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell)), 0, Structure.Status.REVEALED)
-	for frame: int in 10: await await_idle_frame()
-	for cell: Vector2i in cells.slice(1): assert_int(_dust_count(cell)).override_failure_message("Rolled before the room was complete").is_equal(0)
-	_level._structure_spawner.spawn_at(room, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cells[0])), 0, Structure.Status.REVEALED)
-	for frame: int in 3: await await_idle_frame()
-	for cell: Vector2i in cells: assert_int(_dust_count(cell)).override_failure_message("No dust at %s" % cell).is_equal(1)
+	_place_room_tile(Vector2i(2, 0), Structure.Status.REVEALED)
+	await await_idle_frame()
+	assert_bool(_level.get_placed_tile(Vector2i(2, 0)).dusty).is_false()
+	assert_int(_dust_count(Vector2i(2, 0))).is_equal(0)
+
+func test_peers_show_the_dust_they_are_sent() -> void:
+	(load(DECORATIONS) as TileDecorations).dusty_room_chance = 0.0
+	# As a peer or a loaded save gets it: the host's decision in the tile's data
+	_level._structure_spawner.spawn_at(load(ROOM) as StructureProfile, Transform3D.IDENTITY, 0, Structure.Status.REVEALED, null, true)
+	await await_idle_frame()
+	assert_int(_dust_count(Vector2i.ZERO)).is_equal(1)
+	assert_bool(_level.get_placed_tile(Vector2i.ZERO).to_structure_data()[Structure.DUSTY]).is_true()
 
 func test_a_clear_room_has_no_dust() -> void:
 	(load(DECORATIONS) as TileDecorations).dusty_room_chance = 0.0
-	_surround_room()
-	var cells: Array[Vector2i] = _spawn_room(Structure.Status.REVEALED)
+	var cells: Array[Vector2i] = _place_room(Structure.Status.REVEALED)
 	await await_idle_frame()
 	for cell: Vector2i in cells: assert_int(_dust_count(cell)).is_equal(0)
 
@@ -103,6 +113,17 @@ func test_a_centrepiece_stands_on_the_middle_corner_once() -> void:
 	assert_object(_level.get_thing_near(Vector2i(-1, 0))).is_same(thing)
 	assert_object(_level.get_placed_thing(Vector2i(-1, 0))).is_null()
 
+func test_a_room_that_grows_keeps_its_one_centrepiece() -> void:
+	_level.set("_room_centrepiece_chance", 1.0)
+	_spawn_room(Structure.Status.PLACED)
+	_level.call("_furnish_room", Vector2i.ZERO)
+	# Two columns more: the room's middle moves two cells to the right
+	for x: int in [2, 3]:
+		for y: int in range(-1, 2): _place_room_tile(Vector2i(x, y), Structure.Status.PLACED)
+	_level.call("_furnish_room", Vector2i(3, 0))
+	await await_idle_frame()
+	assert_array(_corner_things().keys()).contains_exactly([Vector2i(0, 1)])
+
 func test_a_centrepiece_keeps_figures_away_from_its_corner_on_its_four_tiles() -> void:
 	_level.set("_room_centrepiece_chance", 1.0)
 	_spawn_room(Structure.Status.PLACED)
@@ -120,7 +141,7 @@ func test_a_centrepiece_shows_with_the_first_of_its_tiles() -> void:
 	_spawn_room(Structure.Status.PLACED)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
-	var thing: Thing = (_level.get("_corner_things") as Dictionary)[Vector2i(0, 1)]
+	var thing: Thing = _corner_things()[Vector2i(0, 1)]
 	assert_int(thing.status).is_equal(Thing.Status.PLACED)
 	_level.get_placed_tile(Vector2i(-1, 1)).shown_status = Structure.Status.REVEALED
 	assert_int(thing.status).is_equal(Thing.Status.REVEALED)
@@ -169,7 +190,7 @@ func test_each_peer_reveals_a_centrepiece_with_its_own_tiles() -> void:
 	_spawn_room(Structure.Status.REVEALED)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
-	var thing: Thing = (_level.get("_corner_things") as Dictionary)[Vector2i(0, 1)]
+	var thing: Thing = _corner_things()[Vector2i(0, 1)]
 	# Spawned unrevealed, it shows as its tiles show here
 	assert_int(thing.status).is_equal(Thing.Status.REVEALED)
 
@@ -188,11 +209,11 @@ func test_no_centrepiece_lands_on_a_figure() -> void:
 	assert_vector(figure.tile_spot).is_equal_approx(corner_spot, Vector2.ONE * 0.001)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
-	assert_bool((_level.get("_corner_things") as Dictionary).is_empty()).is_true()
+	assert_bool(_corner_things().is_empty()).is_true()
 	figure.remove_from_group(Character.GROUP)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
-	assert_bool((_level.get("_corner_things") as Dictionary).has(Vector2i(0, 1))).override_failure_message("Furnished once the figure left").is_true()
+	assert_bool(_corner_things().has(Vector2i(0, 1))).override_failure_message("Furnished once the figure left").is_true()
 
 func _spawn(profile_path: String, cell: Vector2i, turns: int = 0) -> Structure:
 	_level._structure_spawner.spawn_at(load(profile_path) as StructureProfile, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell)), turns, Structure.Status.PLACED)
@@ -254,3 +275,6 @@ func test_a_turned_room_tile_leaves_its_pillars_on_their_corners() -> void:
 	_level.rotate_tile(holder, 1, null)
 	await await_millis(2000)
 	assert_float(Vector2(pillar.global_position.x, pillar.global_position.z).distance_to(standing)).is_less(0.01)
+
+func _corner_things() -> Dictionary:
+	return _level.get("_corner_things")

@@ -1,3 +1,4 @@
+@tool
 extends Ability
 ## Test ability: records what the turn manager calls in the character's metadata.
 ## A use adds 1 to "effects" (at once, or when the turn ends with [member acts_at_turn_end]); undo takes it back.

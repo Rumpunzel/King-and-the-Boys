@@ -46,8 +46,9 @@ func _spawn_hero(cell: Vector2i) -> Character:
 func _spawn_monster(cell: Vector2i) -> Character:
 	_level.spawn_monster(ModelFreeWorld.load_monster_profile(), cell)
 	await await_idle_frame()
-	var agents: Array[Node] = (_level.get("_agent_spawner") as AgentSpawner).get_children()
-	return (agents.back() as Agent).character
+	var spawner: AgentSpawner = _level.get("_agent_spawner")
+	var agents: Array[Node] = spawner.get_children()
+	return (agents[-1] as Agent).character
 
 ## @returns a direction with a passage out of [param cell] onto a tile with room
 func _way_out(cell: Vector2i) -> Level.Direction:
@@ -110,7 +111,6 @@ func test_each_face_plays_out() -> void:
 	var start: Vector2i = _start_cell()
 	var hero: Character = await _spawn_hero(start)
 	var monster: Character = await _spawn_monster(start)
-	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	Block.new(hero, monster).apply(Block.Face.ATTACKER_DOWN, _level)
 	assert_int(hero.posture).is_equal(Character.Posture.DOWN)
 	assert_int(monster.posture).is_equal(Character.Posture.STANDING)
@@ -136,7 +136,6 @@ func test_a_stumbling_defender_falls_only_if_clumsier() -> void:
 	var start: Vector2i = _start_cell()
 	var hero: Character = await _spawn_hero(start)
 	var monster: Character = await _spawn_monster(start)
-	var random: RandomNumberGenerator = RandomNumberGenerator.new()
 	# Equally agile: it keeps its feet
 	Block.new(hero, monster).apply(Block.Face.DEFENDER_STUMBLES, _level)
 	assert_int(monster.posture).is_equal(Character.Posture.STANDING)
@@ -237,7 +236,8 @@ func _set_up_a_hero_who_picks() -> Character:
 
 ## Answers the open choice with [param value]
 func _answer(value: int) -> void:
-	_turn_manager.request_block_choice(_turn_manager.block_choice[TurnManager.CHOICE_ID] as int, value)
+	var choice_id: int = _turn_manager.block_choice[TurnManager.CHOICE_ID]
+	_turn_manager.request_block_choice(choice_id, value)
 
 ## Passes and waits until a block asks the local player, or the block happened
 func _pass_until_asked() -> void:
@@ -252,7 +252,7 @@ func test_the_player_whose_side_picks_chooses_the_die() -> void:
 	await _pass_until_asked()
 	var choice: Dictionary = _turn_manager.block_choice
 	assert_dict(choice).is_not_empty()
-	assert_int(choice[TurnManager.CHOICE_PICKER] as int).is_equal(multiplayer.get_unique_id())
+	assert_int(choice[TurnManager.CHOICE_PICKER]).is_equal(multiplayer.get_unique_id())
 	var dice: Array = choice[TurnManager.CHOICE_DICE]
 	assert_int(dice.size()).is_equal(2)
 	# Nothing moves while the choice is open, and no wrong answer counts
@@ -260,7 +260,8 @@ func test_the_player_whose_side_picks_chooses_the_die() -> void:
 	_turn_manager.request_move(hero.get_path(), _way_out(cell))
 	_answer(5)
 	# An answer naming another choice counts for nothing, even a valid one
-	_turn_manager.request_block_choice((choice[TurnManager.CHOICE_ID] as int) + 1, 0)
+	var choice_id: int = choice[TurnManager.CHOICE_ID]
+	_turn_manager.request_block_choice(choice_id + 1, 0)
 	await await_idle_frame()
 	assert_that(hero.grid_cell).is_equal(cell)
 	assert_dict(_turn_manager.block_choice).is_equal(choice)
