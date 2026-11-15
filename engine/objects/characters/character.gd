@@ -94,7 +94,7 @@ var posture: Posture = Posture.STANDING:
 		posture_changed.emit()
 		if not model: return
 		# A fall waits until the strike that caused it landed
-		var held: float = _get_hold()
+		var held: float = get_hold()
 		if held > 0.0: create_tween().tween_interval(held).finished.connect(_rest_in_posture)
 		else: model.rest_in(_get_rest())
 ## The [Character] currently controlling this one, if any
@@ -193,7 +193,7 @@ func _ready() -> void:
 	if model: model.play_model_animation(profile.spawn_animation)
 	if multiplayer.is_server():
 		# Initial grid state comes from the spawn transform: where it stands if its side has room there, else the nearest tile
-		# with room; the level lays out the tile as it enters (see Level._arrange), so a loaded side keeps its edge
+		# with room; the level lays out the tile as it enters (see LevelFormations), so a loaded side keeps its edge
 		grid_cell = level.world_to_grid_position(global_position)
 		facing = rotation_to_facing(rotation.y)
 		var offset: Vector3 = global_position - level.grid_to_world_position(grid_cell)
@@ -450,7 +450,7 @@ func _apply_grid_visuals() -> void:
 		if not _is_moving(): _hide_if_unseen()
 		return
 	# A push waits until the strike landed; the figure counts as moving meanwhile
-	var held: float = _get_hold()
+	var held: float = get_hold()
 	if held > 0.0:
 		_grid_visual_update_queued = true
 		create_tween().tween_interval(held).finished.connect(_apply_grid_visuals)
@@ -497,7 +497,8 @@ func _slide(target_position: Vector3) -> void:
 	_move_target = target_position
 	_move_tween = create_tween()
 	_move_tween.tween_property(self, "global_position", target_position, _SLIDE_DURATION).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_move_tween.tween_callback(_on_move_finished)
+	# Keeping the formation's facing, not looking round at a thing on the tile
+	_move_tween.tween_callback(_on_move_finished.bind(false))
 
 ## Redirects the move under way to [param target_position], from where the figure is: at most one step's time
 ## is left after any step, so quick steps take hardly longer than one, and corners may be cut
@@ -521,10 +522,11 @@ func _run_move(target_position: Vector3, animation: ModelAnimation, continuing: 
 	if _model_tween: _model_tween.kill()
 	_model_tween = model.continue_model_animation(animation) if continuing else model.play_model_animation(animation)
 
-func _on_move_finished() -> void:
+## [param looks_around]: whether the figure, having come onto a tile, looks at a thing there
+func _on_move_finished(looks_around: bool = true) -> void:
 	# The tween still counts as running during its own callback; listeners must see the figure arrived
 	_move_tween = null
-	if not _move_backwards: _look_at_thing_on_tile()
+	if looks_around and not _move_backwards: _look_at_thing_on_tile()
 	_hide_if_unseen()
 	figure_arrived.emit()
 
@@ -546,7 +548,7 @@ func show_block(defender: Character) -> void:
 	defender._hold_until_msec = maxi(defender._hold_until_msec, lands)
 
 ## @returns how long the figure still waits for a strike to land, in seconds; [code]0[/code] if it does not
-func _get_hold() -> float:
+func get_hold() -> float:
 	return maxf(_hold_until_msec - Time.get_ticks_msec(), 0.0) / 1000.0
 
 func _rest_in_posture() -> void:

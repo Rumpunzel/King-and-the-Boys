@@ -32,8 +32,9 @@ func test_figures_keep_clear_of_what_stands_on_the_tile_and_on_it() -> void:
 	var spot: Vector2 = Formation.get_spots(1, Vector2.DOWN, false, chest)[0]
 	assert_float(spot.length()).is_greater_equal(0.49)
 	var corner: Array[Vector2] = [Vector2(0.5, 0.5)]
+	# Even where the edge of the tile is near: the back spot towards that corner keeps clear too
 	for clear: Vector2 in Formation.get_spots(3, Vector2.DOWN, true, corner):
-		assert_float(clear.distance_to(corner[0])).is_greater_equal(0.25)
+		assert_bool(Formation.is_clear(clear, corner)).is_true()
 		assert_float(maxf(absf(clear.x), absf(clear.y))).is_less_equal(0.75)
 
 func test_the_edge_towards_a_spot() -> void:

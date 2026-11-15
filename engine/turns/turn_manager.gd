@@ -189,7 +189,7 @@ func try_step(character: Character, direction: Level.Direction, undoable: bool =
 		_track(character)
 		var undo_stack: Array = _undo_stacks.get_or_add(character, [])
 		undo_stack.append(GridStep.new(character))
-	# The tile's formation places it (see Level._arrange)
+	# The tile's formation places it (see LevelFormations)
 	character.place_on_grid(target_cell, Vector2.ZERO, direction)
 	if undoable: _update_undo_steps(character)
 	if _get_enemy_on(target_cell, character): _engage(character)
@@ -306,21 +306,12 @@ func _cancel_choice() -> void:
 	_choice_run += 1
 	block_choice = {}
 
-## @returns the standing enemy of [param character] on [param cell] who blocks it (its side's lead, see [method _get_lead]), or
-## [code]null[/code]
+## @returns the standing enemy of [param character] on [param cell] who blocks it (its side's lead, see [method Level.get_lead]),
+## or [code]null[/code]
 func _get_enemy_on(cell: Vector2i, character: Character) -> Character:
 	var other_group: CharacterProfile.Groups = CharacterProfile.Groups.MONSTERS
 	if character.profile.group == CharacterProfile.Groups.MONSTERS: other_group = CharacterProfile.Groups.HEROES
-	return _get_lead(cell, other_group)
-
-## @returns the lead of [param group]'s side on [param cell]: its first standing figure by
-## [member CharacterProfile.block_priority], in turn order among equals (the monsters'); [code]null[/code] if none stands there
-func _get_lead(cell: Vector2i, group: CharacterProfile.Groups) -> Character:
-	var lead: Character = null
-	for other: Character in Block.get_standing_on(cell, _level):
-		if other.profile.group != group: continue
-		if not lead or other.profile.block_priority < lead.profile.block_priority: lead = other
-	return lead
+	return _level.get_lead(cell, other_group)
 
 func _close_undo(character: Character) -> void:
 	_undo_stacks.erase(character)
@@ -458,8 +449,12 @@ func _run_monster_phase() -> void:
 	await _block_on_shared_tiles(CharacterProfile.Groups.HEROES)
 	if run != _monster_phase_run: return
 	# Pieces may leave while the host waits (a player leaving takes their hero along): each is checked before it is used
-	for monster: Character in _get_monsters():
-		if not is_instance_valid(monster) or not monster.is_inside_tree() or not monster.visible: continue
+	# By index: a figure freed meanwhile may not go into a typed variable
+	var monsters: Array[Character] = _get_monsters()
+	for index: int in monsters.size():
+		if not is_instance_valid(monsters[index]): continue
+		var monster: Character = monsters[index]
+		if not monster.is_inside_tree() or not monster.visible: continue
 		var agent: Agent = monster.get_parent() as Agent
 		_alert_heroes_seen_by(monster)
 		while is_instance_valid(monster) and monster.is_inside_tree() and monster.movement_points > 0:
@@ -498,7 +493,7 @@ func _get_monsters() -> Array[Character]:
 	return monsters
 
 ## Host only: [param group]'s side blocks on every tile where standing heroes and monsters meet, in the monsters' turn order.
-## The heroes' lead (see [method _get_lead]) blocks every standing monster there once; a lead knocked down hands over to the next.
+## The heroes' lead (see [method Level.get_lead]) blocks every standing monster there once; a lead knocked down hands over to the next.
 ## The monsters' lead blocks the heroes' lead; only if it is knocked down does the next monster block. Waits for each block the
 ## heroes can see.
 func _block_on_shared_tiles(group: CharacterProfile.Groups) -> void:
@@ -508,12 +503,14 @@ func _block_on_shared_tiles(group: CharacterProfile.Groups) -> void:
 		if monster.posture == Character.Posture.STANDING and not cells.has(monster.grid_cell) and _get_enemy_on(monster.grid_cell, monster): cells.append(monster.grid_cell)
 	for cell: Vector2i in cells:
 		var monsters: Array[Character] = []
-		for monster: Character in Block.get_standing_on(cell, _level):
+		for monster: Character in Formation.by_priority(Block.get_standing_on(cell, _level)):
 			if monster.profile.group == CharacterProfile.Groups.MONSTERS: monsters.append(monster)
-		for monster: Character in monsters:
-			# Figures may fall, be pushed away or leave while the host waits
-			if not is_instance_valid(monster) or monster.posture != Character.Posture.STANDING or monster.grid_cell != cell: continue
-			var hero: Character = _get_lead(cell, CharacterProfile.Groups.HEROES)
+		for index: int in monsters.size():
+			# Figures may fall, be pushed away or leave while the host waits; one freed may not go into a typed variable
+			if not is_instance_valid(monsters[index]): continue
+			var monster: Character = monsters[index]
+			if monster.posture != Character.Posture.STANDING or monster.grid_cell != cell: continue
+			var hero: Character = _level.get_lead(cell, CharacterProfile.Groups.HEROES)
 			if not hero: break
 			var by_heroes: bool = group == CharacterProfile.Groups.HEROES
 			var block: Block = null

@@ -426,6 +426,14 @@ func has_room(grid_position: Vector2i, group: CharacterProfile.Groups, except: C
 		if character.profile.group == group: count += 1
 	return count < Formation.MAX_PER_SIDE
 
+## @returns the lead of [param group]'s side on [param grid_position]: its first standing figure by
+## [member CharacterProfile.block_priority], in turn order among equals, who blocks and is blocked, and stands in front of its
+## side's [Formation]; [code]null[/code] if none stands there
+func get_lead(grid_position: Vector2i, group: CharacterProfile.Groups) -> Character:
+	for character: Character in Formation.by_priority(get_figures_on(grid_position)):
+		if character.profile.group == group and character.posture == Character.Posture.STANDING: return character
+	return null
+
 ## @returns the figures on the board on [param grid_position] (not those taken off it, see [member Character.visible]), but
 ## [param except], in turn order
 func get_figures_on(grid_position: Vector2i, except: Character = null) -> Array[Character]:

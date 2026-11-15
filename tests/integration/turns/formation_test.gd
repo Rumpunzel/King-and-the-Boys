@@ -170,3 +170,38 @@ func test_the_monsters_lead_blocks_alone_while_it_keeps_its_feet() -> void:
 	assert_object(_blocks[0].defender).is_same(hero)
 	assert_int(_blocks.size()).is_equal(2 if not after_first[0] and after_first[1] else 1)
 	if _blocks.size() == 2: assert_object(_blocks[1].attacker).is_same(monsters[1])
+
+func test_a_fallen_figure_moves_off_what_now_stands_on_its_place() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	hero.posture = Character.Posture.DOWN
+	hero.place_on_grid(start, Vector2(0.5, 0.5), hero.facing)
+	var corner_things: Dictionary = _level.get("_corner_things")
+	corner_things[start + Vector2i.ONE] = auto_free(Thing.new())
+	(_level.get("_formations") as LevelFormations).arrange(start)
+	corner_things.erase(start + Vector2i.ONE)
+	var blocked: Array[Vector2] = [Vector2(0.5, 0.5)]
+	assert_bool(Formation.is_clear(hero.tile_spot, blocked)).is_true()
+
+func test_the_others_close_up_only_once_the_strike_landed() -> void:
+	var figures: Array[Character] = await _engage()
+	var lead: Character = figures[0]
+	var monster: Character = figures[1]
+	var cell: Vector2i = lead.grid_cell
+	var second: Character = await _spawn_hero(cell)
+	# The heroes hold the edge back to the start, so the lead can be pushed there
+	var formations: LevelFormations = _level.get("_formations")
+	var back: Level.Direction = Level.get_direction(cell, _start_cell())
+	var edges: Dictionary = formations.get_side_edges(cell)
+	edges[CharacterProfile.Groups.HEROES] = back
+	edges[CharacterProfile.Groups.MONSTERS] = Level.get_opposite(back)
+	formations.arrange(cell)
+	var waiting_at: Vector2 = second.tile_spot
+	# As Character.show_block() holds it with a model to strike
+	lead.set("_hold_until_msec", Time.get_ticks_msec() + 400)
+	Block.new(monster, lead).apply(Block.Face.PUSH, _level)
+	assert_that(lead.grid_cell).is_not_equal(cell)
+	# The second hero stays behind while the strike swings
+	assert_vector(second.tile_spot).is_equal(waiting_at)
+	await await_millis(roundi(lead.get_hold() * 1000.0) + 100)
+	assert_vector(second.tile_spot).is_not_equal(waiting_at)

@@ -17,6 +17,8 @@ const _GATHER_SPREAD: float = 0.4
 ## from the middle any figure stands at most
 const _CLEARANCE: float = 0.5
 const _MAX_REACH: float = 0.75
+## How many places around something in the way are tried
+const _CLEAR_STEPS: int = 16
 
 ## @returns the way from the middle towards the side holding [param own_edge] (a [enum Level.Direction]), facing the side
 ## holding [param other_edge] ([code]-1[/code] for none): straight out over its edge, or, with the other side on a
@@ -43,15 +45,44 @@ static func get_spots(count: int, axis: Vector2, facing_enemies: bool, blocked: 
 	for spot: Vector2 in spots: clear.append(_keep_clear(spot, axis, blocked))
 	return clear
 
-## @returns [param spot] moved away from every [param blocked] spot it comes too close to (along [param axis] from one right on
-## it), and back onto the tile
+## @returns [param spot] on the tile, or, if that comes too close to a [param blocked] spot, the nearest place on the tile clear of
+## them all (towards [param axis] when several are as near)
 static func _keep_clear(spot: Vector2, axis: Vector2, blocked: Array[Vector2]) -> Vector2:
-	var moved: Vector2 = spot
+	var on_tile: Vector2 = _onto_tile(spot)
+	if is_clear(on_tile, blocked): return on_tile
+	var wanted: Vector2 = spot + axis * 0.01
+	var best: Vector2 = on_tile
+	var best_distance: float = INF
 	for blocked_spot: Vector2 in blocked:
-		var away: Vector2 = moved - blocked_spot
-		if away.length() >= _CLEARANCE: continue
-		moved = blocked_spot + (away.normalized() if away.length() > 0.01 else axis) * _CLEARANCE
-	return moved.clamp(-Vector2.ONE * _MAX_REACH, Vector2.ONE * _MAX_REACH)
+		for step: int in _CLEAR_STEPS:
+			var candidate: Vector2 = _onto_tile(blocked_spot + Vector2.from_angle(TAU * step / _CLEAR_STEPS) * _CLEARANCE)
+			if not is_clear(candidate, blocked) or candidate.distance_squared_to(wanted) >= best_distance: continue
+			best = candidate
+			best_distance = candidate.distance_squared_to(wanted)
+	return best
+
+## @returns whether a figure on [param spot] keeps clear of every [param blocked] spot
+static func is_clear(spot: Vector2, blocked: Array[Vector2]) -> bool:
+	for blocked_spot: Vector2 in blocked:
+		if spot.distance_to(blocked_spot) < _CLEARANCE - 0.001: return false
+	return true
+
+static func _onto_tile(spot: Vector2) -> Vector2:
+	return spot.clamp(-Vector2.ONE * _MAX_REACH, Vector2.ONE * _MAX_REACH)
+
+## @returns [param characters] by [member CharacterProfile.block_priority], the lowest first; equal ones keep their (turn) order.
+## The first standing one leads its side (see [method Level.get_lead])
+static func by_priority(characters: Array[Character]) -> Array[Character]:
+	var ordered: Array[Character] = characters.duplicate()
+	# Insertion sort: stable, and sides are small
+	for index: int in range(1, ordered.size()):
+		var character: Character = ordered[index]
+		var at: int = index
+		while at > 0 and ordered[at - 1].profile.block_priority > character.profile.block_priority:
+			ordered[at] = ordered[at - 1]
+			at -= 1
+		ordered[at] = character
+	return ordered
 
 ## @returns the spot of [param spots] nearest [param spot]
 static func get_nearest(spot: Vector2, spots: Array[Vector2]) -> Vector2:

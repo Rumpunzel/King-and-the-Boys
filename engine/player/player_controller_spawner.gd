@@ -40,7 +40,7 @@ func spawn_player_controller(player: Player) -> void:
 	assert(_level.is_built)
 	var player_spawn_point: PlayerSpawnPoint = _get_player_spawn_point()
 	assert(player_spawn_point)
-	# On the start tile, whose formation makes room for it (see Level._arrange); a full start tile sends the player to the
+	# On the start tile, whose formation makes room for it (see LevelFormations); a full start tile sends the player to the
 	# nearest tile with room
 	var cell: Vector2i = _level.world_to_grid_position(player_spawn_point.global_position)
 	var spot_position: Vector3 = _level.get_nearest_room_position(cell, player.character.group)
