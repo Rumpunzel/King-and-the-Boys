@@ -42,12 +42,12 @@ func _on_phase_changed(phase: TurnManager.Phase) -> void:
 	_banner.visible = phase == TurnManager.Phase.MONSTERS
 
 ## The dice as they fell, the one that counts highlighted; they stay a while, then go
-func _on_block_shown(attacker: Character, defender: Character, dice: Array[int], chosen: int) -> void:
+func _on_block_shown(attacker: Character, defender: Character, dice: Array[int], chosen: int, pinned: bool) -> void:
 	_title.text = "%s blocks %s" % [attacker.profile.name, defender.profile.name]
 	_clear()
 	var marked: bool = false
 	for face: int in dice:
-		var die: Button = _add_die(face, attacker, defender)
+		var die: Button = _add_die(face, attacker, defender, pinned)
 		# Shown, not pressed; one die of the face that counts is marked, even if several show it
 		die.disabled = true
 		if face == chosen and not marked:
@@ -84,7 +84,7 @@ func _on_block_choice_changed() -> void:
 		_title.text = "Pick a die: %s blocks %s" % [attacker.profile.name, defender.profile.name] if choosing else "Picking a die…"
 		for index: int in dice.size():
 			var face: int = dice[index]
-			var die: Button = _add_die(face, attacker, defender)
+			var die: Button = _add_die(face, attacker, defender, choice.get(TurnManager.CHOICE_PINNED, false) as bool)
 			die.disabled = not choosing
 			die.pressed.connect(_choose.bind(index))
 	else:
@@ -110,19 +110,20 @@ func _clear() -> void:
 			container.remove_child(child)
 			child.queue_free()
 
-func _add_die(face: int, attacker: Character, defender: Character) -> Button:
+func _add_die(face: int, attacker: Character, defender: Character, pinned: bool) -> Button:
 	var die: Button = Button.new()
-	die.text = face_name(face as Block.Face, attacker.profile.name, defender.profile.name)
+	die.text = face_name(face as Block.Face, attacker.profile.name, defender.profile.name, pinned)
 	_dice.add_child(die)
 	return die
 
-## @returns what [param face] means for this block, e.g. "Skeleton falls"
-static func face_name(face: Block.Face, attacker_name: String, defender_name: String) -> String:
+## @returns what [param face] means for this block, e.g. "Skeleton falls"; a defender [param pinned] (see [member Block.pinned])
+## falls against the wall where it would be pushed
+static func face_name(face: Block.Face, attacker_name: String, defender_name: String, pinned: bool = false) -> String:
 	match face:
 		Block.Face.ATTACKER_DOWN: return "%s falls" % attacker_name
 		Block.Face.BOTH_DOWN: return "Both fall"
-		Block.Face.PUSH: return "Push"
-		Block.Face.DEFENDER_STUMBLES: return "%s stumbles" % defender_name
+		Block.Face.PUSH: return "Push: %s falls against the wall" % defender_name if pinned else "Push"
+		Block.Face.DEFENDER_STUMBLES: return "%s stumbles and falls against the wall" % defender_name if pinned else "%s stumbles" % defender_name
 		Block.Face.DEFENDER_DOWN: return "%s falls" % defender_name
 	return "?"
 

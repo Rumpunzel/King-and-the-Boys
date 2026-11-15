@@ -141,7 +141,7 @@ func test_a_stumbling_defender_falls_only_if_clumsier() -> void:
 	Block.new(hero, monster).apply(Block.Face.DEFENDER_STUMBLES, _level, random)
 	assert_int(monster.posture).is_equal(Character.Posture.STANDING)
 
-func test_a_push_with_nowhere_to_go_leaves_the_defender_where_it_is() -> void:
+func test_a_push_with_nowhere_to_go_knocks_the_defender_down_where_it_is() -> void:
 	var start: Vector2i = _start_cell()
 	var hero: Character = await _spawn_hero(start)
 	var monster: Character = await _spawn_monster(start)
@@ -154,6 +154,17 @@ func test_a_push_with_nowhere_to_go_leaves_the_defender_where_it_is() -> void:
 	push.apply(Block.Face.PUSH, _level, RandomNumberGenerator.new())
 	assert_bool(push.was_pushed()).is_false()
 	assert_that(monster.grid_cell).is_equal(start)
+	assert_int(monster.posture).is_equal(Character.Posture.DOWN)
+	# Rolled like that, the block knows the defender is pinned
+	var again: Block = Block.new(hero, monster)
+	again.roll(_level, RandomNumberGenerator.new())
+	assert_bool(again.pinned).is_true()
+	# The strike tells every peer, so the dice can say a push is a fall
+	monster.posture = Character.Posture.STANDING
+	var shown: Array[bool] = []
+	_turn_manager.block_shown.connect(func(_attacker: Character, _defender: Character, _dice: Array[int], _chosen: int, pinned: bool) -> void: shown.append(pinned))
+	await _turn_manager.call("_block", hero, monster)
+	assert_array(shown).is_equal([true])
 
 func test_allies_on_the_tile_assist_unless_more_enemies_stand_there() -> void:
 	var start: Vector2i = _start_cell()
@@ -278,7 +289,7 @@ func test_the_host_chooses_for_a_player_who_does_not() -> void:
 		await await_idle_frame()
 	assert_int(_blocks.size()).is_greater_equal(1)
 	var block: Block = _blocks[0]
-	assert_int(block.chosen).is_equal(Block.pick_best(block.dice, block.attacker_picks, block.stumbles_down()))
+	assert_int(block.chosen).is_equal(Block.pick_best(block.dice, block.attacker_picks, block.stumbles_down(), block.pinned))
 
 func test_loading_drops_a_choice_and_its_block() -> void:
 	_turn_manager.choice_timeout = 30.0
