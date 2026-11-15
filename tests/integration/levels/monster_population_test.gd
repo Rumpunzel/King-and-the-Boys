@@ -100,13 +100,13 @@ func test_a_tile_placed_outside_a_build_rolls_no_monster() -> void:
 func test_only_a_figure_on_its_spot_keeps_a_centrepiece_out() -> void:
 	await _build(42)
 	var start: Vector2i = _start()
-	# The corner whose spot on the start tile lies towards (1, 1); a figure on the tile's centre leaves it free
+	# The corner towards (1, 1) of the start tile; a figure in the tile's middle leaves it free, three gathered there do not
 	var corner: Vector2i = start + Vector2i(1, 1)
 	var profile: CharacterProfile = ModelFreeWorld.load_monster_profile()
 	_level.spawn_monster(profile, start)
 	await await_idle_frame()
 	assert_bool(_level.call("_is_corner_spot_taken", corner)).is_false()
-	for _spot: int in _level.get_free_spots(start).size(): _level.spawn_monster(profile, start)
+	for _monster: int in Formation.MAX_PER_SIDE - 1: _level.spawn_monster(profile, start)
 	await await_idle_frame()
 	assert_bool(_level.call("_is_corner_spot_taken", corner)).is_true()
 

@@ -20,7 +20,7 @@ func before_test() -> void:
 
 func _spawn_hero(grid_cell: Vector2i) -> Character:
 	var hero: Character = auto_free(_hero_profile.create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(grid_cell))))
-	hero.level = _level
+	_level.add_character(hero)
 	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
 	add_child(hero)
 	await await_idle_frame()
@@ -84,23 +84,16 @@ func test_pieces_on_the_tile_turn_along() -> void:
 	assert_vector(second.grid_cell).is_equal(_start_cell())
 	assert_vector(first.tile_spot).is_not_equal(second.tile_spot)
 
-func test_a_turned_piece_keeps_off_the_spot_a_corner_thing_holds() -> void:
-	var hero: Character = await _spawn_hero(_start_cell())
+func test_turned_pieces_keep_clear_of_a_corner_thing() -> void:
+	var heroes: Array[Character] = []
+	for _hero: int in Formation.MAX_PER_SIDE: heroes.append(await _spawn_hero(_start_cell()))
 	var tile: Structure = _level.get_placed_tile(_start_cell())
-	for spot: Vector2 in tile.profile.get_tile_spots():
-		if spot.x != 0.0 and spot.y != 0.0: hero.place_on_grid(_start_cell(), spot, hero.facing)
-	# A centrepiece on the corner a half turn carries the hero towards; it stays there as the tile turns
-	var carried_to: Vector2 = Level.turn_spot(hero.tile_spot, 2)
-	var corner: Vector2i = Vector2i(int(carried_to.x > 0.0), int(carried_to.y > 0.0))
+	# A centrepiece on a corner; it stays there as the tile turns
 	var corner_things: Dictionary = _level.get("_corner_things")
-	var centrepiece: Thing = auto_free(Thing.new())
-	corner_things[_start_cell() + corner] = centrepiece
-	var held: Vector2 = Level.get_spot_towards(tile.profile.get_tile_spots(), Vector2(corner) * 2.0 - Vector2.ONE)
-	assert_vector(held).is_equal(carried_to)
-	_level.rotate_tile(tile, 2, hero)
-	corner_things.erase(_start_cell() + corner)
-	assert_vector(hero.tile_spot).is_not_equal(held)
-	assert_bool(tile.profile.get_tile_spots().has(hero.tile_spot)).is_true()
+	corner_things[_start_cell() + Vector2i.ONE] = auto_free(Thing.new())
+	_level.rotate_tile(tile, 2, heroes[0])
+	corner_things.erase(_start_cell() + Vector2i.ONE)
+	for hero: Character in heroes: assert_float(hero.tile_spot.distance_to(Vector2(0.5, 0.5))).is_greater_equal(0.45)
 
 func test_one_sided_openings_are_dead_ends() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())

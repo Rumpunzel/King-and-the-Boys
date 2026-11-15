@@ -18,7 +18,7 @@ func before_test() -> void:
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	var start_cell: Vector2i = _level.world_to_grid_position((spawn_points.front() as Node3D).global_position)
 	_hero = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(start_cell))))
-	_hero.level = _level
+	_level.add_character(_hero)
 	add_child(_hero)
 	await await_idle_frame()
 	_tile = _level.get_placed_tile(start_cell)
@@ -154,8 +154,7 @@ func test_lifted_again_while_dropping_it_rises_again() -> void:
 	assert_float(_tile.model.position.y).is_equal(0.0)
 
 func test_a_figure_on_its_way_arrives_before_it_is_carried() -> void:
-	var other_spot: Vector2 = Vector2.INF
-	for spot: Vector2 in _tile.profile.get_tile_spots(): if spot != _hero.tile_spot: other_spot = spot
+	var other_spot: Vector2 = _hero.tile_spot + Vector2(0.5, 0.5)
 	_hero.place_on_grid(_hero.grid_cell, other_spot, _hero.facing)
 	await await_idle_frame()
 	var arrived: Array[bool] = [false]
@@ -184,8 +183,7 @@ func test_setting_down_tells_of_it_once() -> void:
 
 func test_figures_ride_a_turn_on_the_board_and_step_off_once_it_is_in_place() -> void:
 	# Off the middle, where a jump would show
-	for spot: Vector2 in _tile.profile.get_tile_spots():
-		if spot.x != 0.0 and spot.y != 0.0: _hero.place_on_grid(_hero.grid_cell, spot, _hero.facing)
+	_hero.place_on_grid(_hero.grid_cell, Vector2(0.5, 0.5), _hero.facing)
 	# Arrived there
 	await _hero.figure_arrived
 	var standing: Vector3 = _hero.global_position

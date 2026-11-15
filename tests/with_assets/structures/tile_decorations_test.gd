@@ -25,9 +25,11 @@ func test_open_tiles_stay_empty() -> void:
 	var open: Array[Level.Direction] = [Level.Direction.UP, Level.Direction.RIGHT, Level.Direction.DOWN, Level.Direction.LEFT]
 	for x: int in 10: assert_array(_props(open, Vector2i(x, 0))).is_empty()
 
-func test_props_keep_to_closed_sides_and_clear_of_tile_spots() -> void:
+func test_props_keep_to_closed_sides_and_clear_of_where_figures_stand() -> void:
 	var hallway: Array[Level.Direction] = [Level.Direction.UP, Level.Direction.DOWN]
-	var spots: Array[Vector2] = (load("uid://bdfrpagwkpemd") as StructureProfile).get_tile_spots()  # data/structures/tiles/hallway.tres
+	# Sides facing each other along the hallway, and one gathered in the middle
+	var none: Array[Vector2] = []
+	var spots: Array[Vector2] = Formation.get_spots(3, Vector2.UP, true, none) + Formation.get_spots(3, Vector2.DOWN, true, none) + Formation.get_spots(3, Vector2.DOWN, false, none)
 	var placed: int = 0
 	for x: int in 20:
 		for prop: Node3D in _props(hallway, Vector2i(x, 1)):

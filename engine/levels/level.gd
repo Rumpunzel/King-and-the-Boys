@@ -22,6 +22,8 @@ enum Direction {
 const DIRECTION_VECTORS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 ## The corners of a cell, as offsets from its grid position to the corner's index (see [member _corner_things])
 const CELL_CORNERS: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
+## How far towards a grid corner (on both axes) a thing on it keeps figures from standing (see [Formation])
+const _CORNER_SPOT_REACH: float = 0.5
 ## Meta of a bridge that is shown or dropping in
 const _SHOWN: StringName = &"shown"
 
@@ -110,6 +112,7 @@ var _stepping_character: Character
 
 ## Host only: counts tile status raises; used to detect board changes
 var _board_change_count: int = 0
+var _formations: LevelFormations = LevelFormations.new(self)
 
 func _process(delta: float) -> void:
 	for character: Character in _reveal_queues.keys(): _process_queues(character, delta)
@@ -247,17 +250,17 @@ func spawn_at(grid_position: Vector2i, status: Structure.Status = Structure.Stat
 	if not pick.suits_all: restriction_fallbacks[grid_position] = true
 	_spawn_at(pick.blueprint, grid_position, status)
 
-## Host only: spawns a monster of [param profile] (a random model variation) on the free spot nearest [param cell], that cell's if
-## it has room (see [method get_nearest_free_spot_position]), facing [param facing]; peers get it through the [AgentSpawner]
+## Host only: spawns a monster of [param profile] (a random model variation) on the tile nearest [param cell] with room for it,
+## that cell's if it has (see [method get_nearest_room_position]), facing [param facing]; peers get it through the [AgentSpawner]
 func spawn_monster(profile: CharacterProfile, cell: Vector2i, facing: Direction = Direction.DOWN, random: RandomNumberGenerator = null) -> void:
 	assert(multiplayer.is_server())
 	assert(profile.group == CharacterProfile.Groups.MONSTERS)
 	if not _placed_tiles.has(cell):
 		push_warning("No tile on %s for a %s" % [cell, profile.name])
 		return
-	var spot_position: Vector3 = get_nearest_free_spot_position(cell)
+	var spot_position: Vector3 = get_nearest_room_position(cell, profile.group)
 	if spot_position == Vector3.INF:
-		push_warning("No free spot for a %s near %s" % [profile.name, cell])
+		push_warning("No room for a %s near %s" % [profile.name, cell])
 		return
 	var spawn_transform: Transform3D = Transform3D(Basis(Vector3.UP, Character.facing_to_rotation(facing)), spot_position)
 	_agent_spawner.spawn_agent(profile.create_character_data(profile.get_random_variation(random), spawn_transform))
@@ -391,21 +394,19 @@ func get_cells_of(piece: BoardObject) -> Array[Vector2i]:
 func get_spot_position(grid_position: Vector2i, spot: Vector2) -> Vector3:
 	return grid_to_world_position(grid_position) + Vector3(spot.x, 0.0, spot.y)
 
-## The first free spot on [param grid_position], else on the nearest revealed tile along passages (tiles the
-## party has seen; unexplored ones would build dungeon away from it), as a world position, ignoring [param except]:
-## where a character goes once its tile is full. [code]Vector3.INF[/code] if no tile reached has room.
-func get_nearest_free_spot_position(grid_position: Vector2i, except: Character = null) -> Vector3:
+## A position on [param grid_position] if it has room for one more of [param group] (see [method has_room]), else on the
+## nearest revealed tile along passages that has (tiles the party has seen; unexplored ones would build dungeon away from it),
+## ignoring [param except]: where a character goes once its tile is full. [code]Vector3.INF[/code] if no tile reached has room.
+func get_nearest_room_position(grid_position: Vector2i, group: CharacterProfile.Groups, except: Character = null) -> Vector3:
 	var cells: Array[Vector2i] = [grid_position]
 	var reached: Dictionary[Vector2i, bool] = {grid_position: true}
 	var next: int = 0
 	while next < cells.size():
 		var cell: Vector2i = cells[next]
 		next += 1
-		var free_spots: Array[Vector2] = get_free_spots(cell, except)
-		if not free_spots.is_empty():
-			var spot: Vector2 = free_spots.front()
-			return get_spot_position(cell, spot)
+		if has_room(cell, group, except): return grid_to_world_position(cell)
 		var tile: Structure = get_placed_tile(cell)
+		if not tile: continue
 		for direction: Direction in tile.get_connections():
 			var neighbour: Vector2i = cell + direction_to_vector(direction)
 			var neighbour_tile: Structure = get_placed_tile(neighbour)
@@ -416,21 +417,42 @@ func get_nearest_free_spot_position(grid_position: Vector2i, except: Character =
 			cells.append(neighbour)
 	return Vector3.INF
 
-## Spots follow the tile's order of preference: the center first, then the corners.
-## Things (e.g. chests) hold the first spot; pieces keep their spot when others leave.
-## @returns the free spots on [param grid_position], ignoring [param except]; empty if the tile is full
-func get_free_spots(grid_position: Vector2i, except: Character = null) -> Array[Vector2]:
-	var tile: Structure = get_placed_tile(grid_position)
-	assert(tile)
-	var free_spots: Array[Vector2] = tile.profile.get_tile_spots()
-	if _placed_things.has(grid_position): free_spots.pop_front()
-	# A thing on a corner takes the spot towards it
-	for corner: Vector2i in CELL_CORNERS:
-		if _corner_things.has(grid_position + corner): free_spots.erase(get_spot_towards(free_spots, Vector2(corner) * 2.0 - Vector2.ONE))
+## @returns whether a figure of [param group] may stand on [param grid_position], ignoring [param except]: a placed tile with
+## fewer than [constant Formation.MAX_PER_SIDE] of that side on it, standing or not
+func has_room(grid_position: Vector2i, group: CharacterProfile.Groups, except: Character = null) -> bool:
+	if not _placed_tiles.has(grid_position): return false
+	var count: int = 0
+	for character: Character in get_figures_on(grid_position, except):
+		if character.profile.group == group: count += 1
+	return count < Formation.MAX_PER_SIDE
+
+## @returns the figures on the board on [param grid_position] (not those taken off it, see [member Character.visible]), but
+## [param except], in turn order
+func get_figures_on(grid_position: Vector2i, except: Character = null) -> Array[Character]:
+	var figures: Array[Character] = []
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if character == except or not character.visible or character.grid_cell != grid_position: continue
-		free_spots.erase(character.tile_spot)
-	return free_spots
+		if character == except or not character.visible or character.level != self or character.grid_cell != grid_position: continue
+		if not character.is_queued_for_deletion(): figures.append(character)
+	return figures
+
+## Host only: the edge (a [enum Direction]) the side of [param group] holds on [param grid_position], which its figures line up
+## towards and are pushed out over (see [LevelFormations]); [code]-1[/code] if none of it stands there
+func get_side_edge(grid_position: Vector2i, group: CharacterProfile.Groups) -> int:
+	assert(multiplayer.is_server())
+	return _formations.get_side_edge(grid_position, group)
+
+## @returns the spots on [param grid_position] taken by what stands there: a thing (e.g. a chest) in the middle, a thing on a
+## corner (e.g. a centrepiece) towards it
+func get_blocked_spots(grid_position: Vector2i) -> Array[Vector2]:
+	var blocked: Array[Vector2] = []
+	if _placed_things.has(grid_position): blocked.append(Vector2.ZERO)
+	for corner: Vector2i in CELL_CORNERS:
+		if _corner_things.has(grid_position + corner): blocked.append(_get_corner_spot(corner))
+	return blocked
+
+## @returns the spot towards the grid corner [param corner] (one of [constant CELL_CORNERS]) of a tile
+static func _get_corner_spot(corner: Vector2i) -> Vector2:
+	return (Vector2(corner) * 2.0 - Vector2.ONE) * _CORNER_SPOT_REACH
 
 ## Host only: turns [param tile] by [param clockwise_turns] quarter turns with the pieces on it, then builds and looks
 ## along its new passages as a step of [param character] would: the heroes' sight is updated from where they stand.
@@ -439,17 +461,12 @@ func rotate_tile(tile: Structure, clockwise_turns: int, character: Character) ->
 	assert(multiplayer.is_server())
 	var grid_position: Vector2i = tile.get_grid_position()
 	assert(_placed_tiles.get(grid_position) == tile)
-	# Each piece takes the free spot nearest to where the turn carries it: none on a spot a thing holds (e.g. a centrepiece on a
-	# corner, which does not turn with the tile), nor two on one
-	var pieces: Array[Character] = []
-	for piece: Character in get_tree().get_nodes_in_group(Character.GROUP):
-		if piece.visible and piece.grid_cell == grid_position: pieces.append(piece)
-	var open_spots: Array[Vector2] = get_free_spots(grid_position)
-	for piece: Character in pieces: open_spots.append(piece.tile_spot)
-	for piece: Character in pieces:
-		var turned_spot: Vector2 = _get_nearest_spot(turn_spot(piece.tile_spot, clockwise_turns), open_spots)
-		open_spots.erase(turned_spot)
-		piece.place_on_grid(grid_position, turned_spot, turn_direction(piece.facing, clockwise_turns))
+	# The pieces turn with it, and the edges their sides hold; then they keep clear of what does not turn (e.g. a centrepiece on a
+	# corner)
+	for piece: Character in get_figures_on(grid_position):
+		piece.place_on_grid(grid_position, turn_spot(piece.tile_spot, clockwise_turns), turn_direction(piece.facing, clockwise_turns))
+	_formations.turn_edges(grid_position, clockwise_turns)
+	_formations.arrange(grid_position)
 	# The thing on it turns with it, on every peer, see _on_tile_turned
 	tile.clockwise_turns = posmod(tile.clockwise_turns + clockwise_turns, Direction.size())
 	tile_rotated.emit(tile, character)
@@ -459,27 +476,6 @@ func rotate_tile(tile: Structure, clockwise_turns: int, character: Character) ->
 	_update_heroes_sight(character)
 	_stepping_character = null
 	if _board_change_count != board_change_count_before: board_changed.emit(character)
-
-static func _get_nearest_spot(spot: Vector2, tile_spots: Array[Vector2]) -> Vector2:
-	var nearest_spot: Vector2 = spot
-	var nearest_distance: float = INF
-	for tile_spot: Vector2 in tile_spots:
-		var distance: float = tile_spot.distance_squared_to(spot)
-		if distance >= nearest_distance: continue
-		nearest_spot = tile_spot
-		nearest_distance = distance
-	return nearest_spot
-
-## The spot of [param spots] furthest out towards [param direction] (e.g. a corner), or [code]Vector2.INF[/code] if none lies that way
-static func get_spot_towards(spots: Array[Vector2], direction: Vector2) -> Vector2:
-	var best: Vector2 = Vector2.INF
-	var best_reach: float = 0.0
-	for spot: Vector2 in spots:
-		var reach: float = spot.dot(direction.normalized())
-		if reach > best_reach:
-			best = spot
-			best_reach = reach
-	return best
 
 func _build_outer_wall() -> void:
 	for y: int in range(-grid_extents.y, grid_extents.y + 1):
@@ -600,16 +596,13 @@ func _furnish_room(grid_position: Vector2i) -> void:
 	# Unrevealed: every peer shows it with its own view of the four tiles, see _on_thing_created
 	_thing_spawner.spawn_at(profile, Transform3D(turn, get_corner_world_position(corner)), Thing.Status.PLACED)
 
-## @returns whether a figure stands on a spot a thing on [param corner] would take (the spot towards it on each of its four
-## tiles, see [method get_free_spots])
+## @returns whether a figure stands where a thing on [param corner] would stand on one of its four tiles (the spot towards it,
+## see [method get_blocked_spots])
 func _is_corner_spot_taken(corner: Vector2i) -> bool:
 	for offset: Vector2i in CELL_CORNERS:
 		var cell: Vector2i = corner - offset
-		var tile: Structure = get_placed_tile(cell)
-		if not tile: continue
-		var spot: Vector2 = get_spot_towards(tile.profile.get_tile_spots(), Vector2(offset) * 2.0 - Vector2.ONE)
-		for character: Character in get_tree().get_nodes_in_group(Character.GROUP):
-			if character.grid_cell == cell and character.tile_spot.is_equal_approx(spot): return true
+		for character: Character in get_figures_on(cell):
+			if character.tile_spot.distance_to(_get_corner_spot(offset)) < _CORNER_SPOT_REACH: return true
 	return false
 
 ## Rooms are built again on every step; their centrepiece is decided once
@@ -857,19 +850,27 @@ func _forget_thing(thing: Thing) -> void:
 			if registry[key] == thing: registry.erase(key)
 
 func _on_agent_created(agent: Agent) -> void:
-	_register_character(agent.character)
+	add_character(agent.character)
 	# Spawned while monsters are off: off with them, until they are turned on
 	if multiplayer.is_server() and not monsters_enabled: agent.character.visible = false
 
 func _on_player_controller_created(player_controller: PlayerController) -> void:
 	var character: Character = player_controller.character
-	_register_character(character)
+	add_character(character)
 	if multiplayer.is_server(): follow_sight_of(character)
 
-func _register_character(character: Character) -> void:
+## Puts [param character] on this level: it reveals what it should and, on the host, its tile lays out its figures (see
+## [LevelFormations]). The spawners call it for every character they create
+func add_character(character: Character) -> void:
 	character.level = self
 	character.entered_grid_cell.connect(_update_shown.bind(character).unbind(1))
 	character.figure_entered_grid_cell.connect(_on_figure_entered_grid_cell.bind(character))
+	if not multiplayer.is_server(): return
+	character.exited_grid_cell.connect(_formations.on_character_exited.bind(character))
+	character.entered_grid_cell.connect(_formations.on_character_entered.bind(character))
+	character.posture_changed.connect(_formations.on_character_changed.bind(character))
+	character.visibility_changed.connect(_formations.on_character_changed.bind(character))
+	character.tree_exiting.connect(_formations.on_character_leaving.bind(character))
 
 func _update_shown_on(grid_position: Vector2i) -> void:
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):

@@ -51,16 +51,17 @@ func _toggle_monsters() -> bool:
 	Toaster.show_toast(message, Toaster.Type.INFO, Toaster.HorizontalPosition.CENTER, Toaster.VerticalPosition.TOP, Toaster.Gravity.BOTTOM, 18, false)
 	return true
 
-## The host referees, so only it spawns, and only in debug builds: on the free spot nearest its own hero, turned towards it
+## The host referees, so only it spawns, and only in debug builds: on its own hero's tile if it has room, else the nearest
+## one, facing the hero's side
 ## @returns whether it spawned one
 func _spawn_debug_monster() -> bool:
 	if not OS.is_debug_build() or not _level or not debug_monster or not multiplayer.is_server(): return false
 	var hero: Character = _get_own_hero()
 	if not hero: return false
-	# The spot spawn_monster takes, so the monster can face the hero from there
-	var spot_position: Vector3 = _level.get_nearest_free_spot_position(hero.grid_cell)
-	if spot_position == Vector3.INF: return false
-	var to_hero: Vector3 = hero.global_position - spot_position
+	# The tile spawn_monster takes, so the monster can face the hero from there
+	var room_position: Vector3 = _level.get_nearest_room_position(hero.grid_cell, debug_monster.group)
+	if room_position == Vector3.INF: return false
+	var to_hero: Vector3 = hero.global_position - room_position
 	_level.spawn_monster(debug_monster, hero.grid_cell, Character.rotation_to_facing(atan2(to_hero.x, to_hero.z)))
 	return true
 

@@ -34,7 +34,7 @@ func _start_cell() -> Vector2i:
 
 func _spawn_hero(cell: Vector2i) -> Character:
 	var hero: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell))))
-	hero.level = _level
+	_level.add_character(hero)
 	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
 	add_child(hero)
 	await await_idle_frame()

@@ -24,7 +24,7 @@ func _start_cell() -> Vector2i:
 func _spawn_knight() -> Character:
 	var knight: CharacterProfile = load(KNIGHT)
 	var figure: Character = auto_free(knight.create(0, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(_start_cell()))))
-	figure.level = _level
+	_level.add_character(figure)
 	add_child(figure)
 	await await_idle_frame()
 	return figure
@@ -47,8 +47,7 @@ func test_a_fall_and_a_push_wait_until_the_strike_lands() -> void:
 	attacker.show_block(defender)
 	var position_before: Vector3 = defender.global_position
 	var target: Vector2i = start + Level.direction_to_vector(way as Level.Direction)
-	var spot: Vector2 = _level.get_free_spots(target, defender).front()
-	defender.place_on_grid(target, spot, way as Level.Direction)
+	defender.place_on_grid(target, Vector2.ZERO, way as Level.Direction)
 	defender.posture = Character.Posture.DOWN
 	await await_idle_frame()
 	# Still standing where it was while the strike swings

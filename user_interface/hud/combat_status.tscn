@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://n3hlq24kgusa" path="res://user_interface/hud/combat_status.gd" id="1_script"]
 
-[node name="CombatStatus" type="VBoxContainer" node_paths=PackedStringArray("_banner", "_block_panel", "_title", "_dice", "_ways")]
+[node name="CombatStatus" type="VBoxContainer" node_paths=PackedStringArray("_banner", "_block_panel", "_title", "_dice")]
 size_flags_horizontal = 4
 size_flags_vertical = 0
 mouse_filter = 2
@@ -12,7 +12,6 @@ _banner = NodePath("Banner")
 _block_panel = NodePath("BlockPanel")
 _title = NodePath("BlockPanel/MarginContainer/VBoxContainer/Title")
 _dice = NodePath("BlockPanel/MarginContainer/VBoxContainer/Dice")
-_ways = NodePath("BlockPanel/MarginContainer/VBoxContainer/Ways")
 
 [node name="Banner" type="Label" parent="."]
 layout_mode = 2
@@ -40,9 +39,5 @@ text = "Knight blocks Skeleton"
 horizontal_alignment = 1
 
 [node name="Dice" type="HBoxContainer" parent="BlockPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="Ways" type="HBoxContainer" parent="BlockPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1

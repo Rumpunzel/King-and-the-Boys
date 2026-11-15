@@ -30,7 +30,7 @@ func after_test() -> void:
 
 func _spawn_hero(grid_cell: Vector2i) -> Character:
 	var hero: Character = auto_free(_hero_profile.create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(grid_cell))))
-	hero.level = _level
+	_level.add_character(hero)
 	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
 	add_child(hero)
 	await await_idle_frame()

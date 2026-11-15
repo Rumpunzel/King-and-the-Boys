@@ -14,6 +14,7 @@ signal held_cost_changed(held_cost: int)
 signal figure_entered_grid_cell(cell: Vector2i)
 ## Emitted on every peer when the figure's move ended
 signal figure_arrived
+signal posture_changed
 
 ## Emitted when the lights the character carries change (see [method get_light_sources]), e.g. a torch equipped, a lantern lit
 signal light_sources_changed
@@ -34,6 +35,8 @@ const BODY: StringName = "body"
 const EQUIPMENT: StringName = "equipment"
 
 const _TURN_DURATION: float = 0.5
+## How long a figure takes to shuffle over to another spot on its own tile
+const _SLIDE_DURATION: float = 0.35
 ## How far into the strike (see [member CharacterProfile.block_animation]) it lands: the falls and the push it causes wait
 ## until then, see [method show_block]
 const _STRIKE_LANDS: float = 0.5
@@ -88,6 +91,7 @@ var posture: Posture = Posture.STANDING:
 	set(new_posture):
 		if new_posture == posture: return
 		posture = new_posture
+		posture_changed.emit()
 		if not model: return
 		# A fall waits until the strike that caused it landed
 		var held: float = _get_hold()
@@ -111,7 +115,7 @@ var grid_cell: Vector2i = Vector2i.ZERO:
 		if previous_grid_cell == grid_cell or not _has_grid_state: return
 		exited_grid_cell.emit(previous_grid_cell)
 		entered_grid_cell.emit(grid_cell)
-## Offset from the center of [member grid_cell], see [method Level.get_free_spots]
+## Offset from the center of [member grid_cell], where the tile's [Formation] puts the figure (see [method Level.has_room])
 var tile_spot: Vector2 = Vector2.ZERO:
 	set(new_tile_spot):
 		tile_spot = new_tile_spot
@@ -188,17 +192,13 @@ func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	if model: model.play_model_animation(profile.spawn_animation)
 	if multiplayer.is_server():
-		# Initial grid state comes from the spawn transform: the spot it stands on if that is free, else the first free one
+		# Initial grid state comes from the spawn transform: where it stands if its side has room there, else the nearest tile
+		# with room; the level lays out the tile as it enters (see Level._arrange), so a loaded side keeps its edge
 		grid_cell = level.world_to_grid_position(global_position)
 		facing = rotation_to_facing(rotation.y)
-		var free_spots: Array[Vector2] = level.get_free_spots(grid_cell, self)
 		var offset: Vector3 = global_position - level.grid_to_world_position(grid_cell)
-		var standing_spot: Vector2 = Vector2(offset.x, offset.z)
-		# A fixed tolerance: float error grows with the distance from the origin (e.g. loaded far out)
-		var spot_index: int = free_spots.find_custom(func(free_spot: Vector2) -> bool: return free_spot.distance_to(standing_spot) < 0.01)
-		if spot_index >= 0: tile_spot = free_spots[spot_index]
-		elif not free_spots.is_empty(): tile_spot = free_spots.front()
-		else: _take_nearest_free_spot()
+		tile_spot = Vector2(offset.x, offset.z)
+		if not level.has_room(grid_cell, profile.group, self): _take_nearest_room()
 		reset_movement_points()
 	_has_grid_state = true
 	_queue_grid_visual_update()
@@ -255,15 +255,14 @@ func _show_abilities() -> void:
 		if ability: ability.show_on(self)
 
 ## Host only, while spawning onto a full tile: the nearest tile with room instead, see
-## [method Level.get_nearest_free_spot_position]
-func _take_nearest_free_spot() -> void:
-	var spot_position: Vector3 = level.get_nearest_free_spot_position(grid_cell, self)
-	if spot_position == Vector3.INF:
-		push_warning("No free spot for %s near %s: it shares a spot" % [self, grid_cell])
+## [method Level.get_nearest_room_position]
+func _take_nearest_room() -> void:
+	var room_position: Vector3 = level.get_nearest_room_position(grid_cell, profile.group, self)
+	if room_position == Vector3.INF:
+		push_warning("No room for %s near %s: it crowds its tile" % [self, grid_cell])
 		return
-	grid_cell = level.world_to_grid_position(spot_position)
-	var offset: Vector3 = spot_position - level.grid_to_world_position(grid_cell)
-	tile_spot = Vector2(offset.x, offset.z)
+	grid_cell = level.world_to_grid_position(room_position)
+	tile_spot = Vector2.ZERO
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
@@ -457,6 +456,8 @@ func _apply_grid_visuals() -> void:
 		create_tween().tween_interval(held).finished.connect(_apply_grid_visuals)
 		return
 	if _is_moving(): _extend_move(target_position)
+	# Making room on its own tile (see Formation): it shuffles over without a hop
+	elif level.world_to_grid_position(global_position) == grid_cell: _slide(target_position)
 	else: _start_move(target_position, target_rotation)
 
 ## Whether the figure can be seen on this peer: its model shows (it may still finish a hop out of sight), or, without a model,
@@ -490,6 +491,13 @@ func _start_move(target_position: Vector3, target_rotation: float) -> void:
 	var animation: ModelAnimation = profile.undo_animation if _move_backwards and profile.undo_animation else profile.move_animation
 	# From standing, by the animation's travel settings, e.g. the hop's: a little back, then forward into the tile
 	_run_move(target_position, animation, false)
+
+func _slide(target_position: Vector3) -> void:
+	_move_backwards = false
+	_move_target = target_position
+	_move_tween = create_tween()
+	_move_tween.tween_property(self, "global_position", target_position, _SLIDE_DURATION).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_move_tween.tween_callback(_on_move_finished)
 
 ## Redirects the move under way to [param target_position], from where the figure is: at most one step's time
 ## is left after any step, so quick steps take hardly longer than one, and corners may be cut

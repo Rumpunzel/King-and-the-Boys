@@ -22,7 +22,7 @@ func before_test() -> void:
 
 func _spawn_hero(grid_cell: Vector2i) -> Character:
 	var hero: Character = auto_free(_hero_profile.create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(grid_cell))))
-	hero.level = _level
+	_level.add_character(hero)
 	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
 	add_child(hero)
 	await await_idle_frame()
@@ -87,31 +87,29 @@ func _undo(hero: Character) -> void:
 	_turn_manager.request_undo(hero.get_path())
 	await await_idle_frame()
 
-func test_pieces_share_a_tile_on_their_own_spots() -> void:
-	var tile_spots: Array[Vector2] = _level.get_placed_tile(_start_cell()).profile.get_tile_spots()
+func test_allies_gather_in_the_middle_of_their_tile() -> void:
 	var first: Character = await _spawn_hero(_start_cell())
+	assert_vector(first.tile_spot).is_equal(Vector2.ZERO)
 	var second: Character = await _spawn_hero(_start_cell())
-	assert_vector(first.tile_spot).is_equal(tile_spots[0])
-	assert_vector(second.tile_spot).is_equal(tile_spots[1])
-	assert_bool(second.global_position.is_equal_approx(first.global_position)).is_false()
-	# The center frees up for the next piece, the second keeps its corner
+	assert_float(first.tile_spot.distance_to(second.tile_spot)).is_greater(0.5)
+	assert_float(first.tile_spot.length()).is_less(0.5)
+	# The one left takes the middle again
 	first.hide_character()
-	assert_vector(_level.get_free_spots(_start_cell()).front()).is_equal(tile_spots[0])
-	assert_vector(second.tile_spot).is_equal(tile_spots[1])
+	assert_vector(second.tile_spot).is_equal(Vector2.ZERO)
 
-func test_things_hold_the_first_spot() -> void:
+func test_figures_keep_clear_of_a_thing_on_their_tile() -> void:
 	var placed_things: Dictionary[Vector2i, Thing] = _level.get("_placed_things")
 	placed_things[_start_cell()] = auto_free(Thing.new())
-	var tile_spots: Array[Vector2] = _level.get_placed_tile(_start_cell()).profile.get_tile_spots()
-	assert_array(_level.get_free_spots(_start_cell())).is_equal(tile_spots.slice(1))
+	var hero: Character = await _spawn_hero(_start_cell())
+	assert_float(hero.tile_spot.length()).is_greater_equal(0.49)
 	placed_things.erase(_start_cell())
 
 func test_full_tile_blocks_entry() -> void:
 	var start: Vector2i = _start_cell()
 	var direction: int = _open_direction(start)
 	var target: Vector2i = _level.get_step_target(start, direction as Level.Direction)
-	for _index: int in Level.Direction.size() + 1: await _spawn_hero(target)
-	assert_array(_level.get_free_spots(target)).is_empty()
+	for _index: int in Formation.MAX_PER_SIDE: await _spawn_hero(target)
+	assert_bool(_level.has_room(target, CharacterProfile.Groups.HEROES)).is_false()
 	var hero: Character = await _spawn_hero(start)
 	await _move(hero, direction)
 	assert_vector(hero.grid_cell).is_equal(start)
@@ -266,8 +264,7 @@ func test_undo_can_not_reach_into_the_previous_turn() -> void:
 	await _undo(hero)
 	assert_vector(hero.grid_cell).is_equal(start)
 
-func test_undo_finds_another_spot_when_the_old_one_is_taken() -> void:
-	var tile_spots: Array[Vector2] = _level.get_placed_tile(_start_cell()).profile.get_tile_spots()
+func test_undo_joins_the_others_on_the_old_tile() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	hero.movement_points = 8
 	var start: Vector2i = hero.grid_cell
@@ -275,12 +272,12 @@ func test_undo_finds_another_spot_when_the_old_one_is_taken() -> void:
 	var first_cell: Vector2i = hero.grid_cell
 	await _move(hero, Level.get_direction(first_cell, start))
 	await _move(hero, Level.get_direction(start, first_cell))
-	# Someone takes the hero's old center spot on the start tile
+	# Someone takes the hero's old middle spot on the start tile
 	var other: Character = await _spawn_hero(start)
-	assert_vector(other.tile_spot).is_equal(tile_spots[0])
+	assert_vector(other.tile_spot).is_equal(Vector2.ZERO)
 	await _undo(hero)
 	assert_vector(hero.grid_cell).is_equal(start)
-	assert_vector(hero.tile_spot).is_equal(tile_spots[1])
+	assert_float(hero.tile_spot.distance_to(other.tile_spot)).is_greater(0.5)
 
 func test_a_step_reveals_tiles_at_once_and_shows_them_later() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
