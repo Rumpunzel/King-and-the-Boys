@@ -159,6 +159,12 @@ func test_a_push_with_nowhere_to_go_knocks_the_defender_down_where_it_is() -> vo
 	var again: Block = Block.new(hero, monster)
 	again.roll(_level, RandomNumberGenerator.new())
 	assert_bool(again.pinned).is_true()
+	# The strike tells every peer, so the dice can say a push is a fall
+	monster.posture = Character.Posture.STANDING
+	var shown: Array[bool] = []
+	_turn_manager.block_shown.connect(func(_attacker: Character, _defender: Character, _dice: Array[int], _chosen: int, pinned: bool) -> void: shown.append(pinned))
+	await _turn_manager.call("_block", hero, monster)
+	assert_array(shown).is_equal([true])
 
 func test_allies_on_the_tile_assist_unless_more_enemies_stand_there() -> void:
 	var start: Vector2i = _start_cell()

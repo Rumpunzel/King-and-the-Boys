@@ -13,7 +13,7 @@ signal phase_changed(phase: Phase)
 ## Host only: a block was rolled and played out on the board
 signal blocked(block: Block)
 ## Every peer: a block's attacker strikes; [param dice] are the faces rolled ([enum Block.Face]), [param chosen] the one that counts
-signal block_shown(attacker: Character, defender: Character, dice: Array[int], chosen: int)
+signal block_shown(attacker: Character, defender: Character, dice: Array[int], chosen: int, pinned: bool)
 ## Every peer: a player is asked to choose for a block, or no longer is, see [member block_choice]
 signal block_choice_changed
 
@@ -37,6 +37,7 @@ const CHOICE_ATTACKER: StringName = &"attacker"
 const CHOICE_DEFENDER: StringName = &"defender"
 const CHOICE_DICE: StringName = &"dice"
 const CHOICE_WAYS: StringName = &"ways"
+const CHOICE_PINNED: StringName = &"pinned"
 
 ## Host only: how long a player has to choose for a block (see [member block_choice]) before the host chooses for them; at
 ## [code]0[/code] the host always chooses (e.g. in tests)
@@ -237,17 +238,21 @@ func _block(attacker: Character, defender: Character) -> Block:
 	if dice.size() > 1:
 		var die: int = await _ask(block.get_picker(), block, dice, [])
 		if not _is_still_on(block, run): return null
+		# The board may have changed meanwhile: whether a push now pins the defender decides the host's pick
+		block.update_pinned(_level)
 		if die >= 0: block.chosen = block.dice[die]
+		else: block.chosen = Block.pick_best(block.dice, block.attacker_picks, block.stumbles_down(), block.pinned)
 	if Block.pushes(block.chosen):
 		var ways: Array[int] = []
 		ways.assign(block.get_push_ways(_level))
 		if ways.size() > 1:
 			block.push_way = await _ask(attacker, block, [], ways)
 			if not _is_still_on(block, run): return null
+	block.update_pinned(_level)
 	# Before the outcome, so every peer holds the falls and the push until the strike lands
-	show_block(attacker.get_path(), defender.get_path(), dice, block.chosen)
+	show_block(attacker.get_path(), defender.get_path(), dice, block.chosen, block.pinned)
 	for peer_id: int in _synced_peers:
-		if peer_id != multiplayer.get_unique_id(): show_block.rpc_id(peer_id, attacker.get_path(), defender.get_path(), dice, block.chosen)
+		if peer_id != multiplayer.get_unique_id(): show_block.rpc_id(peer_id, attacker.get_path(), defender.get_path(), dice, block.chosen, block.pinned)
 	block.apply(block.chosen, _level, combat_random)
 	_step_blocks.append(block)
 	blocked.emit(block)
@@ -263,12 +268,12 @@ func _is_still_on(block: Block, run: int) -> bool:
 ## Every peer: [param attacker_path]'s figure strikes at [param defender_path]'s; the host calls it on itself and sends it to the
 ## peers that have this node
 @rpc("authority", "call_remote", "reliable")
-func show_block(attacker_path: NodePath, defender_path: NodePath, dice: Array[int], chosen: int) -> void:
+func show_block(attacker_path: NodePath, defender_path: NodePath, dice: Array[int], chosen: int, pinned: bool) -> void:
 	var attacker: Character = get_node_or_null(attacker_path) as Character
 	var defender: Character = get_node_or_null(defender_path) as Character
 	if not attacker or not defender: return
 	attacker.show_block(defender)
-	block_shown.emit(attacker, defender, dice, chosen)
+	block_shown.emit(attacker, defender, dice, chosen, pinned)
 
 ## Host only: asks the player controlling [param chooser] to pick one of [param dice] (indices) or of [param ways] for
 ## [param block], and waits for the choice, at most [member choice_timeout], while the player stays.
@@ -286,6 +291,7 @@ func _ask(chooser: Character, block: Block, dice: Array[int], ways: Array[int]) 
 		CHOICE_DEFENDER: block.defender.get_path(),
 		CHOICE_DICE: dice,
 		CHOICE_WAYS: ways,
+		CHOICE_PINNED: block.pinned,
 	}
 	var waited: float = 0.0
 	# A tween, not a timer: it goes with this node (e.g. leaving the game), so nothing resumes on a freed one
