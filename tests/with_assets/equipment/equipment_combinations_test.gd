@@ -11,7 +11,7 @@ func _with_none(body_part: ModularBodyPart) -> int:
 
 func _keys(combinations: EquipmentCombinations) -> Dictionary[String, bool]:
 	var keys: Dictionary[String, bool] = {}
-	for combination: Dictionary in combinations.list(): keys[combination.key as String] = true
+	for combination: Dictionary in combinations.list(): keys[combination.key] = true
 	return keys
 
 func test_helmet_combinations_include_none_but_skip_empty_ones() -> void:
@@ -56,9 +56,9 @@ func test_group_leaders_reach_numbers_their_partners_lack() -> void:
 
 func test_listing_shows_the_original_meshes_afterwards() -> void:
 	_model.helmet_attachment.update_index(_model.helmet_attachment.find_mesh_index("02"))
-	var before: String = EquipmentFixtures.mesh_path(_model.helmet_attachment)
+	var mesh_before: String = EquipmentFixtures.mesh_path(_model.helmet_attachment)
 	EquipmentCombinations.new(EquipmentFixtures.load_type("helmet"), _model).list()
-	assert_str(EquipmentFixtures.mesh_path(_model.helmet_attachment)).is_equal(before)
+	assert_str(EquipmentFixtures.mesh_path(_model.helmet_attachment)).is_equal(mesh_before)
 
 func test_show_key_puts_a_stored_combination_back_on_the_model() -> void:
 	var chest: EquipmentCombinations = EquipmentCombinations.new(EquipmentFixtures.load_type("chest_armor"), _model)

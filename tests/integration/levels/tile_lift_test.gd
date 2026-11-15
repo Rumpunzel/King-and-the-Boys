@@ -16,7 +16,7 @@ func before_test() -> void:
 	_level.build_level()
 	await await_idle_frame()
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
-	var start_cell: Vector2i = _level.world_to_grid_position((spawn_points.front() as Node3D).global_position)
+	var start_cell: Vector2i = _level.world_to_grid_position((spawn_points[0] as Node3D).global_position)
 	_hero = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(start_cell))))
 	_level.add_character(_hero)
 	add_child(_hero)

@@ -99,8 +99,10 @@ func _draw_room(cells: Array[Vector2i]) -> void:
 	var centre: Vector3 = Vector3.ZERO
 	for cell: Vector2i in cells: centre += _level.grid_to_world_position(cell)
 	DebugDraw3D.draw_text(centre / cells.size() + Vector3.UP * 0.4, label, 48, color)
-	var corner: Variant = Level.get_centrepiece_corner(cells)
-	if corner != null: DebugDraw3D.draw_sphere(_level.get_corner_world_position(corner as Vector2i) + Vector3.UP * HEIGHT, 0.2, color)
+	var found: Variant = Level.get_centrepiece_corner(cells)
+	if found == null: return
+	var corner: Vector2i = found
+	DebugDraw3D.draw_sphere(_level.get_corner_world_position(corner) + Vector3.UP * HEIGHT, 0.2, color)
 
 ## How far an outline edge of [param cell] facing [param outward] reaches towards [param side]: to the inset at an outer corner, on to
 ## the next cell along a straight edge, and a little past it at an inner corner, so the outline closes

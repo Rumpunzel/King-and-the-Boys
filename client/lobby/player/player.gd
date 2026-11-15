@@ -51,6 +51,8 @@ var body: Dictionary = {}:
 
 @export_group("Configuration")
 
+# Read and written by the player's synchronizer (player.tscn) only
+@warning_ignore("unused_private_class_variable")
 var _serialized_character: String:
 	get: return character.resource_path if character else ""
 	set(new_serialized_character): if not new_serialized_character.is_empty(): character = load(new_serialized_character)

@@ -226,11 +226,11 @@ func test_a_turned_tile_keeps_its_edge_props_and_decides_open_edges() -> void:
 	for direction: Level.Direction in Level.Direction.values():
 		var cell: Vector2i = turned.get_grid_position() + Level.DIRECTION_VECTORS[direction]
 		if _level.get_placed_tile(cell): existing.append(cell)
-	var before: Array[Node] = _own_edge_props(turned)
+	var props_before: Array[Node] = _own_edge_props(turned)
 	_level.rotate_tile(turned, 1, null)
 	var new_props: Array[Model] = []
 	for prop: Node in _own_edge_props(turned):
-		if not before.has(prop): new_props.append(prop as Model)
+		if not props_before.has(prop): new_props.append(prop as Model)
 	for direction: Level.Direction in Level.Direction.values():
 		var neighbour_position: Vector2i = turned.get_grid_position() + Level.DIRECTION_VECTORS[direction]
 		assert_int(_edge_props(turned, neighbour_position).size()).override_failure_message("Edge towards %s" % neighbour_position).is_less_equal(1)
@@ -244,7 +244,7 @@ func test_a_turned_tile_keeps_its_edge_props_and_decides_open_edges() -> void:
 		var prop_position: Vector3 = (prop as Node3D).global_position
 		assert_float(Vector2(prop_position.x, prop_position.z).distance_to(Vector2(edge_middle.x, edge_middle.z))).override_failure_message("Prop towards %s" % edge).is_less(0.5)
 	var kept: int = 0
-	for prop: Node in before: if is_instance_valid(prop) and prop.is_inside_tree(): kept += 1
+	for prop: Node in props_before: if is_instance_valid(prop) and prop.is_inside_tree(): kept += 1
 	assert_int(kept + new_props.size()).is_greater(0)
 
 ## The arches and walls [param tile] raised itself

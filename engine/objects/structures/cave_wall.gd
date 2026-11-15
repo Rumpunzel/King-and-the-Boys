@@ -12,4 +12,5 @@ func _ready() -> void:
 	if _variants.is_empty(): return
 	var cell_hash: int = absi(hash(Vector2i(roundi(global_position.x / grid_size), roundi(global_position.z / grid_size))))
 	for index: int in _variants.size(): _variants[index].visible = index == cell_hash % _variants.size()
+	@warning_ignore("integer_division")
 	rotation.y = (cell_hash / _variants.size() % 4) * PI * 0.5

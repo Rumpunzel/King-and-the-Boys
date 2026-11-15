@@ -35,4 +35,6 @@ const META: StringName = &"light_source"
 
 ## @returns the [LightSource] [param mesh] is, or [code]null[/code]
 static func of_mesh(mesh: Mesh) -> LightSource:
-	return mesh.get_meta(META) as LightSource if mesh and mesh.has_meta(META) else null
+	if not mesh or not mesh.has_meta(META): return null
+	var light_source: Variant = mesh.get_meta(META)
+	return light_source if light_source is LightSource else null

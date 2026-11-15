@@ -30,7 +30,7 @@ func _spawn_hero(grid_cell: Vector2i) -> Character:
 
 func _start_cell() -> Vector2i:
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
-	return _level.world_to_grid_position((spawn_points.front() as Node3D).global_position)
+	return _level.world_to_grid_position((spawn_points[0] as Node3D).global_position)
 
 ## @returns a direction with a passage out of [param cell], or -1
 func _open_direction(cell: Vector2i) -> int:
@@ -310,7 +310,7 @@ func test_grid_state_and_points_are_saved() -> void:
 	var collected: Dictionary[NodePath, Variant] = serializer.collect_properties()
 	for property_path: NodePath in collected: saved[property_path.get_concatenated_subnames()] = collected[property_path]
 	assert_dict(saved).contains_keys([&"grid_cell", &"tile_spot", &"facing", &"movement_points"])
-	assert_vector(saved[&"tile_spot"] as Vector2).is_equal(second.tile_spot)
+	assert_vector(saved[&"tile_spot"]).is_equal(second.tile_spot)
 
 ## A second player keeps the turn open while the local one passes
 func _add_other_player() -> Player:
@@ -361,7 +361,7 @@ func test_undo_steps_go_with_their_character() -> void:
 	assert_bool(undo_stacks.has(hero)).is_false()
 
 func _wait_until_shown(tiles: Array[Structure], timeout_millis: int) -> bool:
-	for _guard: int in timeout_millis / 50:
+	for _guard: int in ceili(timeout_millis / 50.0):
 		if tiles.all(func(tile: Structure) -> bool: return tile.shown_status == tile.status): return true
 		await await_millis(50)
 	return false

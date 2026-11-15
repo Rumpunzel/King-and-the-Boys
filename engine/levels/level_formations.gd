@@ -106,7 +106,9 @@ func on_character_exited(grid_position: Vector2i, character: Character) -> void:
 ## The edges their sides hold on [param grid_position] turn with its tile by [param clockwise_turns] quarter turns
 func turn_edges(grid_position: Vector2i, clockwise_turns: int) -> void:
 	var edges: Dictionary = _side_edges.get(grid_position, {})
-	for group: Variant in edges.keys(): edges[group] = Level.turn_direction(edges[group] as Level.Direction, clockwise_turns)
+	for group: Variant in edges.keys():
+		var edge: Level.Direction = edges[group]
+		edges[group] = Level.turn_direction(edge, clockwise_turns)
 
 ## A figure falling or getting up may hand over or take back the lead; one taken off the board makes room
 func on_character_changed(character: Character) -> void:

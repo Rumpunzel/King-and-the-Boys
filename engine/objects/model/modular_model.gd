@@ -67,12 +67,14 @@ func has_part(part: int) -> bool: return part >= 0 and part < get_part_keys().si
 ## and [constant BODY_HAIR_COLOR] (absent: the atlas' own)
 func apply_body(body: Dictionary) -> void:
 	set_body_colors(get_body_color(body, BODY_SKIN_COLOR), get_body_color(body, BODY_HAIR_COLOR))
-	for part: Variant in body:
-		if is_body_color_key(part): continue
-		if not part is int or not body[part] is String or not fits_part(part as int, body[part] as String):
-			push_warning("%s does not fit part %s of %s; skipped." % [body[part], part, scene_file_path])
+	for key: Variant in body:
+		if is_body_color_key(key): continue
+		var part: int = key if key is int else -1
+		var mesh_id: String = body[key] if body[key] is String else ""
+		if part < 0 or not body[key] is String or not fits_part(part, mesh_id):
+			push_warning("%s does not fit part %s of %s; skipped." % [body[key], key, scene_file_path])
 			continue
-		get_part(part as int).apply_mesh(ResourceId.find(body[part] as String) as ArrayMesh)
+		get_part(part).apply_mesh(ResourceId.find(mesh_id) as ArrayMesh)
 
 ## Whether [param body] names a mesh for exactly this body's body parts (see [method get_body_parts]), each fitting its part, e.g. a
 ## body a peer rolled in the lobby
@@ -84,7 +86,9 @@ func is_complete_body(body: Dictionary) -> bool:
 		colors += 1
 	if body.size() - colors != get_body_parts().size(): return false
 	for part: int in get_body_parts():
-		if not body.get(part) is String or not fits_part(part, body[part] as String): return false
+		if not body.get(part) is String: return false
+		var mesh_id: String = body[part]
+		if not fits_part(part, mesh_id): return false
 	return true
 
 ## Whether [param mesh_id] names one of [param part]'s own meshes, or none where the part may show none; checked by file path, so
@@ -166,13 +170,15 @@ func get_gear_material(mesh: Mesh) -> ShaderMaterial:
 	var texture: Texture2D = _get_albedo_texture(mesh.surface_get_material(0))
 	if not texture: return null
 	for material: ShaderMaterial in _gear_materials:
-		var gear_texture: Texture2D = material.get_shader_parameter(_GEAR_TEXTURE) as Texture2D if material else null
+		var gear_texture: Texture2D = material.get_shader_parameter(_GEAR_TEXTURE) if material else null
 		if gear_texture and gear_texture.resource_path == texture.resource_path: return material
 	return null
 
 static func _get_albedo_texture(material: Material) -> Texture2D:
 	if material is StandardMaterial3D: return (material as StandardMaterial3D).albedo_texture
-	if material is ShaderMaterial: return (material as ShaderMaterial).get_shader_parameter(_GEAR_TEXTURE) as Texture2D
+	if material is ShaderMaterial:
+		var texture: Texture2D = (material as ShaderMaterial).get_shader_parameter(_GEAR_TEXTURE)
+		return texture
 	return null
 
 ## Leaves meshes to a material put on the whole model, and paints them again once it goes

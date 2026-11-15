@@ -276,9 +276,9 @@ func _show_model() -> void:
 			var decorations: Node3D = _decorate()
 			model.visible = true
 			model.remove_material_override(_hidden_material)
-			var reveal: Tween = model.play_model_animation(profile.reveal_animation)
+			var reveal_tween: Tween = model.play_model_animation(profile.reveal_animation)
 			# The props drop in once the tile has turned over
-			if decorations: profile.decorations.drop(decorations, reveal)
+			if decorations: profile.decorations.drop(decorations, reveal_tween)
 		_: push_error("Status %s not implemented!" % shown_status)
 
 ## Dresses the model with the profile's props the first time it is revealed; they are part of the model, so they turn with it

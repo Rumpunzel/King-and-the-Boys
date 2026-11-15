@@ -53,9 +53,9 @@ func test_the_server_rolls_anew_for_a_body_outside_the_pools() -> void:
 	var chosen: Dictionary = (load("uid://bxrtwssk6b5uw") as ModelConfigurationRandom).roll(_model)  # data/characters/people/mystic_body.tres
 	# Mystic beards are none of the knight's
 	var data: Dictionary[StringName, Variant] = knight.create_character_data(0, Transform3D.IDENTITY, chosen)
-	assert_dict(data[Character.BODY] as Dictionary).is_not_equal(chosen)
+	assert_dict(data[Character.BODY]).is_not_equal(chosen)
 	var own: Dictionary = knight.model_configuration.roll(_model)
-	assert_dict(knight.create_character_data(0, Transform3D.IDENTITY, own)[Character.BODY] as Dictionary).is_equal(own)
+	assert_dict(knight.create_character_data(0, Transform3D.IDENTITY, own)[Character.BODY]).is_equal(own)
 
 func test_every_hero_has_a_look_of_their_own() -> void:
 	for hero: String in HEROES:
@@ -127,7 +127,7 @@ func test_a_body_without_facial_hair_meshes_keeps_to_any_pool() -> void:
 	knight_body.gender = ModularBodyPartGendered.Gender.FEMALE
 	assert_bool(knight_body.mesh_pools["FACIAL_HAIR"].has(ModularBodyPart.EMPTY_MESH_NUMBER)).is_false()
 	var body: Dictionary = knight_body.roll(_model)
-	assert_str(body[ModularCharacter.Part.FACIAL_HAIR] as String).is_empty()
+	assert_str(body[ModularCharacter.Part.FACIAL_HAIR]).is_empty()
 	assert_bool(knight_body.allows(_model, body)).is_true()
 
 func test_a_body_turns_female_and_back_keeping_its_mesh_numbers() -> void:
@@ -177,8 +177,8 @@ func test_the_elf_is_female_wherever_her_body_is_built() -> void:
 	assert_int(model.torso.gender).is_equal(ModularBodyPartGendered.Gender.FEMALE)
 	# The body a player rolls in the lobby names female meshes, and the server takes it
 	var body: Dictionary = elf.roll_body(0)
-	assert_str(ResourceId.get_file_path(body[ModularCharacter.Part.EYEBROW] as String)).contains("/female/")
-	assert_dict(elf.create_character_data(0, Transform3D.IDENTITY, body)[Character.BODY] as Dictionary).is_equal(body)
+	assert_str(ResourceId.get_file_path(str(body[ModularCharacter.Part.EYEBROW]))).contains("/female/")
+	assert_dict(elf.create_character_data(0, Transform3D.IDENTITY, body)[Character.BODY]).is_equal(body)
 	# Dressed, her gear shows its female meshes
 	elf.dress_model(model, body)
 	assert_str(model.torso.mesh.resource_path).contains("/female/")

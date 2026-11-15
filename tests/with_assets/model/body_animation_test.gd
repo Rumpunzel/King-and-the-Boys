@@ -158,7 +158,8 @@ func test_figures_travel_as_their_move_says() -> void:
 	assert_int(hop.redirect_transition).is_equal(Tween.TRANS_SINE)
 	var rogue_move: ModelAnimation = load(ROGUE_MOVE)
 	assert_int(rogue_move.travel_transition).override_failure_message("A roll does not pull back").is_not_equal(Tween.TRANS_BACK)
-	assert_float(rogue_move.travel_delay).override_failure_message("The rogue stays put while winding up").is_equal_approx(rogue_move.get("_wind_up") as float, 0.001)
+	var wind_up: float = rogue_move.get("_wind_up")
+	assert_float(rogue_move.travel_delay).override_failure_message("The rogue stays put while winding up").is_equal_approx(wind_up, 0.001)
 
 func test_drawing_and_sheathing_move_the_weapons() -> void:
 	for model: Model in _models():
@@ -209,7 +210,8 @@ func test_a_redirected_roll_rolls_on() -> void:
 
 func test_weapons_put_away_for_a_draw_come_back_when_it_is_cut_short() -> void:
 	var model: ModularModel = _models()[0] as ModularModel
-	(model.get("main_hand") as ModularBodyPart).update_index(0)
+	var main_hand: ModularBodyPart = model.get("main_hand")
+	main_hand.update_index(0)
 	model.play_model_animation(load(KNIGHT_SPAWN) as ModelAnimation)
 	assert_bool(model.are_weapons_stowed()).is_true()
 	# Moving before the follow-up draws the sword

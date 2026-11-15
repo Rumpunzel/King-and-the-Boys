@@ -9,7 +9,7 @@ func test_a_random_pick_is_always_another_character() -> void:
 	var picked: Array[CharacterProfile] = []
 	selection.character_selected.connect(func(character: CharacterProfile) -> void: picked.append(character))
 	for roll: int in 40:
-		var before: CharacterProfile = selection.character
+		var previous: CharacterProfile = selection.character
 		selection.randomize_character()
-		assert_object(selection.character).override_failure_message("Picked %s again" % before.name).is_not_same(before)
+		assert_object(selection.character).override_failure_message("Picked %s again" % previous.name).is_not_same(previous)
 	assert_int(picked.size()).is_equal(40)

@@ -68,8 +68,10 @@ func _on_block_choice_changed() -> void:
 		_hide_unless_choosing()
 		return
 	if _hide_tween: _hide_tween.kill()
-	var attacker: Character = get_node_or_null(choice[TurnManager.CHOICE_ATTACKER] as NodePath) as Character
-	var defender: Character = get_node_or_null(choice[TurnManager.CHOICE_DEFENDER] as NodePath) as Character
+	var attacker_path: NodePath = choice[TurnManager.CHOICE_ATTACKER]
+	var defender_path: NodePath = choice[TurnManager.CHOICE_DEFENDER]
+	var attacker: Character = get_node_or_null(attacker_path) as Character
+	var defender: Character = get_node_or_null(defender_path) as Character
 	# Figures this peer does not have (yet): nothing to show, and no dice of an earlier block left behind
 	if not attacker or not defender:
 		_clear()
@@ -79,9 +81,10 @@ func _on_block_choice_changed() -> void:
 	var dice: Array = choice[TurnManager.CHOICE_DICE]
 	_clear()
 	_title.text = "Pick a die: %s blocks %s" % [attacker.profile.name, defender.profile.name] if choosing else "Picking a die…"
+	var pinned: bool = choice.get(TurnManager.CHOICE_PINNED, false)
 	for index: int in dice.size():
 		var face: int = dice[index]
-		var die: Button = _add_die(face, attacker, defender, choice.get(TurnManager.CHOICE_PINNED, false) as bool)
+		var die: Button = _add_die(face, attacker, defender, pinned)
 		die.disabled = not choosing
 		die.pressed.connect(_choose.bind(index))
 	_block_panel.show()

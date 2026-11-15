@@ -14,7 +14,8 @@ func test_a_thing_keeps_the_variation_it_was_created_with() -> void:
 		assert_int(thing.variation).is_equal(variation)
 		assert_int(thing.to_thing_data()[Thing.VARIATION]).is_equal(variation)
 		var variations: Array = fish.get("_model_variations")
-		assert_str(thing.model.scene_file_path).is_equal((variations[variation] as PackedScene).resource_path)
+		var scene: PackedScene = variations[variation]
+		assert_str(thing.model.scene_file_path).is_equal(scene.resource_path)
 
 func test_a_thing_without_a_variation_rolls_one() -> void:
 	var fish: ThingProfile = load(FISH)

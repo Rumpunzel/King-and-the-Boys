@@ -96,6 +96,7 @@ func test_a_preview_rolls_anew_once_its_colours_leave_the_configuration() -> voi
 	left.remove_at(left.find(shown))
 	edited.skin_colors = left
 	knight.setup_model(model)
-	assert_bool(left.has(knight._preview_body[ModularModel.BODY_SKIN_COLOR] as Color)).is_true()
+	var skin_color: Color = knight._preview_body[ModularModel.BODY_SKIN_COLOR]
+	assert_bool(left.has(skin_color)).is_true()
 	knight.model_configuration = own
 	knight._preview_body = {}

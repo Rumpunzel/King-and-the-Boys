@@ -42,8 +42,9 @@ func _spawn_hero(cell: Vector2i) -> Character:
 func _spawn_monster(cell: Vector2i) -> Character:
 	_level.spawn_monster(ModelFreeWorld.load_monster_profile(), cell)
 	await await_idle_frame()
-	var agents: Array[Node] = (_level.get("_agent_spawner") as AgentSpawner).get_children()
-	return (agents.back() as Agent).character
+	var spawner: AgentSpawner = _level.get("_agent_spawner")
+	var agents: Array[Node] = spawner.get_children()
+	return (agents[-1] as Agent).character
 
 func _way_out(cell: Vector2i) -> Level.Direction:
 	for direction: Level.Direction in Level.Direction.values():
@@ -178,7 +179,8 @@ func test_a_fallen_figure_moves_off_what_now_stands_on_its_place() -> void:
 	hero.place_on_grid(start, Vector2(0.5, 0.5), hero.facing)
 	var corner_things: Dictionary = _level.get("_corner_things")
 	corner_things[start + Vector2i.ONE] = auto_free(Thing.new())
-	(_level.get("_formations") as LevelFormations).arrange(start)
+	var formations: LevelFormations = _level.get("_formations")
+	formations.arrange(start)
 	corner_things.erase(start + Vector2i.ONE)
 	var blocked: Array[Vector2] = [Vector2(0.5, 0.5)]
 	assert_bool(Formation.is_clear(hero.tile_spot, blocked)).is_true()

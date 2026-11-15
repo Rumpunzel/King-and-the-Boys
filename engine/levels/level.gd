@@ -206,7 +206,7 @@ static func get_direction(first_grid_position: Vector2i, second_grid_position: V
 	return Direction.UP
 
 static func get_opposite(direction: Direction) -> Direction:
-	return posmod(direction + Direction.size() / 2, Direction.size()) as Direction
+	return turn_direction(direction, 2)
 
 ## @returns [param direction] turned by [param clockwise_turns] quarter turns
 static func turn_direction(direction: Direction, clockwise_turns: int) -> Direction:
@@ -841,7 +841,8 @@ func _forget_tile(tile: Structure) -> void:
 	# Until it is freed it may still change: nothing here follows it any more
 	for handler: Array in [[tile.status_changed, _on_tile_status_changed], [tile.shown_status_changed, _on_tile_shown_status_changed], [tile.spawn_requested, _on_spawn_requested]]:
 		var tile_signal: Signal = handler[0]
-		var bound_handler: Callable = (handler[1] as Callable).bind(tile)
+		var method: Callable = handler[1]
+		var bound_handler: Callable = method.bind(tile)
 		if tile_signal.is_connected(bound_handler): tile_signal.disconnect(bound_handler)
 	for queues: Dictionary in [_reveal_queues, _discover_queues]:
 		for queue: Array in queues.values(): queue.erase(tile)

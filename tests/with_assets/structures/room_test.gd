@@ -120,7 +120,7 @@ func test_a_centrepiece_shows_with_the_first_of_its_tiles() -> void:
 	_spawn_room(Structure.Status.PLACED)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
-	var thing: Thing = (_level.get("_corner_things") as Dictionary)[Vector2i(0, 1)]
+	var thing: Thing = _corner_things()[Vector2i(0, 1)]
 	assert_int(thing.status).is_equal(Thing.Status.PLACED)
 	_level.get_placed_tile(Vector2i(-1, 1)).shown_status = Structure.Status.REVEALED
 	assert_int(thing.status).is_equal(Thing.Status.REVEALED)
@@ -169,7 +169,7 @@ func test_each_peer_reveals_a_centrepiece_with_its_own_tiles() -> void:
 	_spawn_room(Structure.Status.REVEALED)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
-	var thing: Thing = (_level.get("_corner_things") as Dictionary)[Vector2i(0, 1)]
+	var thing: Thing = _corner_things()[Vector2i(0, 1)]
 	# Spawned unrevealed, it shows as its tiles show here
 	assert_int(thing.status).is_equal(Thing.Status.REVEALED)
 
@@ -188,11 +188,11 @@ func test_no_centrepiece_lands_on_a_figure() -> void:
 	assert_vector(figure.tile_spot).is_equal_approx(corner_spot, Vector2.ONE * 0.001)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
-	assert_bool((_level.get("_corner_things") as Dictionary).is_empty()).is_true()
+	assert_bool(_corner_things().is_empty()).is_true()
 	figure.remove_from_group(Character.GROUP)
 	_level.call("_furnish_room", Vector2i.ZERO)
 	await await_idle_frame()
-	assert_bool((_level.get("_corner_things") as Dictionary).has(Vector2i(0, 1))).override_failure_message("Furnished once the figure left").is_true()
+	assert_bool(_corner_things().has(Vector2i(0, 1))).override_failure_message("Furnished once the figure left").is_true()
 
 func _spawn(profile_path: String, cell: Vector2i, turns: int = 0) -> Structure:
 	_level._structure_spawner.spawn_at(load(profile_path) as StructureProfile, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell)), turns, Structure.Status.PLACED)
@@ -254,3 +254,6 @@ func test_a_turned_room_tile_leaves_its_pillars_on_their_corners() -> void:
 	_level.rotate_tile(holder, 1, null)
 	await await_millis(2000)
 	assert_float(Vector2(pillar.global_position.x, pillar.global_position.z).distance_to(standing)).is_less(0.01)
+
+func _corner_things() -> Dictionary:
+	return _level.get("_corner_things")

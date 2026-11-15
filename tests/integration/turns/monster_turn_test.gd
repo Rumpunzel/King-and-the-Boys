@@ -43,8 +43,9 @@ func _spawn_hero(cell: Vector2i) -> Character:
 func _spawn_monster(cell: Vector2i) -> Character:
 	_level.spawn_monster(ModelFreeWorld.load_monster_profile(), cell)
 	await await_idle_frame()
-	var agents: Array[Node] = (_level.get("_agent_spawner") as AgentSpawner).get_children()
-	return (agents.back() as Agent).character
+	var spawner: AgentSpawner = _level.get("_agent_spawner")
+	var agents: Array[Node] = spawner.get_children()
+	return (agents[-1] as Agent).character
 
 ## @returns the cells exactly [param steps] steps from [param from] along passages
 func _cells_at(from: Vector2i, steps: int) -> Array[Vector2i]:

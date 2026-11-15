@@ -58,14 +58,14 @@ func test_the_light_travels_in_the_spawn_data() -> void:
 	var tile: Structure = _level.get_placed_tiles().front()
 	tile.light = TORCH
 	var data: Dictionary[StringName, Variant] = tile.to_structure_data()
-	assert_str(data[Structure.LIGHT] as String).is_equal(ResourceId.of(TORCH))
+	assert_str(data[Structure.LIGHT]).is_equal(ResourceId.of(TORCH))
 	var copy: Structure = auto_free(Structure.from_structure_data(data))
 	assert_object(copy.light).is_same(TORCH)
 	tile.light = null
-	assert_str(tile.to_structure_data()[Structure.LIGHT] as String).is_empty()
+	assert_str(tile.to_structure_data()[Structure.LIGHT]).is_empty()
 
 func test_tile_data_without_a_light_loads_unlit() -> void:
-	var data: Dictionary[StringName, Variant] = (_level.get_placed_tiles().front() as Structure).to_structure_data()
+	var data: Dictionary[StringName, Variant] = _level.get_placed_tiles()[0].to_structure_data()
 	# As saved before tiles held lights
 	data.erase(Structure.LIGHT)
 	var copy: Structure = auto_free(Structure.from_structure_data(data))
@@ -75,7 +75,7 @@ func test_tile_data_without_a_light_loads_unlit() -> void:
 func _spawn_hero(profile: CharacterProfile = null) -> Character:
 	var hero_profile: CharacterProfile = profile if profile else ModelFreeWorld.load_hero_profile()
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
-	var hero: Character = auto_free(hero_profile.create(-1, (spawn_points.front() as Node3D).global_transform))
+	var hero: Character = auto_free(hero_profile.create(-1, (spawn_points[0] as Node3D).global_transform))
 	_level.add_character(hero)
 	add_child(hero)
 	await await_idle_frame()
@@ -119,8 +119,10 @@ func test_a_light_next_door_widens_sight_through_a_passage() -> void:
 	# Nor through a wall
 	var walled: Array = _neighbours(false)
 	assert_array(walled).is_not_empty()
-	hero.place_on_grid(walled[0] as Vector2i, Vector2.ZERO, hero.facing)
-	_level.get_placed_tile((walled[0] as Vector2i) + Level.direction_to_vector(walled[1] as Level.Direction)).light = TORCH
+	var walled_cell: Vector2i = walled[0]
+	var wall_side: Level.Direction = walled[1]
+	hero.place_on_grid(walled_cell, Vector2.ZERO, hero.facing)
+	_level.get_placed_tile(walled_cell + Level.direction_to_vector(wall_side)).light = TORCH
 	_expect_sight(hero, 0.0)
 
 func test_candles_widen_no_sight() -> void:
@@ -248,7 +250,7 @@ func test_a_placed_tile_holds_the_light_rolled_for_it() -> void:
 	assert_object(tile).is_not_null()
 	assert_object(tile.light).is_same(TORCH)
 	# And the light is what the tile saves
-	assert_str(tile.to_structure_data()[Structure.LIGHT] as String).is_equal(ResourceId.of(TORCH))
+	assert_str(tile.to_structure_data()[Structure.LIGHT]).is_equal(ResourceId.of(TORCH))
 
 func test_a_quarter_turned_tile_keeps_its_light_and_beacon() -> void:
 	var hero: Character = await _dark_hero()

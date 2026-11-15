@@ -84,7 +84,9 @@ static func clear_starting_equipment(profile: CharacterProfile) -> Dictionary:
 	return original
 
 static func restore_starting_equipment(profile: CharacterProfile, original: Dictionary) -> void:
-	for slot: EquipmentLook.Slot in original: profile.set_starting_equipment_for(slot, original[slot] as EquipmentLook)
+	for slot: EquipmentLook.Slot in original:
+		var look: EquipmentLook = original[slot]
+		profile.set_starting_equipment_for(slot, look)
 
 static func mesh_path(body_part: ModularBodyPart) -> String:
 	return body_part.mesh.resource_path if body_part.visible and body_part.mesh else ""

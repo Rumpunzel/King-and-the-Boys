@@ -139,7 +139,9 @@ func roll_light(profile: StructureProfile, level_seed: int, cell: Vector2i) -> T
 	if random.randf() >= light_chance: return null
 	# rand_weighted gives -1 when every weight is 0: then no light at all
 	var pick: int = random.rand_weighted(PackedFloat32Array(tile_lights.values()))
-	return tile_lights.keys()[pick] as TileLight if pick >= 0 else null
+	if pick < 0: return null
+	var light: TileLight = tile_lights.keys()[pick]
+	return light
 
 ## Builds the clutter of a tile whose open sides are [param connections], as its model sees them (unrotated), with the wall light
 ## [param light] the tile holds, if any (see [member Structure.light])
@@ -568,4 +570,5 @@ func _drop_each(decorations: Node3D) -> void:
 
 func _drop_one(prop: Model) -> void:
 	prop.visible = true
-	prop.play_model_animation(prop.get_meta(DROP_ANIMATION, drop_animation) as ModelAnimation)
+	var animation: ModelAnimation = prop.get_meta(DROP_ANIMATION, drop_animation)
+	prop.play_model_animation(animation)

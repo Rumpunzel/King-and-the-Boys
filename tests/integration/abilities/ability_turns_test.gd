@@ -36,7 +36,7 @@ func after_test() -> void:
 
 func _spawn_hero() -> Character:
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
-	var start_cell: Vector2i = _level.world_to_grid_position((spawn_points.front() as Node3D).global_position)
+	var start_cell: Vector2i = _level.world_to_grid_position((spawn_points[0] as Node3D).global_position)
 	var hero: Character = auto_free(_hero_profile.create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(start_cell))))
 	_level.add_character(hero)
 	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
@@ -145,10 +145,10 @@ func test_a_held_ability_is_begun_adjusted_and_confirmed() -> void:
 	_use(HELD_ABILITY)
 	assert_int(_effects()).is_equal(0)
 	_begin()
-	assert_bool(_hero.get_meta(TestAbility.BEGUN, false) as bool).is_true()
+	assert_bool(_hero.get_meta(TestAbility.BEGUN, false)).is_true()
 	assert_object(_hero.get_ability(_hero.active_ability_id)).is_same(HELD_ABILITY)
 	_turn_manager.request_ability_adjust(_hero.get_path(), 3)
-	assert_int(_hero.get_meta(TestAbility.ARGUMENT, 0) as int).is_equal(3)
+	assert_int(_hero.get_meta(TestAbility.ARGUMENT, 0)).is_equal(3)
 	assert_int(_hero.movement_points).is_equal(points)
 	_use(HELD_ABILITY, 3)
 	assert_int(_effects()).is_equal(1)
@@ -168,7 +168,7 @@ func test_a_held_ability_blocks_steps_undo_and_other_abilities() -> void:
 	assert_vector(_hero.grid_cell).is_equal(cell)
 	assert_int(_effects()).is_equal(1)
 	assert_int(_hero.undo_steps).is_equal(1)
-	assert_int(_hero.get_meta(TestAbility.CANCELLED, 0) as int).is_equal(0)
+	assert_int(_hero.get_meta(TestAbility.CANCELLED, 0)).is_equal(0)
 
 func test_adjusting_needs_the_points_the_choice_costs() -> void:
 	_begin()
@@ -181,7 +181,7 @@ func test_a_held_ability_that_can_not_be_used_is_cancelled() -> void:
 	# The host's own choice, adjusted to one the ability refuses; what the confirm asks for counts for nothing
 	_turn_manager.request_ability_adjust(_hero.get_path(), -1)
 	_use(HELD_ABILITY, 0)
-	assert_int(_hero.get_meta(TestAbility.CANCELLED, 0) as int).is_equal(1)
+	assert_int(_hero.get_meta(TestAbility.CANCELLED, 0)).is_equal(1)
 	assert_str(_hero.active_ability_id).is_empty()
 	assert_int(_effects()).is_equal(0)
 
@@ -195,7 +195,7 @@ func test_cancel_pass_and_turn_end_cancel_a_held_ability() -> void:
 	_begin()
 	_end_turn()
 	assert_str(_hero.active_ability_id).is_empty()
-	assert_int(_hero.get_meta(TestAbility.CANCELLED, 0) as int).is_equal(3)
+	assert_int(_hero.get_meta(TestAbility.CANCELLED, 0)).is_equal(3)
 	assert_int(_effects()).is_equal(0)
 
 func test_turn_end_effects_resolve_when_the_turn_ends() -> void:

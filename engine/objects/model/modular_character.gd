@@ -98,5 +98,6 @@ func get_hair_parts() -> Array[int]: return [Part.HAIR, Part.EYEBROW, Part.FACIA
 
 func get_slot_parts(slot: EquipmentLook.Slot) -> Array[int]:
 	var parts: Array[int] = []
-	parts.assign(SLOT_PARTS.get(slot, []) as Array)
+	var own_parts: Array = SLOT_PARTS.get(slot, [])
+	parts.assign(own_parts)
 	return parts

@@ -47,7 +47,8 @@ func get_part_key(part: int) -> String:
 
 func get_slot_parts(slot: EquipmentLook.Slot) -> Array[int]:
 	var parts: Array[int] = []
-	parts.assign(slot_parts.get(slot, []) as Array)
+	var own_parts: Array = slot_parts.get(slot, [])
+	parts.assign(own_parts)
 	return parts
 
 func get_mesh_options(part: int) -> PackedStringArray:

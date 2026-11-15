@@ -49,7 +49,8 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		# A preview: two moves used, one undoable, one held, one left
 		_build(5)
-		for move: int in 5: _show(move, [MoveState.USED, MoveState.USED, MoveState.UNDOABLE, MoveState.HELD, MoveState.LEFT][move] as MoveState, Color.CORNFLOWER_BLUE, false)
+		var preview: Array[MoveState] = [MoveState.USED, MoveState.USED, MoveState.UNDOABLE, MoveState.HELD, MoveState.LEFT]
+		for move: int in preview.size(): _show(move, preview[move], Color.CORNFLOWER_BLUE, false)
 		return
 	if character: _update(false)
 

@@ -91,7 +91,7 @@ func set_stowed(stowed: bool) -> void:
 
 func _update_attachment() -> void:
 	var scene: PackedScene = null
-	if visible and mesh and mesh.has_meta(ATTACHMENT_META): scene = mesh.get_meta(ATTACHMENT_META) as PackedScene
+	if visible and mesh and mesh.get_meta(ATTACHMENT_META, null) is PackedScene: scene = mesh.get_meta(ATTACHMENT_META)
 	if _attachment and scene and _attachment.scene_file_path == scene.resource_path: return
 	if _attachment:
 		_attachment.queue_free()

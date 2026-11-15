@@ -18,7 +18,7 @@ func test_only_state_scripts_in_the_project_load() -> void:
 func test_a_machine_without_a_state_serializes_to_nothing() -> void:
 	var machine: AgentStateMachine = auto_free(AgentStateMachine.new())
 	add_child(machine)
-	assert_dict(machine.get(&"_serialized_state") as Dictionary).is_empty()
+	assert_dict(machine.get(&"_serialized_state")).is_empty()
 	machine.set(&"_serialized_state", {} as Dictionary[StringName, Variant])
 	assert_object(machine.get_state()).is_null()
 

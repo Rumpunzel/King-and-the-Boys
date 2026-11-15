@@ -68,7 +68,7 @@ func show_on(character: Character) -> void:
 	if not character.model: return
 	var skeletons: Array[Node] = character.model.find_children("*", "Skeleton3D", true, false)
 	if skeletons.is_empty(): return
-	var skeleton: Skeleton3D = skeletons.front() as Skeleton3D
+	var skeleton: Skeleton3D = skeletons[0] as Skeleton3D
 	var holder_name: String = ("%s_%s" % [name.to_pascal_case(), bone]).validate_node_name()
 	var holder: BoneAttachment3D = skeleton.get_node_or_null(holder_name) as BoneAttachment3D
 	if not holder:

@@ -15,7 +15,8 @@ var _previous_state_script: GDScript
 ## @returns the state [param serialized_state] describes; [code]null[/code] if it names no [State] script (it may come
 ## from a peer)
 static func from_serialized_state(serialized_state: Dictionary[StringName, Variant]) -> State:
-	var state_script: GDScript = load_state_script(serialized_state.get(STATE_SCRIPT, "") as String)
+	# str(): a peer may send anything, and what is no State script path loads nothing
+	var state_script: GDScript = load_state_script(str(serialized_state.get(STATE_SCRIPT, "")))
 	if not state_script:
 		push_error("No State script in %s" % serialized_state)
 		return null

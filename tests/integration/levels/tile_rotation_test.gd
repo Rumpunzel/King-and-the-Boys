@@ -28,7 +28,7 @@ func _spawn_hero(grid_cell: Vector2i) -> Character:
 
 func _start_cell() -> Vector2i:
 	var spawn_points: Array[Node] = get_tree().get_nodes_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
-	return _level.world_to_grid_position((spawn_points.front() as Node3D).global_position)
+	return _level.world_to_grid_position((spawn_points[0] as Node3D).global_position)
 
 ## @returns the placed tiles that are not part of the outer wall, nearest to the start first
 func _inner_tiles() -> Array[Structure]:

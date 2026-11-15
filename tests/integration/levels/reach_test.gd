@@ -16,7 +16,8 @@ func before_test() -> void:
 
 func _walkable_cells() -> Array[Vector2i]:
 	var cells: Array[Vector2i] = []
-	for cell: Vector2i in (_level.get("_placed_tiles") as Dictionary):
+	var placed_tiles: Dictionary = _level.get("_placed_tiles")
+	for cell: Vector2i in placed_tiles:
 		if not _level.get_placed_tile(cell).get_connections().is_empty(): cells.append(cell)
 	return cells
 

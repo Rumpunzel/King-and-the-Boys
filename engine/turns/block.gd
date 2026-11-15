@@ -114,21 +114,22 @@ static func count_dice(attack: int, defence: int) -> int:
 	return 2
 
 ## The face best for the side that picks: the attacker wants the defender down, the defender wants the attacker down or at
-## least to stay; a stumble counts as a fall if [param stumbles_down], and every push does if the defender is [param pinned]
-static func pick_best(faces: Array[Face], by_attacker: bool, stumbles_down: bool, pinned: bool = false) -> Face:
+## least to stay; a stumble counts as a fall if [param stumble_falls], and every push does if [param push_falls] (the defender is
+## pinned)
+static func pick_best(faces: Array[Face], by_attacker: bool, stumble_falls: bool, push_falls: bool = false) -> Face:
 	var best: Face = faces.front()
 	var side: int = 1 if by_attacker else -1
 	for face: Face in faces:
-		if _score(face, stumbles_down, pinned) * side > _score(best, stumbles_down, pinned) * side: best = face
+		if _score(face, stumble_falls, push_falls) * side > _score(best, stumble_falls, push_falls) * side: best = face
 	return best
 
 ## How good [param face] is for the attacker
-static func _score(face: Face, stumbles_down: bool, pinned: bool) -> int:
+static func _score(face: Face, stumble_falls: bool, push_falls: bool) -> int:
 	match face:
 		Face.ATTACKER_DOWN: return -2
 		Face.BOTH_DOWN: return -1
-		Face.PUSH: return 3 if pinned else 1
-		Face.DEFENDER_STUMBLES: return 3 if stumbles_down or pinned else 1
+		Face.PUSH: return 3 if push_falls else 1
+		Face.DEFENDER_STUMBLES: return 3 if stumble_falls or push_falls else 1
 		Face.DEFENDER_DOWN: return 3
 	return 0
 

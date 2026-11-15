@@ -35,7 +35,8 @@ func _drop_level() -> void:
 
 func _monsters() -> Array[Character]:
 	var monsters: Array[Character] = []
-	for node: Node in (_level.get("_agent_spawner") as AgentSpawner).get_children():
+	var spawner: AgentSpawner = _level.get("_agent_spawner")
+	for node: Node in spawner.get_children():
 		var agent: Agent = node as Agent
 		if agent: monsters.append(agent.character)
 	return monsters
