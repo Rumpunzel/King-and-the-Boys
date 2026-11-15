@@ -3,6 +3,7 @@ class_name Block
 extends RefCounted
 ## One figure blocking another on the same tile, refereed by the host (see [TurnManager]): block dice decide who falls and
 ## whether the defender is pushed. Nobody takes damage; a fallen figure lies [constant Character.Posture.DOWN] until it gets up.
+## A defender pushed with nowhere to go (a wall, or full tiles) is knocked down where it stands.
 ## Strength decides the dice: each side adds 1 for every other standing figure of its own on the tile (an assist), as long as
 ## the other side has only one standing figure there.
 
@@ -29,6 +30,8 @@ var defender_spot: Vector2
 var pushed_to: Vector2i
 ## The way the attacker chose to push; [code]-1[/code] for one at random
 var push_way: int = -1
+## Whether the defender had nowhere to be pushed to as the dice were rolled, so a push knocks it down
+var pinned: bool = false
 
 func _init(blocking: Character, blocked: Character) -> void:
 	attacker = blocking
@@ -43,9 +46,10 @@ func roll(level: Level, random: RandomNumberGenerator) -> void:
 	var attack: int = get_strength(attacker, level)
 	var defence: int = get_strength(defender, level)
 	attacker_picks = attack >= defence
+	pinned = get_push_ways(level).is_empty()
 	dice.clear()
 	for _die: int in count_dice(attack, defence): dice.append(FACES[random.randi() % FACES.size()])
-	chosen = pick_best(dice, attacker_picks, stumbles_down())
+	chosen = pick_best(dice, attacker_picks, stumbles_down(), pinned)
 
 ## @returns the figure whose side picks the die
 func get_picker() -> Character:
@@ -89,11 +93,13 @@ func stumbles_down() -> bool:
 	return defender.profile.agility < attacker.profile.agility
 
 ## Onto a free spot of a neighbouring tile through a passage: the way chosen ([member push_way]) if it is still open, else one
-## picked at random; with none, the defender stays
+## picked at random; with none, the defender stays and is knocked down against the wall
 func _push(level: Level, random: RandomNumberGenerator) -> void:
 	var cell: Vector2i = defender.grid_cell
 	var ways: Array[Level.Direction] = get_push_ways(level)
-	if ways.is_empty(): return
+	if ways.is_empty():
+		defender.posture = Character.Posture.DOWN
+		return
 	var way: Level.Direction = push_way as Level.Direction if ways.has(push_way) else ways[random.randi() % ways.size()]
 	pushed_to = cell + Level.direction_to_vector(way)
 	# Facing back towards the one who pushed it
@@ -107,20 +113,21 @@ static func count_dice(attack: int, defence: int) -> int:
 	return 2
 
 ## The face best for the side that picks: the attacker wants the defender down, the defender wants the attacker down or at
-## least to stay; a stumble counts as a fall if [param stumbles_down]
-static func pick_best(faces: Array[Face], by_attacker: bool, stumbles_down: bool) -> Face:
+## least to stay; a stumble counts as a fall if [param stumbles_down], and every push does if the defender is [param pinned]
+static func pick_best(faces: Array[Face], by_attacker: bool, stumbles_down: bool, pinned: bool = false) -> Face:
 	var best: Face = faces.front()
+	var side: int = 1 if by_attacker else -1
 	for face: Face in faces:
-		if _score(face, stumbles_down) * (1 if by_attacker else -1) > _score(best, stumbles_down) * (1 if by_attacker else -1): best = face
+		if _score(face, stumbles_down, pinned) * side > _score(best, stumbles_down, pinned) * side: best = face
 	return best
 
 ## How good [param face] is for the attacker
-static func _score(face: Face, stumbles_down: bool) -> int:
+static func _score(face: Face, stumbles_down: bool, pinned: bool) -> int:
 	match face:
 		Face.ATTACKER_DOWN: return -2
 		Face.BOTH_DOWN: return -1
-		Face.PUSH: return 1
-		Face.DEFENDER_STUMBLES: return 3 if stumbles_down else 1
+		Face.PUSH: return 3 if pinned else 1
+		Face.DEFENDER_STUMBLES: return 3 if stumbles_down or pinned else 1
 		Face.DEFENDER_DOWN: return 3
 	return 0
 

@@ -27,3 +27,14 @@ func test_a_stumble_counts_as_a_fall_only_against_a_clumsier_defender() -> void:
 func test_the_defender_would_rather_go_down_together_than_alone() -> void:
 	var faces: Array[Block.Face] = [Block.Face.DEFENDER_DOWN, Block.Face.BOTH_DOWN]
 	assert_int(Block.pick_best(faces, false, true)).is_equal(Block.Face.BOTH_DOWN)
+
+func test_against_a_pinned_defender_a_push_is_as_good_as_a_fall() -> void:
+	var faces: Array[Block.Face] = [Block.Face.DEFENDER_DOWN, Block.Face.PUSH]
+	# Free to be pushed, the defender would rather be pushed than fall
+	assert_int(Block.pick_best(faces, false, false)).is_equal(Block.Face.PUSH)
+	# Pinned, both knock it down: no better pick than the first
+	assert_int(Block.pick_best(faces, false, false, true)).is_equal(Block.Face.DEFENDER_DOWN)
+	# An agile defender's stumble too
+	faces = [Block.Face.DEFENDER_DOWN, Block.Face.DEFENDER_STUMBLES]
+	assert_int(Block.pick_best(faces, false, false)).is_equal(Block.Face.DEFENDER_STUMBLES)
+	assert_int(Block.pick_best(faces, false, false, true)).is_equal(Block.Face.DEFENDER_DOWN)
