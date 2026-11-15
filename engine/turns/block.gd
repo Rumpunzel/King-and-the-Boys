@@ -29,7 +29,8 @@ var attacker_picks: bool = true
 var defender_cell: Vector2i
 var defender_spot: Vector2
 var pushed_to: Vector2i
-## Whether the defender had nowhere to be pushed to as the dice were rolled, so a push knocks it down
+## Whether the defender has nowhere to be pushed to, so a push knocks it down; checked as the dice are rolled and again after
+## waiting for a choice (see [method update_pinned])
 var pinned: bool = false
 
 func _init(blocking: Character, blocked: Character) -> void:
@@ -45,10 +46,15 @@ func roll(level: Level, random: RandomNumberGenerator) -> void:
 	var attack: int = get_strength(attacker, level)
 	var defence: int = get_strength(defender, level)
 	attacker_picks = attack >= defence
-	pinned = get_push_way(level) < 0
+	update_pinned(level)
 	dice.clear()
 	for _die: int in count_dice(attack, defence): dice.append(FACES[random.randi() % FACES.size()])
 	chosen = pick_best(dice, attacker_picks, stumbles_down(), pinned)
+
+## Host only: whether the defender has nowhere to be pushed to now, see [member pinned]; the board may change while a block
+## waits for a choice (a player joining or leaving)
+func update_pinned(level: Level) -> void:
+	pinned = get_push_way(level) < 0
 
 ## @returns the figure whose side picks the die
 func get_picker() -> Character:
@@ -65,7 +71,8 @@ func get_push_way(level: Level) -> int:
 	if not level.is_passage(cell, way) or not level.has_room(cell + Level.direction_to_vector(way), defender.profile.group, defender): return -1
 	return way
 
-## Host only: plays out [param face]: who falls, and the push (the attacker does not follow)
+## Host only: plays out [param face]: who falls, and the push (the attacker does not follow); a defender with nowhere to be
+## pushed to falls against the wall instead
 func apply(face: Face, level: Level) -> void:
 	match face:
 		Face.ATTACKER_DOWN:
@@ -74,10 +81,9 @@ func apply(face: Face, level: Level) -> void:
 			attacker.posture = Character.Posture.DOWN
 			defender.posture = Character.Posture.DOWN
 		Face.PUSH:
-			_push(level)
+			if not _push(level): defender.posture = Character.Posture.DOWN
 		Face.DEFENDER_STUMBLES:
-			_push(level)
-			if stumbles_down(): defender.posture = Character.Posture.DOWN
+			if not _push(level) or stumbles_down(): defender.posture = Character.Posture.DOWN
 		Face.DEFENDER_DOWN:
 			_push(level)
 			defender.posture = Character.Posture.DOWN
@@ -86,19 +92,20 @@ func apply(face: Face, level: Level) -> void:
 func was_pushed() -> bool:
 	return pushed_to != defender_cell
 
-## A stumbling defender keeps its feet only if it is at least as agile as the attacker
+## A stumbling defender pushed away keeps its feet only if it is at least as agile as the attacker; one pinned falls anyway (see
+## [method apply])
 func stumbles_down() -> bool:
 	return defender.profile.agility < attacker.profile.agility
 
 ## Back over the edge its side holds onto the tile beyond (see [method get_push_way]), facing the one who pushed it; with nowhere
-## to go, the defender stays and is knocked down against the wall
-func _push(level: Level) -> void:
+## to go, the defender stays
+## @returns whether it was pushed
+func _push(level: Level) -> bool:
 	var way: int = get_push_way(level)
-	if way < 0:
-		defender.posture = Character.Posture.DOWN
-		return
+	if way < 0: return false
 	pushed_to = defender.grid_cell + Level.direction_to_vector(way as Level.Direction)
 	defender.place_on_grid(pushed_to, Vector2.ZERO, Level.get_opposite(way as Level.Direction))
+	return true
 
 ## How many dice a block rolls: 1 at equal strength, 2 if one side is stronger, 3 if the attacker is at least twice as strong
 static func count_dice(attack: int, defence: int) -> int:

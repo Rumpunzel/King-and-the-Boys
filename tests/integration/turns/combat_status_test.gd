@@ -53,7 +53,7 @@ func test_the_banner_shows_while_the_monsters_act() -> void:
 func test_a_blocks_dice_show_with_the_one_that_counts() -> void:
 	var figures: Array[Character] = await _figures()
 	var dice: Array[int] = [Block.Face.PUSH, Block.Face.DEFENDER_DOWN]
-	_turn_manager.block_shown.emit(figures[0], figures[1], dice, Block.Face.DEFENDER_DOWN)
+	_turn_manager.block_shown.emit(figures[0], figures[1], dice, Block.Face.DEFENDER_DOWN, false)
 	assert_bool((_status.get("_block_panel") as Control).visible).is_true()
 	var buttons: Array[Button] = _dice()
 	assert_int(buttons.size()).is_equal(2)
@@ -79,3 +79,6 @@ func test_face_names_say_who_falls() -> void:
 	assert_str(CombatStatus.face_name(Block.Face.ATTACKER_DOWN, "Knight", "Skeleton")).is_equal("Knight falls")
 	assert_str(CombatStatus.face_name(Block.Face.DEFENDER_STUMBLES, "Knight", "Skeleton")).is_equal("Skeleton stumbles")
 	assert_str(CombatStatus.face_name(Block.Face.BOTH_DOWN, "Knight", "Skeleton")).is_equal("Both fall")
+	# Pinned, a push is a fall
+	assert_str(CombatStatus.face_name(Block.Face.PUSH, "Knight", "Skeleton", true)).is_equal("Push: Skeleton falls against the wall")
+	assert_str(CombatStatus.face_name(Block.Face.DEFENDER_STUMBLES, "Knight", "Skeleton", true)).is_equal("Skeleton stumbles and falls against the wall")
