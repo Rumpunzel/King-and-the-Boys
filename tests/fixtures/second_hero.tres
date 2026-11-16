@@ -1,9 +1,6 @@
 [gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://c6k2m8x4q1vbe"]
 
-[ext_resource type="Resource" path="res://data/model_animations/miniature_move_animation.tres" id="3_s80u3"]
-[ext_resource type="Resource" path="res://data/characters/people/random_human.tres" id="4_fogkv"]
 [ext_resource type="Script" path="res://engine/objects/characters/character_profile.gd" id="5_1msby"]
-[ext_resource type="Resource" path="res://data/model_animations/high_bounce_animation.tres" id="6_tt5hc"]
 
 [resource]
 script = ExtResource("5_1msby")

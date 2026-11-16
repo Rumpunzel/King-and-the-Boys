@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="HeroRoster" format=3 uid="uid://bn7w3q5h2ycle"]
 
-[ext_resource type="Script" path="res://engine/objects/characters/hero_roster.gd" id="1_roster"]
+[ext_resource type="Script" uid="uid://cm7cg6gykhgow" path="res://engine/objects/characters/hero_roster.gd" id="1_roster"]
 [ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="2_profile"]
 [ext_resource type="Resource" uid="uid://ro6wvnf88xbo" path="res://data/characters/people/dwarf.tres" id="3_dwarf"]
 [ext_resource type="Resource" uid="uid://4knh77xf2vfl" path="res://data/characters/people/elf.tres" id="4_elf"]

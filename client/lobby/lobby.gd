@@ -6,6 +6,13 @@ signal player_connected(player: Player)
 signal player_disconnected(player: Player)
 
 signal player_created(player: Player)
+## A player's hero or [member Player.ready_to_start] changed, or a player joined or left
+signal readiness_changed
+
+## The heroes players pick from; without one, no heroes are assigned or checked
+var hero_roster: HeroRoster
+## Whether players may still pick heroes and get ready; closed once the game is about to start
+var picks_open: bool = true
 
 ## {PlayerId: int -> Plaer}
 var _players: Dictionary[int, Player] = {}
@@ -39,6 +46,61 @@ func get_local_player() -> Player:
 	push_error("No local player in the lobby yet (looked up as %d)" % local_player_id)
 	return null
 
+## The player holding the hero, null if it is free
+func get_holder(profile: CharacterProfile) -> Player:
+	if not profile: return null
+	for player: Player in _players.values():
+		if player.character == profile: return player
+	return null
+
+## The roster's heroes no player but [param for_player] holds, in roster order
+func get_free_heroes(for_player: Player) -> Array[CharacterProfile]:
+	var free_heroes: Array[CharacterProfile] = []
+	if not hero_roster: return free_heroes
+	for hero: CharacterProfile in hero_roster.heroes:
+		var holder: Player = get_holder(hero)
+		if not holder or holder == for_player: free_heroes.append(hero)
+	return free_heroes
+
+## Host side: gives the player the hero if picks are open, it is in the roster, nobody else holds it and the player
+## is not ready yet
+func try_pick(player: Player, profile: CharacterProfile) -> bool:
+	if not picks_open or not hero_roster or not hero_roster.has(profile): return false
+	if player.ready_to_start: return false
+	var holder: Player = get_holder(profile)
+	if holder and holder != player: return false
+	player.character = profile
+	return true
+
+## Host side: picks a free hero at random for the player, another one than they hold unless it is the only one free
+func pick_random(player: Player) -> bool:
+	var free_heroes: Array[CharacterProfile] = get_free_heroes(player)
+	if free_heroes.size() > 1: free_heroes.erase(player.character)
+	if free_heroes.is_empty(): return false
+	var hero: CharacterProfile = free_heroes.pick_random()
+	return try_pick(player, hero)
+
+## Host side: marks a client's player ready or not while picks are open; offline and the host need no ready
+func try_set_ready(player: Player, new_ready_to_start: bool) -> bool:
+	if not Multiplayer.is_online() or not picks_open or player.is_host(): return false
+	player.ready_to_start = new_ready_to_start
+	return true
+
+## Stops picks and ready changes, e.g. as the game starts
+func close_picks() -> void:
+	picks_open = false
+
+## Whether the game may start: offline always, online once every connected peer's player is ready
+func can_start() -> bool:
+	if not Multiplayer.is_online(): return true
+	return _can_start_with(multiplayer.get_peers())
+
+func _can_start_with(peers: PackedInt32Array) -> bool:
+	for peer_id: int in peers:
+		var player: Player = get_player(peer_id)
+		if not player or not player.ready_to_start: return false
+	return true
+
 func get_all_node_data() -> Array[Variant]:
 	var player_data: Array[Variant] = []
 	for player: Player in _players.values():
@@ -60,6 +122,8 @@ func _spawn_player(player_info: Dictionary[StringName, Variant]) -> Player:
 	var player: Player = Player.from_player_info(player_info)
 	_players[player.player_id] = player
 	player.ready.connect(player_created.emit.bind(player))
+	player.player_info_changed.connect(readiness_changed.emit)
+	if is_multiplayer_authority() and hero_roster and picks_open: pick_random(player)
 	print_debug("Spawned player: %s" % player.get_player_info())
 	return player
 
@@ -93,6 +157,7 @@ func _setup_toaster() -> void:
 	add_child(toaster)
 
 func _on_game_started() -> void:
+	picks_open = true
 	_create_local_player()
 
 func _on_game_stopped() -> void:
@@ -102,6 +167,7 @@ func _on_disconnected_from_multiplayer() -> void:
 	_remove_all_players(true)
 
 func _on_joining_multiplayer() -> void:
+	picks_open = true
 	_remove_all_players()
 
 func _on_player_joined(player_info: Dictionary[StringName, Variant]) -> void:
@@ -111,6 +177,7 @@ func _on_player_joined(player_info: Dictionary[StringName, Variant]) -> void:
 	var player_id: int = player_info[Player.ID]
 	var connected_player: Player = get_player(player_id)
 	player_connected.emit(connected_player)
+	readiness_changed.emit()
 
 func _on_peer_disconnected(peer_id: int) -> void:
 	if not is_multiplayer_authority(): return
@@ -120,6 +187,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		return
 	_remove_player(disconnected_player)
 	player_disconnected.emit(disconnected_player)
+	readiness_changed.emit()
 	print_debug("Player with player_id %d disconnected!" % peer_id)
 
 func _on_server_disconnected() -> void:

@@ -16,7 +16,8 @@ const NAME: StringName = "player_name"
 		if not Engine.is_editor_hint(): name = "%d" % new_player_id
 		player_id = new_player_id
 		if Engine.is_editor_hint(): return
-		set_multiplayer_authority(player_id)
+		# Not recursive: children (e.g. the lobby's pick synchronizer) keep the host's authority
+		set_multiplayer_authority(player_id, false)
 		player_info_changed.emit()
 		player_avatar = await Client.get_player_avatar(player_id)
 
@@ -46,6 +47,13 @@ const NAME: StringName = "player_name"
 var body: Dictionary = {}:
 	set(new_body):
 		body = new_body
+		if Engine.is_editor_hint(): return
+		player_info_changed.emit()
+
+## Whether this player is ready for the game to start; the host decides, see [method Lobby.try_set_ready]
+var ready_to_start: bool = false:
+	set(new_ready_to_start):
+		ready_to_start = new_ready_to_start
 		if Engine.is_editor_hint(): return
 		player_info_changed.emit()
 
