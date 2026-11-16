@@ -12,6 +12,9 @@ const HEROES: String = "uid://ddcr4k3p6t8nw"
 
 ## The host's own player if a test created it, removed again in after_test()
 var _own_host_player: Player
+## The server a test went online with, and the peer it replaced, put back in after_test()
+var _server: ENetMultiplayerPeer
+var _offline_peer: MultiplayerPeer
 
 func before_test() -> void:
 	var roster: HeroRoster = load(HEROES)
@@ -19,6 +22,12 @@ func before_test() -> void:
 	Lobby.picks_open = true
 
 func after_test() -> void:
+	# Offline again first, so players leave as they would offline
+	if _server:
+		Lobby.multiplayer.multiplayer_peer = _offline_peer
+		_server.close()
+		_server = null
+		_offline_peer = null
 	for player_id: int in [JOINING_ID, SECOND_ID]:
 		var joined: Player = Lobby.get_player(player_id)
 		if joined: Lobby.call("_remove_player", joined)
@@ -122,17 +131,15 @@ func test_start_is_allowed_offline() -> void:
 
 func test_ready_is_refused_without_a_hero() -> void:
 	# Online, as ready is refused offline anyway
-	var server: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-	assert_int(server.create_server(PORT)).is_equal(OK)
-	var offline: MultiplayerPeer = Lobby.multiplayer.multiplayer_peer
-	Lobby.multiplayer.multiplayer_peer = server
+	_server = ENetMultiplayerPeer.new()
+	assert_int(_server.create_server(PORT)).is_equal(OK)
+	_offline_peer = Lobby.multiplayer.multiplayer_peer
+	Lobby.multiplayer.multiplayer_peer = _server
 	var a: Player = await _join(JOINING_ID)
 	var with_hero: bool = Lobby.try_set_ready(a, true)
 	Lobby.try_set_ready(a, false)
 	a.character = null
 	var without_hero: bool = Lobby.try_set_ready(a, true)
-	Lobby.multiplayer.multiplayer_peer = offline
-	server.close()
 	assert_bool(with_hero).is_true()
 	assert_bool(without_hero).is_false()
 	assert_bool(a.ready_to_start).is_false()
@@ -151,6 +158,7 @@ func test_a_random_pick_keeps_the_only_free_hero() -> void:
 	assert_object(a.character).is_same(own)
 
 func test_players_without_a_hero_get_one_once_the_roster_is_set() -> void:
+	# after_test() clears the roster whatever happens here, and before_test() sets it again
 	var roster: HeroRoster = Lobby.hero_roster
 	Lobby.hero_roster = null
 	var a: Player = await _join(JOINING_ID)

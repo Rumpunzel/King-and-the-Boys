@@ -79,7 +79,6 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_constants/h_separation = 8
 toggle_mode = true
-button_mask = 0
 text = "READY"
 icon_alignment = 1
 expand_icon = true

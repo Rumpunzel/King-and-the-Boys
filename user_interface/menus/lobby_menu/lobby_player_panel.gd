@@ -27,6 +27,10 @@ extends PanelContainer
 
 func get_character_panel() -> CharacterPanel: return _character_panel
 
+func _ready() -> void:
+	if Engine.is_editor_hint(): return
+	_ready_button.toggled.connect(_on_ready_toggled)
+
 ## R asks the host for another free hero, picked at random
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not _hero_picker or not player: return
@@ -38,7 +42,7 @@ func _clear() -> void:
 	_player_info.player = null
 	_show_character(null)
 	if _hero_picker: _hero_picker.player = null
-	_ready_button.button_pressed = false
+	_show_ready(false)
 	_ready_button.disabled = true
 	_ready_button.modulate.a = 0.0
 
@@ -47,9 +51,26 @@ func _update_player_panel() -> void:
 	_player_info.player = player
 	_show_character(player.character)
 	if _hero_picker: _hero_picker.player = player
-	_ready_button.button_pressed = true
-	_ready_button.disabled = false
-	_ready_button.modulate.a = 1.0
+	_update_ready_button()
+
+## Ready only shows online and for guests: the host starts the game instead. The local guest toggles it, the host decides
+func _update_ready_button() -> void:
+	var shown: bool = Multiplayer.is_online() and not player.is_host()
+	_ready_button.modulate.a = 1.0 if shown else 0.0
+	_ready_button.disabled = not shown or not player.is_local_player()
+	_show_ready(player.ready_to_start)
+
+## Shows the ready state the host decided, without asking for it again
+func _show_ready(ready_to_start: bool) -> void:
+	_ready_button.set_pressed_no_signal(ready_to_start)
+	# Not before the button stored its untoggled text and icon
+	if _ready_button.is_node_ready(): _ready_button.update_button()
+
+func _on_ready_toggled(toggled_on: bool) -> void:
+	if not player or not player.is_local_player(): return
+	player.ask_for_ready(toggled_on)
+	# The button follows the host's answer: it shows the new state once the host took it
+	_show_ready(player.ready_to_start)
 
 func _show_character(character: CharacterProfile) -> void:
 	if _character_panel: _character_panel.character = character
@@ -58,6 +79,7 @@ func _show_character(character: CharacterProfile) -> void:
 func _on_player_info_changed() -> void:
 	assert(player)
 	_show_character(player.character)
+	_update_ready_button()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
