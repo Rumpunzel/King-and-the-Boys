@@ -80,9 +80,9 @@ func pick_random(player: Player) -> bool:
 	var hero: CharacterProfile = free_heroes.pick_random()
 	return try_pick(player, hero)
 
-## Host side: marks a client's player ready or not while picks are open; offline and the host need no ready
+## Host side: marks a client's player with a hero ready or not while picks are open; offline and the host need no ready
 func try_set_ready(player: Player, new_ready_to_start: bool) -> bool:
-	if not Multiplayer.is_online() or not picks_open or player.is_host(): return false
+	if not Multiplayer.is_online() or not picks_open or player.is_host() or not player.character: return false
 	player.ready_to_start = new_ready_to_start
 	return true
 
@@ -122,8 +122,11 @@ func _spawn_player(player_info: Dictionary[StringName, Variant]) -> Player:
 	var player: Player = Player.from_player_info(player_info)
 	_players[player.player_id] = player
 	player.ready.connect(player_created.emit.bind(player))
-	player.player_info_changed.connect(readiness_changed.emit)
+	player.tree_exited.connect(_on_player_exited.bind(player))
 	if is_multiplayer_authority() and hero_roster and picks_open: pick_random(player)
+	# Runs on every peer (the spawner's spawn function), so each one hears of the new player and its changes
+	player.player_info_changed.connect(readiness_changed.emit)
+	readiness_changed.emit()
 	print_debug("Spawned player: %s" % player.get_player_info())
 	return player
 
@@ -177,7 +180,6 @@ func _on_player_joined(player_info: Dictionary[StringName, Variant]) -> void:
 	var player_id: int = player_info[Player.ID]
 	var connected_player: Player = get_player(player_id)
 	player_connected.emit(connected_player)
-	readiness_changed.emit()
 
 func _on_peer_disconnected(peer_id: int) -> void:
 	if not is_multiplayer_authority(): return
@@ -187,8 +189,12 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		return
 	_remove_player(disconnected_player)
 	player_disconnected.emit(disconnected_player)
-	readiness_changed.emit()
 	print_debug("Player with player_id %d disconnected!" % peer_id)
+
+## On every peer, whoever removed the player (the host, or the spawner despawning it on a client)
+func _on_player_exited(player: Player) -> void:
+	if _players.get(player.player_id) == player: _players.erase(player.player_id)
+	readiness_changed.emit()
 
 func _on_server_disconnected() -> void:
 	_remove_all_players()
