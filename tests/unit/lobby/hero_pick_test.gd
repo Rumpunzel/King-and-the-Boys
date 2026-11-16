@@ -5,6 +5,7 @@ extends GdUnitTestSuite
 const JOINING_ID: int = 5
 const SECOND_ID: int = 6
 const PEER_WITHOUT_PLAYER: int = 7
+const THIRD_ID: int = 8
 const PORT: int = 47125
 
 ## The two model-free fixture heroes (res://tests/fixtures/heroes.tres)
@@ -28,7 +29,7 @@ func after_test() -> void:
 		_server.close()
 		_server = null
 		_offline_peer = null
-	for player_id: int in [JOINING_ID, SECOND_ID]:
+	for player_id: int in [JOINING_ID, SECOND_ID, THIRD_ID]:
 		var joined: Player = Lobby.get_player(player_id)
 		if joined: Lobby.call("_remove_player", joined)
 	if is_instance_valid(_own_host_player) and Lobby.get_player(Multiplayer.HOST_ID) == _own_host_player:
@@ -109,6 +110,46 @@ func test_picks_are_refused_once_closed() -> void:
 	assert_object(a.character).is_same(own)
 	var late: Player = await _join(SECOND_ID)
 	assert_object(late.character).is_null()
+
+func test_a_late_joiner_is_assigned_a_free_hero() -> void:
+	var a: Player = await _join(JOINING_ID)
+	Lobby.close_picks()
+	var late: Player = await _join(SECOND_ID)
+	var spawned_with: CharacterProfile = late.character
+	var assigned: bool = Lobby.assign_free_hero(late)
+	assert_object(spawned_with).is_null()
+	assert_bool(assigned).is_true()
+	assert_bool(Lobby.hero_roster.has(late.character)).is_true()
+	assert_object(late.character).is_not_same(a.character)
+
+func test_no_hero_is_assigned_once_all_are_held() -> void:
+	await _join(JOINING_ID)
+	await _join(SECOND_ID)
+	Lobby.close_picks()
+	var late: Player = await _join(THIRD_ID)
+	assert_bool(Lobby.assign_free_hero(late)).is_false()
+	assert_object(late.character).is_null()
+
+func test_ready_guests_are_counted() -> void:
+	var a: Player = await _join(JOINING_ID)
+	var b: Player = await _join(SECOND_ID)
+	a.ready_to_start = true
+	var peers: PackedInt32Array = PackedInt32Array([JOINING_ID, SECOND_ID, PEER_WITHOUT_PLAYER])
+	assert_int(Lobby.call("_count_ready", peers)).is_equal(1)
+	b.ready_to_start = true
+	assert_int(Lobby.call("_count_ready", peers)).is_equal(2)
+	assert_int(Lobby.get_ready_count()).is_equal(0)
+
+func test_the_synced_hero_id_follows_the_hero() -> void:
+	var a: Player = await _join(JOINING_ID)
+	var other: CharacterProfile = _get_other_hero(a.character)
+	var id_before: String = a.get("_character_id")
+	var expected_before: String = ResourceId.of(a.character)
+	a.set("_character_id", ResourceId.of(other))
+	var id_after: String = a.get("_character_id")
+	assert_str(id_before).is_equal(expected_before)
+	assert_object(a.character).is_same(other)
+	assert_str(id_after).is_equal(ResourceId.of(other))
 
 func test_a_leaving_player_frees_their_hero() -> void:
 	var a: Player = await _join(JOINING_ID)

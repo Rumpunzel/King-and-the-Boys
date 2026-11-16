@@ -37,6 +37,7 @@ const NAME: StringName = "player_name"
 	set(new_character):
 		if new_character == character: return
 		character = new_character
+		_character_id_cache = ResourceId.of(character)
 		if Engine.is_editor_hint(): return
 		# The player who picks rolls the look; peers receive it through the synchronizer
 		if is_local_player(): body = character.roll_body(0) if character else {}
@@ -62,10 +63,12 @@ var ready_to_start: bool = false:
 # Read and written by the HostSynchronizer (player.tscn) only: the host decides the hero, peers take what it syncs
 @warning_ignore("unused_private_class_variable")
 var _character_id: String:
-	get: return ResourceId.of(character)
+	get: return _character_id_cache
 	set(new_character_id):
 		var found: Resource = ResourceId.find(new_character_id)
 		character = found if found is CharacterProfile else null
+# [ResourceId] of [member character], kept by its setter as the synchronizer reads [member _character_id] every tick
+var _character_id_cache: String = ""
 
 static func create(new_player_id: int, new_player_name: String) -> Player:
 	var new_player: Player = (Files.load_kept("uid://bvdlyl1asckv4") as PackedScene).instantiate()

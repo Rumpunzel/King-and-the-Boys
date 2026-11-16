@@ -86,6 +86,15 @@ func pick_random(player: Player) -> bool:
 	var hero: CharacterProfile = free_heroes.pick_random()
 	return try_pick(player, hero)
 
+## Host side: gives the player a free hero of the roster at random, whether picks are open or not (e.g. a player
+## joining as the game starts or into a running game, who needs one for their character); false without a roster or a
+## free hero
+func assign_free_hero(player: Player) -> bool:
+	var free_heroes: Array[CharacterProfile] = get_free_heroes(player)
+	if free_heroes.is_empty(): return false
+	player.character = free_heroes.pick_random()
+	return true
+
 ## Host side: marks a client's player with a hero ready or not while picks are open; offline and the host need no ready
 func try_set_ready(player: Player, new_ready_to_start: bool) -> bool:
 	if not Multiplayer.is_online() or not picks_open or player.is_host() or not player.character: return false
@@ -101,11 +110,19 @@ func can_start() -> bool:
 	if not Multiplayer.is_online(): return true
 	return _can_start_with(multiplayer.get_peers())
 
+## How many connected peers' players are ready; the host is no peer of its own
+func get_ready_count() -> int:
+	return _count_ready(multiplayer.get_peers())
+
 func _can_start_with(peers: PackedInt32Array) -> bool:
+	return _count_ready(peers) == peers.size()
+
+func _count_ready(peers: PackedInt32Array) -> int:
+	var ready_count: int = 0
 	for peer_id: int in peers:
 		var player: Player = get_player(peer_id)
-		if not player or not player.ready_to_start: return false
-	return true
+		if player and player.ready_to_start: ready_count += 1
+	return ready_count
 
 func get_all_node_data() -> Array[Variant]:
 	var player_data: Array[Variant] = []

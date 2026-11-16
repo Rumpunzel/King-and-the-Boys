@@ -33,12 +33,7 @@ func _update_start_button() -> void:
 	if not Multiplayer.is_online():
 		_start_button.text = "Start"
 		return
-	var peers: PackedInt32Array = multiplayer.get_peers()
-	var ready_count: int = 0
-	for peer_id: int in peers:
-		var guest: Player = Lobby.get_player(peer_id)
-		if guest and guest.ready_to_start: ready_count += 1
-	_start_button.text = "Start (%d / %d ready)" % [ready_count, peers.size()]
+	_start_button.text = "Start (%d / %d ready)" % [Lobby.get_ready_count(), multiplayer.get_peers().size()]
 
 ## Deferred, as the multiplayer may still list a leaving peer while it tells
 func _on_peers_changed(_peer_id: int) -> void:
