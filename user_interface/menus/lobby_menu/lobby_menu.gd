@@ -3,6 +3,9 @@
 class_name LobbyMenu
 extends Menu
 
+## The heroes players pick from in this lobby, see [member Lobby.hero_roster]
+@export var _hero_roster: HeroRoster
+
 @export_group("Configuration")
 @export var _title: Label
 @export var _left_player_panels_container: Container
@@ -27,6 +30,8 @@ var _panel_spots: Dictionary[LobbyPlayerPanel, Node3D] = {}
 func _enter_tree() -> void:
 	super._enter_tree()
 	if Engine.is_editor_hint(): return
+	# Before the local player is created (_ready), so the host gives it a hero as it spawns
+	Lobby.hero_roster = _hero_roster
 	Multiplayer.disconnected_from_multiplayer.connect(_on_disconnected_from_multiplayer)
 
 func _ready() -> void:
@@ -131,6 +136,7 @@ func _update_preview(player: Player) -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if not _hero_roster: warnings.append("Missing hero roster.")
 	if not _title: warnings.append("Missing title reference.")
 	if not _left_player_panels_container: warnings.append("Missing left player infos container reference.")
 	if not _local_player_panel: warnings.append("Missing local PlayerPanel reference.")

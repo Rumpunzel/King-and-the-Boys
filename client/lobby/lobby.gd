@@ -9,8 +9,14 @@ signal player_created(player: Player)
 ## A player's hero or [member Player.ready_to_start] changed, or a player joined or left
 signal readiness_changed
 
-## The heroes players pick from; without one, no heroes are assigned or checked
-var hero_roster: HeroRoster
+## The heroes players pick from; without one, no heroes are assigned or checked. Set on the host, it gives every
+## player still without a hero a free one, e.g. those who joined before the lobby menu set it
+var hero_roster: HeroRoster:
+	set(new_hero_roster):
+		hero_roster = new_hero_roster
+		if Engine.is_editor_hint() or not hero_roster or not picks_open or not is_multiplayer_authority(): return
+		for player: Player in _players.values():
+			if not player.character: pick_random(player)
 ## Whether players may still pick heroes and get ready; closed once the game is about to start
 var picks_open: bool = true
 

@@ -150,6 +150,14 @@ func test_a_random_pick_keeps_the_only_free_hero() -> void:
 	assert_bool(Lobby.pick_random(a)).is_true()
 	assert_object(a.character).is_same(own)
 
+func test_players_without_a_hero_get_one_once_the_roster_is_set() -> void:
+	var roster: HeroRoster = Lobby.hero_roster
+	Lobby.hero_roster = null
+	var a: Player = await _join(JOINING_ID)
+	assert_object(a.character).is_null()
+	Lobby.hero_roster = roster
+	assert_bool(roster.has(a.character)).is_true()
+
 func test_a_request_from_another_peer_is_ignored() -> void:
 	var a: Player = await _join(JOINING_ID)
 	var own: CharacterProfile = a.character

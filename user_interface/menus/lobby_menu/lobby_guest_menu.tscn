@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cf6txwkm0153" path="res://user_interface/menus/lobby_menu/lobby_guest_player_panel.tscn" id="4_bfn47"]
 [ext_resource type="FontFile" uid="uid://b5koyewmt0kld" path="res://assets/fonts/Fondamento-Regular.ttf" id="6_3j5nk"]
 [ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="8_6d7le"]
+[ext_resource type="Resource" uid="uid://bn7w3q5h2ycle" path="res://data/characters/heroes.tres" id="9_roster"]
 
 [node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_title", "_left_player_panels_container", "_local_player_panel", "_right_player_panels_container", "_character_preview", "_other_character_spots")]
 anchors_preset = 15
@@ -16,6 +17,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = ExtResource("1_3j5nk")
 script = ExtResource("1_pffa0")
+_hero_roster = ExtResource("9_roster")
 _title = NodePath("MenusContainer/PlayerPanels/PanelContainer/Title")
 _left_player_panels_container = NodePath("MenusContainer/PlayerPanels/Left/LeftPlayerPanels")
 _local_player_panel = NodePath("MenusContainer/PlayerPanels/LocalPlayerPanel")
