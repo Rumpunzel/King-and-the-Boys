@@ -16,8 +16,7 @@ extends PanelContainer
 		player.player_info_changed.connect(_on_player_info_changed)
 
 @export_group("Configuration")
-## Shows the hero's portrait and name where the hero's model does not stand in the panel; optional, the local player's model stands
-## in its panel (the lobby menu's hero selection shows its hero)
+## Shows the hero's name, and its portrait while no model stands in the panel
 @export var _character_panel: CharacterPanel
 @export var _player_info: PlayerInfo
 @export var _ready_button: ToggleButton
@@ -62,7 +61,7 @@ func _on_ready_toggled(toggled_on: bool) -> void:
 	_show_ready(player.ready_to_start)
 
 func _show_character(character: CharacterProfile) -> void:
-	if _character_panel: _character_panel.character = character
+	_character_panel.character = character
 
 func _on_player_info_changed() -> void:
 	assert(player)
@@ -71,6 +70,7 @@ func _on_player_info_changed() -> void:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
+	if not _character_panel: warnings.append("Missing CharacterPanel reference.")
 	if not _player_info: warnings.append("Missing PlayerInfo reference.")
 	if not _ready_button: warnings.append("Missing ready button reference.")
 	return warnings
