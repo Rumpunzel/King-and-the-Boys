@@ -2,70 +2,92 @@
 
 [ext_resource type="Script" uid="uid://ckt2nxay1yp3e" path="res://user_interface/menus/lobby_menu/hero_stats.gd" id="1_stats"]
 
-[node name="HeroStats" type="MarginContainer" unique_id=202834146 node_paths=PackedStringArray("_strength_label", "_intelligence_label", "_agility_label", "_movement_label")]
-custom_minimum_size = Vector2(200, 0)
-offset_right = 200.0
-offset_bottom = 160.0
+[node name="HeroStats" type="VBoxContainer" unique_id=348058576 node_paths=PackedStringArray("_strength_score", "_agility_score", "_intelligence_score", "_speed_score")]
+offset_right = 268.0
+offset_bottom = 467.0
 script = ExtResource("1_stats")
-_strength_label = NodePath("Stats/Strength")
-_intelligence_label = NodePath("Stats/Intelligence")
-_agility_label = NodePath("Stats/Agility")
-_movement_label = NodePath("Stats/Movement")
+_strength_score = NodePath("Strength/Score")
+_agility_score = NodePath("Agility/Score")
+_intelligence_score = NodePath("Intelligence/Score")
+_speed_score = NodePath("Speed/Score")
 metadata/_custom_type_script = "uid://ckt2nxay1yp3e"
 
-[node name="Stats" type="GridContainer" parent="." unique_id=921950960]
+[node name="Strength" type="VBoxContainer" parent="." unique_id=2102730805]
 layout_mode = 2
-theme_override_constants/h_separation = 16
-columns = 2
+size_flags_vertical = 3
 
-[node name="StrengthTitle" type="Label" parent="Stats" unique_id=830070415]
+[node name="Title" type="Label" parent="Strength" unique_id=830070415]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Strength"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Strength" type="Label" parent="Stats" unique_id=672646274]
+[node name="Score" type="Label" parent="Strength" unique_id=672646274]
 layout_mode = 2
 theme_type_variation = &"HeaderMedium"
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "3"
-horizontal_alignment = 2
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="IntelligenceTitle" type="Label" parent="Stats" unique_id=557545706]
+[node name="Agility" type="VBoxContainer" parent="." unique_id=94802198]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Intelligence"
+size_flags_vertical = 3
 
-[node name="Intelligence" type="Label" parent="Stats" unique_id=1981863013]
-layout_mode = 2
-theme_type_variation = &"HeaderMedium"
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "3"
-horizontal_alignment = 2
-
-[node name="AgilityTitle" type="Label" parent="Stats" unique_id=1486155937]
+[node name="Title" type="Label" parent="Agility" unique_id=272465805]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Agility"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Agility" type="Label" parent="Stats" unique_id=889803439]
+[node name="Score" type="Label" parent="Agility" unique_id=1456168325]
 layout_mode = 2
 theme_type_variation = &"HeaderMedium"
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "3"
-horizontal_alignment = 2
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="MovementTitle" type="Label" parent="Stats" unique_id=1218296822]
+[node name="Intelligence" type="VBoxContainer" parent="." unique_id=614481976]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Title" type="Label" parent="Intelligence" unique_id=147548071]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Movement"
+text = "Intelligence"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Movement" type="Label" parent="Stats" unique_id=1235158722]
+[node name="Score" type="Label" parent="Intelligence" unique_id=1156822329]
 layout_mode = 2
 theme_type_variation = &"HeaderMedium"
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "3"
-horizontal_alignment = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Speed" type="VBoxContainer" parent="." unique_id=1077271888]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Title" type="Label" parent="Speed" unique_id=1051824424]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Speed"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="Label" parent="Speed" unique_id=1374273019]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -19,7 +19,7 @@ func test_the_stats_show_the_heroes_values() -> void:
 	for value: int in [hero.strength, hero.intelligence, hero.agility, hero.speed]:
 		assert_bool(texts.has(str(value))).is_true()
 	hero_stats.character = null
-	for control: Node in [hero_stats.find_child("Strength"), hero_stats.find_child("Movement")]:
+	for control: Node in [hero_stats.get_node("Strength/Score"), hero_stats.get_node("Speed/Score")]:
 		assert_str((control as Label).text).is_empty()
 	hero_stats.queue_free()
 

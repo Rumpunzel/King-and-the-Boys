@@ -1,10 +1,8 @@
 @tool
 @icon("uid://cmkguhmw7vdp1")
 class_name HeroAbilities
-extends HFlowContainer
+extends VBoxContainer
 ## Shows a hero's abilities in the lobby, one icon (or name, without one) each; hovering one shows its description
-
-@export var _ability_icon_size: Vector2 = Vector2(40.0, 40.0)
 
 ## The hero shown; none shows no abilities
 var character: CharacterProfile:
@@ -29,9 +27,9 @@ func _create_ability_control(ability: Ability) -> Control:
 	if ability.icon:
 		var icon: TextureRect = TextureRect.new()
 		icon.texture = ability.icon
-		icon.custom_minimum_size = _ability_icon_size
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		control = icon
 	else:
 		var label: Label = Label.new()

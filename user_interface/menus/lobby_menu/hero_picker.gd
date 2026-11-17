@@ -1,13 +1,10 @@
 @tool
 @icon("uid://dflrk3do2ph2u")
 class_name HeroPicker
-extends Container
+extends VBoxContainer
 ## One button per hero of the lobby's roster: pressing another hero asks the host for it, pressing the own hero rolls
 ## another look. Heroes other players hold and every hero once the player is ready are disabled; the host decides,
 ## see [method Lobby.try_pick]. R asks for a random free hero
-
-@export_group("Configuration")
-@export var _hero_button_size: Vector2 = Vector2(0.0, 112.0)
 
 ## The player who picks; the buttons only show the roster without one
 var player: Player:
@@ -62,9 +59,9 @@ func _create_buttons(heroes: Array[CharacterProfile]) -> void:
 		button.expand_icon = true
 		button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-		button.custom_minimum_size = _hero_button_size
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.focus_mode = Control.FOCUS_NONE
+		#button.custom_minimum_size = _hero_button_size
+		#button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		button.pressed.connect(_on_hero_pressed.bind(hero))
 		add_child(button)
