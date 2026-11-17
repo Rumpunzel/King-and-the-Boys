@@ -2,10 +2,9 @@
 
 [ext_resource type="Script" uid="uid://ckt2nxay1yp3e" path="res://user_interface/menus/lobby_menu/hero_stats.gd" id="1_stats"]
 
-[node name="HeroStats" type="VBoxContainer" node_paths=PackedStringArray("_name_label", "_strength_label", "_intelligence_label", "_agility_label", "_movement_label", "_abilities_container")]
+[node name="HeroStats" type="VBoxContainer" unique_id=202834146 node_paths=PackedStringArray("_name_label", "_strength_label", "_intelligence_label", "_agility_label", "_movement_label", "_abilities_container")]
 offset_right = 480.0
 offset_bottom = 160.0
-theme_override_constants/separation = 6
 script = ExtResource("1_stats")
 _name_label = NodePath("Name")
 _strength_label = NodePath("Stats/Strength")
@@ -13,8 +12,9 @@ _intelligence_label = NodePath("Stats/Intelligence")
 _agility_label = NodePath("Stats/Agility")
 _movement_label = NodePath("Stats/Movement")
 _abilities_container = NodePath("Abilities")
+metadata/_custom_type_script = "uid://ckt2nxay1yp3e"
 
-[node name="Name" type="Label" parent="."]
+[node name="Name" type="Label" parent="." unique_id=1961828279]
 layout_mode = 2
 theme_type_variation = &"HeaderLarge"
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -24,39 +24,39 @@ text = "Hero"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Stats" type="GridContainer" parent="."]
+[node name="Stats" type="GridContainer" parent="." unique_id=921950960]
 layout_mode = 2
 columns = 4
 
-[node name="StrengthTitle" type="Label" parent="Stats"]
+[node name="StrengthTitle" type="Label" parent="Stats" unique_id=830070415]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Strength"
 horizontal_alignment = 1
 
-[node name="IntelligenceTitle" type="Label" parent="Stats"]
+[node name="IntelligenceTitle" type="Label" parent="Stats" unique_id=557545706]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Intelligence"
 horizontal_alignment = 1
 
-[node name="AgilityTitle" type="Label" parent="Stats"]
+[node name="AgilityTitle" type="Label" parent="Stats" unique_id=1486155937]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Agility"
 horizontal_alignment = 1
 
-[node name="MovementTitle" type="Label" parent="Stats"]
+[node name="MovementTitle" type="Label" parent="Stats" unique_id=1218296822]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Movement"
 horizontal_alignment = 1
 
-[node name="Strength" type="Label" parent="Stats"]
+[node name="Strength" type="Label" parent="Stats" unique_id=672646274]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"HeaderMedium"
@@ -64,7 +64,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "3"
 horizontal_alignment = 1
 
-[node name="Intelligence" type="Label" parent="Stats"]
+[node name="Intelligence" type="Label" parent="Stats" unique_id=1981863013]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"HeaderMedium"
@@ -72,7 +72,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "3"
 horizontal_alignment = 1
 
-[node name="Agility" type="Label" parent="Stats"]
+[node name="Agility" type="Label" parent="Stats" unique_id=889803439]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"HeaderMedium"
@@ -80,7 +80,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "3"
 horizontal_alignment = 1
 
-[node name="Movement" type="Label" parent="Stats"]
+[node name="Movement" type="Label" parent="Stats" unique_id=1235158722]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"HeaderMedium"
@@ -88,7 +88,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "3"
 horizontal_alignment = 1
 
-[node name="Abilities" type="HFlowContainer" parent="."]
+[node name="Abilities" type="HFlowContainer" parent="." unique_id=2045106636]
 layout_mode = 2
 theme_override_constants/h_separation = 12
 alignment = 1

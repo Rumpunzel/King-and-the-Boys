@@ -1,7 +1,7 @@
 @tool
 @icon("uid://cmkguhmw7vdp1")
 class_name HeroStats
-extends Container
+extends VBoxContainer
 ## Shows a hero's name, stats and abilities in the lobby; hovering an ability shows its description
 
 @export_group("Configuration")
