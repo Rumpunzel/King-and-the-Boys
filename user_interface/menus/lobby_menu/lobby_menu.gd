@@ -11,6 +11,10 @@ extends Menu
 @export var _left_player_panels_container: Container
 @export var _local_player_panel: LobbyPlayerPanel
 @export var _right_player_panels_container: Container
+## Lets the local player pick a hero
+@export var _hero_picker: HeroPicker
+## Shows the local player's hero
+@export var _hero_stats: HeroStats
 ## Where the local player's character stands. Models are built from the chosen profiles, so dwarves show as dwarves
 @export var _character_preview: Node3D
 ## Where other players' characters stand, below their portraits: one per player panel, the left panels' first, then the right ones'
@@ -46,10 +50,17 @@ func _ready() -> void:
 		if player.is_host(): _title.text = "%s's Lobby" % player.player_name
 		if player.is_local_player():
 			_local_player_panel.player = player
+			_hero_picker.player = player
 			player.player_info_changed.connect(_update_preview.bind(player))
+			player.player_info_changed.connect(_show_local_hero.bind(player))
 			_update_preview(player)
+			_show_local_hero(player)
 		else: _add_player(player)
 	Lobby.player_created.connect(_add_player)
+
+## Other player info (name, avatar, ready) leaves the stats be
+func _show_local_hero(player: Player) -> void:
+	if _hero_stats.character != player.character: _hero_stats.character = player.character
 
 func _create_player_panel(in_container: Container) -> LobbyPlayerPanel:
 	var new_player_panel: LobbyPlayerPanel = _guest_player_panel_scene.instantiate()
@@ -141,6 +152,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not _left_player_panels_container: warnings.append("Missing left player infos container reference.")
 	if not _local_player_panel: warnings.append("Missing local PlayerPanel reference.")
 	if not _right_player_panels_container: warnings.append("Missing right player infos container reference.")
+	if not _hero_picker: warnings.append("Missing HeroPicker reference.")
+	if not _hero_stats: warnings.append("Missing HeroStats reference.")
 	if not _character_preview: warnings.append("Missing character preview reference.")
 	if _other_character_spots.size() < Multiplayer.MAX_CONNECTIONS: warnings.append("Missing a spot for each other player's character.")
 	if _game_scene_path.is_empty(): warnings.append("Missing game scene path.")

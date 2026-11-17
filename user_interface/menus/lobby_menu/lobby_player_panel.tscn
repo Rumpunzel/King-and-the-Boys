@@ -1,8 +1,6 @@
 [gd_scene format=3 uid="uid://c7kea8i8fdsvy"]
 
 [ext_resource type="Script" uid="uid://cydfmkyu11yx2" path="res://user_interface/menus/lobby_menu/lobby_player_panel.gd" id="1_u61ja"]
-[ext_resource type="PackedScene" uid="uid://bnwn6yaumyoss" path="res://user_interface/menus/lobby_menu/hero_picker.tscn" id="2_picker"]
-[ext_resource type="PackedScene" uid="uid://dp2uvtgmdbxh0" path="res://user_interface/menus/lobby_menu/hero_stats.tscn" id="2_stats"]
 [ext_resource type="PackedScene" uid="uid://75rctdin2cpp" path="res://user_interface/menus/lobby_menu/player_info.tscn" id="3_u61ja"]
 [ext_resource type="Script" uid="uid://cpyey1rgiu5s0" path="res://user_interface/toggle_button.gd" id="5_rnd7j"]
 [ext_resource type="Texture2D" uid="uid://bsjjapj01slb6" path="res://tools/icons/editor_icons/hero_icons/check.svg" id="6_lan2d"]
@@ -32,14 +30,13 @@ expand_margin_top = 4.0
 expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
-[node name="PlayerPanel" type="PanelContainer" unique_id=635160952 node_paths=PackedStringArray("_hero_picker", "_hero_stats", "_player_info", "_ready_button")]
+[node name="PlayerPanel" type="PanelContainer" unique_id=635160952 node_paths=PackedStringArray("_player_info", "_ready_button")]
+custom_minimum_size = Vector2(320, 0)
 offset_right = 486.0
 offset_bottom = 690.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_2qws8")
 script = ExtResource("1_u61ja")
-_hero_picker = NodePath("VBoxContainer/PanelContainer/VBoxContainer/HeroPicker")
-_hero_stats = NodePath("VBoxContainer/PanelContainer/VBoxContainer/HeroStats")
-_player_info = NodePath("VBoxContainer/PanelContainer/VBoxContainer/HeroStats/PlayerInfo")
+_player_info = NodePath("VBoxContainer/PanelContainer/VBoxContainer/PlayerInfo")
 _ready_button = NodePath("VBoxContainer/Ready")
 metadata/_custom_type_script = "uid://cydfmkyu11yx2"
 
@@ -55,18 +52,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_6u3sx")
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer" unique_id=1666809714]
 layout_mode = 2
 
-[node name="HeroPicker" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=1123606263 instance=ExtResource("2_picker")]
-layout_mode = 2
-
 [node name="ModelSpace" type="Control" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=196704008]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="HeroStats" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=2075846726 instance=ExtResource("2_stats")]
-layout_mode = 2
-
-[node name="PlayerInfo" parent="VBoxContainer/PanelContainer/VBoxContainer/HeroStats" unique_id=1344657733 instance=ExtResource("3_u61ja")]
+[node name="PlayerInfo" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=1344657733 instance=ExtResource("3_u61ja")]
 layout_mode = 2
 
 [node name="Ready" type="Button" parent="VBoxContainer" unique_id=1199024611]
@@ -81,5 +72,3 @@ expand_icon = true
 script = ExtResource("5_rnd7j")
 toggled_icon = ExtResource("6_lan2d")
 metadata/_custom_type_script = "uid://cpyey1rgiu5s0"
-
-[editable path="VBoxContainer/PanelContainer/VBoxContainer/HeroStats"]

@@ -8,8 +8,9 @@
 [ext_resource type="FontFile" uid="uid://b5koyewmt0kld" path="res://assets/fonts/Fondamento-Regular.ttf" id="6_3j5nk"]
 [ext_resource type="Texture2D" uid="uid://85u82srrqglx" path="res://tools/icons/editor_icons/hero_icons/x-mark.svg" id="8_6d7le"]
 [ext_resource type="Resource" uid="uid://bn7w3q5h2ycle" path="res://data/characters/heroes.tres" id="9_roster"]
+[ext_resource type="PackedScene" uid="uid://cxsieg5e3vrn2" path="res://user_interface/menus/lobby_menu/hero_selection.tscn" id="10_heroes"]
 
-[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_title", "_left_player_panels_container", "_local_player_panel", "_right_player_panels_container", "_character_preview", "_other_character_spots")]
+[node name="LobbyGuestMenu" type="PanelContainer" unique_id=1066179210 node_paths=PackedStringArray("_title", "_left_player_panels_container", "_local_player_panel", "_right_player_panels_container", "_hero_picker", "_hero_stats", "_character_preview", "_other_character_spots")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,6 +23,8 @@ _title = NodePath("MenusContainer/PlayerPanels/PanelContainer/Title")
 _left_player_panels_container = NodePath("MenusContainer/PlayerPanels/Left/LeftPlayerPanels")
 _local_player_panel = NodePath("MenusContainer/PlayerPanels/LocalPlayerPanel")
 _right_player_panels_container = NodePath("MenusContainer/PlayerPanels/Right/RightPlayerPanels")
+_hero_picker = NodePath("MenusContainer/PlayerPanels/HeroSelection/Box/HeroPicker")
+_hero_stats = NodePath("MenusContainer/PlayerPanels/HeroSelection/Box/HeroStats")
 _character_preview = NodePath("CharacterPreview")
 _other_character_spots = [NodePath("OtherCharacterSpots/LeftSpot1"), NodePath("OtherCharacterSpots/LeftSpot2"), NodePath("OtherCharacterSpots/RightSpot1"), NodePath("OtherCharacterSpots/RightSpot2")]
 _game_scene_path = "uid://ciy6s8n2reyy2"
@@ -70,7 +73,7 @@ alignment = 2
 
 [node name="LocalPlayerPanel" parent="MenusContainer/PlayerPanels" unique_id=635160952 instance=ExtResource("3_80fhf")]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 4
 size_flags_vertical = 3
 
 [node name="Right" type="MarginContainer" parent="MenusContainer/PlayerPanels" unique_id=1262921204]
@@ -81,6 +84,18 @@ theme_override_constants/margin_top = 16
 
 [node name="RightPlayerPanels" type="HBoxContainer" parent="MenusContainer/PlayerPanels/Right" unique_id=1175328803]
 layout_mode = 2
+
+[node name="HeroLeftPlaceholder" type="Control" parent="MenusContainer/PlayerPanels" unique_id=1740212581]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HeroSelection" parent="MenusContainer/PlayerPanels" unique_id=1093315877 instance=ExtResource("10_heroes")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HeroRightPlaceholder" type="Control" parent="MenusContainer/PlayerPanels" unique_id=416098812]
+layout_mode = 2
+mouse_filter = 2
 
 [node name="LeftMargin" type="MarginContainer" parent="MenusContainer/PlayerPanels" unique_id=384000010]
 layout_mode = 2

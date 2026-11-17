@@ -4,7 +4,7 @@ class_name HeroPicker
 extends Container
 ## One button per hero of the lobby's roster: pressing another hero asks the host for it, pressing the own hero rolls
 ## another look. Heroes other players hold and every hero once the player is ready are disabled; the host decides,
-## see [method Lobby.try_pick]
+## see [method Lobby.try_pick]. R asks for a random free hero
 
 @export_group("Configuration")
 @export var _hero_button_size: Vector2 = Vector2(0.0, 112.0)
@@ -30,6 +30,11 @@ func _exit_tree() -> void:
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	_update()
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not player or not event is InputEventKey: return
+	var key: InputEventKey = event
+	if key.is_pressed() and not key.is_echo() and key.as_text_key_label() == "R": player.ask_for_random_character()
 
 func _update() -> void:
 	var heroes: Array[CharacterProfile] = []
