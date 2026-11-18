@@ -38,6 +38,10 @@ func spawn_player_controller(player: Player) -> void:
 	assert(player)
 	assert(not _player_controllers.has(player.player_id))
 	assert(_level.is_built)
+	# A player joining after picks closed (as the game starts, or into a running game) has no hero yet
+	if not player.character and not Lobby.assign_free_hero(player):
+		push_error("No free hero for %s: no player controller spawned" % player)
+		return
 	var player_spawn_point: PlayerSpawnPoint = _get_player_spawn_point()
 	assert(player_spawn_point)
 	# On the start tile, whose formation makes room for it (see LevelFormations); a full start tile sends the player to the

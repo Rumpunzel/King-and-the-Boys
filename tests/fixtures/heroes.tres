@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="HeroRoster" format=3 uid="uid://ddcr4k3p6t8nw"]
+
+[ext_resource type="Script" uid="uid://cm7cg6gykhgow" path="res://engine/objects/characters/hero_roster.gd" id="1_roster"]
+[ext_resource type="Resource" uid="uid://b5brg76ytc255" path="res://tests/fixtures/hero.tres" id="2_hero"]
+[ext_resource type="Resource" uid="uid://c6k2m8x4q1vbe" path="res://tests/fixtures/second_hero.tres" id="3_second"]
+[ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="4_profile"]
+
+[resource]
+script = ExtResource("1_roster")
+heroes = Array[ExtResource("4_profile")]([ExtResource("2_hero"), ExtResource("3_second")])

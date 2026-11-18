@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://dp2uvtgmdbxh0"]
+
+[ext_resource type="Script" uid="uid://ckt2nxay1yp3e" path="res://user_interface/menus/lobby_menu/hero_stats.gd" id="1_stats"]
+
+[node name="HeroStats" type="VBoxContainer" unique_id=348058576 node_paths=PackedStringArray("_strength_score", "_agility_score", "_intelligence_score", "_speed_score")]
+offset_right = 268.0
+offset_bottom = 467.0
+script = ExtResource("1_stats")
+_strength_score = NodePath("Strength/Score")
+_agility_score = NodePath("Agility/Score")
+_intelligence_score = NodePath("Intelligence/Score")
+_speed_score = NodePath("Speed/Score")
+metadata/_custom_type_script = "uid://ckt2nxay1yp3e"
+
+[node name="Strength" type="VBoxContainer" parent="." unique_id=2102730805]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Title" type="Label" parent="Strength" unique_id=830070415]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Strength"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="Label" parent="Strength" unique_id=672646274]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Agility" type="VBoxContainer" parent="." unique_id=94802198]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Title" type="Label" parent="Agility" unique_id=272465805]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Agility"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="Label" parent="Agility" unique_id=1456168325]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Intelligence" type="VBoxContainer" parent="." unique_id=614481976]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Title" type="Label" parent="Intelligence" unique_id=147548071]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Intelligence"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="Label" parent="Intelligence" unique_id=1156822329]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Speed" type="VBoxContainer" parent="." unique_id=1077271888]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Title" type="Label" parent="Speed" unique_id=1051824424]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Speed"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="Label" parent="Speed" unique_id=1374273019]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1

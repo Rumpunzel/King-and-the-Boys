@@ -6,9 +6,17 @@ const OTHER_PLAYER_ID: int = 2
 var _turn_manager: TurnManager
 var _other_player: Player
 var _local_id: int
+## The local player this suite created, removed again in after(): a player left in the Lobby holds a hero in later suites
+var _own_local_player: Player
 
 func before() -> void:
-	if Lobby.get_connected_players().is_empty(): Lobby.call("_create_local_player")
+	if Lobby.get_connected_players().is_empty():
+		Lobby.call("_create_local_player")
+		_own_local_player = Lobby.get_player(Multiplayer.HOST_ID)
+
+func after() -> void:
+	if is_instance_valid(_own_local_player) and Lobby.get_player(Multiplayer.HOST_ID) == _own_local_player: Lobby.call("_remove_player", _own_local_player)
+	await await_idle_frame()
 
 func before_test() -> void:
 	_turn_manager = auto_free(TurnManager.new())

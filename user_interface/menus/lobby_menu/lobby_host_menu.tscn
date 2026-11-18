@@ -5,17 +5,18 @@
 [ext_resource type="PackedScene" uid="uid://bvxmx3fwfllaa" path="res://user_interface/menus/multiplayer_menu/multiplayer_host_menu.tscn" id="4_wjy6x"]
 [ext_resource type="Texture2D" uid="uid://b0vg3flbqcfqk" path="res://protoype_assets/logo/goblin_icon.png" id="4_y2tes"]
 
-[node name="LobbyHostMenu" unique_id=1066179210 instance=ExtResource("1_6ios2")]
+[node name="LobbyHostMenu" unique_id=1066179210 node_paths=PackedStringArray("_start_button") instance=ExtResource("1_6ios2")]
 script = ExtResource("2_y2tes")
+_start_button = NodePath("MenusContainer/PlayerPanels/RightMargin/Start")
 
-[node name="LeftMargin" parent="MenusContainer/PlayerPanels" parent_id_path=PackedInt32Array(546632883) index="6" unique_id=384000010]
+[node name="LeftMargin" parent="MenusContainer/PlayerPanels" parent_id_path=PackedInt32Array(546632883) index="9" unique_id=384000010]
 theme_override_constants/margin_left = 64
 theme_override_constants/margin_right = 64
 
 [node name="MultiplayerHostMenu" parent="MenusContainer/PlayerPanels/LeftMargin" index="0" unique_id=445969921 instance=ExtResource("4_wjy6x")]
 layout_mode = 2
 
-[node name="RightMargin" parent="MenusContainer/PlayerPanels" parent_id_path=PackedInt32Array(546632883) index="8" unique_id=890694212]
+[node name="RightMargin" parent="MenusContainer/PlayerPanels" parent_id_path=PackedInt32Array(546632883) index="11" unique_id=890694212]
 theme_override_constants/margin_left = 64
 theme_override_constants/margin_right = 64
 

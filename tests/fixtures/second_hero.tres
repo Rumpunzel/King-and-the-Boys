@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CharacterProfile" format=3 uid="uid://c6k2m8x4q1vbe"]
+
+[ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="5_1msby"]
+
+[resource]
+script = ExtResource("5_1msby")
+speed = 2
+dark_vision = 4.0
+name = "Second test hero"

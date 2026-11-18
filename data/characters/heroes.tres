@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="HeroRoster" format=3 uid="uid://bn7w3q5h2ycle"]
+
+[ext_resource type="Script" uid="uid://cm7cg6gykhgow" path="res://engine/objects/characters/hero_roster.gd" id="1_roster"]
+[ext_resource type="Script" uid="uid://ddefcwtx6jfym" path="res://engine/objects/characters/character_profile.gd" id="2_profile"]
+[ext_resource type="Resource" uid="uid://ro6wvnf88xbo" path="res://data/characters/people/dwarf.tres" id="3_dwarf"]
+[ext_resource type="Resource" uid="uid://4knh77xf2vfl" path="res://data/characters/people/elf.tres" id="4_elf"]
+[ext_resource type="Resource" uid="uid://cqkx0op1msr7s" path="res://data/characters/people/knight.tres" id="5_knight"]
+[ext_resource type="Resource" uid="uid://dptm3ey44x73g" path="res://data/characters/people/mystic.tres" id="6_mystic"]
+[ext_resource type="Resource" uid="uid://d18sc738vkuku" path="res://data/characters/people/rogue.tres" id="7_rogue"]
+[ext_resource type="Resource" uid="uid://bxlvdrtypiygb" path="res://data/characters/people/soldier.tres" id="8_soldier"]
+
+[resource]
+script = ExtResource("1_roster")
+heroes = Array[ExtResource("2_profile")]([ExtResource("3_dwarf"), ExtResource("4_elf"), ExtResource("5_knight"), ExtResource("6_mystic"), ExtResource("7_rogue"), ExtResource("8_soldier")])

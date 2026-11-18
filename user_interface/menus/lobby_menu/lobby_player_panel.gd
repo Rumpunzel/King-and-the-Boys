@@ -12,46 +12,61 @@ extends PanelContainer
 			_clear()
 			return
 		if Engine.is_editor_hint(): return
-		if not player.character: player.character = _character_panel.character
 		_update_player_panel()
 		player.player_info_changed.connect(_on_player_info_changed)
 
 @export_group("Configuration")
+## Shows the hero's name, and its portrait while no model stands in the panel
 @export var _character_panel: CharacterPanel
 @export var _player_info: PlayerInfo
 @export var _ready_button: ToggleButton
 
 func get_character_panel() -> CharacterPanel: return _character_panel
 
-func _unhandled_key_input(event: InputEvent) -> void:
-	if not _character_panel is CharacterSelection: return
-	if event is InputEventKey and (event as InputEventKey).as_text_key_label() == "R" and (event as InputEventKey).is_pressed():
-		(_character_panel as CharacterSelection).randomize_character()
+func _ready() -> void:
+	if Engine.is_editor_hint(): return
+	_ready_button.toggled.connect(_on_ready_toggled)
 
 func _clear() -> void:
 	modulate.a = 0.5
 	_player_info.player = null
-	_character_panel.character = null
-	_ready_button.button_pressed = false
+	_show_character(null)
+	_show_ready(false)
 	_ready_button.disabled = true
 	_ready_button.modulate.a = 0.0
 
 func _update_player_panel() -> void:
 	modulate.a = 1.0
 	_player_info.player = player
-	_character_panel.character = player.character
-	_ready_button.button_pressed = true
-	_ready_button.disabled = false
-	_ready_button.modulate.a = 1.0
+	_show_character(player.character)
+	_update_ready_button()
 
-func _on_character_selected(character: CharacterProfile) -> void:
-	if not player or player.character == character: return
-	player.character = character
+## Ready only shows online and for guests: the host starts the game instead. The local guest toggles it, the host decides
+func _update_ready_button() -> void:
+	var shown: bool = Multiplayer.is_online() and not player.is_host()
+	_ready_button.modulate.a = 1.0 if shown else 0.0
+	_ready_button.disabled = not shown or not player.is_local_player()
+	_show_ready(player.ready_to_start)
+
+## Shows the ready state the host decided, without asking for it again
+func _show_ready(ready_to_start: bool) -> void:
+	_ready_button.set_pressed_no_signal(ready_to_start)
+	# Not before the button stored its untoggled text and icon
+	if _ready_button.is_node_ready(): _ready_button.update_button()
+
+func _on_ready_toggled(toggled_on: bool) -> void:
+	if not player or not player.is_local_player(): return
+	player.ask_for_ready(toggled_on)
+	# The button follows the host's answer: it shows the new state once the host took it
+	_show_ready(player.ready_to_start)
+
+func _show_character(character: CharacterProfile) -> void:
+	_character_panel.character = character
 
 func _on_player_info_changed() -> void:
-	print(player)
 	assert(player)
-	_character_panel.character = player.character
+	_show_character(player.character)
+	_update_ready_button()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
