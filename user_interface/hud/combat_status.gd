@@ -3,7 +3,7 @@
 class_name CombatStatus
 extends VBoxContainer
 ## Shows what the monsters and blocks do: a banner while the monsters take their turn, and each block's dice with the one that
-## counts. When a block waits for the local player (see [member TurnManager.block_choice]), its dice become buttons; pressing one
+## counts. When a block waits for the local player (see [member TurnManager.block_state]), its dice become buttons; pressing one
 ## only asks the local [PlayerController], the rules live in [TurnManager].
 
 @export var _player_controller_spawner: PlayerControllerSpawner
@@ -28,14 +28,14 @@ func _ready() -> void:
 	_block_panel.hide()
 	_turn_manager.phase_changed.connect(_on_phase_changed)
 	_turn_manager.block_shown.connect(_on_block_shown)
-	_turn_manager.block_choice_changed.connect(_on_block_choice_changed)
+	_turn_manager.block_state_changed.connect(_on_block_state_changed)
 	_player_controller_spawner.player_controller_created.connect(_on_player_controller_created)
 	_on_phase_changed(_turn_manager.phase)
-	_on_block_choice_changed()
+	_on_block_state_changed()
 
 func _on_player_controller_created(player_controller: PlayerController) -> void:
 	if player_controller.player.is_local_player(): _player_controller = player_controller
-	_on_block_choice_changed()
+	_on_block_state_changed()
 
 func _on_phase_changed(phase: TurnManager.Phase) -> void:
 	_banner.visible = phase == TurnManager.Phase.MONSTERS
@@ -62,14 +62,16 @@ func _on_block_shown(attacker: Character, defender: Character, dice: Array[int],
 	_hide_tween.tween_callback(_hide_unless_choosing)
 
 ## A choice for the local player: the dice as buttons; others see whose choice it is
-func _on_block_choice_changed() -> void:
-	var choice: Dictionary = _turn_manager.block_choice
+func _on_block_state_changed() -> void:
+	var choice: Dictionary = _turn_manager.block_state
 	if choice.is_empty():
 		_hide_unless_choosing()
 		return
+	var stage: int = choice[BlockSequence.STAGE]
+	if stage != BlockSequence.Stage.CHOOSING: return
 	if _hide_tween: _hide_tween.kill()
-	var attacker_path: NodePath = choice[TurnManager.CHOICE_ATTACKER]
-	var defender_path: NodePath = choice[TurnManager.CHOICE_DEFENDER]
+	var attacker_path: NodePath = choice[BlockSequence.ATTACKER]
+	var defender_path: NodePath = choice[BlockSequence.DEFENDER]
 	var attacker: Character = get_node_or_null(attacker_path) as Character
 	var defender: Character = get_node_or_null(defender_path) as Character
 	# Figures this peer does not have (yet): nothing to show, and no dice of an earlier block left behind
@@ -78,10 +80,10 @@ func _on_block_choice_changed() -> void:
 		_block_panel.hide()
 		return
 	var choosing: bool = is_instance_valid(_player_controller) and _player_controller.is_choosing_for_block()
-	var dice: Array = choice[TurnManager.CHOICE_DICE]
+	var dice: Array = choice[BlockSequence.DICE]
 	_clear()
 	_title.text = "Pick a die: %s blocks %s" % [attacker.profile.name, defender.profile.name] if choosing else "Picking a die…"
-	var pinned: bool = choice.get(TurnManager.CHOICE_PINNED, false)
+	var pinned: bool = choice.get(BlockSequence.PINNED, false)
 	for index: int in dice.size():
 		var face: int = dice[index]
 		var die: Button = _add_die(face, attacker, defender, pinned)
@@ -93,7 +95,7 @@ func _choose(value: int) -> void:
 	if is_instance_valid(_player_controller): _player_controller.request_block_choice(value)
 
 func _hide_unless_choosing() -> void:
-	if _turn_manager.block_choice.is_empty() and not (_hide_tween and _hide_tween.is_running()): _block_panel.hide()
+	if _turn_manager.block_state.is_empty() and not (_hide_tween and _hide_tween.is_running()): _block_panel.hide()
 
 func _clear() -> void:
 	for child: Node in _dice.get_children():

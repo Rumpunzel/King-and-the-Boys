@@ -64,17 +64,18 @@ func test_a_blocks_dice_show_with_the_one_that_counts() -> void:
 
 func test_others_see_whose_choice_it_is_without_buttons_to_press() -> void:
 	var figures: Array[Character] = await _figures()
-	_turn_manager.block_choice = {
-		TurnManager.CHOICE_PICKER: 99,
-		TurnManager.CHOICE_ATTACKER: figures[0].get_path(),
-		TurnManager.CHOICE_DEFENDER: figures[1].get_path(),
-		TurnManager.CHOICE_DICE: [Block.Face.PUSH, Block.Face.ATTACKER_DOWN],
+	_turn_manager.block_state = {
+		BlockSequence.STAGE: BlockSequence.Stage.CHOOSING,
+		BlockSequence.PICKER: 99,
+		BlockSequence.ATTACKER: figures[0].get_path(),
+		BlockSequence.DEFENDER: figures[1].get_path(),
+		BlockSequence.DICE: [Block.Face.PUSH, Block.Face.ATTACKER_DOWN],
 	}
 	assert_bool(_block_panel().visible).is_true()
 	var buttons: Array[Button] = _dice()
 	assert_int(buttons.size()).is_equal(2)
 	for button: Button in buttons: assert_bool(button.disabled).is_true()
-	_turn_manager.block_choice = {}
+	_turn_manager.block_state = {}
 	assert_bool(_block_panel().visible).is_false()
 
 func test_face_names_say_who_falls() -> void:

@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 
 const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 ## Frames a monster phase may take before a test gives up on it
-const MAX_FRAMES: int = 600
+const MAX_FRAMES: int = 3000
 
 var _level: Level
 var _turn_manager: TurnManager
@@ -65,6 +65,32 @@ func _pass_turn() -> void:
 		await await_idle_frame()
 	fail("The monster phase did not end")
 
+## @returns the stage of the block under way, [code]-1[/code] for none
+func _stage() -> int:
+	var stage: int = _turn_manager.block_state.get(BlockSequence.STAGE, -1)
+	return stage
+
+## Waits until the block under way reaches [param stage]
+func _await_stage(stage: int) -> void:
+	for _frame: int in MAX_FRAMES:
+		if _stage() == stage: return
+		await await_idle_frame()
+	fail("The block did not reach stage %d" % stage)
+
+## Waits until no block is under way
+func _await_block_end() -> void:
+	await _await_stage(-1)
+
+## Records the stage of every block state as it changes, [code]-1[/code] as it clears
+func _record_stages() -> Array[int]:
+	var stages: Array[int] = []
+	_turn_manager.block_state_changed.connect(func() -> void: stages.append(_stage()))
+	return stages
+
+## Waits [param seconds] of real time
+func _wait(seconds: float) -> void:
+	await get_tree().create_timer(seconds).timeout
+
 func test_stepping_onto_a_monsters_tile_ends_the_heros_moves_for_good() -> void:
 	var start: Vector2i = _start_cell()
 	var way: Level.Direction = _way_out(start)
@@ -97,7 +123,7 @@ func test_leaving_an_enemys_tile_takes_a_block_first() -> void:
 	var hero: Character = await _spawn_hero(start)
 	var monster: Character = await _spawn_monster(start)
 	_turn_manager.request_move(hero.get_path(), _way_out(start))
-	await await_idle_frame()
+	await _await_block_end()
 	assert_int(_blocks.size()).is_equal(1)
 	var block: Block = _blocks[0]
 	assert_object(block.attacker).is_same(monster)
@@ -200,7 +226,7 @@ func test_the_attacker_turns_to_face_the_defender() -> void:
 	var hero: Character = await _spawn_hero(start)
 	var monster: Character = await _spawn_monster(start)
 	_turn_manager.request_move(hero.get_path(), _way_out(start))
-	await await_idle_frame()
+	await _await_block_end()
 	var block: Block = _blocks[0]
 	assert_object(block.attacker).is_same(monster)
 	# Where the hero stood as the monster struck
@@ -220,7 +246,7 @@ func test_the_monster_phase_lets_a_block_in_sight_play_out() -> void:
 	)
 	await _pass_turn()
 	assert_bool(times.has(&"blocked")).is_true()
-	assert_int(times[&"done"] - times[&"blocked"]).is_greater_equal(roundi(TurnManager._BLOCK_PAUSE * 1000.0) - 50)
+	assert_int(times[&"done"] - times[&"blocked"]).is_greater_equal(roundi(BlockSequence._STRIKE_PAUSE * 1000.0) - 50)
 
 ## Two heroes against one monster: the hero who stepped onto its tile blocks with an assist, rolls two dice and picks
 func _set_up_a_hero_who_picks() -> Character:
@@ -236,35 +262,35 @@ func _set_up_a_hero_who_picks() -> Character:
 
 ## Answers the open choice with [param value]
 func _answer(value: int) -> void:
-	var choice_id: int = _turn_manager.block_choice[TurnManager.CHOICE_ID]
+	var choice_id: int = _turn_manager.block_state[BlockSequence.CHOICE_ID]
 	_turn_manager.request_block_choice(choice_id, value)
 
 ## Passes and waits until a block asks the local player, or the block happened
 func _pass_until_asked() -> void:
 	_turn_manager.request_pass(true)
 	for _frame: int in MAX_FRAMES:
-		if not _turn_manager.block_choice.is_empty() or not _blocks.is_empty(): return
+		if _stage() == BlockSequence.Stage.CHOOSING or not _blocks.is_empty(): return
 		await await_idle_frame()
 
 func test_the_player_whose_side_picks_chooses_the_die() -> void:
 	_turn_manager.choice_timeout = 30.0
 	var hero: Character = await _set_up_a_hero_who_picks()
 	await _pass_until_asked()
-	var choice: Dictionary = _turn_manager.block_choice
-	assert_dict(choice).is_not_empty()
-	assert_int(choice[TurnManager.CHOICE_PICKER]).is_equal(multiplayer.get_unique_id())
-	var dice: Array = choice[TurnManager.CHOICE_DICE]
+	var choice: Dictionary = _turn_manager.block_state
+	assert_int(_stage()).is_equal(BlockSequence.Stage.CHOOSING)
+	assert_int(choice[BlockSequence.PICKER]).is_equal(multiplayer.get_unique_id())
+	var dice: Array = choice[BlockSequence.DICE]
 	assert_int(dice.size()).is_equal(2)
 	# Nothing moves while the choice is open, and no wrong answer counts
 	var cell: Vector2i = hero.grid_cell
 	_turn_manager.request_move(hero.get_path(), _way_out(cell))
 	_answer(5)
 	# An answer naming another choice counts for nothing, even a valid one
-	var choice_id: int = choice[TurnManager.CHOICE_ID]
+	var choice_id: int = choice[BlockSequence.CHOICE_ID]
 	_turn_manager.request_block_choice(choice_id + 1, 0)
 	await await_idle_frame()
 	assert_that(hero.grid_cell).is_equal(cell)
-	assert_dict(_turn_manager.block_choice).is_equal(choice)
+	assert_dict(_turn_manager.block_state).is_equal(choice)
 	_answer(1)
 	var picked: int = dice[1]
 	for _frame: int in MAX_FRAMES:
@@ -289,9 +315,9 @@ func test_loading_drops_a_choice_and_its_block() -> void:
 	_turn_manager.choice_timeout = 30.0
 	await _set_up_a_hero_who_picks()
 	await _pass_until_asked()
-	assert_dict(_turn_manager.block_choice).is_not_empty()
+	assert_int(_stage()).is_equal(BlockSequence.Stage.CHOOSING)
 	_turn_manager.stop_monster_phase()
-	assert_dict(_turn_manager.block_choice).is_empty()
+	assert_dict(_turn_manager.block_state).is_empty()
 	for _frame: int in 30: await await_idle_frame()
 	assert_array(_blocks).is_empty()
 
@@ -304,8 +330,7 @@ func test_the_turn_ends_only_once_a_choice_and_its_step_are_done() -> void:
 	await _spawn_hero(start)
 	await _spawn_monster(start)
 	_turn_manager.request_move(hero.get_path(), _way_out(start))
-	await await_idle_frame()
-	assert_dict(_turn_manager.block_choice).is_not_empty()
+	await _await_stage(BlockSequence.Stage.CHOOSING)
 	# As if the last other player left while the choice was open
 	_turn_manager.passed_player_ids = PackedInt32Array([multiplayer.get_unique_id()])
 	_turn_manager.call("_end_turn_if_everyone_passed")
@@ -314,9 +339,115 @@ func test_the_turn_ends_only_once_a_choice_and_its_step_are_done() -> void:
 	_answer(0)
 	for _frame: int in MAX_FRAMES:
 		if _turn_manager.turn_number > turn: break
-		if not _turn_manager.block_choice.is_empty(): _answer(0)
+		if _stage() == BlockSequence.Stage.CHOOSING: _answer(0)
 		await await_idle_frame()
 	# The step's block came first; the monster phase may have brought more
 	assert_int(_blocks.size()).is_greater_equal(1)
 	assert_object(_blocks[0].defender).is_same(hero)
 	assert_int(_turn_manager.turn_number).is_equal(turn + 1)
+
+func test_a_block_goes_through_its_stages() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	await _spawn_monster(start)
+	var stages: Array[int] = _record_stages()
+	_turn_manager.request_move(hero.get_path(), _way_out(start))
+	await _await_block_end()
+	assert_array(stages).is_equal([BlockSequence.Stage.ROLLED, BlockSequence.Stage.STRUCK, -1])
+
+func test_a_block_with_a_choice_goes_through_choosing() -> void:
+	_turn_manager.choice_timeout = 30.0
+	await _set_up_a_hero_who_picks()
+	var stages: Array[int] = _record_stages()
+	await _pass_until_asked()
+	_answer(0)
+	# The monsters' blocks may follow at once: wait for this one's end in the record
+	for _frame: int in MAX_FRAMES:
+		if stages.size() >= 4: break
+		await await_idle_frame()
+	assert_array(stages.slice(0, 4)).is_equal([BlockSequence.Stage.ROLLED, BlockSequence.Stage.CHOOSING, BlockSequence.Stage.STRUCK, -1])
+
+func test_a_block_in_sight_pauses_after_the_roll() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	await _spawn_monster(start)
+	var times: Dictionary[int, int] = {}
+	_turn_manager.block_state_changed.connect(func() -> void:
+		if not times.has(_stage()): times[_stage()] = Time.get_ticks_msec()
+	)
+	_turn_manager.request_move(hero.get_path(), _way_out(start))
+	await _await_block_end()
+	var rolled: int = times[BlockSequence.Stage.ROLLED]
+	var struck: int = times[BlockSequence.Stage.STRUCK]
+	assert_int(struck - rolled).is_greater_equal(roundi(BlockSequence._ROLL_PAUSE * 1000.0) - 50)
+
+func test_a_hidden_block_does_not_pause() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	var monster: Character = await _spawn_monster(start)
+	_level.get_placed_tile(start).status = Structure.Status.DISCOVERED
+	var stages: Array[int] = _record_stages()
+	_turn_manager.call("_block", monster, hero)
+	# Not awaited: with nothing to see, it is over at once
+	assert_array(stages).is_equal([BlockSequence.Stage.ROLLED, BlockSequence.Stage.STRUCK, -1])
+	assert_int(_blocks.size()).is_equal(1)
+
+func test_loading_during_the_roll_drops_the_block() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	var monster: Character = await _spawn_monster(start)
+	_turn_manager.request_move(hero.get_path(), _way_out(start))
+	assert_int(_stage()).is_equal(BlockSequence.Stage.ROLLED)
+	_turn_manager.stop_monster_phase()
+	assert_dict(_turn_manager.block_state).is_empty()
+	await _wait(BlockSequence._ROLL_PAUSE + BlockSequence._STRIKE_PAUSE)
+	assert_array(_blocks).is_empty()
+	assert_that(hero.grid_cell).is_equal(start)
+	assert_array([hero.posture, monster.posture]).is_equal([Character.Posture.STANDING, Character.Posture.STANDING])
+
+func test_a_figure_leaving_during_the_roll_drops_the_block() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	var monster: Character = await _spawn_monster(start)
+	_turn_manager.request_move(hero.get_path(), _way_out(start))
+	assert_int(_stage()).is_equal(BlockSequence.Stage.ROLLED)
+	monster.get_parent().queue_free()
+	await _wait(BlockSequence._ROLL_PAUSE + BlockSequence._STRIKE_PAUSE)
+	assert_array(_blocks).is_empty()
+	assert_dict(_turn_manager.block_state).is_empty()
+	assert_that(hero.grid_cell).is_equal(start)
+
+func test_answers_count_only_while_choosing() -> void:
+	_turn_manager.choice_timeout = 30.0
+	await _set_up_a_hero_who_picks()
+	_turn_manager.request_pass(true)
+	await _await_stage(BlockSequence.Stage.ROLLED)
+	# The id the coming choice will get, answered too early
+	var next_id: int = BlockSequence._choices_asked + 1
+	_turn_manager.request_block_choice(next_id, 0)
+	await _await_stage(BlockSequence.Stage.CHOOSING)
+	var choice_id: int = _turn_manager.block_state[BlockSequence.CHOICE_ID]
+	assert_int(choice_id).is_equal(next_id)
+	await await_idle_frame()
+	assert_int(_stage()).is_equal(BlockSequence.Stage.CHOOSING)
+	assert_array(_blocks).is_empty()
+	_answer(0)
+	for _frame: int in MAX_FRAMES:
+		if not _blocks.is_empty(): break
+		await await_idle_frame()
+	assert_int(_blocks.size()).is_equal(1)
+
+func test_requests_wait_during_any_stage() -> void:
+	var start: Vector2i = _start_cell()
+	var way: Level.Direction = _way_out(start)
+	var next_door: Vector2i = start + Level.direction_to_vector(way)
+	var hero: Character = await _spawn_hero(start)
+	var other: Character = await _spawn_hero(next_door)
+	await _spawn_monster(start)
+	_turn_manager.request_move(hero.get_path(), way)
+	assert_int(_stage()).is_equal(BlockSequence.Stage.ROLLED)
+	_turn_manager.request_move(other.get_path(), Level.get_opposite(way))
+	_turn_manager.request_pass(true)
+	assert_that(other.grid_cell).is_equal(next_door)
+	assert_bool(_turn_manager.has_passed(multiplayer.get_unique_id())).is_false()
+	await _await_block_end()

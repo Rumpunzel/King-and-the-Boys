@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 
 const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 ## Frames a monster phase may take before a test gives up on it
-const MAX_FRAMES: int = 600
+const MAX_FRAMES: int = 3000
 
 var _level: Level
 var _turn_manager: TurnManager
