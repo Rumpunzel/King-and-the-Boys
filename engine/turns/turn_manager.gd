@@ -200,7 +200,7 @@ func _stand_up(character: Character) -> void:
 	character.posture = Character.Posture.STANDING
 
 ## Host only: [param attacker] blocks [param defender], played out by a [BlockSequence] in stages every peer follows.
-## @returns the block, or [code]null[/code] if the game moved on before the strike (a save loaded, a figure gone)
+## @returns the block, or [code]null[/code] if a figure was gone before the strike or the game moved on (a save loaded)
 func _block(attacker: Character, defender: Character) -> Block:
 	var sequence: BlockSequence = BlockSequence.new(self, _level, attacker, defender)
 	_block_sequence = sequence
@@ -342,11 +342,11 @@ func request_ability_cancel(character_path: NodePath) -> void:
 	if not character: return
 	_cancel_held(character)
 
-## Passes or takes a pass back; the turn ends once every connected player has passed.
-## Passing cancels the held abilities of the sender's characters.
+## Passes or takes a pass back; the turn ends once every connected player has passed, and a block under way ended (see
+## [method request_move]). Passing cancels the held abilities of the sender's characters.
 @rpc("any_peer", "call_local", "reliable")
 func request_pass(passed: bool) -> void:
-	if not multiplayer.is_server() or not is_heroes_turn() or not block_state.is_empty(): return
+	if not multiplayer.is_server() or not is_heroes_turn(): return
 	var sender_id: int = _get_sender_id()
 	if not Lobby.get_player(sender_id): return
 	if passed: _cancel_held_of(sender_id)

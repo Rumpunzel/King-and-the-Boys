@@ -39,9 +39,6 @@ var auto_pass: bool = true:
 # The target and choice of the held ability this player armed; the host keeps its own and checks every request
 var _ability_target: Vector2i = Vector2i.ZERO
 var _ability_argument: int = 0
-# A pass (or taking one back) asked while a block holds the board, sent once it ended
-var _holds_pass: bool = false
-var _held_pass: bool = false
 
 var _controlled_character: Character:
 	set(new_controlled_character):
@@ -61,10 +58,8 @@ func _ready() -> void:
 		turn_manager.passed_players_changed.connect(_on_passed_players_changed)
 		_on_passed_players_changed()
 	if not is_multiplayer_authority(): return
-	# The host refuses passes while a block is under way: auto-pass tries again once it ended
-	if turn_manager:
-		turn_manager.block_state_changed.connect(_on_turn_state_changed.bind(0))
-		turn_manager.block_state_changed.connect(_on_block_state_changed)
+	# The host checks no moves while a block is under way: auto-pass tries again once it ended
+	if turn_manager: turn_manager.block_state_changed.connect(_on_turn_state_changed.bind(0))
 	_state_machine.controlled_character_changed.connect(_on_controlled_character_changed)
 	_state_machine.start()
 	_controlled_character = get_controlled_character()
@@ -139,12 +134,6 @@ func request_undo() -> void:
 func request_pass(passed: bool) -> void:
 	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
 	if not turn_manager: return
-	# The host holds the board while a block plays: the pass goes once it ended
-	if not turn_manager.block_state.is_empty():
-		_holds_pass = true
-		_held_pass = passed
-		return
-	_holds_pass = false
 	if passed == has_passed(): return
 	if not passed and must_pass(): return
 	turn_manager.request_pass.rpc_id(Multiplayer.HOST_ID, passed)
@@ -257,10 +246,6 @@ func _auto_pass_if_out_of_moves() -> void:
 		return
 	# The host checks the moves again: this peer may still see the last turn's moves
 	turn_manager.request_auto_pass.rpc_id(Multiplayer.HOST_ID, _controlled_character.get_path())
-
-func _on_block_state_changed() -> void:
-	var turn_manager: TurnManager = TurnManager.get_instance(get_tree())
-	if _holds_pass and turn_manager and turn_manager.block_state.is_empty(): request_pass(_held_pass)
 
 func _on_controlled_character_changed(controlled_character: Character) -> void:
 	_controlled_character = controlled_character

@@ -447,7 +447,42 @@ func test_requests_wait_during_any_stage() -> void:
 	_turn_manager.request_move(hero.get_path(), way)
 	assert_int(_stage()).is_equal(BlockSequence.Stage.ROLLED)
 	_turn_manager.request_move(other.get_path(), Level.get_opposite(way))
-	_turn_manager.request_pass(true)
 	assert_that(other.grid_cell).is_equal(next_door)
-	assert_bool(_turn_manager.has_passed(multiplayer.get_unique_id())).is_false()
 	await _await_block_end()
+
+func test_a_pass_during_a_block_counts_but_the_turn_waits_for_it() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	await _spawn_monster(start)
+	var turn: int = _turn_manager.turn_number
+	_turn_manager.request_move(hero.get_path(), _way_out(start))
+	assert_int(_stage()).is_equal(BlockSequence.Stage.ROLLED)
+	_turn_manager.request_pass(true)
+	assert_bool(_turn_manager.has_passed(multiplayer.get_unique_id())).is_true()
+	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.HEROES)
+	for _frame: int in MAX_FRAMES:
+		if _turn_manager.turn_number > turn: break
+		await await_idle_frame()
+	# The step's block was struck before the turn ended
+	assert_int(_blocks.size()).is_greater_equal(1)
+	assert_object(_blocks[0].defender).is_same(hero)
+	assert_int(_turn_manager.turn_number).is_equal(turn + 1)
+
+func test_loading_during_the_strike_drops_the_block() -> void:
+	var start: Vector2i = _start_cell()
+	var hero: Character = await _spawn_hero(start)
+	var monster: Character = await _spawn_monster(start)
+	var results: Array[Block] = []
+	var run_block: Callable = func() -> void:
+		var block: Block = await _turn_manager._block(monster, hero)
+		results.append(block)
+	run_block.call()
+	await _await_stage(BlockSequence.Stage.STRUCK)
+	_turn_manager.stop_monster_phase()
+	for _frame: int in MAX_FRAMES:
+		if not results.is_empty(): break
+		await await_idle_frame()
+	assert_int(results.size()).is_equal(1)
+	# The game moved on: the step it belonged to does not go on
+	assert_object(results[0]).is_null()
+	assert_dict(_turn_manager.block_state).is_empty()

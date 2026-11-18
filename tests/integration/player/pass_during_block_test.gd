@@ -1,5 +1,5 @@
 extends GdUnitTestSuite
-## The local player's pass during a block: the host holds the board while a block plays, so the pass is sent once it ended
+## The local player's pass during a block: it counts at once, and the turn ends once the block ended
 
 const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 const SPAWNER_SCENE: String = "uid://bvj0ntif5bqqq"  # engine/player/player_controller_spawner.tscn
@@ -45,7 +45,7 @@ func _controller() -> PlayerController:
 		if child is PlayerController and not child.is_queued_for_deletion(): return child as PlayerController
 	return null
 
-func test_a_pass_during_a_block_counts_once_it_ended() -> void:
+func test_a_pass_during_a_block_counts_at_once() -> void:
 	var controller: PlayerController = _controller()
 	var hero: Character = controller.get_controlled_character()
 	var cell: Vector2i = hero.grid_cell
@@ -58,11 +58,11 @@ func test_a_pass_during_a_block_counts_once_it_ended() -> void:
 	_turn_manager.request_move(hero.get_path(), way as Level.Direction)
 	assert_dict(_turn_manager.block_state).is_not_empty()
 	controller.request_pass(true)
-	await await_idle_frame()
-	# Held by the block, not lost
-	assert_bool(controller.has_passed()).is_false()
+	# Counted at once, so the button shows it; the turn waits for the block
+	assert_bool(controller.has_passed()).is_true()
+	assert_int(_turn_manager.turn_number).is_equal(1)
 	for _frame: int in MAX_FRAMES:
-		if controller.has_passed() or _turn_manager.turn_number > 1: break
+		if _turn_manager.turn_number > 1: break
 		await await_idle_frame()
-	# Passed once the block ended: the only player, so the turn went on
-	assert_bool(controller.has_passed() or _turn_manager.turn_number > 1).is_true()
+	# The only player passed: the turn went on once the block ended
+	assert_int(_turn_manager.turn_number).is_greater(1)

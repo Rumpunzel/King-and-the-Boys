@@ -51,7 +51,8 @@ func _init(turn_manager: TurnManager, level: Level, attacker: Character, defende
 
 ## Rolls, asks for a choice if a player picks among more than one die, strikes and plays the outcome out, pausing where the
 ## heroes see it. Nothing either figure did before can be undone any more.
-## @returns the block, or [code]null[/code] if the game moved on before the strike (see [method cancel], a figure gone)
+## @returns the block, or [code]null[/code] if a figure was gone before the strike or the game moved on (see [method cancel]):
+## then the step it belongs to does not go on
 func run() -> Block:
 	var attacker: Character = block.attacker
 	var defender: Character = block.defender
@@ -81,7 +82,9 @@ func run() -> Block:
 	if in_sight:
 		await _pause(_STRIKE_PAUSE)
 		if block.was_pushed() and is_instance_valid(block.defender) and not _cancelled: await _turn_manager.wait_for_figure(block.defender)
-	if not _cancelled: _turn_manager.block_state = {}
+	# A save loaded meanwhile: struck in the game left behind
+	if _cancelled: return null
+	_turn_manager.block_state = {}
 	return block
 
 ## The player asked counts [param value], a die's index, if [param sender_id] is that player and [param choice_id] names the
@@ -105,10 +108,10 @@ func _ask() -> int:
 	_choices_asked += 1
 	_choice_id = _choices_asked
 	_publish(Stage.CHOOSING)
-	var waited: float = 0.0
-	while _chosen < 0 and not _cancelled and waited < _turn_manager.choice_timeout and Lobby.get_player(_picker_id):
+	# By the clock: each poll lasts a frame or more beyond its length
+	var deadline: int = Time.get_ticks_msec() + roundi(_turn_manager.choice_timeout * 1000.0)
+	while _chosen < 0 and not _cancelled and Time.get_ticks_msec() < deadline and Lobby.get_player(_picker_id):
 		await _pause(_POLL)
-		waited += _POLL
 	return _chosen
 
 ## @returns the id of the connected player who chooses for [param chooser], [code]0[/code] if the host chooses (a monster, or
