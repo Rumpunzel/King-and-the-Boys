@@ -433,10 +433,12 @@ func _move_monsters() -> void:
 			# Once it hopped in: the heroes react to what they see
 			if is_instance_valid(monster): _alert_heroes_seen_by(monster)
 
-## @returns whether a monster that may still move stands where the heroes see it
+## @returns whether a monster that may still move stands where the heroes see it; one standing on a tile with a standing enemy
+## stays to fight
 func _has_monster_in_sight() -> bool:
 	for monster: Character in _get_monsters():
-		if monster.movement_points > 0 and is_in_sight(monster.grid_cell): return true
+		if monster.movement_points <= 0 or not is_in_sight(monster.grid_cell): continue
+		if monster.posture != Character.Posture.STANDING or not _get_enemy_on(monster.grid_cell, monster): return true
 	return false
 
 ## @returns whether standing heroes and monsters meet on a tile the heroes see

@@ -302,3 +302,18 @@ func test_a_phase_with_nothing_in_sight_does_not_pause() -> void:
 	# Every phase is set, but nothing waits
 	assert_int(_turn_manager.turn_number).is_equal(turn + 1)
 	assert_bool(_turn_manager.is_heroes_turn()).is_true()
+
+func test_monsters_that_will_not_move_do_not_pause_their_phase() -> void:
+	var start: Vector2i = _start_cell()
+	var monster: Character = await _spawn_monster(start)
+	# In sight, free to move: its phase pauses for it
+	assert_bool(_turn_manager.call("_has_monster_in_sight")).is_true()
+	# On a hero's tile it stays to fight: nothing to show
+	var hero: Character = await _spawn_hero(start)
+	assert_bool(_turn_manager.call("_has_monster_in_sight")).is_false()
+	# Fallen, it gets up, which shows
+	monster.posture = Character.Posture.DOWN
+	assert_bool(_turn_manager.call("_has_monster_in_sight")).is_true()
+	monster.posture = Character.Posture.STANDING
+	hero.posture = Character.Posture.DOWN
+	assert_bool(_turn_manager.call("_has_monster_in_sight")).is_true()
