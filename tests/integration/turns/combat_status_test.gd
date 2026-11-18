@@ -47,7 +47,7 @@ func _dice() -> Array[Button]:
 func test_the_banner_shows_while_the_monsters_act() -> void:
 	var banner: Control = _status.get("_banner")
 	assert_bool(banner.visible).is_false()
-	_turn_manager.phase = TurnManager.Phase.MONSTERS
+	_turn_manager.phase = TurnManager.Phase.MONSTER_MOVES
 	assert_bool(banner.visible).is_true()
 	_turn_manager.phase = TurnManager.Phase.HEROES
 	assert_bool(banner.visible).is_false()
@@ -64,17 +64,18 @@ func test_a_blocks_dice_show_with_the_one_that_counts() -> void:
 
 func test_others_see_whose_choice_it_is_without_buttons_to_press() -> void:
 	var figures: Array[Character] = await _figures()
-	_turn_manager.block_choice = {
-		TurnManager.CHOICE_PICKER: 99,
-		TurnManager.CHOICE_ATTACKER: figures[0].get_path(),
-		TurnManager.CHOICE_DEFENDER: figures[1].get_path(),
-		TurnManager.CHOICE_DICE: [Block.Face.PUSH, Block.Face.ATTACKER_DOWN],
+	_turn_manager.block_state = {
+		BlockSequence.STAGE: BlockSequence.Stage.CHOOSING,
+		BlockSequence.PICKER: 99,
+		BlockSequence.ATTACKER: figures[0].get_path(),
+		BlockSequence.DEFENDER: figures[1].get_path(),
+		BlockSequence.DICE: [Block.Face.PUSH, Block.Face.ATTACKER_DOWN],
 	}
 	assert_bool(_block_panel().visible).is_true()
 	var buttons: Array[Button] = _dice()
 	assert_int(buttons.size()).is_equal(2)
 	for button: Button in buttons: assert_bool(button.disabled).is_true()
-	_turn_manager.block_choice = {}
+	_turn_manager.block_state = {}
 	assert_bool(_block_panel().visible).is_false()
 
 func test_face_names_say_who_falls() -> void:
@@ -87,3 +88,28 @@ func test_face_names_say_who_falls() -> void:
 
 func _block_panel() -> Control:
 	return _status.get("_block_panel")
+
+func test_each_phase_after_the_heroes_turn_has_its_banner() -> void:
+	assert_str(CombatStatus.banner_text(TurnManager.Phase.HEROES)).is_empty()
+	assert_str(CombatStatus.banner_text(TurnManager.Phase.HERO_BLOCKS)).is_equal("Heroes strike")
+	assert_str(CombatStatus.banner_text(TurnManager.Phase.MONSTER_MOVES)).is_equal("Monsters move")
+	assert_str(CombatStatus.banner_text(TurnManager.Phase.MONSTER_BLOCKS)).is_equal("Monsters strike")
+	var banner: Label = _status.get("_banner")
+	_turn_manager.phase = TurnManager.Phase.MONSTER_BLOCKS
+	assert_str(banner.text).is_equal("Monsters strike")
+
+func test_rolled_dice_show_before_the_strike() -> void:
+	var figures: Array[Character] = await _figures()
+	_turn_manager.block_state = {
+		BlockSequence.STAGE: BlockSequence.Stage.ROLLED,
+		BlockSequence.ATTACKER: figures[0].get_path(),
+		BlockSequence.DEFENDER: figures[1].get_path(),
+		BlockSequence.DICE: [Block.Face.PUSH, Block.Face.ATTACKER_DOWN],
+		BlockSequence.PINNED: false,
+	}
+	assert_bool(_block_panel().visible).is_true()
+	var title: Label = _status.get("_title")
+	assert_str(title.text).is_equal("Test hero blocks Test monster")
+	var buttons: Array[Button] = _dice()
+	assert_int(buttons.size()).is_equal(2)
+	for button: Button in buttons: assert_bool(button.disabled).is_true()

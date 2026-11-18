@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 
 const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
 ## Frames a monster phase may take before a test gives up on it
-const MAX_FRAMES: int = 600
+const MAX_FRAMES: int = 3000
 
 var _level: Level
 var _turn_manager: TurnManager
@@ -129,7 +129,7 @@ func test_players_wait_while_monsters_act() -> void:
 	await _spawn_monster(_cell_in_sight(2))
 	_turn_manager.request_pass(true)
 	# The hunt's first hop is in sight, so the host waits for it
-	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
+	assert_bool(_turn_manager.is_heroes_turn()).is_false()
 	var cell: Vector2i = hero.grid_cell
 	for direction: Level.Direction in Level.Direction.values(): _turn_manager.request_move(hero.get_path(), direction)
 	_turn_manager.request_pass(false)
@@ -157,7 +157,7 @@ func test_a_piece_leaving_during_the_monster_phase_stalls_nothing() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
 	var turn: int = _turn_manager.turn_number
 	_turn_manager.request_pass(true)
-	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
+	assert_bool(_turn_manager.is_heroes_turn()).is_false()
 	# As a player leaving takes their hero along
 	remove_child(hero)
 	hero.free()
@@ -173,7 +173,7 @@ func test_loading_stops_the_monster_phase() -> void:
 	await _spawn_monster(_cell_in_sight(2))
 	var turn: int = _turn_manager.turn_number
 	_turn_manager.request_pass(true)
-	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
+	assert_bool(_turn_manager.is_heroes_turn()).is_false()
 	# As Game.load_game does
 	_turn_manager.stop_monster_phase()
 	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.HEROES)
@@ -192,15 +192,19 @@ func test_the_heroes_turn_ends_before_the_monsters_act() -> void:
 	await await_idle_frame()
 	assert_int(hero.undo_steps).is_equal(1)
 	_turn_manager.request_pass(true)
-	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
+	assert_bool(_turn_manager.is_heroes_turn()).is_false()
 	assert_int(hero.undo_steps).is_zero()
 
 func test_the_host_waits_for_a_monster_stepping_out_of_sight() -> void:
 	# Only the start tile is revealed: wherever the monster goes, it leaves the heroes' sight
 	var monster: Character = await _spawn_monster(_start_cell())
 	_turn_manager.request_pass(true)
+	# Its phase, in sight, pauses first
+	for _frame: int in MAX_FRAMES:
+		if monster.grid_cell != _start_cell(): break
+		await await_idle_frame()
 	assert_that(monster.grid_cell).is_not_equal(_start_cell())
-	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.MONSTERS)
+	assert_bool(_turn_manager.is_heroes_turn()).is_false()
 	for _frame: int in MAX_FRAMES:
 		if _turn_manager.phase == TurnManager.Phase.HEROES: break
 		await await_idle_frame()
@@ -217,7 +221,7 @@ func test_a_hero_a_monster_comes_for_is_on_alert_until_the_next_turn() -> void:
 	var alerted_in_phase: Array[bool] = [false]
 	for _frame: int in MAX_FRAMES:
 		if _turn_manager.turn_number > turn: break
-		alerted_in_phase[0] = alerted_in_phase[0] or (hero.alerted and _turn_manager.phase == TurnManager.Phase.MONSTERS)
+		alerted_in_phase[0] = alerted_in_phase[0] or (hero.alerted and not _turn_manager.is_heroes_turn())
 		await await_idle_frame()
 	assert_bool(alerted_in_phase[0]).is_true()
 	assert_bool(hero.alerted).is_false()
@@ -262,3 +266,54 @@ func test_a_monster_notices_heroes_by_perception_and_not_by_light() -> void:
 	_level.get_placed_tile(monster.grid_cell).light = load("uid://cvimunviu8yb1")  # tests/fixtures/torch_tile_light.tres
 	assert_float(monster.get_vision()).is_greater(monster.profile.vision)
 	assert_float(monster.get_perception()).is_equal(monster.profile.perception)
+
+func test_the_phases_run_in_order() -> void:
+	var start: Vector2i = _start_cell()
+	await _spawn_hero(start)
+	await _spawn_monster(start)
+	var phases: Array[int] = []
+	_turn_manager.phase_changed.connect(func(phase: TurnManager.Phase) -> void: phases.append(phase))
+	await _pass_turn()
+	assert_array(phases).is_equal([TurnManager.Phase.HERO_BLOCKS, TurnManager.Phase.MONSTER_MOVES, TurnManager.Phase.MONSTER_BLOCKS, TurnManager.Phase.HEROES])
+
+func test_a_phase_in_sight_pauses_before_it_acts() -> void:
+	var start: Vector2i = _start_cell()
+	await _spawn_hero(start)
+	await _spawn_monster(start)
+	var times: Dictionary[StringName, int] = {}
+	_turn_manager.phase_changed.connect(func(phase: TurnManager.Phase) -> void:
+		if phase == TurnManager.Phase.HERO_BLOCKS: times[&"phase"] = Time.get_ticks_msec()
+	)
+	_turn_manager.blocked.connect(func(_block: Block) -> void:
+		if not times.has(&"blocked"): times[&"blocked"] = Time.get_ticks_msec()
+	)
+	await _pass_turn()
+	# The banner reads, then the dice lie a while before the strike
+	var paused: int = times[&"blocked"] - times[&"phase"]
+	assert_int(paused).is_greater_equal(roundi((TurnManager._PHASE_PAUSE + BlockSequence._ROLL_PAUSE) * 1000.0) - 50)
+
+func test_a_phase_with_nothing_in_sight_does_not_pause() -> void:
+	var start: Vector2i = _start_cell()
+	var monster: Character = await _spawn_monster(start)
+	_level.get_placed_tile(start).status = Structure.Status.DISCOVERED
+	monster.movement_points = 0
+	var turn: int = _turn_manager.turn_number
+	_turn_manager.request_pass(true)
+	# Every phase is set, but nothing waits
+	assert_int(_turn_manager.turn_number).is_equal(turn + 1)
+	assert_bool(_turn_manager.is_heroes_turn()).is_true()
+
+func test_monsters_that_will_not_move_do_not_pause_their_phase() -> void:
+	var start: Vector2i = _start_cell()
+	var monster: Character = await _spawn_monster(start)
+	# In sight, free to move: its phase pauses for it
+	assert_bool(_turn_manager.call("_has_monster_in_sight")).is_true()
+	# On a hero's tile it stays to fight: nothing to show
+	var hero: Character = await _spawn_hero(start)
+	assert_bool(_turn_manager.call("_has_monster_in_sight")).is_false()
+	# Fallen, it gets up, which shows
+	monster.posture = Character.Posture.DOWN
+	assert_bool(_turn_manager.call("_has_monster_in_sight")).is_true()
+	monster.posture = Character.Posture.STANDING
+	hero.posture = Character.Posture.DOWN
+	assert_bool(_turn_manager.call("_has_monster_in_sight")).is_true()

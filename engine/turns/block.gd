@@ -41,7 +41,7 @@ func _init(blocking: Character, blocked: Character) -> void:
 	pushed_to = blocked.grid_cell
 
 ## Host only: rolls the dice with [param random] and decides who picks; [member chosen] starts as the face best for the picker
-## (what a monster or an absent player takes, see [method TurnManager._ask])
+## (what a monster or an absent player takes, see [BlockSequence])
 func roll(level: Level, random: RandomNumberGenerator) -> void:
 	var attack: int = get_strength(attacker, level)
 	var defence: int = get_strength(defender, level)
