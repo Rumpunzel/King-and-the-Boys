@@ -18,24 +18,26 @@ var _buttons: Array[Button] = []
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint(): return
-	Lobby.readiness_changed.connect(_update)
+	Lobby.players_changed.connect(_update)
 
 func _exit_tree() -> void:
 	if Engine.is_editor_hint(): return
-	Lobby.readiness_changed.disconnect(_update)
+	Lobby.players_changed.disconnect(_update)
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	_update()
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if not player or not event is InputEventKey: return
+	# As the buttons: nothing to ask for once ready
+	if not player or player.ready_to_start or not event is InputEventKey: return
 	var key: InputEventKey = event
 	if key.is_pressed() and not key.is_echo() and key.as_text_key_label() == "R": player.ask_for_random_character()
 
 func _update() -> void:
 	var heroes: Array[CharacterProfile] = []
-	if Lobby.hero_roster: heroes = Lobby.hero_roster.heroes
+	# An empty slot in the roster gets no button
+	if Lobby.hero_roster: heroes = Lobby.hero_roster.heroes.filter(func(hero: CharacterProfile) -> bool: return hero != null)
 	if heroes != _heroes: _create_buttons(heroes)
 	for index: int in range(_heroes.size()):
 		var hero: CharacterProfile = _heroes[index]

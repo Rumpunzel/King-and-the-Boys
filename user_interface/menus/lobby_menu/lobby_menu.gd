@@ -49,15 +49,18 @@ func _ready() -> void:
 	if multiplayer.is_server(): Client.start_game()
 	for player: Player in Lobby.get_connected_players():
 		if player.is_host(): _title.text = "%s's Lobby" % player.player_name
-		if player.is_local_player():
-			_local_player_panel.player = player
-			_hero_picker.player = player
-			player.player_info_changed.connect(_update_preview.bind(player))
-			player.player_info_changed.connect(_show_local_hero.bind(player))
-			_update_preview(player)
-			_show_local_hero(player)
-		else: _add_player(player)
+		_add_player(player)
 	Lobby.player_created.connect(_add_player)
+
+## The local player's panel, picker, stats and abilities show them, wherever they come from: a guest's own player may
+## arrive after the menu is ready, as the host sends the guest here while their player is still being registered
+func _set_local_player(player: Player) -> void:
+	_local_player_panel.player = player
+	_hero_picker.player = player
+	player.player_info_changed.connect(_update_preview.bind(player))
+	player.player_info_changed.connect(_show_local_hero.bind(player))
+	_update_preview(player)
+	_show_local_hero(player)
 
 ## Other player info (name, avatar, ready) leaves the stats be
 func _show_local_hero(player: Player) -> void:
@@ -74,6 +77,9 @@ func _create_player_panel(in_container: Container) -> LobbyPlayerPanel:
 
 func _add_player(player: Player) -> void:
 	assert(player)
+	if player.is_local_player() and not _local_player_panel.player:
+		_set_local_player(player)
+		return
 	var empty_player_info: LobbyPlayerPanel = null
 	var left_player_panels: Array[LobbyPlayerPanel] = _get_player_panels(_left_player_panels_container)
 	left_player_panels.reverse()
@@ -100,6 +106,9 @@ func _remove_player(player: Player) -> void:
 	player_panel_to_clear.player = null
 	player_panel_to_clear.get_character_panel().set_portrait_shown(true)
 	_player_panels.erase(player)
+	# A late change (e.g. the avatar) of a player who left builds no model
+	var update_preview: Callable = _update_preview.bind(player)
+	if player.player_info_changed.is_connected(update_preview): player.player_info_changed.disconnect(update_preview)
 	var model: Model = _preview_models.get(player)
 	if model: model.queue_free()
 	_preview_models.erase(player)
@@ -138,8 +147,8 @@ func _update_preview(player: Player) -> void:
 			# Shows off as it is picked, on every peer
 			if profile.selected_animation: model.play_body_animation(profile.selected_animation)
 		# The model stands where the portrait was
-		var panel: LobbyPlayerPanel = _player_panels.get(player, _local_player_panel)
-		panel.get_character_panel().set_portrait_shown(model == null)
+		var panel: LobbyPlayerPanel = _local_player_panel if player == _local_player_panel.player else _player_panels.get(player)
+		if panel: panel.get_character_panel().set_portrait_shown(model == null)
 	if not model is ModularModel: return
 	# Each player's own look, as they rolled it; it is used in game as well. Character and body reach peers one after the other,
 	# so a body of the previous character waits until the new one arrives

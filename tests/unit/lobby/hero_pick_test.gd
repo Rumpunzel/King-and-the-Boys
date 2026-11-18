@@ -231,12 +231,12 @@ func test_readiness_changes_as_players_join_and_leave() -> void:
 	# Shared through an array, as lambdas copy local variables
 	var changes: Array[bool] = []
 	var count_change: Callable = func() -> void: changes.append(true)
-	Lobby.readiness_changed.connect(count_change)
+	Lobby.players_changed.connect(count_change)
 	await _join(JOINING_ID)
 	var on_join: int = changes.size()
 	changes.clear()
 	Lobby.call("_on_peer_disconnected", JOINING_ID)
 	var on_leave: int = changes.size()
-	Lobby.readiness_changed.disconnect(count_change)
+	Lobby.players_changed.disconnect(count_change)
 	assert_int(on_join).is_greater_equal(1)
 	assert_int(on_leave).is_equal(1)

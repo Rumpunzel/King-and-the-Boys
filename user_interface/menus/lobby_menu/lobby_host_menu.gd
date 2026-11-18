@@ -11,14 +11,14 @@ func _enter_tree() -> void:
 	super._enter_tree()
 	if Engine.is_editor_hint(): return
 	Multiplayer.connected_to_multiplayer.connect(_on_connected_to_multiplayer)
-	Lobby.readiness_changed.connect(_update_start_button)
+	Lobby.players_changed.connect(_update_start_button)
 	multiplayer.peer_connected.connect(_on_peers_changed)
 	multiplayer.peer_disconnected.connect(_on_peers_changed)
 
 func _exit_tree() -> void:
 	if Engine.is_editor_hint(): return
 	Multiplayer.connected_to_multiplayer.disconnect(_on_connected_to_multiplayer)
-	Lobby.readiness_changed.disconnect(_update_start_button)
+	Lobby.players_changed.disconnect(_update_start_button)
 	multiplayer.peer_connected.disconnect(_on_peers_changed)
 	multiplayer.peer_disconnected.disconnect(_on_peers_changed)
 

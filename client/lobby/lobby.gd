@@ -6,8 +6,9 @@ signal player_connected(player: Player)
 signal player_disconnected(player: Player)
 
 signal player_created(player: Player)
-## A player's hero or [member Player.ready_to_start] changed, or a player joined or left
-signal readiness_changed
+## A player joined or left, or something about one changed (hero, ready, name, avatar, body): hero picks and ready
+## follow it
+signal players_changed
 
 ## The heroes players pick from; without one, no heroes are assigned or checked. Set on the host, it gives every
 ## player still without a hero a free one, e.g. those who joined before the lobby menu set it
@@ -148,8 +149,8 @@ func _spawn_player(player_info: Dictionary[StringName, Variant]) -> Player:
 	player.tree_exited.connect(_on_player_exited.bind(player))
 	if is_multiplayer_authority() and hero_roster and picks_open: pick_random(player)
 	# Runs on every peer (the spawner's spawn function), so each one hears of the new player and its changes
-	player.player_info_changed.connect(readiness_changed.emit)
-	readiness_changed.emit()
+	player.player_info_changed.connect(players_changed.emit)
+	players_changed.emit()
 	print_debug("Spawned player: %s" % player.get_player_info())
 	return player
 
@@ -217,7 +218,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 ## On every peer, whoever removed the player (the host, or the spawner despawning it on a client)
 func _on_player_exited(player: Player) -> void:
 	if _players.get(player.player_id) == player: _players.erase(player.player_id)
-	readiness_changed.emit()
+	players_changed.emit()
 
 func _on_server_disconnected() -> void:
 	_remove_all_players()
