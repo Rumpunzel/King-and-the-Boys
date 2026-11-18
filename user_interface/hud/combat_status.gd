@@ -38,7 +38,7 @@ func _on_player_controller_created(player_controller: PlayerController) -> void:
 	_on_block_state_changed()
 
 func _on_phase_changed(phase: TurnManager.Phase) -> void:
-	_banner.visible = phase == TurnManager.Phase.MONSTERS
+	_banner.visible = phase != TurnManager.Phase.HEROES
 
 ## The dice as they fell, the one that counts highlighted; they stay a while, then go
 func _on_block_shown(attacker: Character, defender: Character, dice: Array[int], chosen: int, pinned: bool) -> void:

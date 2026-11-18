@@ -17,9 +17,13 @@ signal block_shown(attacker: Character, defender: Character, dice: Array[int], c
 ## Every peer: a block started, went on to its next stage or ended, see [member block_state]
 signal block_state_changed
 
+## The parts of a turn, in order: the players move and act; the heroes block the monsters on the tiles they share; the monsters
+## move one after another; the monsters block the heroes on the tiles they share (see [method _run_monster_phase])
 enum Phase {
 	HEROES,
-	MONSTERS,
+	HERO_BLOCKS,
+	MONSTER_MOVES,
+	MONSTER_BLOCKS,
 }
 
 const GROUP: StringName = "TurnManager"
@@ -27,6 +31,8 @@ const GROUP: StringName = "TurnManager"
 ## arrives must not hold the game)
 const _HOP_POLL: float = 0.05
 const _MAX_HOP_WAIT: float = 3.0
+## How long a phase the heroes see waits before it acts, so its banner reads first
+const _PHASE_PAUSE: float = 0.6
 
 ## Host only: how long a player has to choose for a block (see [member block_state]) before the host chooses for them; at
 ## [code]0[/code] the host always chooses (e.g. in tests)
@@ -48,7 +54,7 @@ var passed_player_ids: PackedInt32Array = PackedInt32Array():
 		if new_passed_player_ids == passed_player_ids: return
 		passed_player_ids = new_passed_player_ids
 		passed_players_changed.emit()
-## Who acts: the players, or the monsters while the heroes wait; a loaded game starts with the heroes (see
+## The part of the turn under way: the players act only in [constant Phase.HEROES]; a loaded game starts with the heroes (see
 ## [method stop_monster_phase])
 var phase: Phase = Phase.HEROES:
 	set(new_phase):
@@ -340,7 +346,7 @@ func request_ability_cancel(character_path: NodePath) -> void:
 ## Passing cancels the held abilities of the sender's characters.
 @rpc("any_peer", "call_local", "reliable")
 func request_pass(passed: bool) -> void:
-	if not multiplayer.is_server() or phase != Phase.HEROES or not block_state.is_empty(): return
+	if not multiplayer.is_server() or not is_heroes_turn() or not block_state.is_empty(): return
 	var sender_id: int = _get_sender_id()
 	if not Lobby.get_player(sender_id): return
 	if passed: _cancel_held_of(sender_id)
@@ -359,24 +365,48 @@ func request_auto_pass(character_path: NodePath) -> void:
 
 func _end_turn_if_everyone_passed() -> void:
 	# Not while a block is under way: the step it belongs to ends first, then checks again (see request_move)
-	if phase != Phase.HEROES or not block_state.is_empty(): return
+	if not is_heroes_turn() or not block_state.is_empty(): return
 	for player: Player in Lobby.get_connected_players():
 		if not has_passed(player.player_id): return
 	_run_monster_phase()
 
-## Host only: the heroes' turn ends, then the monster phase runs in three parts: the heroes' blocks on every tile they share with
-## monsters, every monster's moves, then the monsters' blocks (see [method _block_on_shared_tiles]). Each monster in turn steps
-## as its [Agent] chooses (see [method Agent.choose_step]) until it is out of movement points or stops (on a hero's tile, its
-## moves end); the next turn starts once all is done. Players' requests wait meanwhile. The host waits for each hop and block
-## the heroes can see (from or onto a revealed tile); hidden monsters move at once.
+## Host only: the heroes' turn ends, then the phases after it run in order (see [enum Phase]): the heroes' blocks on every tile
+## they share with monsters, every monster's moves, then the monsters' blocks (see [method _block_on_shared_tiles]); a phase the
+## heroes see something of pauses first. The next turn starts once all is done. Players' requests wait meanwhile.
 func _run_monster_phase() -> void:
 	assert(multiplayer.is_server())
 	_end_heroes_turn()
-	phase = Phase.MONSTERS
 	_monster_phase_run += 1
 	var run: int = _monster_phase_run
+	await _enter_phase(Phase.HERO_BLOCKS, _has_shared_tile_in_sight())
+	if run != _monster_phase_run: return
 	await _block_on_shared_tiles(CharacterProfile.Groups.HEROES)
 	if run != _monster_phase_run: return
+	await _enter_phase(Phase.MONSTER_MOVES, _has_monster_in_sight())
+	if run != _monster_phase_run: return
+	await _move_monsters()
+	if run != _monster_phase_run: return
+	await _enter_phase(Phase.MONSTER_BLOCKS, _has_shared_tile_in_sight())
+	if run != _monster_phase_run: return
+	await _block_on_shared_tiles(CharacterProfile.Groups.MONSTERS)
+	if run != _monster_phase_run: return
+	phase = Phase.HEROES
+	_start_next_turn()
+
+## @returns whether the players act now (see [enum Phase])
+func is_heroes_turn() -> bool:
+	return phase == Phase.HEROES
+
+## Host only: sets [param next_phase]; one [param in_sight] of the heroes pauses a moment before it acts
+func _enter_phase(next_phase: Phase, in_sight: bool) -> void:
+	phase = next_phase
+	if in_sight: await create_tween().tween_interval(_PHASE_PAUSE).finished
+
+## Host only: each monster in turn steps as its [Agent] chooses (see [method Agent.choose_step]) until it is out of movement
+## points or stops (on a hero's tile, its moves end). The host waits for each hop the heroes can see (from or onto a revealed
+## tile); hidden monsters move at once.
+func _move_monsters() -> void:
+	var run: int = _monster_phase_run
 	# Pieces may leave while the host waits (a player leaving takes their hero along): each is checked before it is used
 	# By index: a figure freed meanwhile may not go into a typed variable
 	var monsters: Array[Character] = _get_monsters()
@@ -402,10 +432,25 @@ func _run_monster_phase() -> void:
 			if not stepped: break
 			# Once it hopped in: the heroes react to what they see
 			if is_instance_valid(monster): _alert_heroes_seen_by(monster)
-	await _block_on_shared_tiles(CharacterProfile.Groups.MONSTERS)
-	if run != _monster_phase_run: return
-	phase = Phase.HEROES
-	_start_next_turn()
+
+## @returns whether a monster that may still move stands where the heroes see it
+func _has_monster_in_sight() -> bool:
+	for monster: Character in _get_monsters():
+		if monster.movement_points > 0 and is_in_sight(monster.grid_cell): return true
+	return false
+
+## @returns whether standing heroes and monsters meet on a tile the heroes see
+func _has_shared_tile_in_sight() -> bool:
+	for cell: Vector2i in _get_shared_cells():
+		if is_in_sight(cell): return true
+	return false
+
+## @returns the cells where standing heroes and monsters meet, in the monsters' turn order
+func _get_shared_cells() -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	for monster: Character in _get_monsters():
+		if monster.posture == Character.Posture.STANDING and not cells.has(monster.grid_cell) and _get_enemy_on(monster.grid_cell, monster): cells.append(monster.grid_cell)
+	return cells
 
 ## Host only: the monsters on the board (not those turned off, see [member Level.monsters_enabled]), in turn order
 func _get_monsters() -> Array[Character]:
@@ -422,10 +467,7 @@ func _get_monsters() -> Array[Character]:
 ## heroes can see.
 func _block_on_shared_tiles(group: CharacterProfile.Groups) -> void:
 	var run: int = _monster_phase_run
-	var cells: Array[Vector2i] = []
-	for monster: Character in _get_monsters():
-		if monster.posture == Character.Posture.STANDING and not cells.has(monster.grid_cell) and _get_enemy_on(monster.grid_cell, monster): cells.append(monster.grid_cell)
-	for cell: Vector2i in cells:
+	for cell: Vector2i in _get_shared_cells():
 		var monsters: Array[Character] = []
 		for monster: Character in Formation.by_priority(Block.get_standing_on(cell, _level)):
 			if monster.profile.group == CharacterProfile.Groups.MONSTERS: monsters.append(monster)
@@ -584,7 +626,7 @@ func _get_sender_id() -> int:
 func _get_controlled_character(sender_id: int, character_path: NodePath) -> Character:
 	var character: Character = get_node_or_null(character_path) as Character
 	# While a block is under way, the board holds still
-	if phase != Phase.HEROES or not block_state.is_empty() or not character or not character.visible: return null
+	if not is_heroes_turn() or not block_state.is_empty() or not character or not character.visible: return null
 	# Monsters belong to the host's agents, not to its player
 	if character.profile.group == CharacterProfile.Groups.MONSTERS: return null
 	if not character.is_controlled_by(sender_id): return null

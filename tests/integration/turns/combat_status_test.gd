@@ -47,7 +47,7 @@ func _dice() -> Array[Button]:
 func test_the_banner_shows_while_the_monsters_act() -> void:
 	var banner: Control = _status.get("_banner")
 	assert_bool(banner.visible).is_false()
-	_turn_manager.phase = TurnManager.Phase.MONSTERS
+	_turn_manager.phase = TurnManager.Phase.MONSTER_MOVES
 	assert_bool(banner.visible).is_true()
 	_turn_manager.phase = TurnManager.Phase.HEROES
 	assert_bool(banner.visible).is_false()
