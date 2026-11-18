@@ -2,9 +2,10 @@
 @icon("uid://cmbhx5v0d8ri8")
 class_name CombatStatus
 extends VBoxContainer
-## Shows what the monsters and blocks do: a banner while the monsters take their turn, and each block's dice with the one that
-## counts. When a block waits for the local player (see [member TurnManager.block_state]), its dice become buttons; pressing one
-## only asks the local [PlayerController], the rules live in [TurnManager].
+## Shows what the monsters and blocks do: a banner naming each part of the turn after the heroes' (see [enum TurnManager.Phase]),
+## and each block's dice as they are rolled, then with the one that counts. When a block waits for the local player (see
+## [member TurnManager.block_state]), its dice become buttons; pressing one only asks the local [PlayerController], the rules
+## live in [TurnManager] and [BlockSequence].
 
 @export var _player_controller_spawner: PlayerControllerSpawner
 @export var _turn_manager: TurnManager
@@ -12,7 +13,7 @@ extends VBoxContainer
 @export_range(0.5, 10.0) var dice_duration: float = 2.5
 
 @export_group("Configuration")
-@export var _banner: Control
+@export var _banner: Label
 @export var _block_panel: Control
 @export var _title: Label
 @export var _dice: Container
@@ -38,7 +39,16 @@ func _on_player_controller_created(player_controller: PlayerController) -> void:
 	_on_block_state_changed()
 
 func _on_phase_changed(phase: TurnManager.Phase) -> void:
-	_banner.visible = phase != TurnManager.Phase.HEROES
+	_banner.text = banner_text(phase)
+	_banner.visible = not _banner.text.is_empty()
+
+## @returns the banner for [param phase], empty for the heroes' turn
+static func banner_text(phase: TurnManager.Phase) -> String:
+	match phase:
+		TurnManager.Phase.HERO_BLOCKS: return "Heroes strike"
+		TurnManager.Phase.MONSTER_MOVES: return "Monsters move"
+		TurnManager.Phase.MONSTER_BLOCKS: return "Monsters strike"
+	return ""
 
 ## The dice as they fell, the one that counts highlighted; they stay a while, then go
 func _on_block_shown(attacker: Character, defender: Character, dice: Array[int], chosen: int, pinned: bool) -> void:
@@ -61,14 +71,15 @@ func _on_block_shown(attacker: Character, defender: Character, dice: Array[int],
 	_hide_tween.tween_interval(dice_duration)
 	_hide_tween.tween_callback(_hide_unless_choosing)
 
-## A choice for the local player: the dice as buttons; others see whose choice it is
+## The block under way: its dice as they were rolled; while the local player chooses, the dice as buttons, and others see whose
+## choice it is. The strike shows the face that counts (see [method _on_block_shown])
 func _on_block_state_changed() -> void:
 	var choice: Dictionary = _turn_manager.block_state
 	if choice.is_empty():
 		_hide_unless_choosing()
 		return
 	var stage: int = choice[BlockSequence.STAGE]
-	if stage != BlockSequence.Stage.CHOOSING: return
+	if stage == BlockSequence.Stage.STRUCK: return
 	if _hide_tween: _hide_tween.kill()
 	var attacker_path: NodePath = choice[BlockSequence.ATTACKER]
 	var defender_path: NodePath = choice[BlockSequence.DEFENDER]
@@ -79,10 +90,12 @@ func _on_block_state_changed() -> void:
 		_clear()
 		_block_panel.hide()
 		return
-	var choosing: bool = is_instance_valid(_player_controller) and _player_controller.is_choosing_for_block()
+	var choosing: bool = stage == BlockSequence.Stage.CHOOSING and is_instance_valid(_player_controller) and _player_controller.is_choosing_for_block()
 	var dice: Array = choice[BlockSequence.DICE]
 	_clear()
-	_title.text = "Pick a die: %s blocks %s" % [attacker.profile.name, defender.profile.name] if choosing else "Picking a die…"
+	var blocks: String = "%s blocks %s" % [attacker.profile.name, defender.profile.name]
+	if stage == BlockSequence.Stage.ROLLED: _title.text = blocks
+	else: _title.text = "Pick a die: %s" % blocks if choosing else "Picking a die…"
 	var pinned: bool = choice.get(BlockSequence.PINNED, false)
 	for index: int in dice.size():
 		var face: int = dice[index]

@@ -16,7 +16,7 @@ _dice = NodePath("BlockPanel/MarginContainer/VBoxContainer/Dice")
 [node name="Banner" type="Label" parent="."]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "Monsters' turn"
+text = "Monsters move"
 horizontal_alignment = 1
 
 [node name="BlockPanel" type="PanelContainer" parent="."]
