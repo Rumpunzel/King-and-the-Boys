@@ -37,10 +37,8 @@ func _process(_delta: float) -> void:
 		if agent and not _marks.has(agent): _add_mark(agent)
 	var camera: Camera3D = get_viewport().get_camera_3d()
 	for agent: Agent in _marks.keys():
-		if not is_instance_valid(agent) or agent.is_queued_for_deletion():
-			_remove_mark(agent)
-			continue
-		_place(agent, _marks[agent], camera)
+		if agent.is_queued_for_deletion(): _remove_mark(agent)
+		else: _place(agent, _marks[agent], camera)
 
 func _add_mark(agent: Agent) -> void:
 	var mark: Label = Label.new()
@@ -54,11 +52,17 @@ func _add_mark(agent: Agent) -> void:
 	add_child(mark)
 	_marks[agent] = mark
 	agent.awareness_changed.connect(_on_awareness_changed.bind(agent))
+	# Before it is freed: a freed agent may not be a key any more
+	agent.tree_exiting.connect(_on_agent_exiting.bind(agent), CONNECT_ONE_SHOT)
 
 func _remove_mark(agent: Agent) -> void:
+	if not _marks.has(agent): return
 	var mark: Label = _marks[agent]
 	_marks.erase(agent)
 	mark.queue_free()
+
+func _on_agent_exiting(agent: Agent) -> void:
+	_remove_mark(agent)
 
 func _place(agent: Agent, mark: Label, camera: Camera3D) -> void:
 	var character: Character = agent.character

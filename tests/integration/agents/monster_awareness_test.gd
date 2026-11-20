@@ -182,3 +182,44 @@ func test_a_passed_hero_shows_the_pass_over_the_alert() -> void:
 	assert_object(hero.call("_get_rest")).is_same(profile.alert_animations)
 	hero.show_passed(true)
 	assert_object(hero.call("_get_rest")).is_same(profile.passed_animations)
+
+func test_a_noticed_hero_leaving_breaks_no_one_elses_alert() -> void:
+	var start: Vector2i = _start_cell()
+	var leaving: Character = await _spawn_hero(start, _lit_profile())
+	var staying: Character = await _spawn_hero(start, _lit_profile())
+	var monster: Character = await _spawn_monster_ahead(2, false)
+	_update()
+	assert_bool(staying.alerted).is_true()
+	# As a player leaving takes their hero along; the monster meanwhile goes where no one sees it
+	remove_child(leaving)
+	leaving.free()
+	_agent(monster).awareness = Agent.Awareness.ROAMING
+	monster.place_on_grid(_cells_at(start, 6)[0], monster.tile_spot, monster.facing)
+	_update()
+	assert_bool(staying.alerted).is_false()
+
+func test_noticing_waits_while_a_held_ability_is_shown() -> void:
+	var profile: CharacterProfile = _lit_profile()
+	profile.abilities = [LANTERN, HELD_ABILITY]
+	var hero: Character = await _spawn_hero(_start_cell(), profile)
+	var monster: Character = await _spawn_monster_ahead(2, false)
+	_turn_manager.request_ability_begin(hero.get_path(), ResourceId.of(HELD_ABILITY), hero.grid_cell)
+	# Another player's action meanwhile: what the held ability shows (a lifted tile) is not the board yet
+	_update()
+	assert_int(_agent(monster).awareness).is_equal(Agent.Awareness.ROAMING)
+	_turn_manager.request_ability_cancel(hero.get_path())
+	assert_int(_agent(monster).awareness).is_equal(Agent.Awareness.HUNTING)
+
+func test_the_first_action_after_loading_closes_no_undo() -> void:
+	var start: Vector2i = _start_cell()
+	var way: Level.Direction = _straight_way(2)
+	var noticed: Character = await _spawn_hero(_cells_at(start, 5)[0], _lit_profile())
+	await _spawn_monster(noticed.grid_cell)
+	var walker: Character = await _spawn_hero(start)
+	await _explore(walker, way, 1)
+	_update()
+	_turn_manager.stop_monster_phase()
+	# The knight was noticed before the load too: the walker's harmless step got no one noticed
+	await _move(walker, way)
+	assert_int(walker.undo_steps).is_equal(1)
+	assert_bool(noticed.alerted).is_true()

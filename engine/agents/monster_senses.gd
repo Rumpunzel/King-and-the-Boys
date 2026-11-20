@@ -9,8 +9,10 @@ extends RefCounted
 
 var _turn_manager: TurnManager
 var _level: Level
-# The heroes noticed at the last update
+# The heroes noticed at the last update; keys may have been freed since (a player leaving takes their hero along)
 var _noticed: Dictionary[Character, bool] = {}
+# After a load: the next update only learns who is noticed, as nothing the next action does got them noticed
+var _settling: bool = false
 
 func _init(turn_manager: TurnManager, level: Level) -> void:
 	_turn_manager = turn_manager
@@ -27,8 +29,10 @@ func notices(monster: Character, hero: Character) -> bool:
 ## Who notices whom now sets each monster's [member Agent.awareness]: it hunts the nearest hero it notices; one that no longer
 ## notices the hero it hunted goes to look where it last noticed them, and roams again once there with no one noticed. Nothing
 ## that gets someone noticed can be taken back: the undo of each hero noticed anew closes, and so does [param actor]'s, whose
-## action it follows. Heroes are on alert ([member Character.alerted]) while any monster notices them.
+## action it follows. Heroes are on alert ([member Character.alerted]) while any monster notices them. While a held ability is
+## shown (e.g. a lifted tile), the board is not what it will be: nothing changes until it is used or cancelled.
 func update(actor: Character = null) -> void:
+	if _turn_manager.is_ability_held(): return
 	var heroes: Array[Character] = _get_on_board(CharacterProfile.Groups.HEROES)
 	var noticed_now: Dictionary[Character, bool] = {}
 	for monster: Character in _get_on_board(CharacterProfile.Groups.MONSTERS):
@@ -41,18 +45,24 @@ func update(actor: Character = null) -> void:
 		_update_awareness(agent, monster, noticed)
 	var anew: bool = false
 	for hero: Character in noticed_now:
-		if _noticed.has(hero): continue
+		if _noticed.has(hero) or _settling: continue
 		anew = true
 		_turn_manager.close_undo(hero)
 	if anew and is_instance_valid(actor) and actor.is_inside_tree(): _turn_manager.close_undo(actor)
-	for hero: Character in _noticed:
-		if is_instance_valid(hero) and not noticed_now.has(hero): hero.alerted = false
+	# Untyped: a freed hero may not go into a typed variable
+	for key: Variant in _noticed.keys():
+		if not is_instance_valid(key): continue
+		var hero: Character = key
+		if not noticed_now.has(hero): hero.alerted = false
 	for hero: Character in noticed_now: hero.alerted = true
 	_noticed = noticed_now
+	_settling = false
 
-## Forgets who was noticed and takes every alert back, e.g. as a save is loaded; awareness stays as saved
+## Forgets who was noticed and takes every alert back, e.g. as a save is loaded; awareness stays as saved. The next
+## [method update] only learns who is noticed then (and puts them on alert), closing no undo
 func reset() -> void:
 	_noticed.clear()
+	_settling = true
 	for node: Node in _turn_manager.get_tree().get_nodes_in_group(Character.GROUP):
 		var character: Character = node as Character
 		if character: character.alerted = false

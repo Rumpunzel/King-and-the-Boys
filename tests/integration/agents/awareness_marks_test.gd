@@ -66,3 +66,15 @@ func test_the_investigation_mark_sits_on_the_target_cell_only_while_investigatin
 	agent.awareness = Agent.Awareness.HUNTING
 	await await_idle_frame()
 	assert_bool(mark.visible).is_false()
+
+func test_a_monster_freed_at_once_takes_its_mark_along() -> void:
+	var monster: Character = await _spawn_monster_ahead(2, false)
+	await await_idle_frame()
+	var agent: Agent = _agent(monster)
+	assert_object(_marks.get_mark(agent)).is_not_null()
+	# Freed between two frames, e.g. by a coroutine a tween resumed
+	agent.get_parent().remove_child(agent)
+	agent.free()
+	await await_idle_frame()
+	await await_idle_frame()
+	assert_int(_marks.get_child_count()).is_zero()

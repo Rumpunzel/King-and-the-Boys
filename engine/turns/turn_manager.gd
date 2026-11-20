@@ -350,6 +350,8 @@ func request_ability_cancel(character_path: NodePath) -> void:
 	var character: Character = _get_controlled_character(_get_sender_id(), character_path)
 	if not character: return
 	_cancel_held(character)
+	# Others may have acted while it was shown
+	get_senses().update()
 
 ## Passes or takes a pass back; the turn ends once every connected player has passed, and a block under way ended (see
 ## [method request_move]). Passing cancels the held abilities of the sender's characters.
@@ -401,6 +403,10 @@ func _run_monster_phase() -> void:
 	if run != _monster_phase_run: return
 	phase = Phase.HEROES
 	_start_next_turn()
+
+## Host only: whether a held ability is in use (shown, not yet used or cancelled), e.g. a lifted tile
+func is_ability_held() -> bool:
+	return not _held_abilities.is_empty()
 
 ## Host only: the rule for who notices whom, and the monsters' awareness it keeps (see [MonsterSenses])
 func get_senses() -> MonsterSenses:
