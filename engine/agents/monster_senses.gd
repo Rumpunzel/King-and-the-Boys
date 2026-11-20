@@ -11,6 +11,8 @@ var _turn_manager: TurnManager
 var _level: Level
 # The heroes noticed at the last update; keys may have been freed since (a player leaving takes their hero along)
 var _noticed: Dictionary[Character, bool] = {}
+# Who noticed whom at the last update, as [monster's instance id, hero's instance id] (ids: either may have been freed since)
+var _attention: Dictionary[Array, bool] = {}
 # After a load: the next update only learns who is noticed, as nothing the next action does got them noticed
 var _settling: bool = false
 
@@ -21,33 +23,47 @@ func _init(turn_manager: TurnManager, level: Level) -> void:
 ## @returns whether [param monster] notices [param hero] now
 func notices(monster: Character, hero: Character) -> bool:
 	if not _is_on_board(monster) or not _is_on_board(hero): return false
-	var seen: Dictionary[Vector2i, bool] = _level.get_cells_in_sight(hero.grid_cell, hero.get_vision())
+	return _notices_in(monster, hero, _level.get_cells_in_sight(hero.grid_cell, hero.get_vision()))
+
+## @returns whether [param monster] notices [param hero], who sees [param seen]
+func _notices_in(monster: Character, hero: Character, seen: Dictionary[Vector2i, bool]) -> bool:
 	if not seen.has(monster.grid_cell): return false
 	if hero.is_lit() or monster.grid_cell == hero.grid_cell: return true
 	return _looks_at(monster, hero.grid_cell)
 
 ## Who notices whom now sets each monster's [member Agent.awareness]: it hunts the nearest hero it notices; one that no longer
 ## notices the hero it hunted goes to look where it last noticed them, and roams again once there with no one noticed. Nothing
-## that gets someone noticed can be taken back: the undo of each hero noticed anew closes, and so does [param actor]'s, whose
-## action it follows. Heroes are on alert ([member Character.alerted]) while any monster notices them. While a held ability is
+## that gets someone noticed can be taken back: the undo of each hero some monster notices anew closes, and so does
+## [param actor]'s, whose action it follows; a monster turns to face the hero it hunts if that hero just caught its eye. Heroes are on alert ([member Character.alerted]) while any monster notices them. While a held ability is
 ## shown (e.g. a lifted tile), the board is not what it will be: nothing changes until it is used or cancelled.
 func update(actor: Character = null) -> void:
 	if _turn_manager.is_ability_held(): return
 	var heroes: Array[Character] = _get_on_board(CharacterProfile.Groups.HEROES)
+	# Each hero's sight once: monsters notice only from there
+	var sights: Dictionary[Character, Dictionary] = {}
+	for hero: Character in heroes: sights[hero] = _level.get_cells_in_sight(hero.grid_cell, hero.get_vision())
 	var noticed_now: Dictionary[Character, bool] = {}
+	var attention_now: Dictionary[Array, bool] = {}
+	var anew: bool = false
 	for monster: Character in _get_on_board(CharacterProfile.Groups.MONSTERS):
 		var agent: Agent = monster.get_parent() as Agent
 		if not agent: continue
 		var noticed: Array[Character] = []
+		# Those it did not notice at the last update
+		var caught: Array[Character] = []
 		for hero: Character in heroes:
-			if notices(monster, hero): noticed.append(hero)
-		for hero: Character in noticed: noticed_now[hero] = true
-		_update_awareness(agent, monster, noticed)
-	var anew: bool = false
-	for hero: Character in noticed_now:
-		if _noticed.has(hero) or _settling: continue
-		anew = true
-		_turn_manager.close_undo(hero)
+			var seen: Dictionary[Vector2i, bool] = sights[hero]
+			if not _notices_in(monster, hero, seen): continue
+			noticed.append(hero)
+			noticed_now[hero] = true
+			var pair: Array = [monster.get_instance_id(), hero.get_instance_id()]
+			attention_now[pair] = true
+			# After a load, nobody knows what was noticed before it
+			if _attention.has(pair) or _settling: continue
+			caught.append(hero)
+			anew = true
+			_turn_manager.close_undo(hero)
+		_update_awareness(agent, monster, noticed, caught)
 	if anew and is_instance_valid(actor) and actor.is_inside_tree(): _turn_manager.close_undo(actor)
 	# Untyped: a freed hero may not go into a typed variable
 	for key: Variant in _noticed.keys():
@@ -56,21 +72,26 @@ func update(actor: Character = null) -> void:
 		if not noticed_now.has(hero): hero.alerted = false
 	for hero: Character in noticed_now: hero.alerted = true
 	_noticed = noticed_now
+	_attention = attention_now
 	_settling = false
 
 ## Forgets who was noticed and takes every alert back, e.g. as a save is loaded; awareness stays as saved. The next
 ## [method update] only learns who is noticed then (and puts them on alert), closing no undo
 func reset() -> void:
 	_noticed.clear()
+	_attention.clear()
 	_settling = true
 	for node: Node in _turn_manager.get_tree().get_nodes_in_group(Character.GROUP):
 		var character: Character = node as Character
 		if character: character.alerted = false
 
-func _update_awareness(agent: Agent, monster: Character, noticed: Array[Character]) -> void:
+## [param caught]: those of [param noticed] it did not notice before
+func _update_awareness(agent: Agent, monster: Character, noticed: Array[Character], caught: Array[Character]) -> void:
 	if not noticed.is_empty():
+		var nearest: Character = _get_nearest(monster, noticed)
+		if caught.has(nearest): _face(monster, nearest)
 		# The target first: whoever follows the awareness reads both
-		agent.awareness_target = _get_nearest(monster, noticed).grid_cell
+		agent.awareness_target = nearest.grid_cell
 		agent.awareness = Agent.Awareness.HUNTING
 	elif agent.awareness == Agent.Awareness.HUNTING:
 		agent.awareness = Agent.Awareness.INVESTIGATING
@@ -93,6 +114,12 @@ func _get_nearest(monster: Character, heroes: Array[Character]) -> Character:
 		nearest = hero
 		nearest_length = length
 	return nearest
+
+## Turns [param monster] towards [param hero], the way it would step to reach them along passages (none on its own tile)
+func _face(monster: Character, hero: Character) -> void:
+	var way: int = _level.get_step_towards(monster.grid_cell, hero.grid_cell)
+	if way < 0: return
+	monster.place_on_grid(monster.grid_cell, monster.tile_spot, way as Level.Direction)
 
 ## @returns the characters of [param group] on this level's board, in turn order
 func _get_on_board(group: CharacterProfile.Groups) -> Array[Character]:

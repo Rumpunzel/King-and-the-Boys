@@ -223,3 +223,26 @@ func test_the_first_action_after_loading_closes_no_undo() -> void:
 	await _move(walker, way)
 	assert_int(walker.undo_steps).is_equal(1)
 	assert_bool(noticed.alerted).is_true()
+
+func test_a_hero_noticed_by_one_more_monster_can_not_undo_it() -> void:
+	var start: Vector2i = _start_cell()
+	var way: Level.Direction = _straight_way(2)
+	var actor: Character = await _spawn_hero(start)
+	await _explore(actor, way, 1)
+	await _move(actor, way)
+	var noticed: Character = await _spawn_hero(_cells_at(start, 5)[0], _lit_profile())
+	await _spawn_monster(noticed.grid_cell)
+	_update()
+	assert_int(actor.undo_steps).is_equal(1)
+	# Already hunted by one: a second monster noticing them is news all the same
+	await _spawn_monster(noticed.grid_cell)
+	_update(actor)
+	assert_int(actor.undo_steps).is_zero()
+
+func test_a_monster_turns_to_face_the_hero_it_notices() -> void:
+	var way: Level.Direction = _straight_way(2)
+	await _spawn_hero(_start_cell(), _lit_profile())
+	var monster: Character = await _spawn_monster_ahead(2, false)
+	assert_int(monster.facing).is_equal(way)
+	_update()
+	assert_int(monster.facing).is_equal(Level.get_opposite(way))
