@@ -9,6 +9,10 @@ signal board_changed(character: Character)
 signal tile_rotated(tile: Structure, character: Character)
 ## Host only: [method build_level] placed the starting tiles, see [member is_built]
 signal built
+## Host only: [param character] was put on this level (see [method add_character])
+signal character_added(character: Character)
+## Host only: [member monsters_enabled] changed
+signal monsters_toggled
 ## Every peer: a tile was placed (spawned, loaded or replicated)
 signal tile_placed(tile: Structure)
 
@@ -73,6 +77,7 @@ var monsters_enabled: bool = true:
 		for node: Node in _agent_spawner.get_children():
 			var agent: Agent = node as Agent
 			if agent and not agent.is_queued_for_deletion(): agent.character.visible = monsters_enabled
+		monsters_toggled.emit()
 
 ## Host only: whether [method build_level] ran, see [signal built]
 var is_built: bool = false
@@ -359,6 +364,18 @@ func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
 ## @returns its [enum Direction], or [code]-1[/code] if none is in sight
 func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision: float) -> int:
 	return _sight.get_step_towards_in_sight(from, targets, vision)
+
+## The first step from [param from] along passages towards [param target], however far, e.g. a monster going to look where it
+## last noticed a hero (see [method LevelSight.get_step_towards])
+## @returns its [enum Direction], or [code]-1[/code] if it stands there or can not get there
+func get_step_towards(from: Vector2i, target: Vector2i) -> int:
+	if from == target: return -1
+	return _sight.get_step_towards(from, [target])
+
+## @returns the number of steps along passages from [param from] to every placed cell at most [param max_length] steps away
+## ([param from] itself 0), e.g. which noticed hero is nearest to a monster (see [method LevelSight.get_path_lengths])
+func get_path_lengths(from: Vector2i, max_length: int) -> Dictionary[Vector2i, int]:
+	return _sight.get_path_lengths(from, max_length)
 
 ## @returns the cells in sight from [param from] within [param vision] (as keys), by the rule heroes see by (straight along
 ## passages, across whole rooms); see [method LevelSight.get_cells_in_sight]
@@ -892,6 +909,7 @@ func add_character(character: Character) -> void:
 	character.posture_changed.connect(_formations.on_character_changed.bind(character))
 	character.visibility_changed.connect(_formations.on_character_changed.bind(character))
 	character.tree_exiting.connect(_formations.on_character_leaving.bind(character))
+	character_added.emit(character)
 
 func _update_shown_on(grid_position: Vector2i) -> void:
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):

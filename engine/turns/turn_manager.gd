@@ -90,6 +90,8 @@ var _board_changed_during_use: bool = false
 var _monster_phase_run: int = 0
 # Host only: peers whose game scene has this node (see start_syncing_peer); only they get its RPCs
 var _synced_peers: Array[int] = []
+# Who notices whom, made on first use (see get_senses)
+var _senses: MonsterSenses
 
 class GridStep extends RefCounted:
 	var grid_cell: Vector2i
@@ -123,6 +125,8 @@ func _ready() -> void:
 		return
 	_level.board_changed.connect(_on_board_changed)
 	_level.tile_rotated.connect(_on_tile_rotated)
+	_level.character_added.connect(_on_character_added)
+	_level.monsters_toggled.connect(_on_monsters_toggled)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
 
 ## Host only: this node is part of the game scene, not spawned, so a peer only gets synced once it has loaded it;
@@ -145,6 +149,8 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	var character: Character = _get_controlled_character(sender_id, character_path)
 	if not character or _held_abilities.has(character): return
 	await try_step(character, direction, true)
+	# Its player may have left while the step's block waited
+	get_senses().update(character if is_instance_valid(character) else null)
 	# A player who left while the step's block waited for a choice may have been the last one not passed
 	_end_turn_if_everyone_passed()
 
@@ -206,6 +212,8 @@ func _block(attacker: Character, defender: Character) -> Block:
 	_block_sequence = sequence
 	var block: Block = await sequence.run()
 	if _block_sequence == sequence: _block_sequence = null
+	# Falls and pushes change who sees whom
+	if block: get_senses().update()
 	return block
 
 ## Host only: every peer that syncs this node sees [param block]'s attacker strike, with its dice and the face that counts
@@ -266,6 +274,7 @@ func request_undo(character_path: NodePath) -> void:
 	if last_step is AbilityStep:
 		_undo_ability(last_step as AbilityStep)
 		_set_passed(sender_id, false)
+		get_senses().update(character)
 		return
 	var previous_step: GridStep = last_step
 	# Not off nor onto a tile someone holds up: like steps, undo waits until it is set down
@@ -281,6 +290,7 @@ func request_undo(character_path: NodePath) -> void:
 	character.place_on_grid(previous_step.grid_cell, previous_step.tile_spot, step_direction)
 	_update_undo_steps(character)
 	_set_passed(sender_id, false)
+	get_senses().update(character)
 
 ## Uses the [Ability] named [param ability_id] of [param character_path] on [param target_cell] with [param argument]
 ## (its choice, e.g. how far to turn), if the profile lists it and its uses, charges and the movement points allow it.
@@ -305,6 +315,8 @@ func request_ability(character_path: NodePath, ability_id: String, target_cell: 
 		return
 	_end_held(character)
 	_use_ability(character, ability, target_cell, argument)
+	# Only now, not while a held ability is shown: what it changes may get someone noticed
+	get_senses().update(character)
 
 ## Starts using the [member Ability.held] ability [param ability_id] of [param character_path] on [param target_cell];
 ## the character can neither step, undo nor use another ability until it is confirmed with [method request_ability] or cancelled
@@ -393,6 +405,15 @@ func _run_monster_phase() -> void:
 	phase = Phase.HEROES
 	_start_next_turn()
 
+## Host only: whether a held ability is in use (shown, not yet used or cancelled), e.g. a lifted tile
+func is_ability_held() -> bool:
+	return not _held_abilities.is_empty()
+
+## Host only: the rule for who notices whom, and the monsters' awareness it keeps (see [MonsterSenses])
+func get_senses() -> MonsterSenses:
+	if not _senses: _senses = MonsterSenses.new(self, _level)
+	return _senses
+
 ## @returns whether the players act now (see [enum Phase])
 func is_heroes_turn() -> bool:
 	return phase == Phase.HEROES
@@ -410,28 +431,34 @@ func _move_monsters() -> void:
 	# Pieces may leave while the host waits (a player leaving takes their hero along): each is checked before it is used
 	# By index: a figure freed meanwhile may not go into a typed variable
 	var monsters: Array[Character] = _get_monsters()
+	# What the heroes' blocks changed, and a load, may have changed who notices whom
+	get_senses().update()
 	for index: int in monsters.size():
 		if not is_instance_valid(monsters[index]): continue
 		var monster: Character = monsters[index]
 		if not monster.is_inside_tree() or not monster.visible: continue
 		var agent: Agent = monster.get_parent() as Agent
-		_alert_heroes_seen_by(monster)
+		# Knowing of no hero, it takes only its roaming steps; noticing one on the way, it hurries with the rest
+		var roamed: int = 0
 		while is_instance_valid(monster) and monster.is_inside_tree() and monster.movement_points > 0:
+			if agent.awareness == Agent.Awareness.ROAMING and roamed >= monster.profile.roam_speed: break
 			var was_in_sight: bool = is_in_sight(monster.grid_cell)
 			if monster.posture != Character.Posture.STANDING:
 				_stand_up(monster)
 				continue
+			var roaming: bool = agent.awareness == Agent.Awareness.ROAMING
 			var direction: int = agent.choose_step()
 			if direction < 0: break
+			if roaming: roamed += 1
 			# A block on leaving plays out within the step (see BlockSequence)
 			var stepped: bool = await try_step(monster, direction as Level.Direction)
 			if run != _monster_phase_run: return
 			if stepped and (was_in_sight or is_in_sight(monster.grid_cell)):
 				await wait_for_figure(monster)
 				if run != _monster_phase_run: return
+			# Once it hopped in (or only turned): whom it notices, and who sees it coming
+			get_senses().update()
 			if not stepped: break
-			# Once it hopped in: the heroes react to what they see
-			if is_instance_valid(monster): _alert_heroes_seen_by(monster)
 
 ## @returns whether a monster that may still move stands where the heroes see it; one standing on a tile with a standing enemy
 ## stays to fight
@@ -494,7 +521,7 @@ func stop_monster_phase() -> void:
 	_monster_phase_run += 1
 	phase = Phase.HEROES
 	_cancel_block()
-	_clear_alerts()
+	get_senses().reset()
 
 ## Waits until [param character]'s figure arrived, at most [constant _MAX_HOP_WAIT]: its hop may last longer than its move
 ## animation (delays, body animations). Tweens, not timers: they go with this node (e.g. leaving the game), so nothing resumes
@@ -504,20 +531,6 @@ func wait_for_figure(character: Character) -> void:
 	while is_instance_valid(character) and character.is_figure_moving() and waited < _MAX_HOP_WAIT:
 		await create_tween().tween_interval(_HOP_POLL).finished
 		waited += _HOP_POLL
-
-## Every hero [param monster] sees, as it comes for them where the heroes see it (on a revealed tile), is on alert, see
-## [member Character.alerted]
-func _alert_heroes_seen_by(monster: Character) -> void:
-	if not is_in_sight(monster.grid_cell): return
-	var in_sight: Dictionary[Vector2i, bool] = _level.get_cells_in_sight(monster.grid_cell, monster.get_perception())
-	for node: Node in get_tree().get_nodes_in_group(Character.GROUP):
-		var hero: Character = node as Character
-		if not hero or not hero.visible or hero.level != _level or hero.profile.group != CharacterProfile.Groups.HEROES: continue
-		if in_sight.has(hero.grid_cell): hero.alerted = true
-
-## After the passes are cleared: a hero that also stops showing its pass then goes straight from its alert to its idles
-func _clear_alerts() -> void:
-	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.alerted = false
 
 ## @returns whether the heroes see what happens on [param cell] (its tile is revealed)
 func is_in_sight(cell: Vector2i) -> bool:
@@ -545,7 +558,6 @@ func _start_next_turn() -> void:
 	assert(multiplayer.is_server())
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP): character.reset_movement_points()
 	clear_passes()
-	_clear_alerts()
 	turn_number += 1
 
 func _use_ability(character: Character, ability: Ability, target_cell: Vector2i, argument: int) -> void:
@@ -586,9 +598,13 @@ func _has_uses_left(character: Character, ability: Ability) -> bool:
 	var used: int = uses.get(ability, 0)
 	return used < ability.uses_per_turn
 
+## Host only: [param character]'s held ability is set aside unused (cancelled, passed, its player leaving, the turn ending);
+## notices lost while it was shown count now (see [method MonsterSenses.update])
 func _cancel_held(character: Character) -> void:
 	var held: HeldAbility = _end_held(character)
-	if held: held.ability.cancel(character, held.target, _level)
+	if not held: return
+	held.ability.cancel(character, held.target, _level)
+	get_senses().update()
 
 ## Forgets the held ability of [param character], used or cancelled
 ## @returns it, or [code]null[/code] if none was held
@@ -665,6 +681,14 @@ func _on_character_exiting(character: Character) -> void:
 	_cancel_held(character)
 	for step: AbilityStep in _pending_steps.duplicate():
 		if step.character == character: _pending_steps.erase(step)
+
+## A hero arriving (spawned, joining, back after a load) is noticed before anyone acts: closing no one's undo, as it has none
+## yet. Deferred, as spawners set a character up after adding it to the level
+func _on_character_added(character: Character) -> void:
+	if character.profile.group == CharacterProfile.Groups.HEROES: get_senses().update.call_deferred()
+
+func _on_monsters_toggled() -> void:
+	get_senses().update()
 
 func _on_player_disconnected(player: Player) -> void:
 	_synced_peers.erase(player.player_id)

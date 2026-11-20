@@ -239,13 +239,21 @@ func get_dark_vision() -> float:
 		dark_vision = maxf(dark_vision, StatModifier.apply_all(light_source.dark_vision_modifiers, profile.dark_vision))
 	return dark_vision
 
-## The lights the character sees by: those it carries and the wall lights it stands in (see [method Structure.get_light_sources]),
-## each once
+## @returns whether the character sees by a light, and so is seen by it: one it carries, a wall light it stands in or a light a
+## companion carries on its tile (see [MonsterSenses])
+func is_lit() -> bool:
+	return not _get_sight_lights().is_empty()
+
+## The lights the character sees by: those it carries, the wall lights it stands in (see [method Structure.get_light_sources]) and
+## those its companions on its tile carry, each once
 func _get_sight_lights() -> Array[LightSource]:
 	var light_sources: Array[LightSource] = get_light_sources()
 	var tile: Structure = level.get_placed_tile(grid_cell) if level else null
 	if tile:
 		for light_source: LightSource in tile.get_light_sources(): _add_light_source(light_sources, light_source)
+		for companion: Character in level.get_figures_on(grid_cell, self):
+			if companion.profile.group != profile.group: continue
+			for light_source: LightSource in companion.get_light_sources(): _add_light_source(light_sources, light_source)
 	return light_sources
 
 ## Lets each ability show itself on the model, e.g. a lantern on the belt, lit or not
@@ -554,18 +562,21 @@ func get_hold() -> float:
 func _rest_in_posture() -> void:
 	if model: model.rest_in(_get_rest())
 
-## What the model rests in now: lying down, the cast animations of the held ability in use, the alert animations, the passed
+## What the model rests in now: lying down, the cast animations of the held ability in use, the passed animations, the alert
 ## animations, or its idles ([code]null[/code])
 func _get_rest() -> BodyAnimations:
 	if posture == Posture.DOWN: return profile.down_animations
 	var ability: Ability = get_ability(active_ability_id)
 	if ability and ability.cast_animations: return ability.cast_animations
-	if alerted: return profile.alert_animations
+	# The pass must read; a monster's mark shows the danger
 	if shows_passed: return profile.passed_animations
+	if alerted: return profile.alert_animations
 	return null
 
-## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
+## Something interesting on the tile (e.g. a chest) catches a hero's eye when it arrives; a monster keeps facing the way it
+## stepped, which decides whom it notices (see [MonsterSenses])
 func _look_at_thing_on_tile() -> void:
+	if profile.group == CharacterProfile.Groups.MONSTERS: return
 	var thing: Thing = level.get_thing_near(grid_cell)
 	if not thing or not thing.visible: return
 	var to_thing: Vector3 = thing.global_position - global_position

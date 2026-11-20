@@ -47,7 +47,13 @@ func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision:
 	var seen: Array[Vector2i] = []
 	for target: Vector2i in targets:
 		if target != from and in_sight.has(target): seen.append(target)
-	if seen.is_empty(): return -1
+	return get_step_towards(from, seen)
+
+## The first step from [param from] along passages towards the nearest of [param targets], however far; targets on [param from]
+## itself are not looked for
+## @returns its [enum Level.Direction], or [code]-1[/code] if none can be reached
+func get_step_towards(from: Vector2i, targets: Array[Vector2i]) -> int:
+	if targets.is_empty(): return -1
 	# Breadth first from the cells one step away, each knowing the step it started with
 	var first_steps: Dictionary[Vector2i, int] = {from: -1}
 	var frontier: Array[Vector2i] = []
@@ -59,7 +65,7 @@ func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision:
 	while not frontier.is_empty():
 		var next_frontier: Array[Vector2i] = []
 		for cell: Vector2i in frontier:
-			if seen.has(cell): return first_steps[cell]
+			if targets.has(cell): return first_steps[cell]
 			for direction: Level.Direction in Level.Direction.values():
 				var neighbour: Vector2i = cell + Level.direction_to_vector(direction)
 				if first_steps.has(neighbour) or not _level.is_passage(cell, direction): continue
@@ -67,6 +73,22 @@ func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision:
 				next_frontier.append(neighbour)
 		frontier = next_frontier
 	return -1
+
+## @returns the number of steps along passages from [param from] to every placed cell at most [param max_length] steps away
+## ([param from] itself 0)
+func get_path_lengths(from: Vector2i, max_length: int) -> Dictionary[Vector2i, int]:
+	var lengths: Dictionary[Vector2i, int] = {from: 0}
+	var frontier: Array[Vector2i] = [from]
+	for length: int in max_length:
+		var next_frontier: Array[Vector2i] = []
+		for cell: Vector2i in frontier:
+			for direction: Level.Direction in Level.Direction.values():
+				var neighbour: Vector2i = cell + Level.direction_to_vector(direction)
+				if lengths.has(neighbour) or not _level.is_passage(cell, direction): continue
+				lengths[neighbour] = length + 1
+				next_frontier.append(neighbour)
+		frontier = next_frontier
+	return lengths
 
 ## @returns the cells that show from afar from [param from] within [param reach]: the cells lit by a wall light (see
 ## [method Structure.get_lit_cells]) that sight from there reaches, never one around a corner

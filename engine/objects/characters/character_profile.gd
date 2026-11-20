@@ -40,9 +40,14 @@ const _MOVE_ANIMATION: ModelAnimation = preload("uid://bwiaycc13h0eo")
 @export var vision: float = 1.5
 ## A hero's sight in the dark along passages: what it discovers (outlines), widened by lights like [member vision]
 @export var dark_vision: float = 2.5
-## How far along passages a monster notices heroes, to hunt them and alert them; lights play no part in it (see
+## How far a monster looks straight ahead to notice a hero without a light (see [MonsterSenses]); lights play no part in it (see
 ## [method Character.get_perception]). Heroes see by [member vision] and [member dark_vision] instead
 @export var perception: float = 3.0
+## A monster's moves per turn while it knows of no hero ([constant Agent.Awareness.ROAMING]); hunting or investigating, it moves
+## [member speed]
+@export var roam_speed: int = 1
+## How a monster picks its steps; none: [InvestigateStrategy]
+@export var strategy: MonsterStrategy
 
 @export_category("Abilities")
 @export var abilities: Array[Ability]:
