@@ -41,6 +41,7 @@
 - Produces:
   - `Character.is_lit() -> bool`: whether the character sees by a light (`not _get_sight_lights().is_empty()`); `_get_sight_lights()` also takes the lights carried by the other standing, visible heroes on its own cell (`Level.get_figures_on(grid_cell, self)`), so a hero beside a torch carrier sees and is lit by that torch.
   - `Level.get_step_towards(from: Vector2i, target: Vector2i) -> int`: first step along passages towards `target` by breadth-first search over placed tiles, `-1` if `from == target` or unreachable. `LevelSight.get_step_towards_in_sight` keeps its behaviour and shares the search.
+  - `Level.get_path_lengths(from: Vector2i, max_length: int) -> Dictionary[Vector2i, int]`: the number of steps along passages from `from` to every placed cell within `max_length` steps (`from` itself 0), by the same search.
   - `class_name MonsterSenses extends RefCounted`, `_init(turn_manager: TurnManager, level: Level)`, `notices(monster: Character, hero: Character) -> bool`.
 
 - [ ] **Step 1: Write the failing tests** in `tests/integration/agents/monster_senses_test.gd` (setup as `tests/integration/turns/monster_turn_test.gd`: level from `ModelFreeWorld`, a `TurnManager`, `_spawn_hero`, `_spawn_monster`, `_cell_in_sight(steps)`; a lit hero is a fixture hero profile `duplicate()` with `abilities = [LANTERN]` (`uid://s4o504byc2n0`, starts lit, vision +3); a monster's facing set with `monster.place_on_grid(cell, Vector2.ZERO, direction)`):
@@ -54,6 +55,7 @@
   - `test_a_lantern_put_out_stops_a_notice_from_behind` — lit hero noticed from behind; `request_ability` toggles the lantern → `notices` false.
   - `test_a_turned_off_monster_notices_nothing` — `_level.monsters_enabled = false` → false.
   - `test_the_step_towards_a_cell_follows_passages_beyond_sight` — `_level.get_step_towards(start, cell five steps away)` equals the direction of the first step of a passage path (use `_cells_at`), and `-1` for the start itself.
+  - `test_path_lengths_count_steps_along_passages` — `_level.get_path_lengths(start, 5)`: the start 0, every cell of `_cells_at(start, n)` n for n up to 5, no cell beyond 5.
 
 - [ ] **Step 2: Run them, expect failures** (`MonsterSenses` / `is_lit` / `get_step_towards` missing → script errors count as failure).
 
@@ -81,7 +83,8 @@
   - `test_noticing_a_hero_hunts_them` — lit hero, monster in their sight; `get_senses().update()` → `HUNTING`, target the hero's cell, `hero.alerted` true.
   - `test_a_hero_slipping_out_of_notice_is_investigated_where_last_seen` — then the hero's lantern goes out and the monster faces away; `update()` → `INVESTIGATING`, target still the old cell, `hero.alerted` false.
   - `test_an_investigation_ends_where_no_one_is_noticed` — monster placed on its target cell, nobody noticed; `update()` → `ROAMING`.
-  - `test_a_monster_hunts_the_nearest_of_two_noticed_heroes`.
+  - `test_a_monster_hunts_the_nearest_of_two_noticed_heroes` — nearest by steps along passages, not by grid distance (pick two cells where the two differ, e.g. one across a wall gap and one down a straight passage; if the seed has none, one hero one step and one two steps away).
+  - `test_heroes_as_near_are_hunted_by_block_priority` — two noticed heroes the same number of steps away: the one with the lower `CharacterProfile.block_priority` (duplicated profile) is the target, whichever spawned first.
   - `test_a_step_that_gets_a_hero_noticed_can_not_be_undone` — lit hero steps into a monster's notice via `request_move` → `undo_steps` 0 and `request_undo` leaves them where they are; an unnoticed step stays undoable.
   - `test_whoever_got_a_hero_noticed_can_not_undo_it` — a lit hero steps onto an unlit hero's tile and that gets the unlit one noticed → both `undo_steps` 0.
   - `test_an_undo_that_got_no_one_noticed_keeps_the_notice` (Review Focus 1).
@@ -93,7 +96,7 @@
 
 - [ ] **Step 2: Run them, expect failures.**
 
-- [ ] **Step 3: Implement `update(actor)`** (host only): for each visible monster in the tree on this level, the noticed heroes are those `notices()` accepts. If any: `HUNTING`, target the nearest by `grid_cell.distance_squared_to` (turn order on ties). Else if `HUNTING`: `INVESTIGATING`, target kept. Else if `INVESTIGATING` and standing on the target: `ROAMING`. Each hero noticed now by any monster and not noticed at the last `update` gets `close_undo`, and so does `actor` if it is valid and anyone was newly noticed. `alerted` is true exactly for the heroes noticed now (by any monster). Freed or invisible characters drop out of the noticed set.
+- [ ] **Step 3: Implement `update(actor)`** (host only): for each visible monster in the tree on this level, the noticed heroes are those `notices()` accepts. If any: `HUNTING`, target the nearest by steps along passages (`Level.get_path_lengths(monster.grid_cell, …)`, a reach covering the farthest noticed hero, e.g. the larger of the monster's perception and the heroes' vision, rounded up, doubled), ties by lower `block_priority`, then turn order (as `Level.get_lead()` orders heroes); a noticed hero the search does not reach comes last. Else if `HUNTING`: `INVESTIGATING`, target kept. Else if `INVESTIGATING` and standing on the target: `ROAMING`. Each hero noticed now by any monster and not noticed at the last `update` gets `close_undo`, and so does `actor` if it is valid and anyone was newly noticed. `alerted` is true exactly for the heroes noticed now (by any monster). Freed or invisible characters drop out of the noticed set.
 
 - [ ] **Step 4: Hook it into the turn manager** (one call each, after the board changed): `request_move` after `await try_step` (`update(character)`); `request_undo` after a step or ability step was taken back (`update(character)`); `request_ability` after `_use_ability` (`update(character)`); in `_move_monsters` after each `try_step` (`update()`, replacing `_alert_heroes_seen_by`); `_block` after the sequence (`update()`); `stop_monster_phase` calls `reset()` and clears every `alerted`. `_start_next_turn` no longer clears alerts. Not on `request_ability_begin`/`adjust`.
 
@@ -156,4 +159,4 @@
 - No strategy file for the skeleton: a profile without `strategy` uses a shared `InvestigateStrategy`, so the default lives in code, not in each profile.
 - A hero is on alert while any monster notices them (the spec says "hunts"; a noticed hero not hunted, because another is nearer, is still in a monster's notice and should look it).
 - Light changes outside the turn manager's requests (equipping a torch through `CharacterEquipment`) do not trigger `update()`; the next step or ability does. Lights change only through abilities in play today.
-- Nearest noticed hero by grid distance, not path length: noticed heroes are in sight, so the two rarely differ.
+- Nearest noticed hero (decided with the user): by steps along passages, ties by `block_priority`, then turn order.
