@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 ## passages, wandering otherwise) through the same step rule as the players, then the next turn starts
 
 const ModelFreeWorld = preload("uid://is6upkdhky8n")  # tests/fixtures/model_free_world.gd
+const LANTERN: ToggleLightAbility = preload("uid://s4o504byc2n0")  # tests/fixtures/lantern.tres
 ## Frames a monster phase may take before a test gives up on it
 const MAX_FRAMES: int = 3000
 
@@ -32,8 +33,13 @@ func _start_cell() -> Vector2i:
 	var spawn_point: Node3D = get_tree().get_first_node_in_group(PlayerSpawnPoint.PLAYER_SPAWN_POINTS)
 	return _level.world_to_grid_position(spawn_point.global_position)
 
-func _spawn_hero(cell: Vector2i) -> Character:
-	var hero: Character = auto_free(ModelFreeWorld.load_hero_profile().create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell))))
+## [param lit]: the hero carries a lit lantern (see MonsterSenses: monsters notice lit heroes from anywhere in their sight)
+func _spawn_hero(cell: Vector2i, lit: bool = false) -> Character:
+	var profile: CharacterProfile = ModelFreeWorld.load_hero_profile()
+	if lit:
+		profile = profile.duplicate()
+		profile.abilities = [LANTERN]
+	var hero: Character = auto_free(profile.create(-1, Transform3D(Basis.IDENTITY, _level.grid_to_world_position(cell))))
 	_level.add_character(hero)
 	hero.entered_grid_cell.connect(_level._on_player_moved.bind(hero))
 	add_child(hero)
@@ -67,7 +73,7 @@ func _cell_at(steps: int) -> Vector2i:
 	assert(not cells.is_empty())
 	return cells.front()
 
-## @returns a cell [param steps] steps straight from the start along passages, so a monster there notices heroes on the start (perception 3)
+## @returns a cell [param steps] steps straight from the start along passages, so a monster there notices lit heroes on the start
 func _cell_in_sight(steps: int) -> Vector2i:
 	var start: Vector2i = _start_cell()
 	for direction: Level.Direction in Level.Direction.values():
@@ -112,7 +118,7 @@ func test_monsters_step_along_passages_only() -> void:
 		assert_bool(_level.is_passage(from, direction)).override_failure_message("A monster went from %s to %s through a wall" % [from, path[index]]).is_true()
 
 func test_a_monster_hunts_a_hero_it_sees() -> void:
-	var hero: Character = await _spawn_hero(_start_cell())
+	var hero: Character = await _spawn_hero(_start_cell(), true)
 	var monster: Character = await _spawn_monster(_cell_in_sight(2))
 	var blocks: Array[Block] = []
 	_turn_manager.blocked.connect(func(block: Block) -> void: blocks.append(block))
@@ -210,21 +216,15 @@ func test_the_host_waits_for_a_monster_stepping_out_of_sight() -> void:
 		await await_idle_frame()
 	assert_int(_turn_manager.phase).is_equal(TurnManager.Phase.HEROES)
 
-func test_a_hero_a_monster_comes_for_is_on_alert_until_the_next_turn() -> void:
-	var hero: Character = await _spawn_hero(_start_cell())
-	await _spawn_monster(_cell_in_sight(2))
+func test_a_hero_is_on_alert_while_noticed() -> void:
+	var hero: Character = await _spawn_hero(_start_cell(), true)
+	var monster: Character = await _spawn_monster(_cell_in_sight(2))
 	assert_bool(hero.alerted).is_false()
-	var turn: int = _turn_manager.turn_number
-	_turn_manager.request_pass(true)
-	# The monster starts on a tile the hero has not revealed: the hero reacts once it hopped into sight, not as it sets off
-	assert_bool(hero.alerted).is_false()
-	var alerted_in_phase: Array[bool] = [false]
-	for _frame: int in MAX_FRAMES:
-		if _turn_manager.turn_number > turn: break
-		alerted_in_phase[0] = alerted_in_phase[0] or (hero.alerted and not _turn_manager.is_heroes_turn())
-		await await_idle_frame()
-	assert_bool(alerted_in_phase[0]).is_true()
-	assert_bool(hero.alerted).is_false()
+	_turn_manager.get_senses().update()
+	assert_bool(hero.alerted).is_true()
+	await _pass_turn()
+	# Over the turn's end too: on alert exactly while a monster notices them
+	assert_bool(hero.alerted).is_equal(_turn_manager.get_senses().notices(monster, hero))
 
 func test_a_monster_out_of_sight_alerts_nobody() -> void:
 	var hero: Character = await _spawn_hero(_start_cell())
@@ -258,14 +258,6 @@ func test_monsters_turned_off_neither_act_nor_block_and_come_back_where_they_sto
 	_level.monsters_enabled = true
 	assert_bool(monster.visible).is_true()
 	assert_bool(later.visible).is_true()
-
-func test_a_monster_notices_heroes_by_perception_and_not_by_light() -> void:
-	var monster: Character = await _spawn_monster(_cell_at(2))
-	assert_float(monster.get_perception()).is_equal(monster.profile.perception)
-	# Standing in a torch's light widens a hero's sight, not a monster's notice
-	_level.get_placed_tile(monster.grid_cell).light = load("uid://cvimunviu8yb1")  # tests/fixtures/torch_tile_light.tres
-	assert_float(monster.get_vision()).is_greater(monster.profile.vision)
-	assert_float(monster.get_perception()).is_equal(monster.profile.perception)
 
 func test_the_phases_run_in_order() -> void:
 	var start: Vector2i = _start_cell()

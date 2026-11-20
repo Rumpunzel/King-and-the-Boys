@@ -4,10 +4,13 @@ extends RefCounted
 ## Host only: who notices whom. A monster notices a hero only from the cells the hero sees ([method Character.get_vision]): if
 ## you can see it, it can see you. A lit hero ([method Character.is_lit]) is noticed there whatever way the monster faces; an
 ## unlit one only by a monster on its tile or looking straight at it within its [method Character.get_perception]. Dark vision
-## does not count. [TurnManager] holds one (see [method TurnManager.get_senses]).
+## does not count. [TurnManager] holds one (see [method TurnManager.get_senses]) and calls [method update] after every change that
+## may change who notices whom.
 
 var _turn_manager: TurnManager
 var _level: Level
+# The heroes noticed at the last update
+var _noticed: Dictionary[Character, bool] = {}
 
 func _init(turn_manager: TurnManager, level: Level) -> void:
 	_turn_manager = turn_manager
@@ -20,6 +23,74 @@ func notices(monster: Character, hero: Character) -> bool:
 	if not seen.has(monster.grid_cell): return false
 	if hero.is_lit() or monster.grid_cell == hero.grid_cell: return true
 	return _looks_at(monster, hero.grid_cell)
+
+## Who notices whom now sets each monster's [member Agent.awareness]: it hunts the nearest hero it notices; one that no longer
+## notices the hero it hunted goes to look where it last noticed them, and roams again once there with no one noticed. Nothing
+## that gets someone noticed can be taken back: the undo of each hero noticed anew closes, and so does [param actor]'s, whose
+## action it follows. Heroes are on alert ([member Character.alerted]) while any monster notices them.
+func update(actor: Character = null) -> void:
+	var heroes: Array[Character] = _get_on_board(CharacterProfile.Groups.HEROES)
+	var noticed_now: Dictionary[Character, bool] = {}
+	for monster: Character in _get_on_board(CharacterProfile.Groups.MONSTERS):
+		var agent: Agent = monster.get_parent() as Agent
+		if not agent: continue
+		var noticed: Array[Character] = []
+		for hero: Character in heroes:
+			if notices(monster, hero): noticed.append(hero)
+		for hero: Character in noticed: noticed_now[hero] = true
+		_update_awareness(agent, monster, noticed)
+	var anew: bool = false
+	for hero: Character in noticed_now:
+		if _noticed.has(hero): continue
+		anew = true
+		_turn_manager.close_undo(hero)
+	if anew and is_instance_valid(actor) and actor.is_inside_tree(): _turn_manager.close_undo(actor)
+	for hero: Character in _noticed:
+		if is_instance_valid(hero) and not noticed_now.has(hero): hero.alerted = false
+	for hero: Character in noticed_now: hero.alerted = true
+	_noticed = noticed_now
+
+## Forgets who was noticed and takes every alert back, e.g. as a save is loaded; awareness stays as saved
+func reset() -> void:
+	_noticed.clear()
+	for node: Node in _turn_manager.get_tree().get_nodes_in_group(Character.GROUP):
+		var character: Character = node as Character
+		if character: character.alerted = false
+
+func _update_awareness(agent: Agent, monster: Character, noticed: Array[Character]) -> void:
+	if not noticed.is_empty():
+		# The target first: whoever follows the awareness reads both
+		agent.awareness_target = _get_nearest(monster, noticed).grid_cell
+		agent.awareness = Agent.Awareness.HUNTING
+	elif agent.awareness == Agent.Awareness.HUNTING:
+		agent.awareness = Agent.Awareness.INVESTIGATING
+	elif agent.awareness == Agent.Awareness.INVESTIGATING and monster.grid_cell == agent.awareness_target:
+		agent.awareness = Agent.Awareness.ROAMING
+
+## @returns the hero of [param heroes] fewest steps along passages from [param monster]; among those as near, the first by
+## [member CharacterProfile.block_priority], then turn order (as [method Level.get_lead] orders them)
+func _get_nearest(monster: Character, heroes: Array[Character]) -> Character:
+	# Far enough for any noticed hero: they stand in the monster's sight or theirs, and passages may wind
+	var reach: float = monster.get_perception()
+	for hero: Character in heroes: reach = maxf(reach, hero.get_vision())
+	var lengths: Dictionary[Vector2i, int] = _level.get_path_lengths(monster.grid_cell, ceili(reach) * 2)
+	var nearest: Character = null
+	var nearest_length: int = 0
+	for hero: Character in Formation.by_priority(heroes):
+		# Not reached along passages: last
+		var length: int = lengths.get(hero.grid_cell, lengths.size() + 1)
+		if nearest and length >= nearest_length: continue
+		nearest = hero
+		nearest_length = length
+	return nearest
+
+## @returns the characters of [param group] on this level's board, in turn order
+func _get_on_board(group: CharacterProfile.Groups) -> Array[Character]:
+	var characters: Array[Character] = []
+	for node: Node in _turn_manager.get_tree().get_nodes_in_group(Character.GROUP):
+		var character: Character = node as Character
+		if character and character.profile and character.profile.group == group and _is_on_board(character): characters.append(character)
+	return characters
 
 ## @returns whether [param cell] lies straight ahead of [param monster], in sight within its perception
 func _looks_at(monster: Character, cell: Vector2i) -> bool:

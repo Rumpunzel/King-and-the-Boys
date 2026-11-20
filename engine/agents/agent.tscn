@@ -11,6 +11,12 @@
 properties/0/path = NodePath("StateMachine:_serialized_state")
 properties/0/spawn = true
 properties/0/replication_mode = 2
+properties/1/path = NodePath(".:awareness")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:awareness_target")
+properties/2/spawn = true
+properties/2/replication_mode = 2
 
 [node name="Agent" type="Node" unique_id=663144089 node_paths=PackedStringArray("character", "_state_machine")]
 script = ExtResource("1_u7v0r")

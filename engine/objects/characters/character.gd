@@ -562,14 +562,15 @@ func get_hold() -> float:
 func _rest_in_posture() -> void:
 	if model: model.rest_in(_get_rest())
 
-## What the model rests in now: lying down, the cast animations of the held ability in use, the alert animations, the passed
+## What the model rests in now: lying down, the cast animations of the held ability in use, the passed animations, the alert
 ## animations, or its idles ([code]null[/code])
 func _get_rest() -> BodyAnimations:
 	if posture == Posture.DOWN: return profile.down_animations
 	var ability: Ability = get_ability(active_ability_id)
 	if ability and ability.cast_animations: return ability.cast_animations
-	if alerted: return profile.alert_animations
+	# The pass must read; a monster's mark shows the danger
 	if shows_passed: return profile.passed_animations
+	if alerted: return profile.alert_animations
 	return null
 
 ## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
