@@ -424,18 +424,25 @@ func _move_monsters() -> void:
 	# Pieces may leave while the host waits (a player leaving takes their hero along): each is checked before it is used
 	# By index: a figure freed meanwhile may not go into a typed variable
 	var monsters: Array[Character] = _get_monsters()
+	# What the heroes' blocks changed, and a load, may have changed who notices whom
+	get_senses().update()
 	for index: int in monsters.size():
 		if not is_instance_valid(monsters[index]): continue
 		var monster: Character = monsters[index]
 		if not monster.is_inside_tree() or not monster.visible: continue
 		var agent: Agent = monster.get_parent() as Agent
+		# Knowing of no hero, it takes only its roaming steps; noticing one on the way, it hurries with the rest
+		var roamed: int = 0
 		while is_instance_valid(monster) and monster.is_inside_tree() and monster.movement_points > 0:
+			if agent.awareness == Agent.Awareness.ROAMING and roamed >= monster.profile.roam_speed: break
 			var was_in_sight: bool = is_in_sight(monster.grid_cell)
 			if monster.posture != Character.Posture.STANDING:
 				_stand_up(monster)
 				continue
+			var roaming: bool = agent.awareness == Agent.Awareness.ROAMING
 			var direction: int = agent.choose_step()
 			if direction < 0: break
+			if roaming: roamed += 1
 			# A block on leaving plays out within the step (see BlockSequence)
 			var stepped: bool = await try_step(monster, direction as Level.Direction)
 			if run != _monster_phase_run: return

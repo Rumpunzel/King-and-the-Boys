@@ -131,7 +131,7 @@ func test_a_monster_hunts_a_hero_it_sees() -> void:
 	assert_object(blocks[0].defender).is_same(hero)
 
 func test_players_wait_while_monsters_act() -> void:
-	var hero: Character = await _spawn_hero(_start_cell())
+	var hero: Character = await _spawn_hero(_start_cell(), true)
 	await _spawn_monster(_cell_in_sight(2))
 	_turn_manager.request_pass(true)
 	# The hunt's first hop is in sight, so the host waits for it
@@ -160,7 +160,7 @@ func test_a_hidden_monster_moves_at_once() -> void:
 func test_a_piece_leaving_during_the_monster_phase_stalls_nothing() -> void:
 	# The monster first, the hero after it: the phase meets the hero only after it has gone
 	var monster: Character = await _spawn_monster(_cell_in_sight(2))
-	var hero: Character = await _spawn_hero(_start_cell())
+	var hero: Character = await _spawn_hero(_start_cell(), true)
 	var turn: int = _turn_manager.turn_number
 	_turn_manager.request_pass(true)
 	assert_bool(_turn_manager.is_heroes_turn()).is_false()
@@ -175,7 +175,7 @@ func test_a_piece_leaving_during_the_monster_phase_stalls_nothing() -> void:
 	assert_bool(is_instance_valid(monster)).is_true()
 
 func test_loading_stops_the_monster_phase() -> void:
-	await _spawn_hero(_start_cell())
+	await _spawn_hero(_start_cell(), true)
 	await _spawn_monster(_cell_in_sight(2))
 	var turn: int = _turn_manager.turn_number
 	_turn_manager.request_pass(true)
@@ -188,10 +188,15 @@ func test_loading_stops_the_monster_phase() -> void:
 	assert_int(_turn_manager.turn_number).is_equal(turn)
 
 func test_the_heroes_turn_ends_before_the_monsters_act() -> void:
-	var hero: Character = await _spawn_hero(_start_cell())
-	await _spawn_monster(_cell_in_sight(2))
-	# Out and back: the first step reveals tiles, which closes the way back; the second can be undone
-	var out: Level.Direction = Level.get_direction(_start_cell(), _cell_in_sight(1))
+	var hero: Character = await _spawn_hero(_start_cell(), true)
+	# What the lit hero sees from the start, so stepping back there reveals nothing new
+	_level.update_sight(hero, hero.grid_cell)
+	var monster: Character = await _spawn_monster(_cell_in_sight(2))
+	# Out towards the monster and back: the first step reveals tiles and gets the hero noticed, which closes the way back; the
+	# second can be undone
+	var out: Level.Direction = Level.Direction.UP
+	for direction: Level.Direction in Level.Direction.values():
+		if _start_cell() + Level.direction_to_vector(direction) * 2 == monster.grid_cell: out = direction
 	_turn_manager.request_move(hero.get_path(), out)
 	await await_idle_frame()
 	_turn_manager.request_move(hero.get_path(), Level.get_opposite(out))

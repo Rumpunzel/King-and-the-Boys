@@ -573,8 +573,10 @@ func _get_rest() -> BodyAnimations:
 	if alerted: return profile.alert_animations
 	return null
 
-## Something interesting on the tile (e.g. a chest) catches the figure's eye when it arrives
+## Something interesting on the tile (e.g. a chest) catches a hero's eye when it arrives; a monster keeps facing the way it
+## stepped, which decides whom it notices (see [MonsterSenses])
 func _look_at_thing_on_tile() -> void:
+	if profile.group == CharacterProfile.Groups.MONSTERS: return
 	var thing: Thing = level.get_thing_near(grid_cell)
 	if not thing or not thing.visible: return
 	var to_thing: Vector3 = thing.global_position - global_position

@@ -173,6 +173,7 @@ The coloured icons in this folder (`red/`, `white/`, `green/`, `yellow/`, `purpl
 | `white/world.svg` | lorc | [world](https://game-icons.net/1x1/lorc/world.html) |
 | `white/wyvern.svg` | lorc | [wyvern](https://game-icons.net/1x1/lorc/wyvern.html) |
 | `yellow/bookshelf.svg` | delapouite | [bookshelf](https://game-icons.net/1x1/delapouite/bookshelf.html) |
+| `yellow/brain.svg` | lorc | [brain](https://game-icons.net/1x1/lorc/brain.html) |
 | `yellow/database.svg` | delapouite | [database](https://game-icons.net/1x1/delapouite/database.html) |
 | `yellow/dice-eight-faces-eight.svg` | delapouite | [dice-eight-faces-eight](https://game-icons.net/1x1/delapouite/dice-eight-faces-eight.html) |
 | `yellow/dice-six-faces-five.svg` | delapouite | [dice-six-faces-five](https://game-icons.net/1x1/delapouite/dice-six-faces-five.html) |
