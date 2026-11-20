@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="3_ns2p6"]
 [ext_resource type="Script" uid="uid://d12y800yphwle" path="res://engine/agents/state_machine/states/agent_state_default.gd" id="4_pe618"]
 [ext_resource type="PackedScene" uid="uid://cvj6b1m2b65hd" path="res://engine/objects/characters/character.tscn" id="5_pe618"]
+[ext_resource type="Script" uid="uid://cawx5vq172wrr" path="res://engine/agents/investigation_mark.gd" id="6_mark"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qws77"]
 properties/0/path = NodePath("StateMachine:_serialized_state")
@@ -43,5 +44,9 @@ _initial_state = ExtResource("4_pe618")
 metadata/_custom_type_script = "uid://d1mglynl0s74y"
 
 [node name="Character" parent="." unique_id=1033858553 instance=ExtResource("5_pe618")]
+
+[node name="InvestigationMark" type="MeshInstance3D" parent="." unique_id=1749203318 node_paths=PackedStringArray("_agent")]
+script = ExtResource("6_mark")
+_agent = NodePath("..")
 
 [editable path="Character"]

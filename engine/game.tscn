@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://rmev082m4bw0" path="res://user_interface/user_interface.tscn" id="8_aqpue"]
 [ext_resource type="PackedScene" uid="uid://bmwhs3lwb74ue" path="res://data/levels/level.tscn" id="9_eadau"]
 [ext_resource type="PackedScene" uid="uid://5sd2jgms4uso" path="res://user_interface/menus/pause_menu/pause_menu.tscn" id="13_vkpvb"]
+[ext_resource type="PackedScene" uid="uid://c4wrnmk2aw1ma" path="res://user_interface/hud/awareness_marks.tscn" id="17_marks"]
 [ext_resource type="Script" uid="uid://cg1qu4y0xejyk" path="res://engine/turns/turn_manager.gd" id="14_turns"]
 [ext_resource type="Script" uid="uid://crm43jylxmjbd" path="res://client/network/synchronizer.gd" id="15_sync"]
 [ext_resource type="Script" uid="uid://047sfnl1r5sv" path="res://client/serialization/synchronizer_serializer.gd" id="16_syncser"]
@@ -66,6 +67,9 @@ _turn_manager = NodePath("../../../TurnManager")
 [node name="CombatStatus" parent="UserInterface/MarginContainer" parent_id_path=PackedInt32Array(30514551, 1277819004) unique_id=1937408211 node_paths=PackedStringArray("_player_controller_spawner", "_turn_manager")]
 _player_controller_spawner = NodePath("../../../PlayerControllerSpawner")
 _turn_manager = NodePath("../../../TurnManager")
+
+[node name="AwarenessMarks" parent="UserInterface" index="0" unique_id=1630558207 node_paths=PackedStringArray("_level") instance=ExtResource("17_marks")]
+_level = NodePath("../../Level")
 
 [node name="PauseMenu" parent="UserInterface" unique_id=1241718021 instance=ExtResource("13_vkpvb")]
 
