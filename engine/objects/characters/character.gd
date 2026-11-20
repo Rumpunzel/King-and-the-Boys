@@ -239,13 +239,21 @@ func get_dark_vision() -> float:
 		dark_vision = maxf(dark_vision, StatModifier.apply_all(light_source.dark_vision_modifiers, profile.dark_vision))
 	return dark_vision
 
-## The lights the character sees by: those it carries and the wall lights it stands in (see [method Structure.get_light_sources]),
-## each once
+## @returns whether the character sees by a light, and so is seen by it: one it carries, a wall light it stands in or a light a
+## companion carries on its tile (see [MonsterSenses])
+func is_lit() -> bool:
+	return not _get_sight_lights().is_empty()
+
+## The lights the character sees by: those it carries, the wall lights it stands in (see [method Structure.get_light_sources]) and
+## those its companions on its tile carry, each once
 func _get_sight_lights() -> Array[LightSource]:
 	var light_sources: Array[LightSource] = get_light_sources()
 	var tile: Structure = level.get_placed_tile(grid_cell) if level else null
 	if tile:
 		for light_source: LightSource in tile.get_light_sources(): _add_light_source(light_sources, light_source)
+		for companion: Character in level.get_figures_on(grid_cell, self):
+			if companion.profile.group != profile.group: continue
+			for light_source: LightSource in companion.get_light_sources(): _add_light_source(light_sources, light_source)
 	return light_sources
 
 ## Lets each ability show itself on the model, e.g. a lantern on the belt, lit or not

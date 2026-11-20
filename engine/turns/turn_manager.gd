@@ -90,6 +90,8 @@ var _board_changed_during_use: bool = false
 var _monster_phase_run: int = 0
 # Host only: peers whose game scene has this node (see start_syncing_peer); only they get its RPCs
 var _synced_peers: Array[int] = []
+# Who notices whom, made on first use (see get_senses)
+var _senses: MonsterSenses
 
 class GridStep extends RefCounted:
 	var grid_cell: Vector2i
@@ -392,6 +394,11 @@ func _run_monster_phase() -> void:
 	if run != _monster_phase_run: return
 	phase = Phase.HEROES
 	_start_next_turn()
+
+## Host only: the rule for who notices whom, and the monsters' awareness it keeps (see [MonsterSenses])
+func get_senses() -> MonsterSenses:
+	if not _senses: _senses = MonsterSenses.new(self, _level)
+	return _senses
 
 ## @returns whether the players act now (see [enum Phase])
 func is_heroes_turn() -> bool:

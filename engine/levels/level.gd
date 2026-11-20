@@ -360,6 +360,18 @@ func is_passage(grid_position: Vector2i, direction: Direction) -> bool:
 func get_step_towards_in_sight(from: Vector2i, targets: Array[Vector2i], vision: float) -> int:
 	return _sight.get_step_towards_in_sight(from, targets, vision)
 
+## The first step from [param from] along passages towards [param target], however far, e.g. a monster going to look where it
+## last noticed a hero (see [method LevelSight.get_step_towards])
+## @returns its [enum Direction], or [code]-1[/code] if it stands there or can not get there
+func get_step_towards(from: Vector2i, target: Vector2i) -> int:
+	if from == target: return -1
+	return _sight.get_step_towards(from, [target])
+
+## @returns the number of steps along passages from [param from] to every placed cell at most [param max_length] steps away
+## ([param from] itself 0), e.g. which noticed hero is nearest to a monster (see [method LevelSight.get_path_lengths])
+func get_path_lengths(from: Vector2i, max_length: int) -> Dictionary[Vector2i, int]:
+	return _sight.get_path_lengths(from, max_length)
+
 ## @returns the cells in sight from [param from] within [param vision] (as keys), by the rule heroes see by (straight along
 ## passages, across whole rooms); see [method LevelSight.get_cells_in_sight]
 func get_cells_in_sight(from: Vector2i, vision: float) -> Dictionary[Vector2i, bool]:
