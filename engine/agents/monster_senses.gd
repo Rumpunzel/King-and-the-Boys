@@ -13,8 +13,6 @@ var _level: Level
 var _noticed: Dictionary[Character, bool] = {}
 # Who noticed whom at the last update, as [monster's instance id, hero's instance id] (ids: either may have been freed since)
 var _attention: Dictionary[Array, bool] = {}
-# After a load: the next update only learns who is noticed, as nothing the next action does got them noticed
-var _settling: bool = false
 
 func _init(turn_manager: TurnManager, level: Level) -> void:
 	_turn_manager = turn_manager
@@ -23,25 +21,34 @@ func _init(turn_manager: TurnManager, level: Level) -> void:
 ## @returns whether [param monster] notices [param hero] now
 func notices(monster: Character, hero: Character) -> bool:
 	if not _is_on_board(monster) or not _is_on_board(hero): return false
-	return _notices_in(monster, hero, _level.get_cells_in_sight(hero.grid_cell, hero.get_vision()))
+	var looked: Dictionary[Vector2i, bool] = {}
+	return _notices_in(monster, hero, _level.get_cells_in_sight(hero.grid_cell, hero.get_vision()), hero.is_lit(), looked)
 
-## @returns whether [param monster] notices [param hero], who sees [param seen]
-func _notices_in(monster: Character, hero: Character, seen: Dictionary[Vector2i, bool]) -> bool:
+## @returns whether [param monster] notices [param hero], who sees [param seen] and is [param lit] or not. [param looked] is the
+## monster's own sight within its perception: worked out into it on first need, so one monster's checks share it
+func _notices_in(monster: Character, hero: Character, seen: Dictionary[Vector2i, bool], lit: bool, looked: Dictionary[Vector2i, bool]) -> bool:
 	if not seen.has(monster.grid_cell): return false
-	if hero.is_lit() or monster.grid_cell == hero.grid_cell: return true
-	return _looks_at(monster, hero.grid_cell)
+	if lit or monster.grid_cell == hero.grid_cell: return true
+	if not _is_ahead(monster, hero.grid_cell): return false
+	if looked.is_empty(): looked.merge(_level.get_cells_in_sight(monster.grid_cell, monster.get_perception()))
+	return looked.has(hero.grid_cell)
 
 ## Who notices whom now sets each monster's [member Agent.awareness]: it hunts the nearest hero it notices; one that no longer
 ## notices the hero it hunted goes to look where it last noticed them, and roams again once there with no one noticed. Nothing
 ## that gets someone noticed can be taken back: the undo of each hero some monster notices anew closes, and so does
-## [param actor]'s, whose action it follows; a monster turns to face the hero it hunts if that hero just caught its eye. Heroes are on alert ([member Character.alerted]) while any monster notices them. While a held ability is
-## shown (e.g. a lifted tile), the board is not what it will be: nothing changes until it is used or cancelled.
+## [param actor]'s, whose action it follows; a monster turns to face the hero it hunts if that hero just caught its eye.
+## Heroes are on alert ([member Character.alerted]) while any monster notices them. While a held ability is shown, notices are
+## only gained: a lifted tile cuts sight across it until it is set down, so nobody loses one before the ability is used or
+## cancelled, which updates again.
 func update(actor: Character = null) -> void:
-	if _turn_manager.is_ability_held(): return
+	var held: bool = _turn_manager.is_ability_held()
 	var heroes: Array[Character] = _get_on_board(CharacterProfile.Groups.HEROES)
-	# Each hero's sight once: monsters notice only from there
+	# Each hero's sight and light once: monsters notice only from there
 	var sights: Dictionary[Character, Dictionary] = {}
-	for hero: Character in heroes: sights[hero] = _level.get_cells_in_sight(hero.grid_cell, hero.get_vision())
+	var lit: Dictionary[Character, bool] = {}
+	for hero: Character in heroes:
+		sights[hero] = _level.get_cells_in_sight(hero.grid_cell, hero.get_vision())
+		lit[hero] = hero.is_lit()
 	var noticed_now: Dictionary[Character, bool] = {}
 	var attention_now: Dictionary[Array, bool] = {}
 	var anew: bool = false
@@ -51,15 +58,15 @@ func update(actor: Character = null) -> void:
 		var noticed: Array[Character] = []
 		# Those it did not notice at the last update
 		var caught: Array[Character] = []
+		var looked: Dictionary[Vector2i, bool] = {}
 		for hero: Character in heroes:
 			var seen: Dictionary[Vector2i, bool] = sights[hero]
-			if not _notices_in(monster, hero, seen): continue
+			var pair: Array = [monster.get_instance_id(), hero.get_instance_id()]
+			if not _notices_in(monster, hero, seen, lit[hero], looked) and not (held and _attention.has(pair)): continue
 			noticed.append(hero)
 			noticed_now[hero] = true
-			var pair: Array = [monster.get_instance_id(), hero.get_instance_id()]
 			attention_now[pair] = true
-			# After a load, nobody knows what was noticed before it
-			if _attention.has(pair) or _settling: continue
+			if _attention.has(pair): continue
 			caught.append(hero)
 			anew = true
 			_turn_manager.close_undo(hero)
@@ -73,14 +80,12 @@ func update(actor: Character = null) -> void:
 	for hero: Character in noticed_now: hero.alerted = true
 	_noticed = noticed_now
 	_attention = attention_now
-	_settling = false
 
-## Forgets who was noticed and takes every alert back, e.g. as a save is loaded; awareness stays as saved. The next
-## [method update] only learns who is noticed then (and puts them on alert), closing no undo
+## Forgets who was noticed and takes every alert back, e.g. as a save is loaded; awareness stays as saved. The heroes come
+## back onto the board after it, each arrival updating (see [signal Level.character_added]) before anyone acts again
 func reset() -> void:
 	_noticed.clear()
 	_attention.clear()
-	_settling = true
 	for node: Node in _turn_manager.get_tree().get_nodes_in_group(Character.GROUP):
 		var character: Character = node as Character
 		if character: character.alerted = false
@@ -129,13 +134,12 @@ func _get_on_board(group: CharacterProfile.Groups) -> Array[Character]:
 		if character and character.profile and character.profile.group == group and _is_on_board(character): characters.append(character)
 	return characters
 
-## @returns whether [param cell] lies straight ahead of [param monster], in sight within its perception
-func _looks_at(monster: Character, cell: Vector2i) -> bool:
+## @returns whether [param cell] lies straight ahead of [param monster], in its row or column
+func _is_ahead(monster: Character, cell: Vector2i) -> bool:
 	var ahead: Vector2i = Level.direction_to_vector(monster.facing)
 	var offset: Vector2i = cell - monster.grid_cell
 	# A positive multiple of the way it faces
-	if offset.x * ahead.y != offset.y * ahead.x or offset.x * ahead.x + offset.y * ahead.y <= 0: return false
-	return _level.get_cells_in_sight(monster.grid_cell, monster.get_perception()).has(cell)
+	return offset.x * ahead.y == offset.y * ahead.x and offset.x * ahead.x + offset.y * ahead.y > 0
 
 func _is_on_board(character: Character) -> bool:
 	if not is_instance_valid(character) or character.is_queued_for_deletion(): return false

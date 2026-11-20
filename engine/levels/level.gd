@@ -9,6 +9,10 @@ signal board_changed(character: Character)
 signal tile_rotated(tile: Structure, character: Character)
 ## Host only: [method build_level] placed the starting tiles, see [member is_built]
 signal built
+## Host only: [param character] was put on this level (see [method add_character])
+signal character_added(character: Character)
+## Host only: [member monsters_enabled] changed
+signal monsters_toggled
 ## Every peer: a tile was placed (spawned, loaded or replicated)
 signal tile_placed(tile: Structure)
 
@@ -73,6 +77,7 @@ var monsters_enabled: bool = true:
 		for node: Node in _agent_spawner.get_children():
 			var agent: Agent = node as Agent
 			if agent and not agent.is_queued_for_deletion(): agent.character.visible = monsters_enabled
+		monsters_toggled.emit()
 
 ## Host only: whether [method build_level] ran, see [signal built]
 var is_built: bool = false
@@ -904,6 +909,7 @@ func add_character(character: Character) -> void:
 	character.posture_changed.connect(_formations.on_character_changed.bind(character))
 	character.visibility_changed.connect(_formations.on_character_changed.bind(character))
 	character.tree_exiting.connect(_formations.on_character_leaving.bind(character))
+	character_added.emit(character)
 
 func _update_shown_on(grid_position: Vector2i) -> void:
 	for character: Character in get_tree().get_nodes_in_group(Character.GROUP):

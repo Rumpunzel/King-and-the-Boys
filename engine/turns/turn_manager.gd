@@ -125,6 +125,8 @@ func _ready() -> void:
 		return
 	_level.board_changed.connect(_on_board_changed)
 	_level.tile_rotated.connect(_on_tile_rotated)
+	_level.character_added.connect(_on_character_added)
+	_level.monsters_toggled.connect(_on_monsters_toggled)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
 
 ## Host only: this node is part of the game scene, not spawned, so a peer only gets synced once it has loaded it;
@@ -147,7 +149,8 @@ func request_move(character_path: NodePath, direction: Level.Direction) -> void:
 	var character: Character = _get_controlled_character(sender_id, character_path)
 	if not character or _held_abilities.has(character): return
 	await try_step(character, direction, true)
-	get_senses().update(character)
+	# Its player may have left while the step's block waited
+	get_senses().update(character if is_instance_valid(character) else null)
 	# A player who left while the step's block waited for a choice may have been the last one not passed
 	_end_turn_if_everyone_passed()
 
@@ -350,8 +353,6 @@ func request_ability_cancel(character_path: NodePath) -> void:
 	var character: Character = _get_controlled_character(_get_sender_id(), character_path)
 	if not character: return
 	_cancel_held(character)
-	# Others may have acted while it was shown
-	get_senses().update()
 
 ## Passes or takes a pass back; the turn ends once every connected player has passed, and a block under way ended (see
 ## [method request_move]). Passing cancels the held abilities of the sender's characters.
@@ -597,9 +598,13 @@ func _has_uses_left(character: Character, ability: Ability) -> bool:
 	var used: int = uses.get(ability, 0)
 	return used < ability.uses_per_turn
 
+## Host only: [param character]'s held ability is set aside unused (cancelled, passed, its player leaving, the turn ending);
+## notices lost while it was shown count now (see [method MonsterSenses.update])
 func _cancel_held(character: Character) -> void:
 	var held: HeldAbility = _end_held(character)
-	if held: held.ability.cancel(character, held.target, _level)
+	if not held: return
+	held.ability.cancel(character, held.target, _level)
+	get_senses().update()
 
 ## Forgets the held ability of [param character], used or cancelled
 ## @returns it, or [code]null[/code] if none was held
@@ -676,6 +681,14 @@ func _on_character_exiting(character: Character) -> void:
 	_cancel_held(character)
 	for step: AbilityStep in _pending_steps.duplicate():
 		if step.character == character: _pending_steps.erase(step)
+
+## A hero arriving (spawned, joining, back after a load) is noticed before anyone acts: closing no one's undo, as it has none
+## yet. Deferred, as spawners set a character up after adding it to the level
+func _on_character_added(character: Character) -> void:
+	if character.profile.group == CharacterProfile.Groups.HEROES: get_senses().update.call_deferred()
+
+func _on_monsters_toggled() -> void:
+	get_senses().update()
 
 func _on_player_disconnected(player: Player) -> void:
 	_synced_peers.erase(player.player_id)

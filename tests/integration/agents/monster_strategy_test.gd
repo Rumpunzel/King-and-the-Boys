@@ -83,6 +83,19 @@ func test_an_unreachable_investigation_turns_to_roaming() -> void:
 	assert_int(_turn_manager.turn_number).is_equal(turn + 1)
 	assert_int(agent.awareness).is_equal(Agent.Awareness.ROAMING)
 
+func test_an_investigation_into_a_full_tile_turns_to_roaming() -> void:
+	var start: Vector2i = _start_cell()
+	await _spawn_hero(start)
+	var monster: Character = await _spawn_monster(_cells_at(start, 6)[0])
+	var target: Vector2i = _cells_at(monster.grid_cell, 1)[0]
+	for _monster: int in Formation.MAX_PER_SIDE: await _spawn_monster(target)
+	assert_bool(_level.has_room(target, CharacterProfile.Groups.MONSTERS)).is_false()
+	var agent: Agent = _agent(monster)
+	agent.awareness_target = target
+	agent.awareness = Agent.Awareness.INVESTIGATING
+	await _pass_turn()
+	assert_int(agent.awareness).is_equal(Agent.Awareness.ROAMING)
+
 func test_a_monster_does_not_look_at_a_thing_on_its_tile() -> void:
 	var start: Vector2i = _start_cell()
 	var hero: Character = await _spawn_hero(start)

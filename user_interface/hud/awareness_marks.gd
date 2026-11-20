@@ -16,6 +16,8 @@ const _POP_DURATION: float = 0.35
 
 # Agent -> its mark
 var _marks: Dictionary[Agent, Label] = {}
+# Each marked agent's awareness as last seen (an Agent.Awareness), so only a new hunt pops
+var _awareness: Dictionary[Agent, int] = {}
 
 ## @returns the mark for [param awareness]
 static func mark_text(awareness: Agent.Awareness) -> String:
@@ -51,6 +53,7 @@ func _add_mark(agent: Agent) -> void:
 	mark.hide()
 	add_child(mark)
 	_marks[agent] = mark
+	_awareness[agent] = agent.awareness
 	agent.awareness_changed.connect(_on_awareness_changed.bind(agent))
 	# Before it is freed: a freed agent may not be a key any more
 	agent.tree_exiting.connect(_on_agent_exiting.bind(agent), CONNECT_ONE_SHOT)
@@ -59,6 +62,7 @@ func _remove_mark(agent: Agent) -> void:
 	if not _marks.has(agent): return
 	var mark: Label = _marks[agent]
 	_marks.erase(agent)
+	_awareness.erase(agent)
 	mark.queue_free()
 
 func _on_agent_exiting(agent: Agent) -> void:
@@ -76,7 +80,11 @@ func _place(agent: Agent, mark: Label, camera: Camera3D) -> void:
 	mark.position = camera.unproject_position(anchor) - mark.size / 2.0
 
 func _on_awareness_changed(agent: Agent) -> void:
-	if agent.awareness != Agent.Awareness.HUNTING or not _marks.has(agent): return
+	if not _marks.has(agent): return
+	var was: int = _awareness[agent]
+	_awareness[agent] = agent.awareness
+	# A new target of the same hunt (the hero stepped on) does not pop
+	if agent.awareness != Agent.Awareness.HUNTING or was == Agent.Awareness.HUNTING: return
 	# It noticed someone: the mark pops
 	var mark: Label = _marks[agent]
 	mark.scale = Vector2.ONE * _POP_SCALE

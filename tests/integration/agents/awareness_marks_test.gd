@@ -38,6 +38,20 @@ func test_a_mark_shows_only_for_a_shown_monster_that_is_not_roaming() -> void:
 	await await_idle_frame()
 	assert_bool(label.visible).is_false()
 
+func test_the_mark_pops_only_as_the_monster_starts_hunting() -> void:
+	var monster: Character = await _spawn_monster_ahead(2, false)
+	monster.shown = true
+	await await_idle_frame()
+	var agent: Agent = _agent(monster)
+	var label: Label = _marks.get_mark(agent)
+	agent.awareness = Agent.Awareness.HUNTING
+	assert_float(label.scale.x).is_greater(1.0)
+	await get_tree().create_timer(AwarenessMarks._POP_DURATION + 0.1).timeout
+	assert_float(label.scale.x).is_equal_approx(1.0, 0.001)
+	# The hunted hero stepped on: the same hunt
+	agent.awareness_target = agent.awareness_target + Vector2i.ONE
+	assert_float(label.scale.x).is_equal_approx(1.0, 0.001)
+
 func test_a_freed_monster_takes_its_mark_along() -> void:
 	var monster: Character = await _spawn_monster_ahead(2, false)
 	await await_idle_frame()
